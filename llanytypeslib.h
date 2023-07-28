@@ -8,31 +8,8 @@
 #ifndef LLPC_HEADER_LLANYTYPESLIB_HPP_
 #define LLPC_HEADER_LLANYTYPESLIB_HPP_
 
- /// Adds, removes or creates defines and types depending the lib we are
-#pragma region c_cpp_check
-// Definitions and more depending of lib
-#if defined(__cplusplus)
-typedef bool ll_bool_t;
-#define LL_TRUE true
-#define LL_FALSE false
-
-#define LL_NULLPTR nullptr
-
-#define C_LIB_START
-#define C_LIB_END
-#elif !defined(__cplusplus)
-typedef char ll_bool_t;
-#define LL_TRUE 1
-#define LL_FALSE 0
-
-#if !defined(NULL)
-#define NULL 0
-#endif // !defined(NULL)
-
-#define LL_NULLPTR NULL
-
-#endif // defined(__cplusplus)
-#pragma endregion
+#include <utility>
+#include <type_traits>
 
 #pragma region GeneralTypes
 
@@ -75,6 +52,8 @@ typedef float ll_float_t;
 typedef double ll_double_t;
 typedef long double ll_ldouble_t;
 
+typedef bool ll_bool_t;
+
 // Bits
 typedef ll_char_t ll_int8_t;
 typedef ll_uchar_t ll_uint8_t;
@@ -90,6 +69,8 @@ typedef ll_ulong_t ll_uint64_t;
 typedef ll_longlong_t ll_int64_t;
 typedef ll_ulonglong_t ll_uint64_t;
 #endif
+
+typedef std::pair<ll_uint64_t, ll_uint64_t> ll_uint128_t;
 #pragma endregion
 
 #pragma region NonGeneralTypes1
@@ -126,18 +107,12 @@ typedef const ll_uchar_t* ll_ustring_t;
 #pragma endregion
 
 #pragma region DEFINES
+#define LL_TRUE true
+#define LL_FALSE false
+#define LL_NULLPTR nullptr
 #define TRUE_STRING "True"
 #define FALSE_STRING "False"
 #define GET_BOOL_STR(a) ((a) ? TRUE_STRING : FALSE_STRING)
-
-#ifndef LL_INLINE
-#if 0
-
-#endif // 0
-
-
-#endif // !LL_INLINE
-
 
 #pragma endregion
 
@@ -172,6 +147,8 @@ typedef ll_ulonglong_t ui64;
 typedef float f32;
 typedef double f64;
 //typedef long double f64;
+typedef ll_uint128_t uint128;
+typedef ll_uint128_t ui128;
 
 #pragma endregion
 
@@ -252,9 +229,5 @@ typedef ll_ulong_t ll_pid_t;
 #elif defined(__unix__)
 typedef int ll_pid_t;
 #endif
-
-// STL Includes!
-
-#include <type_traits>
 
 #endif /* LLPC_HEADER_LLANYTYPESLIB_HPP_ */

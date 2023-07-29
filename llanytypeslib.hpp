@@ -5,8 +5,8 @@
  *      Author: llanyro
  */
 
-#ifndef LLPC_HEADER_LLANYTYPESLIB_HPP_
-#define LLPC_HEADER_LLANYTYPESLIB_HPP_
+#ifndef LLCPP_HEADER_LLANYTYPESLIB_HPP_
+#define LLCPP_HEADER_LLANYTYPESLIB_HPP_
 
 #include <utility>
 #include <type_traits>
@@ -184,7 +184,7 @@ typedef i32 (*i32CompareExtra)(const void*, const void*, void*);
 
 /// Win dll
 #if defined(WINDOWS_SYSTEM)
-    #define LL_DLL_BUILD
+    //#define LL_DLL_BUILD
     #if defined(LL_DLL_BUILD)
         #define LL_SHARED_LIB __declspec(dllexport)
     #else
@@ -237,4 +237,4 @@ typedef ll_ulong_t ll_pid_t;
 typedef int ll_pid_t;
 #endif
 
-#endif /* LLPC_HEADER_LLANYTYPESLIB_HPP_ */
+#endif /* LLCPP_HEADER_LLANYTYPESLIB_HPP_ */

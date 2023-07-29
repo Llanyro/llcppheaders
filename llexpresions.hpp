@@ -8,7 +8,7 @@
 #ifndef LLPC_HEADER_LLEXPRESIONS_HPP_
 #define LLPC_HEADER_LLEXPRESIONS_HPP_
 
-#include "llanytypeslib.h"
+#include "llanytypeslib.hpp"
 
 namespace llcpp {
 namespace header {
@@ -49,19 +49,19 @@ constexpr ll_string_t ZERO_BYTES_VALUE_STR = "Number of bytes provided cannot be
 
 
 } /* namespace strings */
-} /* namespace expresions */
-} /* namespace header */
-} /* namespace llcpp */
-
-namespace llcpp {
-namespace header {
-namespace expresions {
 namespace traits {
-
 constexpr ll_string_t INVALID_LAMBDA_RETURN_bool = "Lambda function must return bool";
 constexpr ll_string_t INVALID_LAMBDA_RETURN_i32 = "Lambda function must return i32";
-
 } /* namespace traits */
+
+namespace extensions {
+#if defined(WINDOWS_SYSTEM)
+constexpr ll_string_t DLL_EXTENSION_STR = ".dll";
+#else
+constexpr ll_string_t DLL_EXTENSION_STR = ".os";
+#endif
+} /* namespace extensions */
+
 } /* namespace expresions */
 } /* namespace header */
 } /* namespace llcpp */

@@ -104,6 +104,9 @@ typedef void* ll_any_t;
 typedef const ll_char_t* ll_string_t;
 typedef const ll_uchar_t* ll_ustring_t;
 
+// For pointer to libs (Handle)
+typedef void* ll_lib_t;
+
 #pragma endregion
 
 #pragma region DEFINES
@@ -194,7 +197,6 @@ typedef i32 (*i32CompareExtra)(const void*, const void*, void*);
     #define LL_SHARED_LIB
 #endif // LL_SHARED_LIB
 
-/// C / C++ Compatibility
 /*
 #ifdef __cplusplus
 extern "C" {
@@ -222,6 +224,11 @@ extern "C" {
 #pragma warning(disable:4309)
 #pragma warning(disable:4477)
 #pragma warning(disable:26439)
+
+// Wall
+#pragma warning(disable:4464)
+
+
 #endif // defined(WINDOWS_SYSTEM)
 
 #if defined(WINDOWS_SYSTEM)

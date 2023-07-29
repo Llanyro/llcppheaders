@@ -8,7 +8,7 @@
 #ifndef LLPC_HEADER_LLOPERATIONS_HPP_
 #define LLPC_HEADER_LLOPERATIONS_HPP_
 
-#include "llanytypeslib.h"
+#include "llanytypeslib.hpp"
 
 namespace llcpp {
 namespace header {

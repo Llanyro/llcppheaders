@@ -8,7 +8,7 @@
 #ifndef LLPC_HEADER_LLLIBBITS_H_
 #define LLPC_HEADER_LLLIBBITS_H_
 
-#include "../header/llanytypeslib.h"
+#include "llanytypeslib.hpp"
 
 typedef ll_uchar_t ll_bitarray_t;
 typedef ll_uchar_t ll_bits_t;

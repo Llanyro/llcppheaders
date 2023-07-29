@@ -178,6 +178,14 @@ typedef i32 (*i32CompareExtra)(const void*, const void*, void*);
 
 #pragma endregion
 
+#pragma region Structs
+
+struct StrPair {
+    ll_string_t str = LL_NULLPTR;
+    len_t len = 0;
+};
+
+#pragma endregion
 
 
 #if defined(_WIN32) or defined(_WIN64)

@@ -46,14 +46,61 @@ namespace strings {
 
 constexpr ll_string_t NULL_VALUE_STR = "Value cannot be nullptr";
 constexpr ll_string_t ZERO_BYTES_VALUE_STR = "Number of bytes provided cannot be 0";
-
+constexpr StrPair nullpair = { "Nullstring", 11 };
 
 } /* namespace strings */
+namespace color {
+
+// Text colors
+constexpr ll_string_t RESET = "\033[0m";
+constexpr ll_string_t BLACK = "\033[30m";
+constexpr ll_string_t RED = "\033[31m";
+constexpr ll_string_t GREEN = "\033[32m";
+constexpr ll_string_t YELLOW = "\033[33m";
+constexpr ll_string_t BLUE = "\033[34m";
+constexpr ll_string_t MAGENTA = "\033[35m";
+constexpr ll_string_t CYAN = "\033[36m";
+constexpr ll_string_t WHITE = "\033[37m";
+
+// Background colors
+constexpr ll_string_t BG_RESET = "\033[49m";
+constexpr ll_string_t BG_BLACK = "\033[40m";
+constexpr ll_string_t BG_RED = "\033[41m";
+constexpr ll_string_t BG_GREEN = "\033[42m";
+constexpr ll_string_t BG_YELLOW = "\033[43m";
+constexpr ll_string_t BG_BLUE = "\033[44m";
+constexpr ll_string_t BG_MAGENTA = "\033[45m";
+constexpr ll_string_t BG_CYAN = "\033[46m";
+constexpr ll_string_t BG_WHITE = "\033[47m";
+
+namespace pair {
+
+constexpr StrPair RESET = { color::RESET, 4 };
+constexpr StrPair BLACK = { color::BLACK, 5 };
+constexpr StrPair RED = { color::RED, 5 };
+constexpr StrPair GREEN = { color::GREEN, 5 };
+constexpr StrPair YELLOW = { color::YELLOW, 5 };
+constexpr StrPair BLUE = { color::BLUE, 5 };
+constexpr StrPair MAGENTA = { color::MAGENTA, 5 };
+constexpr StrPair CYAN = { color::CYAN, 5};
+constexpr StrPair WHITE = { color::WHITE, 5 };
+
+constexpr StrPair BG_RESET = { color::BG_RESET, 5 };
+constexpr StrPair BG_BLACK = { color::BG_BLACK, 5 };
+constexpr StrPair BG_RED = { color::BG_RED, 5 };
+constexpr StrPair BG_GREEN = { color::BG_GREEN, 5 };
+constexpr StrPair BG_YELLOW = { color::BG_YELLOW, 5 };
+constexpr StrPair BG_BLUE = { color::BG_BLUE, 5 };
+constexpr StrPair BG_MAGENTA = { color::BG_MAGENTA, 5 };
+constexpr StrPair BG_CYAN = { color::BG_CYAN, 5 };
+constexpr StrPair BG_WHITE = { color::BG_WHITE, 5 };
+
+} /* namespace pair */
+} /* namespace color */
 namespace traits {
 constexpr ll_string_t INVALID_LAMBDA_RETURN_bool = "Lambda function must return bool";
 constexpr ll_string_t INVALID_LAMBDA_RETURN_i32 = "Lambda function must return i32";
 } /* namespace traits */
-
 namespace extensions {
 #if defined(WINDOWS_SYSTEM)
 constexpr ll_string_t DLL_EXTENSION_STR = ".dll";

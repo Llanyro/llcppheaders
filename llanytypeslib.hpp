@@ -73,6 +73,32 @@ typedef ll_ulonglong_t ll_uint64_t;
 typedef std::pair<ll_uint64_t, ll_uint64_t> ll_uint128_t;
 #pragma endregion
 
+// More like rust
+#pragma region Standard
+typedef ll_char_t i8;
+typedef ll_uchar_t ui8;
+
+typedef ll_short_t i16;
+typedef ll_ushort_t ui16;
+typedef ll_int_t i32;
+typedef ll_uint_t ui32;
+
+#if defined(__x86_64__) && !defined(__ILP32__)
+typedef ll_long_t i64;
+typedef ll_ulong_t ui64;
+#else
+typedef ll_longlong_t i64;
+typedef ll_ulonglong_t ui64;
+#endif
+
+typedef float f32;
+typedef double f64;
+//typedef long double f64;
+typedef ll_uint128_t uint128;
+typedef ll_uint128_t ui128;
+
+#pragma endregion
+
 #pragma region NonGeneralTypes1
 typedef ll_uchar_t hex;		// Usado para guardar el valor numerico de un Hexadecimal
 
@@ -107,6 +133,9 @@ typedef const ll_uchar_t* ll_ustring_t;
 // For pointer to libs (Handle)
 typedef void* ll_lib_t;
 
+// Standard value hash
+typedef ui64 ll_hash_t;
+
 #pragma endregion
 
 #pragma region DEFINES
@@ -126,32 +155,6 @@ typedef void* ll_lib_t;
 #else
 #define assert
 #endif // _DEBUG
-
-#pragma endregion
-
-// More like rust
-#pragma region Standard
-typedef ll_char_t i8;
-typedef ll_uchar_t ui8;
-
-typedef ll_short_t i16;
-typedef ll_ushort_t ui16;
-typedef ll_int_t i32;
-typedef ll_uint_t ui32;
-
-#if defined(__x86_64__) && !defined(__ILP32__)
-typedef ll_long_t i64;
-typedef ll_ulong_t ui64;
-#else
-typedef ll_longlong_t i64;
-typedef ll_ulonglong_t ui64;
-#endif
-
-typedef float f32;
-typedef double f64;
-//typedef long double f64;
-typedef ll_uint128_t uint128;
-typedef ll_uint128_t ui128;
 
 #pragma endregion
 

@@ -5,8 +5,8 @@
  *      Author: llanyro
  */
 
-#ifndef LLPC_HEADER_LLEXPRESIONS_HPP_
-#define LLPC_HEADER_LLEXPRESIONS_HPP_
+#ifndef LLCPP_HEADER_LLEXPRESIONS_HPP_
+#define LLCPP_HEADER_LLEXPRESIONS_HPP_
 
 #include "llanytypeslib.hpp"
 
@@ -113,4 +113,4 @@ constexpr ll_string_t DLL_EXTENSION_STR = ".os";
 } /* namespace header */
 } /* namespace llcpp */
 
-#endif /* LLPC_HEADER_LLEXPRESIONS_HPP_ */
+#endif /* LLCPP_HEADER_LLEXPRESIONS_HPP_ */

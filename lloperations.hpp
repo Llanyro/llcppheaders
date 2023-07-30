@@ -5,8 +5,8 @@
  *      Author: llanyro
  */
 
-#ifndef LLPC_HEADER_LLOPERATIONS_HPP_
-#define LLPC_HEADER_LLOPERATIONS_HPP_
+#ifndef LLCPP_HEADER_LLOPERATIONS_HPP_
+#define LLCPP_HEADER_LLOPERATIONS_HPP_
 
 #include "llanytypeslib.hpp"
 
@@ -58,4 +58,4 @@ ll_bool_t compareBool(const void* a, const void* b) {
 
 namespace op = llcpp::header::operations;
 
-#endif /* LLPC_HEADER_LLOPERATIONS_HPP_ */
+#endif /* LLCPP_HEADER_LLOPERATIONS_HPP_ */

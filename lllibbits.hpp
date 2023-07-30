@@ -5,8 +5,8 @@
  *      Author: llanyro
  */
 
-#ifndef LLPC_HEADER_LLLIBBITS_H_
-#define LLPC_HEADER_LLLIBBITS_H_
+#ifndef LLCPP_HEADER_LLLIBBITS_H_
+#define LLCPP_HEADER_LLLIBBITS_H_
 
 #include "llanytypeslib.hpp"
 
@@ -43,4 +43,4 @@ constexpr ui8 BITARRAY_LEN = 8;
 
 namespace bits = llcpp::header::bit;
 
-#endif /* LLPC_HEADER_LLLIBBITS_H_ */
+#endif /* LLCPP_HEADER_LLLIBBITS_H_ */

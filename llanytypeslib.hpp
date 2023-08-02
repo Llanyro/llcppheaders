@@ -195,7 +195,6 @@ struct StrPair {
 
 /// Win dll
 #if defined(WINDOWS_SYSTEM)
-    //#define LL_DLL_BUILD
     #if defined(LL_DLL_BUILD)
         #define LL_SHARED_LIB __declspec(dllexport)
     #else

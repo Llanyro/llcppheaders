@@ -31,7 +31,7 @@ long long	Bytes 8 : -9,223,372,036,854,775,808 to 9,223,372,036,854,775,808	-> 1
 32 & 64 bits
 float		Bytes 4 :
 double		Bytes 8 : 
-long double	Bytes 16: �?
+long double	Bytes 16:
 */
 
 // Signed

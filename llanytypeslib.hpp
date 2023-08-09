@@ -248,4 +248,15 @@ typedef ll_ulong_t ll_pid_t;
 typedef int ll_pid_t;
 #endif
 
+namespace llcpp {
+namespace header {
+
+template<class T2, class T>
+ll_bool_t isSubType(const T* v) {
+    return (dynamic_cast<const T2*>(v) != LL_NULLPTR);
+}
+
+} /* namespace header */
+} /* namespace llcpp */
+
 #endif /* LLCPP_HEADER_LLANYTYPESLIB_HPP_ */

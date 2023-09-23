@@ -192,7 +192,7 @@ enum class ASCII_224 {
     ArrowUp = 72,
     ArrowDown = 80,
     ArrowLeft = 75,
-    ArrowUpRight = 77,
+    ArrowRight = 77,
     Undefined,
 };
 
@@ -351,7 +351,7 @@ enum class ASCII {
     ArrowUp,
     ArrowDown,
     ArrowLeft,
-    ArrowUpRight,
+    ArrowRight,
 #pragma endregion
 
     Undefined,

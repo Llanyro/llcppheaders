@@ -189,10 +189,10 @@ enum class ASCII_0 {
     Undefined,
 };
 enum class ASCII_224 {
-    ArrowUp = 0,
-    ArrowDown = 0,
-    ArrowLeft = 0,
-    ArrowUpRight = 0,
+    ArrowUp = 72,
+    ArrowDown = 80,
+    ArrowLeft = 75,
+    ArrowUpRight = 77,
     Undefined,
 };
 

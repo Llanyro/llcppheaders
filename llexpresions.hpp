@@ -197,7 +197,6 @@ enum class ASCII_224 {
 };
 
 enum class ASCII {
-#pragma region AsciiBase
     //control characters
     _NULL,                                           // NULL
     SOH,                                             // Start of Heading
@@ -343,17 +342,17 @@ enum class ASCII {
     TILDE,                                           // ~
 
     DEL,                                             // Delete
-#pragma endregion
-#pragma region Ascii0
 
-#pragma endregion
-#pragma region Ascii224
+    // Ascii0
+
+    // Ascii224
     ArrowUp,
     ArrowDown,
     ArrowLeft,
     ArrowRight,
-#pragma endregion
 
+
+    // None
     Undefined,
 };
 

@@ -186,6 +186,16 @@ enum class ASCII_Base {
 };
 
 enum class ASCII_0 {
+    F1 = 59,
+    F2 = 60,
+    F3 = 61,
+    F4 = 62,
+    F5 = 63,
+    F6 = 64,
+    F7 = 65,
+    F8 = 66,
+    F9 = 67,
+    F10 = 68,
     Undefined,
 };
 enum class ASCII_224 {
@@ -193,11 +203,13 @@ enum class ASCII_224 {
     ArrowDown = 80,
     ArrowLeft = 75,
     ArrowRight = 77,
+    F11 = 133,
+    F12 = 134,
     Undefined,
 };
 
 enum class ASCII {
-    //control characters
+#pragma region ControlCharacters
     _NULL,                                           // NULL
     SOH,                                             // Start of Heading
     STX,                                             // Start of Text
@@ -230,9 +242,8 @@ enum class ASCII {
     GS,                                              // Group Separator
     RS,                                              // Record Separator
     US,                                              // Unit Separator
-
-    //misc characters				                 
-
+#pragma endregion
+#pragma region MiscCharacters
     SPACE,                                           // space
     EXCLAMAION_MARK,                                 // !
     QUOTATION_MARK_DOUBLE,                           // "
@@ -266,9 +277,8 @@ enum class ASCII {
     GREATER_THAN,                                    // >
     QUESTION_MARK,                                   // ?
     SING_AT,                                         // @
-
-    //upper case alphabet			                 
-
+#pragma endregion
+#pragma region UpperCaseAlphabet
     A_UPPER,                                         // A
     B_UPPER,                                         // B
     C_UPPER,                                         // C
@@ -295,18 +305,16 @@ enum class ASCII {
     X_UPPER,                                         // X
     Y_UPPER,                                         // Y
     Z_UPPER,                                         // Z
-
-    //misc characters				                 
-
+#pragma endregion
+#pragma region MiscCharacters				                 
     BRACKET_OPEN,                                    // [
     SLASH_BACKWARD,                                  // \ 
     BRACKET_CLOSE,                                   // ]
     CARET,                                           // ^
     UNDERSCORE,                                      // _
     GRAVE_ACCENT,                                    // ` 
-
-    //lower case alphabet			                 
-
+#pragma endregion
+#pragma region LowerCaseAlphabet
     A_LOWER,                                         // a
     B_LOWER,                                         // b
     C_LOWER,                                         // c
@@ -333,24 +341,36 @@ enum class ASCII {
     X_LOWER,                                         // x
     Y_LOWER,                                         // y
     Z_LOWER,                                         // z
-
-    //misc characters				                 
-
+#pragma endregion
+#pragma region MiscCharacters				                 
     BRACKET_CURLY_OPEN,                              // {
     VERTICAL_BAR,                                    // |
     BRACKET_CURLY_CLOSE,                             // }
     TILDE,                                           // ~
-
+#pragma endregion
     DEL,                                             // Delete
+#pragma region Ascii0
+    F1,
+    F2,
+    F3,
+    F4,
+    F5,
+    F6,
+    F7,
+    F8,
+    F9,
+    F10,
 
-    // Ascii0
-
-    // Ascii224
+#pragma endregion
+#pragma region Ascii224
     ArrowUp,
     ArrowDown,
     ArrowLeft,
     ArrowRight,
+    F11,
+    F12,
 
+#pragma endregion
 
     // None
     Undefined,

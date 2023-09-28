@@ -71,6 +71,7 @@ typedef ll_ulonglong_t ll_uint64_t;
 #endif
 
 typedef std::pair<ll_uint64_t, ll_uint64_t> ll_uint128_t;
+typedef std::pair<ll_int64_t, ll_int64_t> ll_int128_t;
 #pragma endregion
 
 // More like rust
@@ -96,6 +97,8 @@ typedef double f64;
 //typedef long double f64;
 typedef ll_uint128_t uint128;
 typedef ll_uint128_t ui128;
+typedef ll_int128_t int128;
+typedef ll_int128_t i128;
 
 #pragma endregion
 

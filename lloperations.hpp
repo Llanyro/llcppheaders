@@ -15,23 +15,23 @@ namespace header {
 namespace operations {
 
 template<class T>
-T min(const T v1, const T v2) { return (v1 > v2) ? v2 : v1; }
+constexpr T min(const T v1, const T v2) { return (v1 > v2) ? v2 : v1; }
 template<class T>
-T minRef(const T& v1, const T& v2) { return (v1 > v2) ? v2 : v1; }
+constexpr T minRef(const T& v1, const T& v2) { return (v1 > v2) ? v2 : v1; }
 
 template<class T>
-T max(const T v1, const T v2) { return (v1 > v2) ? v1 : v2; }
+constexpr T max(const T v1, const T v2) { return (v1 > v2) ? v1 : v2; }
 template<class T>
-T maxRef(const T& v1, const T& v2) { return (v1 > v2) ? v1 : v2; }
+constexpr T maxRef(const T& v1, const T& v2) { return (v1 > v2) ? v1 : v2; }
 
 
 template<class T>
-T minMax(const T minVal, const T val, const T maxVal) { return min(max(minVal, val),maxVal); }
+constexpr T minMax(const T minVal, const T val, const T maxVal) { return min(max(minVal, val),maxVal); }
 template<class T>
-T minMaxRef(const T& minVal, const T& val, const T& maxVal) { return min(max(minVal, val), maxVal); }
+constexpr T minMaxRef(const T& minVal, const T& val, const T& maxVal) { return min(max(minVal, val), maxVal); }
 
 template<class T, T minVal, T maxVal>
-ll_bool_t isBetween(const T number) {
+constexpr ll_bool_t isBetween(const T number) {
     return (minVal <= number && number <= maxVal);
 }
 
@@ -40,7 +40,7 @@ ll_bool_t isBetween(const T number) {
 *   Works good for basic types
 */
 template<class T>
-i32 comparei32(const void* a, const void* b) {
+constexpr i32 comparei32(const void* a, const void* b) {
     return *reinterpret_cast<const T*>(a) - *reinterpret_cast<const T*>(b);
 }
 /*
@@ -48,9 +48,15 @@ i32 comparei32(const void* a, const void* b) {
 *   Works good for basic types and classes with == operator
 */
 template<class T>
-ll_bool_t compareBool(const void* a, const void* b) {
+constexpr ll_bool_t compareBool(const void* a, const void* b) {
     return *reinterpret_cast<const T*>(a) == *reinterpret_cast<const T*>(b);
 }
+
+template<class T> constexpr T abs(const T& v1, const T& v2) { return 0; }
+template<> constexpr ui64 abs(const ui64& v1, const ui64& v2) { return (v1 > v2) ? v1 - v2 : v2 - v1; }
+template<> constexpr ui128 abs(const ui128& v1, const ui128& v2) { return { abs(v1.first, v2.first), abs(v1.second, v2.second) }; }
+
+
 
 } /* namespace operations */
 } /* namespace header */

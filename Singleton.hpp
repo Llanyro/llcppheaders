@@ -48,12 +48,12 @@ class Singleton {
 		static T* instancia;
 	public:
 		static T* getInstance() {
-			if (Singleton<T>::instancia == LL_NULLPTR)
+			if (!Singleton<T>::instancia)
 				Singleton<T>::instancia = new T();
 			return Singleton<T>::instancia;
 		}
 		static void freeInstance() {
-			if (Singleton<T>::instancia != LL_NULLPTR) {
+			if (Singleton<T>::instancia) {
 				delete Singleton<T>::instancia;
 				Singleton<T>::instancia = LL_NULLPTR;
 			}

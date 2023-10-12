@@ -142,12 +142,12 @@ typedef ui64 ll_hash_t;
 #pragma endregion
 
 #pragma region DEFINES
-#define LL_TRUE true
-#define LL_FALSE false
+constexpr ll_bool_t LL_TRUE = true;
+constexpr ll_bool_t LL_FALSE = false;
 #define LL_NULLPTR nullptr
-#define TRUE_STRING "True"
-#define FALSE_STRING "False"
-#define GET_BOOL_STR(a) ((a) ? TRUE_STRING : FALSE_STRING)
+constexpr ll_string_t TRUE_STRING = "True";
+constexpr ll_string_t FALSE_STRING = "False";
+constexpr ll_bool_t GET_BOOL_STR(const ll_bool_t a) { return a ? TRUE_STRING : FALSE_STRING; }
 
 #pragma endregion
 
@@ -255,7 +255,7 @@ namespace llcpp {
 namespace header {
 
 template<class T2, class T>
-ll_bool_t isSubType(const T* v) {
+constexpr ll_bool_t isSubType(const T* v) {
     return (dynamic_cast<const T2*>(v) != LL_NULLPTR);
 }
 

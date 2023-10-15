@@ -10,6 +10,62 @@
 
 #include <utility>
 #include <type_traits>
+#include <functional>
+
+#pragma region IncludesByDefines
+
+#if defined(_DEBUG)
+#include <assert.h>
+#else
+#define assert
+#endif // _DEBUG
+
+#pragma endregion
+
+#if defined(_WIN32) or defined(_WIN64)
+#define WINDOWS_SYSTEM
+#endif // _WIN32
+
+
+/// Win dll
+#if defined(WINDOWS_SYSTEM)
+    #if defined(LL_DLL_BUILD)
+        #define LL_SHARED_LIB __declspec(dllexport)
+    #else
+        //#define LL_SHARED_LIB __declspec(dllimport)
+    #endif
+#endif // WINDOWS_SYSTEM
+
+// If we are not in windows, we dont need to export anything
+#if !defined(LL_SHARED_LIB)
+    #define LL_SHARED_LIB
+#endif // LL_SHARED_LIB
+
+// Disables del pesao de windows
+#if defined(WINDOWS_SYSTEM)
+#pragma warning(disable:6029)
+
+#pragma warning(disable:6011)
+#pragma warning(disable:6387)
+#pragma warning(disable:4996)
+
+
+#pragma warning(disable:4251)
+#pragma warning(disable:4244)
+#pragma warning(disable:6031)
+
+// Socket
+#pragma warning(disable:4309)
+#pragma warning(disable:4477)
+#pragma warning(disable:26439)
+
+// Wall
+#pragma warning(disable:4464)
+
+#endif // defined(WINDOWS_SYSTEM)
+
+
+namespace llcpp {
 
 #pragma region GeneralTypes
 
@@ -151,17 +207,8 @@ constexpr ll_bool_t GET_BOOL_STR(const ll_bool_t a) { return a ? TRUE_STRING : F
 
 #pragma endregion
 
-#pragma region IncludesByDefines
-
-#if defined(_DEBUG)
-#include <assert.h>
-#else
-#define assert
-#endif // _DEBUG
-
-#pragma endregion
-
 #pragma region TypesFunctions
+#pragma region c
 typedef i32 (*i32Compare)(const void*, const void*);
 typedef ll_bool_t (*boolCompare)(const void*, const void*);
 typedef i32 (*i32CompareChar)(const char*, const char*);
@@ -178,7 +225,12 @@ typedef i32 (*i32CompareChar)(const char*, const char*);
 *	So this function poposes a solution, a third data, that can contains an struct or other data (int, char, ...)
 */
 typedef i32 (*i32CompareExtra)(const void*, const void*, void*);
+#pragma endregion
+#pragma region cpp
+template<class T> using SearchFunctioni32 = std::function<i32(const T&)>;
+template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T&)>;
 
+#pragma endregion
 #pragma endregion
 
 #pragma region Structs
@@ -190,76 +242,17 @@ struct StrPair {
 
 #pragma endregion
 
-
-#if defined(_WIN32) or defined(_WIN64)
-#define WINDOWS_SYSTEM
-#endif // _WIN32
-
-
-/// Win dll
-#if defined(WINDOWS_SYSTEM)
-    #if defined(LL_DLL_BUILD)
-        #define LL_SHARED_LIB __declspec(dllexport)
-    #else
-        //#define LL_SHARED_LIB __declspec(dllimport)
-    #endif
-#endif // WINDOWS_SYSTEM
-
-// If we are not in windows, we dont need to export anything
-#if !defined(LL_SHARED_LIB)
-    #define LL_SHARED_LIB
-#endif // LL_SHARED_LIB
-
-/*
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
-
-#ifdef __cplusplus
-}
-#endif // __cplusplus
-*/
-
-// Disables del pesao de windows
-#if defined(WINDOWS_SYSTEM)
-#pragma warning(disable:6029)
-
-#pragma warning(disable:6011)
-#pragma warning(disable:6387)
-#pragma warning(disable:4996)
-
-
-#pragma warning(disable:4251)
-#pragma warning(disable:4244)
-#pragma warning(disable:6031)
-
-// Socket
-#pragma warning(disable:4309)
-#pragma warning(disable:4477)
-#pragma warning(disable:26439)
-
-// Wall
-#pragma warning(disable:4464)
-
-
-#endif // defined(WINDOWS_SYSTEM)
-
 #if defined(WINDOWS_SYSTEM)
 typedef ll_ulong_t ll_pid_t;
 #elif defined(__unix__)
 typedef int ll_pid_t;
 #endif
 
-namespace llcpp {
-namespace header {
-
 template<class T2, class T>
 constexpr ll_bool_t isSubType(const T* v) {
     return (dynamic_cast<const T2*>(v) != LL_NULLPTR);
 }
 
-} /* namespace header */
 } /* namespace llcpp */
 
 #endif /* LLCPP_HEADER_LLANYTYPESLIB_HPP_ */

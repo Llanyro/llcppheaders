@@ -10,11 +10,11 @@
 
 #include "llanytypeslib.hpp"
 
+namespace llcpp {
 typedef ll_uchar_t ll_bitarray_t;
 typedef ll_uchar_t ll_bits_t;
 typedef ll_uchar_t ll_byte_t;
-
-namespace llcpp {
+	
 namespace header {
 namespace bit {
 

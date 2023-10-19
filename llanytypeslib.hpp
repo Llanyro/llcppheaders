@@ -9,8 +9,8 @@
 #define LLCPP_HEADER_LLANYTYPESLIB_HPP_
 
 #include <utility>
-#include <type_traits>
 #include <functional>
+#include <type_traits>
 
 #pragma region IncludesByDefines
 
@@ -22,10 +22,10 @@
 
 #pragma endregion
 
+#pragma region OS
 #if defined(_WIN32) or defined(_WIN64)
 #define WINDOWS_SYSTEM
 #endif // _WIN32
-
 
 /// Win dll
 #if defined(WINDOWS_SYSTEM)
@@ -63,6 +63,8 @@
 #pragma warning(disable:4464)
 
 #endif // defined(WINDOWS_SYSTEM)
+
+#pragma endregion
 
 
 namespace llcpp {
@@ -197,16 +199,6 @@ typedef ui64 ll_hash_t;
 
 #pragma endregion
 
-#pragma region DEFINES
-constexpr ll_bool_t LL_TRUE = true;
-constexpr ll_bool_t LL_FALSE = false;
-#define LL_NULLPTR nullptr
-constexpr ll_string_t TRUE_STRING = "True";
-constexpr ll_string_t FALSE_STRING = "False";
-constexpr ll_bool_t GET_BOOL_STR(const ll_bool_t a) { return a ? TRUE_STRING : FALSE_STRING; }
-
-#pragma endregion
-
 #pragma region TypesFunctions
 #pragma region c
 typedef i32 (*i32Compare)(const void*, const void*);
@@ -233,6 +225,17 @@ template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T&)>;
 #pragma endregion
 #pragma endregion
 
+#pragma region Definitions
+constexpr ll_bool_t LL_TRUE = true;
+constexpr ll_bool_t LL_FALSE = false;
+#define LL_NULLPTR nullptr
+
+constexpr ll_string_t TRUE_STRING = "True";
+constexpr ll_string_t FALSE_STRING = "False";
+
+#pragma endregion
+
+
 #pragma region Structs
 
 struct StrPair {
@@ -242,6 +245,19 @@ struct StrPair {
 
 #pragma endregion
 
+
+#pragma region Expression
+#define PAIR_STR(str) StrPair{str, sizeof(str) - 1}
+
+constexpr ll_string_t TRUE_STRING = "True";
+constexpr ll_string_t FALSE_STRING = "False";
+
+constexpr StrPair TRUE_STR_PAIR = PAIR_STR("True");
+constexpr StrPair FALSE_STR_PAIR = PAIR_STR("False");
+
+#pragma endregion
+
+
 #if defined(WINDOWS_SYSTEM)
 typedef ll_ulong_t ll_pid_t;
 #elif defined(__unix__)
@@ -249,9 +265,11 @@ typedef int ll_pid_t;
 #endif
 
 template<class T2, class T>
-constexpr ll_bool_t isSubType(const T* v) {
-    return (dynamic_cast<const T2*>(v) != LL_NULLPTR);
-}
+constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) != LL_NULLPTR); }
+//constexpr ll_bool_t GET_BOOL_STR(const ll_bool_t a) { return a ? TRUE_STRING : FALSE_STRING; }
+constexpr ll_string_t getBoolString(const ll_bool_t a) { return a ? TRUE_STRING : FALSE_STRING; }
+constexpr const StrPair& getBoolStringPair(const ll_bool_t a) { return a ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
+
 
 } /* namespace llcpp */
 

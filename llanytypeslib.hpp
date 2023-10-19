@@ -266,7 +266,6 @@ typedef int ll_pid_t;
 
 template<class T2, class T>
 constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) != LL_NULLPTR); }
-//constexpr ll_bool_t GET_BOOL_STR(const ll_bool_t a) { return a ? TRUE_STRING : FALSE_STRING; }
 constexpr ll_string_t getBoolString(const ll_bool_t a) { return a ? TRUE_STRING : FALSE_STRING; }
 constexpr const StrPair& getBoolStringPair(const ll_bool_t a) { return a ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
 

@@ -230,9 +230,6 @@ constexpr ll_bool_t LL_TRUE = true;
 constexpr ll_bool_t LL_FALSE = false;
 #define LL_NULLPTR nullptr
 
-constexpr ll_string_t TRUE_STRING = "True";
-constexpr ll_string_t FALSE_STRING = "False";
-
 #pragma endregion
 
 

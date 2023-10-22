@@ -237,7 +237,7 @@ constexpr ll_bool_t LL_FALSE = false;
 
 struct StrPair {
     ll_string_t str = LL_NULLPTR;
-    const len_t len = 0;
+    len_t len = 0;
 };
 
 #pragma endregion

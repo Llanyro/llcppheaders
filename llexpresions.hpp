@@ -36,7 +36,13 @@ constexpr ui8 JEAII_ALGORITHM_BUFFER_SIZE = 10;
 } /* namespace buffers */
 namespace ascii {
 constexpr ui8 MAYUS_MINUS_DIFF = 'a' - 'A';
-constexpr StrPair VISIBLE_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+constexpr StrPair ALPHABET_MINUS_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyz");
+constexpr StrPair ALPHABET_MAYUS_CHARS = PAIR_STR("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+constexpr StrPair ALPHABET_NUMS_CHARS = PAIR_STR("0123456789");
+constexpr StrPair ALPHABET_MAYUS_MINUS_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+constexpr StrPair ALPHABET_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+constexpr StrPair SPECIAL_CHARS = PAIR_STR("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
+constexpr StrPair ALL_VISIBLE_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 
 
 enum class ASCII_Base {

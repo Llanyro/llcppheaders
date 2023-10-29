@@ -25,6 +25,12 @@
 #pragma region OS
 #if defined(_WIN32) or defined(_WIN64)
 #define WINDOWS_SYSTEM
+#elif defined(__unix__)
+#if defined(__linux__)
+#define POSIX_SYSTEM
+#else
+#define UNIX_SYSTEM
+#endif // 
 #endif // _WIN32
 
 /// Win dll
@@ -160,7 +166,30 @@ typedef ll_int128_t i128;
 
 #pragma endregion
 
+#pragma region OSTypes
+#if defined(WINDOWS_SYSTEM)
+typedef ll_ulong_t ll_pid_t;
+typedef ui32 ll_socket_t;
+typedef void* WindowsHandle;
+
+typedef WindowsHandle ll_share_memory_handle_t;
+
+#define INVALID_HANDLE_VALUE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
+#define INVALID_SHARE_HANDLE INVALID_HANDLE_VALUE
+#elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
+typedef i32 ll_pid_t;
+typedef i32 ll_socket_t;
+
+
+typedef i32 ll_share_memory_handle_t;
+
+constexpr ll_socket_t INVALID_SOCKET = -1;
+constexpr ll_share_memory_handle_t INVALID_SHARE_HANDLE = -1;
+#endif
+#pragma endregion
+
 #pragma region NonGeneralTypes1
+#pragma region Bytes
 typedef ll_uchar_t hex;		// Usado para guardar el valor numerico de un Hexadecimal
 
 typedef ll_uint64_t len_t; 		// Usado para posiciones de listas y tamanios de listas -> es decir: cantidades de datos
@@ -180,6 +209,7 @@ typedef size_bytes64_t b64;		// Use to count number of bytes in ui64
 
 typedef ll_char_t ll_bytes_t;
 typedef ll_uchar_t ll_ubytes_t;
+#pragma endregion
 
 typedef ll_int8_t ll_singleton_priority_t;
 typedef ll_singleton_priority_t ll_singleton_prio_t;
@@ -196,6 +226,9 @@ typedef void* ll_lib_t;
 
 // Standard value hash
 typedef ui64 ll_hash_t;
+
+// Type for share memory handle
+typedef ll_share_memory_handle_t ll_share_t;
 
 #pragma endregion
 
@@ -255,18 +288,112 @@ constexpr StrPair FALSE_STR_PAIR = PAIR_STR("False");
 #pragma endregion
 
 
-#if defined(WINDOWS_SYSTEM)
-typedef ll_ulong_t ll_pid_t;
-#elif defined(__unix__)
-typedef int ll_pid_t;
-#endif
 
+
+
+
+/*!
+*	@brief Check if type inherits from other class
+*
+*	@param[in] v Pointer of class to check
+*
+*	@return If class T inherits from T2 true sis returned
+*
+*	@constexpr True
+*
+*	@thread_safety This function may be called from any thread.
+*
+*	@sa @ref llcpp
+*
+*	@since Added in version 1.0.
+*
+*	@ingroup llcpp
+*/
 template<class T2, class T>
 constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) != LL_NULLPTR); }
-constexpr ll_string_t getBoolString(const ll_bool_t a) { return a ? TRUE_STRING : FALSE_STRING; }
-constexpr const StrPair& getBoolStringPair(const ll_bool_t a) { return a ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
+/*!
+*	@brief Gets a string of a bool
+* 
+*   Gives a user a string that represents the bool provided
+*   true will be : "True"
+*   false will be: "False"
+*
+*	@param[in] v Bool value
+*
+*	@return String that represents bool value
+*
+*	@constexpr True
+*
+*	@thread_safety This function may be called from any thread.
+*
+*	@sa @ref llcpp
+*
+*	@since Added in version 1.0.
+*
+*	@ingroup llcpp
+*/
+constexpr ll_string_t getBoolString(const ll_bool_t v) { return v ? TRUE_STRING : FALSE_STRING; }
+/*!
+*	@brief Gets a StrPair of a bool
+*
+*   Gives a user a string that represents the bool provided
+*   true will be : { "True", 4 }
+*   false will be: { "False", 5 }
+*
+*	@param[in] v Bool value
+*
+*	@return StrPair that represents bool value
+*
+*	@constexpr True
+*
+*	@thread_safety This function may be called from any thread.
+*
+*	@sa @ref llcpp
+*
+*	@since Added in version 1.0.
+*
+*	@ingroup llcpp
+*/
+constexpr const StrPair& getBoolStringPair(const ll_bool_t v) { return v ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
 
+namespace enums {
 
+/*!
+*	@brief Casts an enum to given type
+*
+*   This is the same to do as static_cast<T>
+*
+*	@param[in] enumValue Enum value to cast
+*
+*	@constexpr True
+*
+*	@return Value as type provided
+*
+*	@thread_safety This function may be called from any thread.
+*
+*	@sa @ref llcpp
+*
+*	@since Added in version 1.0.
+*
+*	@ingroup llcpp
+*	@ingroup enums
+*/
+template<class ValueType, class EnumClass>
+constexpr ValueType asType(const EnumClass enumValue) {
+    return static_cast<ValueType>(enumValue);
+}
+
+//template<class ValueType, class EnumClass, class... EnumClasses>
+//constexpr ValueType enumOrOperation() {
+//    return ValueType();
+//}
+
+//template<class ValueType, class EnumClass, class... EnumClasses>
+//constexpr ValueType enumOrOperation(const EnumClass _enum, const EnumClasses... _enums) {
+//    return asType<ValueType, EnumClass>(_enum) | enumOrOperation<ValueType, EnumClass, EnumClasses...>(_enums...);
+//}
+
+} /* namespace enums */
 } /* namespace llcpp */
 
 #endif /* LLCPP_HEADER_LLANYTYPESLIB_HPP_ */

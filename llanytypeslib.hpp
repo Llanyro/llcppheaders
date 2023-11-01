@@ -174,8 +174,8 @@ typedef void* WindowsHandle;
 
 typedef WindowsHandle ll_share_memory_handle_t;
 
-#define INVALID_HANDLE_VALUE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
-#define INVALID_SHARE_HANDLE INVALID_HANDLE_VALUE
+//#define INVALID_HANDLE_VALUE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
+#define INVALID_SHARE_HANDLE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 typedef i32 ll_pid_t;
 typedef i32 ll_socket_t;

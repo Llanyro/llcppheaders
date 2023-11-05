@@ -14,12 +14,12 @@ namespace header {
 namespace singleton {
 
 /*
-	#pragma region Singleton
 	private:
+		#pragma region Singleton
 		friend class Singleton<class>;
 		class();
 		~class();
-	#pragma endregion
+		#pragma endregion
 */
 
 namespace static_ {
@@ -30,9 +30,9 @@ class Singleton {
 		Singleton() {}
 		~Singleton() {}
 	public:
-		static T* getInstance() {
+		static T& getInstance() noexcept {
 			static T instance;
-			return &instance;
+			return instance;
 		}
 };
 
@@ -45,25 +45,24 @@ class Singleton {
 	protected:
 		Singleton() {}
 		~Singleton() {}
-		static T* instancia;
+		static T* instance;
 	public:
-		static T* getInstance() {
-			if (!Singleton<T>::instancia)
-				Singleton<T>::instancia = new T();
-			return Singleton<T>::instancia;
+		static T& getInstance() noexcept {
+			if (!Singleton<T>::instance)
+				Singleton<T>::instance = new T();
+			return *Singleton<T>::instance;
 		}
-		static void freeInstance() {
-			if (Singleton<T>::instancia) {
-				delete Singleton<T>::instancia;
-				Singleton<T>::instancia = LL_NULLPTR;
+		static void freeInstance() noexcept {
+			if (Singleton<T>::instance) {
+				delete Singleton<T>::instance;
+				Singleton<T>::instance = LL_NULLPTR;
 			}
 		}
-		virtual ll_bool_t clear() { return LL_FALSE; };
 };
 
 #pragma region Singleton
 template <class T>
-T* Singleton<T>::instancia = LL_NULLPTR;
+T* Singleton<T>::instance = LL_NULLPTR;
 #pragma endregion
 
 } /* namespace dynamic */

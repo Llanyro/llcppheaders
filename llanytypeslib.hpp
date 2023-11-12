@@ -14,7 +14,7 @@
 
 #pragma region IncludesByDefines
 
-#if defined(_DEBUG)
+#if defined(_DEBUG_)
 #include <assert.h>
 #else
 #define assert
@@ -218,51 +218,49 @@ typedef size_bytes64_t b64;	    // Used to count bytes
 
 namespace llcpp {
 
-// Common structures in lib
-#pragma region StringPair
 // Stores a string
-struct StrPair {
-    ll_string_t str;
-    len_t len;
+class StrPair {
+    public:
+        ll_string_t str;
+        len_t len;
 
-    constexpr StrPair(ll_string_t str, const len_t len) : str(str), len(len) {}
-    StrPair(const StrPair& other) : str(other.str), len(other.len) {}
-    StrPair(StrPair&& other) : str(other.str), len(other.len) { other.clear(); }
-    StrPair& operator=(const StrPair& other) {
-        this->len = other.len;
-        this->str = other.str;
-        return *this;
-    }
-    StrPair& operator=(StrPair&& other) {
-        this->len = other.len;
-        this->str = other.str;
-        other.clear();
-        return *this;
-    }
+        constexpr StrPair() : str(nullptr), len(0ull) {}
+        constexpr StrPair(ll_string_t str, const len_t len) : str(str), len(len) {}
+        StrPair(const StrPair& other) : str(other.str), len(other.len) {}
+        StrPair(StrPair&& other) : str(other.str), len(other.len) { other.clear(); }
+        StrPair& operator=(const StrPair& other) {
+            this->len = other.len;
+            this->str = other.str;
+            return *this;
+        }
+        StrPair& operator=(StrPair&& other) {
+            this->len = other.len;
+            this->str = other.str;
+            other.clear();
+            return *this;
+        }
 
-    _NODISCARD ll_bool_t operator==(ll_string_t str) const {
-        return str == this->str;
-    }
-    _NODISCARD ll_bool_t operator==(const StrPair& str) const {
-        return
-            this->str == str.str &&
-            this->len == str.len;
-    }
-    _NODISCARD ll_bool_t operator!=(ll_string_t str) const {
-        return !this->operator==(str);
-    }
-    _NODISCARD ll_bool_t operator!=(const StrPair& str) const {
-        return !this->operator==(str);
-    }
-    _NODISCARD operator ll_bool_t() const { return this->str && this->len > 0; }
+        _NODISCARD ll_bool_t operator==(ll_string_t str) const {
+            return str == this->str;
+        }
+        _NODISCARD ll_bool_t operator==(const StrPair& str) const {
+            return
+                this->str == str.str &&
+                this->len == str.len;
+        }
+        _NODISCARD ll_bool_t operator!=(ll_string_t str) const {
+            return !this->operator==(str);
+        }
+        _NODISCARD ll_bool_t operator!=(const StrPair& str) const {
+            return !this->operator==(str);
+        }
+        _NODISCARD operator ll_bool_t() const { return this->str && this->len > 0; }
 
-    void clear() {
-        this->len = 0;
-        this->str = nullptr;
-    }
+        void clear() {
+            this->len = 0;
+            this->str = nullptr;
+        }
 };
-
-#pragma endregion
 
 namespace functional {
 
@@ -359,14 +357,58 @@ typedef i32 (*Comparei32Extra)(const void* __a__, const void* __b__, void* __ext
 typedef ll_bool_t (*CompareBoolExtra)(const void* __a__, const void* __b__, void* __extra__);
 
 namespace classic {
-template<class T> using SearchFunctioni32 = i32(*)(const T&, const T&);
-template<class T> using SearchFunctionBool = ll_bool_t(*)(const T&, const T&);
+/*!
+*	@brief Function type to compare 2 objects
+*
+*   This needs to return a value to check if object __a__ is same to object __b__
+*   The implementation of this function needs to return:
+*       0 if both are the same
+*      -1 if __a__ smaller
+*       1 if __a__ is bigger
+* 
+*	@param[in] __a__ First object to compare
+*	@param[in] __b__ Second object to compare
+*
+*	@return Comparacion result
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref comparator
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
+template<class T>
+using SearchFunctioni32 = i32(*)(const T& __a__, const T& __b__);
+/*!
+*	@brief Function type to compare 2 objects
+*
+*	@param[in] __a__ First object to compare
+*	@param[in] __b__ Second object to compare
+*
+*	@return True if __a__ is same as __b__
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref comparator
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
+template<class T>
+using SearchFunctionBool = ll_bool_t(*)(const T& __a__, const T& __b__);
 
 } /* namespace classic */
 
 namespace lambda {
-template<class T> using SearchFunctioni32 = std::function<i32(const T&)>;
-template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T&)>;
+template<class T> using SearchFunctioni32 = std::function<i32(const T& __a__)>;
+template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T& __a__)>;
 
 } /* namespace lambda */
 } /* namespace functional */

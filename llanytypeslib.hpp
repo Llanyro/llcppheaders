@@ -73,8 +73,6 @@
 #pragma endregion
 
 
-namespace llcpp {
-
 #pragma region GeneralTypes
 
 /*
@@ -94,7 +92,7 @@ long long	Bytes 8 : -9,223,372,036,854,775,808 to 9,223,372,036,854,775,808	-> 1
 
 32 & 64 bits
 float		Bytes 4 :
-double		Bytes 8 : 
+double		Bytes 8 :
 long double	Bytes 16:
 */
 
@@ -141,11 +139,11 @@ typedef std::pair<ll_int64_t, ll_int64_t> ll_int128_t;
 // More like rust
 #pragma region Standard
 typedef ll_char_t i8;
-typedef ll_uchar_t ui8;
-
 typedef ll_short_t i16;
-typedef ll_ushort_t ui16;
 typedef ll_int_t i32;
+
+typedef ll_uchar_t ui8;
+typedef ll_ushort_t ui16;
 typedef ll_uint_t ui32;
 
 #if defined(__x86_64__) && !defined(__ILP32__)
@@ -159,125 +157,233 @@ typedef ll_ulonglong_t ui64;
 typedef float f32;
 typedef double f64;
 //typedef long double f64;
-typedef ll_uint128_t uint128;
+
 typedef ll_uint128_t ui128;
-typedef ll_int128_t int128;
 typedef ll_int128_t i128;
 
 #pragma endregion
 
+// Types by OS
 #pragma region OSTypes
 #if defined(WINDOWS_SYSTEM)
+// Process ID
 typedef ll_ulong_t ll_pid_t;
+// Socket descriptor
 typedef ui32 ll_socket_t;
+// Generic Handle in windows
 typedef void* WindowsHandle;
 
+// Handle in share memory module
 typedef WindowsHandle ll_share_memory_handle_t;
 
 //#define INVALID_HANDLE_VALUE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
 #define INVALID_SHARE_HANDLE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
+// Process ID
 typedef i32 ll_pid_t;
+// Socket descriptor
 typedef i32 ll_socket_t;
 
 
+// Handle in share memory module
 typedef i32 ll_share_memory_handle_t;
 
+// Value of invalid socket
 constexpr ll_socket_t INVALID_SOCKET = -1;
+// Value of invalid share memory handle
 constexpr ll_share_memory_handle_t INVALID_SHARE_HANDLE = -1;
 #endif
 #pragma endregion
 
+// Lib types or rename types
 #pragma region NonGeneralTypes1
-#pragma region Bytes
-typedef ll_uchar_t hex;		// Usado para guardar el valor numerico de un Hexadecimal
+typedef ui64 len_t;     // Used to cound things (natural number)
 
-typedef ll_uint64_t len_t; 		// Usado para posiciones de listas y tamanios de listas -> es decir: cantidades de datos
-typedef ll_uint32_t medlen_t; 	// Usado para posiciones de listas y tamanios de listas -> es decir: cantidades de datos
+typedef const ll_char_t* ll_string_t;       // Used to point to non editable strings
+typedef const ll_uchar_t* ll_ustring_t;     // Used to point to non editable unsigned strings
+
 
 /// Tipos para control de bytes
-typedef ll_uint8_t size_bytes8_t;	// Used to store the size of a object or memory
-typedef ll_uint16_t size_bytes16_t;	// Used to store the size of a object or memory
-typedef ll_uint32_t size_bytes32_t;	// Used to store the size of a object or memory
-typedef ll_uint64_t size_bytes64_t;	// Used to store the size of a object or memory
+typedef ui8 size_bytes8_t;      // Used to count bytes
+typedef ui16 size_bytes16_t;	// Used to count bytes
+typedef ui32 size_bytes32_t;	// Used to count bytes
+typedef ui64 size_bytes64_t;	// Used to count bytes
 
-typedef size_bytes8_t s_b8_t;	// Used to store the size of a object or memory
-typedef size_bytes16_t s_b16_t;	// Used to store the size of a object or memory
-typedef size_bytes32_t s_b32_t;	// Used to store the size of a object or memory
-typedef size_bytes64_t s_b64_t;	// Used to store the size of a object or memory
-typedef size_bytes64_t b64;		// Use to count number of bytes in ui64
-
-typedef ll_char_t ll_bytes_t;
-typedef ll_uchar_t ll_ubytes_t;
-#pragma endregion
-
-typedef ll_int8_t ll_singleton_priority_t;
-typedef ll_singleton_priority_t ll_singleton_prio_t;
-
-typedef void* ll_any_t;
-
-//typedef char const* const ll_constchar_t;
-//typedef void ll_void_t;
-typedef const ll_char_t* ll_string_t;
-typedef const ll_uchar_t* ll_ustring_t;
-
-// For pointer to libs (Handle)
-typedef void* ll_lib_t;
-
-// Standard value hash
-typedef ui64 ll_hash_t;
-
-// Type for share memory handle
-typedef ll_share_memory_handle_t ll_share_t;
+typedef size_bytes8_t b8;	    // Used to count bytes
+typedef size_bytes16_t b16;	    // Used to count bytes
+typedef size_bytes32_t b32;	    // Used to count bytes
+typedef size_bytes64_t b64;	    // Used to count bytes
 
 #pragma endregion
 
-#pragma region TypesFunctions
-#pragma region c
-typedef i32 (*i32Compare)(const void*, const void*);
-typedef ll_bool_t (*boolCompare)(const void*, const void*);
-typedef i32 (*i32CompareChar)(const char*, const char*);
-/*
-* History and information
-* This function inheritances from Compare_int (now i32Compare)
-*	Compare_int is a function of general comparations
-*	Compare_int compares 2 objects and return a int
-*		0 -> Same item
-*		1 -> a > b
-*	   -1 -> a < b
-*	That means, that this function compares 2 items
-*	But sometimes is not enough, sometimes we need more data
-*	So this function poposes a solution, a third data, that can contains an struct or other data (int, char, ...)
-*/
-typedef i32 (*i32CompareExtra)(const void*, const void*, void*);
-#pragma endregion
-#pragma region cpp
-template<class T> using SearchFunctioni32 = std::function<i32(const T&)>;
-template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T&)>;
+namespace llcpp {
 
-#pragma endregion
-#pragma endregion
-
-#pragma region Definitions
-constexpr ll_bool_t LL_TRUE = true;
-constexpr ll_bool_t LL_FALSE = false;
-#define LL_NULLPTR nullptr
-
-#pragma endregion
-
-
-#pragma region Structs
-
+// Common structures in lib
+#pragma region StringPair
+// Stores a string
 struct StrPair {
-    ll_string_t str = LL_NULLPTR;
-    len_t len = 0;
+    ll_string_t str;
+    len_t len;
+
+    constexpr StrPair(ll_string_t str, const len_t len) : str(str), len(len) {}
+    StrPair(const StrPair& other) : str(other.str), len(other.len) {}
+    StrPair(StrPair&& other) : str(other.str), len(other.len) { other.clear(); }
+    StrPair& operator=(const StrPair& other) {
+        this->len = other.len;
+        this->str = other.str;
+        return *this;
+    }
+    StrPair& operator=(StrPair&& other) {
+        this->len = other.len;
+        this->str = other.str;
+        other.clear();
+        return *this;
+    }
+
+    _NODISCARD ll_bool_t operator==(ll_string_t str) const {
+        return str == this->str;
+    }
+    _NODISCARD ll_bool_t operator==(const StrPair& str) const {
+        return
+            this->str == str.str &&
+            this->len == str.len;
+    }
+    _NODISCARD ll_bool_t operator!=(ll_string_t str) const {
+        return !this->operator==(str);
+    }
+    _NODISCARD ll_bool_t operator!=(const StrPair& str) const {
+        return !this->operator==(str);
+    }
+    _NODISCARD operator ll_bool_t() const { return this->str && this->len > 0; }
+
+    void clear() {
+        this->len = 0;
+        this->str = nullptr;
+    }
 };
 
 #pragma endregion
 
+namespace functional {
 
-#pragma region Expression
-#define PAIR_STR(str) StrPair{str, sizeof(str) - 1}
+/*!
+*	@brief Function type to compare 2 objects
+*
+*   This needs to return a value to check if object __a__ is same to object __b__
+*   The implementation of this function needs to return:
+*       0 if both are the same
+*      -1 if __a__ smaller
+*       1 if __a__ is bigger
+* 
+*	@param[in] __a__ First object to compare
+*	@param[in] __b__ Second object to compare
+*
+*	@return Comparacion result
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref comparator
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
+typedef i32 (*Comparei32)(const void* __a__, const void* __b__);
+/*!
+*	@brief Function type to compare 2 objects
+*
+*	@param[in] __a__ First object to compare
+*	@param[in] __b__ Second object to compare
+*
+*	@return True if __a__ is same as __b__
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref comparator
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
+typedef ll_bool_t (*CompareBool)(const void* __a__, const void* __b__);
+
+/*!
+*	@brief Function type to compare 2 objects
+*
+*   This needs to return a value to check if object __a__ is same to object __b__
+*   The implementation of this function needs to return:
+*       0 if both are the same
+*      -1 if __a__ smaller
+*       1 if __a__ is bigger
+* 
+*	@param[in] __a__ First object to compare
+*	@param[in] __b__ Second object to compare
+*	@param[in] __extra__ Extra data to being used by user
+*
+*	@return Comparacion result
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref comparator
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
+typedef i32 (*Comparei32Extra)(const void* __a__, const void* __b__, void* __extra__);
+/*!
+*	@brief Function type to compare 2 objects
+*
+*	@param[in] __a__ First object to compare
+*	@param[in] __b__ Second object to compare
+*	@param[in] __extra__ Extra data to being used by user
+*
+*	@return True if __a__ is same as __b__
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref comparator
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
+typedef ll_bool_t (*CompareBoolExtra)(const void* __a__, const void* __b__, void* __extra__);
+
+namespace classic {
+template<class T> using SearchFunctioni32 = i32(*)(const T&, const T&);
+template<class T> using SearchFunctionBool = ll_bool_t(*)(const T&, const T&);
+
+} /* namespace classic */
+
+namespace lambda {
+template<class T> using SearchFunctioni32 = std::function<i32(const T&)>;
+template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T&)>;
+
+} /* namespace lambda */
+} /* namespace functional */
+
+} /* namespace llcpp */
+
+#pragma region Definitions
+#define LL_NULLPTR nullptr
+#define PAIR_STR(str) llcpp::StrPair{str, sizeof(str) - 1}
+
+#pragma endregion
+
+namespace llcpp {
+
+#pragma region GenralExpresions
+constexpr ll_bool_t LL_TRUE = true;
+constexpr ll_bool_t LL_FALSE = false;
 
 constexpr ll_string_t TRUE_STRING = "True";
 constexpr ll_string_t FALSE_STRING = "False";
@@ -286,11 +392,6 @@ constexpr StrPair TRUE_STR_PAIR = PAIR_STR("True");
 constexpr StrPair FALSE_STR_PAIR = PAIR_STR("False");
 
 #pragma endregion
-
-
-
-
-
 
 /*!
 *	@brief Check if type inherits from other class
@@ -308,12 +409,13 @@ constexpr StrPair FALSE_STR_PAIR = PAIR_STR("False");
 *	@since Added in version 1.0.
 *
 *	@ingroup llcpp
+*	@ingroup headers
 */
 template<class T2, class T>
 constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) != LL_NULLPTR); }
 /*!
 *	@brief Gets a string of a bool
-* 
+*
 *   Gives a user a string that represents the bool provided
 *   true will be : "True"
 *   false will be: "False"
@@ -331,6 +433,7 @@ constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) !
 *	@since Added in version 1.0.
 *
 *	@ingroup llcpp
+*	@ingroup headers
 */
 constexpr ll_string_t getBoolString(const ll_bool_t v) { return v ? TRUE_STRING : FALSE_STRING; }
 /*!
@@ -353,6 +456,7 @@ constexpr ll_string_t getBoolString(const ll_bool_t v) { return v ? TRUE_STRING 
 *	@since Added in version 1.0.
 *
 *	@ingroup llcpp
+*	@ingroup headers
 */
 constexpr const StrPair& getBoolStringPair(const ll_bool_t v) { return v ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
 
@@ -394,6 +498,7 @@ constexpr ValueType asType(const EnumClass enumValue) {
 //}
 
 } /* namespace enums */
+
 } /* namespace llcpp */
 
 #endif /* LLCPP_HEADER_LLANYTYPESLIB_HPP_ */

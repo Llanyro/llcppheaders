@@ -13,6 +13,7 @@
 namespace llcpp {
 namespace header {
 namespace expresions {
+
 namespace bytes {
 
 constexpr b64 bToKb = 1e-3;
@@ -421,10 +422,6 @@ constexpr StrPair BG_CYAN = PAIR_STR("\033[46m");
 constexpr StrPair BG_WHITE = PAIR_STR("\033[47m");
 
 } /* namespace color */
-namespace traits {
-constexpr StrPair INVALID_LAMBDA_RETURN_bool = PAIR_STR("Lambda function must return bool");
-constexpr StrPair INVALID_LAMBDA_RETURN_i32 = PAIR_STR("Lambda function must return i32");
-} /* namespace traits */
 namespace extensions {
 #if defined(WINDOWS_SYSTEM)
 constexpr StrPair DLL_EXTENSION_STR = PAIR_STR(".dll");

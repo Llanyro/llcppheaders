@@ -72,7 +72,6 @@
 
 #pragma endregion
 
-
 #pragma region GeneralTypes
 
 /*
@@ -178,6 +177,8 @@ typedef WindowsHandle ll_share_memory_handle_t;
 
 //#define INVALID_HANDLE_VALUE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
 #define INVALID_SHARE_HANDLE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
+#define __LL_NODISCARD__ _NODISCARD
+
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 // Process ID
 typedef i32 ll_pid_t;
@@ -192,6 +193,11 @@ typedef i32 ll_share_memory_handle_t;
 constexpr ll_socket_t INVALID_SOCKET = -1;
 // Value of invalid share memory handle
 constexpr ll_share_memory_handle_t INVALID_SHARE_HANDLE = -1;
+
+#define __LL_NODISCARD__ _NODISCARD
+#else
+#define __LL_NODISCARD__
+
 #endif
 #pragma endregion
 
@@ -219,7 +225,7 @@ typedef size_bytes64_t b64;	    // Used to count bytes
 namespace llcpp {
 
 // Stores a string
-class StrPair {
+class LL_SHARED_LIB StrPair {
     public:
         ll_string_t str;
         len_t len;
@@ -240,21 +246,21 @@ class StrPair {
             return *this;
         }
 
-        _NODISCARD ll_bool_t operator==(ll_string_t str) const {
+        __LL_NODISCARD__ ll_bool_t operator==(ll_string_t str) const {
             return str == this->str;
         }
-        _NODISCARD ll_bool_t operator==(const StrPair& str) const {
+        __LL_NODISCARD__ ll_bool_t operator==(const StrPair& str) const {
             return
                 this->str == str.str &&
                 this->len == str.len;
         }
-        _NODISCARD ll_bool_t operator!=(ll_string_t str) const {
+        __LL_NODISCARD__ ll_bool_t operator!=(ll_string_t str) const {
             return !this->operator==(str);
         }
-        _NODISCARD ll_bool_t operator!=(const StrPair& str) const {
+        __LL_NODISCARD__ ll_bool_t operator!=(const StrPair& str) const {
             return !this->operator==(str);
         }
-        _NODISCARD operator ll_bool_t() const { return this->str && this->len > 0; }
+        __LL_NODISCARD__ operator ll_bool_t() const { return this->str && this->len > 0; }
 
         void clear() {
             this->len = 0;
@@ -265,6 +271,7 @@ class StrPair {
 namespace functional {
 
 /*!
+*	@template False
 *	@brief Function type to compare 2 objects
 *
 *   This needs to return a value to check if object __a__ is same to object __b__
@@ -290,6 +297,7 @@ namespace functional {
 */
 typedef i32 (*Comparei32)(const void* __a__, const void* __b__);
 /*!
+*	@template False
 *	@brief Function type to compare 2 objects
 *
 *	@param[in] __a__ First object to compare
@@ -310,6 +318,7 @@ typedef i32 (*Comparei32)(const void* __a__, const void* __b__);
 typedef ll_bool_t (*CompareBool)(const void* __a__, const void* __b__);
 
 /*!
+*	@template False
 *	@brief Function type to compare 2 objects
 *
 *   This needs to return a value to check if object __a__ is same to object __b__
@@ -336,6 +345,7 @@ typedef ll_bool_t (*CompareBool)(const void* __a__, const void* __b__);
 */
 typedef i32 (*Comparei32Extra)(const void* __a__, const void* __b__, void* __extra__);
 /*!
+*	@template False
 *	@brief Function type to compare 2 objects
 *
 *	@param[in] __a__ First object to compare
@@ -358,6 +368,7 @@ typedef ll_bool_t (*CompareBoolExtra)(const void* __a__, const void* __b__, void
 
 namespace classic {
 /*!
+*	@template True
 *	@brief Function type to compare 2 objects
 *
 *   This needs to return a value to check if object __a__ is same to object __b__
@@ -384,6 +395,7 @@ namespace classic {
 template<class T>
 using SearchFunctioni32 = i32(*)(const T& __a__, const T& __b__);
 /*!
+*	@template True
 *	@brief Function type to compare 2 objects
 *
 *	@param[in] __a__ First object to compare
@@ -404,11 +416,100 @@ using SearchFunctioni32 = i32(*)(const T& __a__, const T& __b__);
 template<class T>
 using SearchFunctionBool = ll_bool_t(*)(const T& __a__, const T& __b__);
 
+
+
+/*!
+*	@template True
+*	@brief Swaps 2 objects
+*
+*	@param[in] __a__ First object to swap
+*	@param[in] __b__ Second object to swap
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref swap
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
+template<class T>
+using SwapFunction = void(*)(const T& __a__, const T& __b__);
+
 } /* namespace classic */
 
 namespace lambda {
+/*!
+*	@template True
+*	@brief Function type to compare 2 objects
+*
+*   This needs to return a value to check if object __a__ is same to object __b__
+*   The implementation of this function needs to return:
+*       0 if both are the same
+*      -1 if __a__ smaller
+*       1 if __a__ is bigger
+* 
+*	@param[in] __a__ First object to compare
+*	@param[in] __b__ Second object to compare
+*
+*	@return Comparacion result
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref comparator
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
 template<class T> using SearchFunctioni32 = std::function<i32(const T& __a__)>;
+/*!
+*	@template True
+*	@brief Function type to compare 2 objects
+*
+*	@param[in] __a__ First object to compare
+*	@param[in] __b__ Second object to compare
+*
+*	@return True if __a__ is same as __b__
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref comparator
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
 template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T& __a__)>;
+
+
+
+/*!
+*	@template True
+*	@brief Swaps 2 objects
+*
+*	@param[in] __a__ First object to swap
+*	@param[in] __b__ Second object to swap
+*
+*	@thread_safety defined by implementation
+*	@thread_protection defined by implementation
+*
+*	@sa @ref swap
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup llcpp
+*	@ingroup headers
+*/
+template<class T>
+using SwapFunction = std::function<void(T& __a__, T& __b__)>;
+
 
 } /* namespace lambda */
 } /* namespace functional */
@@ -436,6 +537,7 @@ constexpr StrPair FALSE_STR_PAIR = PAIR_STR("False");
 #pragma endregion
 
 /*!
+*	@template True
 *	@brief Check if type inherits from other class
 *
 *	@param[in] v Pointer of class to check
@@ -454,8 +556,9 @@ constexpr StrPair FALSE_STR_PAIR = PAIR_STR("False");
 *	@ingroup headers
 */
 template<class T2, class T>
-constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) != LL_NULLPTR); }
+__LL_NODISCARD__ constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) != LL_NULLPTR); }
 /*!
+*	@template True
 *	@brief Gets a string of a bool
 *
 *   Gives a user a string that represents the bool provided
@@ -477,8 +580,9 @@ constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) !
 *	@ingroup llcpp
 *	@ingroup headers
 */
-constexpr ll_string_t getBoolString(const ll_bool_t v) { return v ? TRUE_STRING : FALSE_STRING; }
+__LL_NODISCARD__ constexpr ll_string_t getBoolString(const ll_bool_t v) { return v ? TRUE_STRING : FALSE_STRING; }
 /*!
+*	@template True
 *	@brief Gets a StrPair of a bool
 *
 *   Gives a user a string that represents the bool provided
@@ -500,11 +604,12 @@ constexpr ll_string_t getBoolString(const ll_bool_t v) { return v ? TRUE_STRING 
 *	@ingroup llcpp
 *	@ingroup headers
 */
-constexpr const StrPair& getBoolStringPair(const ll_bool_t v) { return v ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
+__LL_NODISCARD__ constexpr const StrPair& getBoolStringPair(const ll_bool_t v) { return v ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
 
 namespace enums {
 
 /*!
+*	@template True
 *	@brief Casts an enum to given type
 *
 *   This is the same to do as static_cast<T>
@@ -525,7 +630,7 @@ namespace enums {
 *	@ingroup enums
 */
 template<class ValueType, class EnumClass>
-constexpr ValueType asType(const EnumClass enumValue) {
+__LL_NODISCARD__ constexpr ValueType asType(const EnumClass enumValue) {
     return static_cast<ValueType>(enumValue);
 }
 

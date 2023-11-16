@@ -518,7 +518,10 @@ using SwapFunction = std::function<void(T& __a__, T& __b__)>;
 
 #pragma region Definitions
 #define LL_NULLPTR nullptr
+// Easy string to StrPair
 #define PAIR_STR(str) llcpp::StrPair{str, sizeof(str) - 1}
+// Easy enabler for template functions
+#define ENABLE_FUNCTION_PARAM(condition) std::enable_if<condition>::type* = nullptr
 
 #pragma endregion
 

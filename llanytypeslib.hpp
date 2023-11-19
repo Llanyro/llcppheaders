@@ -14,10 +14,11 @@
 
 #pragma region IncludesByDefines
 
-#if defined(_DEBUG_)
+#if defined(_DEBUG)
 #include <assert.h>
+#define LL_ASSERT(condition, message) assert(condition && message)
 #else
-#define assert
+#define LL_ASSERT(condition, message) assert(condition && message)
 #endif // _DEBUG
 
 #pragma endregion

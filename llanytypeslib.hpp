@@ -9,7 +9,6 @@
 #define LLCPP_HEADER_LLANYTYPESLIB_HPP_
 
 #include <utility>
-#include <functional>
 #include <type_traits>
 
 #pragma region IncludesByDefines
@@ -70,10 +69,16 @@
 //#pragma warning(disable:4464)
 #pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
 #pragma warning(disable:5045) // Security mitigation
+#pragma warning(disable:4710) // Function not inlined
+#pragma warning(disable:4711) // Function inlined
+#pragma warning(disable:4514) // Function not used removed
 
 #endif // defined(WINDOWS_SYSTEM)
 
 #pragma endregion
+
+// Added here to fix inline error /W4
+#include <functional>
 
 #pragma region GeneralTypes
 

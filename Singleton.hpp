@@ -30,7 +30,7 @@ class Singleton {
 		Singleton() {}
 		~Singleton() {}
 	public:
-		static T& getInstance() noexcept {
+		static __LL_NODISCARD__ T& getInstance() noexcept {
 			static T instance;
 			return instance;
 		}
@@ -47,7 +47,7 @@ class Singleton {
 		~Singleton() {}
 		static T* instance;
 	public:
-		static T& getInstance() noexcept {
+		static __LL_NODISCARD__ T& getInstance() noexcept {
 			if (!Singleton<T>::instance)
 				Singleton<T>::instance = new T();
 			return *Singleton<T>::instance;

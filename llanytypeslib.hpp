@@ -67,7 +67,8 @@
 #pragma warning(disable:26439)
 
 // Wall
-#pragma warning(disable:4464)
+//#pragma warning(disable:4464)
+#pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
 
 #endif // defined(WINDOWS_SYSTEM)
 
@@ -180,6 +181,7 @@ typedef WindowsHandle ll_share_memory_handle_t;
 #define INVALID_SHARE_HANDLE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
 #define __LL_NODISCARD__ _NODISCARD
 #define __LL_CONSTEXPR__ consteval
+#define __LL_INLINE__ inline
 
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 // Process ID

@@ -18,7 +18,7 @@
 #include <assert.h>
 #define LL_ASSERT(condition, message) assert(condition && message)
 #else
-#define LL_ASSERT(condition, message) assert(condition && message)
+#define LL_ASSERT(condition, message)
 #endif // _DEBUG
 
 #pragma endregion
@@ -69,6 +69,7 @@
 // Wall
 //#pragma warning(disable:4464)
 #pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
+#pragma warning(disable:5045) // Security mitigation
 
 #endif // defined(WINDOWS_SYSTEM)
 

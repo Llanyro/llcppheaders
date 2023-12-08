@@ -197,6 +197,7 @@ typedef WindowsHandle ll_share_memory_handle_t;
 #define INVALID_SHARE_HANDLE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
 #define __LL_NODISCARD__ _NODISCARD
 #define __LL_CONSTEXPR__ constexpr
+#define __LL_CLASSEXPR__ constexpr
 #define __LL_CONSTEVAL__ consteval
 //#define __LL_INLINE__ inline
 #define __LL_EXCEPT__ noexcept

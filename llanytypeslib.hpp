@@ -1,9 +1,9 @@
 /*
- * llanytypeslib.hpp
- *
- *  Created on: Feb 28, 2022
- *      Author: llanyro
- */
+*	llanytypeslib.hpp
+*
+*	Created on: Feb 28, 2022
+*		Author: llanyro
+*/
 
 #ifndef LLCPP_HEADER_LLANYTYPESLIB_HPP_
 #define LLCPP_HEADER_LLANYTYPESLIB_HPP_
@@ -23,29 +23,37 @@
 #pragma endregion
 
 #pragma region OS
-#if defined(_WIN32) or defined(_WIN64)
-#define WINDOWS_SYSTEM
+#if defined(_WIN32) || defined(_WIN64)
+	#define WINDOWS_SYSTEM
 #elif defined(__unix__)
-#if defined(__linux__)
-#define POSIX_SYSTEM
+	#if defined(__linux__)
+		#define POSIX_SYSTEM
+	#else
+		#define UNIX_SYSTEM
+	#endif // __linux__
 #else
-#define UNIX_SYSTEM
-#endif // 
-#endif // _WIN32
+	#error Unknown system
+	#define UNKNOWN_SYSTEM
+#endif // _WIN32 || _WIN64 || __unix__
 
 /// Win dll
 #if defined(WINDOWS_SYSTEM)
-    #if defined(LL_DLL_BUILD)
-        #define LL_SHARED_LIB __declspec(dllexport)
-    #else
-        //#define LL_SHARED_LIB __declspec(dllimport)
-    #endif
-#endif // WINDOWS_SYSTEM
+	#if defined(LL_DLL_BUILD)
+		#define LL_SHARED_LIB __declspec(dllexport)
+	#else
+		//#define LL_SHARED_LIB __declspec(dllimport)
+		#define LL_SHARED_LIB
+	#endif // LL_DLL_BUILD
+#elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
+	#if defined(LL_DLL_BUILD)
+		#define LL_SHARED_LIB extern "C++"
+	#else
+		#define LL_SHARED_LIB
+	#endif // LL_DLL_BUILD
+#else
+#define LL_SHARED_LIB
+#endif // WINDOWS_SYSTEM || POSIX_SYSTEM || UNIX_SYSTEM
 
-// If we are not in windows, we dont need to export anything
-#if !defined(LL_SHARED_LIB)
-    #define LL_SHARED_LIB
-#endif // LL_SHARED_LIB
 
 // Disables del pesao de windows
 #if defined(WINDOWS_SYSTEM)
@@ -72,6 +80,8 @@
 #pragma warning(disable:4710) // Function not inlined
 #pragma warning(disable:4711) // Function inlined
 #pragma warning(disable:4514) // Function not used removed
+
+#pragma warning(disable:4365) // ignore conversion from long to ui32 (signed/unsigned mismatch)
 
 #endif // defined(WINDOWS_SYSTEM)
 
@@ -186,8 +196,10 @@ typedef WindowsHandle ll_share_memory_handle_t;
 //#define INVALID_HANDLE_VALUE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
 #define INVALID_SHARE_HANDLE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
 #define __LL_NODISCARD__ _NODISCARD
-#define __LL_CONSTEXPR__ consteval
-#define __LL_INLINE__ inline
+#define __LL_CONSTEXPR__ constexpr
+#define __LL_CONSTEVAL__ consteval
+//#define __LL_INLINE__ inline
+#define __LL_EXCEPT__ noexcept
 
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 // Process ID
@@ -213,22 +225,22 @@ constexpr ll_share_memory_handle_t INVALID_SHARE_HANDLE = -1;
 
 // Lib types or rename types
 #pragma region NonGeneralTypes1
-typedef ui64 len_t;     // Used to cound things (natural number)
+typedef ui64 len_t;		// Used to cound things (natural number)
 
-typedef const ll_char_t* ll_string_t;       // Used to point to non editable strings
-typedef const ll_uchar_t* ll_ustring_t;     // Used to point to non editable unsigned strings
+typedef const ll_char_t* ll_string_t;		// Used to point to non editable strings
+typedef const ll_uchar_t* ll_ustring_t;		// Used to point to non editable unsigned strings
 
 
 /// Tipos para control de bytes
-typedef ui8 size_bytes8_t;      // Used to count bytes
+typedef ui8 size_bytes8_t;		// Used to count bytes
 typedef ui16 size_bytes16_t;	// Used to count bytes
 typedef ui32 size_bytes32_t;	// Used to count bytes
 typedef ui64 size_bytes64_t;	// Used to count bytes
 
-typedef size_bytes8_t b8;	    // Used to count bytes
-typedef size_bytes16_t b16;	    // Used to count bytes
-typedef size_bytes32_t b32;	    // Used to count bytes
-typedef size_bytes64_t b64;	    // Used to count bytes
+typedef size_bytes8_t b8;		// Used to count bytes
+typedef size_bytes16_t b16;		// Used to count bytes
+typedef size_bytes32_t b32;		// Used to count bytes
+typedef size_bytes64_t b64;		// Used to count bytes
 
 #pragma endregion
 
@@ -236,46 +248,46 @@ namespace llcpp {
 
 // Stores a string
 class LL_SHARED_LIB StrPair {
-    public:
-        ll_string_t str;
-        len_t len;
+	public:
+		ll_string_t str;
+		len_t len;
 
-        constexpr StrPair() : str(nullptr), len(0ull) {}
-        constexpr StrPair(ll_string_t str, const len_t len) : str(str), len(len) {}
-        StrPair(const StrPair& other) : str(other.str), len(other.len) {}
-        StrPair(StrPair&& other) : str(other.str), len(other.len) { other.clear(); }
-        StrPair& operator=(const StrPair& other) {
-            this->len = other.len;
-            this->str = other.str;
-            return *this;
-        }
-        StrPair& operator=(StrPair&& other) {
-            this->len = other.len;
-            this->str = other.str;
-            other.clear();
-            return *this;
-        }
+		constexpr StrPair() : str(nullptr), len(0ull) {}
+		constexpr StrPair(ll_string_t str, const len_t len) : str(str), len(len) {}
+		StrPair(const StrPair& other) : str(other.str), len(other.len) {}
+		StrPair(StrPair&& other) : str(other.str), len(other.len) { other.clear(); }
+		StrPair& operator=(const StrPair& other) {
+			this->len = other.len;
+			this->str = other.str;
+			return *this;
+		}
+		StrPair& operator=(StrPair&& other) {
+			this->len = other.len;
+			this->str = other.str;
+			other.clear();
+			return *this;
+		}
 
-        __LL_NODISCARD__ ll_bool_t operator==(ll_string_t str) const {
-            return str == this->str;
-        }
-        __LL_NODISCARD__ ll_bool_t operator==(const StrPair& str) const {
-            return
-                this->str == str.str &&
-                this->len == str.len;
-        }
-        __LL_NODISCARD__ ll_bool_t operator!=(ll_string_t str) const {
-            return !this->operator==(str);
-        }
-        __LL_NODISCARD__ ll_bool_t operator!=(const StrPair& str) const {
-            return !this->operator==(str);
-        }
-        __LL_NODISCARD__ operator ll_bool_t() const { return this->str && this->len > 0; }
+		__LL_NODISCARD__ ll_bool_t operator==(ll_string_t str) const {
+			return str == this->str;
+		}
+		__LL_NODISCARD__ ll_bool_t operator==(const StrPair& str) const {
+			return
+				this->str == str.str &&
+				this->len == str.len;
+		}
+		__LL_NODISCARD__ ll_bool_t operator!=(ll_string_t str) const {
+			return !this->operator==(str);
+		}
+		__LL_NODISCARD__ ll_bool_t operator!=(const StrPair& str) const {
+			return !this->operator==(str);
+		}
+		__LL_NODISCARD__ operator ll_bool_t() const { return this->str && this->len > 0; }
 
-        void clear() {
-            this->len = 0;
-            this->str = nullptr;
-        }
+		void clear() {
+			this->len = 0;
+			this->str = nullptr;
+		}
 };
 
 namespace functional {
@@ -284,11 +296,11 @@ namespace functional {
 *	@template False
 *	@brief Function type to compare 2 objects
 *
-*   This needs to return a value to check if object __a__ is same to object __b__
-*   The implementation of this function needs to return:
-*       0 if both are the same
-*      -1 if __a__ smaller
-*       1 if __a__ is bigger
+*	This needs to return a value to check if object __a__ is same to object __b__
+*	The implementation of this function needs to return:
+*		 0 if both are the same
+*		-1 if __a__ smaller
+*		 1 if __a__ is bigger
 * 
 *	@param[in] __a__ First object to compare
 *	@param[in] __b__ Second object to compare
@@ -331,11 +343,11 @@ typedef ll_bool_t (*CompareBool)(const void* __a__, const void* __b__);
 *	@template False
 *	@brief Function type to compare 2 objects
 *
-*   This needs to return a value to check if object __a__ is same to object __b__
-*   The implementation of this function needs to return:
-*       0 if both are the same
-*      -1 if __a__ smaller
-*       1 if __a__ is bigger
+*	This needs to return a value to check if object __a__ is same to object __b__
+*	The implementation of this function needs to return:
+*		 0 if both are the same
+*		-1 if __a__ smaller
+*		 1 if __a__ is bigger
 * 
 *	@param[in] __a__ First object to compare
 *	@param[in] __b__ Second object to compare
@@ -381,11 +393,11 @@ namespace classic {
 *	@template True
 *	@brief Function type to compare 2 objects
 *
-*   This needs to return a value to check if object __a__ is same to object __b__
-*   The implementation of this function needs to return:
-*       0 if both are the same
-*      -1 if __a__ smaller
-*       1 if __a__ is bigger
+*	This needs to return a value to check if object __a__ is same to object __b__
+*	The implementation of this function needs to return:
+*		 0 if both are the same
+*		-1 if __a__ smaller
+*		 1 if __a__ is bigger
 * 
 *	@param[in] __a__ First object to compare
 *	@param[in] __b__ Second object to compare
@@ -455,11 +467,11 @@ namespace lambda {
 *	@template True
 *	@brief Function type to compare 2 objects
 *
-*   This needs to return a value to check if object __a__ is same to object __b__
-*   The implementation of this function needs to return:
-*       0 if both are the same
-*      -1 if __a__ smaller
-*       1 if __a__ is bigger
+*	This needs to return a value to check if object __a__ is same to object __b__
+*	The implementation of this function needs to return:
+*		 0 if both are the same
+*		-1 if __a__ smaller
+*		 1 if __a__ is bigger
 * 
 *	@param[in] __a__ First object to compare
 *	@param[in] __b__ Second object to compare
@@ -574,9 +586,9 @@ __LL_NODISCARD__ constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cas
 *	@template True
 *	@brief Gets a string of a bool
 *
-*   Gives a user a string that represents the bool provided
-*   true will be : "True"
-*   false will be: "False"
+*	Gives a user a string that represents the bool provided
+*	true will be : "True"
+*	false will be: "False"
 *
 *	@param[in] v Bool value
 *
@@ -598,9 +610,9 @@ __LL_NODISCARD__ constexpr ll_string_t getBoolString(const ll_bool_t v) { return
 *	@template True
 *	@brief Gets a StrPair of a bool
 *
-*   Gives a user a string that represents the bool provided
-*   true will be : { "True", 4 }
-*   false will be: { "False", 5 }
+*	Gives a user a string that represents the bool provided
+*	true will be : { "True", 4 }
+*	false will be: { "False", 5 }
 *
 *	@param[in] v Bool value
 *
@@ -625,7 +637,7 @@ namespace enums {
 *	@template True
 *	@brief Casts an enum to given type
 *
-*   This is the same to do as static_cast<T>
+*	This is the same to do as static_cast<T>
 *
 *	@param[in] enumValue Enum value to cast
 *
@@ -644,17 +656,17 @@ namespace enums {
 */
 template<class ValueType, class EnumClass>
 __LL_NODISCARD__ constexpr ValueType asType(const EnumClass enumValue) {
-    return static_cast<ValueType>(enumValue);
+	return static_cast<ValueType>(enumValue);
 }
 
 //template<class ValueType, class EnumClass, class... EnumClasses>
 //constexpr ValueType enumOrOperation() {
-//    return ValueType();
+//	return ValueType();
 //}
 
 //template<class ValueType, class EnumClass, class... EnumClasses>
 //constexpr ValueType enumOrOperation(const EnumClass _enum, const EnumClasses... _enums) {
-//    return asType<ValueType, EnumClass>(_enum) | enumOrOperation<ValueType, EnumClass, EnumClasses...>(_enums...);
+//	return asType<ValueType, EnumClass>(_enum) | enumOrOperation<ValueType, EnumClass, EnumClasses...>(_enums...);
 //}
 
 } /* namespace enums */

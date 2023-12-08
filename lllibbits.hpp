@@ -1,9 +1,9 @@
 /*
- * lllibbits.h
- *
- *  Created on: Nov 26, 2020
- *      Author: llanyro
- */
+*	lllibbits.h
+*
+*	Created on: Nov 26, 2020
+*		Author: llanyro
+*/
 
 #ifndef LLCPP_HEADER_LLLIBBITS_H_
 #define LLCPP_HEADER_LLLIBBITS_H_
@@ -17,39 +17,176 @@ typedef ll_uchar_t ll_byte_t;
 	
 namespace header {
 namespace bit {
-
-template<class T, ui8 pos>
-constexpr void set(T& value) { value |= static_cast<T>(1 << pos); }
-template<class T, ui8 pos>
-constexpr ui8 get(T value) { return (value >> pos) & 1; }
-template<class T, ui8 pos>
-constexpr void clear(T& value) { value &= ~(1 << pos); }
-template<class T, ui8 base>
-constexpr T transformToBaseV2(T value) { return (value & (0xFFFFFFFFFFFFFFFF - base - 1)) + base; }
-
-template<class T>
-constexpr T transformTo64(T value) { return transformToBaseV2<T, 64>(value); }
-template<class T>
-constexpr T transformTo32(T value) { return transformToBaseV2<T, 32>(value); }
-template<class T>
-constexpr T transformTo8(T value) { return transformToBaseV2<T, 8>(value); }
-
-// Sets bit pos 0
-template<class T>
-constexpr void set(T& value) { set<T, 0>(value); }
-// Gets bit pos 0
-template<class T>
-constexpr ui8 get(T value) { return get<T, 0>(value); }
-// Clear bit pos 0
-template<class T>
-constexpr void clear(T& value) { return clear<T, 0>(value); }
-
 constexpr ui8 BITARRAY_LEN = 8;
+
+/*!
+*	@template False
+*	@brief Set a bit to 1 by given position
+*
+*	@efficiency O(1)
+*	@time T(1)
+*	@memory M(1)
+*	@const eval
+*	@throw False
+*
+*	@param[in] value Value to edit
+*
+*	@templateparam T item type
+*	@templateparam pos Bit position
+*
+*	@thread_safety This function may be called from any thread.
+*	@thread_protection This function is not protexted by mutex.
+*
+*	@sa @ref bit_operations
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup header
+*	@ingroup bit
+*/
+template<class T, ui8 pos>
+LL_SHARED_LIB __LL_CONSTEVAL__ void set(T& value) noexcept {
+	value |= static_cast<T>(1 << pos);
+}
+/*!
+*	@template True
+*	@brief Get bit value by given position
+*
+*	@efficiency O(1)
+*	@time T(1)
+*	@memory M(1)
+*	@const eval
+*	@throw False
+*
+*	@param[in] value Value to check
+*
+*	@templateparam T item type
+*	@templateparam pos Bit position
+*
+*	@return Bit value requested
+*
+*	@thread_safety This function may be called from any thread.
+*	@thread_protection This function is not protexted by mutex.
+*
+*	@sa @ref bit_operations
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup header
+*	@ingroup bit
+*/
+template<class T, ui8 pos>
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ui8 get(T value) noexcept {
+	return (value >> pos) & 1;
+}
+/*!
+*	@template False
+*	@brief Set a bit to 0 by given position
+*
+*	@efficiency O(1)
+*	@time T(1)
+*	@memory M(1)
+*	@const eval
+*	@throw False
+*
+*	@param[in] value Value to edit
+*
+*	@templateparam T item type
+*	@templateparam pos Bit position
+*
+*	@thread_safety This function may be called from any thread.
+*	@thread_protection This function is not protexted by mutex.
+*
+*	@sa @ref bit_operations
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup header
+*	@ingroup bit
+*/
+template<class T, ui8 pos>
+LL_SHARED_LIB __LL_CONSTEVAL__ void clear(T& value) noexcept {
+	value &= ~(1 << pos);
+}
+
+#pragma region BaseTransformation
+template<class T, ui8 base>
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T transformToBaseV2(T value) noexcept {
+	return (value & (0xFFFFFFFFFFFFFFFF - base - 1)) + base;
+}
+template<class T>
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T transformTo64(T value) noexcept {
+	return transformToBaseV2<T, 64>(value);
+}
+template<class T>
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T transformTo32(T value) noexcept {
+	return transformToBaseV2<T, 32>(value);
+}
+template<class T>
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T transformTo8(T value) noexcept {
+	return transformToBaseV2<T, 8>(value);
+}
+#pragma endregion
+
+#pragma region Proxy
+/*!
+*	@template True
+*	@brief Proxy of set<T, 0>(T& value)
+*	@proxyof set<T, 0>(T& value)
+*
+*	@templateparam T item type
+*
+*	@sa @ref bit_operations
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup header
+*	@ingroup bit
+*/
+template<class T>
+LL_SHARED_LIB __LL_CONSTEVAL__ void set(T& value) noexcept {
+	set<T, 0>(value);
+}
+/*!
+*	@template True
+*	@brief Proxy of get<T, 0>(T& value)
+*	@proxyof get<T, 0>(T& value)
+*
+*	@templateparam T item type
+*
+*	@sa @ref bit_operations
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup header
+*	@ingroup bit
+*/
+template<class T>
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ui8 get(T value) noexcept {
+	return get<T, 0>(value);
+}
+/*!
+*	@template True
+*	@brief Proxy of clear<T, 0>(T& value)
+*	@proxyof clear<T, 0>(T& value)
+*
+*	@templateparam T item type
+*
+*	@sa @ref bit_operations
+*
+*	@since Added in version 2.0.
+*
+*	@ingroup header
+*	@ingroup bit
+*/
+template<class T>
+LL_SHARED_LIB __LL_CONSTEVAL__ void clear(T& value) noexcept {
+	return clear<T, 0>(value);
+}
+#pragma endregion
 
 } /* namespace bit */
 } /* namespace header */
 } /* namespace llcpp */
-
-namespace bits = llcpp::header::bit;
 
 #endif /* LLCPP_HEADER_LLLIBBITS_H_ */

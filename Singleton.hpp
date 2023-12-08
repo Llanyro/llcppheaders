@@ -1,9 +1,9 @@
 /*
- * Singleton.hpp
- *
- *  Created on: ??? ??, ????
- *      Author: llanyro
- */
+*	Singleton.hpp
+*
+*	Created on: ??? ??, ????
+*		Author: llanyro
+*/
 #ifndef LLCPP_HEADER_SINGLETON_HPP_
 #define LLCPP_HEADER_SINGLETON_HPP_
 

@@ -82,6 +82,8 @@
 #pragma warning(disable:4514) // Function not used removed
 
 #pragma warning(disable:4365) // ignore conversion from long to ui32 (signed/unsigned mismatch)
+#pragma warning(disable:4706) // assignment within conditional expression if( (result = value)) {}
+#pragma warning(disable:4464) // relative include path contains '..'
 
 #endif // defined(WINDOWS_SYSTEM)
 

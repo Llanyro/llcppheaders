@@ -42,7 +42,7 @@ namespace operations {
 *	@ingroup operations
 */
 template<class T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T min(const T v1, const T v2) noexcept {
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T min(const T v1, const T v2) __LL_EXCEPT__ {
 	 return (v1 > v2) ? v2 : v1;
 }
 /*!
@@ -73,7 +73,7 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T min(const T v1, const T v2) no
 *	@ingroup operations
 */
 template<class T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T max(const T v1, const T v2) noexcept {
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T max(const T v1, const T v2) __LL_EXCEPT__ {
 	 return (v1 > v2) ? v1 : v2;
 }
 
@@ -113,7 +113,7 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T max(const T v1, const T v2) no
 *	@ingroup operations
 */
 template<class T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T minMax(const T minVal, const T val, const T maxVal) noexcept {
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T minMax(const T minVal, const T val, const T maxVal) __LL_EXCEPT__ {
 	 return min(max(minVal, val),maxVal);
 }
 /*!
@@ -123,7 +123,7 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T minMax(const T minVal, const T
 *	@efficiency O(1)
 *	@time T(1)
 *	@memory M(1)
-*	@const eval
+*	@const expr
 *	@throw False
 *
 *	@param[in] val Value to check 
@@ -145,7 +145,7 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T minMax(const T minVal, const T
 *	@ingroup operations
 */
 template<class T, T minVal, T maxVal>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ll_bool_t isBetween(const T val) noexcept {
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEXPR__ ll_bool_t isBetween(const T val) __LL_EXCEPT__ {
 	 return (minVal <= val && val <= maxVal);
 }
 
@@ -156,7 +156,7 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ll_bool_t isBetween(const T val)
 *	@efficiency O(1)
 *	@time T(1)
 *	@memory M(1)
-*	@const eval
+*	@const expr
 *	@throw False
 *
 *	@param[in] a Item 1 to compare
@@ -177,7 +177,7 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ll_bool_t isBetween(const T val)
 *	@ingroup operations
 */
 template<class T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ i32 comparei32(const void* a, const void* b) noexcept {
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEXPR__ i32 comparei32(const void* a, const void* b) __LL_EXCEPT__ {
 	 return *reinterpret_cast<const T*>(a) - *reinterpret_cast<const T*>(b);
 }
 /*!
@@ -208,12 +208,12 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ i32 comparei32(const void* a, co
 *	@ingroup operations
 */
 template<class T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ll_bool_t compareBool(const void* a, const void* b) noexcept {
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ll_bool_t compareBool(const void* a, const void* b) __LL_EXCEPT__ {
 	 return *reinterpret_cast<const T*>(a) == *reinterpret_cast<const T*>(b);
 }
 
 //template<class T>
-//__LL_CONSTEVAL__ T abs(const T& v1, const T& v2) noexcept {
+//__LL_CONSTEVAL__ T abs(const T& v1, const T& v2) __LL_EXCEPT__ {
 //	 return (v1 > v2) ? v1 - v2 : v2 - v1;
 //}
 //template<>
@@ -221,7 +221,7 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ll_bool_t compareBool(const void
 //	 return (v1 > v2) ? v1 - v2 : v2 - v1;
 //}
 //template<>
-//__LL_CONSTEVAL__ ui128 abs(const ui128& v1, const ui128& v2) noexcept {
+//__LL_CONSTEVAL__ ui128 abs(const ui128& v1, const ui128& v2) __LL_EXCEPT__ {
 //	 return { abs(v1.first, v2.first), abs(v1.second, v2.second) };
 //}
 

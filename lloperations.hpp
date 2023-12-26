@@ -42,7 +42,7 @@ namespace operations {
 *	@ingroup operations
 */
 template<class T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ T min(const T v1, const T v2) __LL_EXCEPT__ {
+__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEXPR__ T min(const T v1, const T v2) __LL_EXCEPT__ {
 	 return (v1 > v2) ? v2 : v1;
 }
 /*!

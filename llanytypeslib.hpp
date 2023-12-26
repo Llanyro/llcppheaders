@@ -299,14 +299,14 @@ namespace functional {
 *	@template False
 *	@brief Function type to compare 2 objects
 *
-*	This needs to return a value to check if object __a__ is same to object __b__
+*	This needs to return a value to check if object __t1 is same to object __t2
 *	The implementation of this function needs to return:
 *		 0 if both are the same
-*		-1 if __a__ smaller
-*		 1 if __a__ is bigger
+*		-1 if __t1 smaller
+*		 1 if __t1 is bigger
 * 
-*	@param[in] __a__ First object to compare
-*	@param[in] __b__ Second object to compare
+*	@param[in] __t1 First object to compare
+*	@param[in] __t2 Second object to compare
 *
 *	@return Comparacion result
 *
@@ -320,15 +320,15 @@ namespace functional {
 *	@ingroup llcpp
 *	@ingroup headers
 */
-typedef i32 (*Comparei32)(const void* __a__, const void* __b__);
+typedef i32 (*Comparei32)(const void* __t1, const void* __t2);
 /*!
 *	@template False
 *	@brief Function type to compare 2 objects
 *
-*	@param[in] __a__ First object to compare
-*	@param[in] __b__ Second object to compare
+*	@param[in] __t1 First object to compare
+*	@param[in] __t2 Second object to compare
 *
-*	@return True if __a__ is same as __b__
+*	@return True if __t1 is same as __t2
 *
 *	@thread_safety defined by implementation
 *	@thread_protection defined by implementation
@@ -340,20 +340,20 @@ typedef i32 (*Comparei32)(const void* __a__, const void* __b__);
 *	@ingroup llcpp
 *	@ingroup headers
 */
-typedef ll_bool_t (*CompareBool)(const void* __a__, const void* __b__);
+typedef ll_bool_t (*CompareBool)(const void* __t1, const void* __t2);
 
 /*!
 *	@template False
 *	@brief Function type to compare 2 objects
 *
-*	This needs to return a value to check if object __a__ is same to object __b__
+*	This needs to return a value to check if object __t1 is same to object __t2
 *	The implementation of this function needs to return:
 *		 0 if both are the same
-*		-1 if __a__ smaller
-*		 1 if __a__ is bigger
+*		-1 if __t1 smaller
+*		 1 if __t1 is bigger
 * 
-*	@param[in] __a__ First object to compare
-*	@param[in] __b__ Second object to compare
+*	@param[in] __t1 First object to compare
+*	@param[in] __t2 Second object to compare
 *	@param[in] __extra__ Extra data to being used by user
 *
 *	@return Comparacion result
@@ -368,16 +368,16 @@ typedef ll_bool_t (*CompareBool)(const void* __a__, const void* __b__);
 *	@ingroup llcpp
 *	@ingroup headers
 */
-typedef i32 (*Comparei32Extra)(const void* __a__, const void* __b__, void* __extra__);
+typedef i32 (*Comparei32Extra)(const void* __t1, const void* __t2, void* __extra__);
 /*!
 *	@template False
 *	@brief Function type to compare 2 objects
 *
-*	@param[in] __a__ First object to compare
-*	@param[in] __b__ Second object to compare
+*	@param[in] __t1 First object to compare
+*	@param[in] __t2 Second object to compare
 *	@param[in] __extra__ Extra data to being used by user
 *
-*	@return True if __a__ is same as __b__
+*	@return True if __t1 is same as __t2
 *
 *	@thread_safety defined by implementation
 *	@thread_protection defined by implementation
@@ -389,21 +389,21 @@ typedef i32 (*Comparei32Extra)(const void* __a__, const void* __b__, void* __ext
 *	@ingroup llcpp
 *	@ingroup headers
 */
-typedef ll_bool_t (*CompareBoolExtra)(const void* __a__, const void* __b__, void* __extra__);
+typedef ll_bool_t (*CompareBoolExtra)(const void* __t1, const void* __t2, void* __extra__);
 
 namespace classic {
 /*!
 *	@template True
 *	@brief Function type to compare 2 objects
 *
-*	This needs to return a value to check if object __a__ is same to object __b__
+*	This needs to return a value to check if object __t1 is same to object __t2
 *	The implementation of this function needs to return:
 *		 0 if both are the same
-*		-1 if __a__ smaller
-*		 1 if __a__ is bigger
+*		-1 if __t1 smaller
+*		 1 if __t1 is bigger
 * 
-*	@param[in] __a__ First object to compare
-*	@param[in] __b__ Second object to compare
+*	@param[in] __t1 First object to compare
+*	@param[in] __t2 Second object to compare
 *
 *	@return Comparacion result
 *
@@ -418,15 +418,15 @@ namespace classic {
 *	@ingroup headers
 */
 template<class T>
-using SearchFunctioni32 = i32(*)(const T& __a__, const T& __b__);
+using SearchFunctioni32 = i32(*)(const T& __t1, const T& __t2);
 /*!
 *	@template True
 *	@brief Function type to compare 2 objects
 *
-*	@param[in] __a__ First object to compare
-*	@param[in] __b__ Second object to compare
+*	@param[in] __t1 First object to compare
+*	@param[in] __t2 Second object to compare
 *
-*	@return True if __a__ is same as __b__
+*	@return True if __t1 is same as __t2
 *
 *	@thread_safety defined by implementation
 *	@thread_protection defined by implementation
@@ -439,7 +439,7 @@ using SearchFunctioni32 = i32(*)(const T& __a__, const T& __b__);
 *	@ingroup headers
 */
 template<class T>
-using SearchFunctionBool = ll_bool_t(*)(const T& __a__, const T& __b__);
+using SearchFunctionBool = ll_bool_t(*)(const T& __t1, const T& __t2);
 
 
 
@@ -447,8 +447,8 @@ using SearchFunctionBool = ll_bool_t(*)(const T& __a__, const T& __b__);
 *	@template True
 *	@brief Swaps 2 objects
 *
-*	@param[in] __a__ First object to swap
-*	@param[in] __b__ Second object to swap
+*	@param[in] __t1 First object to swap
+*	@param[in] __t2 Second object to swap
 *
 *	@thread_safety defined by implementation
 *	@thread_protection defined by implementation
@@ -461,7 +461,7 @@ using SearchFunctionBool = ll_bool_t(*)(const T& __a__, const T& __b__);
 *	@ingroup headers
 */
 template<class T>
-using SwapFunction = void(*)(const T& __a__, const T& __b__);
+using SwapFunction = void(*)(const T& __t1, const T& __t2);
 
 } /* namespace classic */
 
@@ -470,14 +470,14 @@ namespace lambda {
 *	@template True
 *	@brief Function type to compare 2 objects
 *
-*	This needs to return a value to check if object __a__ is same to object __b__
+*	This needs to return a value to check if object __t1 is same to object __t2
 *	The implementation of this function needs to return:
 *		 0 if both are the same
-*		-1 if __a__ smaller
-*		 1 if __a__ is bigger
+*		-1 if __t1 smaller
+*		 1 if __t1 is bigger
 * 
-*	@param[in] __a__ First object to compare
-*	@param[in] __b__ Second object to compare
+*	@param[in] __t1 First object to compare
+*	@param[in] __t2 Second object to compare
 *
 *	@return Comparacion result
 *
@@ -491,15 +491,15 @@ namespace lambda {
 *	@ingroup llcpp
 *	@ingroup headers
 */
-template<class T> using SearchFunctioni32 = std::function<i32(const T& __a__)>;
+template<class T> using SearchFunctioni32 = std::function<i32(const T& __t1)>;
 /*!
 *	@template True
 *	@brief Function type to compare 2 objects
 *
-*	@param[in] __a__ First object to compare
-*	@param[in] __b__ Second object to compare
+*	@param[in] __t1 First object to compare
+*	@param[in] __t2 Second object to compare
 *
-*	@return True if __a__ is same as __b__
+*	@return True if __t1 is same as __t2
 *
 *	@thread_safety defined by implementation
 *	@thread_protection defined by implementation
@@ -511,7 +511,7 @@ template<class T> using SearchFunctioni32 = std::function<i32(const T& __a__)>;
 *	@ingroup llcpp
 *	@ingroup headers
 */
-template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T& __a__)>;
+template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T& __t1)>;
 
 
 
@@ -519,8 +519,8 @@ template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T& __
 *	@template True
 *	@brief Swaps 2 objects
 *
-*	@param[in] __a__ First object to swap
-*	@param[in] __b__ Second object to swap
+*	@param[in] __t1 First object to swap
+*	@param[in] __t2 Second object to swap
 *
 *	@thread_safety defined by implementation
 *	@thread_protection defined by implementation
@@ -533,7 +533,7 @@ template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T& __
 *	@ingroup headers
 */
 template<class T>
-using SwapFunction = std::function<void(T& __a__, T& __b__)>;
+using SwapFunction = std::function<void(T& __t1, T& __t2)>;
 
 
 } /* namespace lambda */
@@ -547,6 +547,10 @@ using SwapFunction = std::function<void(T& __a__, T& __b__)>;
 #define PAIR_STR(str) llcpp::StrPair{str, sizeof(str) - 1}
 // Easy enabler for template functions
 #define ENABLE_FUNCTION_PARAM(condition) std::enable_if<condition>::type* = nullptr
+
+#define IS_BASIC_TYPE_V(type) std::_Is_any_of_v<type, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64>
+#define IS_BASIC_TYPE(type) ENABLE_FUNCTION_PARAM(IS_BASIC_TYPE_V(type))
+#define IS_NOT_BASIC_TYPE(type) ENABLE_FUNCTION_PARAM(!IS_BASIC_TYPE_V(type))
 
 #pragma endregion
 

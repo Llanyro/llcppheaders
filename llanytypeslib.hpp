@@ -552,6 +552,21 @@ using SwapFunction = std::function<void(T& __t1, T& __t2)>;
 #define IS_BASIC_TYPE(type) ENABLE_FUNCTION_PARAM(IS_BASIC_TYPE_V(type))
 #define IS_NOT_BASIC_TYPE(type) ENABLE_FUNCTION_PARAM(!IS_BASIC_TYPE_V(type))
 
+// Adds basic types in template classes
+#define __LL_CLASS_TEMPLATE_TYPES(__type__) \
+	using __type = __type__; \
+	using __ptr = __type__*; \
+	using __ref = __type__&; \
+	using __ptrref = __ptr&
+
+// Adds basic types with indentifiers in template classes
+#define __LL_CLASS_TEMPLATE_TYPES(__type__, id) \
+	using __type#id = __type__; \
+	using __ptr#id = __type__*; \
+	using __ref#id = __type__&; \
+	using __ptrref#id = __ptr#id&
+
+
 #pragma endregion
 
 namespace llcpp {

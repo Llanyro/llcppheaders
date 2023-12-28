@@ -418,7 +418,7 @@ namespace classic {
 *	@ingroup headers
 */
 template<class T>
-using SearchFunctioni32 = i32(*)(const T& __t1, const T& __t2);
+using SearchFunctioni32 = i32(*)(const __T& __t1, const __T& __t2);
 /*!
 *	@template True
 *	@brief Function type to compare 2 objects
@@ -439,7 +439,7 @@ using SearchFunctioni32 = i32(*)(const T& __t1, const T& __t2);
 *	@ingroup headers
 */
 template<class T>
-using SearchFunctionBool = ll_bool_t(*)(const T& __t1, const T& __t2);
+using SearchFunctionBool = ll_bool_t(*)(const __T& __t1, const __T& __t2);
 
 
 
@@ -461,7 +461,7 @@ using SearchFunctionBool = ll_bool_t(*)(const T& __t1, const T& __t2);
 *	@ingroup headers
 */
 template<class T>
-using SwapFunction = void(*)(const T& __t1, const T& __t2);
+using SwapFunction = void(*)(const __T& __t1, const __T& __t2);
 
 } /* namespace classic */
 
@@ -491,7 +491,7 @@ namespace lambda {
 *	@ingroup llcpp
 *	@ingroup headers
 */
-template<class T> using SearchFunctioni32 = std::function<i32(const T& __t1)>;
+template<class __T> using SearchFunctioni32 = std::function<i32(const __T& __t1)>;
 /*!
 *	@template True
 *	@brief Function type to compare 2 objects
@@ -511,7 +511,7 @@ template<class T> using SearchFunctioni32 = std::function<i32(const T& __t1)>;
 *	@ingroup llcpp
 *	@ingroup headers
 */
-template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T& __t1)>;
+template<class __T> using SearchFunctionBool = std::function<ll_bool_t(const __T& __t1)>;
 
 
 
@@ -532,8 +532,8 @@ template<class T> using SearchFunctionBool = std::function<ll_bool_t(const T& __
 *	@ingroup llcpp
 *	@ingroup headers
 */
-template<class T>
-using SwapFunction = std::function<void(T& __t1, T& __t2)>;
+template<class __T>
+using SwapFunction = std::function<void(__T& __t1, __T& __t2)>;
 
 
 } /* namespace lambda */
@@ -553,19 +553,33 @@ using SwapFunction = std::function<void(T& __t1, T& __t2)>;
 #define IS_NOT_BASIC_TYPE(type) ENABLE_FUNCTION_PARAM(!IS_BASIC_TYPE_V(type))
 
 // Adds basic types in template classes
-#define __LL_CLASS_TEMPLATE_TYPES(__type__) \
+#define __LL_CLASS_TEMPLATE_TYPE__(__type__) \
 	using __type = __type__; \
 	using __ptr = __type__*; \
+	using __cptr = __type__ const*; \
 	using __ref = __type__&; \
-	using __ptrref = __ptr&
+	using __cref = __type__ const&; \
+	using __move = __type__&&; \
+	using __ptrref = __type__*&
 
 // Adds basic types with indentifiers in template classes
-#define __LL_CLASS_TEMPLATE_TYPES(__type__, id) \
-	using __type#id = __type__; \
-	using __ptr#id = __type__*; \
-	using __ref#id = __type__&; \
-	using __ptrref#id = __ptr#id&
+#define __LL_CLASS_TEMPLATE_TYPES__(__type__, id) \
+	using __type##id## = __type__; \
+	using __ptr##id## = __type__*; \
+	using __cptr##id## = __type__ const*; \
+	using __ref##id## = __type__&; \
+	using __cref##id## = __type__ const&; \
+	using __move##id## = __type__&&; \
+	using __ptrref##id## = __type__*&
 
+#define __LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__type__, name) \
+	using __##name## = __type__; \
+	using __ptr_##name## = __type__*; \
+	using __cptr_##name## = __type__ const*; \
+	using __ref_##name## = __type__&; \
+	using __cref_##name## = __type__ const&; \
+	using __move_##name## = __type__&&; \
+	using __ptrref_##name## = __type__*&
 
 #pragma endregion
 

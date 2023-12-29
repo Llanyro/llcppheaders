@@ -417,7 +417,7 @@ namespace classic {
 *	@ingroup llcpp
 *	@ingroup headers
 */
-template<class T>
+template<class __T>
 using SearchFunctioni32 = i32(*)(const __T& __t1, const __T& __t2);
 /*!
 *	@template True
@@ -438,7 +438,7 @@ using SearchFunctioni32 = i32(*)(const __T& __t1, const __T& __t2);
 *	@ingroup llcpp
 *	@ingroup headers
 */
-template<class T>
+template<class __T>
 using SearchFunctionBool = ll_bool_t(*)(const __T& __t1, const __T& __t2);
 
 
@@ -460,7 +460,7 @@ using SearchFunctionBool = ll_bool_t(*)(const __T& __t1, const __T& __t2);
 *	@ingroup llcpp
 *	@ingroup headers
 */
-template<class T>
+template<class __T>
 using SwapFunction = void(*)(const __T& __t1, const __T& __t2);
 
 } /* namespace classic */
@@ -556,9 +556,9 @@ using SwapFunction = std::function<void(__T& __t1, __T& __t2)>;
 #define __LL_CLASS_TEMPLATE_TYPE__(__type__) \
 	using __type = __type__; \
 	using __ptr = __type__*; \
-	using __cptr = __type__ const*; \
+	using __cptr = const __type__ *; \
 	using __ref = __type__&; \
-	using __cref = __type__ const&; \
+	using __cref = const __type__ &; \
 	using __move = __type__&&; \
 	using __ptrref = __type__*&
 
@@ -566,18 +566,18 @@ using SwapFunction = std::function<void(__T& __t1, __T& __t2)>;
 #define __LL_CLASS_TEMPLATE_TYPES__(__type__, id) \
 	using __type##id## = __type__; \
 	using __ptr##id## = __type__*; \
-	using __cptr##id## = __type__ const*; \
+	using __cptr##id## = const __type__ *; \
 	using __ref##id## = __type__&; \
-	using __cref##id## = __type__ const&; \
+	using __cref##id## = const __type__ &; \
 	using __move##id## = __type__&&; \
 	using __ptrref##id## = __type__*&
 
 #define __LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__type__, name) \
 	using __##name## = __type__; \
 	using __ptr_##name## = __type__*; \
-	using __cptr_##name## = __type__ const*; \
+	using __cptr_##name## = const __type__ *; \
 	using __ref_##name## = __type__&; \
-	using __cref_##name## = __type__ const&; \
+	using __cref_##name## = const __type__ &; \
 	using __move_##name## = __type__&&; \
 	using __ptrref_##name## = __type__*&
 
@@ -666,6 +666,9 @@ __LL_NODISCARD__ constexpr ll_string_t getBoolString(const ll_bool_t v) { return
 *	@ingroup headers
 */
 __LL_NODISCARD__ constexpr const StrPair& getBoolStringPair(const ll_bool_t v) { return v ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
+
+template<class __T, len_t N>
+__LL_NODISCARD__ __LL_CONSTEXPR__ len_t arraySize(__T const (&a)[N]) { return N; }
 
 namespace enums {
 

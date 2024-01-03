@@ -46,6 +46,7 @@
 	#endif // LL_DLL_BUILD
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 	#if defined(LL_DLL_BUILD)
+		// Does not works (?) not tested
 		#define LL_SHARED_LIB extern "C++"
 	#else
 		#define LL_SHARED_LIB
@@ -57,35 +58,35 @@
 
 // Disables del pesao de windows
 #if defined(WINDOWS_SYSTEM)
-#pragma warning(disable:6029)
+//#pragma warning(disable:6029)
 
-#pragma warning(disable:6011)
-#pragma warning(disable:6387)
-#pragma warning(disable:4996)
+//#pragma warning(disable:6011)
+//#pragma warning(disable:6387)
+//#pragma warning(disable:4996)
 
 
-#pragma warning(disable:4251)
-#pragma warning(disable:4244)
-#pragma warning(disable:6031)
+//#pragma warning(disable:4251)
+//#pragma warning(disable:4244)
+//#pragma warning(disable:6031)
 
 // Socket
-#pragma warning(disable:4309)
-#pragma warning(disable:4477)
-#pragma warning(disable:26439)
+//#pragma warning(disable:4309)
+//#pragma warning(disable:4477)
+//#pragma warning(disable:26439)
 
 // Wall
 //#pragma warning(disable:4464)
-#pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
-#pragma warning(disable:5045) // Security mitigation
-#pragma warning(disable:4710) // Function not inlined
-#pragma warning(disable:4711) // Function inlined
-#pragma warning(disable:4514) // Function not used removed
+//#pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
+//#pragma warning(disable:5045) // Security mitigation
+//#pragma warning(disable:4710) // Function not inlined
+//#pragma warning(disable:4711) // Function inlined
+//#pragma warning(disable:4514) // Function not used removed
 
-#pragma warning(disable:4365) // ignore conversion from long to ui32 (signed/unsigned mismatch)
-#pragma warning(disable:4706) // assignment within conditional expression if( (result = value)) {}
-#pragma warning(disable:4464) // relative include path contains '..'
+//#pragma warning(disable:4365) // ignore conversion from long to ui32 (signed/unsigned mismatch)
+//#pragma warning(disable:4706) // assignment within conditional expression if( (result = value)) {}
+//#pragma warning(disable:4464) // relative include path contains '..'
 
-#endif // defined(WINDOWS_SYSTEM)
+#endif // WINDOWS_SYSTEM
 
 #pragma endregion
 
@@ -203,6 +204,7 @@ typedef WindowsHandle ll_share_memory_handle_t;
 #define __LL_CONSTEVAL__ consteval
 //#define __LL_INLINE__ inline
 #define __LL_EXCEPT__ noexcept
+//#define __LL_RESTRICT__ restrict
 
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 // Process ID
@@ -252,42 +254,59 @@ namespace llcpp {
 // Stores a string
 class LL_SHARED_LIB StrPair {
 	public:
-		ll_string_t str;
-		len_t len;
+		using string_type = ll_string_t;
+		using string_size_type = len_t;
+	public:
+		string_type str;
+		string_size_type len;
 
-		constexpr StrPair() : str(nullptr), len(0ull) {}
-		constexpr StrPair(ll_string_t str, const len_t len) : str(str), len(len) {}
-		StrPair(const StrPair& other) : str(other.str), len(other.len) {}
-		StrPair(StrPair&& other) : str(other.str), len(other.len) { other.clear(); }
-		StrPair& operator=(const StrPair& other) {
+		__LL_CONSTEXPR__ StrPair() __LL_EXCEPT__ : StrPair(nullptr, 0ull) {}
+		__LL_CONSTEXPR__ StrPair(string_type str, const string_size_type len) __LL_EXCEPT__
+			: str(str), len(len) {}
+		__LL_CONSTEXPR__ StrPair(const StrPair& other) __LL_EXCEPT__
+			: StrPair(other.str, other.len) {}
+		__LL_CONSTEXPR__ StrPair(StrPair&& other) __LL_EXCEPT__
+			: StrPair(other.str, other.len)
+		{ other.clear(); }
+		__LL_CONSTEXPR__ StrPair& operator=(const StrPair& other) __LL_EXCEPT__ {
 			this->len = other.len;
 			this->str = other.str;
 			return *this;
 		}
-		StrPair& operator=(StrPair&& other) {
+		__LL_CONSTEXPR__ StrPair& operator=(StrPair&& other) __LL_EXCEPT__ {
 			this->len = other.len;
 			this->str = other.str;
 			other.clear();
 			return *this;
 		}
 
-		__LL_NODISCARD__ ll_bool_t operator==(ll_string_t str) const {
+		__LL_CONSTEXPR__ __LL_NODISCARD__ ll_bool_t operator==(string_type str) const __LL_EXCEPT__ {
 			return str == this->str;
 		}
-		__LL_NODISCARD__ ll_bool_t operator==(const StrPair& str) const {
+		__LL_CONSTEXPR__ __LL_NODISCARD__ ll_bool_t operator==(const StrPair& str) const __LL_EXCEPT__ {
 			return
 				this->str == str.str &&
 				this->len == str.len;
 		}
-		__LL_NODISCARD__ ll_bool_t operator!=(ll_string_t str) const {
+		__LL_CONSTEXPR__ __LL_NODISCARD__ ll_bool_t operator!=(string_type str) const __LL_EXCEPT__ {
 			return !this->operator==(str);
 		}
-		__LL_NODISCARD__ ll_bool_t operator!=(const StrPair& str) const {
+		__LL_CONSTEXPR__ __LL_NODISCARD__ ll_bool_t operator!=(const StrPair& str) const __LL_EXCEPT__ {
 			return !this->operator==(str);
 		}
-		__LL_NODISCARD__ operator ll_bool_t() const { return this->str && this->len > 0; }
+		__LL_CONSTEXPR__ __LL_NODISCARD__ operator ll_bool_t() const __LL_EXCEPT__ {
+			return 
+				static_cast<ll_bool_t>(this->str) &&
+				static_cast<ll_bool_t>(this->len > 0);
+		}
+		__LL_CONSTEXPR__ __LL_NODISCARD__ operator string_type() const __LL_EXCEPT__ {
+			return this->str;
+		}
+		__LL_CONSTEXPR__ __LL_NODISCARD__ operator string_size_type() const __LL_EXCEPT__ {
+			return this->len;
+		}
 
-		void clear() {
+		__LL_CONSTEXPR__ void clear() {
 			this->len = 0;
 			this->str = nullptr;
 		}
@@ -463,7 +482,7 @@ using SearchFunctionBool = ll_bool_t(*)(const __T& __t1, const __T& __t2);
 template<class __T>
 using SwapFunction = void(*)(const __T& __t1, const __T& __t2);
 
-} /* namespace classic */
+} // namespace classic
 
 namespace lambda {
 /*!
@@ -536,10 +555,10 @@ template<class __T>
 using SwapFunction = std::function<void(__T& __t1, __T& __t2)>;
 
 
-} /* namespace lambda */
-} /* namespace functional */
+} // namespace lambda
+} // namespace functional
 
-} /* namespace llcpp */
+} // namespace llcpp
 
 #pragma region Definitions
 #define LL_NULLPTR nullptr
@@ -584,6 +603,20 @@ using SwapFunction = std::function<void(__T& __t1, __T& __t2)>;
 #pragma endregion
 
 namespace llcpp {
+
+template <typename __T>
+struct has_bool_operator {
+    template <typename __U, IS_NOT_BASIC_TYPE(__U)>
+    static auto test(__U* p) -> decltype(static_cast<ll_bool_t>(*p), std::true_type{});
+    
+	template <typename __U, IS_BASIC_TYPE(__U)>
+    static auto test(__U* p) -> std::false_type;
+    
+	template <typename>
+    static auto test(...) -> std::false_type;
+
+	static constexpr bool value = decltype(test<__T>(nullptr))::value;
+};
 
 #pragma region GenralExpresions
 constexpr ll_bool_t LL_TRUE = true;
@@ -708,8 +741,7 @@ __LL_NODISCARD__ constexpr ValueType asType(const EnumClass enumValue) {
 //	return asType<ValueType, EnumClass>(_enum) | enumOrOperation<ValueType, EnumClass, EnumClasses...>(_enums...);
 //}
 
-} /* namespace enums */
-
-} /* namespace llcpp */
+} // namespace enums
+} // namespace llcpp
 
 #endif /* LLCPP_HEADER_LLANYTYPESLIB_HPP_ */

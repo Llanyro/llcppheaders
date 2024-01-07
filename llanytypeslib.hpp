@@ -61,7 +61,6 @@
 //#pragma warning(disable:6029)
 
 //#pragma warning(disable:6011)
-//#pragma warning(disable:6387)
 //#pragma warning(disable:4996)
 
 
@@ -76,22 +75,31 @@
 
 // Wall
 //#pragma warning(disable:4464)
-//#pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
+//#pragma warning(disable:6387)	// Pointer could be nullptr
 //#pragma warning(disable:5045) // Security mitigation
 //#pragma warning(disable:4710) // Function not inlined
 //#pragma warning(disable:4711) // Function inlined
-//#pragma warning(disable:4514) // Function not used removed
-
-//#pragma warning(disable:4365) // ignore conversion from long to ui32 (signed/unsigned mismatch)
 //#pragma warning(disable:4706) // assignment within conditional expression if( (result = value)) {}
 //#pragma warning(disable:4464) // relative include path contains '..'
+#pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
+#pragma warning(disable:4514) // Function not used removed
 
 #endif // WINDOWS_SYSTEM
 
 #pragma endregion
 
+#if defined(WINDOWS_SYSTEM)
+#pragma warning(push)
+#pragma warning(disable:4365) // ignore conversion from long to ui32 (signed/unsigned mismatch)
+
+#endif // WINDOWS_SYSTEM
+
 // Added here to fix inline error /W4
 #include <functional>
+
+#if defined(WINDOWS_SYSTEM)
+#pragma warning(pop)
+#endif // WINDOWS_SYSTEM
 
 #pragma region GeneralTypes
 
@@ -205,6 +213,7 @@ typedef WindowsHandle ll_share_memory_handle_t;
 //#define __LL_INLINE__ inline
 #define __LL_EXCEPT__ noexcept
 //#define __LL_RESTRICT__ restrict
+#define __LL_UNSECURE_FUNCTIONS__
 
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 // Process ID
@@ -280,29 +289,29 @@ class LL_SHARED_LIB StrPair {
 			return *this;
 		}
 
-		__LL_CONSTEXPR__ __LL_NODISCARD__ ll_bool_t operator==(string_type str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ __LL_CONSTEXPR__ ll_bool_t operator==(string_type str) const __LL_EXCEPT__ {
 			return str == this->str;
 		}
-		__LL_CONSTEXPR__ __LL_NODISCARD__ ll_bool_t operator==(const StrPair& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ __LL_CONSTEXPR__ ll_bool_t operator==(const StrPair& str) const __LL_EXCEPT__ {
 			return
 				this->str == str.str &&
 				this->len == str.len;
 		}
-		__LL_CONSTEXPR__ __LL_NODISCARD__ ll_bool_t operator!=(string_type str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ __LL_CONSTEXPR__ ll_bool_t operator!=(string_type str) const __LL_EXCEPT__ {
 			return !this->operator==(str);
 		}
-		__LL_CONSTEXPR__ __LL_NODISCARD__ ll_bool_t operator!=(const StrPair& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ __LL_CONSTEXPR__ ll_bool_t operator!=(const StrPair& str) const __LL_EXCEPT__ {
 			return !this->operator==(str);
 		}
-		__LL_CONSTEXPR__ __LL_NODISCARD__ operator ll_bool_t() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ __LL_CONSTEXPR__ operator ll_bool_t() const __LL_EXCEPT__ {
 			return 
 				static_cast<ll_bool_t>(this->str) &&
 				static_cast<ll_bool_t>(this->len > 0);
 		}
-		__LL_CONSTEXPR__ __LL_NODISCARD__ operator string_type() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ __LL_CONSTEXPR__ operator string_type() const __LL_EXCEPT__ {
 			return this->str;
 		}
-		__LL_CONSTEXPR__ __LL_NODISCARD__ operator string_size_type() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ __LL_CONSTEXPR__ operator string_size_type() const __LL_EXCEPT__ {
 			return this->len;
 		}
 
@@ -311,6 +320,8 @@ class LL_SHARED_LIB StrPair {
 			this->str = nullptr;
 		}
 };
+
+using CStrPair = const StrPair;
 
 namespace functional {
 
@@ -650,7 +661,7 @@ constexpr StrPair FALSE_STR_PAIR = PAIR_STR("False");
 *	@ingroup headers
 */
 template<class T2, class T>
-__LL_NODISCARD__ constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) != LL_NULLPTR); }
+__LL_NODISCARD__ __LL_CONSTEXPR__ ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) != LL_NULLPTR); }
 /*!
 *	@template True
 *	@brief Gets a string of a bool
@@ -674,7 +685,7 @@ __LL_NODISCARD__ constexpr ll_bool_t isSubType(const T* v) { return (dynamic_cas
 *	@ingroup llcpp
 *	@ingroup headers
 */
-__LL_NODISCARD__ constexpr ll_string_t getBoolString(const ll_bool_t v) { return v ? TRUE_STRING : FALSE_STRING; }
+__LL_NODISCARD__ __LL_CONSTEXPR__ ll_string_t getBoolString(const ll_bool_t v) { return v ? TRUE_STRING : FALSE_STRING; }
 /*!
 *	@template True
 *	@brief Gets a StrPair of a bool
@@ -698,7 +709,7 @@ __LL_NODISCARD__ constexpr ll_string_t getBoolString(const ll_bool_t v) { return
 *	@ingroup llcpp
 *	@ingroup headers
 */
-__LL_NODISCARD__ constexpr const StrPair& getBoolStringPair(const ll_bool_t v) { return v ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
+__LL_NODISCARD__ __LL_CONSTEXPR__ CStrPair& getBoolStringPair(const ll_bool_t v) { return v ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
 
 template<class __T, len_t N>
 __LL_NODISCARD__ __LL_CONSTEXPR__ len_t arraySize(__T const (&a)[N]) { return N; }
@@ -727,7 +738,7 @@ namespace enums {
 *	@ingroup enums
 */
 template<class ValueType, class EnumClass>
-__LL_NODISCARD__ constexpr ValueType asType(const EnumClass enumValue) {
+__LL_NODISCARD__ __LL_CONSTEXPR__ ValueType asType(const EnumClass enumValue) {
 	return static_cast<ValueType>(enumValue);
 }
 

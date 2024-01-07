@@ -80,9 +80,9 @@
 //#pragma warning(disable:4710) // Function not inlined
 //#pragma warning(disable:4711) // Function inlined
 //#pragma warning(disable:4706) // assignment within conditional expression if( (result = value)) {}
-//#pragma warning(disable:4464) // relative include path contains '..'
 #pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
 #pragma warning(disable:4514) // Function not used removed
+#pragma warning(disable:4464) // relative include path contains '..'
 
 #endif // WINDOWS_SYSTEM
 

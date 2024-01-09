@@ -585,6 +585,7 @@ using SwapFunction = std::function<void(__T& __t1, __T& __t2)>;
 // Adds basic types in template classes
 #define __LL_CLASS_TEMPLATE_TYPE__(__type__) \
 	using __type = __type__; \
+	using __ctype = const __type__; \
 	using __ptr = __type__*; \
 	using __cptr = const __type__ *; \
 	using __ref = __type__&; \
@@ -595,6 +596,7 @@ using SwapFunction = std::function<void(__T& __t1, __T& __t2)>;
 // Adds basic types with indentifiers in template classes
 #define __LL_CLASS_TEMPLATE_TYPES__(__type__, id) \
 	using __type##id## = __type__; \
+	using __ctype##id## = const __type__; \
 	using __ptr##id## = __type__*; \
 	using __cptr##id## = const __type__ *; \
 	using __ref##id## = __type__&; \

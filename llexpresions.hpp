@@ -2,7 +2,8 @@
 *	llexpresions.hpp
 *
 *	Created on: Jun 25, 2023
-*		Author: llanyro
+ *	  Author: Francisco Julio Ruiz Fernandez
+ *    Author: llanyro
 */
 
 #ifndef LLCPP_HEADER_LLEXPRESIONS_HPP_
@@ -24,7 +25,7 @@ constexpr b64 KbToB = 1e3;
 constexpr b64 MbToB = 1e6;
 constexpr b64 GbToB = 1e9;
 
-} /* namespace bytes */
+} // namespace bytes
 namespace buffers {
 
 constexpr b64 WRITER_BUFFER_LEN = 256;
@@ -34,7 +35,7 @@ constexpr b64 VECTORLIST_BUFFER_INCREMENT_LEN = 128;
 constexpr b64 ARRAY_DEFAULT_BUFFER_LEN = 300;
 constexpr ui8 JEAII_ALGORITHM_BUFFER_SIZE = 10;
 
-} /* namespace buffers */
+} // namespace buffers
 namespace ascii {
 constexpr ui8 MAYUS_MINUS_DIFF = 'a' - 'A';
 constexpr StrPair ALPHABET_MINUS_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyz");
@@ -385,18 +386,18 @@ enum class ASCII {
     Undefined,
 };
 
-} /* namespace ascii */
+} // namespace ascii
 namespace list {
 constexpr len_t npos = 0xffffffffffffffff;
 
-} /* namespace list */
+} // namespace list
 namespace strings {
 
 constexpr StrPair NULL_VALUE_STR = PAIR_STR("Value cannot be nullptr");
 constexpr StrPair ZERO_BYTES_VALUE_STR = PAIR_STR("Number of bytes provided cannot be 0");
 constexpr StrPair NULL_STRPAIR = PAIR_STR("Nullstring");
 
-} /* namespace strings */
+} // namespace strings
 namespace color {
 
 // Text colors
@@ -421,17 +422,17 @@ constexpr StrPair BG_MAGENTA = PAIR_STR("\033[45m");
 constexpr StrPair BG_CYAN = PAIR_STR("\033[46m");
 constexpr StrPair BG_WHITE = PAIR_STR("\033[47m");
 
-} /* namespace color */
+} // namespace color
 namespace extensions {
 #if defined(WINDOWS_SYSTEM)
 constexpr StrPair DLL_EXTENSION_STR = PAIR_STR(".dll");
 #else
 constexpr StrPair DLL_EXTENSION_STR = PAIR_STR(".os");
 #endif
-} /* namespace extensions */
+} // namespace extensions
 
-} /* namespace expresions */
-} /* namespace header */
-} /* namespace llcpp */
+} // namespace expresions
+} // namespace header
+} // namespace llcpp
 
-#endif /* LLCPP_HEADER_LLEXPRESIONS_HPP_ */
+#endif // LLCPP_HEADER_LLEXPRESIONS_HPP_

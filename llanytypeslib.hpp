@@ -2,7 +2,8 @@
 *	llanytypeslib.hpp
 *
 *	Created on: Feb 28, 2022
-*		Author: llanyro
+ *	  Author: Francisco Julio Ruiz Fernandez
+ *    Author: llanyro
 */
 
 #ifndef LLCPP_HEADER_LLANYTYPESLIB_HPP_

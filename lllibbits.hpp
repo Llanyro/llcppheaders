@@ -2,7 +2,8 @@
 *	lllibbits.h
 *
 *	Created on: Nov 26, 2020
-*		Author: llanyro
+ *	  Author: Francisco Julio Ruiz Fernandez
+ *    Author: llanyro
 */
 
 #ifndef LLCPP_HEADER_LLLIBBITS_H_
@@ -185,8 +186,8 @@ LL_SHARED_LIB __LL_CONSTEVAL__ void clear(T& value) noexcept {
 }
 #pragma endregion
 
-} /* namespace bit */
-} /* namespace header */
-} /* namespace llcpp */
+} // namespace bit
+} // namespace header
+} // namespace llcpp
 
-#endif /* LLCPP_HEADER_LLLIBBITS_H_ */
+#endif // LLCPP_HEADER_LLLIBBITS_H_

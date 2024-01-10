@@ -36,7 +36,7 @@ class Singleton {
 		}
 };
 
-} /* namespace static_ */
+} // namespace static_
 
 namespace dynamic {
 
@@ -65,10 +65,10 @@ template <class T>
 T* Singleton<T>::instance = LL_NULLPTR;
 #pragma endregion
 
-} /* namespace dynamic */
+} // namespace dynamic
 
-} /* namespace singleton */
-} /* namespace header */
-} /* namespace llcpp */
+} // namespace singleton
+} // namespace header
+} // namespace llcpp
 
 #endif // !LLCPP_HEADER_SINGLETON_HPP_

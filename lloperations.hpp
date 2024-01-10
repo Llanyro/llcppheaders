@@ -2,7 +2,8 @@
 *	lloperations.hpp
 *
 *	Created on: Jun 25, 2023
-*		Author: llanyro
+ *	  Author: Francisco Julio Ruiz Fernandez
+ *    Author: llanyro
 */
 
 #ifndef LLCPP_HEADER_LLOPERATIONS_HPP_
@@ -225,8 +226,8 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ll_bool_t compareBool(const void
 //	 return { abs(v1.first, v2.first), abs(v1.second, v2.second) };
 //}
 
-} /* namespace operations */
-} /* namespace header */
-} /* namespace llcpp */
+} // namespace operations
+} // namespace header
+} // namespace llcpp
 
-#endif /* LLCPP_HEADER_LLOPERATIONS_HPP_ */
+#endif // LLCPP_HEADER_LLOPERATIONS_HPP_

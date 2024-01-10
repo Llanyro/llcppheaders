@@ -78,8 +78,8 @@
 //#pragma warning(disable:6387)	// Pointer could be nullptr
 //#pragma warning(disable:5045) // Security mitigation
 //#pragma warning(disable:4710) // Function not inlined
-//#pragma warning(disable:4711) // Function inlined
 //#pragma warning(disable:4706) // assignment within conditional expression if( (result = value)) {}
+#pragma warning(disable:4711) // Function inlined
 #pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
 #pragma warning(disable:4514) // Function not used removed
 #pragma warning(disable:4464) // relative include path contains '..'

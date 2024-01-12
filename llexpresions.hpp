@@ -17,13 +17,13 @@ namespace expresions {
 
 namespace bytes {
 
-constexpr b64 bToKb = 1e-3;
-constexpr b64 bToMb = 1e-6;
-constexpr b64 bToGb = 1e-9;
+constexpr f64 bToKb = 1e-3;
+constexpr f64 bToMb = 1e-6;
+constexpr f64 bToGb = 1e-9;
 
-constexpr b64 KbToB = 1e3;
-constexpr b64 MbToB = 1e6;
-constexpr b64 GbToB = 1e9;
+constexpr b64 KbToB = static_cast<b64>(1e3);
+constexpr b64 MbToB = static_cast<b64>(1e6);
+constexpr b64 GbToB = static_cast<b64>(1e9);
 
 } // namespace bytes
 namespace buffers {

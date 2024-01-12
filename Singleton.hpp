@@ -24,14 +24,14 @@ namespace singleton {
 
 namespace static_ {
 
-template <class T>
+template <class __T>
 class Singleton {
 	protected:
 		Singleton() {}
 		~Singleton() {}
 	public:
-		static __LL_NODISCARD__ T& getInstance() noexcept {
-			static T instance;
+		static __LL_NODISCARD__ __T& getInstance() __LL_EXCEPT__ {
+			static __T instance;
 			return instance;
 		}
 };
@@ -40,29 +40,29 @@ class Singleton {
 
 namespace dynamic {
 
-template <class T>
+template <class __T>
 class Singleton {
 	protected:
 		Singleton() {}
 		~Singleton() {}
-		static T* instance;
+		static __T* instance;
 	public:
-		static __LL_NODISCARD__ T& getInstance() noexcept {
-			if (!Singleton<T>::instance)
-				Singleton<T>::instance = new T();
-			return *Singleton<T>::instance;
+		static __LL_NODISCARD__ __T& getInstance() __LL_EXCEPT__ {
+			if (!Singleton<__T>::instance)
+				Singleton<__T>::instance = new T();
+			return *Singleton<__T>::instance;
 		}
 		static void freeInstance() noexcept {
-			if (Singleton<T>::instance) {
-				delete Singleton<T>::instance;
-				Singleton<T>::instance = LL_NULLPTR;
+			if (Singleton<__T>::instance) {
+				delete Singleton<__T>::instance;
+				Singleton<__T>::instance = LL_NULLPTR;
 			}
 		}
 };
 
 #pragma region Singleton
-template <class T>
-T* Singleton<T>::instance = LL_NULLPTR;
+template <class __T>
+__T* Singleton<__T>::instance = LL_NULLPTR;
 #pragma endregion
 
 } // namespace dynamic

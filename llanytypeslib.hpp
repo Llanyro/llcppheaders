@@ -65,7 +65,6 @@
 //#pragma warning(disable:4996)
 
 
-//#pragma warning(disable:4251)
 //#pragma warning(disable:4244)
 //#pragma warning(disable:6031)
 
@@ -84,6 +83,8 @@
 #pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
 #pragma warning(disable:4514) // Function not used removed
 #pragma warning(disable:4464) // relative include path contains '..'
+
+#pragma warning(disable:4251) // Exporting in dll a class that contains stl objects
 
 #endif // WINDOWS_SYSTEM
 
@@ -215,6 +216,7 @@ typedef WindowsHandle ll_share_memory_handle_t;
 #define __LL_EXCEPT__ noexcept
 //#define __LL_RESTRICT__ restrict
 #define __LL_UNSECURE_FUNCTIONS__
+#define __LL_SPECTRE_FUNCTIONS__
 
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 // Process ID
@@ -327,170 +329,170 @@ using CStrPair = const StrPair;
 namespace functional {
 
 /*!
-*	@template False
-*	@brief Function type to compare 2 objects
-*
-*	This needs to return a value to check if object __t1 is same to object __t2
-*	The implementation of this function needs to return:
-*		 0 if both are the same
-*		-1 if __t1 smaller
-*		 1 if __t1 is bigger
-* 
-*	@param[in] __t1 First object to compare
-*	@param[in] __t2 Second object to compare
-*
-*	@return Comparacion result
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref comparator
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template False
+ *	@brief Function type to compare 2 objects
+ *
+ *	This needs to return a value to check if object __t1 is same to object __t2
+ *	The implementation of this function needs to return:
+ *		 0 if both are the same
+ *		-1 if __t1 smaller
+ *		 1 if __t1 is bigger
+ * 
+ *	@param[in] __t1 First object to compare
+ *	@param[in] __t2 Second object to compare
+ *
+ *	@return Comparacion result
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref comparator
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 typedef i32 (*Comparei32)(const void* __t1, const void* __t2);
 /*!
-*	@template False
-*	@brief Function type to compare 2 objects
-*
-*	@param[in] __t1 First object to compare
-*	@param[in] __t2 Second object to compare
-*
-*	@return True if __t1 is same as __t2
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref comparator
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template False
+ *	@brief Function type to compare 2 objects
+ *
+ *	@param[in] __t1 First object to compare
+ *	@param[in] __t2 Second object to compare
+ *
+ *	@return True if __t1 is same as __t2
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref comparator
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 typedef ll_bool_t (*CompareBool)(const void* __t1, const void* __t2);
 
 /*!
-*	@template False
-*	@brief Function type to compare 2 objects
-*
-*	This needs to return a value to check if object __t1 is same to object __t2
-*	The implementation of this function needs to return:
-*		 0 if both are the same
-*		-1 if __t1 smaller
-*		 1 if __t1 is bigger
-* 
-*	@param[in] __t1 First object to compare
-*	@param[in] __t2 Second object to compare
-*	@param[in] __extra__ Extra data to being used by user
-*
-*	@return Comparacion result
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref comparator
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template False
+ *	@brief Function type to compare 2 objects
+ *
+ *	This needs to return a value to check if object __t1 is same to object __t2
+ *	The implementation of this function needs to return:
+ *		 0 if both are the same
+ *		-1 if __t1 smaller
+ *		 1 if __t1 is bigger
+ * 
+ *	@param[in] __t1 First object to compare
+ *	@param[in] __t2 Second object to compare
+ *	@param[in] __extra__ Extra data to being used by user
+ *
+ *	@return Comparacion result
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref comparator
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 typedef i32 (*Comparei32Extra)(const void* __t1, const void* __t2, void* __extra__);
 /*!
-*	@template False
-*	@brief Function type to compare 2 objects
-*
-*	@param[in] __t1 First object to compare
-*	@param[in] __t2 Second object to compare
-*	@param[in] __extra__ Extra data to being used by user
-*
-*	@return True if __t1 is same as __t2
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref comparator
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template False
+ *	@brief Function type to compare 2 objects
+ *
+ *	@param[in] __t1 First object to compare
+ *	@param[in] __t2 Second object to compare
+ *	@param[in] __extra__ Extra data to being used by user
+ *
+ *	@return True if __t1 is same as __t2
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref comparator
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 typedef ll_bool_t (*CompareBoolExtra)(const void* __t1, const void* __t2, void* __extra__);
 
 namespace classic {
 /*!
-*	@template True
-*	@brief Function type to compare 2 objects
-*
-*	This needs to return a value to check if object __t1 is same to object __t2
-*	The implementation of this function needs to return:
-*		 0 if both are the same
-*		-1 if __t1 smaller
-*		 1 if __t1 is bigger
-* 
-*	@param[in] __t1 First object to compare
-*	@param[in] __t2 Second object to compare
-*
-*	@return Comparacion result
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref comparator
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template True
+ *	@brief Function type to compare 2 objects
+ *
+ *	This needs to return a value to check if object __t1 is same to object __t2
+ *	The implementation of this function needs to return:
+ *		 0 if both are the same
+ *		-1 if __t1 smaller
+ *		 1 if __t1 is bigger
+ * 
+ *	@param[in] __t1 First object to compare
+ *	@param[in] __t2 Second object to compare
+ *
+ *	@return Comparacion result
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref comparator
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 template<class __T>
 using SearchFunctioni32 = i32(*)(const __T& __t1, const __T& __t2);
 /*!
-*	@template True
-*	@brief Function type to compare 2 objects
-*
-*	@param[in] __t1 First object to compare
-*	@param[in] __t2 Second object to compare
-*
-*	@return True if __t1 is same as __t2
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref comparator
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template True
+ *	@brief Function type to compare 2 objects
+ *
+ *	@param[in] __t1 First object to compare
+ *	@param[in] __t2 Second object to compare
+ *
+ *	@return True if __t1 is same as __t2
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref comparator
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 template<class __T>
 using SearchFunctionBool = ll_bool_t(*)(const __T& __t1, const __T& __t2);
 
 
 
 /*!
-*	@template True
-*	@brief Swaps 2 objects
-*
-*	@param[in] __t1 First object to swap
-*	@param[in] __t2 Second object to swap
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref swap
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template True
+ *	@brief Swaps 2 objects
+ *
+ *	@param[in] __t1 First object to swap
+ *	@param[in] __t2 Second object to swap
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref swap
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 template<class __T>
 using SwapFunction = void(*)(const __T& __t1, const __T& __t2);
 
@@ -498,71 +500,71 @@ using SwapFunction = void(*)(const __T& __t1, const __T& __t2);
 
 namespace lambda {
 /*!
-*	@template True
-*	@brief Function type to compare 2 objects
-*
-*	This needs to return a value to check if object __t1 is same to object __t2
-*	The implementation of this function needs to return:
-*		 0 if both are the same
-*		-1 if __t1 smaller
-*		 1 if __t1 is bigger
-* 
-*	@param[in] __t1 First object to compare
-*	@param[in] __t2 Second object to compare
-*
-*	@return Comparacion result
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref comparator
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template True
+ *	@brief Function type to compare 2 objects
+ *
+ *	This needs to return a value to check if object __t1 is same to object __t2
+ *	The implementation of this function needs to return:
+ *		 0 if both are the same
+ *		-1 if __t1 smaller
+ *		 1 if __t1 is bigger
+ * 
+ *	@param[in] __t1 First object to compare
+ *	@param[in] __t2 Second object to compare
+ *
+ *	@return Comparacion result
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref comparator
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 template<class __T> using SearchFunctioni32 = std::function<i32(const __T& __t1)>;
 /*!
-*	@template True
-*	@brief Function type to compare 2 objects
-*
-*	@param[in] __t1 First object to compare
-*	@param[in] __t2 Second object to compare
-*
-*	@return True if __t1 is same as __t2
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref comparator
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template True
+ *	@brief Function type to compare 2 objects
+ *
+ *	@param[in] __t1 First object to compare
+ *	@param[in] __t2 Second object to compare
+ *
+ *	@return True if __t1 is same as __t2
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref comparator
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 template<class __T> using SearchFunctionBool = std::function<ll_bool_t(const __T& __t1)>;
 
 
 
 /*!
-*	@template True
-*	@brief Swaps 2 objects
-*
-*	@param[in] __t1 First object to swap
-*	@param[in] __t2 Second object to swap
-*
-*	@thread_safety defined by implementation
-*	@thread_protection defined by implementation
-*
-*	@sa @ref swap
-*
-*	@since Added in version 2.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template True
+ *	@brief Swaps 2 objects
+ *
+ *	@param[in] __t1 First object to swap
+ *	@param[in] __t2 Second object to swap
+ *
+ *	@thread_safety defined by implementation
+ *	@thread_protection defined by implementation
+ *
+ *	@sa @ref swap
+ *
+ *	@since Added in version 2.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 template<class __T>
 using SwapFunction = std::function<void(__T& __t1, __T& __t2)>;
 
@@ -645,73 +647,73 @@ constexpr StrPair FALSE_STR_PAIR = PAIR_STR("False");
 #pragma endregion
 
 /*!
-*	@template True
-*	@brief Check if type inherits from other class
-*
-*	@param[in] v Pointer of class to check
-*
-*	@return If class T inherits from T2 true sis returned
-*
-*	@constexpr True
-*
-*	@thread_safety This function may be called from any thread.
-*
-*	@sa @ref llcpp
-*
-*	@since Added in version 1.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
-template<class T2, class T>
-__LL_NODISCARD__ __LL_CONSTEXPR__ ll_bool_t isSubType(const T* v) { return (dynamic_cast<const T2*>(v) != LL_NULLPTR); }
+ *	@template True
+ *	@brief Check if type inherits from other class
+ *
+ *	@param[in] v Pointer of class to check
+ *
+ *	@return If class __T inherits from T2 true sis returned
+ *
+ *	@constexpr True
+ *
+ *	@thread_safety This function may be called from any thread.
+ *
+ *	@sa @ref llcpp
+ *
+ *	@since Added in version 1.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
+template<class __U, class __T>
+__LL_NODISCARD__ __LL_CONSTEXPR__ ll_bool_t isSubType(const __T* v) { return (dynamic_cast<const __U*>(v) != LL_NULLPTR); }
 /*!
-*	@template True
-*	@brief Gets a string of a bool
-*
-*	Gives a user a string that represents the bool provided
-*	true will be : "True"
-*	false will be: "False"
-*
-*	@param[in] v Bool value
-*
-*	@return String that represents bool value
-*
-*	@constexpr True
-*
-*	@thread_safety This function may be called from any thread.
-*
-*	@sa @ref llcpp
-*
-*	@since Added in version 1.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template True
+ *	@brief Gets a string of a bool
+ *
+ *	Gives a user a string that represents the bool provided
+ *	true will be : "True"
+ *	false will be: "False"
+ *
+ *	@param[in] v Bool value
+ *
+ *	@return String that represents bool value
+ *
+ *	@constexpr True
+ *
+ *	@thread_safety This function may be called from any thread.
+ *
+ *	@sa @ref llcpp
+ *
+ *	@since Added in version 1.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 __LL_NODISCARD__ __LL_CONSTEXPR__ ll_string_t getBoolString(const ll_bool_t v) { return v ? TRUE_STRING : FALSE_STRING; }
 /*!
-*	@template True
-*	@brief Gets a StrPair of a bool
-*
-*	Gives a user a string that represents the bool provided
-*	true will be : { "True", 4 }
-*	false will be: { "False", 5 }
-*
-*	@param[in] v Bool value
-*
-*	@return StrPair that represents bool value
-*
-*	@constexpr True
-*
-*	@thread_safety This function may be called from any thread.
-*
-*	@sa @ref llcpp
-*
-*	@since Added in version 1.0.
-*
-*	@ingroup llcpp
-*	@ingroup headers
-*/
+ *	@template True
+ *	@brief Gets a StrPair of a bool
+ *
+ *	Gives a user a string that represents the bool provided
+ *	true will be : { "True", 4 }
+ *	false will be: { "False", 5 }
+ *
+ *	@param[in] v Bool value
+ *
+ *	@return StrPair that represents bool value
+ *
+ *	@constexpr True
+ *
+ *	@thread_safety This function may be called from any thread.
+ *
+ *	@sa @ref llcpp
+ *
+ *	@since Added in version 1.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup headers
+ */
 __LL_NODISCARD__ __LL_CONSTEXPR__ CStrPair& getBoolStringPair(const ll_bool_t v) { return v ? TRUE_STR_PAIR : FALSE_STR_PAIR; }
 
 template<class __T, len_t N>
@@ -720,26 +722,26 @@ __LL_NODISCARD__ __LL_CONSTEXPR__ len_t arraySize(__T const (&a)[N]) { return N;
 namespace enums {
 
 /*!
-*	@template True
-*	@brief Casts an enum to given type
-*
-*	This is the same to do as static_cast<T>
-*
-*	@param[in] enumValue Enum value to cast
-*
-*	@constexpr True
-*
-*	@return Value as type provided
-*
-*	@thread_safety This function may be called from any thread.
-*
-*	@sa @ref llcpp
-*
-*	@since Added in version 1.0.
-*
-*	@ingroup llcpp
-*	@ingroup enums
-*/
+ *	@template True
+ *	@brief Casts an enum to given type
+ *
+ *	This is the same to do as static_cast<__T>
+ *
+ *	@param[in] enumValue Enum value to cast
+ *
+ *	@constexpr True
+ *
+ *	@return Value as type provided
+ *
+ *	@thread_safety This function may be called from any thread.
+ *
+ *	@sa @ref llcpp
+ *
+ *	@since Added in version 1.0.
+ *
+ *	@ingroup llcpp
+ *	@ingroup enums
+ */
 template<class ValueType, class EnumClass>
 __LL_NODISCARD__ __LL_CONSTEXPR__ ValueType asType(const EnumClass enumValue) {
 	return static_cast<ValueType>(enumValue);

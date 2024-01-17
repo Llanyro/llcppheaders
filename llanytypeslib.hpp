@@ -620,20 +620,6 @@ using SwapFunction = std::function<void(__T& __t1, __T& __t2)>;
 
 namespace llcpp {
 
-template <typename __T>
-struct has_bool_operator {
-    template <typename __U, IS_NOT_BASIC_TYPE(__U)>
-    static auto test(__U* p) -> decltype(static_cast<ll_bool_t>(*p), std::true_type{});
-    
-	template <typename __U, IS_BASIC_TYPE(__U)>
-    static auto test(__U* p) -> std::false_type;
-    
-	template <typename>
-    static auto test(...) -> std::false_type;
-
-	static constexpr bool value = decltype(test<__T>(nullptr))::value;
-};
-
 #pragma region GenralExpresions
 constexpr ll_bool_t LL_TRUE = true;
 constexpr ll_bool_t LL_FALSE = false;
@@ -645,6 +631,87 @@ constexpr StrPair TRUE_STR_PAIR = PAIR_STR("True");
 constexpr StrPair FALSE_STR_PAIR = PAIR_STR("False");
 
 #pragma endregion
+
+namespace traits {
+
+struct TestClassBase {
+	//public:
+	//	TestClassBase() {}
+
+		operator bool() const {
+			return false;
+		}
+		void swap(TestClass& other) {
+
+		}
+		void clear() {}
+};
+
+struct TestClass : public TestClassBase {
+	//public:
+	//	TestClass() : TestClassBase() {}
+	//operator bool() const {
+	//	return false;
+	//}
+	//void swap(TestClass& other) {
+	//
+	//}
+	//void clear() {}
+};
+
+template <class __T, class __V>
+struct has_type_operator {
+    template <class __U, IS_NOT_BASIC_TYPE(__U)>
+    static auto test(__U* p) -> decltype(p->operator __V(), std::true_type{});
+
+	template <class __U, IS_BASIC_TYPE(__U)>
+	static auto test(__U* p) ->std::false_type;
+	
+	template <class>
+	static auto test(...) -> std::false_type;
+
+	static constexpr ll_bool_t value = decltype(test<__T>(nullptr))::value;
+};
+
+template <class __T>
+struct has_swap {
+	template <class __U, IS_NOT_BASIC_TYPE(__U)>
+	static auto test(__U* p) -> decltype(p->swap(*p), std::true_type{});
+
+	template <class __U, IS_BASIC_TYPE(__U)>
+	static auto test(__U* p)->std::false_type;
+
+	template <class>
+	static auto test(...)->std::false_type;
+
+	static constexpr ll_bool_t value = decltype(test<__T>(nullptr))::value;
+};
+
+#define __TEMPLATE_HAS_SIMPLE_FUNCTION__(function) \
+	template <class __T> \
+	struct has_##function## { \
+		template <class __U, IS_NOT_BASIC_TYPE(__U)> \
+		static auto test(__U* p) -> decltype(p->##function##(), std::true_type{}); \
+		template <class __U, IS_BASIC_TYPE(__U)> \
+		static auto test(__U* p)->std::false_type; \
+		template <class> \
+		static auto test(...)->std::false_type; \
+		static constexpr ll_bool_t value = decltype(test<__T>(nullptr))::value; \
+	}
+
+__TEMPLATE_HAS_SIMPLE_FUNCTION__(clear);
+
+constexpr ll_bool_t test_1_obj = has_type_operator<TestClass, ll_bool_t>::value;
+constexpr ll_bool_t test_1_int = has_type_operator<int, ll_bool_t>::value;
+
+constexpr ll_bool_t test_2_obj = has_clear<TestClass>::value;
+constexpr ll_bool_t test_2_int = has_clear<int>::value;
+
+constexpr ll_bool_t test_2_obj = has_swap<TestClass>::value;
+constexpr ll_bool_t test_2_int = has_swap<int>::value;
+
+} // namespace traits
+
 
 /*!
  *	@template True
@@ -758,6 +825,7 @@ __LL_NODISCARD__ __LL_CONSTEXPR__ ValueType asType(const EnumClass enumValue) {
 //}
 
 } // namespace enums
+
 } // namespace llcpp
 
 #endif /* LLCPP_HEADER_LLANYTYPESLIB_HPP_ */

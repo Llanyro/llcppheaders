@@ -291,12 +291,18 @@ constexpr ll_bool_t LL_FALSE = false;
 constexpr ll_string_t TRUE_STRING = "True";
 constexpr ll_string_t FALSE_STRING = "False";
 
-//constexpr StrPair TRUE_STR_PAIR = pair_str("True");
-//constexpr StrPair FALSE_STR_PAIR = pair_str("False");
+constexpr StrPair TRUE_STR_PAIR = pair_str("True");
+constexpr StrPair FALSE_STR_PAIR = pair_str("False");
 
 #pragma endregion
 
 namespace traits {
+
+#if defined(WINDOWS_SYSTEM)
+#pragma warning(push)
+#pragma warning(disable:4100)	// Unreferenced formal parameter
+
+#endif // WINDOWS_SYSTEM
 
 struct TestClassBase {
 	operator bool() const {
@@ -320,14 +326,22 @@ struct TestClassBad {
 
 struct TestClassPrivateCopy {
 	private:
+		TestClassPrivateCopy(const TestClassPrivateCopy&) = delete;
+		TestClassPrivateCopy(TestClassPrivateCopy&&) = delete;
 		TestClassPrivateCopy& operator=(const TestClassPrivateCopy&) = delete;
 		TestClassPrivateCopy& operator=(TestClassPrivateCopy&&) = delete;
 };
 
 struct TestClassNoCopy {
+	TestClassNoCopy(const TestClassNoCopy&) = delete;
+	TestClassNoCopy(TestClassNoCopy&&) = delete;
 	TestClassNoCopy& operator=(const TestClassNoCopy&) = delete;
 	TestClassNoCopy& operator=(TestClassNoCopy&&) = delete;
 };
+
+#if defined(WINDOWS_SYSTEM)
+#pragma warning(pop)
+#endif // WINDOWS_SYSTEM
 
 template<class __T>
 inline constexpr ll_bool_t is_basic_type_v = std::_Is_any_of_v<__T, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64>;
@@ -430,9 +444,9 @@ __TEMPLATE_HAS_FUNCTION__(compare_operator, p->operator<=>(*p));
  *	@ingroup llcpp
  *	@ingroup headers
  */
-//__LL_NODISCARD__ constexpr ll_string_t getBoolString(const ll_bool_t v) {
-//	return v ? TRUE_STRING : FALSE_STRING;
-//}
+__LL_NODISCARD__ constexpr ll_string_t getBoolString(const ll_bool_t v) {
+	return v ? TRUE_STRING : FALSE_STRING;
+}
 /*!
  *	@template True
  *	@brief Gets a StrPair of a bool
@@ -456,9 +470,9 @@ __TEMPLATE_HAS_FUNCTION__(compare_operator, p->operator<=>(*p));
  *	@ingroup llcpp
  *	@ingroup headers
  */
-//__LL_NODISCARD__ constexpr StrPair getBoolStringPair(const ll_bool_t v) {
-//	return v ? TRUE_STR_PAIR : FALSE_STR_PAIR;
-//}
+__LL_NODISCARD__ constexpr StrPair getBoolStringPair(const ll_bool_t v) {
+	return v ? TRUE_STR_PAIR : FALSE_STR_PAIR;
+}
 
 template<class __T, len_t N>
 __LL_NODISCARD__ constexpr len_t arraySize(__T const (&a)[N]) { return N; }

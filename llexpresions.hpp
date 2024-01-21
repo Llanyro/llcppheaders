@@ -38,13 +38,13 @@ constexpr ui8 JEAII_ALGORITHM_BUFFER_SIZE = 10;
 } // namespace buffers
 namespace ascii {
 constexpr ui8 MAYUS_MINUS_DIFF = 'a' - 'A';
-constexpr StrPair ALPHABET_MINUS_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyz");
-constexpr StrPair ALPHABET_MAYUS_CHARS = PAIR_STR("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-constexpr StrPair ALPHABET_NUMS_CHARS = PAIR_STR("0123456789");
-constexpr StrPair ALPHABET_MAYUS_MINUS_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-constexpr StrPair ALPHABET_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-constexpr StrPair SPECIAL_CHARS = PAIR_STR("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
-constexpr StrPair ALL_VISIBLE_CHARS = PAIR_STR("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
+constexpr StrPair ALPHABET_MINUS_CHARS = pair_str("abcdefghijklmnopqrstuvwxyz");
+constexpr StrPair ALPHABET_MAYUS_CHARS = pair_str("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+constexpr StrPair ALPHABET_NUMS_CHARS = pair_str("0123456789");
+constexpr StrPair ALPHABET_MAYUS_MINUS_CHARS = pair_str("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+constexpr StrPair ALPHABET_CHARS = pair_str("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+constexpr StrPair SPECIAL_CHARS = pair_str("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
+constexpr StrPair ALL_VISIBLE_CHARS = pair_str("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 
 
 enum class ASCII_Base {
@@ -393,41 +393,41 @@ constexpr len_t npos = 0xffffffffffffffff;
 } // namespace list
 namespace strings {
 
-constexpr StrPair NULL_VALUE_STR = PAIR_STR("Value cannot be nullptr");
-constexpr StrPair ZERO_BYTES_VALUE_STR = PAIR_STR("Number of bytes provided cannot be 0");
-constexpr StrPair NULL_STRPAIR = PAIR_STR("Nullstring");
+constexpr StrPair NULL_VALUE_STR = pair_str("Value cannot be nullptr");
+constexpr StrPair ZERO_BYTES_VALUE_STR = pair_str("Number of bytes provided cannot be 0");
+constexpr StrPair NULL_STRPAIR = pair_str("Nullstring");
 
 } // namespace strings
 namespace color {
 
 // Text colors
-constexpr StrPair RESET = PAIR_STR("\033[0m");
-constexpr StrPair BLACK = PAIR_STR("\033[30m");
-constexpr StrPair RED = PAIR_STR("\033[31m");
-constexpr StrPair GREEN = PAIR_STR("\033[32m");
-constexpr StrPair YELLOW = PAIR_STR("\033[33m");
-constexpr StrPair BLUE = PAIR_STR("\033[34m");
-constexpr StrPair MAGENTA = PAIR_STR("\033[35m");
-constexpr StrPair CYAN = PAIR_STR("\033[36m");
-constexpr StrPair WHITE = PAIR_STR("\033[37m");
+constexpr StrPair RESET = pair_str("\033[0m");
+constexpr StrPair BLACK = pair_str("\033[30m");
+constexpr StrPair RED = pair_str("\033[31m");
+constexpr StrPair GREEN = pair_str("\033[32m");
+constexpr StrPair YELLOW = pair_str("\033[33m");
+constexpr StrPair BLUE = pair_str("\033[34m");
+constexpr StrPair MAGENTA = pair_str("\033[35m");
+constexpr StrPair CYAN = pair_str("\033[36m");
+constexpr StrPair WHITE = pair_str("\033[37m");
 
 // Background colors
-constexpr StrPair BG_RESET = PAIR_STR("\033[49m");
-constexpr StrPair BG_BLACK = PAIR_STR("\033[40m");
-constexpr StrPair BG_RED = PAIR_STR("\033[41m");
-constexpr StrPair BG_GREEN = PAIR_STR("\033[42m");
-constexpr StrPair BG_YELLOW = PAIR_STR("\033[43m");
-constexpr StrPair BG_BLUE = PAIR_STR("\033[44m");
-constexpr StrPair BG_MAGENTA = PAIR_STR("\033[45m");
-constexpr StrPair BG_CYAN = PAIR_STR("\033[46m");
-constexpr StrPair BG_WHITE = PAIR_STR("\033[47m");
+constexpr StrPair BG_RESET = pair_str("\033[49m");
+constexpr StrPair BG_BLACK = pair_str("\033[40m");
+constexpr StrPair BG_RED = pair_str("\033[41m");
+constexpr StrPair BG_GREEN = pair_str("\033[42m");
+constexpr StrPair BG_YELLOW = pair_str("\033[43m");
+constexpr StrPair BG_BLUE = pair_str("\033[44m");
+constexpr StrPair BG_MAGENTA = pair_str("\033[45m");
+constexpr StrPair BG_CYAN = pair_str("\033[46m");
+constexpr StrPair BG_WHITE = pair_str("\033[47m");
 
 } // namespace color
 namespace extensions {
 #if defined(WINDOWS_SYSTEM)
-constexpr StrPair DLL_EXTENSION_STR = PAIR_STR(".dll");
+constexpr StrPair DLL_EXTENSION_STR = pair_str(".dll");
 #else
-constexpr StrPair DLL_EXTENSION_STR = PAIR_STR(".os");
+constexpr StrPair DLL_EXTENSION_STR = pair_str(".os");
 #endif
 } // namespace extensions
 

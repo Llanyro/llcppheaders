@@ -108,7 +108,9 @@
 	#pragma warning(disable:4514) // Function not used removed
 	#pragma warning(disable:4464) // relative include path contains '..'
 
-	#pragma warning(disable:4251) // Exporting in dll a class that contains stl objects
+	#pragma warning(disable:4251) // Exporting in dll a class that contains stl objectsç
+
+	#define __LL_SPECTRE_FUNCTIONS__
 #endif // WINDOWS_SYSTEM
 
 #endif /* LLCPP_HEADER_OS_HPP_ */

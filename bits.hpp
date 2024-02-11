@@ -1,23 +1,20 @@
 /*
-*	lllibbits.h
-*
-*	Created on: Nov 26, 2020
+ *	bits.h
+ *
+ *	Created on: Nov 26, 2020
  *	  Author: Francisco Julio Ruiz Fernandez
  *    Author: llanyro
-*/
+ */
 
-#ifndef LLCPP_HEADER_LLLIBBITS_H_
-#define LLCPP_HEADER_LLLIBBITS_H_
+#ifndef LLCPP_HEADER_BITS_H_
+#define LLCPP_HEADER_BITS_H_
 
-#include "llanytypeslib.hpp"
+#include "definitions.hpp"
+#include "traits.hpp"
 
 namespace llcpp {
-typedef ll_uchar_t ll_bitarray_t;
-typedef ll_uchar_t ll_bits_t;
-typedef ll_uchar_t ll_byte_t;
 	
-namespace header {
-namespace bit {
+namespace bits {
 constexpr ui8 BITARRAY_LEN = 8;
 
 /*!
@@ -45,10 +42,8 @@ constexpr ui8 BITARRAY_LEN = 8;
  *	@ingroup header
  *	@ingroup bit
  */
-template<class __T, ui8 pos>
-LL_SHARED_LIB __LL_CONSTEVAL__ void set(__T& value) noexcept {
-	value |= static_cast<__T>(1 << pos);
-}
+template<class T, ui8 pos>
+constexpr void set(T& value) __LL_EXCEPT__ { value |= static_cast<T>(1 << pos); }
 /*!
  *	@template True
  *	@brief Get bit value by given position
@@ -76,10 +71,8 @@ LL_SHARED_LIB __LL_CONSTEVAL__ void set(__T& value) noexcept {
  *	@ingroup header
  *	@ingroup bit
  */
-template<class __T, ui8 pos>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ui8 get(__T value) noexcept {
-	return (value >> pos) & 1;
-}
+template<class T, ui8 pos>
+__LL_NODISCARD__ constexpr ui8 get(T value) __LL_EXCEPT__ { return (value >> pos) & 1; }
 /*!
  *	@template False
  *	@brief Set a bit to 0 by given position
@@ -105,27 +98,27 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ui8 get(__T value) noexcept {
  *	@ingroup header
  *	@ingroup bit
  */
-template<class __T, ui8 pos>
-LL_SHARED_LIB __LL_CONSTEVAL__ void clear(__T& value) noexcept {
-	value &= ~(1 << pos);
-}
+template<class T, ui8 pos>
+constexpr void clear(T& value) __LL_EXCEPT__ { value &= ~(1 << pos); }
 
 #pragma region BaseTransformation
-template<class __T, ui8 base>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ __T transformToBaseV2(__T value) noexcept {
-	return (value & (0xFFFFFFFFFFFFFFFF - base - 1)) + base;
+template<class T, ui8 base>
+__LL_NODISCARD__ constexpr T transformToBaseV2(T value) __LL_EXCEPT__ {
+	static_cast(std::is_unsigned_v<T>, "<T> needs to be a unsigned value!");
+	//return (value & (0xFFFFFFFFFFFFFFFF - base - 1)) + base;
+	return (value & (static_cast<T>(-1) - base - 1)) + base;
 }
-template<class __T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ __T transformTo64(__T value) noexcept {
-	return transformToBaseV2<__T, 64>(value);
+template<class T>
+__LL_NODISCARD__ constexpr T transformTo64(T value) __LL_EXCEPT__ {
+	return transformToBaseV2<T, 64>(value);
 }
-template<class __T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ __T transformTo32(__T value) noexcept {
-	return transformToBaseV2<__T, 32>(value);
+template<class T>
+__LL_NODISCARD__ constexpr T transformTo32(T value) __LL_EXCEPT__ {
+	return transformToBaseV2<T, 32>(value);
 }
-template<class __T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ __T transformTo8(__T value) noexcept {
-	return transformToBaseV2<__T, 8>(value);
+template<class T>
+__LL_NODISCARD__ constexpr T transformTo8(T value) __LL_EXCEPT__ {
+	return transformToBaseV2<T, 8>(value);
 }
 #pragma endregion
 
@@ -144,10 +137,8 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ __T transformTo8(__T value) noex
  *	@ingroup header
  *	@ingroup bit
  */
-template<class __T>
-LL_SHARED_LIB __LL_CONSTEVAL__ void set(T& value) noexcept {
-	set<T, 0>(value);
-}
+template<class T>
+constexpr void set(T& value) __LL_EXCEPT__ { set<T, 0>(value); }
 /*!
  *	@template True
  *	@brief Proxy of get<T, 0>(T& value)
@@ -162,10 +153,8 @@ LL_SHARED_LIB __LL_CONSTEVAL__ void set(T& value) noexcept {
  *	@ingroup header
  *	@ingroup bit
  */
-template<class __T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ui8 get(T value) noexcept {
-	return get<T, 0>(value);
-}
+template<class T>
+__LL_NODISCARD__ constexpr ui8 get(T value) __LL_EXCEPT__ { return get<T, 0>(value); }
 /*!
  *	@template True
  *	@brief Proxy of clear<T, 0>(T& value)
@@ -180,14 +169,12 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ui8 get(T value) noexcept {
  *	@ingroup header
  *	@ingroup bit
  */
-template<class __T>
-LL_SHARED_LIB __LL_CONSTEVAL__ void clear(T& value) noexcept {
-	return clear<T, 0>(value);
-}
+template<class T>
+constexpr void clear(T& value) __LL_EXCEPT__ { return clear<T, 0>(value); }
+
 #pragma endregion
 
-} // namespace bit
-} // namespace header
+} // namespace bits
 } // namespace llcpp
 
-#endif // LLCPP_HEADER_LLLIBBITS_H_
+#endif // LLCPP_HEADER_BITS_H_

@@ -1,19 +1,19 @@
 /*
- *	lloperations.hpp
+ *	math.hpp
  *
- *	Created on: Jun 25, 2023
+ *	Created on: Sep 27, 2021
  *	  Author: Francisco Julio Ruiz Fernandez
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_LLOPERATIONS_HPP_
-#define LLCPP_HEADER_LLOPERATIONS_HPP_
+#ifndef LLCPP_HEADER_MATH_HPP_
+#define LLCPP_HEADER_MATH_HPP_
 
-#include "llanytypeslib.hpp"
+#include "definitions.hpp"
+#include "types.hpp"
 
 namespace llcpp {
-namespace header {
-namespace operations {
+namespace math {
 
 /*!
  *	@template True
@@ -42,8 +42,8 @@ namespace operations {
  *	@ingroup header
  *	@ingroup operations
  */
-template<class __T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEXPR__ __T min(const __T v1, const __T v2) __LL_EXCEPT__ {
+template<class T>
+__LL_NODISCARD__ constexpr T min(const T v1, const T v2) __LL_EXCEPT__ {
 	 return (v1 > v2) ? v2 : v1;
 }
 /*!
@@ -73,8 +73,8 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEXPR__ __T min(const __T v1, const __T 
  *	@ingroup header
  *	@ingroup operations
  */
-template<class __T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ __T max(const __T v1, const __T v2) __LL_EXCEPT__ {
+template<class T>
+__LL_NODISCARD__ constexpr T max(const T v1, const T v2) __LL_EXCEPT__ {
 	 return (v1 > v2) ? v1 : v2;
 }
 
@@ -113,8 +113,8 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ __T max(const __T v1, const __T 
  *	@ingroup header
  *	@ingroup operations
  */
-template<class __T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ __T minMax(const __T minVal, const __T val, const __T maxVal) __LL_EXCEPT__ {
+template<class T>
+__LL_NODISCARD__ constexpr T minMax(const T minVal, const T val, const T maxVal) __LL_EXCEPT__ {
 	 return min(max(minVal, val),maxVal);
 }
 /*!
@@ -145,9 +145,13 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ __T minMax(const __T minVal, con
  *	@ingroup header
  *	@ingroup operations
  */
-template<class __T, __T minVal, __T maxVal>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEXPR__ ll_bool_t isBetween(const __T val) __LL_EXCEPT__ {
+template<class T, T minVal, T maxVal>
+__LL_NODISCARD__ constexpr ll_bool_t isBetween(const T val) __LL_EXCEPT__ {
 	 return (minVal <= val && val <= maxVal);
+}
+template<class T>
+__LL_NODISCARD__ constexpr ll_bool_t isBetween(const T minVal, const T val, const T maxVal) __LL_EXCEPT__ {
+	return (minVal <= val && val <= maxVal);
 }
 
 /*!
@@ -177,9 +181,9 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEXPR__ ll_bool_t isBetween(const __T va
  *	@ingroup header
  *	@ingroup operations
  */
-template<class __T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEXPR__ i32 comparei32(const void* a, const void* b) __LL_EXCEPT__ {
-	 return *reinterpret_cast<const __T*>(a) - *reinterpret_cast<const __T*>(b);
+template<class T>
+__LL_NODISCARD__ constexpr i32 comparei32(const void* a, const void* b) __LL_EXCEPT__ {
+	 return *reinterpret_cast<const T*>(a) - *reinterpret_cast<const T*>(b);
 }
 /*!
  *	@template True
@@ -208,13 +212,13 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEXPR__ i32 comparei32(const void* a, co
  *	@ingroup header
  *	@ingroup operations
  */
-template<class __T>
-__LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ll_bool_t compareBool(const void* a, const void* b) __LL_EXCEPT__ {
-	 return *reinterpret_cast<const __T*>(a) == *reinterpret_cast<const __T*>(b);
+template<class T>
+__LL_NODISCARD__ constexpr ll_bool_t compareBool(const void* a, const void* b) __LL_EXCEPT__ {
+	 return *reinterpret_cast<const T*>(a) == *reinterpret_cast<const T*>(b);
 }
 
-//template<class __T>
-//__LL_CONSTEVAL__ T abs(const __T& v1, const __T& v2) __LL_EXCEPT__ {
+//template<class T>
+//__LL_CONSTEVAL__ T abs(const T& v1, const T& v2) __LL_EXCEPT__ {
 //	 return (v1 > v2) ? v1 - v2 : v2 - v1;
 //}
 //template<>
@@ -226,8 +230,7 @@ __LL_NODISCARD__ LL_SHARED_LIB __LL_CONSTEVAL__ ll_bool_t compareBool(const void
 //	 return { abs(v1.first, v2.first), abs(v1.second, v2.second) };
 //}
 
-} // namespace operations
-} // namespace header
+} // namespace math
 } // namespace llcpp
 
-#endif // LLCPP_HEADER_LLOPERATIONS_HPP_
+#endif /* LLCPP_HEADER_MATH_HPP_ */

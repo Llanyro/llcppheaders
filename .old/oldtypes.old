@@ -1,0 +1,68 @@
+//typedef ll_char_t ll_bytes_t;
+//typedef ll_uchar_t ll_ubytes_t;
+
+//typedef ll_int8_t ll_singleton_priority_t;
+//typedef ll_singleton_priority_t ll_singleton_prio_t;
+
+//typedef void* ll_any_t;
+
+//typedef char const* const ll_constchar_t;
+//typedef void ll_void_t;
+
+// For pointer to libs (Handle)
+typedef void* ll_lib_t;
+
+// Standard value hash
+typedef ui64 ll_hash_t;
+
+// Type for share memory handle
+typedef ll_share_memory_handle_t ll_share_t;
+
+
+typedef ll_uchar_t hex; // Used to store hexadecimal values
+
+
+
+
+// Types by OS
+#pragma region OSTypes
+#if defined(WINDOWS_SYSTEM)
+// Process ID
+typedef ll_ulong_t ll_pid_t;
+// Socket descriptor
+typedef ui32 ll_socket_t;
+// Generic Handle in windows
+typedef void* WindowsHandle;
+
+// Handle in share memory module
+typedef WindowsHandle ll_share_memory_handle_t;
+
+//#define INVALID_HANDLE_VALUE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
+#define INVALID_SHARE_HANDLE ((ll_share_memory_handle_t)(ll_longlong_t)-1)
+
+#elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
+// Process ID
+typedef i32 ll_pid_t;
+// Socket descriptor
+typedef i32 ll_socket_t;
+
+
+// Handle in share memory module
+typedef i32 ll_share_memory_handle_t;
+
+// Value of invalid socket
+constexpr ll_socket_t INVALID_SOCKET = -1;
+// Value of invalid share memory handle
+constexpr ll_share_memory_handle_t INVALID_SHARE_HANDLE = -1;
+
+#else
+
+#endif
+#pragma endregion
+
+#pragma region Definitions
+// Easy enabler for template functions
+#define ENABLE_FUNCTION_PARAM(condition) std::enable_if<condition>::type* = LL_NULLPTR
+
+
+#pragma endregion

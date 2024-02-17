@@ -6,8 +6,8 @@
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_DEFINITIONS_HPP_
-#define LLCPP_HEADER_DEFINITIONS_HPP_
+#ifndef LLANYLIB_DEFINITIONS_HPP_
+#define LLANYLIB_DEFINITIONS_HPP_
 
 #include "os.hpp"
 
@@ -17,12 +17,15 @@
 	#define __LL_UNSECURE_FUNCTIONS__
 	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_INLINE__ __forceinline
+	#define __LL_VAR_INLINE__ inline
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 	#define __LL_NODISCARD__ NODISCARD
 	#define __LL_INLINE__ inline
+	#define __LL_VAR_INLINE__ inline
 #else
 	#define __LL_NODISCARD__ [[nodiscard]]
 	#define __LL_INLINE__ inline
+	#define __LL_VAR_INLINE__ inline
 #endif
 
 // Definitions
@@ -60,4 +63,4 @@
 	using __move_##name## = __type__&&; \
 	using __ptrref_##name## = __type__*&
 
-#endif /* LLCPP_HEADER_DEFINITIONS_HPP_ */
+#endif // LLANYLIB_DEFINITIONS_HPP_

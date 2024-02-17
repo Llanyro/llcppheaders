@@ -1,11 +1,11 @@
 /*
-*	Singleton.hpp
-*
-*	Created on: ??? ??, ????
-*		Author: llanyro
-*/
-#ifndef LLCPP_HEADER_SINGLETON_HPP_
-#define LLCPP_HEADER_SINGLETON_HPP_
+ *	Singleton.hpp
+ *
+ *	Created on: ??? ??, ????
+ *		Author: llanyro
+ */
+#ifndef LLANYLIB_SINGLETON_HPP_
+#define LLANYLIB_SINGLETON_HPP_
 
 #include "definitions.hpp"
 
@@ -71,4 +71,4 @@ T* Singleton<T>::instance = LL_NULLPTR;
 } // namespace header
 } // namespace llcpp
 
-#endif // !LLCPP_HEADER_SINGLETON_HPP_
+#endif // !LLANYLIB_SINGLETON_HPP_

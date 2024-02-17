@@ -1,13 +1,13 @@
 /*
-*	traits_test_class.hpp
-*
-*	Created on: Feb 28, 2022
+ *	traits_test_class.hpp
+ *
+ *	Created on: Feb 28, 2022
  *	  Author: Francisco Julio Ruiz Fernandez
  *    Author: llanyro
-*/
+ */
 
-#ifndef LLCPP_HEADER_TRAITS_TEST_CLASS_HPP_
-#define LLCPP_HEADER_TRAITS_TEST_CLASS_HPP_
+#ifndef LLANYLIB_TRAITS_TEST_CLASS_HPP_
+#define LLANYLIB_TRAITS_TEST_CLASS_HPP_
 
 #include "definitions.hpp"
 #include "types.hpp"
@@ -86,4 +86,4 @@ struct TestClassThrow {
 } // namespace traits
 } // namespace llcpp
 
-#endif /* LLCPP_HEADER_TRAITS_TEST_CLASS_HPP_ */
+#endif // LLANYLIB_TRAITS_TEST_CLASS_HPP_

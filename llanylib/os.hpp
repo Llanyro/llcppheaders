@@ -6,8 +6,8 @@
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_OS_HPP_
-#define LLCPP_HEADER_OS_HPP_
+#ifndef LLANYLIB_OS_HPP_
+#define LLANYLIB_OS_HPP_
 
 #if defined(__cplusplus)
 	#if __STDC_HOSTED__ != 1
@@ -113,4 +113,4 @@
 	#define __LL_SPECTRE_FUNCTIONS__
 #endif // WINDOWS_SYSTEM
 
-#endif /* LLCPP_HEADER_OS_HPP_ */
+#endif // LLANYLIB_OS_HPP_

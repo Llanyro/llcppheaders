@@ -6,10 +6,10 @@
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_ASCII_HPP_
-#define LLCPP_HEADER_ASCII_HPP_
+#ifndef LLANYLIB_EXPRESIONS_ASCII_HPP_
+#define LLANYLIB_EXPRESIONS_ASCII_HPP_
 
-#include "ArrayView.hpp"
+#include "../ArrayView.hpp"
 
 namespace llcpp {
 namespace ascii {
@@ -35,4 +35,4 @@ constexpr ArrayView FALSE_STR = "False";
 } // namespace ascii
 } // namespace llcpp
 
-#endif /* LLCPP_HEADER_ASCII_HPP_ */
+#endif // LLANYLIB_EXPRESIONS_ASCII_HPP_

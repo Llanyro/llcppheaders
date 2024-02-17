@@ -1,22 +1,22 @@
 /*
- *	bits.h
+ *	bits.hpp
  *
  *	Created on: Nov 26, 2020
  *	  Author: Francisco Julio Ruiz Fernandez
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_BITS_H_
-#define LLCPP_HEADER_BITS_H_
+#ifndef LLANYLIB_BITS_HPP_
+#define LLANYLIB_BITS_HPP_
 
 #include "definitions.hpp"
 #include "traits.hpp"
+#include "expresions/bits.hpp"
 
 namespace llcpp {
-	
 namespace bits {
-constexpr ui8 BITARRAY_LEN = 8;
 
+#pragma region BitOperations
 /*!
  *	@template False
  *	@brief Set a bit to 1 by given position
@@ -42,8 +42,10 @@ constexpr ui8 BITARRAY_LEN = 8;
  *	@ingroup header
  *	@ingroup bit
  */
-template<class T, ui8 pos>
-constexpr void set(T& value) __LL_EXCEPT__ { value |= static_cast<T>(1 << pos); }
+template<class T>
+constexpr void set(T& value, const bit_pos pos) __LL_EXCEPT__ {
+	value |= static_cast<T>(1 << pos);
+}
 /*!
  *	@template True
  *	@brief Get bit value by given position
@@ -71,8 +73,10 @@ constexpr void set(T& value) __LL_EXCEPT__ { value |= static_cast<T>(1 << pos); 
  *	@ingroup header
  *	@ingroup bit
  */
-template<class T, ui8 pos>
-__LL_NODISCARD__ constexpr ui8 get(T value) __LL_EXCEPT__ { return (value >> pos) & 1; }
+template<class T>
+__LL_NODISCARD__ constexpr ui8 get(T value, const bit_pos pos) __LL_EXCEPT__ {
+	return (value >> pos) & 1;
+}
 /*!
  *	@template False
  *	@brief Set a bit to 0 by given position
@@ -98,29 +102,10 @@ __LL_NODISCARD__ constexpr ui8 get(T value) __LL_EXCEPT__ { return (value >> pos
  *	@ingroup header
  *	@ingroup bit
  */
-template<class T, ui8 pos>
-constexpr void clear(T& value) __LL_EXCEPT__ { value &= ~(1 << pos); }
-
-#pragma region BaseTransformation
-template<class T, ui8 base>
-__LL_NODISCARD__ constexpr T transformToBaseV2(T value) __LL_EXCEPT__ {
-	static_cast(std::is_unsigned_v<T>, "<T> needs to be a unsigned value!");
-	//return (value & (0xFFFFFFFFFFFFFFFF - base - 1)) + base;
-	return (value & (static_cast<T>(-1) - base - 1)) + base;
-}
 template<class T>
-__LL_NODISCARD__ constexpr T transformTo64(T value) __LL_EXCEPT__ {
-	return transformToBaseV2<T, 64>(value);
+constexpr void clear(T& value, const bit_pos pos) __LL_EXCEPT__ {
+	value &= ~(1 << pos);
 }
-template<class T>
-__LL_NODISCARD__ constexpr T transformTo32(T value) __LL_EXCEPT__ {
-	return transformToBaseV2<T, 32>(value);
-}
-template<class T>
-__LL_NODISCARD__ constexpr T transformTo8(T value) __LL_EXCEPT__ {
-	return transformToBaseV2<T, 8>(value);
-}
-#pragma endregion
 
 #pragma region Proxy
 /*!
@@ -174,7 +159,29 @@ constexpr void clear(T& value) __LL_EXCEPT__ { return clear<T, 0>(value); }
 
 #pragma endregion
 
+#pragma endregion
+#pragma region BaseTransformation
+template<class T>
+__LL_NODISCARD__ constexpr T transformToBaseV2(const T value, const ui8 base) __LL_EXCEPT__ {
+	static_assert(std::is_unsigned_v<T>, "<T> needs to be a unsigned value!");
+	//return (value & (0xFFFFFFFFFFFFFFFF - base - 1)) + base;
+	return (value & (static_cast<T>(-1) - base - 1)) + base;
+}
+template<class T>
+__LL_NODISCARD__ constexpr T transformTo64(const T value, const ui8 base) __LL_EXCEPT__ {
+	return transformToBaseV2<T>(value, 64);
+}
+template<class T>
+__LL_NODISCARD__ constexpr T transformTo32(const T value, const ui8 base) __LL_EXCEPT__ {
+	return transformToBaseV2<T>(value, 32);
+}
+template<class T>
+__LL_NODISCARD__ constexpr T transformTo8(const T value, const ui8 base) __LL_EXCEPT__ {
+	return transformToBaseV2<T>(value, 8);
+}
+#pragma endregion
+
 } // namespace bits
 } // namespace llcpp
 
-#endif // LLCPP_HEADER_BITS_H_
+#endif // LLANYLIB_BITS_HPP_

@@ -6,8 +6,8 @@
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_TYPES_HPP_
-#define LLCPP_HEADER_TYPES_HPP_
+#ifndef LLANYLIB_TYPES_HPP_
+#define LLANYLIB_TYPES_HPP_
 
 #pragma region Standard
 /*
@@ -92,26 +92,6 @@ using b16 = size_bytes16_t;
 using b32 = size_bytes32_t;
 using b64 = size_bytes64_t;
 using b128 = size_bytes128_t;
-
-#pragma endregion
-
-#pragma region Expresions
-constexpr ll_bool_t LL_TRUE = true;
-constexpr ll_bool_t LL_FALSE = false;
-
-constexpr ui8 ZERO_UI8 = 0u;
-constexpr ui16 ZERO_UI16 = 0u;
-constexpr ui32 ZERO_UI32 = 0u;
-constexpr ui64 ZERO_UI64 = 0ull;
-
-constexpr i8 ZERO_I8 = 0;
-constexpr i16 ZERO_I16 = 0;
-constexpr i32 ZERO_I32 = 0;
-constexpr i64 ZERO_I64 = 0ll;
-
-constexpr f32 ZERO_F32 = 0.0f;
-constexpr f64 ZERO_F64 = 0.0;
-constexpr f128 ZERO_F128 = 0.0l;
 
 #pragma endregion
 
@@ -291,5 +271,4 @@ using SwapFunction = void(*)(const T& __t1, const T& __t2);
 } // namespace functional
 } // namespace llcpp
 
-
-#endif /* LLCPP_HEADER_TYPES_HPP_ */
+#endif // LLANYLIB_TYPES_HPP_

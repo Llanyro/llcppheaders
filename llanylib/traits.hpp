@@ -6,10 +6,11 @@
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_TRAITS_HPP_
-#define LLCPP_HEADER_TRAITS_HPP_
+#ifndef LLANYLIB_TRAITS_HPP_
+#define LLANYLIB_TRAITS_HPP_
 
-#include "types.hpp"
+#include "definitions.hpp"
+#include "expresions/types.hpp"
 
 #define LL_TRAITS_TEST
 
@@ -26,14 +27,16 @@ namespace traits {
 #define ENABLE_FUNCTION_PARAM(condition) typename = typename std::enable_if<condition>::type
 
 template<class T>
-inline constexpr ll_bool_t is_basic_type_v = std::_Is_any_of_v<T, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::_Is_any_of_v<T, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64>;
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_or_ptr_v = is_basic_type_v<T> || std::is_pointer_v<T>;
 
 template <class T, class OperatorType>
 struct has_type_operator {
     template <class U>
 	static auto test(U* p) -> decltype(p->operator OperatorType(), std::true_type{});
 	template <class>
-	static auto test(...) -> 
+	static auto test(...) ->
 		std::conditional_t<
 			is_basic_type_v<T>,
 			std::bool_constant<std::is_same_v<T, OperatorType>>,
@@ -43,7 +46,7 @@ struct has_type_operator {
 };
 
 template <class T, class OperatorType>
-inline constexpr ll_bool_t has_type_operator_v = has_type_operator<T, OperatorType>::val::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v = has_type_operator<T, OperatorType>::val::value;
 
 #define __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, basic_value) \
 	template<class T> \
@@ -60,7 +63,7 @@ inline constexpr ll_bool_t has_type_operator_v = has_type_operator<T, OperatorTy
 		using val = decltype(test<T>(nullptr)); \
 	}; \
 	template <class T> \
-	inline constexpr ll_bool_t has_##name##_v = has_##name##<T>::val::value
+	__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_v = has_##name##<T>::val::value
 
 #define __LL_TEMPLATE_HAS_FUNCTION__(name, function) __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, LL_FALSE)
 #define __TEMPLATE_HAS_SIMPLE_FUNCTION__(function) __LL_TEMPLATE_HAS_FUNCTION__(function, p->##function())
@@ -97,7 +100,90 @@ __TEMPLATE_HAS_SIMPLE_FUNCTION__(clear);
 
 #endif
 
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_constructible_v =
+	std::is_pointer_v<T> ||
+	traits::is_basic_type_v<T> ||
+	noexcept(T());
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_destructible_v =
+	std::is_pointer_v<T> ||
+	traits::is_basic_type_v<T> ||
+	noexcept(std::declval<T>().~T());
+
+#pragma region TypeConversions
+template<class T, ll_bool_t promote>
+struct promote_type {
+	using __type = T;
+	static constexpr ll_bool_t isPromoted = promote;
+};
+
+#pragma region Unsigned
+template<ll_bool_t promote>
+struct promote_type<ui64, promote> {
+	using __type = std::conditional_t<promote, ui128, ui32>;
+	static constexpr ll_bool_t isPromoted = promote;
+};
+
+template<ll_bool_t promote>
+struct promote_type<ui32, promote> {
+	using __type = std::conditional_t<promote, ui64, ui16>;
+	static constexpr ll_bool_t isPromoted = promote;
+};
+
+template<ll_bool_t promote>
+struct promote_type<ui16, promote> {
+	using __type = std::conditional_t<promote, ui32, ui8>;
+	static constexpr ll_bool_t isPromoted = promote;
+};
+
+template<ll_bool_t promote>
+struct promote_type<ui8, promote> {
+	using __type = std::conditional_t<promote, ui16, ui8>;
+	static constexpr ll_bool_t isPromoted = promote;
+};
+
+#pragma endregion
+#pragma region Floating-point
+template<ll_bool_t promote>
+struct promote_type<f64, promote> {
+	using __type = std::conditional_t<promote, f128, f32>;
+	static constexpr ll_bool_t isPromoted = promote;
+};
+
+template<ll_bool_t promote>
+struct promote_type<f32, promote> {
+	using __type = std::conditional_t<promote, f64, f32>;
+	static constexpr ll_bool_t isPromoted = promote;
+};
+
+#pragma endregion
+
+#pragma endregion
+
+template<class T>
+using get_smaller_type_u = promote_type<T, LL_FALSE>::__type;
+
+template<class T>
+using get_bigger_type_u = promote_type<T, LL_TRUE>;
+
+template<class T>
+using get_smaller_type_t = 
+	std::conditional_t<
+		std::is_unsigned_v<T>,
+		get_smaller_type_u<T>,
+		std::make_signed_t<get_smaller_type_u<std::make_unsigned_t<T>>>
+	>;
+
+template<class T>
+using get_bigger_type_t = 
+	std::conditional_t<
+		std::is_unsigned_v<T>,
+		get_bigger_type_u<T>,
+		std::make_signed_t<get_bigger_type_u<std::make_unsigned_t<T>>>
+	>;
+
 } // namespace traits
 } // namespace llcpp
 
-#endif /* LLCPP_HEADER_TRAITS_HPP_ */
+#endif // LLANYLIB_TRAITS_HPP_

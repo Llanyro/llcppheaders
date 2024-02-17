@@ -6,8 +6,8 @@
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_MATH_HPP_
-#define LLCPP_HEADER_MATH_HPP_
+#ifndef LLANYLIB_MATH_HPP_
+#define LLANYLIB_MATH_HPP_
 
 #include "definitions.hpp"
 #include "types.hpp"
@@ -233,4 +233,4 @@ __LL_NODISCARD__ constexpr ll_bool_t compareBool(const void* a, const void* b) _
 } // namespace math
 } // namespace llcpp
 
-#endif /* LLCPP_HEADER_MATH_HPP_ */
+#endif // LLANYLIB_MATH_HPP_

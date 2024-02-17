@@ -6,8 +6,8 @@
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_VECTOR_HPP_
-#define LLCPP_HEADER_VECTOR_HPP_
+#ifndef LLANYLIB_VECTOR_HPP_
+#define LLANYLIB_VECTOR_HPP_
 
 #include "definitions.hpp"
 #include "traits.hpp"
@@ -41,4 +41,4 @@ __LL_NODISCARD__ constexpr ll_bool_t equals(const T (&v1)[size1], const T (&v2)[
 } // namespace vector
 } // namespace llcpp
 
-#endif /* LLCPP_HEADER_VECTOR_HPP_ */
+#endif // LLANYLIB_VECTOR_HPP_

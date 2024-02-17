@@ -6,8 +6,8 @@
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_TYPES_EXTRA_HPP_
-#define LLCPP_HEADER_TYPES_EXTRA_HPP_
+#ifndef LLANYLIB_TYPES_EXTRA_HPP_
+#define LLANYLIB_TYPES_EXTRA_HPP_
 
 #include "definitions.hpp"
 #include "types.hpp"
@@ -101,4 +101,4 @@ using SwapFunction = std::function<void(T& __t1, T& __t2)>;
 } // namespace functional
 } // namespace llcpp
 
-#endif /* LLCPP_HEADER_TYPES_EXTRA_HPP_ */
+#endif // LLANYLIB_TYPES_EXTRA_HPP_

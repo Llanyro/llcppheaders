@@ -24,8 +24,8 @@ SOFTWARE.
 
 #include "definitions.hpp"
 
-#ifndef JEAIII_TO_TEXT_H_
-#define JEAIII_TO_TEXT_H_
+#ifndef JEAIII_TO_TEXT_HPP_
+#define JEAIII_TO_TEXT_HPP_
 
 namespace jeaiii {
 
@@ -385,4 +385,4 @@ char* end = to_text_from_integer(&t2[0], 55);
 
 } // namespace jeaii
 
-#endif // JEAIII_TO_TEXT_H_
+#endif // JEAIII_TO_TEXT_HPP_

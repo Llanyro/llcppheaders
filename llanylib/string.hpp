@@ -6,10 +6,11 @@
  *    Author: llanyro
  */
 
-#ifndef LLCPP_HEADER_STRING_HPP_
-#define LLCPP_HEADER_STRING_HPP_
+#ifndef LLANYLIB_STRING_HPP_
+#define LLANYLIB_STRING_HPP_
 
 #include "vector.hpp"
+#include "expresions/types.hpp"
 
 namespace llcpp {
 namespace string {
@@ -81,39 +82,39 @@ __LL_NODISCARD__ constexpr ll_bool_t is_digit(const i8 c) __LL_EXCEPT__ { return
 #pragma endregion
 #pragma region string_to_value
 template<class T>
-__LL_NODISCARD__ constexpr T string_to_value(const char* c) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr T string_to_value(ll_string_t c) __LL_EXCEPT__ {
 	return __internal__::string_to_value<T>(c, 0);
 }
 template<>
-__LL_NODISCARD__ constexpr i8 string_to_value(const char* c) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr i8 string_to_value(ll_string_t c) __LL_EXCEPT__ {
 	return __internal__::string_to_value<i8>(c, ZERO_I8);
 }
 template<>
-__LL_NODISCARD__ constexpr i16 string_to_value(const char* c) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr i16 string_to_value(ll_string_t c) __LL_EXCEPT__ {
 	return __internal__::string_to_value<i16>(c, ZERO_I16);
 }
 template<>
-__LL_NODISCARD__ constexpr i32 string_to_value(const char* c) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr i32 string_to_value(ll_string_t c) __LL_EXCEPT__ {
 	return __internal__::string_to_value<i32>(c, ZERO_I32);
 }
 template<>
-__LL_NODISCARD__ constexpr i64 string_to_value(const char* c) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr i64 string_to_value(ll_string_t c) __LL_EXCEPT__ {
 	return __internal__::string_to_value<i64>(c, ZERO_I64);
 }
 template<>
-__LL_NODISCARD__ constexpr ui8 string_to_value(const char* c) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ui8 string_to_value(ll_string_t c) __LL_EXCEPT__ {
 	return __internal__::string_to_value<ui8>(c, ZERO_UI8);
 }
 template<>
-__LL_NODISCARD__ constexpr ui16 string_to_value(const char* c) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ui16 string_to_value(ll_string_t c) __LL_EXCEPT__ {
 	return __internal__::string_to_value<ui16>(c, ZERO_UI16);
 }
 template<>
-__LL_NODISCARD__ constexpr ui32 string_to_value(const char* c) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ui32 string_to_value(ll_string_t c) __LL_EXCEPT__ {
 	return __internal__::string_to_value<ui32>(c, ZERO_UI32);
 }
 template<>
-__LL_NODISCARD__ constexpr ui64 string_to_value(const char* c) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ui64 string_to_value(ll_string_t c) __LL_EXCEPT__ {
 	return __internal__::string_to_value<ui64>(c, ZERO_UI64);
 }
 
@@ -151,10 +152,7 @@ constexpr ui64 number_of_chars_to_display_value_v = number_of_chars_to_display_v
 //constexpr ui64 string_to_value_2_738438947 = string_to_value<ui64>("2_738438947");
 //constexpr i64 string_to_value_minus_2738438947 = string_to_value<i64>("-2738438947");
 
-constexpr len_t MAX_LIST_SIZE = static_cast<len_t>(-1);
-constexpr len_t npos = MAX_LIST_SIZE;
-
 } // namespace string
 } // namespace llcpp
 
-#endif /* LLCPP_HEADER_STRING_HPP_ */
+#endif // LLANYLIB_STRING_HPP_

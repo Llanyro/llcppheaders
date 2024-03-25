@@ -44,7 +44,7 @@ class LL_SHARED_LIB Singleton {
 		Singleton() {}
 		~Singleton() {}
 	public:
-		static constexpr __LL_NODISCARD__ T& getInstance() __LL_EXCEPT__ {
+		static T& getInstance() __LL_EXCEPT__ {
 			static T instance;
 			return instance;
 		}
@@ -61,7 +61,7 @@ class LL_SHARED_LIB Singleton {
 		~Singleton() {}
 		static T* instance;
 	public:
-		static __LL_NODISCARD__ T& getInstance() __LL_EXCEPT__ {
+		static T& getInstance() __LL_EXCEPT__ {
 			if (!Singleton<T>::instance)
 				Singleton<T>::instance = new T();
 			return *Singleton<T>::instance;

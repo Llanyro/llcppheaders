@@ -23,11 +23,16 @@ namespace llcpp {
 namespace singleton {
 
 /*
-	private:
 		#pragma region Singleton
+	private:
 		friend class Singleton<class>;
 		class();
 		~class();
+	public:
+		class(const class& other) __LL_EXCEPT__ = delete;
+		class& operator=(const class& other) __LL_EXCEPT__ = delete;
+		class(class&& other) __LL_EXCEPT__ = delete;
+		class& operator=(class&& other) __LL_EXCEPT__ = delete;
 		#pragma endregion
 */
 

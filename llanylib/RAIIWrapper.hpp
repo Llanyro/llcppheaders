@@ -144,11 +144,11 @@ class LL_SHARED_LIB RAIIWrapperCreation {
 
 		constexpr void recallOnGenerate() __LL_EXCEPT__ { this->onGenerateObject(); }
 
-		template<typename U = OnGenerateData, typename std::enable_if<std::is_same<U, void>::value>::type* = nullptr>
+		template<typename U = OnGenerateData, typename std::enable_if<__is_void_type__>::type* = nullptr>
 		constexpr void clear() __LL_EXCEPT__ {
 			this->onGenerateObject = LL_NULLPTR;
 		}
-		template<typename U = OnGenerateData, typename std::enable_if<!std::is_same<U, void>::value>::type* = nullptr>
+		template<typename U = OnGenerateData, typename std::enable_if<!__is_void_type__>::type* = nullptr>
 		constexpr void clear(void*  clearFunc = LL_NULLPTR) __LL_EXCEPT__ {
 			this->onGenerateObject.clear(reinterpret_cast<OnGenerateObject::__ClearFunction>(clearFunc));
 		}

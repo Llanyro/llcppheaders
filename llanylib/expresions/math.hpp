@@ -1,9 +1,10 @@
 /*
  *	math.hpp
  *
- *	Created on: Sep 27, 2021
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
+ *
+ *	Version: 4.2
  */
 
 #ifndef LLANYLIB_MATH_HPP_

@@ -1,9 +1,10 @@
 /*
  *	llanylib.hpp
  *
- *	Created on: Feb 28, 2022
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
+ *
+ *	Version: 4.2
  */
 
 #ifndef LLANYLIB_HPP_

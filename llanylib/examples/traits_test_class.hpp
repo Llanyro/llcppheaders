@@ -1,16 +1,24 @@
 /*
  *	traits_test_class.hpp
  *
- *	Created on: Feb 28, 2022
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
+ *
+ *	Version: 4.2
  */
 
-#ifndef LLANYLIB_TRAITS_TEST_CLASS_HPP_
-#define LLANYLIB_TRAITS_TEST_CLASS_HPP_
+#if defined(LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_) // Guard && version protector
+	#if LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ != 4 || LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ < 2
+		#error "traits_test_class.hpp version error!"
+	#endif // LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ || LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_
 
-#include "definitions.hpp"
-#include "types.hpp"
+#else !defined(LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_)
+#define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_
+#define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ 4
+#define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ 2
+
+#include "../definitions.hpp"
+#include "../types.hpp"
 
 namespace llcpp {
 namespace traits {
@@ -86,4 +94,4 @@ struct TestClassThrow {
 } // namespace traits
 } // namespace llcpp
 
-#endif // LLANYLIB_TRAITS_TEST_CLASS_HPP_
+#endif // LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_

@@ -1,13 +1,31 @@
 /*
  *	types.hpp
  *
- *	Created on: Feb 28, 2022
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
+ *
+ *	Version: 4.2
  */
 
-#ifndef LLANYLIB_TYPES_HPP_
+#if defined(LLANYLIB_TYPES_HPP_) // Guard && version protector
+	#if LLANYLIB_TYPES_MAYOR_ != 4 || LLANYLIB_TYPES_MINOR_ < 2
+		#error "types.hpp version error!"
+	#endif // LLANYLIB_TYPES_MAYOR_ || LLANYLIB_TYPES_MINOR_
+
+#else !defined(LLANYLIB_TYPES_HPP_)
 #define LLANYLIB_TYPES_HPP_
+#define LLANYLIB_TYPES_MAYOR_ 4
+#define LLANYLIB_TYPES_MINOR_ 2
+
+namespace llcpp {
+
+template<class T>
+class ByteExtender {
+	T l;
+	T h;
+};
+
+} // namespace llcpp
 
 #pragma region Standard
 /*
@@ -57,16 +75,16 @@ using i8 = ll_char_t;
 using i16 = ll_short_t;
 using i32 = ll_int_t;
 using i64 = ll_longlong_t;
-using i128 = i64[2];
-using i256 = i128[2];
+using i128 = llcpp::ByteExtender<i64>;
+using i256 = llcpp::ByteExtender<i128>;
 
 // Simplified Unsigned
 using ui8 = ll_uchar_t;
 using ui16 = ll_ushort_t;
 using ui32 = ll_uint_t;
 using ui64 = ll_ulonglong_t;
-using ui128 = ui64[2];
-using ui256 = ui128[2];
+using ui128 = llcpp::ByteExtender<ui64>;
+using ui256 = llcpp::ByteExtender<ui128>;
 
 // Simplified Floating-point
 using f32 = ll_float_t;
@@ -76,6 +94,7 @@ using f128 = ll_longdouble_t;
 #pragma endregion
 #pragma region LibaryCustom
 using len_t = ui64;							// Used to cound things (natural number)
+using cmp_t = i32;							// Default type in comparations
 
 using ll_string_t = const ll_char_t*;		// Used to point to non editable strings
 using ll_ustring_t = const ll_uchar_t*;		// Used to point to non editable unsigned strings
@@ -98,6 +117,26 @@ using b128 = size_bytes128_t;
 #pragma endregion
 
 namespace llcpp {
+
+#pragma region Expresions
+constexpr ll_bool_t LL_TRUE = true;
+constexpr ll_bool_t LL_FALSE = false;
+
+constexpr ui8 ZERO_UI8 = 0u;
+constexpr ui16 ZERO_UI16 = 0u;
+constexpr ui32 ZERO_UI32 = 0u;
+constexpr ui64 ZERO_UI64 = 0ull;
+
+constexpr i8 ZERO_I8 = 0;
+constexpr i16 ZERO_I16 = 0;
+constexpr i32 ZERO_I32 = 0;
+constexpr i64 ZERO_I64 = 0ll;
+
+constexpr f32 ZERO_F32 = 0.0f;
+constexpr f64 ZERO_F64 = 0.0;
+constexpr f128 ZERO_F128 = 0.0l;
+#pragma endregion
+
 namespace functional {
 
 /*!
@@ -125,7 +164,7 @@ namespace functional {
  *	@ingroup llcpp
  *	@ingroup headers
  */
-using Comparei32 = i32 (*)(const void* __t1, const void* __t2);
+using Compare = cmp_t(*)(const void* __t1, const void* __t2);
 /*!
  *	@template False
  *	@brief Function type to compare 2 objects
@@ -145,7 +184,7 @@ using Comparei32 = i32 (*)(const void* __t1, const void* __t2);
  *	@ingroup llcpp
  *	@ingroup headers
  */
-using CompareBool = ll_bool_t (*)(const void* __t1, const void* __t2);
+using CompareBool = ll_bool_t(*)(const void* __t1, const void* __t2);
 
 /*!
  *	@template False
@@ -173,7 +212,7 @@ using CompareBool = ll_bool_t (*)(const void* __t1, const void* __t2);
  *	@ingroup llcpp
  *	@ingroup headers
  */
-using Comparei32Extra = i32 (*)(const void* __t1, const void* __t2, void* __extra__);
+using CompareExtra = cmp_t(*)(const void* __t1, const void* __t2, void* __extra__);
 /*!
  *	@template False
  *	@brief Function type to compare 2 objects
@@ -194,7 +233,7 @@ using Comparei32Extra = i32 (*)(const void* __t1, const void* __t2, void* __extr
  *	@ingroup llcpp
  *	@ingroup headers
  */
-using CompareBoolExtra = ll_bool_t (*)(const void* __t1, const void* __t2, void* __extra__);
+using CompareBoolExtra = ll_bool_t(*)(const void* __t1, const void* __t2, void* __extra__);
 
 namespace classic {
 /*!
@@ -223,7 +262,7 @@ namespace classic {
  *	@ingroup headers
  */
 template<class T>
-using SearchFunctioni32 = i32(*)(const T& __t1, const T& __t2);
+using Compare = cmp_t(*)(const T& __t1, const T& __t2);
 /*!
  *	@template True
  *	@brief Function type to compare 2 objects
@@ -244,7 +283,7 @@ using SearchFunctioni32 = i32(*)(const T& __t1, const T& __t2);
  *	@ingroup headers
  */
 template<class T>
-using SearchFunctionBool = ll_bool_t(*)(const T& __t1, const T& __t2);
+using CompareBool = ll_bool_t(*)(const T& __t1, const T& __t2);
 
 /*!
  *	@template True
@@ -264,11 +303,13 @@ using SearchFunctionBool = ll_bool_t(*)(const T& __t1, const T& __t2);
  *	@ingroup headers
  */
 template<class T>
-using SwapFunction = void(*)(const T& __t1, const T& __t2);
+using SwapFunction = void(*)(T& __t1, T& __t2);
 
 } // namespace classic
-
 } // namespace functional
+namespace fnc_clss = functional::classic;
+//namespace fnc_lmb = functional::lambda;
+
 } // namespace llcpp
 
 #endif // LLANYLIB_TYPES_HPP_

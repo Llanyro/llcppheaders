@@ -1,21 +1,29 @@
 /*
  *	traits.hpp
  *
- *	Created on: Feb 28, 2022
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
+ *
+ *	Version: 4.2
  */
 
-#ifndef LLANYLIB_TRAITS_HPP_
-#define LLANYLIB_TRAITS_HPP_
+#if defined(LLANYLIB_TRAITS_HPP_) // Guard && version protector
+	#if LLANYLIB_TRAITS_MAYOR_ != 4 || LLANYLIB_TRAITS_MINOR_ < 2
+		#error "traits.hpp version error!"
+	#endif // LLANYLIB_TRAITS_MAYOR_ || LLANYLIB_TRAITS_MINOR_
 
-#include "definitions.hpp"
-#include "expresions/types.hpp"
+#else !defined(LLANYLIB_TRAITS_HPP_)
+#define LLANYLIB_TRAITS_HPP_
+#define LLANYLIB_TRAITS_MAYOR_ 4
+#define LLANYLIB_TRAITS_MINOR_ 2
 
 #define LL_TRAITS_TEST
 
+#include "definitions.hpp"
+#include "types.hpp"
+
 #if defined(LL_TRAITS_TEST)
-	#include "traits_test_class.hpp"
+	#include "examples/traits_test_class.hpp"
 #endif
 
 #include <type_traits>
@@ -24,12 +32,16 @@ namespace llcpp {
 namespace traits {
 
 // Easy enabler for template functions
-#define ENABLE_FUNCTION_PARAM(condition) typename = typename std::enable_if<condition>::type
+#define ENABLE_FUNCTION_PARAM(condition, ret) class __ret__ = ret, typename = std::enable_if_t<__is_void_type__, __ret__>
 
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::_Is_any_of_v<T, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_or_ptr_v = is_basic_type_v<T> || std::is_pointer_v<T>;
+
+// Returns a type with reference if object is not basic type
+template<class T>
+using get_object_reference_t = std::conditional_t<traits::is_basic_type_v<T>, T, T&>;
 
 template <class T, class OperatorType>
 struct has_type_operator {
@@ -79,26 +91,6 @@ __LL_TEMPLATE_HAS_FUNCTION_BASE__(lower_operator, p->operator<(*p), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION__(swap, p->swap(*p));
 __LL_TEMPLATE_HAS_FUNCTION__(swap_s, p->swap_s(*p));
 __TEMPLATE_HAS_SIMPLE_FUNCTION__(clear);
-
-#if defined(LL_TRAITS_TEST)
-//constexpr ll_bool_t test_1_obj2 = has_type_operator_v<TestClassBase, ll_bool_t>;
-//constexpr ll_bool_t test_1_obj = has_type_operator_v<TestClass, ll_bool_t>;
-//constexpr ll_bool_t test_1_obj3 = has_type_operator_v<TestClassNoCopy, ll_bool_t>;
-//constexpr ll_bool_t test_1_int = has_type_operator_v<int, ll_bool_t>;
-//constexpr ll_bool_t test_2_obj = has_clear_v<TestClass>;
-//constexpr ll_bool_t test_2_int = has_clear_v<int>;
-//constexpr ll_bool_t test_2_obj = has_swap_v<TestClass>;
-//constexpr ll_bool_t test_2_int = has_swap_v<int>;
-//
-//constexpr ll_bool_t test_1_int = has_type_operator_v<int, int>;
-//
-//constexpr ll_bool_t test_copy_operator_int = has_copy_operator_v<int>;
-//constexpr ll_bool_t test_copy_operator_class = has_copy_operator_v<TestClass>;
-//constexpr ll_bool_t test_copy_operator_class_bad = has_copy_operator_v<TestClassBad>;
-//constexpr ll_bool_t test_copy_operator_class_private_copy = has_copy_operator_v<TestClassPrivateCopy>;
-//constexpr ll_bool_t test_copy_operator_class_no_copy = has_copy_operator_v<TestClassNoCopy>;
-
-#endif
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_constructible_v =
@@ -182,6 +174,38 @@ using get_bigger_type_t =
 		get_bigger_type_u<T>,
 		std::make_signed_t<get_bigger_type_u<std::make_unsigned_t<T>>>
 	>;
+
+template<class ReturnType, class ObjectType>
+constexpr ReturnType operatorTypeCall(const ObjectType& object) __LL_EXCEPT__ {
+	if constexpr (std::is_pointer_v<ObjectType>) {
+		using __noptr = std::remove_pointer_t<ObjectType>;
+
+		if constexpr (std::is_pointer_v<__noptr>)
+			return static_cast<ReturnType>(object);
+		else if constexpr (has_type_operator_v<__noptr, ReturnType>) {
+			if constexpr (is_basic_type_v<__noptr>) return *object;
+			else return object->operator ReturnType();
+		}
+		else if constexpr (is_basic_type_v<__noptr>)
+			return static_cast<ReturnType>(*object);
+		else return LL_FALSE;
+	}
+	else if constexpr (has_type_operator_v<ObjectType, ReturnType>) {
+		if constexpr (is_basic_type_v<ObjectType>) return object;
+		else return object.operator ReturnType();
+	}
+	else if constexpr (is_basic_type_v<ObjectType>)
+		return static_cast<ReturnType>(object);
+	else return LL_FALSE;
+}
+
+using Testinng1 = std::add_lvalue_reference_t<void>;
+using Testinng2 = std::add_rvalue_reference_t<void>;
+
+using Testinng3 = std::add_lvalue_reference_t<int>;
+using Testinng4 = std::add_rvalue_reference_t<int>;
+
+
 
 } // namespace traits
 } // namespace llcpp

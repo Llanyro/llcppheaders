@@ -1,20 +1,52 @@
 /*
  *	bits.hpp
  *
- *	Created on: Nov 26, 2020
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
+ *
+ *	Version: 4.2
  */
 
-#ifndef LLANYLIB_BITS_HPP_
+#if defined(LLANYLIB_BITS_HPP_) // Guard && version protector
+	#if LLANYLIB_BITS_MAYOR_ != 4 || LLANYLIB_BITS_MINOR_ < 2
+		#error "bits.hpp version error!"
+	#endif // LLANYLIB_BITS_MAYOR_ || LLANYLIB_BITS_MINOR_
+
+#else !defined(LLANYLIB_BITS_HPP_)
 #define LLANYLIB_BITS_HPP_
+#define LLANYLIB_BITS_MAYOR_ 4
+#define LLANYLIB_BITS_MINOR_ 2
 
 #include "definitions.hpp"
+
 #include "traits.hpp"
-#include "expresions/bits.hpp"
 
 namespace llcpp {
 namespace bits {
+
+using bit_pos = ui8;
+
+constexpr ui8 BITARRAY_LEN = 8;
+
+constexpr ui8 SHIFT_2	= 1;
+constexpr ui8 SHIFT_4	= 2;
+constexpr ui8 SHIFT_8	= 3;
+constexpr ui8 SHIFT_16	= 4;
+constexpr ui8 SHIFT_32	= 5;
+constexpr ui8 SHIFT_64	= 6;
+constexpr ui8 SHIFT_128 = 7;
+constexpr ui8 SHIFT_256 = 8;
+constexpr ui8 SHIFT_512 = 9;
+
+constexpr ui8 MASK_2	= (1 << SHIFT_2)	- 1;
+constexpr ui8 MASK_4	= (1 << SHIFT_4)	- 1;
+constexpr ui8 MASK_8	= (1 << SHIFT_8)	- 1;
+constexpr ui8 MASK_16	= (1 << SHIFT_16)	- 1;
+constexpr ui8 MASK_32	= (1 << SHIFT_32)	- 1;
+constexpr ui8 MASK_64	= (1 << SHIFT_64)	- 1;
+constexpr ui8 MASK_128	= (1 << SHIFT_128)	- 1;
+constexpr ui16 MASK_256 = (1 << SHIFT_256)	- 1;
+constexpr ui16 MASK_512 = (1 << SHIFT_512)	- 1;
 
 #pragma region BitOperations
 /*!
@@ -162,23 +194,24 @@ constexpr void clear(T& value) __LL_EXCEPT__ { return clear<T, 0>(value); }
 #pragma endregion
 #pragma region BaseTransformation
 template<class T>
-__LL_NODISCARD__ constexpr T transformToBaseV2(const T value, const ui8 base) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr T transformToBaseV3(const T value, const ui8 base) __LL_EXCEPT__ {
 	static_assert(std::is_unsigned_v<T>, "<T> needs to be a unsigned value!");
-	//return (value & (0xFFFFFFFFFFFFFFFF - base - 1)) + base;
-	return (value & (static_cast<T>(-1) - base - 1)) + base;
+	T v1 = (value & (base - 1));
+	return v1 ? (value - v1 + base) : value;
 }
 template<class T>
-__LL_NODISCARD__ constexpr T transformTo64(const T value, const ui8 base) __LL_EXCEPT__ {
-	return transformToBaseV2<T>(value, 64);
+__LL_NODISCARD__ constexpr T transformTo64(const T value) __LL_EXCEPT__ {
+	return transformToBaseV3<T>(value, 64);
 }
 template<class T>
-__LL_NODISCARD__ constexpr T transformTo32(const T value, const ui8 base) __LL_EXCEPT__ {
-	return transformToBaseV2<T>(value, 32);
+__LL_NODISCARD__ constexpr T transformTo32(const T value) __LL_EXCEPT__ {
+	return transformToBaseV3<T>(value, 32);
 }
 template<class T>
-__LL_NODISCARD__ constexpr T transformTo8(const T value, const ui8 base) __LL_EXCEPT__ {
-	return transformToBaseV2<T>(value, 8);
+__LL_NODISCARD__ constexpr T transformTo8(const T value) __LL_EXCEPT__ {
+	return transformToBaseV3<T>(value, 8);
 }
+
 #pragma endregion
 
 } // namespace bits

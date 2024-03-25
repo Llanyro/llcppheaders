@@ -1,13 +1,21 @@
 /*
  *	definitions.hpp
+ * 
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
  *
- *	Created on: Jan 28, 2024
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Version: 4.2
  */
 
-#ifndef LLANYLIB_DEFINITIONS_HPP_
+#if defined(LLANYLIB_DEFINITIONS_HPP_) // Guard && version protector
+	#if LLANYLIB_DEFINITIONS_MAYOR_ != 4 || LLANYLIB_DEFINITIONS_MINOR_ < 2
+		#error "definitions.hpp version error!"
+	#endif // LLANYLIB_DEFINITIONS_MAYOR_ || LLANYLIB_DEFINITIONS_MINOR_
+
+#else !defined(LLANYLIB_DEFINITIONS_HPP_)
 #define LLANYLIB_DEFINITIONS_HPP_
+#define LLANYLIB_DEFINITIONS_MAYOR_ 4
+#define LLANYLIB_DEFINITIONS_MINOR_ 2
 
 #include "os.hpp"
 

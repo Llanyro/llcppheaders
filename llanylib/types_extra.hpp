@@ -1,13 +1,21 @@
 /*
  *	types_extra.hpp
  *
- *	Created on: Feb 28, 2022
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
+ *
+ *	Version: 4.2
  */
 
-#ifndef LLANYLIB_TYPES_EXTRA_HPP_
+#if defined(LLANYLIB_TYPES_EXTRA_HPP_) // Guard && version protector
+	#if LLANYLIB_TYPES_EXTRA_MAYOR_ != 4 || LLANYLIB_TYPES_EXTRA_MINOR_ < 2
+		#error "types_extra.hpp version error!"
+	#endif // LLANYLIB_TYPES_EXTRA_MAYOR_ || LLANYLIB_TYPES_EXTRA_MINOR_
+
+#else !defined(LLANYLIB_TYPES_EXTRA_HPP_)
 #define LLANYLIB_TYPES_EXTRA_HPP_
+#define LLANYLIB_TYPES_EXTRA_MAYOR_ 4
+#define LLANYLIB_TYPES_EXTRA_MINOR_ 2
 
 #include "definitions.hpp"
 #include "types.hpp"

@@ -1,23 +1,32 @@
 /*
  *	os.hpp
  *
- *	Created on: Jan 28, 2024
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
+ *
+ *	Version: 4.2
  */
 
-#ifndef LLANYLIB_OS_HPP_
+#if defined(LLANYLIB_OS_HPP_) // Guard && version protector
+	#if LLANYLIB_OS_MAYOR_ != 4 || LLANYLIB_OS_MINOR_ < 2
+		#error "os.hpp version error!"
+	#endif // LLANYLIB_OS_MAYOR_ || LLANYLIB_OS_MINOR_
+
+#else !defined(LLANYLIB_OS_HPP_)
 #define LLANYLIB_OS_HPP_
+#define LLANYLIB_OS_MAYOR_ 4
+#define LLANYLIB_OS_MINOR_ 2
+
 
 #if defined(__cplusplus)
 	#if __STDC_HOSTED__ != 1
 		#error "Not a hosted implementation"
-	#endif
+	#endif // __STDC_HOSTED__
 
 	#if __cplusplus >= 202302L
 		#define DIRECTIVE_WARNING
-	#endif
-#endif
+	#endif // __cplusplus
+#endif // __cplusplus
 
 
 
@@ -87,7 +96,6 @@
 
 	//#pragma warning(disable:6011)
 	//#pragma warning(disable:4996)
-
 
 	//#pragma warning(disable:4244)
 	//#pragma warning(disable:6031)

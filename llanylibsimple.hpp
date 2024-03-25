@@ -20,11 +20,4 @@
 // Traits
 #include "llanylib/traits.hpp"
 
-// Expresions
-#include "llanylib/expresions/ascii.hpp"
-#include "llanylib/expresions/bits.hpp"
-#include "llanylib/expresions/color.hpp"
-#include "llanylib/expresions/string.hpp"
-#include "llanylib/expresions/types.hpp"
-
 #endif // LLANYLIBSIMPLE_HPP_

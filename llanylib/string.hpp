@@ -1,19 +1,42 @@
 /*
  *	string.hpp
  *
- *	Created on: Sep 27, 2021
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
+ *	Author: Francisco Julio Ruiz Fernandez
+ *	Author: llanyro
+ *
+ *	Version: 4.2
  */
 
-#ifndef LLANYLIB_STRING_HPP_
-#define LLANYLIB_STRING_HPP_
+#if defined(LLANYLIB_STRING_HPP_) // Guard && version protector
+	#if LLANYLIB_STRING_MAYOR_ != 4 || LLANYLIB_STRING_MINOR_ < 2
+		#error "algorithm.hpp version error!"
+	#endif // LLANYLIB_STRING_MAYOR_ || LLANYLIB_STRING_MINOR_
 
-#include "vector.hpp"
-#include "expresions/types.hpp"
+#else !defined(LLANYLIB_STRING_HPP_)
+#define LLANYLIB_STRING_HPP_
+#define LLANYLIB_STRING_MAYOR_ 4
+#define LLANYLIB_STRING_MINOR_ 2
+
+#include "algorithm.hpp"
 
 namespace llcpp {
 namespace string {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 namespace __internal__ {
 
 #pragma region string_to_value
@@ -121,15 +144,15 @@ __LL_NODISCARD__ constexpr ui64 string_to_value(ll_string_t c) __LL_EXCEPT__ {
 #pragma endregion
 #pragma region Compare
 __LL_NODISCARD__ constexpr ll_bool_t equals(ll_string_t v1, const len_t size1, ll_string_t v2, const len_t size2) __LL_EXCEPT__ {
-	return (size1 == size2) ? vector::compare_arrays<ll_char_t>(v1, v2, size1) == 0 : LL_FALSE;
+	return algorithm::equals<ll_char_t>(v1, size1, v2, size2);
 }
 template<len_t size1, len_t size2 = size1>
 __LL_NODISCARD__ constexpr ll_bool_t equals(ll_string_t v1, ll_string_t v2) __LL_EXCEPT__ {
-	return (size1 == size2) ? vector::compare_arrays<ll_char_t>(v1, v2, size1) == 0 : LL_FALSE;
+	return algorithm::equals<ll_char_t>(v1, size1, v2, size2);
 }
 template<len_t size1, len_t size2>
 __LL_NODISCARD__ constexpr ll_bool_t equals(const ll_char_t (&v1)[size1], const ll_char_t (&v2)[size2]) __LL_EXCEPT__ {
-	return (size1 == size2) ? vector::compare_arrays<ll_char_t>(v1, v2, size1) == 0 : LL_FALSE;
+	return algorithm::equals<ll_char_t>(v1, size1, v2, size2);
 }
 
 #pragma endregion

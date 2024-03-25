@@ -34,7 +34,7 @@ namespace singleton {
 namespace static_ {
 
 template <class T>
-class Singleton {
+class LL_SHARED_LIB Singleton {
 	protected:
 		Singleton() {}
 		~Singleton() {}
@@ -50,7 +50,7 @@ class Singleton {
 namespace dynamic {
 
 template <class T>
-class Singleton {
+class LL_SHARED_LIB Singleton {
 	protected:
 		Singleton() {}
 		~Singleton() {}

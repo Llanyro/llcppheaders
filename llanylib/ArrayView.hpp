@@ -26,8 +26,6 @@ class LL_SHARED_LIB ArrayView {
 	private:
 		using __internal__ArrayView__ = ArrayView<T, SIZE>;
 	public:
-		static_assert(SIZE > 0, "Array cannot have a size of 0");
-	public:
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
 		using __type_raw = std::remove_const_t<T>;
@@ -38,15 +36,21 @@ class LL_SHARED_LIB ArrayView {
 		constexpr ArrayView() __LL_EXCEPT__ = delete;
 		constexpr ~ArrayView() __LL_EXCEPT__ {}
 
+		template<typename U = __type, len_t _SIZE = SIZE, typename std::enable_if<!std::is_same_v<U, void>>::type* = nullptr>
 		constexpr ArrayView(__type (&data)[SIZE]) __LL_EXCEPT__
 			: data(data), ignoreLastElement(LL_FALSE) {}
+		template<typename U = __type, typename std::enable_if<!std::is_same_v<U, void>>::type* = nullptr>
 		constexpr ArrayView(__type (&data)[SIZE], const ll_bool_t ignoreLastElement) __LL_EXCEPT__
 			: data(data), ignoreLastElement(ignoreLastElement) {}
-		constexpr __ref_ArrayView operator=(__type (&data)[SIZE]) __LL_EXCEPT__ {
+		template<typename U = __type, typename std::enable_if<!std::is_same_v<U, void>>::type* = nullptr>
+		constexpr __ref_ArrayView operator=(__type(&data)[SIZE]) __LL_EXCEPT__ {
 			this->data = data;
 			this->ignoreLastElement = LL_FALSE;
 			return *this;
 		}
+
+		template<typename U = __type, typename std::enable_if<std::is_same_v<U, void>>::type* = nullptr>
+		constexpr ArrayView() __LL_EXCEPT__ : data(LL_NULLPTR), ignoreLastElement(LL_FALSE) {}
 
 		constexpr ArrayView(__cref_ArrayView other) __LL_EXCEPT__
 			: data(other.data), ignoreLastElement(other.ignoreLastElement) {}

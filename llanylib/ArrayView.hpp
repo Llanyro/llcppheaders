@@ -26,9 +26,11 @@ class LL_SHARED_LIB ArrayView {
 	private:
 		using __internal__ArrayView__ = ArrayView<T, SIZE>;
 	public:
+		static_assert(SIZE > 0, "Array cannot have a size of 0");
+	public:
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
-		using __type_raw = std::remove_const_t<T>;
+		using __type_raw = std::remove_const_t<__type>;
 	protected:
 		__ptr data;
 		ll_bool_t ignoreLastElement;	// Usefull on literal strings like: "Hello world"
@@ -36,21 +38,15 @@ class LL_SHARED_LIB ArrayView {
 		constexpr ArrayView() __LL_EXCEPT__ = delete;
 		constexpr ~ArrayView() __LL_EXCEPT__ {}
 
-		template<typename U = __type, len_t _SIZE = SIZE, typename std::enable_if<!std::is_same_v<U, void>>::type* = nullptr>
 		constexpr ArrayView(__type (&data)[SIZE]) __LL_EXCEPT__
 			: data(data), ignoreLastElement(LL_FALSE) {}
-		template<typename U = __type, typename std::enable_if<!std::is_same_v<U, void>>::type* = nullptr>
 		constexpr ArrayView(__type (&data)[SIZE], const ll_bool_t ignoreLastElement) __LL_EXCEPT__
 			: data(data), ignoreLastElement(ignoreLastElement) {}
-		template<typename U = __type, typename std::enable_if<!std::is_same_v<U, void>>::type* = nullptr>
 		constexpr __ref_ArrayView operator=(__type(&data)[SIZE]) __LL_EXCEPT__ {
 			this->data = data;
 			this->ignoreLastElement = LL_FALSE;
 			return *this;
 		}
-
-		template<typename U = __type, typename std::enable_if<std::is_same_v<U, void>>::type* = nullptr>
-		constexpr ArrayView() __LL_EXCEPT__ : data(LL_NULLPTR), ignoreLastElement(LL_FALSE) {}
 
 		constexpr ArrayView(__cref_ArrayView other) __LL_EXCEPT__
 			: data(other.data), ignoreLastElement(other.ignoreLastElement) {}
@@ -64,7 +60,9 @@ class LL_SHARED_LIB ArrayView {
 		constexpr __ref_ArrayView operator=(__move_ArrayView) __LL_EXCEPT__ = delete;
 
 		__LL_NODISCARD__ constexpr operator __cptr() const __LL_EXCEPT__ { return this->data; }
-		__LL_NODISCARD__ constexpr __cptr get(const len_t pos = 0ull) const __LL_EXCEPT__ { return this->data + pos; }
+		__LL_NODISCARD__ constexpr __cptr get(const len_t pos = 0ull) const __LL_EXCEPT__ {
+			return this->data + pos;
+		}
 
 		__LL_NODISCARD__ constexpr operator len_t() const __LL_EXCEPT__ {
 			return this->ignoreLastElement ? SIZE - 1 : SIZE;
@@ -76,13 +74,11 @@ class LL_SHARED_LIB ArrayView {
 			return this->operator len_t();
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
-			return SIZE == 0;
+			return this->operator len_t() == 0;
 		}
 
 		__LL_NODISCARD__ constexpr operator ll_bool_t() const __LL_EXCEPT__ {
-			return
-				static_cast<ll_bool_t>(this->data) &&
-				static_cast<ll_bool_t>(SIZE > 0);
+			return !this->empty() && static_cast<ll_bool_t>(this->data);
 		}
 
 		__LL_NODISCARD__ constexpr __cref operator[] (const len_t pos) const __LL_EXCEPT__ {

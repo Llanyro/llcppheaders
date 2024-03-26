@@ -35,7 +35,7 @@ class LL_SHARED_LIB ArrayView {
 		__ptr data;
 		ll_bool_t ignoreLastElement;	// Usefull on literal strings like: "Hello world"
 	public:
-		constexpr ArrayView() = delete;
+		constexpr ArrayView() __LL_EXCEPT__ = delete;
 		constexpr ~ArrayView() __LL_EXCEPT__ {}
 
 		constexpr ArrayView(__type (&data)[SIZE]) __LL_EXCEPT__
@@ -56,8 +56,8 @@ class LL_SHARED_LIB ArrayView {
 			return *this;
 		}
 
-		constexpr ArrayView(__move_ArrayView other) = delete;
-		constexpr __ref_ArrayView operator=(__move_ArrayView other) = delete;
+		constexpr ArrayView(__move_ArrayView) __LL_EXCEPT__ = delete;
+		constexpr __ref_ArrayView operator=(__move_ArrayView) __LL_EXCEPT__ = delete;
 
 		__LL_NODISCARD__ constexpr operator __cptr() const __LL_EXCEPT__ { return this->data; }
 		__LL_NODISCARD__ constexpr __cptr get(const len_t pos = 0ull) const __LL_EXCEPT__ { return this->data + pos; }

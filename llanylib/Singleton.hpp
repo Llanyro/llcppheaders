@@ -29,10 +29,10 @@ namespace singleton {
 		class();
 		~class();
 	public:
-		class(const class& other) __LL_EXCEPT__ = delete;
-		class& operator=(const class& other) __LL_EXCEPT__ = delete;
-		class(class&& other) __LL_EXCEPT__ = delete;
-		class& operator=(class&& other) __LL_EXCEPT__ = delete;
+		class(const class&) __LL_EXCEPT__ = delete;
+		class& operator=(const class&) __LL_EXCEPT__ = delete;
+		class(class&&) __LL_EXCEPT__ = delete;
+		class& operator=(class&&) __LL_EXCEPT__ = delete;
 		#pragma endregion
 */
 

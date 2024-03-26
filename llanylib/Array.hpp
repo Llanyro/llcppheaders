@@ -32,7 +32,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
 		using __type_raw = __ArrayView::__type_raw;
 	public:
-		constexpr Array() = delete;
+		constexpr Array() __LL_EXCEPT__ = delete;
 		constexpr ~Array() __LL_EXCEPT__ {}
 
 		constexpr Array(__type (&data)[SIZE]) __LL_EXCEPT__ : __ArrayView(data) {}
@@ -47,8 +47,8 @@ class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
 			return *this;
 		}
 
-		constexpr Array(__move_Array other) = delete;
-		constexpr __ref_Array operator=(__move_Array other) = delete;
+		constexpr Array(__move_Array) __LL_EXCEPT__ = delete;
+		constexpr __ref_Array operator=(__move_Array) __LL_EXCEPT__ = delete;
 
 		__LL_NODISCARD__ constexpr operator __ptr() __LL_EXCEPT__ { return this->data; }
 		__LL_NODISCARD__ constexpr __ptr get() __LL_EXCEPT__ { return this->data; }

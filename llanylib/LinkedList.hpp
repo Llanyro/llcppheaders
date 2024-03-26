@@ -9,7 +9,7 @@
 
 #if defined(LLANYLIB_LINKEDLIST_HPP_) // Guard && version protector
 	#if LLANYLIB_LINKEDLIST_MAYOR_ != 4 || LLANYLIB_LINKEDLIST_MINOR_ < 2
-		#error "algorithm.hpp version error!"
+		#error "LinkedList.hpp version error!"
 	#endif // LLANYLIB_LINKEDLIST_MAYOR_ || LLANYLIB_LINKEDLIST_MINOR_
 
 #else !defined(LLANYLIB_LINKEDLIST_HPP_)
@@ -23,10 +23,10 @@ namespace llcpp {
 namespace linked {
 
 template<class T>
-class LL_SHARED_LIB ArrayChain {
+class LL_SHARED_LIB LinkedList {
 	public:
 		__LL_CLASS_TEMPLATE_TYPE__(T);
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(ArrayChain<T>, ArrayChain);
+		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(LinkedList<T>, LinkedList);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(DoubleNode<T>, DoubleNode);
 		using Foreach = void(*)(__ptr);
 		using ForeachConst = void(*)(__cptr);
@@ -47,10 +47,16 @@ class LL_SHARED_LIB ArrayChain {
 			--this->len;
 		}
 	public:
-		constexpr ArrayChain() __LL_EXCEPT__ : root(LL_NULLPTR), len(0ull) {}
+		constexpr LinkedList() __LL_EXCEPT__ : root(LL_NULLPTR), len(0ull) {}
 		// No need to remove or anyting any node
 		// This class is supposed to be used only in stack memory
-		constexpr ~ArrayChain() __LL_EXCEPT__ {}
+		constexpr ~LinkedList() __LL_EXCEPT__ {}
+
+		constexpr LinkedList(__cref_LinkedList) __LL_EXCEPT__ = delete;
+		constexpr __LinkedList& operator=(__cref_LinkedList) __LL_EXCEPT__ = delete;
+
+		constexpr LinkedList(__move_LinkedList) __LL_EXCEPT__ = delete;
+		constexpr __LinkedList& operator=(__move_LinkedList) __LL_EXCEPT__ = delete;
 
 		#pragma region InsertionDeletion
 		constexpr void push_back(__ptr_DoubleNode n) __LL_EXCEPT__ {
@@ -66,7 +72,7 @@ class LL_SHARED_LIB ArrayChain {
 		}
 		constexpr ll_bool_t remove(__ptr data) __LL_EXCEPT__ {
 			ll_bool_t found = LL_FALSE;
-			this->removeCoincidences(data, &found, __ArrayChain::comparator);
+			this->removeCoincidences(data, &found, __LinkedList::comparator);
 			return found;
 		}
 

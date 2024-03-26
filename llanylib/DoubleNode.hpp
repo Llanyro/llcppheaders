@@ -45,11 +45,11 @@ class LL_SHARED_LIB DoubleNode {
 			this->next = this;
 		}
 
-		DoubleNode(__cref_DoubleNode other) = delete;
-		__ref_DoubleNode operator=(__cref_DoubleNode other) = delete;
+		DoubleNode(__cref_DoubleNode) __LL_EXCEPT__ = delete;
+		__ref_DoubleNode operator=(__cref_DoubleNode) __LL_EXCEPT__ = delete;
 
-		DoubleNode(__move_DoubleNode other) = delete;
-		__ref_DoubleNode operator=(__move_DoubleNode other) = delete;
+		DoubleNode(__move_DoubleNode) __LL_EXCEPT__ = delete;
+		__ref_DoubleNode operator=(__move_DoubleNode) __LL_EXCEPT__ = delete;
 
 		constexpr void setData(__ptr data) __LL_EXCEPT__ { this->data = data; }
 		constexpr __ptr getData() __LL_EXCEPT__ { return this->data; }

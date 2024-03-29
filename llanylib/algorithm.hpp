@@ -26,39 +26,49 @@ namespace algorithm {
 constexpr len_t MAX_LIST_SIZE = static_cast<len_t>(-1);
 constexpr len_t npos = MAX_LIST_SIZE;
 
-template<class T>
+template<class T, class result_t>
 struct CompareData {
 	len_t position;		// Position of comparation data
 	T value1;			// Value 1 of the result given
 	T value2;			// Value 2 of the result given
-	cmp_t result;		// Result of comparation
+	result_t result;	// Result of comparation
 };
 
-#pragma region Compare
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class U = std::conditional_t<GET_DATA, CompareData<T>, cmp_t>>
-__LL_NODISCARD__ constexpr U compare(const T* v1, const T* v2, len_t size, fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
+template<class T, class U, ll_bool_t GET_DATA>
+using CompareConditional = std::conditional_t<GET_DATA, CompareData<T, U>, U>;
+template<class T, ll_bool_t GET_DATA>
+using CompareConditionalCmpT = CompareConditional<T, cmp_t, GET_DATA>;
+template<class T, ll_bool_t GET_DATA>
+using CompareConditionalBool = CompareConditional<T, ll_bool_t, GET_DATA>;
+
+
+
+#pragma region Comparators
+#pragma region CompareSimple
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalCmpT<T, GET_DATA>>
+__LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const T* v2, len_t size, fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
 	const T* begin = v1;
 	for (; 0 < size; --size, ++v1, ++v2) {
 		cmp_t result = cmp(*v1, *v2);
 		if (result != 0) {
 			if constexpr (GET_DATA)
-				return CompareData<T> { static_cast<len_t>(v1 - begin), *v1, *v2, result };
+				return CompareResult{ static_cast<len_t>(v1 - begin), *v1, *v2, result };
 			else return result;
 		}
 	}
 	if constexpr (GET_DATA) {
-		CompareData<T> __{};
+		CompareResult __{};
 		__.position = size;
 		__.result = 0;
 		return __;
 	}
 	else return 0;
 }
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class U = std::conditional_t<GET_DATA, CompareData<T>, cmp_t>>
-__LL_NODISCARD__ constexpr U compare(const T* v1, const T* v2, len_t size) __LL_EXCEPT__ {
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalCmpT<T, GET_DATA>>
+__LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const T* v2, len_t size) __LL_EXCEPT__ {
 	static_assert(traits::has_no_equal_operator_v<T>, "Error, <T> object has no operator!=()");
 	static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
-	return compare<T, GET_DATA, U>(v1, v2, size, common::compare_with_operators);
+	return compare<T, GET_DATA, CompareResult>(v1, v2, size, common::compare_with_operators);
 }
 
 #pragma region Proxy
@@ -66,26 +76,107 @@ template<class T>
 __LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const len_t size1, const T* v2, const len_t size2, fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
 	return (size1 == size2) ? compare<T>(v1, v2, size1, cmp) == 0 : LL_FALSE;
 }
-template<class T, len_t size1, len_t size2 = size1>
+template<class T, len_t N1, len_t N2 = N1>
 __LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const T* v2, fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
-	return (size1 == size2) ? compare<T>(v1, v2, size1, cmp) == 0 : LL_FALSE;
+	return (N1 == N2) ? compare<T>(v1, v2, N1, cmp) == 0 : LL_FALSE;
 }
-template<class T, len_t size1, len_t size2>
-__LL_NODISCARD__ constexpr ll_bool_t equals(const T(&v1)[size1], const T(&v2)[size2], fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
-	return (size1 == size2) ? compare<T>(v1, v2, size1, cmp) == 0 : LL_FALSE;
+template<class T, len_t N1, len_t N2>
+__LL_NODISCARD__ constexpr ll_bool_t equals(const T(&v1)[N1], const T(&v2)[N2], fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
+	return (N1 == N2) ? compare<T>(v1, v2, N1, cmp) == 0 : LL_FALSE;
 }
 
 template<class T>
 __LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const len_t size1, const T* v2, const len_t size2) __LL_EXCEPT__ {
 	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : LL_FALSE;
 }
-template<class T, len_t size1, len_t size2 = size1>
+template<class T, len_t N1, len_t N2 = N1>
 __LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const T* v2) __LL_EXCEPT__ {
-	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : LL_FALSE;
+	return (N1 == N2) ? compare<T>(v1, v2, N1) == 0 : LL_FALSE;
 }
-template<class T, len_t size1, len_t size2>
-__LL_NODISCARD__ constexpr ll_bool_t equals(const T(&v1)[size1], const T(&v2)[size2]) __LL_EXCEPT__ {
-	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : LL_FALSE;
+template<class T, len_t N1, len_t N2>
+__LL_NODISCARD__ constexpr ll_bool_t equals(const T(&v1)[N1], const T(&v2)[N2]) __LL_EXCEPT__ {
+	return (N1 == N2) ? compare<T>(v1, v2, N1) == 0 : LL_FALSE;
+}
+
+#pragma endregion
+#pragma endregion
+#pragma region StartsWith
+// str size needs to be bigger or equal to needle
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
+__LL_NODISCARD__ constexpr CompareResult starts_with_impl(const T* str, const T* needle, len_t size, fnc_clss::CompareBool<T> cmp) {
+	const T* begin = str;
+	for (; 0 < size; --size, ++str, ++needle) {
+		ll_bool_t result = cmp(*str, *needle);
+		if (!result) {
+			if constexpr (GET_DATA)
+				return CompareResult{ static_cast<len_t>(str - begin), *str, *needle, result };
+			else return result;
+		}
+	}
+	if constexpr (GET_DATA) {
+		CompareResult __{};
+		__.position = size;
+		__.result = LL_TRUE;
+		return __;
+	}
+	else return LL_TRUE;
+}
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
+__LL_NODISCARD__ constexpr CompareResult starts_with_impl(const T* str, const T* needle, len_t size) {
+	return starts_with_impl<T, LL_FALSE>(str, needle, size, common::simple_equals);
+}
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
+__LL_NODISCARD__ constexpr CompareResult starts_with(const T* str, const T* needle, const len_t size1, const len_t size2, fnc_clss::CompareBool<T> cmp) {
+	if (size1 < size2) {
+		if constexpr (GET_DATA) {
+			CompareResult __{};
+			__.position = 0;
+			__.result = LL_FALSE;
+			return __;
+		}
+		else return LL_FALSE;
+	}
+	return starts_with_impl<T, GET_DATA, CompareResult>(str, needle, size2, cmp);
+}
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
+__LL_NODISCARD__ constexpr CompareResult starts_with(const T* str, const T* needle, const len_t size1, const len_t size2) {
+	return starts_with<T, GET_DATA, CompareResult>(str, needle, size1, size2, common::simple_equals);
+}
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>, len_t N1, len_t N2>
+__LL_NODISCARD__ constexpr CompareResult starts_with(const T(&str)[N1], const T(&needle)[N2], fnc_clss::CompareBool<T> cmp) {
+	return starts_with<T, GET_DATA, CompareResult>(str, needle, N1, N2, cmp);
+}
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>, len_t N1, len_t N2>
+__LL_NODISCARD__ constexpr CompareResult starts_with(const T(&str)[N1], const T(&needle)[N2]) {
+	return starts_with<T, GET_DATA, CompareResult>(str, needle, N1, N2, common::simple_equals);
+}
+
+#pragma endregion
+#pragma region EndsWith
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
+__LL_NODISCARD__ constexpr CompareResult ends_with(const T* str, const T* needle, const len_t size1, const len_t size2, fnc_clss::CompareBool<T> cmp) {
+	if (size1 < size2) {
+		if constexpr (GET_DATA) {
+			CompareResult __{};
+			__.position = 0;
+			__.result = LL_FALSE;
+			return __;
+		}
+		else return LL_FALSE;
+	}
+	return starts_with_impl<T, GET_DATA, CompareResult>((str + size1) - size2, needle, size2, cmp);
+}
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
+__LL_NODISCARD__ constexpr CompareResult ends_with(const T* str, const T* needle, const len_t size1, const len_t size2) {
+	return ends_with<T, GET_DATA, CompareResult>(str, needle, size1, size2, common::simple_equals);
+}
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>, len_t N1, len_t N2>
+__LL_NODISCARD__ constexpr CompareResult ends_with(const T(&str)[N1], const T(&needle)[N2], fnc_clss::CompareBool<T> cmp) {
+	return ends_with<T, GET_DATA, CompareResult>(str, needle, N1, N2, cmp);
+}
+template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>, len_t N1, len_t N2>
+__LL_NODISCARD__ constexpr CompareResult ends_with(const T(&str)[N1], const T(&needle)[N2]) {
+	return ends_with<T, GET_DATA, CompareResult>(str, needle, N1, N2, common::simple_equals);
 }
 
 #pragma endregion

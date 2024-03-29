@@ -150,9 +150,9 @@ template<len_t size1, len_t size2 = size1>
 __LL_NODISCARD__ constexpr ll_bool_t equals(ll_string_t v1, ll_string_t v2) __LL_EXCEPT__ {
 	return algorithm::equals<ll_char_t>(v1, size1, v2, size2);
 }
-template<len_t size1, len_t size2>
-__LL_NODISCARD__ constexpr ll_bool_t equals(const ll_char_t (&v1)[size1], const ll_char_t (&v2)[size2]) __LL_EXCEPT__ {
-	return algorithm::equals<ll_char_t>(v1, size1, v2, size2);
+template<len_t N1, len_t N2>
+__LL_NODISCARD__ constexpr ll_bool_t equals(const ll_char_t (&v1)[N1], const ll_char_t (&v2)[N2]) __LL_EXCEPT__ {
+	return algorithm::equals<ll_char_t>(v1, N1, v2, N2);
 }
 
 #pragma endregion

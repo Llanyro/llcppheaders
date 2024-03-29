@@ -10,71 +10,104 @@
 #define LLANYLIB_EXAMPLES_ARRAYVIEWEXAMPLE_HPP_
 
 #include "../Array.hpp"
-#include "algorithmExample.hpp"
 #include "../DoubleNode.hpp"
+
+#include "algorithmExample.hpp"
 
 namespace llcpp {
 
 /************************************* Data *************************************/
 
-constexpr const int numbers_1[3] = { 10, 9, 6 };
-constexpr const int numbers_2[3] = { 10, 9, 6 };
-constexpr const int numbers_3[3] = { 10, 9, 5 };
-constexpr const int numbers_4[4] = { 10, 9, 6, 0 };
+constexpr const int numbers_01[] = { 10, 9, 6 };
+constexpr const int numbers_02[] = { 10, 9, 6 };
+constexpr const int numbers_03[] = { 10, 5 };
+constexpr const int numbers_04[] = { 10, 9, 6, 0 };
 
 /************************************* ArrayView Storage *************************************/
 
-constexpr auto arrayview1 = ArrayView(numbers_1);
-constexpr auto arrayview2 = ArrayView(numbers_2);
-constexpr auto arrayview3 = ArrayView(numbers_3);
-constexpr auto arrayview4 = ArrayView(numbers_4);
-constexpr auto arrayview5 = ArrayView(algorithm::str);
-constexpr auto arrayview6 = ArrayView(algorithm::str2);
+constexpr auto arrayview_01 = ArrayView(numbers_01);
+constexpr auto arrayview_02 = ArrayView(numbers_02);
+constexpr auto arrayview_03 = ArrayView(numbers_03);
+constexpr auto arrayview_04 = ArrayView(numbers_04);
+constexpr auto arrayview_05 = ArrayView(algorithm::str1);
+constexpr auto arrayview_06 = ArrayView(algorithm::str2);
 
-constexpr ArrayView HOLA_WORLD = "Hola world!";
+constexpr ArrayView HOLA_WORLD = algorithm::str4;
 
 /************************************* ArrayView Copy *************************************/
 
-constexpr auto arrayview7 = ArrayView("Hola mundo");
-constexpr auto arrayview8 = ArrayView(HOLA_WORLD);
+constexpr auto arrayview_07 = ArrayView("Hola mundo");
+constexpr auto arrayview_08 = ArrayView(HOLA_WORLD);
+constexpr auto arrayview_09 = ArrayView(algorithm::str4);
 
 /************************************* ArrayView access *************************************/
 
-constexpr const ll_char_t stringview_char = arrayview8[2];
+constexpr const ll_char_t stringview_char_1 = arrayview_08[2];
+constexpr const ll_char_t stringview_char_2 = *arrayview_07.get(9);
+
+static_assert(stringview_char_1 == 'l', "Error changed value");
+static_assert(stringview_char_2 == 'o', "Error changed value");
 
 /************************************* ArrayView algorithm *************************************/
 
-constexpr len_t find_pos_1 = arrayview5.find_pos('*');
-constexpr len_t find_pos_2 = arrayview6.find_pos('?');
+constexpr len_t find_pos_01 = arrayview_05.find_pos('*');
+constexpr len_t find_pos_02 = arrayview_06.find_pos('?');
 
-constexpr auto find_1 = arrayview5.find('*');
-constexpr auto find_2 = arrayview6.find('?');
+constexpr auto find_01 = arrayview_05.find('*');
+constexpr auto find_02 = arrayview_06.find('?');
 
-constexpr ll_bool_t equals_1 = arrayview7.operator==(arrayview8);
-constexpr ll_bool_t equals_2 = arrayview7.operator==(arrayview7);
+constexpr ll_bool_t equals_01 = arrayview_07.operator==(arrayview_08);
+constexpr ll_bool_t equals_02 = arrayview_07.operator==(arrayview_07);
 
-constexpr ll_bool_t equals_3 = llcpp::algorithm::equals(numbers_1, numbers_2);
-constexpr ll_bool_t equals_4 = llcpp::algorithm::equals({ 10 }, numbers_2);
+constexpr ll_bool_t equals_03 = llcpp::algorithm::equals(numbers_01, numbers_02);
+constexpr ll_bool_t equals_04 = llcpp::algorithm::equals({ 10 }, numbers_02);
 
-constexpr ll_bool_t equals_5 = arrayview2.operator==(arrayview1);
-constexpr ll_bool_t equals_6 = arrayview3.operator==(arrayview1);
-constexpr ll_bool_t equals_7 = arrayview4.operator==(arrayview1);
-constexpr ll_bool_t equals_8 = arrayview2.operator==(arrayview1);
+constexpr ll_bool_t equals_05 = arrayview_02.operator==(arrayview_01);
+constexpr ll_bool_t equals_06 = arrayview_03.operator==(arrayview_01);
+constexpr ll_bool_t equals_07 = arrayview_04.operator==(arrayview_01);
+constexpr ll_bool_t equals_08 = arrayview_02.operator==(arrayview_01);
 
-constexpr ll_bool_t equals_9 = arrayview3.operator==(numbers_1);
-constexpr ll_bool_t equals_10 = arrayview3.operator==(numbers_2);
-constexpr ll_bool_t equals_11 = arrayview3.operator==(numbers_4);
+constexpr ll_bool_t equals_09 = arrayview_03.operator==(numbers_01);
+constexpr ll_bool_t equals_10 = arrayview_03.operator==(numbers_02);
+constexpr ll_bool_t equals_11 = arrayview_03.operator==(numbers_04);
 
-constexpr ll_bool_t equals_12 = arrayview1.operator==(numbers_1);
-constexpr ll_bool_t equals_13 = arrayview1.operator==(numbers_2);
-constexpr ll_bool_t equals_14 = arrayview1.operator==(numbers_3);
-constexpr ll_bool_t equals_15 = arrayview1.operator==(numbers_4);
+constexpr ll_bool_t equals_12 = arrayview_01.operator==(numbers_01);
+constexpr ll_bool_t equals_13 = arrayview_01.operator==(numbers_02);
+constexpr ll_bool_t equals_14 = arrayview_01.operator==(numbers_03);
+constexpr ll_bool_t equals_15 = arrayview_01.operator==(numbers_04);
 
-constexpr ll_bool_t equals_16 = llcpp::algorithm::equals(numbers_1, numbers_3);
-constexpr ll_bool_t equals_17 = llcpp::algorithm::equals(numbers_2, numbers_3);
-constexpr ll_bool_t equals_18 = llcpp::algorithm::equals(numbers_1, numbers_4);
-constexpr ll_bool_t equals_19 = llcpp::algorithm::equals(numbers_2, numbers_4);
-constexpr ll_bool_t equals_20 = llcpp::algorithm::equals(numbers_3, numbers_4);
+constexpr ll_bool_t equals_16 = llcpp::algorithm::equals(numbers_01, numbers_03);
+constexpr ll_bool_t equals_17 = llcpp::algorithm::equals(numbers_02, numbers_03);
+constexpr ll_bool_t equals_18 = llcpp::algorithm::equals(numbers_01, numbers_04);
+constexpr ll_bool_t equals_19 = llcpp::algorithm::equals(numbers_02, numbers_04);
+constexpr ll_bool_t equals_20 = llcpp::algorithm::equals(numbers_03, numbers_04);
+
+static_assert(find_pos_01 == 13, "Error changed value");
+static_assert(find_pos_02 == 13, "Error changed value");
+
+static_assert(*find_01 == '*', "Error changed value");
+static_assert(*find_02 == '?', "Error changed value");
+
+static_assert(equals_01 == LL_FALSE, "Error changed value");
+static_assert(equals_02 ==  LL_TRUE, "Error changed value");
+static_assert(equals_03 ==  LL_TRUE, "Error changed value");
+static_assert(equals_04 == LL_FALSE, "Error changed value");
+static_assert(equals_05 ==  LL_TRUE, "Error changed value");
+static_assert(equals_06 == LL_FALSE, "Error changed value");
+static_assert(equals_07 == LL_FALSE, "Error changed value");
+static_assert(equals_08 ==  LL_TRUE, "Error changed value");
+static_assert(equals_09 == LL_FALSE, "Error changed value");
+static_assert(equals_10 == LL_FALSE, "Error changed value");
+static_assert(equals_11 == LL_FALSE, "Error changed value");
+static_assert(equals_12 ==  LL_TRUE, "Error changed value");
+static_assert(equals_13 ==  LL_TRUE, "Error changed value");
+static_assert(equals_14 == LL_FALSE, "Error changed value");
+static_assert(equals_15 == LL_FALSE, "Error changed value");
+static_assert(equals_16 == LL_FALSE, "Error changed value");
+static_assert(equals_17 == LL_FALSE, "Error changed value");
+static_assert(equals_18 == LL_FALSE, "Error changed value");
+static_assert(equals_19 == LL_FALSE, "Error changed value");
+static_assert(equals_20 == LL_FALSE, "Error changed value");
 
 /************************************* Array reverse *************************************/
 
@@ -86,11 +119,17 @@ constexpr len_t __array_reverse_example__(int v) {
 	return arr[v];
 }
 
-constexpr len_t array_reverse_0 = __array_reverse_example__(0);
-constexpr len_t array_reverse_1 = __array_reverse_example__(1);
-constexpr len_t array_reverse_2 = __array_reverse_example__(2);
-constexpr len_t array_reverse_3 = __array_reverse_example__(3);
-constexpr len_t array_reverse_4 = __array_reverse_example__(4);
+constexpr len_t array_reverse_00 = __array_reverse_example__(0);
+constexpr len_t array_reverse_01 = __array_reverse_example__(1);
+constexpr len_t array_reverse_02 = __array_reverse_example__(2);
+constexpr len_t array_reverse_03 = __array_reverse_example__(3);
+constexpr len_t array_reverse_04 = __array_reverse_example__(4);
+
+static_assert(array_reverse_00 == 4, "Error changed value");
+static_assert(array_reverse_01 == 3, "Error changed value");
+static_assert(array_reverse_02 == 2, "Error changed value");
+static_assert(array_reverse_03 == 1, "Error changed value");
+static_assert(array_reverse_04 == 0, "Error changed value");
 
 /************************************* Array fill *************************************/
 
@@ -101,11 +140,17 @@ constexpr len_t __array_fill_example__(int v) {
 	return arr[v];
 }
 
-constexpr len_t array_fill_0 = __array_fill_example__(0);
-constexpr len_t array_fill_1 = __array_fill_example__(1);
-constexpr len_t array_fill_2 = __array_fill_example__(2);
-constexpr len_t array_fill_3 = __array_fill_example__(3);
-constexpr len_t array_fill_4 = __array_fill_example__(4);
+constexpr len_t array_fill_00 = __array_fill_example__(0);
+constexpr len_t array_fill_01 = __array_fill_example__(1);
+constexpr len_t array_fill_02 = __array_fill_example__(2);
+constexpr len_t array_fill_03 = __array_fill_example__(3);
+constexpr len_t array_fill_04 = __array_fill_example__(4);
+
+static_assert(array_fill_00 == 000, "Error changed value");
+static_assert(array_fill_01 == 999, "Error changed value");
+static_assert(array_fill_02 == 999, "Error changed value");
+static_assert(array_fill_03 == 999, "Error changed value");
+static_assert(array_fill_04 == 000, "Error changed value");
 
 /************************************* Array shift left *************************************/
 
@@ -117,11 +162,17 @@ constexpr len_t __array_shift_left_example__(int v) {
 	return arr[v];
 }
 
-constexpr len_t array_shift_left_0 = __array_shift_left_example__(0);
-constexpr len_t array_shift_left_1 = __array_shift_left_example__(1);
-constexpr len_t array_shift_left_2 = __array_shift_left_example__(2);
-constexpr len_t array_shift_left_3 = __array_shift_left_example__(3);
-constexpr len_t array_shift_left_4 = __array_shift_left_example__(4);
+constexpr len_t array_shift_left_00 = __array_shift_left_example__(0);
+constexpr len_t array_shift_left_01 = __array_shift_left_example__(1);
+constexpr len_t array_shift_left_02 = __array_shift_left_example__(2);
+constexpr len_t array_shift_left_03 = __array_shift_left_example__(3);
+constexpr len_t array_shift_left_04 = __array_shift_left_example__(4);
+
+static_assert(array_shift_left_00 == 999, "Error changed value");
+static_assert(array_shift_left_01 == 999, "Error changed value");
+static_assert(array_shift_left_02 == 000, "Error changed value");
+static_assert(array_shift_left_03 == 001, "Error changed value");
+static_assert(array_shift_left_04 == 002, "Error changed value");
 
 /************************************* Array shift right *************************************/
 
@@ -138,6 +189,12 @@ constexpr len_t array_shift_right_1 = __array_shift_right_example__(1);
 constexpr len_t array_shift_right_2 = __array_shift_right_example__(2);
 constexpr len_t array_shift_right_3 = __array_shift_right_example__(3);
 constexpr len_t array_shift_right_4 = __array_shift_right_example__(4);
+
+static_assert(array_shift_right_0 == 002, "Error changed value");
+static_assert(array_shift_right_1 == 003, "Error changed value");
+static_assert(array_shift_right_2 == 004, "Error changed value");
+static_assert(array_shift_right_3 == 999, "Error changed value");
+static_assert(array_shift_right_4 == 999, "Error changed value");
 
 /************************************* Array test nodes *************************************/
 
@@ -201,7 +258,15 @@ constexpr len_t __array_test_nodes_example__(
 	}
 }
 
-constexpr len_t array_test_nodes_1 = __array_test_nodes_example__(999, 7);
+constexpr len_t array_test_nodes_00 = __array_test_nodes_example__(999, 0);
+constexpr len_t array_test_nodes_01 = __array_test_nodes_example__(999, 1);
+constexpr len_t array_test_nodes_02 = __array_test_nodes_example__(999, 2);
+constexpr len_t array_test_nodes_03 = __array_test_nodes_example__(999, 3);
+
+static_assert(array_test_nodes_00 == 000, "Error changed value");
+static_assert(array_test_nodes_01 == 001, "Error changed value");
+static_assert(array_test_nodes_02 == 002, "Error changed value");
+static_assert(array_test_nodes_03 == 003, "Error changed value");
 
 /************************************* Array test list 2 *************************************/
 
@@ -241,9 +306,10 @@ constexpr len_t __array_test_nodes3_example__(int v, int v2) {
 	return arr_ptr_1->operator[](v);
 }
 
-constexpr len_t array_test_nodes3_1 = __array_test_nodes3_example__(1, 0);
-constexpr len_t array_test_nodes3_2 = __array_test_nodes3_example__(2, 2);
-constexpr len_t array_test_nodes3_3 = __array_test_nodes3_example__(9, 1);
+constexpr len_t array_test_nodes3_00 = __array_test_nodes3_example__(1, 0);
+constexpr len_t array_test_nodes3_01 = __array_test_nodes3_example__(1, 1);
+constexpr len_t array_test_nodes3_02 = __array_test_nodes3_example__(2, 2);
+constexpr len_t array_test_nodes3_03 = __array_test_nodes3_example__(9, 3);
 
 /************************************* Array test list 4 *************************************/
 
@@ -251,7 +317,7 @@ constexpr len_t ARR_TEST_SIZE_5 = 10;
 using ArrayType_5 = Array<len_t, ARR_TEST_SIZE_5>;
 using NodeTest5 = linked::DoubleNode<ArrayType_5>;
 
-//template<class T, len_t SIZE>
+//template<class T, len_t N>
 class ArrayChain {
 	protected:
 		NodeTest5* root;	// Nodes

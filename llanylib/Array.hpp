@@ -21,11 +21,11 @@
 
 namespace llcpp {
 
-template<class T, len_t SIZE>
-class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
+template<class T, len_t N>
+class LL_SHARED_LIB Array : public ArrayView<T, N> {
 	private:
-		using __internal__ArrayView__ = ArrayView<T, SIZE>;
-		using __internal__Array__ = Array<T, SIZE>;
+		using __internal__ArrayView__ = ArrayView<T, N>;
+		using __internal__Array__ = Array<T, N>;
 	public:
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__Array__, Array);
@@ -35,8 +35,8 @@ class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
 		constexpr Array() __LL_EXCEPT__ = delete;
 		constexpr ~Array() __LL_EXCEPT__ {}
 
-		constexpr Array(__type (&data)[SIZE]) __LL_EXCEPT__ : __ArrayView(data) {}
-		constexpr __ref_Array operator=(__type (&data)[SIZE]) __LL_EXCEPT__ {
+		constexpr Array(__type (&data)[N]) __LL_EXCEPT__ : __ArrayView(data) {}
+		constexpr __ref_Array operator=(__type (&data)[N]) __LL_EXCEPT__ {
 			__ArrayView::operator=(data);
 			return *this;
 		}
@@ -62,13 +62,13 @@ class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
 		constexpr void reverse(
 			fnc_clss::SwapFunction<T> swap,
 			const len_t __begin = 0ull,
-			const len_t __end = SIZE - 1
+			const len_t __end = N - 1
 		) __LL_EXCEPT__ {
 			algorithm::reverse<T>(this->get(__begin), this->get(__end), swap);
 		}
 		constexpr void reverse(
 			const len_t __begin = 0ull,
-			const len_t __end = SIZE - 1
+			const len_t __end = N - 1
 		) __LL_EXCEPT__ {
 			algorithm::reverse<T>(this->get(__begin), this->get(__end));
 		}
@@ -77,7 +77,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
 		constexpr void fill(
 			const U object,
 			const len_t __begin = 0ull,
-			const len_t __end = SIZE
+			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::fill<T, U>(this->get(__begin), this->get(__end), object);
 		}
@@ -88,7 +88,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
 			const U null,
 			fnc_clss::SwapFunction<T> swap,
 			const len_t __begin = 0ull,
-			const len_t __end = SIZE
+			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shiftLeft<T, U>(this->get(__begin), this->get(__end), num, null, swap);
 		}
@@ -97,7 +97,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
 			const len_t num,
 			const U null,
 			const len_t __begin = 0ull,
-			const len_t __end = SIZE
+			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shiftLeft<T, U>(this->get(__begin), this->get(__end), num, null);
 		}
@@ -108,7 +108,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
 			const U null,
 			fnc_clss::SwapFunction<T> swap,
 			const len_t __begin = 0ull,
-			const len_t __end = SIZE
+			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shifRight<T, U>(this->get(__begin), this->get(__end), num, null, swap);
 		}
@@ -117,7 +117,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, SIZE> {
 			const len_t num,
 			const U null,
 			const len_t __begin = 0ull,
-			const len_t __end = SIZE
+			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shifRight<T, U>(this->get(__begin), this->get(__end), num, null);
 		}

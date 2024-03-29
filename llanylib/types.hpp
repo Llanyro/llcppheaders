@@ -20,10 +20,12 @@
 namespace llcpp {
 
 template<class T>
-class ByteExtender {
+struct ByteExtender {
 	T l;
 	T h;
 };
+
+struct EmptyStruct {};
 
 } // namespace llcpp
 

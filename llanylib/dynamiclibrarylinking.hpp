@@ -136,33 +136,37 @@ class DllHandle {
 
 		#pragma endregion
 		#pragma region GetTemplateSafe
-
 		template<class T>
 		__LL_NODISCARD__ T getFunction_s(const std::string& libraryFunctionName) __LL_EXCEPT__ {
+			static_assert(std::is_function_v<T>, "Template type can only be a function");
 			return reinterpret_cast<T>(this->getFunction_s(libraryFunctionName));
 		}
 		template<class T>
 		__LL_NODISCARD__ T getFunction_s(ll_string_t libraryFunctionName) __LL_EXCEPT__ {
+			static_assert(std::is_function_v<T>, "Template type can only be a function");
 			return reinterpret_cast<T>(this->getFunction_s(libraryFunctionName));
 		}
 		template<class T>
 		__LL_NODISCARD__ T getFunction_s(const std::string_view& libraryFunctionName) __LL_EXCEPT__ {
+			static_assert(std::is_function_v<T>, "Template type can only be a function");
 			return reinterpret_cast<T>(this->getFunction_s(libraryFunctionName));
 		}
 
 		#pragma endregion
 		#pragma region GetTemplateUnsafe
-
 		template<class T>
 		__LL_NODISCARD__ T getFunction(const std::string& libraryFunctionName) __LL_EXCEPT__ {
+			static_assert(std::is_function_v<T>, "Template type can only be a function");
 			return reinterpret_cast<T>(this->getFunction(libraryFunctionName));
 		}
 		template<class T>
 		__LL_NODISCARD__ T getFunction(ll_string_t libraryFunctionName) __LL_EXCEPT__ {
+			static_assert(std::is_function_v<T>, "Template type can only be a function");
 			return reinterpret_cast<T>(this->getFunction(libraryFunctionName));
 		}
 		template<class T>
 		__LL_NODISCARD__ T getFunction(const std::string_view& libraryFunctionName) __LL_EXCEPT__ {
+			static_assert(std::is_function_v<T>, "Template type can only be a function");
 			return reinterpret_cast<T>(this->getFunction(libraryFunctionName));
 		}
 

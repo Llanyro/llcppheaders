@@ -16,7 +16,6 @@
 
 // Types
 #include "llanylib/types.hpp"
-#include "llanylib/types_extra.hpp"
 
 // Traits
 #include "llanylib/traits.hpp"

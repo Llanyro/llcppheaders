@@ -328,6 +328,9 @@ class LL_SHARED_LIB ArrayView {
 
 		#pragma endregion
 		#pragma region std
+		__LL_NODISCARD__ constexpr __cptr data() const __LL_EXCEPT__ {
+			return this->get();
+		}
 		__LL_NODISCARD__ constexpr __cptr begin() const __LL_EXCEPT__ {
 			return this->get();
 		}

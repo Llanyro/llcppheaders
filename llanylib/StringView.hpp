@@ -21,17 +21,20 @@
 
 namespace llcpp {
 
-template<len_t N>
-struct SizeConversor {
-	static constexpr ll_bool_t IS_EMPTY = (N == 1);
-	static constexpr len_t ARR_SIZE = IS_EMPTY ? N : N - 1;
-};
-
 template<len_t N, class T = const ll_char_t>
 class LL_SHARED_LIB StringView {
 	private:
+		template<len_t N>
+		struct SizeConversor {
+			static constexpr ll_bool_t IS_EMPTY = (N == 1);
+			static constexpr len_t ARR_SIZE = IS_EMPTY ? N : N - 1;
+		};
 		using STypes = SizeConversor<N>;
 		using __internal__StringView__ = StringView<N, T>;
+		template<len_t N2>
+		using StringViewOtherSize = StringView<N2, T>;
+		template<len_t N2>
+		using __cref_StringViewOtherSize = const StringViewOtherSize<N2>&;
 		template<len_t N2>
 		using STypes2 = SizeConversor<N2>;
 		//using __internal__ArrayView__ = ArrayView<T, STypes::ARR_SIZE>;
@@ -45,8 +48,14 @@ class LL_SHARED_LIB StringView {
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__StringView__, StringView);
 		//__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
+		using __type_raw = std::remove_const_t<__type>;
 	protected:
 		__ptr data;
+	protected:
+		template<len_t N2>
+		static constexpr __ptr convert(__type(&__array)[N2]) {
+			return const_cast<__ptr>(__array);
+		}
 	public:
 		constexpr StringView() __LL_EXCEPT__ = delete;
 		constexpr ~StringView() __LL_EXCEPT__ {}
@@ -92,115 +101,180 @@ class LL_SHARED_LIB StringView {
 		#pragma region Algorithm
 		#pragma region Compare
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = std::conditional_t<GET_DATA, algorithm::CompareData<__type, cmp_t>, cmp_t>>
-		__LL_NODISCARD__ constexpr CompareResult compare(__type(&_array)[N], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
-			return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), _array, this->len(), cmp);
+		__LL_NODISCARD__ constexpr CompareResult compare(__type(&__array)[N], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+			return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), __array, this->len(), cmp);
 		}
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = std::conditional_t<GET_DATA, algorithm::CompareData<__type, cmp_t>, cmp_t>>
-		__LL_NODISCARD__ constexpr CompareResult compare(__type(&_array)[N]) const __LL_EXCEPT__ {
-			return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), _array, this->len());
+		__LL_NODISCARD__ constexpr CompareResult compare(__type(&__array)[N]) const __LL_EXCEPT__ {
+			return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), __array, this->len());
 		}
 
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = std::conditional_t<GET_DATA, algorithm::CompareData<__type, cmp_t>, cmp_t>>
-		__LL_NODISCARD__ constexpr CompareResult compare(__cref_ArrayView other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult compare(__cref_StringView other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
 			return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), this->len(), cmp);
 		}
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = std::conditional_t<GET_DATA, algorithm::CompareData<__type, cmp_t>, cmp_t>>
-		__LL_NODISCARD__ constexpr CompareResult compare(__cref_ArrayView other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult compare(__cref_StringView other) const __LL_EXCEPT__ {
 			return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), this->len());
 		}
+
+		/// *************** ArrayView Compatibility *************** ///
+		//template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = std::conditional_t<GET_DATA, algorithm::CompareData<__type, cmp_t>, cmp_t>>
+		//__LL_NODISCARD__ constexpr CompareResult compare(__cref_StringView other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		//	return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), this->len(), cmp);
+		//}
+		//template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = std::conditional_t<GET_DATA, algorithm::CompareData<__type, cmp_t>, cmp_t>>
+		//__LL_NODISCARD__ constexpr CompareResult compare(__cref_StringView other) const __LL_EXCEPT__ {
+		//	return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), this->len());
+		//}
 
 		#pragma endregion
 		#pragma region Equals
 		#pragma region Func
 		template<len_t N2>
-		__LL_NODISCARD__ constexpr ll_bool_t equals(__type(&_array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
-			return algorithm::equals<__type>(this->begin(), N, _array, N2, cmp);
+		__LL_NODISCARD__ constexpr ll_bool_t equals(__type(&__array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+			return algorithm::equals<__type>(this->begin(), N, __array, N2, cmp);
 		}
 		template<len_t N2>
-		__LL_NODISCARD__ constexpr ll_bool_t equals(__type(&_array)[N2]) const __LL_EXCEPT__ {
-			return algorithm::equals<__type>(this->begin(), N, _array, N2);
+		__LL_NODISCARD__ constexpr ll_bool_t equals(__type(&__array)[N2]) const __LL_EXCEPT__ {
+			return algorithm::equals<__type>(this->begin(), N, __array, N2);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_ArrayView other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_StringView other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
 			return algorithm::equals<__type, N>(this->begin(), other.begin(), cmp);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_ArrayView other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_StringView other) const __LL_EXCEPT__ {
 			return algorithm::equals<__type, N>(this->begin(), other.begin());
 		}
 		template<len_t N2>
-		__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_ArrayViewOtherSize<N2> other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_StringViewOtherSize<N2> other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
 			return algorithm::equals<__type>(this->begin(), N, other.begin(), N2, cmp);
 		}
 		template<len_t N2>
-		__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_ArrayViewOtherSize<N2> other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_StringViewOtherSize<N2> other) const __LL_EXCEPT__ {
 			return algorithm::equals<__type>(this->begin(), N, other.begin(), N2);
 		}
+
+		/// *************** ArrayView Compatibility *************** ///
+		//__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_StringView other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		//	return algorithm::equals<__type, N>(this->begin(), other.begin(), cmp);
+		//}
+		//__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_StringView other) const __LL_EXCEPT__ {
+		//	return algorithm::equals<__type, N>(this->begin(), other.begin());
+		//}
+		//template<len_t N2>
+		//__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_StringViewOtherSize<N2> other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		//	return algorithm::equals<__type>(this->begin(), N, other.begin(), N2, cmp);
+		//}
+		//template<len_t N2>
+		//__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_StringViewOtherSize<N2> other) const __LL_EXCEPT__ {
+		//	return algorithm::equals<__type>(this->begin(), N, other.begin(), N2);
+		//}
 
 		#pragma endregion
 		#pragma region Operator
 		template<len_t N2>
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(__type(&_array)[N2]) const __LL_EXCEPT__ {
-			return this->equals<N2>(_array);
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(__type(&__array)[N2]) const __LL_EXCEPT__ {
+			return this->equals<N2>(__array);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(__cref_ArrayView other) const __LL_EXCEPT__ {
-			return this->equals<N>(other);
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(__cref_StringView other) const __LL_EXCEPT__ {
+			return this->equals(other);
 		}
 		template<len_t N2>
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(__cref_ArrayViewOtherSize<N2> other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(__cref_StringViewOtherSize<N2> other) const __LL_EXCEPT__ {
 			return this->equals<N2>(other);
 		}
+
+
+		/// *************** ArrayView Compatibility *************** ///
+		//template<len_t N2>
+		//__LL_NODISCARD__ constexpr ll_bool_t operator==(__cref_StringViewOtherSize<N2> other) const __LL_EXCEPT__ {
+		//	return this->equals<N2>(other);
+		//}
 
 		#pragma endregion
 		#pragma endregion
 		#pragma region StartsWith
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult starts_with(__type(&_array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
-			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), _array, N, N2, cmp);
+		__LL_NODISCARD__ constexpr CompareResult starts_with(__type(&__array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), __array, STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE, cmp);
 		}
-		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult starts_with(__type(&_array)[N2]) const __LL_EXCEPT__ {
-			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), _array, STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE);
+		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type_raw, GET_DATA>, len_t N2>
+		__LL_NODISCARD__ constexpr CompareResult starts_with(__type(&__array)[N2]) const __LL_EXCEPT__ {
+			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), __array, STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE);
 		}
-		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>>
+		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type_raw, GET_DATA>>
 		__LL_NODISCARD__ constexpr CompareResult starts_with(__ctype c) const __LL_EXCEPT__ {
 			if constexpr (GET_DATA) {
 				CompareResult __{};
 				__.position = 0;
-				__.value1 = this->data[0];
+				__.value1 = this->operator[](0);
 				__.value2 = c;
-				__.result = this->data[0] == c;
+				__.result = __.value1 == __.value2;
 				return __;
 			}
-			else  return this->data[0] == c;
+			else return this->operator[](0) == c;
 		}
 
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult starts_with(__cref_ArrayViewOtherSize<N2> other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
-			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), N, N2, cmp);
+		__LL_NODISCARD__ constexpr CompareResult starts_with(__cref_StringViewOtherSize<N2> other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE, cmp);
 		}
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult starts_with(__cref_ArrayViewOtherSize<N2> other) const __LL_EXCEPT__ {
-			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), N, N2);
+		__LL_NODISCARD__ constexpr CompareResult starts_with(__cref_StringViewOtherSize<N2> other) const __LL_EXCEPT__ {
+			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE);
 		}
+
+		/// *************** ArrayView Compatibility *************** ///
+		//template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
+		//__LL_NODISCARD__ constexpr CompareResult starts_with(__cref_StringViewOtherSize<N2> other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		//	return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE, cmp);
+		//}
+		//template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
+		//__LL_NODISCARD__ constexpr CompareResult starts_with(__cref_StringViewOtherSize<N2> other) const __LL_EXCEPT__ {
+		//	return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE);
+		//}
 
 		#pragma endregion
 		#pragma region EndsWith
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult ends_with(__type(&_array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
-			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), _array, N, N2, cmp);
+		__LL_NODISCARD__ constexpr CompareResult ends_with(__type(&__array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), __array, STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE, cmp);
 		}
-		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult ends_with(__type(&_array)[N2]) const __LL_EXCEPT__ {
-			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), _array, N, N2);
+		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type_raw, GET_DATA>, len_t N2>
+		__LL_NODISCARD__ constexpr CompareResult ends_with(__type(&__array)[N2]) const __LL_EXCEPT__ {
+			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), __array, STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE);
+		}
+		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type_raw, GET_DATA>>
+		__LL_NODISCARD__ constexpr CompareResult ends_with(__ctype c) const __LL_EXCEPT__ {
+			if constexpr (GET_DATA) {
+				CompareResult __{};
+				__.position = 0;
+				__.value1 = this->operator[](STypes::ARR_SIZE - 1);
+				__.value2 = c;
+				__.result = __.value1 == __.value2;
+				return __;
+			}
+			else return this->operator[](STypes::ARR_SIZE - 1) == c;
 		}
 
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult ends_with(__cref_ArrayViewOtherSize<N2> other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
-			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), N, N2, cmp);
+		__LL_NODISCARD__ constexpr CompareResult ends_with(__cref_StringViewOtherSize<N2> other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE, cmp);
 		}
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult ends_with(__cref_ArrayViewOtherSize<N2> other) const __LL_EXCEPT__ {
-			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), N, N2);
+		__LL_NODISCARD__ constexpr CompareResult ends_with(__cref_StringViewOtherSize<N2> other) const __LL_EXCEPT__ {
+			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE);
 		}
+
+		/// *************** ArrayView Compatibility *************** ///
+		//template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
+		//__LL_NODISCARD__ constexpr CompareResult ends_with(__cref_StringViewOtherSize<N2> other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		//	return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE, cmp);
+		//}
+		//template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
+		//__LL_NODISCARD__ constexpr CompareResult ends_with(__cref_StringViewOtherSize<N2> other) const __LL_EXCEPT__ {
+		//	return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), other.begin(), STypes::ARR_SIZE, STypes2<N2>::ARR_SIZE);
+		//}
 
 		#pragma endregion
 		#pragma region Find
@@ -353,7 +427,7 @@ class LL_SHARED_LIB StringView {
 			return this->get();
 		}
 		__LL_NODISCARD__ constexpr __cptr end() const __LL_EXCEPT__ {
-			return this->get(this->operator len_t());
+			return this->get(N);
 		}
 
 		#pragma endregion

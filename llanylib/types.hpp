@@ -124,11 +124,11 @@ using b128 = size_bytes128_t;
 namespace std {
 template <class _Ty>
 class allocator;
-template <class _Elem>
-struct char_traits : _Char_traits<_Elem, long> {};
+template <class _Elem, class _Int_type>
+struct _Char_traits;
 template <class _Elem, class _Traits, class _Alloc>
 class basic_string;
-using string  = basic_string<char, char_traits<char>, allocator<char>>;
+using string  = basic_string<char, _Char_traits<char, long>, allocator<char>>;
 template <class _Fty>
 class function;
 } // namespace std

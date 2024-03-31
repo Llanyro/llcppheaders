@@ -50,7 +50,7 @@ class LL_SHARED_LIB StringView {
 		//__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
 		using __type_raw = std::remove_const_t<__type>;
 	protected:
-		__ptr data;
+		__ptr __data;
 	protected:
 		template<len_t N2>
 		static constexpr __ptr convert(__type(&__array)[N2]) {
@@ -60,12 +60,12 @@ class LL_SHARED_LIB StringView {
 		constexpr StringView() __LL_EXCEPT__ = delete;
 		constexpr ~StringView() __LL_EXCEPT__ {}
 
-		constexpr StringView(__type (&data)[N]) __LL_EXCEPT__ : data(data) {}
-		constexpr __ref_StringView operator=(__type(&data)[N]) __LL_EXCEPT__ = delete;
+		constexpr StringView(__type (&__data)[N]) __LL_EXCEPT__ : __data(__data) {}
+		constexpr __ref_StringView operator=(__type(&__data)[N]) __LL_EXCEPT__ = delete;
 
-		constexpr StringView(__cref_StringView other) __LL_EXCEPT__ : data(other.data) {}
+		constexpr StringView(__cref_StringView other) __LL_EXCEPT__ : __data(other.__data) {}
 		constexpr __ref_StringView operator=(__cref_StringView other) __LL_EXCEPT__ {
-			this->data = other.data;
+			this->__data = other.__data;
 			return *this;
 		}
 
@@ -85,17 +85,17 @@ class LL_SHARED_LIB StringView {
 			return this->operator len_t() == 0;
 		}
 		__LL_NODISCARD__ constexpr operator ll_bool_t() const __LL_EXCEPT__ {
-			return !this->empty() && static_cast<ll_bool_t>(this->data);
+			return !this->empty() && static_cast<ll_bool_t>(this->__data);
 		}
 
 		__LL_NODISCARD__ constexpr operator __cptr() const __LL_EXCEPT__ {
-			return this->data;
+			return this->__data;
 		}
 		__LL_NODISCARD__ constexpr __cptr get(const len_t pos = 0ull) const __LL_EXCEPT__ {
-			return this->data + pos;
+			return this->__data + pos;
 		}
 		__LL_NODISCARD__ constexpr __cref operator[] (const len_t pos) const __LL_EXCEPT__ {
-			return this->data[pos];
+			return this->__data[pos];
 		}
 
 		#pragma region Algorithm

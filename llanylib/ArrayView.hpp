@@ -36,20 +36,20 @@ class LL_SHARED_LIB ArrayView {
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
 		using __type_raw = std::remove_const_t<__type>;
 	protected:
-		__ptr data;
+		__ptr __data;
 	public:
 		constexpr ArrayView() __LL_EXCEPT__ = delete;
 		constexpr ~ArrayView() __LL_EXCEPT__ {}
 
-		constexpr ArrayView(__type (&data)[N]) __LL_EXCEPT__ : data(data) {}
-		constexpr __ref_ArrayView operator=(__type(&data)[N]) __LL_EXCEPT__ {
-			this->data = data;
+		constexpr ArrayView(__type (&__data)[N]) __LL_EXCEPT__ : __data(__data) {}
+		constexpr __ref_ArrayView operator=(__type(&__data)[N]) __LL_EXCEPT__ {
+			this->__data = __data;
 			return *this;
 		}
 
-		constexpr ArrayView(__cref_ArrayView other) __LL_EXCEPT__ : data(other.data) {}
+		constexpr ArrayView(__cref_ArrayView other) __LL_EXCEPT__ : __data(other.__data) {}
 		constexpr __ref_ArrayView operator=(__cref_ArrayView other) __LL_EXCEPT__ {
-			this->data = other.data;
+			this->__data = other.__data;
 			return *this;
 		}
 
@@ -69,15 +69,15 @@ class LL_SHARED_LIB ArrayView {
 			return this->operator len_t() == 0;
 		}
 		__LL_NODISCARD__ constexpr operator ll_bool_t() const __LL_EXCEPT__ {
-			return !this->empty() && static_cast<ll_bool_t>(this->data);
+			return !this->empty() && static_cast<ll_bool_t>(this->__data);
 		}
 
-		__LL_NODISCARD__ constexpr operator __cptr() const __LL_EXCEPT__ { return this->data; }
+		__LL_NODISCARD__ constexpr operator __cptr() const __LL_EXCEPT__ { return this->__data; }
 		__LL_NODISCARD__ constexpr __cptr get(const len_t pos = 0ull) const __LL_EXCEPT__ {
-			return this->data + pos;
+			return this->__data + pos;
 		}
 		__LL_NODISCARD__ constexpr __cref operator[] (const len_t pos) const __LL_EXCEPT__ {
-			return this->data[pos];
+			return this->__data[pos];
 		}
 
 		#pragma region Algorithm
@@ -328,7 +328,7 @@ class LL_SHARED_LIB ArrayView {
 
 		#pragma endregion
 		#pragma region std
-		__LL_NODISCARD__ constexpr __cptr data() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr __cptr __data() const __LL_EXCEPT__ {
 			return this->get();
 		}
 		__LL_NODISCARD__ constexpr __cptr begin() const __LL_EXCEPT__ {

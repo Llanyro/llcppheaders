@@ -1,6 +1,8 @@
 #include "../StringView.hpp"
 #include <iostream>
 
+#include <string>
+
 constexpr auto HELLO_WORLD_1 = llcpp::StringView("Hello world");
 constexpr auto HELLO_WORLD_2 = llcpp::StringView("Hello world!");
 constexpr auto EMPTY_STRING = llcpp::StringView("");

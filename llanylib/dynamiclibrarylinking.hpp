@@ -71,12 +71,6 @@ inline ll_lib_t getLibraryFunction(ll_lib_t libraryHandle, const std::string_vie
 inline void closeLibrary(ll_lib_t libraryHandle) {
 	close_lib(libraryHandle);
 }
-inline void closeLibrary(ll_lib_t libraryHandle) {
-	close_lib(libraryHandle);
-}
-inline void closeLibrary(ll_lib_t libraryHandle) {
-	close_lib(libraryHandle);
-}
 
 class DllHandle {
 	protected:
@@ -127,7 +121,7 @@ class DllHandle {
 
 		template<class T, ll_bool_t SAFE_MODE>
 		__LL_NODISCARD__ T getFunction(ll_string_t libraryFunctionName) __LL_EXCEPT__ {
-			static_assert(std::is_function_v<T>, "Template type can only be a function");
+			//static_assert(std::is_function_v<T>, "Template type can only be a function");
 			return reinterpret_cast<T>(this->getFunction<SAFE_MODE>(libraryFunctionName));
 		}
 		template<class T, ll_bool_t SAFE_MODE>

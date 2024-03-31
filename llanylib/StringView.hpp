@@ -82,7 +82,7 @@ class LL_SHARED_LIB StringView {
 			return this->operator len_t();
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
-			return this->operator len_t() == 0;
+			return STypes::ARR_SIZE == 1 && this->__data[0] == '\0';
 		}
 		__LL_NODISCARD__ constexpr operator ll_bool_t() const __LL_EXCEPT__ {
 			return !this->empty() && static_cast<ll_bool_t>(this->__data);

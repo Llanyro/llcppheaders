@@ -213,6 +213,45 @@ __LL_NODISCARD__ constexpr T transformTo8(const T value) __LL_EXCEPT__ {
 }
 
 #pragma endregion
+#pragma region TypeDivision(?)
+
+template<class T, const ui8 HALF_BITS, class U = traits::get_smaller_type_t<T>, const U _FULL_FIRST = 0, const T _FULL_SECOND = 0>
+struct TypeDivision {
+	using __type = T;
+	using __type_lower = U;
+	constexpr static U FULL_FIRST = _FULL_FIRST;
+	constexpr static T _FULL_SECOND = _FULL_SECOND;
+
+	static constexpr ByteExtender<U> div(const T v) {
+		return ByteExtender<U>{
+			static_cast<U>(v & FULL_FIRST),
+			static_cast<U>((v & _FULL_SECOND) >> HALF_BITS)
+		};
+	}
+};
+
+#pragma region SpecializationTypeDivision
+constexpr i8 I8_MAX = 0x7f;
+constexpr i16 I16_MAX = 0x7fff;
+constexpr i32 I32_MAX = 0x7fffffff;
+constexpr i64 I64_MAX = 0x7fffffffffffffff;
+
+constexpr ui8 UI8_MAX = 0xff;
+constexpr ui16 UI16_MAX = 0xffff;
+constexpr ui32 UI32_MAX = 0xffffffff;
+constexpr ui64 UI64_MAX = 0xffffffffffffffff;
+
+using i16Divisor = TypeDivision<i16, 7, i8, I8_MAX, I16_MAX>;
+using i32Divisor = TypeDivision<i32, 15, i16, I16_MAX, I32_MAX>;
+using i64Divisor = TypeDivision<i64, 31, i32, I32_MAX, I64_MAX>;
+
+using ui16Divisor = TypeDivision<ui16, 8, ui8, UI8_MAX, UI16_MAX>;
+using ui32Divisor = TypeDivision<ui32, 16, ui16, UI16_MAX, UI32_MAX>;
+using ui64Divisor = TypeDivision<ui64, 32, ui32, UI32_MAX, UI64_MAX>;
+
+#pragma endregion
+
+#pragma endregion
 
 } // namespace bits
 } // namespace llcpp

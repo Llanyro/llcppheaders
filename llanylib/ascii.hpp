@@ -9,7 +9,7 @@
 
 #if defined(LLANYLIB_ASCII_HPP_) // Guard && version protector
 #if LLANYLIB_ASCII_MAYOR_ != 4 || LLANYLIB_ASCII_MINOR_ < 2
-#error "ArrayView.hpp version error!"
+#error "ascii.hpp version error!"
 #endif // LLANYLIB_ASCII_MAYOR_ || LLANYLIB_ASCII_MINOR_
 
 #else !defined(LLANYLIB_ASCII_HPP_)
@@ -17,25 +17,25 @@
 #define LLANYLIB_ASCII_MAYOR_ 4
 #define LLANYLIB_ASCII_MINOR_ 2
 
-#include "ArrayView.hpp"
+#include "StringView.hpp"
 
 namespace llcpp {
 namespace ascii {
 
 constexpr ui8 MAYUS_MINUS_DIFF = 'a' - 'A';
 
-constexpr ArrayView ALPHABET_MINUS_CHARS = ArrayView("abcdefghijklmnopqrstuvwxyz", LL_TRUE);
-constexpr ArrayView ALPHABET_MAYUS_CHARS = ArrayView("ABCDEFGHIJKLMNOPQRSTUVWXYZ", LL_TRUE);
-constexpr ArrayView ALPHABET_NUMS_CHARS = ArrayView("0123456789", LL_TRUE);
-constexpr ArrayView ALPHABET_MAYUS_MINUS_CHARS = ArrayView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", LL_TRUE);
-constexpr ArrayView ALPHABET_CHARS = ArrayView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", LL_TRUE);
-constexpr ArrayView SPECIAL_CHARS = ArrayView("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~", LL_TRUE);
-constexpr ArrayView ALL_VISIBLE_CHARS = ArrayView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~", LL_TRUE);
+constexpr auto ALPHABET_MINUS_CHARS = StringView("abcdefghijklmnopqrstuvwxyz");
+constexpr auto ALPHABET_MAYUS_CHARS = StringView("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+constexpr auto ALPHABET_NUMS_CHARS = StringView("0123456789");
+constexpr auto ALPHABET_MAYUS_MINUS_CHARS = StringView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+constexpr auto ALPHABET_CHARS = StringView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+constexpr auto SPECIAL_CHARS = StringView("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
+constexpr auto ALL_VISIBLE_CHARS = StringView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 
-constexpr ArrayView NULLPTR = ArrayView("nullptr", LL_TRUE);
+constexpr auto NULLPTR = StringView("nullptr");
 
-constexpr ArrayView TRUE_STR = ArrayView("True", LL_TRUE);
-constexpr ArrayView FALSE_STR = ArrayView("False", LL_TRUE);
+constexpr auto TRUE_STR = StringView("True");
+constexpr auto FALSE_STR = StringView("False");
 
 } // namespace ascii
 } // namespace llcpp

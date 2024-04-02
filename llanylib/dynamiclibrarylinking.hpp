@@ -72,7 +72,7 @@ inline void closeLibrary(ll_lib_t libraryHandle) {
 	close_lib(libraryHandle);
 }
 
-class DllHandle {
+class LL_SHARED_LIB DllHandle {
 	protected:
 		ll_lib_t handle;
 	protected:

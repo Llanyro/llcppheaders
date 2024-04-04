@@ -1,5 +1,5 @@
 /*
- *	LinkedList.hpp
+ *	Loop.hpp
  *
  *	Author: Francisco Julio Ruiz Fernandez
  *	Author: llanyro
@@ -148,7 +148,6 @@ class LL_SHARED_LIB LinkedList : public CountableL {
 
 		#pragma endregion
 };
-
 } // namespace linked
 } // namespace llcpp
 

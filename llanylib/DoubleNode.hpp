@@ -9,7 +9,7 @@
 
 #if defined(LLANYLIB_DOUBLENODE_HPP_) // Guard && version protector
 	#if LLANYLIB_DOUBLENODE_MAYOR_ != 4 || LLANYLIB_DOUBLENODE_MINOR_ < 2
-		#error "algorithm.hpp version error!"
+		#error "DoubleNode.hpp version error!"
 	#endif // LLANYLIB_DOUBLENODE_MAYOR_ || LLANYLIB_DOUBLENODE_MINOR_
 
 #else !defined(LLANYLIB_DOUBLENODE_HPP_)
@@ -17,32 +17,29 @@
 #define LLANYLIB_DOUBLENODE_MAYOR_ 4
 #define LLANYLIB_DOUBLENODE_MINOR_ 2
 
-#include "definitions.hpp"
-#include "traits.hpp"
+#include "Node.hpp"
 
 namespace llcpp {
 namespace linked {
 
 template<class T>
-class LL_SHARED_LIB DoubleNode {
+class LL_SHARED_LIB DoubleNode : public NodePrev<DoubleNode<T>>, public NodeNext<DoubleNode<T>> {
 	public:
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(DoubleNode<T>, DoubleNode);
+		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(NodePrev<DoubleNode>, NodePrev);
+		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(NodeNext<DoubleNode>, NodeNext);
 	protected:
-		__ptr_DoubleNode prev;
-		__ptr_DoubleNode next;
-		__ptr data;
+		__type data;
 	public:
-		constexpr DoubleNode() __LL_EXCEPT__
-			: prev(LL_NULLPTR)
-			, next(LL_NULLPTR)
-			, data(LL_NULLPTR)
-		{}
+		constexpr DoubleNode() __LL_EXCEPT__ : __NodePrev(), __NodeNext(), data() {}
+		constexpr DoubleNode(__cref data) __LL_EXCEPT__ : __NodePrev(), __NodeNext(), data(data) {}
+		constexpr DoubleNode(__move data) __LL_EXCEPT__ : __NodePrev(), __NodeNext(), data(std::move(data)) {}
 		constexpr ~DoubleNode() __LL_EXCEPT__ {}
 
 		constexpr void __autopoint() __LL_EXCEPT__ {
-			this->prev = this;
-			this->next = this;
+			this->setPrev(this);
+			this->setNext(this);
 		}
 
 		DoubleNode(__cref_DoubleNode) __LL_EXCEPT__ = delete;
@@ -51,34 +48,14 @@ class LL_SHARED_LIB DoubleNode {
 		DoubleNode(__move_DoubleNode) __LL_EXCEPT__ = delete;
 		__ref_DoubleNode operator=(__move_DoubleNode) __LL_EXCEPT__ = delete;
 
-		constexpr void setData(__ptr data) __LL_EXCEPT__ { this->data = data; }
-		constexpr __ptr getData() __LL_EXCEPT__ { return this->data; }
-		constexpr const __ptr getData() const __LL_EXCEPT__ { return this->data; }
-
-		constexpr void setPrev(__ptr_DoubleNode prev) __LL_EXCEPT__ { this->prev = prev; }
-		constexpr void setNext(__ptr_DoubleNode next) __LL_EXCEPT__ { this->next = next; }
-		__LL_NODISCARD__ constexpr __ptr_DoubleNode getPrev() __LL_EXCEPT__ { return this->prev; }
-		__LL_NODISCARD__ constexpr __ptr_DoubleNode getNext() __LL_EXCEPT__ { return this->next; }
-		__LL_NODISCARD__ constexpr __cptr_DoubleNode getPrev() const __LL_EXCEPT__ { return this->prev; }
-		__LL_NODISCARD__ constexpr __cptr_DoubleNode getNext() const __LL_EXCEPT__ { return this->next; }
+		constexpr void setData(__cref data) __LL_EXCEPT__ { this->data = data; }
+		constexpr void setData(__move data) __LL_EXCEPT__ { this->data = std::move(data); }
+		constexpr __ref getData() __LL_EXCEPT__ { return this->data; }
+		constexpr __cref getData() const __LL_EXCEPT__ { return this->data; }
 		constexpr void clear() __LL_EXCEPT__ {}
 
-
-		__LL_NODISCARD__ constexpr __ptr_DoubleNode getPrevNoThis() __LL_EXCEPT__ {
-			return (this->getPrev() != this) ? this->getPrev() : LL_NULLPTR;
-		}
-		__LL_NODISCARD__ constexpr __ptr_DoubleNode getNextNoThis() __LL_EXCEPT__ {
-			return (this->getNext() != this) ? this->getNext() : LL_NULLPTR;
-		}
-		__LL_NODISCARD__ constexpr __cptr_DoubleNode getPrevNoThis() const __LL_EXCEPT__ {
-			return (this->getPrev() != this) ? this->getPrev() : LL_NULLPTR;
-		}
-		__LL_NODISCARD__ constexpr __cptr_DoubleNode getNextNoThis() const __LL_EXCEPT__ {
-			return (this->getNext() != this) ? this->getNext() : LL_NULLPTR;
-		}
-
 		constexpr void unlink() __LL_EXCEPT__ {
-			DoubleNode::link(this->getPrev(), this->getNext());
+			__DoubleNode::link(this->getPrev(), this->getNext());
 		}
 		constexpr void linkRight(__ptr_DoubleNode middleNode) __LL_EXCEPT__ {
 			middleNode->setNext(this->getNext());
@@ -107,31 +84,6 @@ class LL_SHARED_LIB DoubleNode {
 			this->setNext(otherNext);
 			otherPrev->setNext(this);
 			otherNext->setPrev(this);
-		}
-
-		__LL_NODISCARD__ constexpr __ptr_DoubleNode getNext(const len_t& num) __LL_EXCEPT__ {
-			__ptr_DoubleNode result = this;
-			for (len_t i{}; i < num; ++i)
-				result = result->getNext();
-			return result;
-		}
-		__LL_NODISCARD__ constexpr __ptr_DoubleNode getPrev(const len_t& num) __LL_EXCEPT__ {
-			__ptr_DoubleNode result = this;
-			for (len_t i{}; i < num; ++i)
-				result = result->getPrev();
-			return result;
-		}
-		__LL_NODISCARD__ constexpr __cptr_DoubleNode getNext(const len_t& num) const __LL_EXCEPT__ {
-			__cptr_DoubleNode result = this;
-			for (len_t i{}; i < num; ++i)
-				result = result->getNext();
-			return result;
-		}
-		__LL_NODISCARD__ constexpr __cptr_DoubleNode getPrev(const len_t& num) const __LL_EXCEPT__ {
-			__cptr_DoubleNode result = this;
-			for (len_t i{}; i < num; ++i)
-				result = result->getPrev();
-			return result;
 		}
 
 		constexpr static void link(__ptr_DoubleNode left, __ptr_DoubleNode right) __LL_EXCEPT__ {

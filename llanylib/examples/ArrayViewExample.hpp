@@ -272,7 +272,7 @@ static_assert(array_test_nodes_03 == 003, "Error changed value");
 
 constexpr len_t ARR_TEST_SIZE_3 = 10;
 using ArrayType_3 = Array<len_t, ARR_TEST_SIZE_3>;
-using NodeTest3 = linked::DoubleNode<ArrayType_3>;
+using NodeTest3 = linked::DoubleNode<ArrayType_3*>;
 
 constexpr len_t __array_test_nodes3_example__(int v, int v2) {
 	// Create memory
@@ -315,7 +315,7 @@ constexpr len_t array_test_nodes3_03 = __array_test_nodes3_example__(9, 3);
 
 constexpr len_t ARR_TEST_SIZE_5 = 10;
 using ArrayType_5 = Array<len_t, ARR_TEST_SIZE_5>;
-using NodeTest5 = linked::DoubleNode<ArrayType_5>;
+using NodeTest5 = linked::DoubleNode<ArrayType_5*>;
 
 //template<class T, len_t N>
 class ArrayChain {

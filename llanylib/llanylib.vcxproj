@@ -27,6 +27,8 @@
     <ClInclude Include="ascii.hpp" />
     <ClInclude Include="bits.hpp" />
     <ClInclude Include="common.hpp" />
+    <ClInclude Include="ContainerDoubleNode.hpp" />
+    <ClInclude Include="Countable.hpp" />
     <ClInclude Include="definitions.hpp" />
     <ClInclude Include="DoubleNode.hpp" />
     <ClInclude Include="dynamiclibrarylinking.hpp" />
@@ -39,7 +41,9 @@
     <ClInclude Include="expresions\color.hpp" />
     <ClInclude Include="expresions\math.hpp" />
     <ClInclude Include="LinkedList.hpp" />
+    <ClInclude Include="LoopList.hpp" />
     <ClInclude Include="math.hpp" />
+    <ClInclude Include="Node.hpp" />
     <ClInclude Include="os.hpp" />
     <ClInclude Include="RAIIWrapper.hpp" />
     <ClInclude Include="Singleton.hpp" />
@@ -50,8 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">

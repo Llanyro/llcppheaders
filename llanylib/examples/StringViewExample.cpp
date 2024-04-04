@@ -1,6 +1,9 @@
 #include "../StringView.hpp"
-#include <iostream>
 
+#include "../Node.hpp"
+//#include "../DoubleNode.hpp"
+
+#include <iostream>
 #include <string>
 
 constexpr auto HELLO_WORLD_1 = llcpp::StringView("Hello world");

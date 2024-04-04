@@ -61,13 +61,13 @@
 	#endif // LL_DLL_BUILD
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 	#if defined(LL_DLL_BUILD)
-		#define LL_SHARED_LIB extern "C++"
+		#define LL_SHARED_LIB
 	#else
 		#define LL_SHARED_LIB
 	#endif // LL_DLL_BUILD
 #else
 	#if defined(LL_DLL_BUILD)
-		#define LL_SHARED_LIB extern "C++"
+		#define LL_SHARED_LIB
 	#else
 		#define LL_SHARED_LIB
 	#endif // LL_DLL_BUILD

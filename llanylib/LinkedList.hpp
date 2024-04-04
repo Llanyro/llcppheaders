@@ -79,6 +79,7 @@ class LL_SHARED_LIB LinkedList : public CountableL {
 			this->root = this->root->getPrev();
 			CountableL::operator++();
 		}
+
 		__LL_NODISCARD__ constexpr ll_bool_t remove(__cref data) __LL_EXCEPT__ {
 			ll_bool_t found = LL_FALSE;
 			this->removeCoincidences(data, &found, __LinkedList::comparator);

@@ -132,9 +132,6 @@
     <ClInclude Include="Node.hpp">
       <Filter>Source Files\utils\lists\linked</Filter>
     </ClInclude>
-    <ClInclude Include="ContainerDoubleNode.hpp">
-      <Filter>Source Files\utils\lists\linked</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

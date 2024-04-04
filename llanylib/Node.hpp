@@ -28,7 +28,7 @@ class LL_SHARED_LIB NodeNext {
 	public:
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(NodeType, NodeType);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(NodeNext<NodeType>, NodeNext);
-		static_assert(std::is_base_of_v<__NodeNext, __NodeType>);
+		//static_assert(std::is_base_of_v<__NodeNext, __NodeType>);
 	private:
 		__ptr_NodeType next;
 	public:
@@ -71,7 +71,7 @@ class LL_SHARED_LIB NodePrev {
 	public:
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(NodeType, NodeType);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(NodePrev<NodeType>, NodePrev);
-		static_assert(std::is_base_of_v<__NodePrev, __NodeType>);
+		//static_assert(std::is_base_of_v<__NodePrev, __NodeType>);
 	private:
 		__ptr_NodeType prev;
 	public:

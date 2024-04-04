@@ -55,25 +55,38 @@ class LL_SHARED_LIB LinkedList : public CountableL {
 		constexpr LinkedList(__cref_LinkedList) __LL_EXCEPT__ = delete;
 		constexpr __LinkedList& operator=(__cref_LinkedList) __LL_EXCEPT__ = delete;
 
-		constexpr LinkedList(__move_LinkedList) __LL_EXCEPT__ = delete;
-		constexpr __LinkedList& operator=(__move_LinkedList) __LL_EXCEPT__ = delete;
+		constexpr LinkedList(__move_LinkedList other) __LL_EXCEPT__
+			: CountableL(std::move(other))
+			, root(other.root)
+		{ other.__LinkedList::clear(); }
+		constexpr __LinkedList& operator=(__move_LinkedList other) __LL_EXCEPT__ {
+			this->root = other.root;
+			CountableL::operator=(other);
+			other.__LinkedList::clear();
+			return *this;
+		}
 
 		#pragma region InsertionDeletion
-		constexpr void push_back(__ptr_DoubleNode n) __LL_EXCEPT__ {
+		constexpr void operator+=(__ptr_DoubleNode n) __LL_EXCEPT__ {
 			n->__autopoint();
 			if (!this->root) this->root = n;
 			else			 this->root->linkLeft(n);
 			CountableL::operator++();
 		}
+		constexpr void push_back(__ptr_DoubleNode n) __LL_EXCEPT__ { this->operator+=(n); }
 		constexpr void push_front(__ptr_DoubleNode n) __LL_EXCEPT__ {
 			this->push_back(n);
 			this->root = this->root->getPrev();
 			CountableL::operator++();
 		}
-		constexpr ll_bool_t remove(__cref data) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t remove(__cref data) __LL_EXCEPT__ {
 			ll_bool_t found = LL_FALSE;
 			this->removeCoincidences(data, &found, __LinkedList::comparator);
 			return found;
+		}
+		constexpr void clear() __LL_EXCEPT__ {
+			this->root = LL_NULLPTR;
+			CountableL::clear();
 		}
 
 		#pragma endregion
@@ -139,10 +152,10 @@ class LL_SHARED_LIB LinkedList : public CountableL {
 
 		#pragma endregion
 		#pragma region Access
-		constexpr __ref operator[](const len_t pos) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr __ref operator[](const len_t pos) __LL_EXCEPT__ {
 			return this->root->getNext(pos)->getData();
 		}
-		constexpr __cref operator[](const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr __cref operator[](const len_t pos) const __LL_EXCEPT__ {
 			return this->root->getNext(pos)->getData();
 		}
 

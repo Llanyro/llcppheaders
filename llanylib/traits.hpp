@@ -38,6 +38,8 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_or_ptr_v = is_basic_type_v<T> || std::is_pointer_v<T>;
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_floating_type_v = std::_Is_any_of_v<std::remove_const_t<T>, f32, f64>;
 
 // Returns a type with reference if object is not basic type
 template<class T>

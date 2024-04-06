@@ -80,15 +80,24 @@
 #endif // __x86_64__ || __ILP32__
 
 
-// Creates a definition to use assert by condition and message
-#if defined(_DEBUG)
-	#include <assert.h>
-	#define LL_ASSERT(condition, message) assert(condition && message)
+#if defined(WINDOWS_SYSTEM)
+	// Creates a definition to use assert by condition and message
+	#if defined(_DEBUG)
+		#include <assert.h>
+		#define LL_ASSERT(condition, message) assert(condition && message)
+	#else
+		#define LL_ASSERT(condition, message)
+		
+		// Windows does not load _NODISCARD in release...
+		#if !defined(_NODISCARD)
+			#include <vcruntime.h>
+		#endif // _NODISCARD
+	#endif // _DEBUG
+#elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
+
 #else
-	#define LL_ASSERT(condition, message)
-#endif // _DEBUG
 
-
+#endif
 
 // Disables some warnings of compiler
 #if defined(WINDOWS_SYSTEM)

@@ -70,7 +70,6 @@ class LinkedListB : public llcpp::linked::LinkedList<T> {
 		}
 };
 
-
 template<class T, len_t N>
 void printStringData(const llcpp::StringView<N, T>& s) {
 	std::cout << "******** Starting ********\n";
@@ -100,7 +99,6 @@ void __testing_linked_list_no_constexpr__() {
 
 	list.foreach([](const len_t& v) { std::cout << "Val: " << v << "\n"; });
 }
-
 
 int main() {
 	printStringData(HELLO_WORLD_1);

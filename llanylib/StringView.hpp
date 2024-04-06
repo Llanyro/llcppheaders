@@ -49,6 +49,7 @@ class LL_SHARED_LIB StringView {
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__StringView__, StringView);
 		//__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
 		using __type_raw = std::remove_const_t<__type>;
+		using __StrPair = std::conditional_t<std::is_same_v<__type_raw, ll_char_t>, StrPair, wStrPair>;
 	protected:
 		__ptr __data;
 	protected:
@@ -88,6 +89,9 @@ class LL_SHARED_LIB StringView {
 			return !this->empty() && static_cast<ll_bool_t>(this->__data);
 		}
 
+		__LL_NODISCARD__ constexpr operator __StrPair() const __LL_EXCEPT__ {
+			return __StrPair{ this->__data, STypes::ARR_SIZE };
+		}
 		__LL_NODISCARD__ constexpr operator __cptr() const __LL_EXCEPT__ {
 			return this->__data;
 		}

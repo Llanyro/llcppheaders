@@ -72,6 +72,9 @@ class LL_SHARED_LIB ArrayView {
 			return !this->empty() && static_cast<ll_bool_t>(this->__data);
 		}
 
+		__LL_NODISCARD__ constexpr operator ArrayPair<__type>() const __LL_EXCEPT__ {
+			return ArrayPair<__type>{ this->__data, N };
+		}
 		__LL_NODISCARD__ constexpr operator __cptr() const __LL_EXCEPT__ { return this->__data; }
 		__LL_NODISCARD__ constexpr __cptr get(const len_t pos = 0ull) const __LL_EXCEPT__ {
 			return this->__data + pos;

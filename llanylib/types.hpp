@@ -99,9 +99,27 @@ using len_t = ui64;							// Used to cound things (natural number)
 using cmp_t = i32;							// Default type in comparations
 
 using ll_string_t = const ll_char_t*;		// Used to point to non editable strings
+using ll_wstring_t = const __wchar_t*;		// Used to point to non editable strings
 using ll_ustring_t = const ll_uchar_t*;		// Used to point to non editable unsigned strings
 
 using ll_lib_t = void*;						// Handle for dynamic library linked/shared objects
+
+struct StrPair {
+	ll_string_t str;
+	len_t len;
+};
+
+struct wStrPair {
+	ll_wstring_t str;
+	len_t len;
+};
+
+template<class T>
+struct ArrayPair {
+	const T* str;
+	len_t len;
+};
+
 
 #pragma region BytesTypes
 using size_bytes8_t = ui8;

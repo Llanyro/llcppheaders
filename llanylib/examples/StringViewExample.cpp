@@ -94,7 +94,7 @@ void printStringData(const llcpp::StringView<N, T>& s) {
 
 void __testing_linked_list_no_constexpr__() {
 	LinkedListB<len_t> list;
-	for (len_t i = 0; i < 50; i++)
+	for (len_t i{}; i < 50; ++i)
 		list += i;
 
 	list.foreach([](const len_t& v) { std::cout << "Val: " << v << "\n"; });

@@ -59,7 +59,7 @@ __LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const T* v2, len_t
 	if constexpr (GET_DATA) {
 		CompareResult __{};
 		__.position = size;
-		__.result = 0;
+		__.result = 0ull;
 		return __;
 	}
 	else return 0;
@@ -130,7 +130,7 @@ __LL_NODISCARD__ constexpr CompareResult starts_with(const T* str, const T* need
 	if (size1 < size2) {
 		if constexpr (GET_DATA) {
 			CompareResult __{};
-			__.position = 0;
+			__.position = 0ull;
 			__.result = LL_FALSE;
 			return __;
 		}
@@ -158,7 +158,7 @@ __LL_NODISCARD__ constexpr CompareResult ends_with(const T* str, const T* needle
 	if (size1 < size2) {
 		if constexpr (GET_DATA) {
 			CompareResult __{};
-			__.position = 0;
+			__.position = 0ull;
 			__.result = LL_FALSE;
 			return __;
 		}
@@ -326,7 +326,7 @@ __LL_NODISCARD__ constexpr const T* binarysearch(const T* begin, const T* end, c
 	LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(const T* begin, const T* end, const U object)");
 	LL_ASSERT(end, "[end] cannot be nullptr. rfind(const T* begin, const T* end, const U object)");
 
-	len_t low = 0;
+	len_t low = 0ull;
 	len_t high = end - begin;
 	while (low <= high) {
 		len_t mid = ((high + low) / 2);
@@ -343,7 +343,7 @@ __LL_NODISCARD__ constexpr const T* binarysearch(const T* begin, const T* end, c
 	LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(const T* begin, const T* end, const U object)");
 	LL_ASSERT(end, "[end] cannot be nullptr. rfind(const T* begin, const T* end, const U object)");
 
-	len_t low = 0;
+	len_t low = 0ull;
 	len_t high = end - begin;
 	while (low <= high) {
 		len_t mid = ((high - low) / 2);

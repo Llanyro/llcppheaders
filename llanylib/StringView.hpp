@@ -210,7 +210,7 @@ class LL_SHARED_LIB StringView {
 		__LL_NODISCARD__ constexpr CompareResult starts_with(__ctype c) const __LL_EXCEPT__ {
 			if constexpr (GET_DATA) {
 				CompareResult __{};
-				__.position = 0;
+				__.position = 0ull;
 				__.value1 = this->operator[](0);
 				__.value2 = c;
 				__.result = __.value1 == __.value2;
@@ -252,7 +252,7 @@ class LL_SHARED_LIB StringView {
 		__LL_NODISCARD__ constexpr CompareResult ends_with(__ctype c) const __LL_EXCEPT__ {
 			if constexpr (GET_DATA) {
 				CompareResult __{};
-				__.position = 0;
+				__.position = 0ull;
 				__.value1 = this->operator[](STypes::ARR_SIZE - 1);
 				__.value2 = c;
 				__.result = __.value1 == __.value2;

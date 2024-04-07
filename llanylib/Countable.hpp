@@ -108,7 +108,7 @@ class LL_SHARED_LIB Countable {
 			: Countable(other.length) { other.clear(); }
 		constexpr Countable& operator=(__move_Countable other) __LL_EXCEPT__ {
 			this->length = other.length;
-			other.length = 0;
+			other.length = 0ull;
 			return *this;
 		}
 

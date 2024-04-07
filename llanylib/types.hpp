@@ -116,7 +116,7 @@ struct wStrPair {
 
 template<class T>
 struct ArrayPair {
-	const T* str;
+	const T* data;
 	len_t len;
 };
 
@@ -154,6 +154,9 @@ class basic_string;
 using string  = basic_string<char, char_traits<char>, allocator<char>>;
 template <class _Fty>
 class function;
+
+template <class T1, class T2>
+struct pair;
 } // namespace std
 
 #if defined(WINDOWS_SYSTEM)

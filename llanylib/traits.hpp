@@ -201,13 +201,6 @@ constexpr ReturnType operatorTypeCall(const ObjectType& object) __LL_EXCEPT__ {
 	else return LL_FALSE;
 }
 
-using Testinng1 = std::add_lvalue_reference_t<void>;
-using Testinng2 = std::add_rvalue_reference_t<void>;
-
-using Testinng3 = std::add_lvalue_reference_t<int>;
-using Testinng4 = std::add_rvalue_reference_t<int>;
-
-
 
 } // namespace traits
 } // namespace llcpp

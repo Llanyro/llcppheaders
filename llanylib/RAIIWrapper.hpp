@@ -17,107 +17,19 @@
 #define LLANYLIB_RAIIWRAPPER_MAYOR_ 4
 #define LLANYLIB_RAIIWRAPPER_MINOR_ 2
 
-#include "traits.hpp"
+#include "RAIIBase.hpp"
 
 namespace llcpp {
 namespace raii {
 
-/*
-*	Defectos:
-*		Si se hace lo siguiente puede provocar errores segun el uso del objecto contenido:
-*		1. RAIIContainer<Any, void> obj;
-*		2. obj = nullptr;		// Calls silent clear
-*		3. Any any2;
-*		4. obj = any2;
-*	Segun el ejemplo, en la linea 2, se llama al clear silencioso, es decir, llama al clear
-*		pero no limpia el objecto data, si al llamar al operador=() en linea 4 no esta bien
-*		definido, puede generar errores (debido al usuario)
-*/
-template<class DataType, class FuncReturnType = void>
-class RAIIContainer {
-	protected:
-		using __internal__RAIIContainer__ = RAIIContainer<DataType, FuncReturnType>;
-	public:
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(DataType, DataType);
-		//__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(FuncReturnType, FuncReturnType);
-		using Function = FuncReturnType(*)(__ref_DataType);
-		using __ClearFunction = void(*)(__ref_DataType);
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(Function, Function);
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__RAIIContainer__, RAIIContainer);
-	private:
-		__DataType data;
-		__Function function;
-	public:
-		constexpr RAIIContainer(__Function function, __cref_DataType data) __LL_EXCEPT__
-			: function(function), data(data) {}
-		constexpr RAIIContainer(__Function function, __move_DataType data) __LL_EXCEPT__
-			: function(function), data(std::move(data)) {}
-		constexpr ~RAIIContainer() __LL_EXCEPT__ {}
-
-		constexpr RAIIContainer(__cref_RAIIContainer other) __LL_EXCEPT__
-			: function(other.function), data(other.data) {}
-		constexpr __ref_RAIIContainer operator=(__cref_RAIIContainer other) __LL_EXCEPT__ {
-			this->function = other.function;
-			this->data = other.data;
-			return *this;
-		}
-
-		constexpr RAIIContainer(__move_RAIIContainer other) __LL_EXCEPT__
-			: function(other.function), data(std::move(other.data)) { other.clear(); }
-		constexpr __ref_RAIIContainer operator=(__move_RAIIContainer other) __LL_EXCEPT__ {
-			this->function = other.function;
-			this->data = std::move(other.data);
-			other.clear();
-			return *this;
-		}
-
-		constexpr operator __cref_Function() const __LL_EXCEPT__ { return this->function; }
-		constexpr operator __ref_Function() __LL_EXCEPT__ { return this->function; }
-		constexpr operator __cref_DataType() const __LL_EXCEPT__ { return this->data; }
-		constexpr operator __ref_DataType() __LL_EXCEPT__ { return this->data; }
-
-		constexpr __ref_RAIIContainer operator=(__cref_Function function) __LL_EXCEPT__ {
-			this->function = function;
-			return *this;
-		}
-		constexpr __ref_RAIIContainer operator=(__cref_DataType data) __LL_EXCEPT__ {
-			this->data = data;
-			return *this;
-		}
-		constexpr __ref_RAIIContainer operator=(__move_DataType data) __LL_EXCEPT__ {
-			this->data = std::move(data);
-			return *this;
-		}
-
-		constexpr operator ll_bool_t() const __LL_EXCEPT__ {
-			return
-				traits::operatorTypeCall<ll_bool_t>(this->data)
-				&& static_cast<ll_bool_t>(this->data);
-		}
-		constexpr FuncReturnType operator()() __LL_EXCEPT__ {
-			if constexpr (std::is_same_v<FuncReturnType, void>) {
-				if (this->function) this->function(this->data);
-			}
-			else return (this->function) ? this->function(this->data) : FuncReturnType();
-		}
-
-		constexpr __ref_RAIIContainer operator=(std::nullptr_t) __LL_EXCEPT__ { this->clear(); }
-		constexpr void clear(__ClearFunction clearFunction = LL_NULLPTR) __LL_EXCEPT__ {
-			this->function = LL_NULLPTR;
-			if (clearFunction) clearFunction(this->data);
-		}
-};
-
 template<class OnGenerateData>
 class LL_SHARED_LIB RAIIWrapperCreation {
+	private:
+		using __internal__OnGenerateObject__ = RAIIContainer<OnGenerateData, void>;
 	public:
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(RAIIWrapperCreation<OnGenerateData>, RAIIWrapperCreation);
 		using __DoOnGenerate = void(*)(std::add_lvalue_reference_t<OnGenerateData>);
-		constexpr static ll_bool_t __is_void_type__ = std::is_same_v<OnGenerateData, void>;
-		using OnGenerateObject =
-			std::conditional_t<__is_void_type__, __DoOnGenerate, RAIIContainer<OnGenerateData>
-		>;
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(OnGenerateObject, OnGenerateObject);
+		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__OnGenerateObject__, OnGenerateObject);
+		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(RAIIWrapperCreation<OnGenerateData>, RAIIWrapperCreation);
 	private:
 		__OnGenerateObject onGenerateObject;
 	public:
@@ -125,6 +37,7 @@ class LL_SHARED_LIB RAIIWrapperCreation {
 			: onGenerateObject(onGenerateObject) { this->recallOnGenerate(); }
 		constexpr RAIIWrapperCreation(__move_OnGenerateObject onGenerateObject) __LL_EXCEPT__
 			: onGenerateObject(std::move(onGenerateObject)) { this->recallOnGenerate(); }
+
 		constexpr ~RAIIWrapperCreation() __LL_EXCEPT__ {}
 
 		constexpr RAIIWrapperCreation(__cref_RAIIWrapperCreation other) __LL_EXCEPT__
@@ -142,15 +55,13 @@ class LL_SHARED_LIB RAIIWrapperCreation {
 			return *this;
 		}
 
-		constexpr void recallOnGenerate() __LL_EXCEPT__ { this->onGenerateObject(); }
+		constexpr void recallOnGenerate() __LL_EXCEPT__ {
+			if(this->onGenerateObject)
+				this->onGenerateObject();
+		}
 
-		template<typename U = OnGenerateData, typename std::enable_if<__is_void_type__>::type* = nullptr>
 		constexpr void clear() __LL_EXCEPT__ {
 			this->onGenerateObject = LL_NULLPTR;
-		}
-		template<typename U = OnGenerateData, typename std::enable_if<!__is_void_type__>::type* = nullptr>
-		constexpr void clear(void*  clearFunc = LL_NULLPTR) __LL_EXCEPT__ {
-			this->onGenerateObject.clear(reinterpret_cast<OnGenerateObject::__ClearFunction>(clearFunc));
 		}
 
 		constexpr void setOnGenerate(__cref_OnGenerateObject onGenerateObject) __LL_EXCEPT__ {
@@ -163,47 +74,50 @@ class LL_SHARED_LIB RAIIWrapperCreation {
 
 template<class OnDestructionData>
 class LL_SHARED_LIB RAIIWrapperDestruction {
-	public:
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(OnDestructionData, OnDestructionData);
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(RAIIWrapperDestruction<OnDestructionData>, RAIIWrapperDestruction);
-		using DoOnDestruction = void(*)(__ptr_OnDestructionData);
 	private:
-		DoOnDestruction onDestruction;
-		__ptr_OnDestructionData onDestructionData;
+		using __internal__OnDestructionObject__ = RAIIContainer<OnDestructionData, void>;
 	public:
-		constexpr RAIIWrapperDestruction(
-			DoOnDestruction onDestruction = LL_NULLPTR,
-			__ptr_OnDestructionData onDestructionData = LL_NULLPTR
-		) __LL_EXCEPT__ : onDestruction(onDestruction), onDestructionData(onDestructionData) {}
-		constexpr ~RAIIWrapperDestruction() __LL_EXCEPT__ { this->callOnDestruction(); }
+		using __DoOnDestruction = void(*)(std::add_lvalue_reference_t<OnDestructionData>);
+		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__OnDestructionObject__, OnDestructionObject);
+		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(RAIIWrapperDestruction<OnDestructionData>, RAIIWrapperDestruction);
+	private:
+		__OnDestructionObject onDestructionObject;
+	public:
+		constexpr RAIIWrapperDestruction(__cref_OnDestructionObject onDestructionObject) __LL_EXCEPT__
+			: onDestructionObject(onDestructionObject) {}
+		constexpr RAIIWrapperDestruction(__move_OnDestructionObject onDestructionObject) __LL_EXCEPT__
+			: onDestructionObject(std::move(onDestructionObject)) {}
+		constexpr ~RAIIWrapperDestruction() __LL_EXCEPT__ { this->recallOnDestruction(); }
 
-		RAIIWrapperDestruction(__cref_RAIIWrapperDestruction other) __LL_EXCEPT__ = delete;
-		__ref_RAIIWrapperDestruction operator=(__cref_RAIIWrapperDestruction other) __LL_EXCEPT__ = delete;
+		constexpr RAIIWrapperDestruction(__cref_RAIIWrapperDestruction other) __LL_EXCEPT__
+			: onDestructionObject(other.onDestructionObject) {}
+		constexpr __ref_RAIIWrapperDestruction operator=(__cref_RAIIWrapperDestruction other) __LL_EXCEPT__ {
+			this->onDestructionObject = other.onDestructionObject;
+			return *this;
+		}
 
 		constexpr RAIIWrapperDestruction(__move_RAIIWrapperDestruction other) __LL_EXCEPT__
-			: __RAIIWrapperDestruction(other.onDestruction, other.onDestructionData)
-		{ other.clear(); }
+			: onDestructionObject(std::move(other.onDestructionObject)) { other.clear(); }
 		constexpr __ref_RAIIWrapperDestruction operator=(__move_RAIIWrapperDestruction other) __LL_EXCEPT__ {
-			this->onDestruction = other.onDestruction;
-			this->onDestructionData = other.onDestructionData;
+			this->onDestructionObject = std::move(onDestructionObject);
 			other.clear();
 			return *this;
 		}
 
-		constexpr void callOnDestruction() const __LL_EXCEPT__ {
-			if (this->onDestruction)
-				this->onDestruction(this->onDestructionData);
-		}
-		constexpr void clear() __LL_EXCEPT__ {
-			this->onDestruction = LL_NULLPTR;
-			this->onDestructionData = LL_NULLPTR;
+		constexpr void recallOnDestruction() __LL_EXCEPT__ {
+			if (this->onDestructionObject)
+				this->onDestructionObject();
 		}
 
-		constexpr void setOnDestruction(DoOnDestruction onDestruction) __LL_EXCEPT__ {
-			this->onDestruction = onDestruction;
+		constexpr void clear() __LL_EXCEPT__ {
+			this->onDestructionObject = LL_NULLPTR;
 		}
-		constexpr void setOnDestructionData(__ptr_OnDestructionData onDestructionData) __LL_EXCEPT__ {
-			this->onDestructionData = onDestructionData;
+
+		constexpr void setOnDestruction(__cref_OnDestructionObject onDestructionObject) __LL_EXCEPT__ {
+			this->onDestructionObject = onDestructionObject;
+		}
+		constexpr void setOnDestruction(__move_OnDestructionObject onDestructionObject) __LL_EXCEPT__ {
+			this->onDestructionObject = std::move(onDestructionObject);
 		}
 };
 
@@ -212,26 +126,46 @@ class LL_SHARED_LIB RAIIWrapper : public RAIIWrapperCreation<OnGenerateData>, pu
 	protected:
 		using __internal__RAIIWrapper__ = RAIIWrapper<OnGenerateData, OnDestructionData>;
 	public:
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(OnGenerateData, OnGenerateData);
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(OnDestructionData, OnDestructionData);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(RAIIWrapperCreation<OnGenerateData>, RAIIWrapperCreation);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(RAIIWrapperDestruction<OnDestructionData>, RAIIWrapperDestruction);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__RAIIWrapper__, RAIIWrapper);
 	public:
-		constexpr RAIIWrapper() __LL_EXCEPT__ {}
-		constexpr RAIIWrapper(
-			__RAIIWrapperCreation::DoOnGenerate onGenerate = LL_NULLPTR,
-			__RAIIWrapperCreation::__ptr_OnGenerateData onGenerateData = LL_NULLPTR,
-			__RAIIWrapperDestruction::DoOnDestruction onDestruction = LL_NULLPTR,
-			__RAIIWrapperDestruction::__ptr_OnDestructionData onDestructionData = LL_NULLPTR
-		) __LL_EXCEPT__
-			: __RAIIWrapperCreation(onGenerate, onGenerateData)
-			, __RAIIWrapperDestruction(onDestruction, onDestructionData)
-		{}
+		constexpr RAIIWrapper() __LL_EXCEPT__ = delete;
 		constexpr ~RAIIWrapper() __LL_EXCEPT__ {}
 
-		RAIIWrapper(__cref_RAIIWrapper other) __LL_EXCEPT__ = delete;
-		__ref_RAIIWrapper operator=(__cref_RAIIWrapper other) __LL_EXCEPT__ = delete;
+		constexpr RAIIWrapper(__cref_RAIIWrapperCreation other) __LL_EXCEPT__ = delete;
+		constexpr __ref_RAIIWrapper operator=(__cref_RAIIWrapperCreation other) __LL_EXCEPT__ = delete;
+		constexpr RAIIWrapper(__move_RAIIWrapperCreation other) __LL_EXCEPT__ = delete;
+		constexpr __ref_RAIIWrapper operator=(__move_RAIIWrapperCreation other) __LL_EXCEPT__ = delete;
+
+		constexpr RAIIWrapper(__cref_RAIIWrapperDestruction other) __LL_EXCEPT__ = delete;
+		constexpr __ref_RAIIWrapper operator=(__cref_RAIIWrapperDestruction other) __LL_EXCEPT__ = delete;
+		constexpr RAIIWrapper(__move_RAIIWrapperDestruction other) __LL_EXCEPT__ = delete;
+		constexpr __ref_RAIIWrapper operator=(__move_RAIIWrapperDestruction other) __LL_EXCEPT__ = delete;
+
+		constexpr RAIIWrapper(
+			__RAIIWrapperCreation::__cref_OnGenerateObject onGenerate,
+			__RAIIWrapperDestruction::__cref_OnDestructionObject onDestruction
+		) __LL_EXCEPT__
+			: __RAIIWrapperCreation(onGenerate)
+			, __RAIIWrapperDestruction(onDestruction)
+		{}
+		constexpr RAIIWrapper(
+			__RAIIWrapperCreation::__move_OnGenerateObject onGenerate,
+			__RAIIWrapperDestruction::__move_OnDestructionObject onDestruction
+		) __LL_EXCEPT__
+			: __RAIIWrapperCreation(std::move(onGenerate))
+			, __RAIIWrapperDestruction(std::move(onDestruction))
+		{}
+
+		constexpr RAIIWrapper(__cref_RAIIWrapper other) __LL_EXCEPT__
+			: __RAIIWrapperCreation(other), __RAIIWrapperDestruction(other) {}
+		constexpr __ref_RAIIWrapper operator=(__cref_RAIIWrapper other) __LL_EXCEPT__ {
+			__RAIIWrapperCreation::operator=(other);
+			__RAIIWrapperDestruction::operator=(other);
+			return *this;
+		}
+
 		constexpr RAIIWrapper(__move_RAIIWrapper other) __LL_EXCEPT__
 			: __RAIIWrapperCreation(std::move(other))
 			, __RAIIWrapperDestruction(std::move(other))
@@ -242,32 +176,13 @@ class LL_SHARED_LIB RAIIWrapper : public RAIIWrapperCreation<OnGenerateData>, pu
 			return *this;
 		}
 
-		RAIIWrapper(__cref_RAIIWrapperCreation other) __LL_EXCEPT__ = delete;
-		__ref_RAIIWrapper operator=(__cref_RAIIWrapperCreation other) __LL_EXCEPT__ = delete;
-		constexpr RAIIWrapper(__move_RAIIWrapperCreation other) __LL_EXCEPT__
-			: __RAIIWrapperCreation(std::move(other))
-			, __RAIIWrapperDestruction()
-		{}
-		constexpr __ref_RAIIWrapper operator=(__move_RAIIWrapperCreation other) __LL_EXCEPT__ {
-			__RAIIWrapperCreation::operator=(std::move(other));
-			return *this;
-		}
-
-		RAIIWrapper(__cref_RAIIWrapperDestruction other) __LL_EXCEPT__ = delete;
-		__ref_RAIIWrapper operator=(__cref_RAIIWrapperDestruction other) __LL_EXCEPT__ = delete;
-		constexpr RAIIWrapper(__move_RAIIWrapperDestruction other) __LL_EXCEPT__
-			: __RAIIWrapperCreation()
-			, __RAIIWrapperDestruction(std::move(other))
-		{}
-		constexpr __ref_RAIIWrapper operator=(__move_RAIIWrapperDestruction other) __LL_EXCEPT__ {
-			__RAIIWrapperDestruction::operator=(std::move(other));
-			return *this;
-		}
-
-		constexpr void clear() __LL_EXCEPT__ {
-			__RAIIWrapperCreation::clear();
-			__RAIIWrapperDestruction::clear();
-		}
+		//constexpr void clear(
+		//	__RAIIWrapperCreation::__Clear clearCreationFunction = LL_NULLPTR,
+		//	__RAIIWrapperDestruction::__ClearFunction clearDestructionFunction = LL_NULLPTR
+		//) __LL_EXCEPT__ {
+		//	__RAIIWrapperCreation::clear(clearCreationFunction);
+		//	__RAIIWrapperDestruction::clear(clearDestructionFunction);
+		//}
 };
 
 template<class OnGenerateData, class OnDestructionData, class ActionInput, class ActionOutput>
@@ -367,7 +282,90 @@ class LL_SHARED_LIB RAIIWrapperExtra : public RAIIWrapper<OnGenerateData, OnDest
 		}
 };
 
+template<class T>
+constexpr RAIIWrapperCreation<T> helperCreate(const RAIIContainer<T, void>& obj) {
+	return RAIIWrapperCreation<T>(obj);
+}
+template<class T>
+constexpr RAIIWrapperCreation<T> helperCreate(RAIIContainer<T, void>&& obj) {
+	return RAIIWrapperCreation<T>(std::move(obj));
+}
+
+template<class T>
+constexpr RAIIWrapperDestruction<T> helperDestruction(const RAIIContainer<T, void>& obj) {
+	return RAIIWrapperDestruction<T>(obj);
+}
+template<class T>
+constexpr RAIIWrapperDestruction<T> helperDestruction(RAIIContainer<T, void>&& obj) {
+	return RAIIWrapperDestruction<T>(std::move(obj));
+}
+
+template<class T, class U>
+constexpr RAIIWrapper<T, U> helper(const RAIIContainer<T, void>& obj, const RAIIContainer<U, void>& obj2) {
+	return RAIIWrapper<T, U>(obj, obj2);
+}
+template<class T, class U>
+constexpr RAIIWrapper<T, U> helper(RAIIContainer<T, void>&& obj, RAIIContainer<U, void>&& obj2) {
+	return RAIIWrapper<T, U>(std::move(obj), std::move(obj2));
+}
+
 } // namespace raii
 } // namespace llcpp
+
+//#include <mutex>
+
+struct mutex;
+
+struct __mutex {
+	mutex mt;
+	int* val;
+
+	constexpr __mutex(mutex& mt, int* val) : mt(mt), val(val) {}
+	constexpr __mutex(const __mutex& other) : mt(other.mt), val(other.val) {}
+	constexpr __mutex& operator=(const __mutex& other) {
+		this->mt = other.mt;
+		this->val = other.val;
+		return *this;
+	}
+};
+
+struct mutex {
+	constexpr mutex() {}
+	constexpr ~mutex() {}
+
+	constexpr mutex(const mutex& other) {}
+	constexpr mutex& operator=(const mutex& other) { return *this; }
+
+	constexpr void lock(__mutex& v) { v.val[0]++; }
+	constexpr void unlock(__mutex& v) { v.val[0] += 3; }
+};
+
+constexpr void _lamb(int*& val) { val[0] = 7; }
+constexpr void _lamb2(int*& val) { (*val)++; }
+
+constexpr int fund() {
+	int val = 0;
+	int* v2 = &val;
+	mutex mt;
+
+	{
+		llcpp::raii::RAIIContainer<__mutex> obj_cre({ mt, &val }, [](__mutex& mt) -> void { mt.mt.lock(mt); });
+		llcpp::raii::RAIIContainer<__mutex> obj_del({ mt, &val }, [](__mutex& mt) -> void { mt.mt.unlock(mt); });
+		llcpp::raii::RAIIWrapper<__mutex, __mutex> b5(obj_cre, obj_del);
+	}
+	{
+		llcpp::raii::RAIIContainer<int*> obj_cre(v2, _lamb);
+		llcpp::raii::RAIIContainer<int*> obj_del(v2, _lamb2);
+		llcpp::raii::RAIIWrapper<int*, int*> b5(obj_cre, obj_del);
+	}
+
+	//llcpp::raii::RAIIContainer<__mutex&, void> obj_cre(_mt, [](__mutex& mt) -> void { mt.mt.lock(mt.val); });
+	//llcpp::raii::RAIIContainer<__mutex&, void> obj_del(_mt, [](__mutex& mt) -> void { mt.mt.unlock(mt.val); });
+	//llcpp::raii::RAIIWrapper<void, __mutex&> b5([](){}, obj_del);
+
+	return val;
+}
+
+constexpr int asdf = fund();
 
 #endif // LLANYLIB_RAIIWRAPPER_HPP_

@@ -132,6 +132,9 @@
     <ClInclude Include="Node.hpp">
       <Filter>Source Files\utils\lists\linked</Filter>
     </ClInclude>
+    <ClInclude Include="RAIIBase.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

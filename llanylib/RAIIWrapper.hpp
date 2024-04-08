@@ -317,15 +317,15 @@ constexpr RAIIWrapper<T, U> helper(RAIIContainer<T, void>&& obj, RAIIContainer<U
 struct mutex;
 
 struct __mutex {
-	mutex mt;
+	mutex& mt;
 	int* val;
 
-	constexpr __mutex(mutex& mt, int* val) : mt(mt), val(val) {}
-	constexpr __mutex(const __mutex& other) : mt(other.mt), val(other.val) {}
-	constexpr __mutex& operator=(const __mutex& other) {
-		this->mt = other.mt;
-		this->val = other.val;
-		return *this;
+	constexpr __mutex(mutex& mt, int* val);
+	constexpr __mutex(const __mutex& other);
+	constexpr ~__mutex();
+	constexpr __mutex& operator=(const __mutex& other);
+	constexpr operator ll_bool_t() const {
+		return llcpp::LL_TRUE;
 	}
 };
 
@@ -339,6 +339,15 @@ struct mutex {
 	constexpr void lock(__mutex& v) { v.val[0]++; }
 	constexpr void unlock(__mutex& v) { v.val[0] += 3; }
 };
+
+constexpr __mutex::__mutex(mutex& mt, int* val) : mt(mt), val(val) {}
+constexpr __mutex::__mutex(const __mutex& other) : mt(other.mt), val(other.val) {}
+constexpr __mutex::~__mutex() {}
+constexpr __mutex& __mutex::operator=(const __mutex& other) {
+	this->mt = other.mt;
+	this->val = other.val;
+	return *this;
+}
 
 constexpr void _lamb(int*& val) { val[0] = 7; }
 constexpr void _lamb2(int*& val) { (*val)++; }

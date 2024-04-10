@@ -219,8 +219,8 @@ template<class T, const ui8 HALF_BITS, class U = traits::get_smaller_type_t<T>, 
 struct TypeDivision {
 	using __type = T;
 	using __type_lower = U;
-	constexpr static U FULL_FIRST = _FULL_FIRST;
-	constexpr static T _FULL_SECOND = _FULL_SECOND;
+	static constexpr U FULL_FIRST = _FULL_FIRST;
+	static constexpr T _FULL_SECOND = _FULL_SECOND;
 
 	static constexpr ByteExtender<U> div(const T v) {
 		return ByteExtender<U>{

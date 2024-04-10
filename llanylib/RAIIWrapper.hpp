@@ -309,68 +309,79 @@ constexpr RAIIWrapper<T, U> helper(RAIIContainer<T, void>&& obj, RAIIContainer<U
 	return RAIIWrapper<T, U>(std::move(obj), std::move(obj2));
 }
 
-} // namespace raii
-} // namespace llcpp
+struct functions;
 
-//#include <mutex>
-
-struct mutex;
-
-struct __mutex {
-	mutex& mt;
+struct __mutex__ {
+	functions* mt;
 	int* val;
 
-	constexpr __mutex(mutex& mt, int* val);
-	constexpr __mutex(const __mutex& other);
-	constexpr ~__mutex();
-	constexpr __mutex& operator=(const __mutex& other);
-	constexpr operator ll_bool_t() const {
-		return llcpp::LL_TRUE;
-	}
+	constexpr __mutex__(functions* mt, int* val);
+	constexpr __mutex__(const __mutex__& other);
+	constexpr ~__mutex__();
+	constexpr __mutex__& operator=(const __mutex__& other);
+	constexpr operator ll_bool_t() const;
 };
 
-struct mutex {
-	constexpr mutex() {}
-	constexpr ~mutex() {}
+struct functions {
+	constexpr functions() {}
+	constexpr ~functions() {}
 
-	constexpr mutex(const mutex& other) {}
-	constexpr mutex& operator=(const mutex& other) { return *this; }
+	constexpr functions(const functions& other) {}
+	constexpr functions& operator=(const functions& other) { return *this; }
 
-	constexpr void lock(__mutex& v) { v.val[0]++; }
-	constexpr void unlock(__mutex& v) { v.val[0] += 3; }
+	constexpr void lock(__mutex__& v) { v.val[0]++; }
+	constexpr void unlock(__mutex__& v) { v.val[0] += 3; }
+	constexpr operator ll_bool_t() const { return true; }
+	operator ll_bool_t() const { return true; }
 };
 
-constexpr __mutex::__mutex(mutex& mt, int* val) : mt(mt), val(val) {}
-constexpr __mutex::__mutex(const __mutex& other) : mt(other.mt), val(other.val) {}
-constexpr __mutex::~__mutex() {}
-constexpr __mutex& __mutex::operator=(const __mutex& other) {
+constexpr __mutex__::__mutex__(functions* mt, int* val) : mt(mt), val(val) {}
+constexpr __mutex__::__mutex__(const __mutex__& other) : mt(other.mt), val(other.val) {}
+constexpr __mutex__::~__mutex__() {}
+constexpr __mutex__& __mutex__::operator=(const __mutex__& other) {
 	this->mt = other.mt;
 	this->val = other.val;
 	return *this;
 }
+constexpr __mutex__::operator ll_bool_t() const { return llcpp::LL_TRUE; }
+
+} // namespace raii
+} // namespace llcpp
 
 constexpr void _lamb(int*& val) { val[0] = 7; }
 constexpr void _lamb2(int*& val) { (*val)++; }
 
+constexpr ll_bool_t result_1 = llcpp::traits::operator_type_call_checker_v<int, ll_bool_t>;
+constexpr ll_bool_t result_2 = llcpp::traits::operator_type_call_checker_v<int*, ll_bool_t>;
+constexpr ll_bool_t result_3 = llcpp::traits::operator_type_call_checker_v<int**, ll_bool_t>;
+
+constexpr ll_bool_t result_4 = llcpp::traits::operator_type_call_checker_v<llcpp::raii::__mutex__, ll_bool_t>;
+constexpr ll_bool_t result_5 = llcpp::traits::operator_type_call_checker_v<llcpp::raii::__mutex__*, ll_bool_t>;
+constexpr ll_bool_t result_6 = llcpp::traits::operator_type_call_checker_v<llcpp::raii::__mutex__**, ll_bool_t>;
+
+constexpr ll_bool_t result_7 = llcpp::traits::operator_type_call_checker_v<llcpp::raii::functions, ll_bool_t>;
+constexpr ll_bool_t result_8 = llcpp::traits::operator_type_call_checker_v<llcpp::raii::functions*, ll_bool_t>;
+constexpr ll_bool_t result_9 = llcpp::traits::operator_type_call_checker_v<llcpp::raii::functions**, ll_bool_t>;
+
 constexpr int fund() {
 	int val = 0;
 	int* v2 = &val;
-	mutex mt;
+	llcpp::raii::functions mt;
 
-	{
-		llcpp::raii::RAIIContainer<__mutex> obj_cre({ mt, &val }, [](__mutex& mt) -> void { mt.mt.lock(mt); });
-		llcpp::raii::RAIIContainer<__mutex> obj_del({ mt, &val }, [](__mutex& mt) -> void { mt.mt.unlock(mt); });
-		llcpp::raii::RAIIWrapper<__mutex, __mutex> b5(obj_cre, obj_del);
-	}
+	//{
+	//	llcpp::raii::RAIIContainer<llcpp::raii::__mutex__> obj_cre({ &mt, &val }, [](llcpp::raii::__mutex__& mt) -> void { mt.mt->lock(mt); });
+	//	llcpp::raii::RAIIContainer<llcpp::raii::__mutex__> obj_del({ &mt, &val }, [](llcpp::raii::__mutex__& mt) -> void { mt.mt->unlock(mt); });
+	//	llcpp::raii::RAIIWrapper<llcpp::raii::__mutex__, llcpp::raii::__mutex__> b5(obj_cre, obj_del);
+	//}
 	{
 		llcpp::raii::RAIIContainer<int*> obj_cre(v2, _lamb);
 		llcpp::raii::RAIIContainer<int*> obj_del(v2, _lamb2);
 		llcpp::raii::RAIIWrapper<int*, int*> b5(obj_cre, obj_del);
 	}
 
-	//llcpp::raii::RAIIContainer<__mutex&, void> obj_cre(_mt, [](__mutex& mt) -> void { mt.mt.lock(mt.val); });
-	//llcpp::raii::RAIIContainer<__mutex&, void> obj_del(_mt, [](__mutex& mt) -> void { mt.mt.unlock(mt.val); });
-	//llcpp::raii::RAIIWrapper<void, __mutex&> b5([](){}, obj_del);
+	//llcpp::raii::RAIIContainer<__mutex__&, void> obj_cre(_mt, [](__mutex__& mt) -> void { mt.mt.lock(mt.val); });
+	//llcpp::raii::RAIIContainer<__mutex__&, void> obj_del(_mt, [](__mutex__& mt) -> void { mt.mt.unlock(mt.val); });
+	//llcpp::raii::RAIIWrapper<void, __mutex__&> b5([](){}, obj_del);
 
 	return val;
 }

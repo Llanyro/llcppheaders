@@ -43,16 +43,20 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_type_v = std::_Is_any_of_v<std
 
 // Returns a type with reference if object is not basic type
 template<class T>
-using get_object_reference_t = std::conditional_t<traits::is_basic_type_v<T>, T, T&>;
+using get_object_reference_t = std::conditional_t<traits::is_basic_type_v<T>, T, std::add_lvalue_reference_t<T>>;
 
+#pragma region FunctionCheckers
+#pragma region DefinesAndStructs
 template <class T, class OperatorType>
 struct has_type_operator {
     template <class U>
 	static auto test(U* p) -> decltype(p->operator OperatorType(), std::true_type{});
+    template <class U>
+	static auto test(const U* p) -> decltype(p->operator OperatorType(), std::true_type{});
 	template <class>
 	static auto test(...) ->
 		std::conditional_t<
-			is_basic_type_v<T>,
+			traits::is_basic_type_v<T>,
 			std::bool_constant<std::is_same_v<T, OperatorType>>,
 			std::false_type
 		>;
@@ -61,23 +65,31 @@ struct has_type_operator {
 
 template <class T, class OperatorType>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v = has_type_operator<T, OperatorType>::val::value;
+template <class T, class OperatorType>
+using has_type_operator_t = has_type_operator<T, OperatorType>::val;
+
 
 #define __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, basic_value) \
 	template<class T> \
 	struct has_##name## { \
 		template <class U> \
 		static auto test(U* p) -> decltype(##function##, std::true_type{}); \
+		template <class U> \
+		static auto test(const U* p) -> decltype(##function##, std::true_type{}); \
 		template <class> \
 		static auto test(...) -> \
 			std::conditional_t< \
-				is_basic_type_v<T>, \
+				traits::is_basic_type_v<T>, \
 				std::bool_constant<basic_value>, \
 				std::false_type \
 			>; \
 		using val = decltype(test<T>(nullptr)); \
 	}; \
-	template <class T> \
-	__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_v = has_##name##<T>::val::value
+template <class T> \
+__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_v = has_##name##<T>::val::value; \
+template <class T> \
+using has_##name##_t = has_##name##<T>::val::value
+
 
 #define __LL_TEMPLATE_HAS_FUNCTION__(name, function) __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, LL_FALSE)
 #define __TEMPLATE_HAS_SIMPLE_FUNCTION__(function) __LL_TEMPLATE_HAS_FUNCTION__(function, p->##function())
@@ -94,6 +106,47 @@ __LL_TEMPLATE_HAS_FUNCTION__(swap, p->swap(*p));
 __LL_TEMPLATE_HAS_FUNCTION__(swap_s, p->swap_s(*p));
 __TEMPLATE_HAS_SIMPLE_FUNCTION__(clear);
 
+#pragma endregion
+#pragma region Checkers
+template<class ObjectType, class TypeCall, class __noptr = std::remove_pointer_t<ObjectType>>
+using __operator_type_call_checker_t_ptr =
+	std::conditional_t<
+		std::is_pointer_v<__noptr>,
+		std::true_type,
+		std::conditional_t<
+			traits::has_type_operator_v<__noptr, TypeCall>,
+			std::true_type,
+			std::conditional_t<
+				traits::is_basic_type_v<__noptr>,
+				std::true_type,
+				std::false_type
+			>
+		>
+	>;
+
+template<class ObjectType, class TypeCall>
+using __operator_type_call_checker_t =
+	std::conditional_t<
+		traits::has_type_operator_v<ObjectType, TypeCall>,
+		std::true_type,
+		std::conditional_t<
+			traits::is_basic_type_v<ObjectType>,
+			std::true_type,
+			std::true_type
+			//std::false_type
+		>
+	>;
+
+template<class ObjectType, class TypeCall>
+using operator_type_call_checker_t =
+	std::conditional_t<
+		std::is_pointer_v<ObjectType>,
+		traits::__operator_type_call_checker_t_ptr<ObjectType, TypeCall>,
+		traits::__operator_type_call_checker_t<ObjectType, TypeCall>
+	>;
+
+#pragma endregion
+#pragma region Values
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_constructible_v =
 	std::is_pointer_v<T> ||
@@ -105,6 +158,11 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_destructible_v =
 	traits::is_basic_type_v<T> ||
 	noexcept(std::declval<T>().~T());
 
+template<class ObjectType, class TypeCall>
+__LL_VAR_INLINE__ constexpr ll_bool_t operator_type_call_checker_v = operator_type_call_checker_t<ObjectType, TypeCall>::value;
+
+#pragma endregion
+#pragma endregion
 #pragma region TypeConversions
 template<class T, ll_bool_t promote>
 struct promote_type {
@@ -153,8 +211,6 @@ struct promote_type<f32, promote> {
 
 #pragma endregion
 
-#pragma endregion
-
 template<class T>
 using get_smaller_type_u = promote_type<T, LL_FALSE>::__type;
 
@@ -162,7 +218,7 @@ template<class T>
 using get_bigger_type_u = promote_type<T, LL_TRUE>;
 
 template<class T>
-using get_smaller_type_t = 
+using get_smaller_type_t =
 	std::conditional_t<
 		std::is_unsigned_v<T>,
 		get_smaller_type_u<T>,
@@ -170,13 +226,15 @@ using get_smaller_type_t =
 	>;
 
 template<class T>
-using get_bigger_type_t = 
+using get_bigger_type_t =
 	std::conditional_t<
 		std::is_unsigned_v<T>,
 		get_bigger_type_u<T>,
 		std::make_signed_t<get_bigger_type_u<std::make_unsigned_t<T>>>
 	>;
 
+#pragma endregion
+#pragma region Functions
 template<class ReturnType, class ObjectType>
 constexpr ReturnType operatorTypeCall(const ObjectType& object) __LL_EXCEPT__ {
 	if constexpr (std::is_pointer_v<ObjectType>) {
@@ -201,6 +259,7 @@ constexpr ReturnType operatorTypeCall(const ObjectType& object) __LL_EXCEPT__ {
 	else return LL_FALSE;
 }
 
+#pragma endregion
 
 } // namespace traits
 } // namespace llcpp

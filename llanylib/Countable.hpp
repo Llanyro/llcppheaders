@@ -56,7 +56,7 @@ class LL_SHARED_LIB Countable {
 	public:
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__Countable__, Countable);
-		constexpr static T ZERO = ZERO_VAL;
+		static constexpr T ZERO = ZERO_VAL;
 	private:
 		__type length;
 	protected:

@@ -44,6 +44,7 @@ class RAIIBase {
 	public:
 		static_assert(!std::is_same_v<_DataType_, void>, "[DataType] cannot be void!");
 		static_assert(!std::is_reference_v<_DataType_>, "[DataType] cannot be a reference!");
+		static_assert(traits::operator_type_call_checker_v<ll_bool_t, _DataType_>, "[DataType] cannot be a reference!");
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(_DataType_, DataType);
 		using Function = FuncReturnType(*)(__ref_DataType);
 		using __ClearFunction = void(*)(__ref_DataType);

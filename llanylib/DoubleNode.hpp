@@ -86,7 +86,7 @@ class LL_SHARED_LIB DoubleNode : public NodePrev<DoubleNode<T>>, public NodeNext
 			otherNext->setPrev(this);
 		}
 
-		constexpr static void link(__ptr_DoubleNode left, __ptr_DoubleNode right) __LL_EXCEPT__ {
+		static constexpr void link(__ptr_DoubleNode left, __ptr_DoubleNode right) __LL_EXCEPT__ {
 			left->setNext(right);
 			right->setPrev(left);
 		}

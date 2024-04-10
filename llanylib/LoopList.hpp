@@ -37,7 +37,7 @@ class LL_SHARED_LIB LinkedList : public CountableL {
 	protected:
 		__ptr_DoubleNode root;	// Nodes
 	protected:
-		constexpr static ll_bool_t comparator(__cref __1, __cref __2, void* extra_data) {
+		static constexpr ll_bool_t comparator(__cref __1, __cref __2, void* extra_data) {
 			return (*static_cast<ll_bool_t*>(extra_data) = (__1 == __2));
 		}
 		// This should be used only in list that contains the node

@@ -277,9 +277,12 @@ class LL_SHARED_LIB RAIIWrapperExtra : public RAIIWrapper<OnGenerateData, OnDest
 
 		#pragma endregion
 		#pragma region Functions
-		constexpr void callOnAction() const __LL_EXCEPT__ {
-			if (this->onActionObject)
-				this->onActionObject();
+		constexpr ActionOutput callOnAction() __LL_EXCEPT__ {
+			if constexpr (std::is_same_v<ActionOutput, void>) {
+				if (this->onActionObject)
+					this->onActionObject();
+			}
+			else return (this->onActionObject) ? this->onActionObject() : ActionOutput();
 		}
 		constexpr void clear() __LL_EXCEPT__ {
 			__RAIIWrapper::clear();

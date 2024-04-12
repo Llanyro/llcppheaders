@@ -37,6 +37,9 @@
     <Filter Include="Source Files\expresions">
       <UniqueIdentifier>{2e8bd116-f9a5-41e4-a404-a361e9f96be3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\utils\raii">
+      <UniqueIdentifier>{0d5a2a76-0644-4c82-9a4b-281f974c96dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\llanylib.hpp">
@@ -61,9 +64,6 @@
       <Filter>Source Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="math.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="RAIIWrapper.hpp">
       <Filter>Source Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.hpp">
@@ -94,9 +94,6 @@
       <Filter>Source Files\utils\string</Filter>
     </ClInclude>
     <ClInclude Include="dynamiclibrarylinking.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="ascii.hpp">
       <Filter>Source Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="examples\algorithmExample.hpp">
@@ -132,11 +129,17 @@
     <ClInclude Include="Node.hpp">
       <Filter>Source Files\utils\lists\linked</Filter>
     </ClInclude>
-    <ClInclude Include="RAIIBase.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
     <ClInclude Include="ostypes.hpp">
       <Filter>Source Files\types</Filter>
+    </ClInclude>
+    <ClInclude Include="ascii.hpp">
+      <Filter>Source Files\utils\string</Filter>
+    </ClInclude>
+    <ClInclude Include="RAIIWrapper.hpp">
+      <Filter>Source Files\utils\raii</Filter>
+    </ClInclude>
+    <ClInclude Include="RAIIBase.hpp">
+      <Filter>Source Files\utils\raii</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

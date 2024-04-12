@@ -1,11 +1,11 @@
-/*
- *	os.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	os.hpp									//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_OS_HPP_) // Guard && version protector
 	#if LLANYLIB_OS_MAYOR_ != 4 || LLANYLIB_OS_MINOR_ < 2

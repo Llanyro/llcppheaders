@@ -1,11 +1,11 @@
-/*
- *	llanylib.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	llanylib.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #ifndef LLANYLIB_HPP_
 #define LLANYLIB_HPP_

@@ -1,11 +1,11 @@
-/*
- *	bits.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	bits.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_BITS_HPP_) // Guard && version protector
 	#if LLANYLIB_BITS_MAYOR_ != 4 || LLANYLIB_BITS_MINOR_ < 2

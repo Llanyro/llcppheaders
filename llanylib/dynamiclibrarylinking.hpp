@@ -1,11 +1,11 @@
-/*
- *	dynamiclibrarylinking.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	dynamiclibrarylinking.hpp				//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_DYNAMICLIBRARYLINKING_HPP_) // Guard && version protector
 	#if LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ != 4 || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ < 2

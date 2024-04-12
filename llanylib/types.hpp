@@ -1,11 +1,11 @@
-/*
- *	types.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	types.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_TYPES_HPP_) // Guard && version protector
 	#if LLANYLIB_TYPES_MAYOR_ != 4 || LLANYLIB_TYPES_MINOR_ < 2

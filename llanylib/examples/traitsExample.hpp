@@ -1,10 +1,11 @@
-/*
- *	traitsExample.hpp
- *
- *	Created on: Sep 27, 2021
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
- */
+//////////////////////////////////////////////
+//	traitsExample.hpp						//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #include "../traits.hpp"
 

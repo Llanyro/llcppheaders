@@ -1,11 +1,11 @@
-/*
- *	traits_test_class.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	traits_test_class.hpp					//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_) // Guard && version protector
 	#if LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ != 4 || LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ < 2

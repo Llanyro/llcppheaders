@@ -1,3 +1,12 @@
+//////////////////////////////////////////////
+//	StringViewExample.cpp					//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
+
 #include "../StringView.hpp"
 
 #include "../LinkedList.hpp"

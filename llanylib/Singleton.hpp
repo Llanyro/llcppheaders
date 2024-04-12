@@ -1,11 +1,11 @@
-/*
- *	Singleton.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	Singleton.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_SINGLETON_HPP_) // Guard && version protector
 	#if LLANYLIB_SINGLETON_MAYOR_ != 4 || LLANYLIB_SINGLETON_MINOR_ < 2

@@ -1,10 +1,11 @@
-/*
- *	StringViewExample.hpp
- *
- *	Created on: Sep 27, 2021
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
- */
+//////////////////////////////////////////////
+//	StringViewExample.hpp					//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #ifndef LLANYLIB_EXAMPLES_STRINGVIEWEXAMPLE_HPP_
 #define LLANYLIB_EXAMPLES_STRINGVIEWEXAMPLE_HPP_
@@ -14,7 +15,7 @@
 
 namespace llcpp {
 
-/************************************* ArrayView Storage *************************************/
+///////////////////////////////////////////////// ArrayView Storage /////////////////////////////////////////////////
 
 constexpr auto stringview_01 = StringView(algorithm::str1);
 constexpr auto stringview_02 = StringView(algorithm::str2);
@@ -28,7 +29,7 @@ constexpr auto stringview_09 = StringView("Holo");
 
 constexpr StringView HOLA_WORLD = algorithm::str4;
 
-/************************************* Compare *************************************/
+///////////////////////////////////////////////// Compare /////////////////////////////////////////////////
 
 constexpr cmp_t compare_01 = stringview_07.compare("Hello");
 constexpr cmp_t compare_02 = stringview_07.compare("Holla");
@@ -54,7 +55,7 @@ static_assert(compare_03_res.result == 01, "Error changed value");
 static_assert(compare_04_res.result == -1, "Error changed value");
 static_assert(compare_05_res.result == 00, "Error changed value");
 
-/************************************* Equals *************************************/
+///////////////////////////////////////////////// Equals /////////////////////////////////////////////////
 
 constexpr ll_bool_t equals_01 = stringview_07.equals("Hello");
 constexpr ll_bool_t equals_02 = stringview_07.equals("Holla");
@@ -70,7 +71,7 @@ static_assert(equals_04 == LL_FALSE, "Error changed value");
 static_assert(equals_05 == LL_FALSE, "Error changed value");
 static_assert(equals_06 == LL_FALSE, "Error changed value");
 
-/************************************* Operator== *************************************/
+///////////////////////////////////////////////// Operator== /////////////////////////////////////////////////
 
 constexpr ll_bool_t operator_eq_01 = stringview_07 == "Hello";
 constexpr ll_bool_t operator_eq_02 = stringview_07 == "Holla";
@@ -86,7 +87,7 @@ static_assert(operator_eq_04 == LL_FALSE, "Error changed value");
 static_assert(operator_eq_05 == LL_FALSE, "Error changed value");
 static_assert(operator_eq_06 == LL_FALSE, "Error changed value");
 
-/************************************* starstwith *************************************/
+///////////////////////////////////////////////// starstwith /////////////////////////////////////////////////
 
 constexpr ll_bool_t starts_with_01 = stringview_06.starts_with("A");
 constexpr ll_bool_t starts_with_02 = stringview_05.starts_with("A");
@@ -120,7 +121,7 @@ static_assert(starts_with_05_res.result == LL_FALSE, "Error changed value");
 static_assert(starts_with_06_res.result ==  LL_TRUE, "Error changed value");
 static_assert(starts_with_07_res.result ==  LL_TRUE, "Error changed value");
 
-/************************************* endswith *************************************/
+///////////////////////////////////////////////// endswith /////////////////////////////////////////////////
 
 constexpr ll_bool_t ends_with_01 = stringview_01.ends_with("*");
 constexpr ll_bool_t ends_with_02 = stringview_02.ends_with("?");
@@ -157,7 +158,7 @@ static_assert(ends_with_08 ==  LL_TRUE, "Error changed value");
 static_assert(ends_with_09 ==  LL_TRUE, "Error changed value");
 static_assert(ends_with_10 ==  LL_TRUE, "Error changed value");
 
-/************************************* find *************************************/
+///////////////////////////////////////////////// find /////////////////////////////////////////////////
 
 constexpr len_t find_pos_01 = stringview_01.find_pos('*');
 constexpr len_t find_pos_02 = stringview_02.find_pos('?');
@@ -187,7 +188,7 @@ static_assert(*find_04 == 'A', "Error changed value");
 static_assert( find_05 == stringview_05.end(), "Error changed value");
 static_assert( find_06 == stringview_06.end(), "Error changed value");
 
-/************************************* rfind *************************************/
+///////////////////////////////////////////////// rfind /////////////////////////////////////////////////
 
 constexpr len_t rfind_pos_01 = stringview_01.rfind_pos('*');
 constexpr len_t rfind_pos_02 = stringview_02.rfind_pos('?');

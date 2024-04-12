@@ -1,11 +1,11 @@
-/*
- *	definitions.hpp
- * 
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	definitions.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_DEFINITIONS_HPP_) // Guard && version protector
 	#if LLANYLIB_DEFINITIONS_MAYOR_ != 4 || LLANYLIB_DEFINITIONS_MINOR_ < 2

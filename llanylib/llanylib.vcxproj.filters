@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -13,14 +9,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
     <Filter Include="Source Files\utils">
       <UniqueIdentifier>{8f625efc-af0f-4c4e-9c0d-e6459870feb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\types">
-      <UniqueIdentifier>{127ec860-0183-4786-98b2-0b7355c8ec60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\defines">
-      <UniqueIdentifier>{e90f5574-8aad-499b-930e-5d42105b6ccf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\utils\lists">
       <UniqueIdentifier>{c8212b79-1063-4446-b1c9-4ed73eae1e2f}</UniqueIdentifier>
@@ -31,14 +25,20 @@
     <Filter Include="Source Files\utils\string">
       <UniqueIdentifier>{4c089b09-ec5e-4c61-8da1-67fe487eb8f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\utils\raii">
+      <UniqueIdentifier>{0d5a2a76-0644-4c82-9a4b-281f974c96dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\types">
+      <UniqueIdentifier>{127ec860-0183-4786-98b2-0b7355c8ec60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\defines">
+      <UniqueIdentifier>{e90f5574-8aad-499b-930e-5d42105b6ccf}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\examples">
       <UniqueIdentifier>{da89fac3-1e0d-4172-878f-b633106c7eda}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\expresions">
       <UniqueIdentifier>{2e8bd116-f9a5-41e4-a404-a361e9f96be3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\utils\raii">
-      <UniqueIdentifier>{0d5a2a76-0644-4c82-9a4b-281f974c96dd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

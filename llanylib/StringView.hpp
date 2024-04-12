@@ -1,11 +1,11 @@
-/*
- *	StringView.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	StringView.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_STRINGVIEW_HPP_) // Guard && version protector
 	#if LLANYLIB_STRINGVIEW_MAYOR_ != 4 || LLANYLIB_STRINGVIEW_MINOR_ < 2

@@ -1,11 +1,11 @@
-/*
- *	math.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	math.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #ifndef LLANYLIB_MATH_HPP_
 #define LLANYLIB_MATH_HPP_

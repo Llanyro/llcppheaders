@@ -1,11 +1,11 @@
-/*
- *	algorithm.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	algorithm.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_ALGORITHM_HPP_) // Guard && version protector
 	#if LLANYLIB_ALGORITHM_MAYOR_ != 4 || LLANYLIB_ALGORITHM_MINOR_ < 2
@@ -320,7 +320,7 @@ __LL_NODISCARD__ constexpr ll_bool_t none(const T* begin, const T* end, const U 
 /// <param name="object"></param>
 /// <returns></returns>
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr const T* binarysearch(const T* begin, const T* end, const U object /*, fnc_clss::CompareBool<T> cmp */ ) {
+__LL_NODISCARD__ constexpr const T* binarysearch(const T* begin, const T* end, const U object) {
 	static_assert(traits::has_equal_operator_v<T>, "Error, <T> object has no operator==()");
 	static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
 	LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(const T* begin, const T* end, const U object)");
@@ -391,33 +391,6 @@ __LL_NODISCARD__ constexpr len_t binarysearch_pos(const T(&v)[N], const U object
 
 #pragma endregion
 #pragma region DataManipulation
-/*!
- *	@template True
- *	@brief Reverses order in a list
- *
- *	@efficiency O(n)
- *	@time T(n/2)
- *	@memory M(1)
- *	@const expr
- *	@throw False
- *
- *	@param[in] begin Start of list that will be edited
- *	@param[in] end Last element of list
- *	@param[in] swapItemsFunction Swap function defined by user
- *
- *	@templateparam T item list type
- *
- *	@thread_safety This function may be called from any thread.
- *	@thread_protection This function is not protexted by mutex.
- *
- *	@sa @ref list_edit
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup util
- *	@ingroup list
- *	@ingroup algorithm
- */
 template<class T>
 constexpr void reverse(T* begin, T* end, fnc_clss::SwapFunction<T> swap) __LL_EXCEPT__ {
 	LL_ASSERT(begin, "[begin] cannot be nullptr. reverse(T* begin, T* end, ReveseSwapFunction<T> revSwap)");

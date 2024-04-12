@@ -1,10 +1,11 @@
-/*
- *	algorithmExample.hpp
- *
- *	Created on: Sep 27, 2021
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
- */
+//////////////////////////////////////////////
+//	algorithmExample.hpp					//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #include "../algorithm.hpp"
 
@@ -14,14 +15,14 @@
 namespace llcpp {
 namespace algorithm {
 
-/************************************* Example strings *************************************/
+///////////////////////////////////////////////// Example strings /////////////////////////////////////////////////
 
 constexpr ll_char_t str1[] = "Holoooo, asdf*";
 constexpr ll_char_t str2[] = "Holoooo, asdf?";
 constexpr ll_char_t str3[] = "abcdefghijklmnopqrstuvwxyz";
 constexpr ll_char_t str4[] = "Hola world!";
 
-/************************************* Compare && Equals *************************************/
+///////////////////////////////////////////////// Compare && Equals /////////////////////////////////////////////////
 
 constexpr i8 cmp1 = compare(str1, str2, 15);
 constexpr CompareData<ll_char_t, cmp_t> cmp2 = compare<ll_char_t, LL_TRUE>(str1, str2, 15);
@@ -32,7 +33,7 @@ static_assert(cmp1 == -1, "Error changed value");
 static_assert(cmp2.result == -1, "Error changed value");
 static_assert(cmp_b_1 == LL_FALSE, "Error changed value");
 
-/************************************* Starts with *************************************/
+///////////////////////////////////////////////// Starts with /////////////////////////////////////////////////
 
 constexpr ll_bool_t starts_with_01 = starts_with(str1, str2, 14, 14);
 constexpr ll_bool_t starts_with_02 = starts_with(str1, str2, 13, 13);
@@ -55,7 +56,7 @@ static_assert(starts_with_02_res.result == LL_TRUE , "Error changed value");
 static_assert(starts_with_03_res.result == LL_FALSE, "Error changed value");
 static_assert(starts_with_04_res.result == LL_TRUE , "Error changed value");
 
-/************************************* Ends with *************************************/
+///////////////////////////////////////////////// Ends with /////////////////////////////////////////////////
 
 constexpr ll_bool_t ends_with_01 = ends_with(str1, str2, 14, 14);
 constexpr ll_bool_t ends_with_02 = ends_with(str1, str2, 13, 13);
@@ -77,7 +78,7 @@ static_assert(ends_with_02_res.result == LL_TRUE , "Error changed value");
 static_assert(ends_with_03_res.result == LL_TRUE , "Error changed value");	// Here is different to start_with cause the '\0' at end
 static_assert(ends_with_04_res.result == LL_FALSE, "Error changed value");	// Here is different to start_with cause the '\0' at end
 
-/************************************* Finders *************************************/
+///////////////////////////////////////////////// Finders /////////////////////////////////////////////////
 
 constexpr len_t find_pos_01 = find_pos(str1, ',');
 constexpr len_t find_pos_02 = find_pos(str1, '*');
@@ -120,7 +121,7 @@ static_assert(*rfind_ptr_04 == '\0', "Error changed value");
 //constexpr auto binarysearch_ptr_1 = binarysearch<ll_char_t>(str3, 'd');
 //constexpr auto binarysearch_ptr_2 = binarysearch<ll_char_t>(str3, 'y');
 
-/************************************* Reverse *************************************/
+///////////////////////////////////////////////// Reverse /////////////////////////////////////////////////
 
 constexpr len_t reverse_example(int pos) {
 	len_t block[10]{};
@@ -152,7 +153,7 @@ static_assert(reverse_07 == 2, "Error changed value");
 static_assert(reverse_08 == 1, "Error changed value");
 static_assert(reverse_09 == 0, "Error changed value");
 
-/************************************* Fill *************************************/
+///////////////////////////////////////////////// Fill /////////////////////////////////////////////////
 
 constexpr len_t fill_example(int pos, int val) {
 	len_t block[10]{};
@@ -185,7 +186,7 @@ static_assert(fill_07 == 7, "Error changed value");
 static_assert(fill_08 == 8, "Error changed value");
 static_assert(fill_09 == 9, "Error changed value");
 
-/************************************* Shift left *************************************/
+///////////////////////////////////////////////// Shift left /////////////////////////////////////////////////
 
 constexpr len_t shift_left_example(int pos) {
 	len_t block[10]{};
@@ -218,7 +219,7 @@ static_assert(shift_left_07 == 002, "Error changed value");
 static_assert(shift_left_08 == 003, "Error changed value");
 static_assert(shift_left_09 == 004, "Error changed value");
 
-/************************************* Shift right *************************************/
+///////////////////////////////////////////////// Shift right /////////////////////////////////////////////////
 
 constexpr len_t shift_right_example(int pos) {
 	len_t block[10]{};
@@ -251,7 +252,7 @@ static_assert(shift_right_07 == 999, "Error changed value");
 static_assert(shift_right_08 == 999, "Error changed value");
 static_assert(shift_right_09 == 999, "Error changed value");
 
-/*************************************/
+//////////////////////////////////////////////////
 
 /*
 #pragma region Compare

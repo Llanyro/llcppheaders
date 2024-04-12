@@ -1,10 +1,11 @@
-/*
- *	ArrayViewExample.hpp
- *
- *	Created on: Sep 27, 2021
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
- */
+//////////////////////////////////////////////
+//	ArrayViewExample.hpp					//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #ifndef LLANYLIB_EXAMPLES_ARRAYVIEWEXAMPLE_HPP_
 #define LLANYLIB_EXAMPLES_ARRAYVIEWEXAMPLE_HPP_
@@ -16,14 +17,14 @@
 
 namespace llcpp {
 
-/************************************* Data *************************************/
+///////////////////////////////////////////////// Data /////////////////////////////////////////////////
 
 constexpr const int numbers_01[] = { 10, 9, 6 };
 constexpr const int numbers_02[] = { 10, 9, 6 };
 constexpr const int numbers_03[] = { 10, 5 };
 constexpr const int numbers_04[] = { 10, 9, 6, 0 };
 
-/************************************* ArrayView Storage *************************************/
+///////////////////////////////////////////////// ArrayView Storage /////////////////////////////////////////////////
 
 constexpr auto arrayview_01 = ArrayView(numbers_01);
 constexpr auto arrayview_02 = ArrayView(numbers_02);
@@ -34,13 +35,13 @@ constexpr auto arrayview_06 = ArrayView(algorithm::str2);
 
 constexpr ArrayView HOLA_WORLD = algorithm::str4;
 
-/************************************* ArrayView Copy *************************************/
+///////////////////////////////////////////////// ArrayView Copy /////////////////////////////////////////////////
 
 constexpr auto arrayview_07 = ArrayView("Hola mundo");
 constexpr auto arrayview_08 = ArrayView(HOLA_WORLD);
 constexpr auto arrayview_09 = ArrayView(algorithm::str4);
 
-/************************************* ArrayView access *************************************/
+///////////////////////////////////////////////// ArrayView access /////////////////////////////////////////////////
 
 constexpr const ll_char_t stringview_char_1 = arrayview_08[2];
 constexpr const ll_char_t stringview_char_2 = *arrayview_07.get(9);
@@ -48,7 +49,7 @@ constexpr const ll_char_t stringview_char_2 = *arrayview_07.get(9);
 static_assert(stringview_char_1 == 'l', "Error changed value");
 static_assert(stringview_char_2 == 'o', "Error changed value");
 
-/************************************* ArrayView algorithm *************************************/
+///////////////////////////////////////////////// ArrayView algorithm /////////////////////////////////////////////////
 
 constexpr len_t find_pos_01 = arrayview_05.find_pos('*');
 constexpr len_t find_pos_02 = arrayview_06.find_pos('?');
@@ -109,7 +110,7 @@ static_assert(equals_18 == LL_FALSE, "Error changed value");
 static_assert(equals_19 == LL_FALSE, "Error changed value");
 static_assert(equals_20 == LL_FALSE, "Error changed value");
 
-/************************************* Array reverse *************************************/
+///////////////////////////////////////////////// Array reverse /////////////////////////////////////////////////
 
 constexpr len_t __array_reverse_example__(int v) {
 	len_t block[5]{};
@@ -131,7 +132,7 @@ static_assert(array_reverse_02 == 2, "Error changed value");
 static_assert(array_reverse_03 == 1, "Error changed value");
 static_assert(array_reverse_04 == 0, "Error changed value");
 
-/************************************* Array fill *************************************/
+///////////////////////////////////////////////// Array fill /////////////////////////////////////////////////
 
 constexpr len_t __array_fill_example__(int v) {
 	len_t block[5]{};
@@ -152,7 +153,7 @@ static_assert(array_fill_02 == 999, "Error changed value");
 static_assert(array_fill_03 == 999, "Error changed value");
 static_assert(array_fill_04 == 000, "Error changed value");
 
-/************************************* Array shift left *************************************/
+///////////////////////////////////////////////// Array shift left /////////////////////////////////////////////////
 
 constexpr len_t __array_shift_left_example__(int v) {
 	len_t block[5]{};
@@ -174,7 +175,7 @@ static_assert(array_shift_left_02 == 000, "Error changed value");
 static_assert(array_shift_left_03 == 001, "Error changed value");
 static_assert(array_shift_left_04 == 002, "Error changed value");
 
-/************************************* Array shift right *************************************/
+///////////////////////////////////////////////// Array shift right /////////////////////////////////////////////////
 
 constexpr len_t __array_shift_right_example__(int v) {
 	len_t block[5]{};
@@ -196,7 +197,7 @@ static_assert(array_shift_right_2 == 004, "Error changed value");
 static_assert(array_shift_right_3 == 999, "Error changed value");
 static_assert(array_shift_right_4 == 999, "Error changed value");
 
-/************************************* Array test nodes *************************************/
+///////////////////////////////////////////////// Array test nodes /////////////////////////////////////////////////
 
 constexpr len_t ARR_TEST_SIZE = 10;
 using ArrayType_1 = Array<len_t, ARR_TEST_SIZE>;
@@ -268,7 +269,7 @@ static_assert(array_test_nodes_01 == 001, "Error changed value");
 static_assert(array_test_nodes_02 == 002, "Error changed value");
 static_assert(array_test_nodes_03 == 003, "Error changed value");
 
-/************************************* Array test list 2 *************************************/
+///////////////////////////////////////////////// Array test list 2 /////////////////////////////////////////////////
 
 constexpr len_t ARR_TEST_SIZE_3 = 10;
 using ArrayType_3 = Array<len_t, ARR_TEST_SIZE_3>;
@@ -311,7 +312,7 @@ constexpr len_t array_test_nodes3_01 = __array_test_nodes3_example__(1, 1);
 constexpr len_t array_test_nodes3_02 = __array_test_nodes3_example__(2, 2);
 constexpr len_t array_test_nodes3_03 = __array_test_nodes3_example__(9, 3);
 
-/************************************* Array test list 4 *************************************/
+///////////////////////////////////////////////// Array test list 4 /////////////////////////////////////////////////
 
 constexpr len_t ARR_TEST_SIZE_5 = 10;
 using ArrayType_5 = Array<len_t, ARR_TEST_SIZE_5>;

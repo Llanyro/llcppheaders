@@ -1,11 +1,11 @@
-/*
- *	RAIIBase.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	RAIIBase.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_RAIIBASE_HPP_) // Guard && version protector
 	#if LLANYLIB_RAIIBASE_MAYOR_ != 4 || LLANYLIB_RAIIBASE_MINOR_ < 2

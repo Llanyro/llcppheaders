@@ -1,11 +1,11 @@
-/*
- *	traits.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	traits.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_TRAITS_HPP_) // Guard && version protector
 	#if LLANYLIB_TRAITS_MAYOR_ != 4 || LLANYLIB_TRAITS_MINOR_ < 2

@@ -1,11 +1,11 @@
-/*
- *	Array.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	Array.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_ARRAY_HPP_) // Guard && version protector
 	#if LLANYLIB_ARRAY_MAYOR_ != 4 || LLANYLIB_ARRAY_MINOR_ < 2

@@ -1,11 +1,11 @@
-/*
- *	DoubleNode.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	DoubleNode.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_DOUBLENODE_HPP_) // Guard && version protector
 	#if LLANYLIB_DOUBLENODE_MAYOR_ != 4 || LLANYLIB_DOUBLENODE_MINOR_ < 2

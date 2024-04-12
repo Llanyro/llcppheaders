@@ -1,11 +1,11 @@
-/*
- *	common.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	common.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_COMMON_HPP_) // Guard && version protector
 	#if LLANYLIB_COMMON_MAYOR_ != 4 || LLANYLIB_COMMON_MINOR_ < 2

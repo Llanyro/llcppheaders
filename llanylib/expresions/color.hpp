@@ -1,11 +1,11 @@
-/*
- *	color.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	color.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #ifndef LLANYLIB_EXPRESIONS_COLOR_HPP_
 #define LLANYLIB_EXPRESIONS_COLOR_HPP_

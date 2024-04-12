@@ -1,10 +1,11 @@
-/*
- *	bitsExample.hpp
- *
- *	Created on: Sep 27, 2021
- *	  Author: Francisco Julio Ruiz Fernandez
- *    Author: llanyro
- */
+//////////////////////////////////////////////
+//	bitsExample.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #include "../bits.hpp"
 
@@ -14,7 +15,7 @@
 namespace llcpp {
 namespace bits {
 
-/************************************* Base transformation *************************************/
+///////////////////////////////////////////////// Base transformation /////////////////////////////////////////////////
 constexpr ui64 transform_to_base_res = transformToBaseV3(30ul, 8);
 
 constexpr ui64 transform_to_base_8_res_1 = transformTo8(30u);
@@ -47,7 +48,7 @@ static_assert(transform_to_base_64_res_2 == 64, "Error changed value");
 static_assert(transform_to_base_64_res_3 == 64, "Error changed value");
 static_assert(transform_to_base_64_res_4 == 64, "Error changed value");
 
-/************************************* Type division *************************************/
+///////////////////////////////////////////////// Type division /////////////////////////////////////////////////
 
 template<class T, class U>
 constexpr __LL_NODISCARD__ ll_bool_t cmp(const ByteExtender<T>& b, const U l, const U h) __LL_EXCEPT__ {

@@ -1,11 +1,11 @@
-/*
- *	ascii.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	ascii.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_ASCII_HPP_) // Guard && version protector
 #if LLANYLIB_ASCII_MAYOR_ != 4 || LLANYLIB_ASCII_MINOR_ < 2

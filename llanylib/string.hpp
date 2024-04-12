@@ -1,11 +1,11 @@
-/*
- *	string.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	string.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_STRING_HPP_) // Guard && version protector
 	#if LLANYLIB_STRING_MAYOR_ != 4 || LLANYLIB_STRING_MINOR_ < 2

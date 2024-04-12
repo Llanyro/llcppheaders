@@ -1,11 +1,11 @@
-/*
- *	Countable.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	Countable.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_COUNTABLE_HPP_) // Guard && version protector
 	#if LLANYLIB_COUNTABLE_MAYOR_ != 4 || LLANYLIB_COUNTABLE_MINOR_ < 2

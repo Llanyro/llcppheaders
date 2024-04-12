@@ -1,11 +1,11 @@
-/*
- *	Node.hpp
- *
- *	Author: Francisco Julio Ruiz Fernandez
- *	Author: llanyro
- *
- *	Version: 4.2
- */
+//////////////////////////////////////////////
+//	Node.hpp								//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 4.2							//
+//////////////////////////////////////////////
 
 #if defined(LLANYLIB_NODE_HPP_) // Guard && version protector
 	#if LLANYLIB_NODE_MAYOR_ != 4 || LLANYLIB_NODE_MINOR_ < 2

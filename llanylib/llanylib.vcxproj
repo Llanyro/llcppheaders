@@ -44,6 +44,7 @@
     <ClInclude Include="math.hpp" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="os.hpp" />
+    <ClInclude Include="ostypes.hpp" />
     <ClInclude Include="RAIIBase.hpp" />
     <ClInclude Include="RAIIWrapper.hpp" />
     <ClInclude Include="Singleton.hpp" />

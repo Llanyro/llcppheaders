@@ -135,6 +135,9 @@
     <ClInclude Include="RAIIBase.hpp">
       <Filter>Source Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="ostypes.hpp">
+      <Filter>Source Files\types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

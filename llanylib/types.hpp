@@ -154,9 +154,17 @@ class basic_string;
 using string  = basic_string<char, char_traits<char>, allocator<char>>;
 template <class _Fty>
 class function;
+//template <class _Ty, class _Alloc = allocator<_Ty>>
+//class vector;
+//template <class _Ty, class _Alloc = allocator<_Ty>>
+//class list;
 
 template <class T1, class T2>
 struct pair;
+
+namespace filesystem {
+class directory_entry;
+} // namespace filesystem
 } // namespace std
 
 #if defined(WINDOWS_SYSTEM)

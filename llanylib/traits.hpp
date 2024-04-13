@@ -94,7 +94,7 @@ using has_##name##_t = has_##name##<T>::val::value
 #define __LL_TEMPLATE_HAS_FUNCTION__(name, function) __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, LL_FALSE)
 #define __TEMPLATE_HAS_SIMPLE_FUNCTION__(function) __LL_TEMPLATE_HAS_FUNCTION__(function, p->##function())
 
-__LL_TEMPLATE_HAS_FUNCTION_BASE__(copy_operator, p->operator=(*p), LL_TRUE);
+//__LL_TEMPLATE_HAS_FUNCTION_BASE__(copy_operator, p->operator=(*p), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(move_operator, p->operator=(std::move(*p)), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(three_compare_operator, p->operator<=>(*p), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(equal_operator, p->operator==(*p), LL_TRUE);
@@ -107,7 +107,7 @@ __LL_TEMPLATE_HAS_FUNCTION__(swap_s, p->swap_s(*p));
 __TEMPLATE_HAS_SIMPLE_FUNCTION__(clear);
 
 #pragma endregion
-#pragma region Checkers
+#pragma region OperatorTypeChecker
 template<class ObjectType, class TypeCall, class __noptr = std::remove_pointer_t<ObjectType>>
 using __operator_type_call_checker_t_ptr =
 	std::conditional_t<
@@ -133,7 +133,6 @@ using __operator_type_call_checker_t =
 			traits::is_basic_type_v<ObjectType>,
 			std::true_type,
 			std::true_type
-			//std::false_type
 		>
 	>;
 
@@ -145,8 +144,102 @@ using operator_type_call_checker_t =
 		traits::__operator_type_call_checker_t<ObjectType, TypeCall>
 	>;
 
+template<class ObjectType, class TypeCall>
+__LL_VAR_INLINE__ constexpr ll_bool_t operator_type_call_checker_v = operator_type_call_checker_t<ObjectType, TypeCall>::value;
+
 #pragma endregion
-#pragma region Values
+#pragma region SwapChecker
+// [TOFIX] Add noexcept to check swap object functions
+template<class T>
+using is_nothrow_swappeable_t =
+	std::conditional_t<
+		std::is_pointer_v<T> || traits::is_basic_type_v<T>,
+		std::true_type,
+		std::conditional_t<
+			!(std::is_move_constructible_v<T> && std::is_move_assignable_v<T>),
+			std::true_type,
+			std::conditional_t<
+				std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_assignable_v<T>,
+				std::true_type,
+				std::false_type
+			>
+		>
+	>;
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_swappeable_v = is_nothrow_swappeable_t<T>::value;
+
+#pragma endregion
+#pragma region CopyChecker
+template<class T, class __noptr = std::remove_pointer_t<T>>
+using __is_nothrow_copyable_t_ptr = 
+	std::conditional_t<
+		std::is_pointer_v<__noptr>,
+		std::false_type,
+		std::conditional_t<
+			!std::is_copy_assignable_v<__noptr>,
+			std::true_type,
+			std::conditional_t<
+				traits::is_basic_type_v<__noptr>,
+				std::true_type,
+				std::conditional_t<
+					std::is_nothrow_copy_assignable_v<__noptr>,
+					std::true_type,
+					std::false_type
+				>
+			>
+		>
+	>;
+
+template<class T>
+using __is_nothrow_copyable_t = 
+		std::conditional_t<
+		!std::is_copy_assignable_v<T>,
+		std::true_type,
+		std::conditional_t<
+			traits::is_basic_type_v<T>,
+			std::true_type,
+			std::conditional_t<
+				std::is_nothrow_copy_assignable_v<T>,
+				std::true_type,
+				std::false_type
+			>
+		>
+	>;
+
+template<class T>
+using is_nothrow_copyable_t =
+	std::conditional_t<
+		std::is_pointer_v<T>,
+		traits::__is_nothrow_copyable_t_ptr<T>,
+		traits::__is_nothrow_copyable_t<T>
+	>;
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyable_t<T>::value;
+
+#pragma endregion
+
+template<class T, class U>
+using is_same_const_t =
+	std::conditional_t<
+		(std::is_pointer_v<T> || std::is_pointer_v<U>) && !(std::is_pointer_v<T> && std::is_pointer_v<U>),
+		std::false_type,
+		std::conditional_t<
+			std::is_same_v<
+				std::remove_const_t<std::remove_pointer_t<T>>,
+				std::remove_const_t<std::remove_pointer_t<U>>
+			>,
+			std::true_type,
+			std::false_type
+		>
+	>;
+
+template<class T, class U>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_same_const_v = is_same_const_t<T, U>::value;
+
+
+
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_constructible_v =
 	std::is_pointer_v<T> ||
@@ -158,10 +251,9 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_destructible_v =
 	traits::is_basic_type_v<T> ||
 	noexcept(std::declval<T>().~T());
 
-template<class ObjectType, class TypeCall>
-__LL_VAR_INLINE__ constexpr ll_bool_t operator_type_call_checker_v = operator_type_call_checker_t<ObjectType, TypeCall>::value;
 
-#pragma endregion
+
+
 #pragma endregion
 #pragma region TypeConversions
 template<class T, ll_bool_t promote>

@@ -8,9 +8,9 @@
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_ASCII_HPP_) // Guard && version protector
-#if LLANYLIB_ASCII_MAYOR_ != 4 || LLANYLIB_ASCII_MINOR_ < 2
-#error "ascii.hpp version error!"
-#endif // LLANYLIB_ASCII_MAYOR_ || LLANYLIB_ASCII_MINOR_
+	#if LLANYLIB_ASCII_MAYOR_ != 4 || LLANYLIB_ASCII_MINOR_ < 2
+		#error "ascii.hpp version error!"
+	#endif // LLANYLIB_ASCII_MAYOR_ || LLANYLIB_ASCII_MINOR_
 
 #else !defined(LLANYLIB_ASCII_HPP_)
 #define LLANYLIB_ASCII_HPP_

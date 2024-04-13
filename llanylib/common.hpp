@@ -9,7 +9,7 @@
 
 #if defined(LLANYLIB_COMMON_HPP_) // Guard && version protector
 	#if LLANYLIB_COMMON_MAYOR_ != 4 || LLANYLIB_COMMON_MINOR_ < 2
-		#error "algorithm.hpp version error!"
+		#error "common.hpp version error!"
 	#endif // LLANYLIB_COMMON_MAYOR_ || LLANYLIB_COMMON_MINOR_
 
 #else !defined(LLANYLIB_COMMON_HPP_)

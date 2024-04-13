@@ -9,7 +9,7 @@
 
 #if defined(LLANYLIB_MATH_HPP_) // Guard && version protector
 	#if LLANYLIB_MATH_MAYOR_ != 3 || LLANYLIB_MATH_MINOR_ < 2
-		#error "algorithm.hpp version error!"
+		#error "math.hpp version error!"
 	#endif // LLANYLIB_MATH_MAYOR_ || LLANYLIB_MATH_MINOR_
 
 #else !defined(LLANYLIB_MATH_HPP_)

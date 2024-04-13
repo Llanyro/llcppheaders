@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	Loop.hpp								//
+//	LoopList.hpp							//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -9,7 +9,7 @@
 
 #if defined(LLANYLIB_LINKEDLIST_HPP_) // Guard && version protector
 	#if LLANYLIB_LINKEDLIST_MAYOR_ != 4 || LLANYLIB_LINKEDLIST_MINOR_ < 2
-		#error "LinkedList.hpp version error!"
+		#error "LoopList.hpp version error!"
 	#endif // LLANYLIB_LINKEDLIST_MAYOR_ || LLANYLIB_LINKEDLIST_MINOR_
 
 #else !defined(LLANYLIB_LINKEDLIST_HPP_)

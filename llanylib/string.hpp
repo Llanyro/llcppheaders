@@ -9,7 +9,7 @@
 
 #if defined(LLANYLIB_STRING_HPP_) // Guard && version protector
 	#if LLANYLIB_STRING_MAYOR_ != 4 || LLANYLIB_STRING_MINOR_ < 2
-		#error "algorithm.hpp version error!"
+		#error "string.hpp version error!"
 	#endif // LLANYLIB_STRING_MAYOR_ || LLANYLIB_STRING_MINOR_
 
 #else !defined(LLANYLIB_STRING_HPP_)

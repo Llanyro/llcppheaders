@@ -9,7 +9,7 @@
 
 #if defined(LLANYLIB_OSTYPES_HPP_) // Guard && version protector
 	#if LLANYLIB_OSTYPES_MAYOR_ != 4 || LLANYLIB_OSTYPES_MINOR_ < 2
-		#error "types.hpp version error!"
+		#error "ostypes.hpp version error!"
 	#endif // LLANYLIB_OSTYPES_MAYOR_ || LLANYLIB_OSTYPES_MINOR_
 
 #else !defined(LLANYLIB_OSTYPES_HPP_)

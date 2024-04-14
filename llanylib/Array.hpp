@@ -30,7 +30,6 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__Array__, Array);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
-		using __type_raw = __ArrayView::__type_raw;
 	public:
 		constexpr Array() __LL_EXCEPT__ = delete;
 		constexpr ~Array() __LL_EXCEPT__ {}
@@ -50,30 +49,30 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		constexpr Array(__move_Array) __LL_EXCEPT__ = delete;
 		constexpr __ref_Array operator=(__move_Array) __LL_EXCEPT__ = delete;
 
-		__LL_NODISCARD__ constexpr operator __ptr() __LL_EXCEPT__ { return this->data; }
-		__LL_NODISCARD__ constexpr __ptr get() __LL_EXCEPT__ { return this->data; }
-		__LL_NODISCARD__ constexpr __ptr get(const len_t pos) __LL_EXCEPT__ { return this->data + pos; }
+		__LL_NODISCARD__ constexpr operator __ptr() __LL_EXCEPT__ { return this->__data; }
+		__LL_NODISCARD__ constexpr __ptr get() __LL_EXCEPT__ { return this->__data; }
+		__LL_NODISCARD__ constexpr __ptr get(const len_t pos) __LL_EXCEPT__ { return this->__data + pos; }
 
 		__LL_NODISCARD__ constexpr __ref operator[] (const len_t pos) __LL_EXCEPT__ {
-			return this->data[pos];
+			return this->__data[pos];
 		}
 
 		#pragma region Algorithm_DataManipulation
 		constexpr void reverse(
-			fnc_clss::SwapFunction<T> swap,
+			fnc_clss::SwapFunction<__type> swap,
 			const len_t __begin = 0ull,
 			const len_t __end = N - 1
 		) __LL_EXCEPT__ {
-			algorithm::reverse<T>(this->get(__begin), this->get(__end), swap);
+			algorithm::reverse<__type>(this->get(__begin), this->get(__end), swap);
 		}
 		constexpr void reverse(
 			const len_t __begin = 0ull,
 			const len_t __end = N - 1
 		) __LL_EXCEPT__ {
-			algorithm::reverse<T>(this->get(__begin), this->get(__end));
+			algorithm::reverse<__type>(this->get(__begin), this->get(__end));
 		}
 
-		template<class U = traits::get_object_reference_t<T>>
+		template<class U = traits::get_object_reference_t<__type>>
 		constexpr void fill(
 			const U object,
 			const len_t __begin = 0ull,
@@ -82,17 +81,17 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 			algorithm::fill<T, U>(this->get(__begin), this->get(__end), object);
 		}
 
-		template<class U = traits::get_object_reference_t<T>>
+		template<class U = traits::get_object_reference_t<__type>>
 		constexpr void shiftLeft(
 			const len_t num,
 			const U null,
-			fnc_clss::SwapFunction<T> swap,
+			fnc_clss::SwapFunction<__type> swap,
 			const len_t __begin = 0ull,
 			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shiftLeft<T, U>(this->get(__begin), this->get(__end), num, null, swap);
 		}
-		template<class U = traits::get_object_reference_t<T>>
+		template<class U = traits::get_object_reference_t<__type>>
 		constexpr void shiftLeft(
 			const len_t num,
 			const U null,
@@ -102,17 +101,17 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 			algorithm::shiftLeft<T, U>(this->get(__begin), this->get(__end), num, null);
 		}
 
-		template<class U = traits::get_object_reference_t<T>>
+		template<class U = traits::get_object_reference_t<__type>>
 		constexpr void shifRight(
 			const len_t num,
 			const U null,
-			fnc_clss::SwapFunction<T> swap,
+			fnc_clss::SwapFunction<__type> swap,
 			const len_t __begin = 0ull,
 			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shifRight<T, U>(this->get(__begin), this->get(__end), num, null, swap);
 		}
-		template<class U = traits::get_object_reference_t<T>>
+		template<class U = traits::get_object_reference_t<__type>>
 		constexpr void shifRight(
 			const len_t num,
 			const U null,

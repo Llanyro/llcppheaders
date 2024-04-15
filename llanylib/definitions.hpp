@@ -19,6 +19,8 @@
 
 #include "os.hpp"
 
+enum class OSEnum { Windows, Posix, Unix, Other };
+
 // Sets more env definitions by OS
 #if defined(WINDOWS_SYSTEM)
 	#define __LL_NODISCARD__ _NODISCARD
@@ -26,14 +28,21 @@
 	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_INLINE__ __forceinline
 	#define __LL_VAR_INLINE__ inline
+	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = OSEnum::Windows;
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 	#define __LL_NODISCARD__ NODISCARD
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline
+	#if defined(POSIX_SYSTEM)
+		__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = OSEnum::Posix;
+	#else
+		__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = OSEnum::Unix;
+	#endif // defined(POSIX_SYSTEM)
 #else
 	#define __LL_NODISCARD__ [[nodiscard]]
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline
+	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = OSEnum::Other;
 #endif
 
 // Definitions

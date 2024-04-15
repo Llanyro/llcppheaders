@@ -151,6 +151,14 @@ using u8string = basic_string<char8_t, char_traits<char8_t>, allocator<char8_t>>
 using u16string = basic_string<char16_t, char_traits<char16_t>, allocator<char16_t>>;
 using u32string = basic_string<char32_t, char_traits<char32_t>, allocator<char32_t>>;
 
+//using string_view = basic_string_view<char>;
+//#ifdef __cpp_lib_char8_t
+//using u8string_view = basic_string_view<char8_t>;
+//#endif // __cpp_lib_char8_t
+//using u16string_view = basic_string_view<char16_t>;
+//using u32string_view = basic_string_view<char32_t>;
+//using wstring_view = basic_string_view<wchar_t>;
+
 template <class _Fty>
 class function;
 //template <class _Ty, class _Alloc = allocator<_Ty>>
@@ -292,142 +300,20 @@ using CompareExtra = cmp_t(*)(const void* __t1, const void* __t2, void* __extra_
 using CompareBoolExtra = ll_bool_t(*)(const void* __t1, const void* __t2, void* __extra__);
 
 namespace classic {
-/*!
- *	@template True
- *	@brief Function type to compare 2 objects
- *
- *	This needs to return a value to check if object __t1 is same to object __t2
- *	The implementation of this function needs to return:
- *		 0 if both are the same
- *		-1 if __t1 smaller
- *		 1 if __t1 is bigger
- * 
- *	@param[in] __t1 First object to compare
- *	@param[in] __t2 Second object to compare
- *
- *	@return Comparacion result
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref comparator
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 template<class T>
 using Compare = cmp_t(*)(const T& __t1, const T& __t2);
-/*!
- *	@template True
- *	@brief Function type to compare 2 objects
- *
- *	@param[in] __t1 First object to compare
- *	@param[in] __t2 Second object to compare
- *
- *	@return True if __t1 is same as __t2
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref comparator
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 template<class T>
 using CompareBool = ll_bool_t(*)(const T& __t1, const T& __t2);
-/*!
- *	@template True
- *	@brief Swaps 2 objects
- *
- *	@param[in] __t1 First object to swap
- *	@param[in] __t2 Second object to swap
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref swap
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 template<class T>
 using SwapFunction = void(*)(T& __t1, T& __t2);
 
 } // namespace classic
 namespace lambda {
 
-/*!
- *	@template True
- *	@brief Function type to compare 2 objects
- *
- *	This needs to return a value to check if object __t1 is same to object __t2
- *	The implementation of this function needs to return:
- *		 0 if both are the same
- *		-1 if __t1 smaller
- *		 1 if __t1 is bigger
- * 
- *	@param[in] __t1 First object to compare
- *	@param[in] __t2 Second object to compare
- *
- *	@return Comparacion result
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref comparator
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 template<class T>
 using SearchFunctioni32 = std::function<i32(const T& __t1)>;
-/*!
- *	@template True
- *	@brief Function type to compare 2 objects
- *
- *	@param[in] __t1 First object to compare
- *	@param[in] __t2 Second object to compare
- *
- *	@return True if __t1 is same as __t2
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref comparator
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 template<class T>
 using SearchFunctionBool = std::function<ll_bool_t(const T& __t1)>;
-/*!
- *	@template True
- *	@brief Swaps 2 objects
- *
- *	@param[in] __t1 First object to swap
- *	@param[in] __t2 Second object to swap
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref swap
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 template<class T>
 using SwapFunction = std::function<void(T& __t1, T& __t2)>;
 

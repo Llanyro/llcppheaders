@@ -112,6 +112,7 @@ struct ArrayPair {
 };
 
 struct StrPair : ArrayPair<ll_char_t> {};
+struct uStrPair : ArrayPair<ll_uchar_t> {};
 struct wStrPair : ArrayPair<ll_wchar_t> {};
 
 #pragma region BytesTypes

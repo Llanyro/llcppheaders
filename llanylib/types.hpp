@@ -145,9 +145,9 @@ struct ArrayPair {
 //	constexpr StrPair& operator=(__ArrayPair&&) __LL_EXCEPT__ = delete;
 //};
 
-struct StrPair : ArrayPair<ll_char_t> {};
-struct uStrPair : ArrayPair<ll_uchar_t> {};
-struct wStrPair : ArrayPair<ll_wchar_t> {};
+using StrPair  = ArrayPair<ll_char_t>;
+using uStrPair = ArrayPair<ll_uchar_t>;
+using wStrPair = ArrayPair<ll_wchar_t>;
 
 #pragma endregion
 

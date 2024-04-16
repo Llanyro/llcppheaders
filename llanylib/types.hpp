@@ -105,15 +105,51 @@ using ll_ustring_t = const ll_uchar_t*;		// Used to point to non editable unsign
 
 using ll_lib_t = void*;						// Handle for dynamic library linked/shared objects
 
+#pragma region Arrays
 template<class T>
 struct ArrayPair {
 	const T* data;
 	len_t len;
+
+	constexpr ArrayPair(const T* data, const len_t len) __LL_EXCEPT__ : data(data), len(len) {}
+	constexpr ArrayPair() __LL_EXCEPT__ {}
+
+	constexpr ArrayPair(const ArrayPair& other) __LL_EXCEPT__ : data(other.data), len(other.len) {}
+	constexpr ArrayPair& operator=(const ArrayPair& other) __LL_EXCEPT__ {
+		this->data = other.data;
+		this->len = other.len;
+		return *this;
+	}
+	constexpr ArrayPair(ArrayPair&&) __LL_EXCEPT__ = delete;
+	constexpr ArrayPair& operator=(ArrayPair&&) __LL_EXCEPT__ = delete;
 };
+
+//struct StrPair : ArrayPair<ll_char_t> {
+//	using __ArrayPair = ArrayPair<ll_char_t>;
+//	constexpr StrPair(const ll_char_t* data, const len_t len) __LL_EXCEPT__
+//		: __ArrayPair(data, len) {}
+//	constexpr StrPair() __LL_EXCEPT__ {}
+//	constexpr StrPair(const StrPair& other) __LL_EXCEPT__ : __ArrayPair(other) {}
+//	constexpr StrPair& operator=(const StrPair& other) __LL_EXCEPT__ {
+//		__ArrayPair::operator=(other);
+//		return *this;
+//	}
+//	constexpr StrPair(StrPair&&) __LL_EXCEPT__ = delete;
+//	constexpr StrPair& operator=(StrPair&&) __LL_EXCEPT__ = delete;
+//	constexpr StrPair(const __ArrayPair& other) __LL_EXCEPT__ : __ArrayPair(other) {}
+//	constexpr StrPair& operator=(const __ArrayPair& other) __LL_EXCEPT__ {
+//		__ArrayPair::operator=(other);
+//		return *this;
+//	}
+//	constexpr StrPair(__ArrayPair&&) __LL_EXCEPT__ = delete;
+//	constexpr StrPair& operator=(__ArrayPair&&) __LL_EXCEPT__ = delete;
+//};
 
 struct StrPair : ArrayPair<ll_char_t> {};
 struct uStrPair : ArrayPair<ll_uchar_t> {};
 struct wStrPair : ArrayPair<ll_wchar_t> {};
+
+#pragma endregion
 
 #pragma region BytesTypes
 using size_bytes8_t = ui8;

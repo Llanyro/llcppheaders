@@ -91,7 +91,7 @@ class LL_SHARED_LIB StringView {
 		}
 
 		__LL_NODISCARD__ constexpr operator __StrPair() const __LL_EXCEPT__ {
-			return __StrPair{ this->__data, STypes::ARR_SIZE };
+			return __StrPair(this->__data, STypes::ARR_SIZE);
 		}
 		__LL_NODISCARD__ constexpr operator __cptr() const __LL_EXCEPT__ {
 			return this->__data;

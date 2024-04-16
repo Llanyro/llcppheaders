@@ -44,13 +44,13 @@ class LL_SHARED_LIB StringView {
 		//using __cref_ArrayViewOtherSize = const ArrayViewOtherSize<N2>&;
 	public:
 		static_assert(N >= 1, "String cannot have a size of 0");
-		static_assert(std::is_char_type_v<T>, "Type must be a char type");
+		static_assert(traits::is_char_type_v<T>, "Type must be a char type");
 	public:
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__StringView__, StringView);
 		//__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
 		using __type_raw = std::remove_const_t<__type>;
-		using __StrPair = get_by_char_type_t<T, StrPair, uStrPair, wStrPair>;
+		using __StrPair = traits::get_by_char_type_t<T, StrPair, uStrPair, wStrPair>;
 	protected:
 		__ptr __data;
 	protected:

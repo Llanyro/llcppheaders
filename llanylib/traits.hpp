@@ -43,23 +43,26 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_type_v = std::_Is_any_of_v<std
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ll_char_t, ll_uchar_t, ll_wchar_t>;
 
+// Returns a type with reference if object is not basic type
+// Is only used when type parameter will be const
+template<class T>
+using get_object_reference_t = std::conditional_t<traits::is_basic_type_v<T>, T, std::add_lvalue_reference_t<T>>;
+
+#pragma region CharConditional
 template<class T, class TypeChar, class TypeUChar, class TypeWChar>
 struct get_by_char_type {
 	template <class U>
 	struct __internal__struct__ { using _val = void; };
 	template<> struct __internal__struct__<ll_char_t> { using _val = TypeChar; };
-	template<> struct __internal__struct__<ll_char_t> { using _val = TypeUChar; };
-	template<> struct __internal__struct__<ll_char_t> { using _val = TypeWChar; };
+	template<> struct __internal__struct__<ll_uchar_t> { using _val = TypeUChar; };
+	template<> struct __internal__struct__<ll_wchar_t> { using _val = TypeWChar; };
 	using value = __internal__struct__<std::remove_const_t<T>>::_val;
 };
 
 template<class T, class TypeChar, class TypeUChar, class TypeWChar>
-using get_by_char_type_t = get_by_char_type<T, TypeChar, TypeUChar, TypeWChar>;
+using get_by_char_type_t = get_by_char_type<T, TypeChar, TypeUChar, TypeWChar>::value;
 
-// Returns a type with reference if object is not basic type
-template<class T>
-using get_object_reference_t = std::conditional_t<traits::is_basic_type_v<T>, T, std::add_lvalue_reference_t<T>>;
-
+#pragma endregion
 #pragma region FunctionCheckers
 #pragma region DefinesAndStructs
 template <class T, class OperatorType>
@@ -79,9 +82,9 @@ struct has_type_operator {
 };
 
 template <class T, class OperatorType>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v = has_type_operator<T, OperatorType>::val::value;
-template <class T, class OperatorType>
 using has_type_operator_t = has_type_operator<T, OperatorType>::val;
+template <class T, class OperatorType>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v = has_type_operator_t<T, OperatorType>::value;
 
 
 #define __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, basic_value) \
@@ -101,9 +104,9 @@ using has_type_operator_t = has_type_operator<T, OperatorType>::val;
 		using val = decltype(test<T>(nullptr)); \
 	}; \
 template <class T> \
-__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_v = has_##name##<T>::val::value; \
+using has_##name##_t = has_##name##<T>::val; \
 template <class T> \
-using has_##name##_t = has_##name##<T>::val::value
+__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_v = has_##name##_t<T>::value
 
 
 #define __LL_TEMPLATE_HAS_FUNCTION__(name, function) __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, LL_FALSE)
@@ -123,113 +126,80 @@ __TEMPLATE_HAS_SIMPLE_FUNCTION__(clear);
 
 #pragma endregion
 #pragma region OperatorTypeChecker
-template<class ObjectType, class TypeCall, class __noptr = std::remove_pointer_t<ObjectType>>
-using __operator_type_call_checker_t_ptr =
-	std::conditional_t<
-		std::is_pointer_v<__noptr>,
-		std::true_type,
-		std::conditional_t<
-			traits::has_type_operator_v<__noptr, TypeCall>,
-			std::true_type,
-			std::conditional_t<
-				traits::is_basic_type_v<__noptr>,
-				std::true_type,
-				std::false_type
-			>
-		>
-	>;
-
 template<class ObjectType, class TypeCall>
-using __operator_type_call_checker_t =
-	std::conditional_t<
-		traits::has_type_operator_v<ObjectType, TypeCall>,
-		std::true_type,
-		std::conditional_t<
-			traits::is_basic_type_v<ObjectType>,
-			std::true_type,
-			std::true_type
-		>
-	>;
+struct operator_type_call_checker {
+	static auto test() {
+		if constexpr (std::is_pointer_v<ObjectType>) {
+			using __noptr = std::remove_pointer_t<ObjectType>;
 
+			if constexpr (std::is_pointer_v<__noptr>)
+				return std::true_type{};
+			else if constexpr (traits::has_type_operator_v<__noptr, TypeCall>)
+				return std::true_type{};
+			else if constexpr (traits::is_basic_type_v<__noptr>)
+				return std::true_type{};
+			else return std::false_type{};
+		}
+		else if constexpr (traits::has_type_operator_v<ObjectType, TypeCall>)
+			return std::true_type{};
+		else if constexpr (traits::is_basic_type_v<ObjectType>)
+			return std::true_type{};
+		else return std::false_type{};
+	}
+	using val = decltype(test());
+};
 template<class ObjectType, class TypeCall>
-using operator_type_call_checker_t =
-	std::conditional_t<
-		std::is_pointer_v<ObjectType>,
-		traits::__operator_type_call_checker_t_ptr<ObjectType, TypeCall>,
-		traits::__operator_type_call_checker_t<ObjectType, TypeCall>
-	>;
-
+using operator_type_call_checker_t = operator_type_call_checker<ObjectType, TypeCall>::val;
 template<class ObjectType, class TypeCall>
 __LL_VAR_INLINE__ constexpr ll_bool_t operator_type_call_checker_v = operator_type_call_checker_t<ObjectType, TypeCall>::value;
 
 #pragma endregion
 #pragma region SwapChecker
-// [TOFIX] Add noexcept to check swap object functions
 template<class T>
-using is_nothrow_swappeable_t =
-	std::conditional_t<
-		std::is_pointer_v<T> || traits::is_basic_type_v<T>,
-		std::true_type,
-		std::conditional_t<
-			!(std::is_move_constructible_v<T> && std::is_move_assignable_v<T>),
-			std::true_type,
-			std::conditional_t<
-				std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_assignable_v<T>,
-				std::true_type,
-				std::false_type
-			>
-		>
-	>;
-
+struct is_nothrow_swappeable {
+	static auto test() {
+		if constexpr (std::is_pointer_v<T> || traits::is_basic_type_v<T>)
+			return std::true_type{};
+		else if constexpr (std::is_move_constructible_v<T> && std::is_move_assignable_v<T>) {
+			if constexpr (std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_assignable_v<T>)
+				return std::true_type{};
+			else return std::false_type{};
+		}
+		else return std::false_type{};
+	}
+	using val = decltype(test());
+};
+template<class T>
+using is_nothrow_swappeable_t = is_nothrow_swappeable<T>::val;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_swappeable_v = is_nothrow_swappeable_t<T>::value;
 
 #pragma endregion
 #pragma region CopyChecker
-template<class T, class __noptr = std::remove_pointer_t<T>>
-using __is_nothrow_copyable_t_ptr = 
-	std::conditional_t<
-		std::is_pointer_v<__noptr>,
-		std::false_type,
-		std::conditional_t<
-			!std::is_copy_assignable_v<__noptr>,
-			std::true_type,
-			std::conditional_t<
-				traits::is_basic_type_v<__noptr>,
-				std::true_type,
-				std::conditional_t<
-					std::is_nothrow_copy_assignable_v<__noptr>,
-					std::true_type,
-					std::false_type
-				>
-			>
-		>
-	>;
-
 template<class T>
-using __is_nothrow_copyable_t = 
-		std::conditional_t<
-		!std::is_copy_assignable_v<T>,
-		std::true_type,
-		std::conditional_t<
-			traits::is_basic_type_v<T>,
-			std::true_type,
-			std::conditional_t<
-				std::is_nothrow_copy_assignable_v<T>,
-				std::true_type,
-				std::false_type
-			>
-		>
-	>;
+struct is_nothrow_copyable {
+	static auto test() {
+		if constexpr (std::is_pointer_v<T>) {
+			using __noptr = std::remove_pointer_t<T>;
 
+			if constexpr (std::is_pointer_v<__noptr>)
+				return std::false_type{};
+			else if constexpr (std::is_copy_assignable_v<__noptr> && std::is_nothrow_copy_assignable_v<__noptr>)
+				return std::true_type{};
+			else if constexpr (traits::is_basic_type_v<__noptr>)
+				return std::true_type{};
+			else return std::false_type{};
+		}
+		else if constexpr (std::is_copy_assignable_v<T> && std::is_nothrow_copy_assignable_v<T>)
+			return std::true_type{};
+		else if constexpr (traits::is_basic_type_v<T>)
+			return std::true_type{};
+		else return std::false_type{};
+	}
+	using val = decltype(test());
+};
 template<class T>
-using is_nothrow_copyable_t =
-	std::conditional_t<
-		std::is_pointer_v<T>,
-		traits::__is_nothrow_copyable_t_ptr<T>,
-		traits::__is_nothrow_copyable_t<T>
-	>;
-
+using is_nothrow_copyable_t = is_nothrow_copyable<T>::val;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyable_t<T>::value;
 

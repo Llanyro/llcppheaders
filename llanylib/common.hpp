@@ -17,7 +17,6 @@
 #define LLANYLIB_COMMON_MAYOR_ 4
 #define LLANYLIB_COMMON_MINOR_ 2
 
-#include "definitions.hpp"
 #include "types.hpp"
 
 namespace llcpp {

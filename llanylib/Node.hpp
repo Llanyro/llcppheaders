@@ -17,7 +17,6 @@
 #define LLANYLIB_NODE_MAYOR_ 4
 #define LLANYLIB_NODE_MINOR_ 2
 
-#include "definitions.hpp"
 #include "traits.hpp"
 
 namespace llcpp {

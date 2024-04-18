@@ -17,7 +17,6 @@
 #define LLANYLIB_MATH_MAYOR_ 3
 #define LLANYLIB_MATH_MINOR_ 2
 
-#include "definitions.hpp"
 #include "types.hpp"
 
 namespace llcpp {

@@ -19,7 +19,6 @@
 
 #define LL_TRAITS_TEST
 
-#include "definitions.hpp"
 #include "types.hpp"
 
 #if defined(LL_TRAITS_TEST)

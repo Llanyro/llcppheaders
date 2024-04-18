@@ -17,7 +17,6 @@
 #define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ 4
 #define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ 2
 
-#include "../definitions.hpp"
 #include "../types.hpp"
 
 namespace llcpp {

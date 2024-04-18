@@ -17,7 +17,6 @@
 #define LLANYLIB_COUNTABLE_MAYOR_ 4
 #define LLANYLIB_COUNTABLE_MINOR_ 2
 
-#include "definitions.hpp"
 #include "types.hpp"
 
 #define DO_IF_VALID(func) \

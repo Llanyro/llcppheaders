@@ -17,7 +17,6 @@
 #define LLANYLIB_OSTYPES_MAYOR_ 4
 #define LLANYLIB_OSTYPES_MINOR_ 2
 
-#include "definitions.hpp"
 #include "types.hpp"
 
 #if defined(WINDOWS_SYSTEM)

@@ -13,16 +13,10 @@
  // Definitions
 #include "llanylib/definitions.hpp"
 
-#if defined(WINDOWS_SYSTEM)
-	#pragma warning(push)
-	#pragma warning(disable:4643) // ignore fordward declaration of some c++ classes
-#endif // WINDOWS_SYSTEM
-
 // Types
 #include "llanylib/types.hpp"
 
-#if defined(WINDOWS_SYSTEM)
-	#pragma warning(pop)
-#endif // WINDOWS_SYSTEM
+// Traits
+#include "llanylib/traits.hpp"
 
 #endif // LLANYLIBSIMPLE_HPP_

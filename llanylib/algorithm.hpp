@@ -43,8 +43,13 @@ using CompareConditionalBool = CompareConditional<T, ll_bool_t, GET_DATA>;
 
 #pragma region Comparators
 #pragma region CompareSimple
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalCmpT<T, GET_DATA>>
-__LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const T* v2, len_t size, fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
+template<
+	class T, class U, ll_bool_t GET_DATA = LL_FALSE,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	class CompareResult = CompareConditionalCmpT<T, GET_DATA>
+>
+__LL_NODISCARD__ constexpr CompareResult compare(const W* v1, const X* v2, len_t size, fnc_clss::Compare<T, U> cmp) __LL_EXCEPT__ {
 	const T* begin = v1;
 	for (; 0 < size; --size, ++v1, ++v2) {
 		cmp_t result = cmp(*v1, *v2);
@@ -62,16 +67,26 @@ __LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const T* v2, len_t
 	}
 	else return 0;
 }
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalCmpT<T, GET_DATA>>
-__LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const T* v2, len_t size) __LL_EXCEPT__ {
+template<
+	class T, class U, ll_bool_t GET_DATA = LL_FALSE,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	class CompareResult = CompareConditionalCmpT<T, GET_DATA>
+>
+__LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const U* v2, len_t size) __LL_EXCEPT__ {
 	static_assert(traits::has_no_equal_operator_v<T>, "Error, <T> object has no operator!=()");
 	static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
-	return compare<T, GET_DATA, CompareResult>(v1, v2, size, common::compare_with_operators);
+	return compare<T, U, GET_DATA, W, X, CompareResult>(v1, v2, size, common::compare_with_operators);
 }
 
 #pragma region Proxy
-template<class T>
-__LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const len_t size1, const T* v2, const len_t size2, fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
+template<
+	class T, class U, ll_bool_t GET_DATA = LL_FALSE,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	class CompareResult = CompareConditionalCmpT<T, GET_DATA>
+>
+__LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const len_t size1, const U* v2, const len_t size2, fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
 	return (size1 == size2) ? compare<T>(v1, v2, size1, cmp) == 0 : LL_FALSE;
 }
 template<class T, len_t N1, len_t N2 = N1>

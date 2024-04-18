@@ -323,12 +323,12 @@ using CompareExtra = cmp_t(*)(const void* __t1, const void* __t2, void* __extra_
 using CompareBoolExtra = ll_bool_t(*)(const void* __t1, const void* __t2, void* __extra__);
 
 namespace classic {
-template<class T>
-using Compare = cmp_t(*)(const T& __t1, const T& __t2);
-template<class T>
-using CompareBool = ll_bool_t(*)(const T& __t1, const T& __t2);
-template<class T>
-using SwapFunction = void(*)(T& __t1, T& __t2);
+template<class T, class U = T>
+using Compare = cmp_t(*)(const T& __t1, const U& __t2);
+template<class T, class U = T>
+using CompareBool = ll_bool_t(*)(const T& __t1, const U& __t2);
+template<class T, class U = T>
+using SwapFunction = void(*)(T& __t1, U& __t2);
 
 } // namespace classic
 namespace lambda {

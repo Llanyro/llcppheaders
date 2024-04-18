@@ -124,6 +124,7 @@
 	#pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
 	#pragma warning(disable:4514) // Function not used removed
 	#pragma warning(disable:4464) // relative include path contains '..'
+	#pragma warning(disable:4820) // Ignore class parameters is not multiple of 8
 
 	#pragma warning(disable:4251) // Exporting in dll a class that contains stl objectsç
 

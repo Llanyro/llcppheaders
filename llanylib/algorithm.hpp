@@ -44,13 +44,13 @@ using CompareConditionalBool = CompareConditional<T, ll_bool_t, GET_DATA>;
 #pragma region Comparators
 #pragma region CompareSimple
 template<
-	class T, class U, ll_bool_t GET_DATA = LL_FALSE,
+	class T, class U = T, ll_bool_t GET_DATA = LL_FALSE,
 	class W = traits::get_object_reference_t<T>,
 	class X = traits::get_object_reference_t<U>,
 	class CompareResult = CompareConditionalCmpT<T, GET_DATA>
 >
 __LL_NODISCARD__ constexpr CompareResult compare(const W* v1, const X* v2, len_t size, fnc_clss::Compare<T, U> cmp) __LL_EXCEPT__ {
-	const T* begin = v1;
+	const W* begin = v1;
 	for (; 0 < size; --size, ++v1, ++v2) {
 		cmp_t result = cmp(*v1, *v2);
 		if (result != 0) {
@@ -68,56 +68,84 @@ __LL_NODISCARD__ constexpr CompareResult compare(const W* v1, const X* v2, len_t
 	else return 0;
 }
 template<
-	class T, class U, ll_bool_t GET_DATA = LL_FALSE,
+	class T, class U = T, ll_bool_t GET_DATA = LL_FALSE,
 	class W = traits::get_object_reference_t<T>,
 	class X = traits::get_object_reference_t<U>,
 	class CompareResult = CompareConditionalCmpT<T, GET_DATA>
 >
-__LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const U* v2, len_t size) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr CompareResult compare(const W* v1, const X* v2, len_t size) __LL_EXCEPT__ {
 	static_assert(traits::has_no_equal_operator_v<T>, "Error, <T> object has no operator!=()");
 	static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
-	return compare<T, U, GET_DATA, W, X, CompareResult>(v1, v2, size, common::compare_with_operators);
+	return compare<T, U, GET_DATA, W, X, CompareResult>(v1, v2, size, common::compare_with_operators<T, U>);
 }
 
 #pragma region Proxy
 template<
-	class T, class U, ll_bool_t GET_DATA = LL_FALSE,
+	class T, class U = T,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>
+>
+__LL_NODISCARD__ constexpr ll_bool_t equals(const W* v1, const len_t size1, const X* v2, const len_t size2, fnc_clss::Compare<T, U> cmp) __LL_EXCEPT__ {
+	return (size1 == size2) ? compare<T, U, false, W, X>(v1, v2, size1, cmp) == 0 : LL_FALSE;
+}
+template<
+	class T, class U = T,
 	class W = traits::get_object_reference_t<T>,
 	class X = traits::get_object_reference_t<U>,
-	class CompareResult = CompareConditionalCmpT<T, GET_DATA>
+	len_t N1, len_t N2 = N1
 >
-__LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const len_t size1, const U* v2, const len_t size2, fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
-	return (size1 == size2) ? compare<T>(v1, v2, size1, cmp) == 0 : LL_FALSE;
+__LL_NODISCARD__ constexpr ll_bool_t equals(const W* v1, const X* v2, fnc_clss::Compare<T, U> cmp) __LL_EXCEPT__ {
+	return (N1 == N2) ? compare<T, U, false, W, X>(v1, v2, N1, cmp) == 0 : LL_FALSE;
 }
-template<class T, len_t N1, len_t N2 = N1>
-__LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const T* v2, fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
-	return (N1 == N2) ? compare<T>(v1, v2, N1, cmp) == 0 : LL_FALSE;
-}
-template<class T, len_t N1, len_t N2>
-__LL_NODISCARD__ constexpr ll_bool_t equals(const T(&v1)[N1], const T(&v2)[N2], fnc_clss::Compare<T> cmp) __LL_EXCEPT__ {
-	return (N1 == N2) ? compare<T>(v1, v2, N1, cmp) == 0 : LL_FALSE;
+template<
+	class T, class U = T,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	len_t N1, len_t N2
+>
+__LL_NODISCARD__ constexpr ll_bool_t equals(const W(&v1)[N1], const X(&v2)[N2], fnc_clss::Compare<T, U> cmp) __LL_EXCEPT__ {
+	return (N1 == N2) ? compare<T, U, false, W, X>(v1, v2, N1, cmp) == 0 : LL_FALSE;
 }
 
-template<class T>
-__LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const len_t size1, const T* v2, const len_t size2) __LL_EXCEPT__ {
-	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : LL_FALSE;
+template<
+	class T, class U = T,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>
+>
+__LL_NODISCARD__ constexpr ll_bool_t equals(const W* v1, const len_t size1, const X* v2, const len_t size2) __LL_EXCEPT__ {
+	return (size1 == size2) ? compare<T, U, false, W, X>(v1, v2, size1) == 0 : LL_FALSE;
 }
-template<class T, len_t N1, len_t N2 = N1>
-__LL_NODISCARD__ constexpr ll_bool_t equals(const T* v1, const T* v2) __LL_EXCEPT__ {
-	return (N1 == N2) ? compare<T>(v1, v2, N1) == 0 : LL_FALSE;
+template<
+	class T, class U = T,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	len_t N1, len_t N2 = N1
+>
+__LL_NODISCARD__ constexpr ll_bool_t equals(const W* v1, const X* v2) __LL_EXCEPT__ {
+	return (N1 == N2) ? compare<T, U, false, W, X>(v1, v2, N1) == 0 : LL_FALSE;
 }
-template<class T, len_t N1, len_t N2>
-__LL_NODISCARD__ constexpr ll_bool_t equals(const T(&v1)[N1], const T(&v2)[N2]) __LL_EXCEPT__ {
-	return (N1 == N2) ? compare<T>(v1, v2, N1) == 0 : LL_FALSE;
+template<
+	class T, class U = T,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	len_t N1, len_t N2
+>
+__LL_NODISCARD__ constexpr ll_bool_t equals(const W(&v1)[N1], const X(&v2)[N2]) __LL_EXCEPT__ {
+	return (N1 == N2) ? compare<T, U, false, W, X>(v1, v2, N1) == 0 : LL_FALSE;
 }
 
 #pragma endregion
 #pragma endregion
 #pragma region StartsWith
 // str size needs to be bigger or equal to needle
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
-__LL_NODISCARD__ constexpr CompareResult starts_with_impl(const T* str, const T* needle, len_t size, fnc_clss::CompareBool<T> cmp) {
-	const T* begin = str;
+template<
+	class T, class U = T, ll_bool_t GET_DATA = LL_FALSE,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	class CompareResult = CompareConditionalBool<T, GET_DATA>
+>
+__LL_NODISCARD__ constexpr CompareResult starts_with_impl(const W* str, const X* needle, len_t size, fnc_clss::CompareBool<T, U> cmp) {
+	const W* begin = str;
 	for (; 0 < size; --size, ++str, ++needle) {
 		ll_bool_t result = cmp(*str, *needle);
 		if (!result) {
@@ -134,12 +162,22 @@ __LL_NODISCARD__ constexpr CompareResult starts_with_impl(const T* str, const T*
 	}
 	else return LL_TRUE;
 }
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
-__LL_NODISCARD__ constexpr CompareResult starts_with_impl(const T* str, const T* needle, len_t size) {
-	return starts_with_impl<T, LL_FALSE>(str, needle, size, common::simple_equals);
+template<
+	class T, class U = T, ll_bool_t GET_DATA = LL_FALSE,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	class CompareResult = CompareConditionalBool<T, GET_DATA>
+>
+__LL_NODISCARD__ constexpr CompareResult starts_with_impl(const W* str, const X* needle, len_t size) {
+	return starts_with_impl<T, U, LL_FALSE, W, X, CompareResult>(str, needle, size, common::simple_equals<T, U>);
 }
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
-__LL_NODISCARD__ constexpr CompareResult starts_with(const T* str, const T* needle, const len_t size1, const len_t size2, fnc_clss::CompareBool<T> cmp) {
+template<
+	class T, class U = T, ll_bool_t GET_DATA = LL_FALSE,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	class CompareResult = CompareConditionalBool<T, GET_DATA>
+>
+__LL_NODISCARD__ constexpr CompareResult starts_with(const W* str, const X* needle, const len_t size1, const len_t size2, fnc_clss::CompareBool<T, U> cmp) {
 	if (size1 < size2) {
 		if constexpr (GET_DATA) {
 			CompareResult __{};
@@ -149,25 +187,42 @@ __LL_NODISCARD__ constexpr CompareResult starts_with(const T* str, const T* need
 		}
 		else return LL_FALSE;
 	}
-	return starts_with_impl<T, GET_DATA, CompareResult>(str, needle, size2, cmp);
+	return starts_with_impl<T, U, LL_FALSE, W, X, CompareResult>(str, needle, size2, cmp);
 }
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
-__LL_NODISCARD__ constexpr CompareResult starts_with(const T* str, const T* needle, const len_t size1, const len_t size2) {
-	return starts_with<T, GET_DATA, CompareResult>(str, needle, size1, size2, common::simple_equals);
+template<
+	class T, class U = T, ll_bool_t GET_DATA = LL_FALSE,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	class CompareResult = CompareConditionalBool<T, GET_DATA>
+>
+__LL_NODISCARD__ constexpr CompareResult starts_with(const W* str, const X* needle, const len_t size1, const len_t size2) {
+	return starts_with<T, U, LL_FALSE, W, X, CompareResult>(str, needle, size1, size2, common::simple_equals);
 }
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>, len_t N1, len_t N2>
-__LL_NODISCARD__ constexpr CompareResult starts_with(const T(&str)[N1], const T(&needle)[N2], fnc_clss::CompareBool<T> cmp) {
-	return starts_with<T, GET_DATA, CompareResult>(str, needle, N1, N2, cmp);
+template<
+	class T, class U = T, ll_bool_t GET_DATA = LL_FALSE,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	class CompareResult = CompareConditionalBool<T, GET_DATA>,
+	len_t N1, len_t N2
+>
+__LL_NODISCARD__ constexpr CompareResult starts_with(const W(&str)[N1], const X(&needle)[N2], fnc_clss::CompareBool<T, U> cmp) {
+	return starts_with<T, U, LL_FALSE, W, X, CompareResult>(str, needle, N1, N2, cmp);
 }
-template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>, len_t N1, len_t N2>
-__LL_NODISCARD__ constexpr CompareResult starts_with(const T(&str)[N1], const T(&needle)[N2]) {
-	return starts_with<T, GET_DATA, CompareResult>(str, needle, N1, N2, common::simple_equals);
+template<
+	class T, class U = T, ll_bool_t GET_DATA = LL_FALSE,
+	class W = traits::get_object_reference_t<T>,
+	class X = traits::get_object_reference_t<U>,
+	class CompareResult = CompareConditionalBool<T, GET_DATA>,
+	len_t N1, len_t N2
+>
+__LL_NODISCARD__ constexpr CompareResult starts_with(const W(&str)[N1], const X(&needle)[N2]) {
+	return starts_with<T, U, LL_FALSE, W, X, CompareResult>(str, needle, N1, N2, common::simple_equals);
 }
 
 #pragma endregion
 #pragma region EndsWith
 template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
-__LL_NODISCARD__ constexpr CompareResult ends_with(const T* str, const T* needle, const len_t size1, const len_t size2, fnc_clss::CompareBool<T> cmp) {
+__LL_NODISCARD__ constexpr CompareResult ends_with(const W* str, const X* needle, const len_t size1, const len_t size2, fnc_clss::CompareBool<T, U> cmp) {
 	if (size1 < size2) {
 		if constexpr (GET_DATA) {
 			CompareResult __{};
@@ -177,19 +232,19 @@ __LL_NODISCARD__ constexpr CompareResult ends_with(const T* str, const T* needle
 		}
 		else return LL_FALSE;
 	}
-	return starts_with_impl<T, GET_DATA, CompareResult>((str + size1) - size2, needle, size2, cmp);
+	return starts_with_impl<T, U, LL_FALSE, W, X, CompareResult>((str + size1) - size2, needle, size2, cmp);
 }
 template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>>
-__LL_NODISCARD__ constexpr CompareResult ends_with(const T* str, const T* needle, const len_t size1, const len_t size2) {
-	return ends_with<T, GET_DATA, CompareResult>(str, needle, size1, size2, common::simple_equals);
+__LL_NODISCARD__ constexpr CompareResult ends_with(const W* str, const X* needle, const len_t size1, const len_t size2) {
+	return ends_with<T, U, LL_FALSE, W, X, CompareResult>(str, needle, size1, size2, common::simple_equals);
 }
 template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>, len_t N1, len_t N2>
-__LL_NODISCARD__ constexpr CompareResult ends_with(const T(&str)[N1], const T(&needle)[N2], fnc_clss::CompareBool<T> cmp) {
-	return ends_with<T, GET_DATA, CompareResult>(str, needle, N1, N2, cmp);
+__LL_NODISCARD__ constexpr CompareResult ends_with(const W(&str)[N1], const X(&needle)[N2], fnc_clss::CompareBool<T, U> cmp) {
+	return ends_with<T, U, LL_FALSE, W, X, CompareResult>(str, needle, N1, N2, cmp);
 }
 template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalBool<T, GET_DATA>, len_t N1, len_t N2>
-__LL_NODISCARD__ constexpr CompareResult ends_with(const T(&str)[N1], const T(&needle)[N2]) {
-	return ends_with<T, GET_DATA, CompareResult>(str, needle, N1, N2, common::simple_equals);
+__LL_NODISCARD__ constexpr CompareResult ends_with(const W(&str)[N1], const X(&needle)[N2]) {
+	return ends_with<T, U, LL_FALSE, W, X, CompareResult>(str, needle, N1, N2, common::simple_equals);
 }
 
 #pragma endregion
@@ -197,7 +252,7 @@ __LL_NODISCARD__ constexpr CompareResult ends_with(const T(&str)[N1], const T(&n
 #pragma region Finders
 #pragma region Find
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr const T* find(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr const T* find(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	LL_ASSERT(begin, "[begin] cannot be nullptr. find(const T* begin, const T* end, const U object)");
 	LL_ASSERT(end, "[end] cannot be nullptr. find(const T* begin, const T* end, const U object)");
 
@@ -213,24 +268,24 @@ __LL_NODISCARD__ constexpr const T* find(const T* begin, const T* end, const U o
 
 #pragma region Proxy
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr len_t find_pos(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr len_t find_pos(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	const T* pos = find<T, U>(begin, end, object, cmp);
 	return (pos != end) ? pos - begin : npos;
 }
 template<class T, class U = traits::get_object_reference_t<T>, len_t N>
-__LL_NODISCARD__ constexpr const T* find(const T(&v)[N], const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr const T* find(const T(&v)[N], const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return find<T, U>(v, v + N, object, cmp);
 }
 template<class T, class U = traits::get_object_reference_t<T>, len_t N>
-__LL_NODISCARD__ constexpr len_t find_pos(const T(&v)[N], const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr len_t find_pos(const T(&v)[N], const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return find_pos<T, U>(v, v + N, object, cmp);
 }
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr T* find(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr T* find(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return find<T, U>(arr.begin(), arr.end(), object, cmp);
 }
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr len_t find_pos(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr len_t find_pos(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return find_pos<T, U>(arr.begin(), arr.end(), object, cmp);
 }
 
@@ -260,7 +315,7 @@ __LL_NODISCARD__ constexpr len_t find_pos(const ArrayPair<T> arr, const U object
 #pragma endregion
 #pragma region rFind
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr const T* rfind(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr const T* rfind(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(const T* begin, const T* end, const U object)");
 	LL_ASSERT(end, "[end] cannot be nullptr. rfind(const T* begin, const T* end, const U object)");
 
@@ -276,24 +331,24 @@ __LL_NODISCARD__ constexpr const T* rfind(const T* begin, const T* end, const U 
 
 #pragma region Proxy
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr len_t rfind_pos(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr len_t rfind_pos(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	const T* pos = rfind<T, U>(begin, end, object, cmp);
 	return (pos != end) ? pos - begin : npos;
 }
 template<class T, class U = traits::get_object_reference_t<T>, len_t N>
-__LL_NODISCARD__ constexpr const T* rfind(const T(&v)[N], const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr const T* rfind(const T(&v)[N], const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return rfind<T, U>(v, v + N, object, cmp);
 }
 template<class T, class U = traits::get_object_reference_t<T>, len_t N>
-__LL_NODISCARD__ constexpr len_t rfind_pos(const T(&v)[N], const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr len_t rfind_pos(const T(&v)[N], const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return rfind_pos<T, U>(v, v + N, object, cmp);
 }
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr T* rfind(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr T* rfind(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return rfind<T, U>(arr.begin(), arr.end(), object, cmp);
 }
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr len_t rfind_pos(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr len_t rfind_pos(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return rfind_pos<T, U>(arr.begin(), arr.end(), object, cmp);
 }
 
@@ -323,7 +378,7 @@ __LL_NODISCARD__ constexpr len_t rfind_pos(const ArrayPair<T> arr, const U objec
 #pragma endregion
 #pragma region Other
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr ll_bool_t all(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ll_bool_t all(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	LL_ASSERT(begin, "[begin] cannot be nullptr. all(const T* begin, const T* end, const U object)");
 	LL_ASSERT(end, "[end] cannot be nullptr. all(const T* begin, const T* end, const U object)");
 
@@ -337,7 +392,7 @@ __LL_NODISCARD__ constexpr ll_bool_t all(const T* begin, const T* end, const U o
 	return all<T, U>(begin, end, object, common::simple_equals);
 }
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr ll_bool_t any(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ll_bool_t any(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return static_cast<ll_bool_t>(find<T, U>(begin, end, object, cmp));
 }
 template<class T, class U = traits::get_object_reference_t<T>>
@@ -345,7 +400,7 @@ __LL_NODISCARD__ constexpr ll_bool_t any(const T* begin, const T* end, const U o
 	return static_cast<ll_bool_t>(find<T, U>(begin, end, object));
 }
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr ll_bool_t none(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ll_bool_t none(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return !static_cast<ll_bool_t>(find<T, U>(begin, end, object, cmp));
 }
 template<class T, class U = traits::get_object_reference_t<T>>
@@ -384,7 +439,7 @@ __LL_NODISCARD__ constexpr const T* binarysearch(const T* begin, const T* end, c
 
 // This is recommended to use with objects types
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr const T* binarysearch(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T> cmp) {
+__LL_NODISCARD__ constexpr const T* binarysearch(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T, U> cmp) {
 	LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(const T* begin, const T* end, const U object)");
 	LL_ASSERT(end, "[end] cannot be nullptr. rfind(const T* begin, const T* end, const U object)");
 
@@ -418,16 +473,16 @@ __LL_NODISCARD__ constexpr len_t binarysearch_pos(const T(&v)[N], const U object
 #pragma endregion
 #pragma region ExtendexProxy
 template<class T, class U = traits::get_object_reference_t<T>>
-__LL_NODISCARD__ constexpr len_t binarysearch_pos(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr len_t binarysearch_pos(const T* begin, const T* end, const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	const T* pos = binarysearch<T, U>(begin, end, object, cmp);
 	return (pos != end) ? pos - begin : npos;
 }
 template<class T, class U = traits::get_object_reference_t<T>, len_t N>
-__LL_NODISCARD__ constexpr const T* binarysearch(const T(&v)[N], const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr const T* binarysearch(const T(&v)[N], const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return binarysearch<T, U>(v, v + N, object, cmp);
 }
 template<class T, class U = traits::get_object_reference_t<T>, len_t N>
-__LL_NODISCARD__ constexpr len_t binarysearch_pos(const T(&v)[N], const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr len_t binarysearch_pos(const T(&v)[N], const U object, fnc_clss::CompareBool<T, U> cmp) __LL_EXCEPT__ {
 	return binarysearch_pos<T, U>(v, v + N, object, cmp);
 }
 

@@ -29,15 +29,15 @@ constexpr void simple_swap(T& v1, T& v2) {
 	v2 = tmp;
 }
 
-template<class T>
-constexpr cmp_t compare_with_operators(const T& v1, const T& v2) {
+template<class T, class U = T>
+constexpr cmp_t compare_with_operators(const T& v1, const U& v2) {
 	if (v1 == v2) return 0;
 	else if (v1 > v2) return 1;
 	else return -1;
 }
 
-template<class T>
-constexpr ll_bool_t simple_equals(const T& v1, const T& v2) {
+template<class T, class U>
+constexpr ll_bool_t simple_equals(const T& v1, const U& v2) {
 	return v1 == v2;
 }
 

@@ -24,44 +24,46 @@ constexpr ll_char_t str4[] = "Hola world!";
 
 ///////////////////////////////////////////////// Compare && Equals /////////////////////////////////////////////////
 
-constexpr i8 cmp1 = compare(str1, str2, 15);
-constexpr CompareData<ll_char_t, cmp_t> cmp2 = compare<ll_char_t, LL_TRUE>(str1, str2, 15);
+constexpr i8 cmp1 = compare<ll_char_t>(str1, str2, 15);
+constexpr CompareData<ll_char_t, cmp_t> cmp2 = compare<ll_char_t, ll_char_t, LL_TRUE>(str1, str2, 15);
 
-constexpr ll_bool_t cmp_b_1 = equals(str1, str2);
+constexpr ll_bool_t cmp_b_1 = equals<ll_char_t>(str1, str2);
 
 static_assert(cmp1 == -1, "Error changed value");
 static_assert(cmp2.result == -1, "Error changed value");
-static_assert(cmp_b_1 == LL_FALSE, "Error changed value");
+static_assert(!cmp_b_1, "Error changed value");
+static_assert(equals<ll_char_t>("Holo", "Holo"), "Error changed value");
+static_assert(!equals<ll_char_t>("Holo", "Hi"), "Error changed value");
 
 ///////////////////////////////////////////////// Starts with /////////////////////////////////////////////////
 
-constexpr ll_bool_t starts_with_01 = starts_with(str1, str2, 14, 14);
-constexpr ll_bool_t starts_with_02 = starts_with(str1, str2, 13, 13);
-constexpr ll_bool_t starts_with_03 = starts_with(str1, "Holoo");
-constexpr ll_bool_t starts_with_04 = starts_with(str1, "Holoo", 15, 4);
+constexpr ll_bool_t starts_with_01 = starts_with<ll_char_t>(str1, str2, 14, 14);
+constexpr ll_bool_t starts_with_02 = starts_with<ll_char_t>(str1, str2, 13, 13);
+constexpr ll_bool_t starts_with_03 = starts_with<ll_char_t>(str1, "Holoo");
+constexpr ll_bool_t starts_with_04 = starts_with<ll_char_t>(str1, "Holoo", 15, 4);
 
-constexpr auto starts_with_01_res = starts_with<char, true>(str1, str2, 14, 14);
-constexpr auto starts_with_02_res = starts_with<char, true>(str1, str2, 13, 13);
-constexpr auto starts_with_03_res = starts_with<char, true>(str1, "Holoo");
-constexpr auto starts_with_04_res = starts_with<char, true>(str1, "Holoo", 15, 4);
+constexpr auto starts_with_01_res = starts_with<ll_char_t, ll_char_t, true>(str1, str2, 14, 14);
+constexpr auto starts_with_02_res = starts_with<ll_char_t, ll_char_t, true>(str1, str2, 13, 13);
+constexpr auto starts_with_03_res = starts_with<ll_char_t, ll_char_t, true>(str1, "Holoo");
+constexpr auto starts_with_04_res = starts_with<ll_char_t, ll_char_t, true>(str1, "Holoo", 15, 4);
 
 
-static_assert(starts_with_01 == LL_FALSE, "Error changed value");
-static_assert(starts_with_02 == LL_TRUE , "Error changed value");
-static_assert(starts_with_03 == LL_FALSE, "Error changed value");
-static_assert(starts_with_04 == LL_TRUE , "Error changed value");
+static_assert(!starts_with_01, "Error changed value");
+static_assert( starts_with_02, "Error changed value");
+static_assert(!starts_with_03, "Error changed value");
+static_assert( starts_with_04, "Error changed value");
 
-static_assert(starts_with_01_res.result == LL_FALSE, "Error changed value");
-static_assert(starts_with_02_res.result == LL_TRUE , "Error changed value");
-static_assert(starts_with_03_res.result == LL_FALSE, "Error changed value");
-static_assert(starts_with_04_res.result == LL_TRUE , "Error changed value");
+static_assert(!starts_with_01_res.result, "Error changed value");
+static_assert( starts_with_02_res.result, "Error changed value");
+static_assert(!starts_with_03_res.result, "Error changed value");
+static_assert( starts_with_04_res.result, "Error changed value");
 
 ///////////////////////////////////////////////// Ends with /////////////////////////////////////////////////
 
-constexpr ll_bool_t ends_with_01 = ends_with(str1, str2, 14, 14);
-constexpr ll_bool_t ends_with_02 = ends_with(str1, str2, 13, 13);
-constexpr ll_bool_t ends_with_03 = ends_with(str1, "asdf*");
-constexpr ll_bool_t ends_with_04 = ends_with(str1, "asdf*", 15, 4);
+constexpr ll_bool_t ends_with_01 = ends_with<ll_char_t>(str1, str2, 14, 14);
+constexpr ll_bool_t ends_with_02 = ends_with<ll_char_t>(str1, str2, 13, 13);
+constexpr ll_bool_t ends_with_03 = ends_with<ll_char_t>(str1, "asdf*");
+constexpr ll_bool_t ends_with_04 = ends_with<ll_char_t>(str1, "asdf*", 15, 4);
 
 constexpr auto ends_with_01_res = ends_with<char, true>(str1, str2, 14, 14);
 constexpr auto ends_with_02_res = ends_with<char, true>(str1, str2, 13, 13);

@@ -41,8 +41,6 @@ using CompareConditionalCmpT = CompareConditional<T, cmp_t, GET_DATA>;
 template<class T, ll_bool_t GET_DATA>
 using CompareConditionalBool = CompareConditional<T, ll_bool_t, GET_DATA>;
 
-
-
 #pragma region Comparators
 #pragma region CompareSimple
 template<class T, ll_bool_t GET_DATA = LL_FALSE, class CompareResult = CompareConditionalCmpT<T, GET_DATA>>
@@ -212,6 +210,14 @@ template<class T, class U = traits::get_object_reference_t<T>, len_t N>
 __LL_NODISCARD__ constexpr len_t find_pos(const T(&v)[N], const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
 	return find_pos<T, U>(v, v + N, object, cmp);
 }
+template<class T, class U = traits::get_object_reference_t<T>>
+__LL_NODISCARD__ constexpr T* find(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+	return find<T, U>(arr.begin(), arr.end(), object, cmp);
+}
+template<class T, class U = traits::get_object_reference_t<T>>
+__LL_NODISCARD__ constexpr len_t find_pos(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+	return find_pos<T, U>(arr.begin(), arr.end(), object, cmp);
+}
 
 template<class T, class U = traits::get_object_reference_t<T>>
 __LL_NODISCARD__ constexpr len_t find_pos(const T* begin, const T* end, const U object) __LL_EXCEPT__ {
@@ -225,6 +231,14 @@ __LL_NODISCARD__ constexpr const T* find(const T (&v)[N], const U object) __LL_E
 template<class T, class U = traits::get_object_reference_t<T>, len_t N>
 __LL_NODISCARD__ constexpr len_t find_pos(const T(&v)[N], const U object) __LL_EXCEPT__ {
 	return find_pos<T, U>(v, v + N, object);
+}
+template<class T, class U = traits::get_object_reference_t<T>>
+__LL_NODISCARD__ constexpr T* find(const ArrayPair<T> arr, const U object) __LL_EXCEPT__ {
+	return find<T, U>(arr.begin(), arr.end(), object);
+}
+template<class T, class U = traits::get_object_reference_t<T>>
+__LL_NODISCARD__ constexpr len_t find_pos(const ArrayPair<T> arr, const U object) __LL_EXCEPT__ {
+	return find_pos<T, U>(arr.begin(), arr.end(), object);
 }
 
 #pragma endregion
@@ -259,6 +273,14 @@ template<class T, class U = traits::get_object_reference_t<T>, len_t N>
 __LL_NODISCARD__ constexpr len_t rfind_pos(const T(&v)[N], const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
 	return rfind_pos<T, U>(v, v + N, object, cmp);
 }
+template<class T, class U = traits::get_object_reference_t<T>>
+__LL_NODISCARD__ constexpr T* rfind(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+	return rfind<T, U>(arr.begin(), arr.end(), object, cmp);
+}
+template<class T, class U = traits::get_object_reference_t<T>>
+__LL_NODISCARD__ constexpr len_t rfind_pos(const ArrayPair<T> arr, const U object, fnc_clss::CompareBool<T> cmp) __LL_EXCEPT__ {
+	return rfind_pos<T, U>(arr.begin(), arr.end(), object, cmp);
+}
 
 template<class T, class U = traits::get_object_reference_t<T>>
 __LL_NODISCARD__ constexpr len_t rfind_pos(const T* begin, const T* end, const U object) __LL_EXCEPT__ {
@@ -272,6 +294,14 @@ __LL_NODISCARD__ constexpr const T* rfind(const T(&v)[N], const U object) __LL_E
 template<class T, class U = traits::get_object_reference_t<T>, len_t N>
 __LL_NODISCARD__ constexpr len_t rfind_pos(const T(&v)[N], const U object) __LL_EXCEPT__ {
 	return rfind_pos<T, U>(v, v + N, object);
+}
+template<class T, class U = traits::get_object_reference_t<T>>
+__LL_NODISCARD__ constexpr T* rfind(const ArrayPair<T> arr, const U object) __LL_EXCEPT__ {
+	return rfind<T, U>(arr.begin(), arr.end(), object);
+}
+template<class T, class U = traits::get_object_reference_t<T>>
+__LL_NODISCARD__ constexpr len_t rfind_pos(const ArrayPair<T> arr, const U object) __LL_EXCEPT__ {
+	return rfind_pos<T, U>(arr.begin(), arr.end(), object);
 }
 
 #pragma endregion

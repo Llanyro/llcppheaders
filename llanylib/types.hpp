@@ -112,18 +112,24 @@ template<class T>
 struct ArrayPair {
 	const T* data;
 	len_t len;
+	using __ArrayPair = ArrayPair<T>;
 
 	constexpr ArrayPair(const T* data, const len_t len) __LL_EXCEPT__ : data(data), len(len) {}
 	constexpr ArrayPair() __LL_EXCEPT__ {}
 
-	constexpr ArrayPair(const ArrayPair& other) __LL_EXCEPT__ : data(other.data), len(other.len) {}
-	constexpr ArrayPair& operator=(const ArrayPair& other) __LL_EXCEPT__ {
+	constexpr ArrayPair(const __ArrayPair& other) __LL_EXCEPT__ : data(other.data), len(other.len) {}
+	constexpr __ArrayPair& operator=(const __ArrayPair& other) __LL_EXCEPT__ {
 		this->data = other.data;
 		this->len = other.len;
 		return *this;
 	}
-	constexpr ArrayPair(ArrayPair&&) __LL_EXCEPT__ = delete;
-	constexpr ArrayPair& operator=(ArrayPair&&) __LL_EXCEPT__ = delete;
+	constexpr ArrayPair(__ArrayPair&&) __LL_EXCEPT__ = delete;
+	constexpr __ArrayPair& operator=(__ArrayPair&&) __LL_EXCEPT__ = delete;
+
+	T* begin() __LL_EXCEPT__ { return this->data; }
+	const T* begin() const __LL_EXCEPT__ { return this->data; }
+	T* end() __LL_EXCEPT__ { return this->data + this->len; }
+	const T* end() const __LL_EXCEPT__ { return this->data + this->len; }
 };
 
 using StrPair  = ArrayPair<ll_char_t>;

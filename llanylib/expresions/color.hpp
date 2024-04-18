@@ -10,32 +10,32 @@
 #ifndef LLANYLIB_EXPRESIONS_COLOR_HPP_
 #define LLANYLIB_EXPRESIONS_COLOR_HPP_
 
-#include "../ArrayView.hpp"
+#include "../StringView.hpp"
 
 namespace llcpp {
 namespace color {
 
 // Text colors
-constexpr ArrayView RESET = "\033[0m";
-constexpr ArrayView BLACK = "\033[30m";
-constexpr ArrayView RED = "\033[31m";
-constexpr ArrayView GREEN = "\033[32m";
-constexpr ArrayView YELLOW = "\033[33m";
-constexpr ArrayView BLUE = "\033[34m";
-constexpr ArrayView MAGENTA = "\033[35m";
-constexpr ArrayView CYAN = "\033[36m";
-constexpr ArrayView WHITE = "\033[37m";
+constexpr auto RESET = StringView("\033[0m");
+constexpr auto BLACK = StringView("\033[30m");
+constexpr auto RED = StringView("\033[31m");
+constexpr auto GREEN = StringView("\033[32m");
+constexpr auto YELLOW = StringView("\033[33m");
+constexpr auto BLUE = StringView("\033[34m");
+constexpr auto MAGENTA = StringView("\033[35m");
+constexpr auto CYAN = StringView("\033[36m");
+constexpr auto WHITE = StringView("\033[37m");
 
 // Background colors
-constexpr ArrayView BG_RESET = "\033[49m";
-constexpr ArrayView BG_BLACK = "\033[40m";
-constexpr ArrayView BG_RED = "\033[41m";
-constexpr ArrayView BG_GREEN = "\033[42m";
-constexpr ArrayView BG_YELLOW = "\033[43m";
-constexpr ArrayView BG_BLUE = "\033[44m";
-constexpr ArrayView BG_MAGENTA = "\033[45m";
-constexpr ArrayView BG_CYAN = "\033[46m";
-constexpr ArrayView BG_WHITE = "\033[47m";
+constexpr auto BG_RESET = StringView("\033[49m");
+constexpr auto BG_BLACK = StringView("\033[40m");
+constexpr auto BG_RED = StringView("\033[41m");
+constexpr auto BG_GREEN = StringView("\033[42m");
+constexpr auto BG_YELLOW = StringView("\033[43m");
+constexpr auto BG_BLUE = StringView("\033[44m");
+constexpr auto BG_MAGENTA = StringView("\033[45m");
+constexpr auto BG_CYAN = StringView("\033[46m");
+constexpr auto BG_WHITE = StringView("\033[47m");
 
 } // namespace color
 } // namespace llcpp

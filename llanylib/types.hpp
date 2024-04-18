@@ -148,11 +148,6 @@ using b128 = size_bytes128_t;
 #pragma endregion
 #pragma region StandardIncompleteTypes
 
-#if defined(WINDOWS_SYSTEM)
-	#pragma warning(push)
-	#pragma warning(disable:4643) // ignore fordward declaration of some c++ classes
-#endif // WINDOWS_SYSTEM
-
 namespace std {
 template <class _Ty>
 class allocator;
@@ -188,10 +183,6 @@ namespace filesystem {
 class directory_entry;
 } // namespace filesystem
 } // namespace std
-
-#if defined(WINDOWS_SYSTEM)
-	#pragma warning(pop)
-#endif // WINDOWS_SYSTEM
 
 #pragma endregion
 

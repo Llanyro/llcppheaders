@@ -101,32 +101,12 @@
 
 // Disables some warnings of compiler
 #if defined(WINDOWS_SYSTEM)
-	//#pragma warning(disable:6029)
-
-	//#pragma warning(disable:6011)
-	//#pragma warning(disable:4996)
-
-	//#pragma warning(disable:4244)
-	//#pragma warning(disable:6031)
-
-	// Socket
-	//#pragma warning(disable:4309)
-	//#pragma warning(disable:4477)
-	//#pragma warning(disable:26439)
-
-	// Wall
-	//#pragma warning(disable:4464)
-	//#pragma warning(disable:6387)	// Pointer could be nullptr
-	//#pragma warning(disable:5045) // Security mitigation
-	//#pragma warning(disable:4710) // Function not inlined
-	//#pragma warning(disable:4706) // assignment within conditional expression if( (result = value)) {}
 	#pragma warning(disable:4711) // Function inlined
 	#pragma warning(disable:4458) // parameter hides class member (just use "this->" to call member)
 	#pragma warning(disable:4514) // Function not used removed
 	#pragma warning(disable:4464) // relative include path contains '..'
 	#pragma warning(disable:4820) // Ignore class parameters is not multiple of 8
-
-	#pragma warning(disable:4251) // Exporting in dll a class that contains stl objectsç
+	#pragma warning(disable:4251) // Exporting in dll a class that contains stl objects
 
 	#define __LL_SPECTRE_FUNCTIONS__
 #endif // WINDOWS_SYSTEM

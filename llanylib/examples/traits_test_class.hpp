@@ -25,8 +25,7 @@ namespace traits {
 
 #if defined(WINDOWS_SYSTEM)
 	#pragma warning(push)
-#pragma warning(disable:4100)	// Unreferenced formal parameter
-
+	#pragma warning(disable:4100)	// Unreferenced formal parameter
 #endif // WINDOWS_SYSTEM
 
 struct TestClassBase {

@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 4.2							//
+//	Version: 5.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_RAIIBASE_HPP_) // Guard && version protector
-	#if LLANYLIB_RAIIBASE_MAYOR_ != 4 || LLANYLIB_RAIIBASE_MINOR_ < 2
+	#if LLANYLIB_RAIIBASE_MAYOR_ != 5 || LLANYLIB_RAIIBASE_MINOR_ < 0
 		#error "RAIIBase.hpp version error!"
 	#endif // LLANYLIB_RAIIBASE_MAYOR_ || LLANYLIB_RAIIBASE_MINOR_
 
 #else !defined(LLANYLIB_RAIIBASE_HPP_)
 #define LLANYLIB_RAIIBASE_HPP_
-#define LLANYLIB_RAIIBASE_MAYOR_ 4
-#define LLANYLIB_RAIIBASE_MINOR_ 2
+#define LLANYLIB_RAIIBASE_MAYOR_ 5
+#define LLANYLIB_RAIIBASE_MINOR_ 0
 
 #include "traits.hpp"
 
@@ -94,7 +94,7 @@ class RAIIBase {
 		constexpr operator ll_bool_t() const __LL_EXCEPT__ {
 			return
 				static_cast<ll_bool_t>(this->function) &&
-				traits::operatorTypeCall<ll_bool_t>(this->data);
+				traits::operatorTypeCall<ll_bool_t, LL_FALSE>(this->data);
 		}
 		constexpr FuncReturnType operator()() __LL_EXCEPT__ {
 			if constexpr (std::is_same_v<FuncReturnType, void>) {

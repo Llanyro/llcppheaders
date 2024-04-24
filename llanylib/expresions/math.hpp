@@ -4,7 +4,7 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 4.2							//
+//	Version: 5.0							//
 //////////////////////////////////////////////
 
 #ifndef LLANYLIB_MATH_HPP_

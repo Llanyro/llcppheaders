@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 4.2							//
+//	Version: 5.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_COUNTABLE_HPP_) // Guard && version protector
-	#if LLANYLIB_COUNTABLE_MAYOR_ != 4 || LLANYLIB_COUNTABLE_MINOR_ < 2
+	#if LLANYLIB_COUNTABLE_MAYOR_ != 5 || LLANYLIB_COUNTABLE_MINOR_ < 0
 		#error "Countable.hpp version error!"
 	#endif // LLANYLIB_COUNTABLE_MAYOR_ || LLANYLIB_COUNTABLE_MINOR_
 
 #else !defined(LLANYLIB_COUNTABLE_HPP_)
 #define LLANYLIB_COUNTABLE_HPP_
-#define LLANYLIB_COUNTABLE_MAYOR_ 4
-#define LLANYLIB_COUNTABLE_MINOR_ 2
+#define LLANYLIB_COUNTABLE_MAYOR_ 5
+#define LLANYLIB_COUNTABLE_MINOR_ 0
 
 #include "types.hpp"
 

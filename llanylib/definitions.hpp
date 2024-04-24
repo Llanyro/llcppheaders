@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 4.2							//
+//	Version: 5.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_DEFINITIONS_HPP_) // Guard && version protector
-	#if LLANYLIB_DEFINITIONS_MAYOR_ != 4 || LLANYLIB_DEFINITIONS_MINOR_ < 2
+	#if LLANYLIB_DEFINITIONS_MAYOR_ != 5 || LLANYLIB_DEFINITIONS_MINOR_ < 0
 		#error "definitions.hpp version error!"
 	#endif // LLANYLIB_DEFINITIONS_MAYOR_ || LLANYLIB_DEFINITIONS_MINOR_
 
 #else !defined(LLANYLIB_DEFINITIONS_HPP_)
 #define LLANYLIB_DEFINITIONS_HPP_
-#define LLANYLIB_DEFINITIONS_MAYOR_ 4
-#define LLANYLIB_DEFINITIONS_MINOR_ 2
+#define LLANYLIB_DEFINITIONS_MAYOR_ 5
+#define LLANYLIB_DEFINITIONS_MINOR_ 0
 
 #include "os.hpp"
 
@@ -49,36 +49,5 @@ enum class OSEnum { Windows, Posix, Unix, Other };
 #define __LL_EXCEPT__ noexcept(true)
 #define LL_NULLPTR nullptr
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
-
-// Adds basic types for classes
-#define __LL_CLASS_TEMPLATE_TYPE__(__type__) \
-	using __type = __type__; \
-	using __ctype = const __type__; \
-	using __ptr = __type__*; \
-	using __cptr = const __type__ *; \
-	using __ref = __type__&; \
-	using __cref = const __type__ &; \
-	using __move = __type__&&; \
-	using __ptrref = __type__*&
-
-// Adds basic types with indentifiers for classes
-#define __LL_CLASS_TEMPLATE_TYPES__(__type__, id) \
-	using __type##id## = __type__; \
-	using __ctype##id## = const __type__; \
-	using __ptr##id## = __type__*; \
-	using __cptr##id## = const __type__ *; \
-	using __ref##id## = __type__&; \
-	using __cref##id## = const __type__ &; \
-	using __move##id## = __type__&&; \
-	using __ptrref##id## = __type__*&
-
-#define __LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__type__, name) \
-	using __##name## = __type__; \
-	using __ptr_##name## = __type__*; \
-	using __cptr_##name## = const __type__ *; \
-	using __ref_##name## = __type__&; \
-	using __cref_##name## = const __type__ &; \
-	using __move_##name## = __type__&&; \
-	using __ptrref_##name## = __type__*&
 
 #endif // LLANYLIB_DEFINITIONS_HPP_

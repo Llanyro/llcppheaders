@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 4.2							//
+//	Version: 5.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_RAIIWRAPPER_HPP_) // Guard && version protector
-	#if LLANYLIB_RAIIWRAPPER_MAYOR_ != 4 || LLANYLIB_RAIIWRAPPER_MINOR_ < 2
+	#if LLANYLIB_RAIIWRAPPER_MAYOR_ != 5 || LLANYLIB_RAIIWRAPPER_MINOR_ < 0
 		#error "RAIIWrapper.hpp version error!"
 	#endif // LLANYLIB_RAIIWRAPPER_MAYOR_ || LLANYLIB_RAIIWRAPPER_MINOR_
 
 #else !defined(LLANYLIB_RAIIWRAPPER_HPP_)
 #define LLANYLIB_RAIIWRAPPER_HPP_
-#define LLANYLIB_RAIIWRAPPER_MAYOR_ 4
-#define LLANYLIB_RAIIWRAPPER_MINOR_ 2
+#define LLANYLIB_RAIIWRAPPER_MAYOR_ 5
+#define LLANYLIB_RAIIWRAPPER_MINOR_ 0
 
 #include "RAIIBase.hpp"
 

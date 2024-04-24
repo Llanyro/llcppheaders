@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 4.2							//
+//	Version: 5.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_ARRAY_HPP_) // Guard && version protector
-	#if LLANYLIB_ARRAY_MAYOR_ != 4 || LLANYLIB_ARRAY_MINOR_ < 2
+	#if LLANYLIB_ARRAY_MAYOR_ != 5 || LLANYLIB_ARRAY_MINOR_ < 0
 		#error "Array.hpp version error!"
 	#endif // LLANYLIB_ARRAY_MAYOR_ || LLANYLIB_ARRAY_MINOR_
 
 #else !defined(LLANYLIB_ARRAY_HPP_)
 #define LLANYLIB_ARRAY_HPP_
-#define LLANYLIB_ARRAY_MAYOR_ 4
-#define LLANYLIB_ARRAY_MINOR_ 2
+#define LLANYLIB_ARRAY_MAYOR_ 5
+#define LLANYLIB_ARRAY_MINOR_ 0
 
 #include "ArrayView.hpp"
 

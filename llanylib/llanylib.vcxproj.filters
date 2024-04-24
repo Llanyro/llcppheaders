@@ -141,6 +141,9 @@
     <ClInclude Include="RAIIBase.hpp">
       <Filter>Source Files\utils\raii</Filter>
     </ClInclude>
+    <ClInclude Include="type_traits.hpp">
+      <Filter>Source Files\types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

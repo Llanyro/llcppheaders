@@ -4,7 +4,7 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 4.2							//
+//	Version: 5.0							//
 //////////////////////////////////////////////
 
 #include "../traits.hpp"
@@ -24,6 +24,127 @@ using get_by_char_type_res_3 = traits::get_by_char_type_t<ll_wchar_t, i8, i16, i
 static_assert(std::is_same_v<get_by_char_type_res_1, i8 >, "Error changed value");
 static_assert(std::is_same_v<get_by_char_type_res_2, i16>, "Error changed value");
 static_assert(std::is_same_v<get_by_char_type_res_3, i32>, "Error changed value");
+
+///////////////////////////////////////////////// Getting types /////////////////////////////////////////////////
+
+using get_raw_type_test_1 = traits::type_conversor<int>::to_raw_t;
+using get_raw_type_test_2 = traits::type_conversor<int*****>::to_raw_t;
+using get_raw_type_test_3 = traits::type_conversor<int&>::to_raw_t;
+using get_raw_type_test_4 = traits::type_conversor<int&&>::to_raw_t;
+
+using get_raw_type_test_5 = traits::type_conversor<const int>::to_raw_t;
+using get_raw_type_test_6 = traits::type_conversor<const int*****>::to_raw_t;
+using get_raw_type_test_7 = traits::type_conversor<const int&>::to_raw_t;
+using get_raw_type_test_8 = traits::type_conversor<const int&&>::to_raw_t;
+
+static_assert(std::is_same_v<get_raw_type_test_1, int>, "Error changed value");
+static_assert(std::is_same_v<get_raw_type_test_2, int>, "Error changed value");
+static_assert(std::is_same_v<get_raw_type_test_3, int>, "Error changed value");
+static_assert(std::is_same_v<get_raw_type_test_4, int>, "Error changed value");
+static_assert(std::is_same_v<get_raw_type_test_5, int>, "Error changed value");
+static_assert(std::is_same_v<get_raw_type_test_6, int>, "Error changed value");
+static_assert(std::is_same_v<get_raw_type_test_7, int>, "Error changed value");
+static_assert(std::is_same_v<get_raw_type_test_8, int>, "Error changed value");
+
+using get_const_type_test_1 = traits::type_conversor<int>::to_const_t;
+using get_const_type_test_2 = traits::type_conversor<int&>::to_const_t;
+using get_const_type_test_3 = traits::type_conversor<int*>::to_const_t;
+using get_const_type_test_4 = traits::type_conversor<int&&>::to_const_t;
+using get_const_type_test_5 = traits::type_conversor<int**>::to_const_t;
+using get_const_type_test_6 = traits::type_conversor<int* const * const>::to_const_t;
+
+static_assert(std::is_same_v<get_const_type_test_1, const int>, "Error changed value");
+static_assert(std::is_same_v<get_const_type_test_2, const int&>, "Error changed value");
+static_assert(std::is_same_v<get_const_type_test_3, const int*>, "Error changed value");
+static_assert(std::is_same_v<get_const_type_test_4, const int&&>, "Error changed value");
+static_assert(std::is_same_v<get_const_type_test_5, const int**>, "Error changed value");
+static_assert(std::is_same_v<get_const_type_test_6, const int* const* const>, "Error changed value");
+
+using get_reference_type_test_1 = traits::type_conversor<int>::to_reference_t<LL_FALSE>;
+using get_reference_type_test_2 = traits::type_conversor<float>::to_reference_t<LL_FALSE>;
+using get_reference_type_test_3 = traits::type_conversor<llcpp::traits::TestClass>::to_reference_t<LL_TRUE>;
+using get_reference_type_test_4 = traits::type_conversor<llcpp::traits::TestClassThrow>::to_reference_t<LL_TRUE>;
+using get_reference_type_test_5 = traits::type_conversor<int*>::to_reference_t<LL_TRUE>;
+using get_reference_type_test_6 = traits::type_conversor<float*>::to_reference_t<LL_TRUE>;
+using get_reference_type_test_7 = traits::type_conversor<llcpp::traits::TestClass*>::to_reference_t<LL_TRUE>;
+using get_reference_type_test_8 = traits::type_conversor<llcpp::traits::TestClassThrow*>::to_reference_t<LL_TRUE>;
+
+static_assert(std::is_same_v<get_reference_type_test_1, int>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_2, float>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_3, llcpp::traits::TestClass&>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_4, llcpp::traits::TestClassThrow&>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_5, int*&>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_6, float*&>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_7, llcpp::traits::TestClass*&>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_8, llcpp::traits::TestClassThrow*&>, "Error changed value");
+
+using get_const_reference_type_test_1 = traits::type_conversor<int>::to_const_reference_t<LL_FALSE>;
+using get_const_reference_type_test_2 = traits::type_conversor<float>::to_const_reference_t<LL_FALSE>;
+using get_const_reference_type_test_3 = traits::type_conversor<llcpp::traits::TestClass>::to_const_reference_t<LL_TRUE>;
+using get_const_reference_type_test_4 = traits::type_conversor<llcpp::traits::TestClassThrow>::to_const_reference_t<LL_TRUE>;
+using get_const_reference_type_test_5 = traits::type_conversor<int*>::to_const_reference_t<LL_FALSE>;
+using get_const_reference_type_test_6 = traits::type_conversor<float*>::to_const_reference_t<LL_FALSE>;
+using get_const_reference_type_test_7 = traits::type_conversor<llcpp::traits::TestClass*>::to_const_reference_t<LL_TRUE>;
+using get_const_reference_type_test_8 = traits::type_conversor<llcpp::traits::TestClassThrow*>::to_const_reference_t<LL_TRUE>;
+
+static_assert(std::is_same_v<get_const_reference_type_test_1, const int>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_2, const float>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_3, const llcpp::traits::TestClass&>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_4, const llcpp::traits::TestClassThrow&>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_5, const int*>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_6, const float*>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_7, const llcpp::traits::TestClass*&>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_8, const llcpp::traits::TestClassThrow*&>, "Error changed value");
+
+using get_promote_type_test_01 = traits::type_conversor<i8>::promote_t<true>;
+using get_promote_type_test_02 = traits::type_conversor<i16>::promote_t<true>;
+using get_promote_type_test_03 = traits::type_conversor<i32>::promote_t<true>;
+using get_promote_type_test_04 = traits::type_conversor<i64>::promote_t<true>;
+using get_promote_type_test_05 = traits::type_conversor<ui8>::promote_t<true>;
+using get_promote_type_test_06 = traits::type_conversor<ui16>::promote_t<true>;
+using get_promote_type_test_07 = traits::type_conversor<ui32>::promote_t<true>;
+using get_promote_type_test_08 = traits::type_conversor<ui64>::promote_t<true>;
+using get_promote_type_test_09 = traits::type_conversor<f32>::promote_t<true>;
+using get_promote_type_test_10 = traits::type_conversor<f64>::promote_t<true>;
+using get_promote_type_test_11 = traits::type_conversor<f128>::promote_t<true>;
+using get_promote_type_test_12 = traits::type_conversor<i8>::promote_t<false>;
+using get_promote_type_test_13 = traits::type_conversor<i16>::promote_t<false>;
+using get_promote_type_test_14 = traits::type_conversor<i32>::promote_t<false>;
+using get_promote_type_test_15 = traits::type_conversor<i64>::promote_t<false>;
+using get_promote_type_test_16 = traits::type_conversor<ui8>::promote_t<false>;
+using get_promote_type_test_17 = traits::type_conversor<ui16>::promote_t<false>;
+using get_promote_type_test_18 = traits::type_conversor<ui32>::promote_t<false>;
+using get_promote_type_test_19 = traits::type_conversor<ui64>::promote_t<false>;
+using get_promote_type_test_20 = traits::type_conversor<f32>::promote_t<false>;
+using get_promote_type_test_21 = traits::type_conversor<f64>::promote_t<false>;
+using get_promote_type_test_22 = traits::type_conversor<f128>::promote_t<false>;
+using get_promote_type_test_23 = traits::type_conversor<llcpp::traits::TestClass>::promote_t<true>;
+using get_promote_type_test_24 = traits::type_conversor<llcpp::traits::TestClass>::promote_t<false>;
+
+static_assert(std::is_same_v<get_promote_type_test_01, i16>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_02, i32>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_03, i64>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_04, i128>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_05, ui16>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_06, ui32>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_07, ui64>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_08, ui128>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_09, f64>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_10, f128>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_11, f128>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_12, i8>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_13, i8>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_14, i16>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_15, i32>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_16, ui8>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_17, ui8>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_18, ui16>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_19, ui32>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_20, f32>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_21, f32>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_22, f64>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_23, llcpp::traits::TestClass>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_24, llcpp::traits::TestClass>, "Error changed value");
 
 ///////////////////////////////////////////////// Operator and functions checker /////////////////////////////////////////////////
 

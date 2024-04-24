@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 4.2							//
+//	Version: 5.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_TYPES_HPP_) // Guard && version protector
-	#if LLANYLIB_TYPES_MAYOR_ != 4 || LLANYLIB_TYPES_MINOR_ < 2
+	#if LLANYLIB_TYPES_MAYOR_ != 5 || LLANYLIB_TYPES_MINOR_ < 0
 		#error "types.hpp version error!"
 	#endif // LLANYLIB_TYPES_MAYOR_ || LLANYLIB_TYPES_MINOR_
 
 #else !defined(LLANYLIB_TYPES_HPP_)
 #define LLANYLIB_TYPES_HPP_
-#define LLANYLIB_TYPES_MAYOR_ 4
-#define LLANYLIB_TYPES_MINOR_ 2
+#define LLANYLIB_TYPES_MAYOR_ 5
+#define LLANYLIB_TYPES_MINOR_ 0
 
 #include "definitions.hpp"
 
@@ -107,37 +107,6 @@ using ll_ustring_t = const ll_uchar_t*;		// Used to point to non editable unsign
 
 using ll_lib_t = void*;						// Handle for dynamic library linked/shared objects
 
-#pragma region Arrays
-template<class T>
-struct ArrayPair {
-	const T* data;
-	len_t len;
-	using __ArrayPair = ArrayPair<T>;
-
-	constexpr ArrayPair(const T* data, const len_t len) __LL_EXCEPT__ : data(data), len(len) {}
-	constexpr ArrayPair() __LL_EXCEPT__ {}
-
-	constexpr ArrayPair(const __ArrayPair& other) __LL_EXCEPT__ : data(other.data), len(other.len) {}
-	constexpr __ArrayPair& operator=(const __ArrayPair& other) __LL_EXCEPT__ {
-		this->data = other.data;
-		this->len = other.len;
-		return *this;
-	}
-	constexpr ArrayPair(__ArrayPair&&) __LL_EXCEPT__ = delete;
-	constexpr __ArrayPair& operator=(__ArrayPair&&) __LL_EXCEPT__ = delete;
-
-	T* begin() __LL_EXCEPT__ { return this->data; }
-	const T* begin() const __LL_EXCEPT__ { return this->data; }
-	T* end() __LL_EXCEPT__ { return this->data + this->len; }
-	const T* end() const __LL_EXCEPT__ { return this->data + this->len; }
-};
-
-using StrPair  = ArrayPair<ll_char_t>;
-using uStrPair = ArrayPair<ll_uchar_t>;
-using wStrPair = ArrayPair<ll_wchar_t>;
-
-#pragma endregion
-
 #pragma region BytesTypes
 using size_bytes8_t = ui8;
 using size_bytes16_t = ui16;
@@ -226,107 +195,16 @@ constexpr f128 ZERO_F128 = 0.0l;
 
 namespace functional {
 
-/*!
- *	@template False
- *	@brief Function type to compare 2 objects
- *
- *	This needs to return a value to check if object __t1 is same to object __t2
- *	The implementation of this function needs to return:
- *		 0 if both are the same
- *		-1 if __t1 smaller
- *		 1 if __t1 is bigger
- * 
- *	@param[in] __t1 First object to compare
- *	@param[in] __t2 Second object to compare
- *
- *	@return Comparacion result
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref comparator
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 using Compare = cmp_t(*)(const void* __t1, const void* __t2);
-/*!
- *	@template False
- *	@brief Function type to compare 2 objects
- *
- *	@param[in] __t1 First object to compare
- *	@param[in] __t2 Second object to compare
- *
- *	@return True if __t1 is same as __t2
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref comparator
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 using CompareBool = ll_bool_t(*)(const void* __t1, const void* __t2);
-
-/*!
- *	@template False
- *	@brief Function type to compare 2 objects
- *
- *	This needs to return a value to check if object __t1 is same to object __t2
- *	The implementation of this function needs to return:
- *		 0 if both are the same
- *		-1 if __t1 smaller
- *		 1 if __t1 is bigger
- * 
- *	@param[in] __t1 First object to compare
- *	@param[in] __t2 Second object to compare
- *	@param[in] __extra__ Extra data to being used by user
- *
- *	@return Comparacion result
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref comparator
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 using CompareExtra = cmp_t(*)(const void* __t1, const void* __t2, void* __extra__);
-/*!
- *	@template False
- *	@brief Function type to compare 2 objects
- *
- *	@param[in] __t1 First object to compare
- *	@param[in] __t2 Second object to compare
- *	@param[in] __extra__ Extra data to being used by user
- *
- *	@return True if __t1 is same as __t2
- *
- *	@thread_safety defined by implementation
- *	@thread_protection defined by implementation
- *
- *	@sa @ref comparator
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup llcpp
- *	@ingroup headers
- */
 using CompareBoolExtra = ll_bool_t(*)(const void* __t1, const void* __t2, void* __extra__);
 
 namespace classic {
 template<class T, class U = T>
-using Compare = cmp_t(*)(const T& __t1, const U& __t2);
+using Compare = cmp_t(*)(T __t1, U __t2);
 template<class T, class U = T>
-using CompareBool = ll_bool_t(*)(const T& __t1, const U& __t2);
+using CompareBool = ll_bool_t(*)(T __t1, U __t2);
 template<class T, class U = T>
 using SwapFunction = void(*)(T& __t1, U& __t2);
 
@@ -334,9 +212,9 @@ using SwapFunction = void(*)(T& __t1, U& __t2);
 namespace lambda {
 
 template<class T>
-using SearchFunctioni32 = std::function<i32(const T& __t1)>;
+using SearchFunction = std::function<cmp_t(T __t1)>;
 template<class T>
-using SearchFunctionBool = std::function<ll_bool_t(const T& __t1)>;
+using SearchFunctionBool = std::function<ll_bool_t(T __t1)>;
 template<class T>
 using SwapFunction = std::function<void(T& __t1, T& __t2)>;
 

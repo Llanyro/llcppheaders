@@ -52,6 +52,7 @@
     <ClInclude Include="StringView.hpp" />
     <ClInclude Include="traits.hpp" />
     <ClInclude Include="types.hpp" />
+    <ClInclude Include="type_traits.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

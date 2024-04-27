@@ -72,6 +72,11 @@ using StrPair  = ArrayPair<ll_char_t>;
 using uStrPair = ArrayPair<ll_uchar_t>;
 using wStrPair = ArrayPair<ll_wchar_t>;
 
+namespace traits {
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_strpair_type_v = std::_Is_any_of_v<std::remove_const_t<T>, StrPair, uStrPair, wStrPair>;
+} // namespace traits
+
 } // namespace llcpp
 
 #endif // LLANYLIB_TYPETRAITS_HPP_

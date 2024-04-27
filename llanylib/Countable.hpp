@@ -37,8 +37,8 @@ template<class T, T ZERO_VAL>
 class LL_SHARED_LIB Countable {
 	public:
 		static constexpr T ZERO = ZERO_VAL;
-		using type = llcpp::traits::template_types<T>;
-		using __Countable = llcpp::traits::template_types<Countable<T, ZERO_VAL>>;
+		using type = traits::template_types<T>;
+		using __Countable = traits::template_types<Countable<T, ZERO_VAL>>;
 		static_assert(traits::is_basic_type_v<T>, "Countable contains basic type only");
 	private:
 		type::type length;
@@ -150,8 +150,8 @@ class LL_SHARED_LIB Countable {
 			return this->operator type::type() != value;
 		}
 
-		__LL_NODISCARD__ constexpr operator __Countable::cref() const __LL_EXCEPT__ { return *this; }
-		__LL_NODISCARD__ constexpr operator __Countable::ref() __LL_EXCEPT__ { return *this; }
+		__LL_NODISCARD__ constexpr operator typename __Countable::cref() const __LL_EXCEPT__ { return *this; }
+		__LL_NODISCARD__ constexpr operator typename __Countable::ref() __LL_EXCEPT__ { return *this; }
 };
 
 using CountableB = Countable<b64, 0ull>;

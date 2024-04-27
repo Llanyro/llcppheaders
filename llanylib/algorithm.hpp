@@ -127,12 +127,14 @@ struct compare_cluster {
 	using __t = traits::template_types<T>;
 	using __u = traits::template_types<U>;
 	using CompareResult = CompareConditionalCmpT<T, U, GET_DATA>;
-	using fun_compare = fnc_clss::Compare<__t::cinput, __u::cinput>;
-	using fun_comparebool = fnc_clss::CompareBool<__t::cinput, __u::cinput>;
+	using fun_compare = fnc_clss::Compare<typename __t::cinput, typename __u::cinput>;
+	using fun_comparebool = fnc_clss::CompareBool<typename __t::cinput, typename __u::cinput>;
+	using __ArrayPair_t = ArrayPair<typename __t::type>;
+	using __ArrayPair_u = ArrayPair<typename __u::type>;
 
 	#pragma region Compare
 	__LL_NODISCARD__ static constexpr CompareResult compare(__t::cptr v1, __u::cptr v2, len_t size, fun_compare cmp) __LL_EXCEPT__ {
-		__t::cptr begin = v1;
+		typename __t::cptr begin = v1;
 		for (; 0 < size; --size, ++v1, ++v2) {
 			cmp_t result = cmp(*v1, *v2);
 			if (result != 0) {
@@ -180,10 +182,10 @@ struct compare_cluster {
 		return __cmp::equals(v1, N1, v2, N2);
 	}
 
-	__LL_NODISCARD__ static constexpr ll_bool_t equals(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2, fun_compare cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t equals(const __ArrayPair_t& v1, const __ArrayPair_u& v2, fun_compare cmp) __LL_EXCEPT__ {
 		return __cmp::equals(v1.begin(), v1.len(), v2.begin(), v2.len(), cmp);
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t equals(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t equals(const __ArrayPair_t& v1, const __ArrayPair_u& v2) __LL_EXCEPT__ {
 		return __cmp::equals(v1.begin(), v1.len(), v2.begin(), v2.len());
 	}
 
@@ -192,7 +194,7 @@ struct compare_cluster {
 	#pragma region StartsWith
 	// str size needs to be bigger or equal to needle
 	__LL_NODISCARD__ static constexpr CompareResult starts_with_impl(__t::cptr str, __u::cptr needle, len_t size, fun_comparebool cmp) {
-		__t::cptr begin = str;
+		typename __t::cptr begin = str;
 		for (; 0 < size; --size, ++str, ++needle) {
 			ll_bool_t result = cmp(*str, *needle);
 			if (!result) {
@@ -228,10 +230,10 @@ struct compare_cluster {
 		return __cmp::starts_with(str, needle, N1, N2);
 	}
 
-	__LL_NODISCARD__ static constexpr CompareResult starts_with(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2, fun_comparebool cmp) {
+	__LL_NODISCARD__ static constexpr CompareResult starts_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2, fun_comparebool cmp) {
 		return __cmp::starts_with(v1.begin(), v2.begin(), v1.len(), v2.len(), cmp);
 	}
-	__LL_NODISCARD__ static constexpr CompareResult starts_with(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2) {
+	__LL_NODISCARD__ static constexpr CompareResult starts_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2) {
 		return __cmp::starts_with(v1.begin(), v2.begin(), v1.len(), v2.len());
 	}
 
@@ -256,10 +258,10 @@ struct compare_cluster {
 		return __cmp::ends_with(str, needle, N1, N2);
 	}
 
-	__LL_NODISCARD__ static constexpr CompareResult ends_with(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2, fun_comparebool cmp) {
+	__LL_NODISCARD__ static constexpr CompareResult ends_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2, fun_comparebool cmp) {
 		return __cmp::ends_with(v1.begin(), v2.begin(), v1.len(), v2.len(), cmp);
 	}
-	__LL_NODISCARD__ static constexpr CompareResult ends_with(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2) {
+	__LL_NODISCARD__ static constexpr CompareResult ends_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2) {
 		return __cmp::ends_with(v1.begin(), v2.begin(), v1.len(), v2.len());
 	}
 
@@ -275,7 +277,8 @@ struct finders_cluster {
 	//using __find = finders_cluster<T, U, N>;
 	using __t = traits::template_types<T>;
 	template<class U>
-	using fun_comparebool = fnc_clss::CompareBool<__t::cinput, U>;
+	using fun_comparebool = fnc_clss::CompareBool<typename __t::cinput, U>;
+	using __ArrayPair_t = ArrayPair<typename __t::type>;
 
 	#pragma region Find
 	template<class U>
@@ -295,12 +298,12 @@ struct finders_cluster {
 	#pragma region Proxy
 	template<class U>
 	__LL_NODISCARD__ static constexpr len_t find_pos(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		__t::cptr pos = __find::find(begin, end, object, cmp);
+		typename __t::cptr pos = __find::find(begin, end, object, cmp);
 		return (pos != end) ? pos - begin : npos;
 	}
 	template<class U>
 	__LL_NODISCARD__ static constexpr len_t find_pos(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
-		__t::cptr pos = __find::find(begin, end, object);
+		typename __t::cptr pos = __find::find(begin, end, object);
 		return (pos != end) ? pos - begin : npos;
 	}
 
@@ -325,20 +328,20 @@ struct finders_cluster {
 
 
 	template<class U>
-	__LL_NODISCARD__ static constexpr __t::cptr find(const ArrayPair<T> arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr __t::cptr find(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return __find::find(arr.begin(), arr.end(), object, cmp);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr __t::cptr find(const ArrayPair<T> arr, U object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr __t::cptr find(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
 		return __find::find(arr.begin(), arr.end(), object);
 	}
 
 	template<class U>
-	__LL_NODISCARD__ static constexpr len_t find_pos(const ArrayPair<T> arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr len_t find_pos(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return __find::find_pos(arr.begin(), arr.end(), object, cmp);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr len_t find_pos(const ArrayPair<T> arr, U object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr len_t find_pos(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
 		return __find::find_pos(arr.begin(), arr.end(), object);
 	}
 
@@ -350,7 +353,7 @@ struct finders_cluster {
 		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const U object)");
 		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const U object)");
 
-		for (__t::cptr i = end - 1; i > begin; --i)
+		for (typename __t::cptr i = end - 1; i > begin; --i)
 			if (cmp(*i, object)) return i;
 		return cmp(*begin, object) ? begin : end;
 	}
@@ -362,12 +365,12 @@ struct finders_cluster {
 	#pragma region Proxy
 	template<class U>
 	__LL_NODISCARD__ static constexpr len_t rfind_pos(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		__t::cptr pos = __find::rfind(begin, end, object, cmp);
+		typename __t::cptr pos = __find::rfind(begin, end, object, cmp);
 		return (pos != end) ? pos - begin : npos;
 	}
 	template<class U>
 	__LL_NODISCARD__ static constexpr len_t rfind_pos(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
-		__t::cptr pos = __find::rfind(begin, end, object);
+		typename __t::cptr pos = __find::rfind(begin, end, object);
 		return (pos != end) ? pos - begin : npos;
 	}
 
@@ -392,20 +395,20 @@ struct finders_cluster {
 
 
 	template<class U>
-	__LL_NODISCARD__ static constexpr __t::cptr rfind(const ArrayPair<T> arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr __t::cptr rfind(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return __find::rfind(arr.begin(), arr.end(), object, cmp);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr __t::cptr rfind(const ArrayPair<T> arr, U object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr __t::cptr rfind(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
 		return __find::rfind(arr.begin(), arr.end(), object);
 	}
 
 	template<class U>
-	__LL_NODISCARD__ static constexpr len_t rfind_pos(const ArrayPair<T> arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr len_t rfind_pos(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return __find::rfind_pos(arr.begin(), arr.end(), object, cmp);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr len_t rfind_pos(const ArrayPair<T> arr, U object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr len_t rfind_pos(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
 		return __find::rfind_pos(arr.begin(), arr.end(), object);
 	}
 
@@ -437,11 +440,11 @@ struct finders_cluster {
 		return __find::all(begin, begin + N, object);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(const ArrayPair<T> arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t all(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return __find::all(arr.begin(), arr.end(), object, cmp);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(const ArrayPair<T> arr, U object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t all(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
 		return __find::all(arr.begin(), arr.end(), object);
 	}
 
@@ -464,11 +467,11 @@ struct finders_cluster {
 		return __find::any(begin, begin + N, object);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(const ArrayPair<T> arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t any(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return __find::any(arr.begin(), arr.end(), object, cmp);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(const ArrayPair<T> arr, U object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t any(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
 		return __find::any(arr.begin(), arr.end(), object);
 	}
 
@@ -491,11 +494,11 @@ struct finders_cluster {
 		return __find::none(begin, begin + N, object);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(const ArrayPair<T> arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t none(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return __find::none(arr.begin(), arr.end(), object, cmp);
 	}
 	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(const ArrayPair<T> arr, U object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t none(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
 		return __find::none(arr.begin(), arr.end(), object);
 	}
 
@@ -550,12 +553,12 @@ struct finders_cluster {
 	#pragma region Proxy
 	template<class U>
 	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		__t::cptr pos = __find::binarysearch(begin, end, object, cmp);
+		typename __t::cptr pos = __find::binarysearch(begin, end, object, cmp);
 		return (pos != end) ? pos - begin : npos;
 	}
 	template<class U>
 	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
-		__t::cptr pos = __find::binarysearch(begin, end, object);
+		typename __t::cptr pos = __find::binarysearch(begin, end, object);
 		return (pos != end) ? pos - begin : npos;
 	}
 
@@ -577,19 +580,19 @@ struct finders_cluster {
 	}
 
 	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(const ArrayPair<T> arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return __find::binarysearch(arr.begin(), arr.end(), object, cmp);
 	}
 	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(const ArrayPair<T> arr, U object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
 		return __find::binarysearch(arr.begin(), arr.end(), object);
 	}
 	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const ArrayPair<T> arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return __find::binarysearch_pos(arr.begin(), arr.end(), object, cmp);
 	}
 	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const ArrayPair<T> arr, U object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
 		return __find::binarysearch_pos(arr.begin(), arr.end(), object);
 	}
 

@@ -43,8 +43,6 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_bigger_type_v = std::_Is_any_of_v<std::remove_const_t<T>, f128>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ll_char_t, ll_uchar_t, ll_wchar_t>;
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_strpair_type_v = std::_Is_any_of_v<std::remove_const_t<T>, StrPair, uStrPair, wStrPair>;
 
 // Returns a type with reference if object is not basic type
 // Is only used when type parameter will be const
@@ -93,8 +91,7 @@ struct type_conversor {
 		}
 		using value = typename decltype(test())::value;
 	};
-	template<ll_bool_t ALL>
-	struct to_reference {
+	template<ll_bool_t ALL> struct to_reference {
 		static constexpr auto test() {
 			using __raw_type = type_conversor<T>::to_raw_t;
 
@@ -104,8 +101,7 @@ struct type_conversor {
 		}
 		using value = typename decltype(test())::value;
 	};
-	template<ll_bool_t ALL>
-	struct to_const_reference {
+	template<ll_bool_t ALL> struct to_const_reference {
 		static constexpr auto test() {
 			using __raw_type = type_conversor<T>::to_raw_t;
 			using __const_type = type_conversor<T>::to_const_t;
@@ -141,8 +137,7 @@ struct type_conversor {
 		}
 		using value = typename decltype(test())::value;
 	};
-	template<ll_bool_t promote>
-	struct type_promotion {
+	template<ll_bool_t promote> struct type_promotion {
 		template<ll_bool_t promote>
 		struct __type_promotion { using value = T; };
 
@@ -189,12 +184,12 @@ struct type_conversor {
 	using to_const_t = to_const::value;
 	// Adds a lvalue reference if type is not a basic type of a basic bigger type
 	// If all is true, all types would get a reference
-	template<ll_bool_t ALL = LL_FALSE>
-	using to_reference_t = to_reference<ALL>::value;
+	using to_reference_t = to_reference<LL_FALSE>::value;
+	using to_reference_all_t = to_reference<LL_TRUE>::value;
 	// Adds a const lvalue reference if type is not a basic type of a basic bigger type
 	// If all is true, all types would get a const reference
-	template<ll_bool_t ALL = LL_FALSE>
-	using to_const_reference_t = to_const_reference<ALL>::value;
+	using to_const_reference_t = to_const_reference<LL_FALSE>::value;
+	using to_const_reference_all_t = to_const_reference<LL_TRUE>::value;
 	// Adds a rvalue reference
 	using to_movement_t = to_movement::value;
 	// Get a ptr type, and removes reference if it has
@@ -203,8 +198,8 @@ struct type_conversor {
 	//using _t = get_cptr_remove_reference;
 	//using get_const_ptr_remove_reference_t = get_const_ptr_remove_reference::value;
 	// Promote a type to a bigger or smaller type
-	template<ll_bool_t promote>
-	using promote_t = type_promotion<promote>::value;
+	using promote_t = type_promotion<LL_TRUE>::value;
+	using demote_t = type_promotion<LL_FALSE>::value;
 };
 
 #pragma region Other
@@ -445,7 +440,7 @@ struct template_types {
 	using ptr = conversor::get_ptr_remove_reference_t;
 	// [TOFIX]
 	using cptr = conversor::get_const_ptr_remove_reference::value;
-	using ptrref = traits::type_conversor<ptr>::to_reference_t<LL_TRUE>;
+	using ptrref = traits::type_conversor<T>::to_reference_t;
 
 	using input = std::conditional_t<traits::is_basic_type_v<type>, type, ref>;
 	using cinput = std::conditional_t<traits::is_basic_type_v<type>, ctype, cref>;

@@ -181,10 +181,10 @@ struct compare_cluster {
 	}
 
 	__LL_NODISCARD__ static constexpr ll_bool_t equals(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2, fun_compare cmp) __LL_EXCEPT__ {
-		return __cmp::equals(v1.begin(), v1.length(), v2.begin(), v2.length(), cmp);
+		return __cmp::equals(v1.begin(), v1.len(), v2.begin(), v2.len(), cmp);
 	}
 	__LL_NODISCARD__ static constexpr ll_bool_t equals(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2) __LL_EXCEPT__ {
-		return __cmp::equals(v1.begin(), v1.length(), v2.begin(), v2.length());
+		return __cmp::equals(v1.begin(), v1.len(), v2.begin(), v2.len());
 	}
 
 	#pragma endregion
@@ -229,10 +229,10 @@ struct compare_cluster {
 	}
 
 	__LL_NODISCARD__ static constexpr CompareResult starts_with(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2, fun_comparebool cmp) {
-		return __cmp::starts_with(v1.begin(), v2.begin(), v1.length(), v2.length(), cmp);
+		return __cmp::starts_with(v1.begin(), v2.begin(), v1.len(), v2.len(), cmp);
 	}
 	__LL_NODISCARD__ static constexpr CompareResult starts_with(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2) {
-		return __cmp::starts_with(v1.begin(), v2.begin(), v1.length(), v2.length());
+		return __cmp::starts_with(v1.begin(), v2.begin(), v1.len(), v2.len());
 	}
 
 	#pragma endregion
@@ -257,10 +257,10 @@ struct compare_cluster {
 	}
 
 	__LL_NODISCARD__ static constexpr CompareResult ends_with(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2, fun_comparebool cmp) {
-		return __cmp::ends_with(v1.begin(), v2.begin(), v1.length(), v2.length(), cmp);
+		return __cmp::ends_with(v1.begin(), v2.begin(), v1.len(), v2.len(), cmp);
 	}
 	__LL_NODISCARD__ static constexpr CompareResult ends_with(ArrayPair<__t::type> v1, ArrayPair<__u::type> v2) {
-		return __cmp::ends_with(v1.begin(), v2.begin(), v1.length(), v2.length());
+		return __cmp::ends_with(v1.begin(), v2.begin(), v1.len(), v2.len());
 	}
 
 	#pragma endregion

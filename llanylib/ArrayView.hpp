@@ -24,7 +24,6 @@ namespace llcpp {
 template<class T, len_t N>
 class LL_SHARED_LIB ArrayView {
 	private:
-		using __internal__ArrayView__ = ArrayView<T, N>;
 		template<len_t N2>
 		using ArrayViewOtherSize = ArrayView<T, N2>;
 		template<len_t N2>
@@ -32,29 +31,28 @@ class LL_SHARED_LIB ArrayView {
 	public:
 		static_assert(N > 0, "Array cannot have a size of 0");
 	public:
-		__LL_CLASS_TEMPLATE_TYPE__(T);
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__ArrayView__, ArrayView);
-		using __type_raw = std::remove_const_t<__type>;
+		using type = llcpp::traits::template_types<T>;
+		using __ArrayView = llcpp::traits::template_types<ArrayView<T, N>>;
 	protected:
-		__ptr __data;
+		type::ptr __data;
 	public:
 		constexpr ArrayView() __LL_EXCEPT__ = delete;
 		constexpr ~ArrayView() __LL_EXCEPT__ {}
 
-		constexpr ArrayView(__type (&__data)[N]) __LL_EXCEPT__ : __data(__data) {}
-		constexpr __ref_ArrayView operator=(__type(&__data)[N]) __LL_EXCEPT__ {
+		constexpr ArrayView(type::type (&__data)[N]) __LL_EXCEPT__ : __data(__data) {}
+		constexpr __ArrayView::ref operator=(type::type (&__data)[N]) __LL_EXCEPT__ {
 			this->__data = __data;
 			return *this;
 		}
 
-		constexpr ArrayView(__cref_ArrayView other) __LL_EXCEPT__ : __data(other.__data) {}
-		constexpr __ref_ArrayView operator=(__cref_ArrayView other) __LL_EXCEPT__ {
+		constexpr ArrayView(__ArrayView::cref other) __LL_EXCEPT__ : __data(other.__data) {}
+		constexpr __ArrayView::ref operator=(__ArrayView::cref other) __LL_EXCEPT__ {
 			this->__data = other.__data;
 			return *this;
 		}
 
-		constexpr ArrayView(__move_ArrayView) __LL_EXCEPT__ = delete;
-		constexpr __ref_ArrayView operator=(__move_ArrayView) __LL_EXCEPT__ = delete;
+		constexpr ArrayView(__ArrayView::move) __LL_EXCEPT__ = delete;
+		constexpr __ArrayView::ref operator=(__ArrayView::move) __LL_EXCEPT__ = delete;
 
 		__LL_NODISCARD__ constexpr operator len_t() const __LL_EXCEPT__ {
 			return N;
@@ -72,25 +70,25 @@ class LL_SHARED_LIB ArrayView {
 			return !this->empty() && static_cast<ll_bool_t>(this->__data);
 		}
 
-		__LL_NODISCARD__ constexpr operator ArrayPair<__type>() const __LL_EXCEPT__ {
-			return ArrayPair<__type>{ this->__data, N };
+		__LL_NODISCARD__ constexpr operator ArrayPair<type::type>() const __LL_EXCEPT__ {
+			return ArrayPair<type::type>(this->__data, N);
 		}
-		__LL_NODISCARD__ constexpr operator __cptr() const __LL_EXCEPT__ { return this->__data; }
-		__LL_NODISCARD__ constexpr __cptr get(const len_t pos = 0ull) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr operator type::cptr() const __LL_EXCEPT__ { return this->__data; }
+		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos = 0ull) const __LL_EXCEPT__ {
 			return this->__data + pos;
 		}
-		__LL_NODISCARD__ constexpr __cref operator[] (const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
 			return this->__data[pos];
 		}
 
 		#pragma region Algorithm
 		#pragma region Compare
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = std::conditional_t<GET_DATA, algorithm::CompareData<__type, cmp_t>, cmp_t>>
-		__LL_NODISCARD__ constexpr CompareResult compare(__type(&__array)[N], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult compare(type::type (&__array)[N], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
 			return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), __array, this->len(), cmp);
 		}
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = std::conditional_t<GET_DATA, algorithm::CompareData<__type, cmp_t>, cmp_t>>
-		__LL_NODISCARD__ constexpr CompareResult compare(__type(&__array)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult compare(type::type (&__array)[N]) const __LL_EXCEPT__ {
 			return algorithm::compare<__type, GET_DATA, CompareResult>(this->begin(), __array, this->len());
 		}
 
@@ -107,11 +105,11 @@ class LL_SHARED_LIB ArrayView {
 		#pragma region Equals
 		#pragma region Func
 		template<len_t N2>
-		__LL_NODISCARD__ constexpr ll_bool_t equals(__type(&__array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t equals(type::type (&__array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
 			return algorithm::equals<__type>(this->begin(), N, __array, N2, cmp);
 		}
 		template<len_t N2>
-		__LL_NODISCARD__ constexpr ll_bool_t equals(__type(&__array)[N2]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t equals(type::type (&__array)[N2]) const __LL_EXCEPT__ {
 			return algorithm::equals<__type>(this->begin(), N, __array, N2);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t equals(__cref_ArrayView other, fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
@@ -132,7 +130,7 @@ class LL_SHARED_LIB ArrayView {
 		#pragma endregion
 		#pragma region Operator
 		template<len_t N2>
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(__type(&__array)[N2]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(type::type (&__array)[N2]) const __LL_EXCEPT__ {
 			return this->equals<N2>(__array);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(__cref_ArrayView other) const __LL_EXCEPT__ {
@@ -147,11 +145,11 @@ class LL_SHARED_LIB ArrayView {
 		#pragma endregion
 		#pragma region StartsWith
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult starts_with(__type(&__array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult starts_with(type::type (&__array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
 			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), __array, N, N2, cmp);
 		}
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult starts_with(__type(&__array)[N2]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult starts_with(type::type (&__array)[N2]) const __LL_EXCEPT__ {
 			return algorithm::starts_with<__type, GET_DATA, CompareResult>(this->begin(), __array, N, N2);
 		}
 
@@ -167,11 +165,11 @@ class LL_SHARED_LIB ArrayView {
 		#pragma endregion
 		#pragma region EndsWith
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult ends_with(__type(&__array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult ends_with(type::type (&__array)[N2], fnc_clss::Compare<__type> cmp) const __LL_EXCEPT__ {
 			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), __array, N, N2, cmp);
 		}
 		template<ll_bool_t GET_DATA = LL_FALSE, class CompareResult = algorithm::CompareConditionalBool<__type, GET_DATA>, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResult ends_with(__type(&__array)[N2]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult ends_with(type::type (&__array)[N2]) const __LL_EXCEPT__ {
 			return algorithm::ends_with<__type, GET_DATA, CompareResult>(this->begin(), __array, N, N2);
 		}
 

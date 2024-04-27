@@ -424,6 +424,33 @@ static constexpr ReturnType operatorTypeCall(const ObjectType& object) __LL_EXCE
 
 #pragma endregion
 
+template<class T>
+struct template_types {
+	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
+	static_assert(!std::is_const_v<T>, "T cannot be const!\nFunctions will use all types as const internally.");
+
+	using conversor = traits::type_conversor<T>;
+
+	using raw = conversor::to_raw_t;
+	using type = T;
+	using ctype = const T;
+	//using ctype = conversor::to_const_t;
+
+	using ref = type&;
+	//using ref = conversor::to_reference_t<LL_TRUE>;
+	using cref = const type&;
+	//using cref = conversor::to_const_reference_t<LL_TRUE>;
+	using move = conversor::to_movement_t;
+
+	using ptr = conversor::get_ptr_remove_reference_t;
+	// [TOFIX]
+	using cptr = conversor::get_const_ptr_remove_reference::value;
+	using ptrref = traits::type_conversor<ptr>::to_reference_t<LL_TRUE>;
+
+	using input = std::conditional_t<traits::is_basic_type_v<type>, type, ref>;
+	using cinput = std::conditional_t<traits::is_basic_type_v<type>, ctype, cref>;
+};
+
 } // namespace traits
 } // namespace llcpp
 

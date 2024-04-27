@@ -17,15 +17,15 @@
 #define LLANYLIB_COUNTABLE_MAYOR_ 5
 #define LLANYLIB_COUNTABLE_MINOR_ 0
 
-#include "types.hpp"
+#include "traits.hpp"
 
-#define DO_IF_VALID(func) \
+#define COUNTABLE_DO_IF_VALID(func) \
 	ll_bool_t result = LL_TRUE; \
 	if ((result = this->inRange(position)) == llcpp::LL_TRUE) \
 		func; \
 	return result;
 
-#define DO_IF_VALID_2_POSITIONS(pos1, pos2, func) \
+#define COUNTABLE_DO_IF_VALID_2_POSITIONS(pos1, pos2, func) \
 	ll_bool_t result = LL_TRUE; \
 	if ((result = (this->inRange(pos1) && this->inRange(pos2))) == llcpp::LL_TRUE) \
 		func; \
@@ -33,145 +33,125 @@
 
 namespace llcpp {
 
-/*!
- *	@class Countable
- *	@classtype Base
- *	@template True
- *	@brief Stores and counts items objects, etc...
- * 
- *	Useful in lists, vector or countable or accumulative objects
- *
- *	@sa @ref icountable
- *
- *	@since Added in version 2.0.
- *
- *	@ingroup util
- *	@ingroup list
- */
 template<class T, T ZERO_VAL>
 class LL_SHARED_LIB Countable {
-	private:
-		using __internal__Countable__ = Countable<T, ZERO_VAL>;
 	public:
-		__LL_CLASS_TEMPLATE_TYPE__(T);
-		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__Countable__, Countable);
+		using type = llcpp::traits::template_types<T>;
+		using __Countable = llcpp::traits::template_types<Countable<T, ZERO_VAL>>;
 		static constexpr T ZERO = ZERO_VAL;
+		static_assert(traits::is_basic_type_v<T>, "Countable contains basic type only");
 	private:
-		__type length;
+		type::type length;
 	protected:
-		__LL_NODISCARD__ constexpr __ref lenRef() __LL_EXCEPT__ { return this->length; }
+		__LL_NODISCARD__ constexpr type::ref lenRef() __LL_EXCEPT__ { return this->length; }
 
 		constexpr void operator++() __LL_EXCEPT__ { ++this->length; }
 		constexpr void operator--() __LL_EXCEPT__ { --this->length; }
-		__LL_NODISCARD__ constexpr __type operator++(int) __LL_EXCEPT__ { return this->length++; }
-		__LL_NODISCARD__ constexpr __type operator--(int) __LL_EXCEPT__ { return this->length--; }
+		__LL_NODISCARD__ constexpr type::type operator++(int) __LL_EXCEPT__ { return this->length++; }
+		__LL_NODISCARD__ constexpr type::type operator--(int) __LL_EXCEPT__ { return this->length--; }
 
-		constexpr void operator+=(__ctype value) __LL_EXCEPT__ { this->length += value; }
-		constexpr void operator-=(__ctype value) __LL_EXCEPT__ { this->length -= value; }
-		constexpr void operator+=(__cref_Countable other) __LL_EXCEPT__ {
+		constexpr void operator+=(type::ctype value) __LL_EXCEPT__ { this->length += value; }
+		constexpr void operator-=(type::ctype value) __LL_EXCEPT__ { this->length -= value; }
+		constexpr void operator+=(__Countable::cref other) __LL_EXCEPT__ {
 			this->length += other.length;
 		}
-		constexpr void operator-=(__cref_Countable other) __LL_EXCEPT__ {
+		constexpr void operator-=(__Countable::cref other) __LL_EXCEPT__ {
 			this->length -= other.length;
 		}
 
-		__LL_NODISCARD__ constexpr __Countable operator+(__ctype value) const __LL_EXCEPT__ {
-			return __Countable(this->length + value);
+		__LL_NODISCARD__ constexpr __Countable::type operator+(type::ctype value) const __LL_EXCEPT__ {
+			return __Countable::type(this->length + value);
 		}
-		__LL_NODISCARD__ constexpr __Countable operator-(__ctype value) const __LL_EXCEPT__ {
-			return __Countable(this->length - value);
+		__LL_NODISCARD__ constexpr __Countable::type operator-(type::ctype value) const __LL_EXCEPT__ {
+			return __Countable::type(this->length - value);
 		}
-		__LL_NODISCARD__ constexpr __Countable operator+(__cref_Countable other) const __LL_EXCEPT__ {
-			return __Countable(this->length + other.length);
+		__LL_NODISCARD__ constexpr __Countable::type operator+(__Countable::cref other) const __LL_EXCEPT__ {
+			return __Countable::type(this->length + other.length);
 		}
-		__LL_NODISCARD__ constexpr __Countable operator-(__cref_Countable other) const __LL_EXCEPT__ {
-			return __Countable(this->length - other.length);
+		__LL_NODISCARD__ constexpr __Countable::type operator-(__Countable::cref other) const __LL_EXCEPT__ {
+			return __Countable::type(this->length - other.length);
 		}
 
-		constexpr __type operator=(__ctype value) __LL_EXCEPT__ {
+		constexpr type::type operator=(type::ctype value) __LL_EXCEPT__ {
 			return this->length = value;
 		}
 	public:
 		constexpr Countable() __LL_EXCEPT__ : Countable(ZERO_VAL) {}
-		constexpr Countable(__ctype length) __LL_EXCEPT__ : length(length) {}
+		constexpr Countable(type::ctype length) __LL_EXCEPT__ : length(length) {}
 		constexpr ~Countable() __LL_EXCEPT__ {}
 
-		constexpr Countable(__cref_Countable other) __LL_EXCEPT__
+		constexpr Countable(__Countable::cref other) __LL_EXCEPT__
 			: Countable(other.length) {}
-		constexpr Countable& operator=(__cref_Countable other) __LL_EXCEPT__ {
+		constexpr Countable& operator=(__Countable::cref other) __LL_EXCEPT__ {
 			this->length = other.length;
 			return *this;
 		}
 
-		constexpr Countable(__move_Countable other) __LL_EXCEPT__
+		constexpr Countable(__Countable::move other) __LL_EXCEPT__
 			: Countable(other.length) { other.clear(); }
-		constexpr Countable& operator=(__move_Countable other) __LL_EXCEPT__ {
+		constexpr Countable& operator=(__Countable::move other) __LL_EXCEPT__ {
 			this->length = other.length;
-			other.length = 0ull;
+			other.length = ZERO_VAL;
 			return *this;
 		}
 
-		__LL_NODISCARD__ constexpr operator __type() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr operator type::type() const __LL_EXCEPT__ {
 			return this->length;
 		}
-		__LL_NODISCARD__ constexpr __type count() const __LL_EXCEPT__ {
-			return this->operator __type();
+		__LL_NODISCARD__ constexpr type::type count() const __LL_EXCEPT__ {
+			return this->operator type::type();
 		}
-		__LL_NODISCARD__ constexpr __type len() const __LL_EXCEPT__ {
-			return this->operator __type();
+		__LL_NODISCARD__ constexpr type::type len() const __LL_EXCEPT__ {
+			return this->operator type::type();
 		}
-		__LL_NODISCARD__ constexpr __type size() const __LL_EXCEPT__ {
-			return this->operator __type();
+		__LL_NODISCARD__ constexpr type::type size() const __LL_EXCEPT__ {
+			return this->operator type::type();
 		}
 		__LL_NODISCARD__ constexpr void clear() __LL_EXCEPT__ { this->length = ZERO_VAL; }
-		__LL_NODISCARD__ constexpr ll_bool_t inRange(__ctype position) const __LL_EXCEPT__ {
-			return position < this->operator __type();
+		__LL_NODISCARD__ constexpr ll_bool_t inRange(type::ctype position) const __LL_EXCEPT__ {
+			return position < this->operator type::type();
 		}
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(__cref_Countable other) const __LL_EXCEPT__ {
-			return this->operator __type() > other.operator __type();
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(__Countable::cref other) const __LL_EXCEPT__ {
+			return this->operator type::type() > other.operator type::type();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(__cref_Countable other) const __LL_EXCEPT__ {
-			return this->operator __type() >= other.operator __type();
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(__Countable::cref other) const __LL_EXCEPT__ {
+			return this->operator type::type() >= other.operator type::type();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(__cref_Countable other) const __LL_EXCEPT__ {
-			return this->operator __type() < other.operator __type();
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(__Countable::cref other) const __LL_EXCEPT__ {
+			return this->operator type::type() < other.operator type::type();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(__cref_Countable other) const __LL_EXCEPT__ {
-			return this->operator __type() <= other.operator __type();
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(__Countable::cref other) const __LL_EXCEPT__ {
+			return this->operator type::type() <= other.operator type::type();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(__cref_Countable other) const __LL_EXCEPT__ {
-			return this->operator __type() == other.operator __type();
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(__Countable::cref other) const __LL_EXCEPT__ {
+			return this->operator type::type() == other.operator type::type();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(__cref_Countable other) const __LL_EXCEPT__ {
-			return this->operator __type() != other.operator __type();
-		}
-
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(__ctype value) const __LL_EXCEPT__ {
-			return this->operator __type() > value;
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(__ctype value) const __LL_EXCEPT__ {
-			return this->operator __type() >= value;
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(__ctype value) const __LL_EXCEPT__ {
-			return this->operator __type() < value;
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(__ctype value) const __LL_EXCEPT__ {
-			return this->operator __type() <= value;
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(__ctype value) const __LL_EXCEPT__ {
-			return this->operator __type() == value;
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(__ctype value) const __LL_EXCEPT__ {
-			return this->operator __type() != value;
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(__Countable::cref other) const __LL_EXCEPT__ {
+			return this->operator type::type() != other.operator type::type();
 		}
 
-		__LL_NODISCARD__ constexpr operator __cref_Countable() const __LL_EXCEPT__ {
-			return *this;
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(type::ctype value) const __LL_EXCEPT__ {
+			return this->operator type::type() > value;
 		}
-		__LL_NODISCARD__ constexpr operator __ref_Countable() __LL_EXCEPT__ {
-			return *this;
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(type::ctype value) const __LL_EXCEPT__ {
+			return this->operator type::type() >= value;
 		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(type::ctype value) const __LL_EXCEPT__ {
+			return this->operator type::type() < value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(type::ctype value) const __LL_EXCEPT__ {
+			return this->operator type::type() <= value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(type::ctype value) const __LL_EXCEPT__ {
+			return this->operator type::type() == value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(type::ctype value) const __LL_EXCEPT__ {
+			return this->operator type::type() != value;
+		}
+
+		__LL_NODISCARD__ constexpr operator __Countable::cref() const __LL_EXCEPT__ { return *this; }
+		__LL_NODISCARD__ constexpr operator __Countable::ref() __LL_EXCEPT__ { return *this; }
 };
 
 using CountableB = Countable<b64, 0ull>;

@@ -17,86 +17,61 @@
 #define LLANYLIB_TYPETRAITS_MAYOR_ 5
 #define LLANYLIB_TYPETRAITS_MINOR_ 0
 
-#include "traits.hpp"
+#include "Countable.hpp"
 
 namespace llcpp {
-namespace traits {
 
 template<class T>
-struct template_types {
-	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
-	static_assert(!std::is_const_v<T>, "T cannot be const!\nFunctions will use all types as const internally.");
-
-	using conversor = traits::type_conversor<T>;
-
-	using raw = conversor::to_raw_t;
-	using type = T;
-	using ctype = const T;
-	//using ctype = conversor::to_const_t;
-
-	using ref = type&;
-	//using ref = conversor::to_reference_t<LL_TRUE>;
-	using cref = const type&;
-	//using cref = conversor::to_const_reference_t<LL_TRUE>;
-	using move = conversor::to_movement_t;
-
-	using ptr = conversor::get_ptr_remove_reference_t;
-	// [TOFIX]
-	using cptr = conversor::get_const_ptr_remove_reference::value;
-	using ptrref = traits::type_conversor<ptr>::to_reference_t<LL_TRUE>;
-
-	using input = std::conditional_t<traits::is_basic_type_v<type>, type, ref>;
-	using cinput = std::conditional_t<traits::is_basic_type_v<type>, ctype, cref>;
-};
-
-} // namespace traits
-} // namespace llcpp
-
-template<class T>
-class ArrayPair {
+class ArrayPair : public CountableL {
 	public:
-		using type = llcpp::traits::template_types<T>;
-		using __ArrayPair = llcpp::traits::template_types<ArrayPair<T>>;
+		using type = traits::template_types<T>;
+		using __ArrayPair = traits::template_types<ArrayPair<T>>;
 	protected:
 		type::cptr data;
-		len_t len;
+	protected:
+		constexpr void simple_clear() __LL_EXCEPT__ { this->data = LL_NULLPTR; }
 	public:
-		constexpr ArrayPair(type::cref data, const len_t len) __LL_EXCEPT__
-			: data(&data), len(len) {}
+		constexpr ArrayPair(type::cptr data, const len_t len) __LL_EXCEPT__
+			: CountableL(len), data(data) {}
 		constexpr ArrayPair() __LL_EXCEPT__ {}
 
 		constexpr ArrayPair(__ArrayPair::cref other) __LL_EXCEPT__
-			: data(other.data), len(other.len) {}
+			: CountableL(other.len), data(other.data) {}
 		constexpr __ArrayPair::ref operator=(__ArrayPair::cref other) __LL_EXCEPT__ {
+			CountableL::operator=(other);
 			this->data = other.data;
-			this->len = other.len;
 			return *this;
 		}
 		constexpr ArrayPair(__ArrayPair::move other) __LL_EXCEPT__
 			: data(other.data), len(other.len) { other.clear(); }
 		constexpr __ArrayPair::ref operator=(__ArrayPair::move other) __LL_EXCEPT__ {
 			this->data = other.data;
-			this->len = other.len;
-			other.clear();
+			CountableL::operator=(std::move(other));
+			other.simple_clear();
 			return *this;
 		}
 
-		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ { return this->data; }
-		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ { return this->data + this->len; }
-		__LL_NODISCARD__ constexpr len_t length() const __LL_EXCEPT__ { return this->len; }
+		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
+			return this->data;
+		}
+		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
+			return this->data + this->operator len_t();
+		}
 		__LL_NODISCARD__ constexpr ll_bool_t isValid() const __LL_EXCEPT__ {
 			return
 				static_cast<ll_bool_t>(this->data) &&
-				static_cast<ll_bool_t>(this->len);
+				static_cast<ll_bool_t>(this->operator len_t());
 		}
 		constexpr void clear() __LL_EXCEPT__ {
-			this->data = LL_NULLPTR;
-			this->len = 0ull;
+			CountableL::clear();
+			this->simple_clear();
 		}
 };
 
 using StrPair  = ArrayPair<ll_char_t>;
 using uStrPair = ArrayPair<ll_uchar_t>;
 using wStrPair = ArrayPair<ll_wchar_t>;
+
+} // namespace llcpp
 
 #endif // LLANYLIB_TYPETRAITS_HPP_

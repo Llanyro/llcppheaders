@@ -473,7 +473,7 @@ struct finders_cluster {
 	}
 
 	#pragma endregion
-	#pragma region All
+	#pragma region None
 	template<class U>
 	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
 		return !static_cast<ll_bool_t>(__find::find(begin, end, object, cmp));

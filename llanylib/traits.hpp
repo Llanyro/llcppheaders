@@ -70,7 +70,7 @@ struct type_conversor {
 				return type_conversor<std::remove_const_t<T>>::to_raw::test();
 			else return traits::type_container<T>{};
 		}
-		using value = decltype(test())::value;
+		using value = typename decltype(test())::value;
 	};
 	struct to_const {
 		static constexpr auto test() {
@@ -91,7 +91,7 @@ struct type_conversor {
 			}
 			else return traits::type_container<const T>{};
 		}
-		using value = decltype(test())::value;
+		using value = typename decltype(test())::value;
 	};
 	template<ll_bool_t ALL>
 	struct to_reference {
@@ -102,7 +102,7 @@ struct type_conversor {
 				return traits::type_container<std::add_lvalue_reference_t<T>>{};
 			else return traits::type_container<T>{};
 		}
-		using value = decltype(test())::value;
+		using value = typename decltype(test())::value;
 	};
 	template<ll_bool_t ALL>
 	struct to_const_reference {
@@ -113,7 +113,7 @@ struct type_conversor {
 				return traits::type_container<std::add_lvalue_reference_t<__const_type>>{};
 			else return traits::type_container<__const_type>{};
 		}
-		using value = decltype(test())::value;
+		using value = typename decltype(test())::value;
 	};
 	struct to_movement {
 		static constexpr auto test() {
@@ -123,7 +123,7 @@ struct type_conversor {
 			}
 			else return traits::type_container<T&&>{};
 		}
-		using value = decltype(test())::value;
+		using value = typename decltype(test())::value;
 	};
 	struct get_ptr_remove_reference {
 		static constexpr auto test() {
@@ -133,13 +133,13 @@ struct type_conversor {
 			}
 			else return traits::type_container<T*>{};
 		}
-		using value = decltype(test())::value;
+		using value = typename decltype(test())::value;
 	};
 	struct get_const_ptr_remove_reference {
 		static constexpr auto test() {
 			return traits::type_container<type_conversor<get_ptr_remove_reference_t>::to_const_t>{};
 		}
-		using value = decltype(test())::value;
+		using value = typename decltype(test())::value;
 	};
 	template<ll_bool_t promote>
 	struct type_promotion {
@@ -307,7 +307,7 @@ struct operator_type_call_checker {
 			return std::true_type{};
 		else return std::false_type{};
 	}
-	using val = decltype(test());
+	using val = typename decltype(test());
 };
 template<class ObjectType, class TypeCall>
 using operator_type_call_checker_t = operator_type_call_checker<ObjectType, TypeCall>::val;
@@ -328,7 +328,7 @@ struct is_nothrow_swappeable {
 		}
 		else return std::false_type{};
 	}
-	using val = decltype(test());
+	using val = typename decltype(test());
 };
 template<class T>
 using is_nothrow_swappeable_t = is_nothrow_swappeable<T>::val;
@@ -357,7 +357,7 @@ struct is_nothrow_copyable {
 			return std::true_type{};
 		else return std::false_type{};
 	}
-	using val = decltype(test());
+	using val = typename decltype(test());
 };
 template<class T>
 using is_nothrow_copyable_t = is_nothrow_copyable<T>::val;

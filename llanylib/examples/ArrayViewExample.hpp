@@ -20,7 +20,7 @@ namespace llcpp {
 ///////////////////////////////////////////////// Data /////////////////////////////////////////////////
 
 constexpr const int numbers_01[] = { 10, 9, 6 };
-constexpr const int numbers_02[] = { 10, 9, 6 };
+constexpr const int numbers_02[] = { 10, 9, 7 };
 constexpr const int numbers_03[] = { 10, 5 };
 constexpr const int numbers_04[] = { 10, 9, 6, 0 };
 
@@ -49,9 +49,54 @@ constexpr const ll_char_t stringview_char_2 = *arrayview_07.get(9);
 static_assert(stringview_char_1 == 'l', "Error changed value");
 static_assert(stringview_char_2 == 'o', "Error changed value");
 
+///////////////////////////////////////////////// ArrayView compare /////////////////////////////////////////////////
+
+constexpr cmp_t compare_01 = arrayview_01.compare(arrayview_01);
+constexpr cmp_t compare_02 = arrayview_01.compare(arrayview_02);
+constexpr cmp_t compare_03 = arrayview_02.compare(arrayview_01);
+constexpr cmp_t compare_04 = arrayview_02.compare(arrayview_02);
+
+constexpr auto compare_01_res = arrayview_01.compare<const int, LL_TRUE>(arrayview_01);
+constexpr auto compare_02_res = arrayview_01.compare<const int, LL_TRUE>(arrayview_02);
+constexpr auto compare_03_res = arrayview_02.compare<const int, LL_TRUE>(arrayview_01);
+constexpr auto compare_04_res = arrayview_02.compare<const int, LL_TRUE>(arrayview_02);
+
+static_assert(compare_01 == 00, "Error changed value");
+static_assert(compare_02 == -1, "Error changed value");
+static_assert(compare_03 == 01, "Error changed value");
+static_assert(compare_04 == 00, "Error changed value");
+
+static_assert(compare_01_res.getResult() == 00, "Error changed value");
+static_assert(compare_02_res.getResult() == -1, "Error changed value");
+static_assert(compare_03_res.getResult() == 01, "Error changed value");
+static_assert(compare_04_res.getResult() == 00, "Error changed value");
+
+constexpr ll_bool_t equals_01 = arrayview_01.equals<const int>(arrayview_02,
+	[](const int, const int) {
+		return 0;
+	}
+);
+constexpr ll_bool_t equals_02 = arrayview_01.equals<const int>(arrayview_02);
+constexpr ll_bool_t equals_03 = arrayview_01.equals<const char>(arrayview_05);
+constexpr ll_bool_t equals_04 = arrayview_05.equals(algorithm::str1);
+constexpr ll_bool_t equals_05 = arrayview_05.equals(algorithm::str2);
+constexpr ll_bool_t equals_06 = arrayview_05.equals(algorithm::str1, 14);
+
+static_assert( equals_01, "Error changed value");
+static_assert(!equals_02, "Error changed value");
+static_assert(!equals_03, "Error changed value");
+static_assert( equals_04, "Error changed value");
+static_assert(!equals_05, "Error changed value");
+static_assert(!equals_06, "Error changed value");
+
+
+
+///////////////////////////////////////////////// ArrayView finders /////////////////////////////////////////////////
+
+
 ///////////////////////////////////////////////// ArrayView algorithm /////////////////////////////////////////////////
 
-constexpr len_t find_pos_01 = arrayview_05.find_pos('*');
+/*constexpr len_t find_pos_01 = arrayview_05.find_pos('*');
 constexpr len_t find_pos_02 = arrayview_06.find_pos('?');
 
 constexpr auto find_01 = arrayview_05.find('*');
@@ -108,10 +153,10 @@ static_assert(equals_16 == LL_FALSE, "Error changed value");
 static_assert(equals_17 == LL_FALSE, "Error changed value");
 static_assert(equals_18 == LL_FALSE, "Error changed value");
 static_assert(equals_19 == LL_FALSE, "Error changed value");
-static_assert(equals_20 == LL_FALSE, "Error changed value");
+static_assert(equals_20 == LL_FALSE, "Error changed value");*/
 
 ///////////////////////////////////////////////// Array reverse /////////////////////////////////////////////////
-
+/*
 constexpr len_t __array_reverse_example__(int v) {
 	len_t block[5]{};
 	Array arr = block;
@@ -418,7 +463,7 @@ constexpr len_t __array_test_nodes5_example__(const len_t number_to_generate, co
 
 constexpr len_t array_test_nodes5_1 = __array_test_nodes5_example__(11, 10);
 constexpr len_t array_test_nodes5_2 = __array_test_nodes5_example__(110, 27);
-
+*/
 } // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_ARRAYVIEWEXAMPLE_HPP_

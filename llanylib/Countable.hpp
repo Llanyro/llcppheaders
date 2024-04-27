@@ -36,9 +36,9 @@ namespace llcpp {
 template<class T, T ZERO_VAL>
 class LL_SHARED_LIB Countable {
 	public:
+		static constexpr T ZERO = ZERO_VAL;
 		using type = llcpp::traits::template_types<T>;
 		using __Countable = llcpp::traits::template_types<Countable<T, ZERO_VAL>>;
-		static constexpr T ZERO = ZERO_VAL;
 		static_assert(traits::is_basic_type_v<T>, "Countable contains basic type only");
 	private:
 		type::type length;

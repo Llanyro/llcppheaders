@@ -17,15 +17,15 @@ namespace llcpp {
 
 ///////////////////////////////////////////////// ArrayView Storage /////////////////////////////////////////////////
 
-constexpr auto stringview_01 = StringView(algorithm::str1);
-constexpr auto stringview_02 = StringView(algorithm::str2);
-constexpr auto stringview_03 = StringView(algorithm::str3);
-constexpr auto stringview_04 = StringView(algorithm::str4);
-constexpr auto stringview_05 = StringView("");
-constexpr auto stringview_06 = StringView("A");
-constexpr auto stringview_07 = StringView("Hello");
-constexpr auto stringview_08 = StringView("Hello world");
-constexpr auto stringview_09 = StringView("Holo");
+constexpr auto stringview_01 = make_StringView(algorithm::str1);
+constexpr auto stringview_02 = make_StringView(algorithm::str2);
+constexpr auto stringview_03 = make_StringView(algorithm::str3);
+constexpr auto stringview_04 = make_StringView(algorithm::str4);
+constexpr auto stringview_05 = make_StringView("");
+constexpr auto stringview_06 = make_StringView("A");
+constexpr auto stringview_07 = make_StringView("Hello");
+constexpr auto stringview_08 = make_StringView("Hello world");
+constexpr auto stringview_09 = make_StringView("Holo");
 
 constexpr StringView HOLA_WORLD = algorithm::str4;
 
@@ -49,11 +49,11 @@ static_assert(compare_03 == 01, "Error changed value");
 static_assert(compare_04 == -1, "Error changed value");
 static_assert(compare_05 == 00, "Error changed value");
 
-static_assert(compare_01_res.result == 00, "Error changed value");
-static_assert(compare_02_res.result == -1, "Error changed value");
-static_assert(compare_03_res.result == 01, "Error changed value");
-static_assert(compare_04_res.result == -1, "Error changed value");
-static_assert(compare_05_res.result == 00, "Error changed value");
+static_assert(compare_01_res.getResult() == 00, "Error changed value");
+static_assert(compare_02_res.getResult() == -1, "Error changed value");
+static_assert(compare_03_res.getResult() == 01, "Error changed value");
+static_assert(compare_04_res.getResult() == -1, "Error changed value");
+static_assert(compare_05_res.getResult() == 00, "Error changed value");
 
 ///////////////////////////////////////////////// Equals /////////////////////////////////////////////////
 

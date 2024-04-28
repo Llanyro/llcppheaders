@@ -26,20 +26,20 @@ constexpr const int numbers_04[] = { 10, 9, 6, 0 };
 
 ///////////////////////////////////////////////// ArrayView Storage /////////////////////////////////////////////////
 
-constexpr auto arrayview_01 = ArrayView(numbers_01);
-constexpr auto arrayview_02 = ArrayView(numbers_02);
-constexpr auto arrayview_03 = ArrayView(numbers_03);
-constexpr auto arrayview_04 = ArrayView(numbers_04);
-constexpr auto arrayview_05 = ArrayView(algorithm::str1);
-constexpr auto arrayview_06 = ArrayView(algorithm::str2);
+constexpr auto arrayview_01 = make_ArrayView(numbers_01);
+constexpr auto arrayview_02 = make_ArrayView(numbers_02);
+constexpr auto arrayview_03 = make_ArrayView(numbers_03);
+constexpr auto arrayview_04 = make_ArrayView(numbers_04);
+constexpr auto arrayview_05 = make_ArrayView(algorithm::str1);
+constexpr auto arrayview_06 = make_ArrayView(algorithm::str2);
 
-constexpr ArrayView HOLA_WORLD = algorithm::str4;
+constexpr ArrayView HOLA_WORLD = make_ArrayView(algorithm::str4);
 
 ///////////////////////////////////////////////// ArrayView Copy /////////////////////////////////////////////////
 
-constexpr auto arrayview_07 = ArrayView("Hola mundo");
+constexpr auto arrayview_07 = make_ArrayView("Hola mundo");
 constexpr auto arrayview_08 = ArrayView(HOLA_WORLD);
-constexpr auto arrayview_09 = ArrayView(algorithm::str4);
+constexpr auto arrayview_09 = make_ArrayView(algorithm::str4);
 
 ///////////////////////////////////////////////// ArrayView access /////////////////////////////////////////////////
 
@@ -51,15 +51,15 @@ static_assert(stringview_char_2 == 'o', "Error changed value");
 
 ///////////////////////////////////////////////// ArrayView compare /////////////////////////////////////////////////
 
-constexpr cmp_t compare_01 = arrayview_01.compare(arrayview_01);
-constexpr cmp_t compare_02 = arrayview_01.compare(arrayview_02);
-constexpr cmp_t compare_03 = arrayview_02.compare(arrayview_01);
-constexpr cmp_t compare_04 = arrayview_02.compare(arrayview_02);
+constexpr cmp_t compare_01 = arrayview_01.compare<int>(arrayview_01);
+constexpr cmp_t compare_02 = arrayview_01.compare<int>(arrayview_02);
+constexpr cmp_t compare_03 = arrayview_02.compare<int>(arrayview_01);
+constexpr cmp_t compare_04 = arrayview_02.compare<int>(arrayview_02);
 
-constexpr auto compare_01_res = arrayview_01.compare<const int, LL_TRUE>(arrayview_01);
-constexpr auto compare_02_res = arrayview_01.compare<const int, LL_TRUE>(arrayview_02);
-constexpr auto compare_03_res = arrayview_02.compare<const int, LL_TRUE>(arrayview_01);
-constexpr auto compare_04_res = arrayview_02.compare<const int, LL_TRUE>(arrayview_02);
+constexpr auto compare_01_res = arrayview_01.compare<int, LL_TRUE>(arrayview_01);
+constexpr auto compare_02_res = arrayview_01.compare<int, LL_TRUE>(arrayview_02);
+constexpr auto compare_03_res = arrayview_02.compare<int, LL_TRUE>(arrayview_01);
+constexpr auto compare_04_res = arrayview_02.compare<int, LL_TRUE>(arrayview_02);
 
 static_assert(compare_01 == 00, "Error changed value");
 static_assert(compare_02 == -1, "Error changed value");
@@ -71,13 +71,13 @@ static_assert(compare_02_res.getResult() == -1, "Error changed value");
 static_assert(compare_03_res.getResult() == 01, "Error changed value");
 static_assert(compare_04_res.getResult() == 00, "Error changed value");
 
-constexpr ll_bool_t equals_01 = arrayview_01.equals<const int>(arrayview_02,
+constexpr ll_bool_t equals_01 = arrayview_01.equals<int>(arrayview_02,
 	[](const int, const int) {
 		return 0;
 	}
 );
-constexpr ll_bool_t equals_02 = arrayview_01.equals<const int>(arrayview_02);
-constexpr ll_bool_t equals_03 = arrayview_01.equals<const char>(arrayview_05);
+constexpr ll_bool_t equals_02 = arrayview_01.equals<int>(arrayview_02);
+constexpr ll_bool_t equals_03 = arrayview_01.equals<char>(arrayview_05);
 constexpr ll_bool_t equals_04 = arrayview_05.equals(algorithm::str1);
 constexpr ll_bool_t equals_05 = arrayview_05.equals(algorithm::str2);
 constexpr ll_bool_t equals_06 = arrayview_05.equals(algorithm::str1, 14);
@@ -88,8 +88,6 @@ static_assert(!equals_03, "Error changed value");
 static_assert( equals_04, "Error changed value");
 static_assert(!equals_05, "Error changed value");
 static_assert(!equals_06, "Error changed value");
-
-
 
 ///////////////////////////////////////////////// ArrayView finders /////////////////////////////////////////////////
 

@@ -34,7 +34,7 @@ namespace traits {
 #define ENABLE_FUNCTION_PARAM(condition, ret) class __ret__ = ret, typename = std::enable_if_t<__is_void_type__, __ret__>
 
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64, ll_bool_t>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_basic_bigger_type_v = std::_Is_any_of_v<std::remove_const_t<T>, i128, i256, ui128, ui256>;
 template<class T>

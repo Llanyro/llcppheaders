@@ -26,31 +26,42 @@ constexpr ll_char_t str4[] = "Hola world!";
 
 using cmp = compare_cluster<ll_char_t>;
 using cmp_res = compare_cluster<ll_char_t, ll_char_t, LL_TRUE>;
-using find = finders_cluster<ll_char_t>;
+using find = finders_cluster<ll_char_t, LL_FALSE>;
+using find_pos = finders_cluster<ll_char_t, LL_TRUE>;
 
 constexpr i8 cmp1 = cmp::compare(str1, str2, 15);
 constexpr auto cmp2 = cmp_res::compare(str1, str2, 15);
-constexpr ll_bool_t cmp_b_1 = cmp::equals(str1, str2);
-constexpr ll_bool_t cmp_b_2 = cmp::equals("Holo", "Holo");
-constexpr ll_bool_t cmp_b_3 = cmp::equals("Holo", "Hi");
 
 static_assert(cmp1 == -1, "Error changed value");
 static_assert(cmp2.getResult() == -1, "Error changed value");
-static_assert(!cmp_b_1, "Error changed value");
-static_assert(cmp_b_2, "Error changed value");
-static_assert(!cmp_b_3, "Error changed value");
+
+constexpr ll_bool_t equals_01 = cmp::equals(str1, str2);
+constexpr ll_bool_t equals_02 = cmp::equals("Holo", "Holo");
+constexpr ll_bool_t equals_03 = cmp::equals("Holo", "Hi");
+
+constexpr auto equals_04 = cmp_res::equals(str1, str2);
+constexpr auto equals_05 = cmp_res::equals("Holo", "Holo");
+constexpr auto equals_06 = cmp_res::equals("Holo", "Hi");
+
+static_assert(!equals_01, "Error changed value");
+static_assert( equals_02, "Error changed value");
+static_assert(!equals_03, "Error changed value");
+
+static_assert(!equals_04.getResult(), "Error changed value");
+static_assert( equals_05.getResult(), "Error changed value");
+static_assert(!equals_06.getResult(), "Error changed value");
 
 ///////////////////////////////////////////////// Starts with /////////////////////////////////////////////////
 
-constexpr ll_bool_t starts_with_01 = cmp::starts_with(str1, str2, 14, 14);
-constexpr ll_bool_t starts_with_02 = cmp::starts_with(str1, str2, 13, 13);
+constexpr ll_bool_t starts_with_01 = cmp::starts_with(str1, 14, str2, 14);
+constexpr ll_bool_t starts_with_02 = cmp::starts_with(str1, 13, str2, 13);
 constexpr ll_bool_t starts_with_03 = cmp::starts_with(str1, "Holoo");
-constexpr ll_bool_t starts_with_04 = cmp::starts_with(str1, "Holoo", 15, 4);
+constexpr ll_bool_t starts_with_04 = cmp::starts_with(str1, 15, "Holoo", 4);
 
-constexpr auto starts_with_01_res = cmp_res::starts_with(str1, str2, 14, 14);
-constexpr auto starts_with_02_res = cmp_res::starts_with(str1, str2, 13, 13);
+constexpr auto starts_with_01_res = cmp_res::starts_with(str1, 14, str2, 14);
+constexpr auto starts_with_02_res = cmp_res::starts_with(str1, 13, str2, 13);
 constexpr auto starts_with_03_res = cmp_res::starts_with(str1, "Holoo");
-constexpr auto starts_with_04_res = cmp_res::starts_with(str1, "Holoo", 15, 4);
+constexpr auto starts_with_04_res = cmp_res::starts_with(str1, 15, "Holoo", 4);
 
 static_assert(!starts_with_01, "Error changed value");
 static_assert( starts_with_02, "Error changed value");
@@ -64,15 +75,15 @@ static_assert( starts_with_04_res.getResult(), "Error changed value");
 
 ///////////////////////////////////////////////// Ends with /////////////////////////////////////////////////
 
-constexpr ll_bool_t ends_with_01 = cmp::ends_with(str1, str2, 14, 14);
-constexpr ll_bool_t ends_with_02 = cmp::ends_with(str1, str2, 13, 13);
+constexpr ll_bool_t ends_with_01 = cmp::ends_with(str1, 14, str2, 14);
+constexpr ll_bool_t ends_with_02 = cmp::ends_with(str1, 13, str2, 13);
 constexpr ll_bool_t ends_with_03 = cmp::ends_with(str1, "asdf*");
-constexpr ll_bool_t ends_with_04 = cmp::ends_with(str1, "asdf*", 15, 4);
+constexpr ll_bool_t ends_with_04 = cmp::ends_with(str1, 15, "asdf*", 4);
 
-constexpr auto ends_with_01_res = cmp_res::ends_with(str1, str2, 14, 14);
-constexpr auto ends_with_02_res = cmp_res::ends_with(str1, str2, 13, 13);
+constexpr auto ends_with_01_res = cmp_res::ends_with(str1, 14, str2, 14);
+constexpr auto ends_with_02_res = cmp_res::ends_with(str1, 13, str2, 13);
 constexpr auto ends_with_03_res = cmp_res::ends_with(str1, "asdf*");
-constexpr auto ends_with_04_res = cmp_res::ends_with(str1, "asdf*", 15, 4);
+constexpr auto ends_with_04_res = cmp_res::ends_with(str1, 15, "asdf*", 4);
 
 static_assert(ends_with_01 == LL_FALSE, "Error changed value");
 static_assert(ends_with_02 == LL_TRUE , "Error changed value");
@@ -86,18 +97,18 @@ static_assert(!ends_with_04_res.getResult(), "Error changed value");	// Here is 
 
 ///////////////////////////////////////////////// Finders /////////////////////////////////////////////////
 
-constexpr len_t find_pos_01 = find::find_pos(str1, ',');
-constexpr len_t find_pos_02 = find::find_pos(str1, '*');
-constexpr len_t find_pos_03 = find::find_pos(str2, '?');
+constexpr len_t find_pos_01 = find_pos::find(str1, ',');
+constexpr len_t find_pos_02 = find_pos::find(str1, '*');
+constexpr len_t find_pos_03 = find_pos::find(str2, '?');
 
 constexpr auto find_ptr_01 = find::find(str1, ',');
 constexpr auto find_ptr_02 = find::find(str1, str1 + 15, '*');
 constexpr auto find_ptr_03 = find::find(str2, str2 + 15, '?');
 
-constexpr len_t rfind_pos_01 = find::rfind_pos(str1, ',');
-constexpr len_t rfind_pos_02 = find::rfind_pos(str1, '*');
-constexpr len_t rfind_pos_03 = find::rfind_pos(str2, '?');
-constexpr len_t rfind_pos_04 = find::rfind_pos(str2, '\0');
+constexpr len_t rfind_pos_01 = find_pos::rfind(str1, ',');
+constexpr len_t rfind_pos_02 = find_pos::rfind(str1, '*');
+constexpr len_t rfind_pos_03 = find_pos::rfind(str2, '?');
+constexpr len_t rfind_pos_04 = find_pos::rfind(str2, '\0');
 
 constexpr auto rfind_ptr_01 = find::rfind(str1, ',');
 constexpr auto rfind_ptr_02 = find::rfind(str1, '*');

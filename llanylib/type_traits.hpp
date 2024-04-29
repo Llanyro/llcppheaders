@@ -62,6 +62,9 @@ class ArrayPair : public CountableL {
 				static_cast<ll_bool_t>(this->data) &&
 				static_cast<ll_bool_t>(this->operator len_t());
 		}
+		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
+			return !this->isValid();
+		}
 		constexpr void clear() __LL_EXCEPT__ {
 			CountableL::clear();
 			this->simple_clear();

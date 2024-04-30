@@ -95,13 +95,13 @@ class LL_SHARED_LIB NodePrev {
 			return (this->getPrev() != this) ? this->getPrev() : LL_NULLPTR;
 		}
 		__LL_NODISCARD__ constexpr __NodeType::ptr getPrev(const len_t num) __LL_EXCEPT__ {
-			__NodeType::ptr result = this;
+			typename __NodeType::ptr result = this;
 			for (len_t i{}; i < num; ++i)
 				result = result->getPrev();
 			return result;
 		}
 		__LL_NODISCARD__ constexpr __NodeType::cptr getPrev(const len_t num) const __LL_EXCEPT__ {
-			__NodeType::cptr result = this;
+			typename __NodeType::cptr result = this;
 			for (len_t i{}; i < num; ++i)
 				result = result->getPrev();
 			return result;

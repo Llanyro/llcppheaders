@@ -108,7 +108,6 @@ class LL_SHARED_LIB ArrayView {
 
 		#pragma region Compare
 	public:
-
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
 		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(const U (&arr)[N], CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::compare(this->begin(), arr, this->operator len_t(), compareFunc);

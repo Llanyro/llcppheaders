@@ -97,23 +97,23 @@ static_assert(!ends_with_04_res.getResult(), "Error changed value");	// Here is 
 
 ///////////////////////////////////////////////// Finders /////////////////////////////////////////////////
 
-constexpr len_t find_pos_01 = find_pos::find(str1, ',');
-constexpr len_t find_pos_02 = find_pos::find(str1, '*');
-constexpr len_t find_pos_03 = find_pos::find(str2, '?');
+constexpr len_t find_pos_01 = find_pos::find<ll_char_t>(str1, ',');
+constexpr len_t find_pos_02 = find_pos::find<ll_char_t>(str1, '*');
+constexpr len_t find_pos_03 = find_pos::find<ll_char_t>(str2, '?');
 
-constexpr auto find_ptr_01 = find::find(str1, ',');
-constexpr auto find_ptr_02 = find::find(str1, str1 + 15, '*');
-constexpr auto find_ptr_03 = find::find(str2, str2 + 15, '?');
+constexpr auto find_ptr_01 = find::find<ll_char_t>(str1, ',');
+constexpr auto find_ptr_02 = find::find<ll_char_t>(str1, str1 + 15, '*');
+constexpr auto find_ptr_03 = find::find<ll_char_t>(str2, str2 + 15, '?');
 
-constexpr len_t rfind_pos_01 = find_pos::rfind(str1, ',');
-constexpr len_t rfind_pos_02 = find_pos::rfind(str1, '*');
-constexpr len_t rfind_pos_03 = find_pos::rfind(str2, '?');
-constexpr len_t rfind_pos_04 = find_pos::rfind(str2, '\0');
+constexpr len_t rfind_pos_01 = find_pos::rfind<ll_char_t>(str1, ',');
+constexpr len_t rfind_pos_02 = find_pos::rfind<ll_char_t>(str1, '*');
+constexpr len_t rfind_pos_03 = find_pos::rfind<ll_char_t>(str2, '?');
+constexpr len_t rfind_pos_04 = find_pos::rfind<ll_char_t>(str2, '\0');
 
-constexpr auto rfind_ptr_01 = find::rfind(str1, ',');
-constexpr auto rfind_ptr_02 = find::rfind(str1, '*');
-constexpr auto rfind_ptr_03 = find::rfind(str2, '?');
-constexpr auto rfind_ptr_04 = find::rfind(str2, '\0');
+constexpr auto rfind_ptr_01 = find::rfind<ll_char_t>(str1, ',');
+constexpr auto rfind_ptr_02 = find::rfind<ll_char_t>(str1, '*');
+constexpr auto rfind_ptr_03 = find::rfind<ll_char_t>(str2, '?');
+constexpr auto rfind_ptr_04 = find::rfind<ll_char_t>(str2, '\0');
 
 static_assert(find_pos_01 == 07, "Error changed value");
 static_assert(find_pos_02 == 13, "Error changed value");

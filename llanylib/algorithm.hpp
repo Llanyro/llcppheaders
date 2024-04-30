@@ -88,9 +88,9 @@ class CompareData {
 
 template<class T, class U, class result_t, result_t NULL_RESULT, ll_bool_t GET_DATA>
 using CompareConditional = std::conditional_t<GET_DATA, CompareData<T, U, result_t, NULL_RESULT>, result_t>;
-template<class T, class U = T, ll_bool_t GET_DATA = LL_TRUE>
+template<class T, class U = T, ll_bool_t GET_DATA>
 using CompareConditionalCmpT = CompareConditional<T, U, cmp_t, 0, GET_DATA>;
-template<class T, class U = T, ll_bool_t GET_DATA = LL_TRUE>
+template<class T, class U = T, ll_bool_t GET_DATA>
 using CompareConditionalBool = CompareConditional<T, U, ll_bool_t, LL_FALSE, GET_DATA>;
 
 template<class T, class U = T, ll_bool_t GET_DATA = LL_FALSE>
@@ -100,16 +100,16 @@ struct compare_cluster {
 	using __u = traits::template_types<U>;
 	using CompareResult = CompareConditionalCmpT<T, U, GET_DATA>;
 	using CompareResultBool = CompareConditionalBool<T, U, GET_DATA>;
-	using fun_compare = fnc_clss::Compare<typename __t::cinput, typename __u::cinput>;
-	using fun_comparebool = fnc_clss::CompareBool<typename __t::cinput, typename __u::cinput>;
+	using CompareFunc = fnc_clss::Compare<typename __t::cinput, typename __u::cinput>;
+	using CompareFuncBool = fnc_clss::CompareBool<typename __t::cinput, typename __u::cinput>;
 	using __ArrayPair_t = ArrayPair<typename __t::type>;
 	using __ArrayPair_u = ArrayPair<typename __u::type>;
 
 	#pragma region Compare
-	__LL_NODISCARD__ static constexpr CompareResult compare(__t::cptr v1, __u::cptr v2, len_t size, fun_compare cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResult compare(__t::cptr v1, __u::cptr v2, len_t size, CompareFunc compareFunc) __LL_EXCEPT__ {
 		typename __t::cptr begin = v1;
 		for (; 0 < size; --size, ++v1, ++v2) {
-			cmp_t result = cmp(*v1, *v2);
+			cmp_t result = compareFunc(*v1, *v2);
 			if (result != 0) {
 				if constexpr (GET_DATA)
 					return CompareResult(v1, v2, result);
@@ -124,13 +124,13 @@ struct compare_cluster {
 	}
 
 	#pragma region Equals
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::cptr v1, const len_t size1, __u::cptr v2, const len_t size2, fun_compare cmp) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::cptr v1, const len_t size1, __u::cptr v2, const len_t size2, CompareFunc compareFunc) __LL_EXCEPT__ {
 		if (size1 != size2) {
 			if constexpr (GET_DATA)
 				return CompareResultBool(LL_FALSE);
 			else return LL_FALSE;
 		}
-		CompareResult res = __cmp::compare(v1, v2, size1, cmp);
+		CompareResult res = __cmp::compare(v1, v2, size1, compareFunc);
 		if constexpr (GET_DATA)
 			return CompareResultBool(res.getValue1(), res.getValue2(), res.getResult() == 0);
 		else return res == 0;
@@ -148,16 +148,16 @@ struct compare_cluster {
 	}
 
 	template<len_t N1, len_t N2>
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype (&v1)[N1], __u::ctype (&v2)[N2], fun_compare cmp) __LL_EXCEPT__ {
-		return __cmp::equals(v1, N1, v2, N2, cmp);
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype (&v1)[N1], __u::ctype (&v2)[N2], CompareFunc compareFunc) __LL_EXCEPT__ {
+		return __cmp::equals(v1, N1, v2, N2, compareFunc);
 	}
 	template<len_t N1, len_t N2>
 	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype (&v1)[N1], __u::ctype(&v2)[N2]) __LL_EXCEPT__ {
 		return __cmp::equals(v1, N1, v2, N2);
 	}
 
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& v1, const __ArrayPair_u& v2, fun_compare cmp) __LL_EXCEPT__ {
-		return __cmp::equals(v1.begin(), v1.len(), v2.begin(), v2.len(), cmp);
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& v1, const __ArrayPair_u& v2, CompareFunc compareFunc) __LL_EXCEPT__ {
+		return __cmp::equals(v1.begin(), v1.len(), v2.begin(), v2.len(), compareFunc);
 	}
 	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& v1, const __ArrayPair_u& v2) __LL_EXCEPT__ {
 		return __cmp::equals(v1.begin(), v1.len(), v2.begin(), v2.len());
@@ -167,10 +167,10 @@ struct compare_cluster {
 	#pragma endregion
 	#pragma region StartsWith
 	// str size needs to be bigger or equal to needle
-	__LL_NODISCARD__ static constexpr CompareResultBool starts_with_impl(__t::cptr str, __u::cptr needle, len_t size, fun_comparebool cmp) {
+	__LL_NODISCARD__ static constexpr CompareResultBool starts_with_impl(__t::cptr str, __u::cptr needle, len_t size, CompareFuncBool compareFunc) {
 		typename __t::cptr begin = str;
 		for (; 0 < size; --size, ++str, ++needle) {
-			ll_bool_t result = cmp(*str, *needle);
+			ll_bool_t result = compareFunc(*str, *needle);
 			if (!result) {
 				if constexpr (GET_DATA)
 					return CompareResultBool(str, needle, result);
@@ -184,29 +184,29 @@ struct compare_cluster {
 		return starts_with_impl(str, needle, size, common::simple_equals<__t::cinput, __u::cinput>);
 	}
 
-	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(__t::cptr str, const len_t size1, __u::cptr needle, const len_t size2, fun_comparebool cmp) {
+	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(__t::cptr str, const len_t size1, __u::cptr needle, const len_t size2, CompareFuncBool compareFunc) {
 		if (size1 < size2) {
 			if constexpr (GET_DATA)
 				return CompareResultBool(LL_FALSE);
 			else return LL_FALSE;
 		}
-		else return __cmp::starts_with_impl(str, needle, size2, cmp);
+		else return __cmp::starts_with_impl(str, needle, size2, compareFunc);
 	}
 	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(__t::cptr str, const len_t size1, __u::cptr needle, const len_t size2) {
 		return __cmp::starts_with(str, size1, needle, size2, common::simple_equals<__t::cinput, __u::cinput>);
 	}
 
 	template<len_t N1, len_t N2>
-	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(__t::ctype (&str)[N1], __u::ctype (&needle)[N2], fun_comparebool cmp) {
-		return __cmp::starts_with(str, N1, needle, N2, cmp);
+	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(__t::ctype (&str)[N1], __u::ctype (&needle)[N2], CompareFuncBool compareFunc) {
+		return __cmp::starts_with(str, N1, needle, N2, compareFunc);
 	}
 	template<len_t N1, len_t N2>
 	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(__t::ctype (&str)[N1], __u::ctype (&needle)[N2]) {
 		return __cmp::starts_with(str, N1, needle, N2);
 	}
 
-	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2, fun_comparebool cmp) {
-		return __cmp::starts_with(v1.begin(), v1.len(), v2.begin(), v2.len(), cmp);
+	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2, CompareFuncBool compareFunc) {
+		return __cmp::starts_with(v1.begin(), v1.len(), v2.begin(), v2.len(), compareFunc);
 	}
 	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2) {
 		return __cmp::starts_with(v1.begin(), v1.len(), v2.begin(), v2.len());
@@ -214,29 +214,29 @@ struct compare_cluster {
 
 	#pragma endregion
 	#pragma region EndsWith
-	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(__t::cptr str, const len_t size1, __u::cptr needle, const len_t size2, fun_comparebool cmp) {
+	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(__t::cptr str, const len_t size1, __u::cptr needle, const len_t size2, CompareFuncBool compareFunc) {
 		if (size1 < size2) {
 			if constexpr (GET_DATA)
 				return CompareResultBool(LL_FALSE);
 			else return LL_FALSE;
 		}
-		else return __cmp::starts_with_impl((str + size1) - size2, needle, size2, cmp);
+		else return __cmp::starts_with_impl((str + size1) - size2, needle, size2, compareFunc);
 	}
 	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(__t::cptr str, const len_t size1, __u::cptr needle, const len_t size2) {
 		return __cmp::ends_with(str, size1, needle, size2, common::simple_equals<__t::cinput, __u::cinput>);
 	}
 
 	template<len_t N1, len_t N2>
-	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(__t::ctype (&str)[N1], __u::ctype (&needle)[N2], fun_comparebool cmp) {
-		return __cmp::ends_with(str, N1, needle, N2, cmp);
+	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(__t::ctype (&str)[N1], __u::ctype (&needle)[N2], CompareFuncBool compareFunc) {
+		return __cmp::ends_with(str, N1, needle, N2, compareFunc);
 	}
 	template<len_t N1, len_t N2>
 	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(__t::ctype (&str)[N1], __u::ctype (&needle)[N2]) {
 		return __cmp::ends_with(str, N1, needle, N2);
 	}
 
-	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2, fun_comparebool cmp) {
-		return __cmp::ends_with(v1.begin(), v1.len(), v2.begin(), v2.len(), cmp);
+	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2, CompareFuncBool compareFunc) {
+		return __cmp::ends_with(v1.begin(), v1.len(), v2.begin(), v2.len(), compareFunc);
 	}
 	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2) {
 		return __cmp::ends_with(v1.begin(), v1.len(), v2.begin(), v2.len());
@@ -247,211 +247,204 @@ struct compare_cluster {
 
 #pragma endregion
 #pragma region Finders
-template<class T, ll_bool_t POSITION>
+template<class T, ll_bool_t POSITION = LL_TRUE>
 struct finders_cluster {
 	using __find = finders_cluster<T, POSITION>;
 	using __t = traits::template_types<T>;
-	template<class U>
-	using fun_comparebool = fnc_clss::CompareBool<typename __t::cinput, U>;
+	using FindResult = std::conditional_t<POSITION, len_t, typename __t::cptr>;
+	template<class W>
+	using CompareFuncBool = fnc_clss::CompareBool<typename __t::cinput, W>;
 	using __ArrayPair_t = ArrayPair<typename __t::type>;
-	using find_res = std::conditional_t<POSITION, len_t, typename __t::cptr>;
 
 	#pragma region Find
-	template<class U>
-	__LL_NODISCARD__ static constexpr find_res find(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr FindResult find(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
 		LL_ASSERT(begin, "[begin] cannot be nullptr. finders_cluster::find()");
 		LL_ASSERT(end, "[end] cannot be nullptr. finders_cluster::find()");
 		LL_ASSERT(end > begin, "[end > begin] begin must be lower position than end. finders_cluster::find()");
 
 		for (typename __t::cptr data = begin; data < end; ++data)
-			if (cmp(*data, object)) {
+			if (compareFunc(*data, object)) {
 				if constexpr (POSITION) return data - begin;
 				else return data;
 			}
 		if constexpr (POSITION) return npos;
 		else return end;
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr find_res find(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
-		return __find::find<U>(begin, end, object, common::simple_equals<__t::cinput, U>);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr FindResult find(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
+		return __find::find<U, W>(begin, end, object, common::simple_equals<__t::cinput, U>);
 	}
-
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr find_res find(__t::ctype (&v)[N], U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::find<U>(v, v + N, object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr FindResult find(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::find<U, W>(v, v + N, object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr find_res find(__t::ctype (&v)[N], U object) __LL_EXCEPT__ {
-		return __find::find<U>(v, v + N, object);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr FindResult find(__t::ctype (&v)[N], W object) __LL_EXCEPT__ {
+		return __find::find<U, W>(v, v + N, object);
 	}
-
-	template<class U>
-	__LL_NODISCARD__ static constexpr find_res find(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::find<U>(arr.begin(), arr.end(), object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr FindResult find(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::find<U, W>(arr.begin(), arr.end(), object, compareFunc);
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr find_res find(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
-		return __find::find<U>(arr.begin(), arr.end(), object);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr FindResult find(const __ArrayPair_t& arr, W object) __LL_EXCEPT__ {
+		return __find::find<U, W>(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region rFind
-	template<class U>
-	__LL_NODISCARD__ static constexpr find_res rfind(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr FindResult rfind(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
 		LL_ASSERT(begin, "[begin] cannot be nullptr. finders_cluster::rfind()");
 		LL_ASSERT(end, "[end] cannot be nullptr. finders_cluster::rfind()");
 		LL_ASSERT(end > begin, "[end > begin] begin must be lower position than end. finders_cluster::rfind()");
 
 		for (typename __t::cptr data = end - 1; data > begin; --data)
-			if (cmp(*data, object)) {
+			if (compareFunc(*data, object)) {
 				if constexpr (POSITION) return data - begin;
 				else return data;
 			}
 
-		if constexpr (POSITION) return cmp(*begin, object) ? 0 : npos;
-		else return cmp(*begin, object) ? begin : end;
+		if constexpr (POSITION) return compareFunc(*begin, object) ? 0 : npos;
+		else return compareFunc(*begin, object) ? begin : end;
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr find_res rfind(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
-		return __find::rfind<U>(begin, end, object, common::simple_equals<__t::cinput, U>);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr FindResult rfind(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
+		return __find::rfind<U, W>(begin, end, object, common::simple_equals<__t::cinput, U>);
 	}
-
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr find_res rfind(__t::ctype (&v)[N], U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::rfind<U>(v, v + N, object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr FindResult rfind(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::rfind<U, W>(v, v + N, object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr find_res rfind(__t::ctype (&v)[N], U object) __LL_EXCEPT__ {
-		return __find::rfind<U>(v, v + N, object);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr FindResult rfind(__t::ctype (&v)[N], W object) __LL_EXCEPT__ {
+		return __find::rfind<U, W>(v, v + N, object);
 	}
-
-	template<class U>
-	__LL_NODISCARD__ static constexpr find_res rfind(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::rfind<U>(arr.begin(), arr.end(), object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr FindResult rfind(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::rfind<U, W>(arr.begin(), arr.end(), object, compareFunc);
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr find_res rfind(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
-		return __find::rfind<U>(arr.begin(), arr.end(), object);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr FindResult rfind(const __ArrayPair_t& arr, W object) __LL_EXCEPT__ {
+		return __find::rfind<U, W>(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region Contains
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		if constexpr (POSITION) return __find::find<U>(begin, end, object, cmp) != npos;
-		else return __find::find<U>(begin, end, object, cmp) != end;
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		if constexpr (POSITION) return __find::find<U, W>(begin, end, object, compareFunc) != npos;
+		else return __find::find<U, W>(begin, end, object, compareFunc) != end;
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
-		if constexpr (POSITION) return __find::find<U>(begin, end, object) != npos;
-		else return __find::find<U>(begin, end, object) != end;
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
+		if constexpr (POSITION) return __find::find<U, W>(begin, end, object) != npos;
+		else return __find::find<U, W>(begin, end, object) != end;
 	}
-
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::ctype(&v)[N], U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::contains<U>(v, v + N, object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::ctype(&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::contains<U, W>(v, v + N, object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::ctype(&v)[N], U object) __LL_EXCEPT__ {
-		return __find::contains<U>(v, v + N, object);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::ctype(&v)[N], W object) __LL_EXCEPT__ {
+		return __find::contains<U, W>(v, v + N, object);
 	}
-
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::contains<U>(arr.begin(), arr.end(), object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::contains<U, W>(arr.begin(), arr.end(), object, compareFunc);
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
-		return __find::contains<U>(arr.begin(), arr.end(), object);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(const __ArrayPair_t& arr, W object) __LL_EXCEPT__ {
+		return __find::contains<U, W>(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region Other
 	#pragma region All
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		LL_ASSERT(begin, "[begin] cannot be nullptr. all(__t::cptr begin, __t::cptr end, const U object)");
-		LL_ASSERT(end, "[end] cannot be nullptr. all(__t::cptr begin, __t::cptr end, const U object)");
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		LL_ASSERT(begin, "[begin] cannot be nullptr. all(__t::cptr begin, __t::cptr end, const W object)");
+		LL_ASSERT(end, "[end] cannot be nullptr. all(__t::cptr begin, __t::cptr end, const W object)");
 
 		for (; begin < end; ++begin)
-			if (!cmp(*begin, object))
+			if (!compareFunc(*begin, object))
 				return LL_FALSE;
 		return LL_TRUE;
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
-		return __find::all(begin, end, object, common::simple_equals<__t::cinput, U>);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
+		return __find::all<U, W>(begin, end, object, common::simple_equals<__t::cinput, U>);
 	}
-
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&begin)[N], U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::all(begin, begin + N, object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&begin)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::all<U, W>(begin, begin + N, object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&begin)[N], U object) __LL_EXCEPT__ {
-		return __find::all(begin, begin + N, object);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&begin)[N], W object) __LL_EXCEPT__ {
+		return __find::all<U, W>(begin, begin + N, object);
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::all(arr.begin(), arr.end(), object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t all(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::all<U, W>(arr.begin(), arr.end(), object, compareFunc);
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
-		return __find::all(arr.begin(), arr.end(), object);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t all(const __ArrayPair_t& arr, W object) __LL_EXCEPT__ {
+		return __find::all<U, W>(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region Any
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return static_cast<ll_bool_t>(__find::find(begin, end, object, cmp));
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return static_cast<ll_bool_t>(__find::find<U, W>(begin, end, object, compareFunc));
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
-		return static_cast<ll_bool_t>(__find::find(begin, end, object));
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
+		return static_cast<ll_bool_t>(__find::find<U, W>(begin, end, object));
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&begin)[N], U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::any(begin, begin + N, object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&begin)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::any<U, W>(begin, begin + N, object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&begin)[N], U object) __LL_EXCEPT__ {
-		return __find::any(begin, begin + N, object);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&begin)[N], W object) __LL_EXCEPT__ {
+		return __find::any<U, W>(begin, begin + N, object);
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::any(arr.begin(), arr.end(), object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t any(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::any<U, W>(arr.begin(), arr.end(), object, compareFunc);
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
-		return __find::any(arr.begin(), arr.end(), object);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t any(const __ArrayPair_t& arr, W object) __LL_EXCEPT__ {
+		return __find::any<U, W>(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region None
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return !static_cast<ll_bool_t>(__find::find(begin, end, object, cmp));
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return !static_cast<ll_bool_t>(__find::find<U, W>(begin, end, object, compareFunc));
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
-		return !static_cast<ll_bool_t>(__find::find(begin, end, object));
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
+		return !static_cast<ll_bool_t>(__find::find<U, W>(begin, end, object));
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&begin)[N], U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::none(begin, begin + N, object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&begin)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::none<U, W>(begin, begin + N, object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&begin)[N], U object) __LL_EXCEPT__ {
-		return __find::none(begin, begin + N, object);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&begin)[N], W object) __LL_EXCEPT__ {
+		return __find::none<U, W>(begin, begin + N, object);
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::none(arr.begin(), arr.end(), object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t none(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::none<U, W>(arr.begin(), arr.end(), object, compareFunc);
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
-		return __find::none(arr.begin(), arr.end(), object);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr ll_bool_t none(const __ArrayPair_t& arr, W object) __LL_EXCEPT__ {
+		return __find::none<U, W>(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
@@ -467,12 +460,12 @@ struct finders_cluster {
 	/// <param name="end"></param>
 	/// <param name="object"></param>
 	/// <returns></returns>
-	template<class U>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::cptr begin, __t::cptr end, U object) {
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::cptr begin, __t::cptr end, W object) {
 		static_assert(traits::has_equal_operator_v<T>, "Error, <T> object has no operator==()");
 		static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
-		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const U object)");
-		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const U object)");
+		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
+		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
 
 		len_t low = 0ull;
 		len_t high = end - begin;
@@ -485,16 +478,16 @@ struct finders_cluster {
 		return end;
 	}
 	// This is recommended to use with objects types
-	template<class U>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) {
-		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const U object)");
-		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const U object)");
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) {
+		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
+		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
 
 		len_t low = 0ull;
 		len_t high = end - begin;
 		while (low <= high) {
 			len_t mid = ((high - low) / 2);
-			cmp_t res = cmp(begin[mid], object);
+			cmp_t res = compareFunc(begin[mid], object);
 			if (res == 0) return begin + mid;
 			else if (res > 0) high = mid;
 			else low = mid + 1;
@@ -503,48 +496,48 @@ struct finders_cluster {
 	}
 
 	#pragma region Proxy
-	template<class U>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::cptr begin, __t::cptr end, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		typename __t::cptr pos = __find::binarysearch(begin, end, object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		typename __t::cptr pos = __find::binarysearch(begin, end, object, compareFunc);
 		return (pos != end) ? pos - begin : npos;
 	}
-	template<class U>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::cptr begin, __t::cptr end, U object) __LL_EXCEPT__ {
+	template<class U, class W = traits::template_types<U>::cinput>
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
 		typename __t::cptr pos = __find::binarysearch(begin, end, object);
 		return (pos != end) ? pos - begin : npos;
 	}
 
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::ctype (&v)[N], U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::binarysearch(v, v + N, object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::binarysearch(v, v + N, object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::ctype (&v)[N], U object) __LL_EXCEPT__ {
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::ctype (&v)[N], W object) __LL_EXCEPT__ {
 		return __find::binarysearch(v, v + N, object);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::ctype (&v)[N], U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::binarysearch_pos(v, v + N, object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::binarysearch_pos(v, v + N, object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::ctype (&v)[N], U object) __LL_EXCEPT__ {
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::ctype (&v)[N], W object) __LL_EXCEPT__ {
 		return __find::binarysearch_pos(v, v + N, object);
 	}
 
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::binarysearch(arr.begin(), arr.end(), object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::binarysearch(arr.begin(), arr.end(), object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(const __ArrayPair_t& arr, W object) __LL_EXCEPT__ {
 		return __find::binarysearch(arr.begin(), arr.end(), object);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const __ArrayPair_t& arr, U object, fun_comparebool<U> cmp) __LL_EXCEPT__ {
-		return __find::binarysearch_pos(arr.begin(), arr.end(), object, cmp);
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::binarysearch_pos(arr.begin(), arr.end(), object, compareFunc);
 	}
-	template<class U, len_t N>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const __ArrayPair_t& arr, U object) __LL_EXCEPT__ {
+	template<class U, class W = traits::template_types<U>::cinput, len_t N>
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const __ArrayPair_t& arr, W object) __LL_EXCEPT__ {
 		return __find::binarysearch_pos(arr.begin(), arr.end(), object);
 	}
 

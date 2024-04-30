@@ -71,30 +71,107 @@ static_assert(compare_02_res.getResult() == -1, "Error changed value");
 static_assert(compare_03_res.getResult() == 01, "Error changed value");
 static_assert(compare_04_res.getResult() == 00, "Error changed value");
 
-constexpr ll_bool_t equals_01 = arrayview_01.equals<int>(arrayview_02,
-	[](const int, const int) {
-		return 0;
-	}
-);
-constexpr ll_bool_t equals_02 = arrayview_01.equals<int>(arrayview_02);
-constexpr ll_bool_t equals_03 = arrayview_01.equals<char>(arrayview_05);
-constexpr ll_bool_t equals_04 = arrayview_05.equals(algorithm::str1);
-constexpr ll_bool_t equals_05 = arrayview_05.equals(algorithm::str2);
-constexpr ll_bool_t equals_06 = arrayview_05.equals(algorithm::str1, 14);
+constexpr ll_bool_t equals_01 = arrayview_01.equals(arrayview_01);
+constexpr ll_bool_t equals_02 = arrayview_01.equals<int>(arrayview_02, [](const int, const int) { return 0; } );
+constexpr ll_bool_t equals_03 = arrayview_01.equals(arrayview_02);
+constexpr ll_bool_t equals_04 = arrayview_01.equals(arrayview_05);
+constexpr ll_bool_t equals_05 = arrayview_05.equals(algorithm::str1);
+constexpr ll_bool_t equals_06 = arrayview_05.equals(algorithm::str2);
+constexpr ll_bool_t equals_07 = arrayview_05.equals(algorithm::str1, 14);
+
+constexpr ll_bool_t equals_08 = arrayview_01 == arrayview_01;
+constexpr ll_bool_t equals_09 = arrayview_01 == arrayview_02;
+constexpr ll_bool_t equals_00 = arrayview_01.operator==<int>(arrayview_02);
+constexpr ll_bool_t equals_10 = arrayview_01.operator==<char>(arrayview_05);
+constexpr ll_bool_t equals_12 = arrayview_05 == algorithm::str1;
+constexpr ll_bool_t equals_13 = arrayview_05 == algorithm::str2;
 
 static_assert( equals_01, "Error changed value");
-static_assert(!equals_02, "Error changed value");
+static_assert( equals_02, "Error changed value");
 static_assert(!equals_03, "Error changed value");
-static_assert( equals_04, "Error changed value");
-static_assert(!equals_05, "Error changed value");
+static_assert(!equals_04, "Error changed value");
+static_assert( equals_05, "Error changed value");
 static_assert(!equals_06, "Error changed value");
+static_assert(!equals_07, "Error changed value");
+
+static_assert( equals_08, "Error changed value");
+static_assert(!equals_09, "Error changed value");
+static_assert(!equals_00, "Error changed value");
+static_assert(!equals_10, "Error changed value");
+static_assert( equals_12, "Error changed value");
+static_assert(!equals_13, "Error changed value");
+
+constexpr ll_bool_t equals_t_01 = arrayview_07.operator==(arrayview_08);
+constexpr ll_bool_t equals_t_02 = arrayview_07.operator==(arrayview_07);
+constexpr ll_bool_t equals_t_05 = arrayview_02.operator==(arrayview_01);
+constexpr ll_bool_t equals_t_06 = arrayview_03.operator==(arrayview_01);
+constexpr ll_bool_t equals_t_07 = arrayview_04.operator==(arrayview_01);
+constexpr ll_bool_t equals_t_08 = arrayview_02.operator==(arrayview_01);
+constexpr ll_bool_t equals_t_09 = arrayview_03.operator==(numbers_01);
+constexpr ll_bool_t equals_t_10 = arrayview_03.operator==(numbers_02);
+constexpr ll_bool_t equals_t_11 = arrayview_03.operator==(numbers_04);
+constexpr ll_bool_t equals_t_12 = arrayview_01.operator==(numbers_01);
+constexpr ll_bool_t equals_t_13 = arrayview_01.operator==(numbers_02);
+constexpr ll_bool_t equals_t_14 = arrayview_01.operator==(numbers_03);
+constexpr ll_bool_t equals_t_15 = arrayview_01.operator==(numbers_04);
+
+static_assert(!equals_t_01, "Error changed value");
+static_assert( equals_t_02, "Error changed value");
+static_assert(!equals_t_05, "Error changed value");
+static_assert(!equals_t_06, "Error changed value");
+static_assert(!equals_t_07, "Error changed value");
+static_assert(!equals_t_08, "Error changed value");
+static_assert(!equals_t_09, "Error changed value");
+static_assert(!equals_t_10, "Error changed value");
+static_assert(!equals_t_11, "Error changed value");
+static_assert( equals_t_12, "Error changed value");
+static_assert(!equals_t_13, "Error changed value");
+static_assert(!equals_t_14, "Error changed value");
+static_assert(!equals_t_15, "Error changed value");
+
+
+///////////////////////////////////////////////// ArrayView compare 2 /////////////////////////////////////////////////
+
+constexpr ll_bool_t starts_with_01 = arrayview_01.starts_with<int>(numbers_01);
+constexpr ll_bool_t starts_with_02 = arrayview_02.starts_with<int>(numbers_02);
+constexpr ll_bool_t starts_with_03 = arrayview_03.starts_with<int>(numbers_03);
+constexpr ll_bool_t starts_with_04 = arrayview_04.starts_with<int>(numbers_04);
+constexpr ll_bool_t starts_with_05 = arrayview_05.starts_with<char>(algorithm::str1);
+constexpr ll_bool_t starts_with_06 = arrayview_06.starts_with<char>(algorithm::str2);
+
+constexpr ll_bool_t starts_with_07 = arrayview_05.starts_with<char>("Holoo", 5);
+constexpr ll_bool_t starts_with_08 = arrayview_06.starts_with<char>("Holoo", 5);
+
+
+static_assert(starts_with_01, "Error changed value");
+static_assert(starts_with_02, "Error changed value");
+static_assert(starts_with_03, "Error changed value");
+static_assert(starts_with_04, "Error changed value");
+static_assert(starts_with_05, "Error changed value");
+static_assert(starts_with_06, "Error changed value");
+
+static_assert(starts_with_07, "Error changed value");
+static_assert(starts_with_08, "Error changed value");
+
 
 ///////////////////////////////////////////////// ArrayView finders /////////////////////////////////////////////////
+
+constexpr len_t find_pos_01 = arrayview_05.find<ll_char_t, LL_TRUE>('*');
+constexpr len_t find_pos_02 = arrayview_06.find<ll_char_t, LL_TRUE>('?');
+
+constexpr auto find_01 = arrayview_05.find<ll_char_t, LL_FALSE>('*');
+constexpr auto find_02 = arrayview_06.find<ll_char_t, LL_FALSE>('?');
+
+static_assert(find_pos_01 == 13, "Error changed value");
+static_assert(find_pos_02 == 13, "Error changed value");
+static_assert(*find_01 == '*', "Error changed value");
+static_assert(*find_02 == '?', "Error changed value");
 
 
 ///////////////////////////////////////////////// ArrayView algorithm /////////////////////////////////////////////////
 
-/*constexpr len_t find_pos_01 = arrayview_05.find_pos('*');
+/*
+constexpr len_t find_pos_01 = arrayview_05.find_pos('*');
 constexpr len_t find_pos_02 = arrayview_06.find_pos('?');
 
 constexpr auto find_01 = arrayview_05.find('*');
@@ -151,7 +228,8 @@ static_assert(equals_16 == LL_FALSE, "Error changed value");
 static_assert(equals_17 == LL_FALSE, "Error changed value");
 static_assert(equals_18 == LL_FALSE, "Error changed value");
 static_assert(equals_19 == LL_FALSE, "Error changed value");
-static_assert(equals_20 == LL_FALSE, "Error changed value");*/
+static_assert(equals_20 == LL_FALSE, "Error changed value");
+*/
 
 ///////////////////////////////////////////////// Array reverse /////////////////////////////////////////////////
 /*

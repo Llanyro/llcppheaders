@@ -88,9 +88,9 @@ class CompareData {
 
 template<class T, class U, class result_t, result_t NULL_RESULT, ll_bool_t GET_DATA>
 using CompareConditional = std::conditional_t<GET_DATA, CompareData<T, U, result_t, NULL_RESULT>, result_t>;
-template<class T, class U = T, ll_bool_t GET_DATA>
+template<class T, class U, ll_bool_t GET_DATA>
 using CompareConditionalCmpT = CompareConditional<T, U, cmp_t, 0, GET_DATA>;
-template<class T, class U = T, ll_bool_t GET_DATA>
+template<class T, class U, ll_bool_t GET_DATA>
 using CompareConditionalBool = CompareConditional<T, U, ll_bool_t, LL_FALSE, GET_DATA>;
 
 template<class T, class U = T, ll_bool_t GET_DATA = LL_FALSE>

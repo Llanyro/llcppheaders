@@ -289,12 +289,13 @@ class LL_SHARED_LIB ArrayView {
 	public:
 		template<ll_bool_t POSITION>
 		using FindResult = __find<POSITION>::FindResult;
-		template<ll_bool_t POSITION, class W>
-		using FindFunc = __find<POSITION>::CompareFuncBool<W>;
+		// [TOFIX]
+		template<class W>
+		using FindFunc = fnc_clss::CompareBool<typename type::input, W>;
 
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object, FindFunc<POSITION, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
 			return __find<POSITION>::find<U, W>(this->begin(), this->end(), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
@@ -303,7 +304,7 @@ class LL_SHARED_LIB ArrayView {
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object, FindFunc<POSITION, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
 			return __find<POSITION>::rfind<U, W>(this->begin(), this->end(), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
@@ -312,7 +313,7 @@ class LL_SHARED_LIB ArrayView {
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object, FindFunc<POSITION, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
 			return __find<POSITION>::contains<U, W>(this->begin(), this->end(), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
@@ -321,7 +322,7 @@ class LL_SHARED_LIB ArrayView {
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object, FindFunc<POSITION, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
 			return __find<POSITION>::all<U, W>(this->begin(), this->end(), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
@@ -330,7 +331,7 @@ class LL_SHARED_LIB ArrayView {
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object, FindFunc<POSITION, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
 			return __find<POSITION>::any<U, W>(this->begin(), this->end(), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
@@ -339,7 +340,7 @@ class LL_SHARED_LIB ArrayView {
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object, FindFunc<POSITION, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
 			return __find<POSITION>::none<U, W>(this->begin(), this->end(), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>

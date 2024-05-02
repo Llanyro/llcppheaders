@@ -9,7 +9,11 @@
 
 #if defined(LLANYLIB_ARRAYVIEW_HPP_) // Guard && version protector
 	#if LLANYLIB_ARRAYVIEW_MAYOR_ != 5 || LLANYLIB_ARRAYVIEW_MINOR_ < 0
-		#error "ArrayView.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "ArrayView.hpp version error!"
+		#else
+			#error "ArrayView.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_ARRAYVIEW_MAYOR_ || LLANYLIB_ARRAYVIEW_MINOR_
 
 #else !defined(LLANYLIB_ARRAYVIEW_HPP_)
@@ -19,20 +23,28 @@
 
 #include "algorithm.hpp"
 
+// [POSIX_CHECK]
+// [UNIX_CHECK]
+// [RASPI_CHECK]
+#include <utility>
+
 namespace llcpp {
 
 template<class T, len_t N>
 class LL_SHARED_LIB ArrayView {
-	// Assersts
+	#pragma region Assersts
 	public:
 		static_assert(N > 0, "Array cannot have a size of 0");
-
-	// Class types
+	#pragma endregion
+	#pragma region ClassTypes
 	public:
 		using type = traits::template_types<T>;
 		using __ArrayView = traits::template_types<ArrayView<T, N>>;
 		using __ArrayPair = ArrayPair<T>;
+		using csubstr = std::pair<typename type::cptr, typename type::cptr>;
 
+	#pragma endregion
+	#pragma region OtherClassTypes
 	// Algorithm objects
 	public:
 		template<ll_bool_t GET_DATA, class U>
@@ -46,19 +58,25 @@ class LL_SHARED_LIB ArrayView {
 		using __ArrayViewOtherType = traits::template_types<ArrayView<U, N>>;
 		//template<len_t N2>
 		//using __ArrayViewOtherSize = traits::template_types<ArrayView<T, N2>>;
-
+	#pragma endregion
+	#pragma region Attributes
 	protected:
 		type::cptr __data;
+	#pragma endregion
+	#pragma region Functions
 	public:
+		#pragma region Contructors
 		constexpr ArrayView() __LL_EXCEPT__ = delete;
 		constexpr ~ArrayView() __LL_EXCEPT__ {}
 
-		constexpr ArrayView(type::ctype (&arr)[N]) __LL_EXCEPT__ : __data(arr) {}
-		constexpr __ArrayView::ref operator=(type::ctype (&arr)[N]) __LL_EXCEPT__ {
+		constexpr ArrayView(type::ctype(&arr)[N]) __LL_EXCEPT__ : __data(arr) {}
+		constexpr __ArrayView::ref operator=(type::ctype(&arr)[N]) __LL_EXCEPT__ {
 			this->__data = arr;
 			return *this;
 		}
 
+		#pragma endregion
+		#pragma region CopyMove
 		constexpr ArrayView(__ArrayView::cref other) __LL_EXCEPT__ : __data(other.__data) {}
 		constexpr __ArrayView::ref operator=(__ArrayView::cref other) __LL_EXCEPT__ {
 			this->__data = other.__data;
@@ -68,15 +86,17 @@ class LL_SHARED_LIB ArrayView {
 		constexpr ArrayView(__ArrayView::move) __LL_EXCEPT__ = delete;
 		constexpr __ArrayView::ref operator=(__ArrayView::move) __LL_EXCEPT__ = delete;
 
-		__LL_NODISCARD__ constexpr operator len_t() const __LL_EXCEPT__ {
-			return N;
-		}
-		__LL_NODISCARD__ constexpr len_t size() const __LL_EXCEPT__ {
-			return this->operator len_t();
-		}
-		__LL_NODISCARD__ constexpr len_t len() const __LL_EXCEPT__ {
-			return this->operator len_t();
-		}
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+		__LL_NODISCARD__ constexpr operator __ArrayView::cref() const __LL_EXCEPT__ { return *this; }
+		__LL_NODISCARD__ constexpr operator __ArrayView::ref() __LL_EXCEPT__ { return *this; }
+		__LL_NODISCARD__ constexpr operator __ArrayView::move() __LL_EXCEPT__ = delete;
+
+		#pragma endregion
+		#pragma region ClassFunctions
+		__LL_NODISCARD__ constexpr operator len_t() const __LL_EXCEPT__ { return N; }
+		__LL_NODISCARD__ constexpr len_t size() const __LL_EXCEPT__ { return this->operator len_t(); }
+		__LL_NODISCARD__ constexpr len_t len() const __LL_EXCEPT__ { return this->operator len_t(); }
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
 			return this->operator len_t() == 0;
 		}
@@ -88,12 +108,24 @@ class LL_SHARED_LIB ArrayView {
 			return __ArrayPair(this->__data, this->operator len_t());
 		}
 		__LL_NODISCARD__ constexpr operator type::cptr() const __LL_EXCEPT__ { return this->__data; }
-		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos = 0ull) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos) const __LL_EXCEPT__ {
 			return this->__data + pos;
+		}
+		__LL_NODISCARD__ constexpr csubstr get(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
+			return csubstr{ this->get(_begin) , this->get(_end) };
+		}
+		__LL_NODISCARD__ constexpr csubstr substr(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
+			return this->get(_begin, _end);
 		}
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
 			return this->__data[pos];
 		}
+		#ifdef LL_REAL_CXX23
+		__LL_NODISCARD__ constexpr csubstr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
+			return this->substr(_begin, _end);
+		}
+
+		#endif // LL_REAL_CXX23
 
 		#pragma region Compare
 	public:
@@ -351,16 +383,21 @@ class LL_SHARED_LIB ArrayView {
 		#pragma endregion
 		#pragma region std
 		__LL_NODISCARD__ constexpr type::cptr data() const __LL_EXCEPT__ {
-			return this->get();
+			return this->begin();
 		}
 		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
-			return this->get();
+			return this->get(0ull);
+		}
+		__LL_NODISCARD__ constexpr type::cptr rbegin() const __LL_EXCEPT__ {
+			return this->get(this->operator len_t() - 1);
 		}
 		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
 			return this->get(this->operator len_t());
 		}
 
 		#pragma endregion
+		#pragma endregion
+	#pragma endregion
 };
 
 template<class T, len_t N>

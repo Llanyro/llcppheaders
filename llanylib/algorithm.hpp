@@ -9,7 +9,11 @@
 
 #if defined(LLANYLIB_ALGORITHM_HPP_) // Guard && version protector
 	#if LLANYLIB_ALGORITHM_MAYOR_ != 5 || LLANYLIB_ALGORITHM_MINOR_ < 0
-		#error "algorithm.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "algorithm.hpp version error!"
+		#else
+			#error "algorithm.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_ALGORITHM_MAYOR_ || LLANYLIB_ALGORITHM_MINOR_
 
 #else !defined(LLANYLIB_ALGORITHM_HPP_)

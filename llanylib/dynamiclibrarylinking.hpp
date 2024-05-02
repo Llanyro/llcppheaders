@@ -17,7 +17,7 @@
 #define LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ 5
 #define LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ 0
 
-#include "types.hpp"
+#include "StringView.hpp"
 
 #if defined(WINDOWS_SYSTEM)
 	#include <Windows.h>

@@ -9,7 +9,11 @@
 
 #if defined(LLANYLIB_DOUBLENODE_HPP_) // Guard && version protector
 	#if LLANYLIB_DOUBLENODE_MAYOR_ != 5 || LLANYLIB_DOUBLENODE_MINOR_ < 0
-		#error "DoubleNode.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "Node.hpp version error!"
+		#else
+			#error "Node.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_DOUBLENODE_MAYOR_ || LLANYLIB_DOUBLENODE_MINOR_
 
 #else !defined(LLANYLIB_DOUBLENODE_HPP_)

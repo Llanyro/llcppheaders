@@ -9,7 +9,11 @@
 
 #if defined(LLANYLIB_TYPES_HPP_) // Guard && version protector
 	#if LLANYLIB_TYPES_MAYOR_ != 5 || LLANYLIB_TYPES_MINOR_ < 0
-		#error "types.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "types.hpp version error!"
+		#else
+			#error "types.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_TYPES_MAYOR_ || LLANYLIB_TYPES_MINOR_
 
 #else !defined(LLANYLIB_TYPES_HPP_)

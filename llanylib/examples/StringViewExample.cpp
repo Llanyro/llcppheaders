@@ -15,11 +15,11 @@
 #include <string>
 #include <list>
 
-constexpr auto HELLO_WORLD_1 = llcpp::StringView("Hello world");
-constexpr auto HELLO_WORLD_2 = llcpp::StringView("Hello world!");
-constexpr auto EMPTY_STRING = llcpp::StringView("");
-constexpr auto QUESTION_STRING = llcpp::StringView("?");
-constexpr auto EXTRA_STRING = llcpp::StringView(L"à");
+constexpr auto HELLO_WORLD_1 = llcpp::make_StringView("Hello world");
+constexpr auto HELLO_WORLD_2 = llcpp::make_StringView("Hello world!");
+constexpr auto EMPTY_STRING = llcpp::make_StringView("");
+constexpr auto QUESTION_STRING = llcpp::make_StringView("?");
+constexpr auto EXTRA_STRING = llcpp::make_StringView(L"à");
 
 template<class T>
 class LinkedListB : public llcpp::linked::LinkedList<T> {

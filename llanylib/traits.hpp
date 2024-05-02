@@ -9,7 +9,11 @@
 
 #if defined(LLANYLIB_TRAITS_HPP_) // Guard && version protector
 	#if LLANYLIB_TRAITS_MAYOR_ != 5 || LLANYLIB_TRAITS_MINOR_ < 0
-		#error "traits.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "traits.hpp version error!"
+		#else
+			#error "traits.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_TRAITS_MAYOR_ || LLANYLIB_TRAITS_MINOR_
 
 #else !defined(LLANYLIB_TRAITS_HPP_)
@@ -43,6 +47,14 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_bigger_type_v = std::_Is_any_of_v<std::remove_const_t<T>, f128>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ll_char_t, ll_uchar_t, ll_wchar_t>;
+
+// Packed types
+
+template<class... Args>
+__LL_VAR_INLINE__ constexpr len_t pack_size = sizeof...(Args);
+template<class... Args>
+__LL_VAR_INLINE__ constexpr ll_bool_t pack_has_args = (pack_size<Args...> > 0);
+
 
 // Returns a type with reference if object is not basic type
 // Is only used when type parameter will be const

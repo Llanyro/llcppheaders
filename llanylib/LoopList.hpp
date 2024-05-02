@@ -9,7 +9,11 @@
 
 #if defined(LLANYLIB_LINKEDLIST_HPP_) // Guard && version protector
 	#if LLANYLIB_LINKEDLIST_MAYOR_ != 5 || LLANYLIB_LINKEDLIST_MINOR_ < 0
-		#error "LoopList.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "LoopList.hpp version error!"
+		#else
+			#error "LoopList.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_LINKEDLIST_MAYOR_ || LLANYLIB_LINKEDLIST_MINOR_
 
 #else !defined(LLANYLIB_LINKEDLIST_HPP_)

@@ -9,7 +9,11 @@
 
 #if defined(LLANYLIB_DEFINITIONS_HPP_) // Guard && version protector
 	#if LLANYLIB_DEFINITIONS_MAYOR_ != 5 || LLANYLIB_DEFINITIONS_MINOR_ < 0
-		#error "definitions.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "definitions.hpp version error!"
+		#else
+			#error "definitions.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_DEFINITIONS_MAYOR_ || LLANYLIB_DEFINITIONS_MINOR_
 
 #else !defined(LLANYLIB_DEFINITIONS_HPP_)

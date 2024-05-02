@@ -9,7 +9,11 @@
 
 #if defined(LLANYLIB_SINGLETON_HPP_) // Guard && version protector
 	#if LLANYLIB_SINGLETON_MAYOR_ != 5 || LLANYLIB_SINGLETON_MINOR_ < 0
-		#error "Singleton.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "Singleton.hpp version error!"
+		#else
+			#error "Singleton.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_SINGLETON_MAYOR_ || LLANYLIB_SINGLETON_MINOR_
 
 #else !defined(LLANYLIB_SINGLETON_HPP_)
@@ -17,22 +21,27 @@
 #define LLANYLIB_SINGLETON_MAYOR_ 5
 #define LLANYLIB_SINGLETON_MINOR_ 0
 
-#include "definitions.hpp"
+#include "traits.hpp"
 
 namespace llcpp {
 namespace singleton {
 
 /*
 		#pragma region Singleton
-	private:
-		friend class Singleton<class>;
-		class();
-		~class();
 	public:
-		class(const class&) __LL_EXCEPT__ = delete;
-		class& operator=(const class&) __LL_EXCEPT__ = delete;
-		class(class&&) __LL_EXCEPT__ = delete;
-		class& operator=(class&&) __LL_EXCEPT__ = delete;
+		using __Singleton = traits::template_types<Singleton<CLASS>>;
+		using __CLASS = traits::template_types<__Singleton::type>;
+
+	private:
+		friend class __Singleton::type;
+		CLASS() noexcept(false);
+		~CLASS() noexcept(false);
+
+	public:
+		CLASS(__CLASS::cref) __LL_EXCEPT__ = delete;
+		__CLASS::ref operator=(__CLASS::cref) __LL_EXCEPT__ = delete;
+		CLASS(__CLASS::move) __LL_EXCEPT__ = delete;
+		__CLASS::ref operator=(__CLASS::move) __LL_EXCEPT__ = delete;
 		#pragma endregion
 */
 
@@ -40,13 +49,36 @@ namespace static_ {
 
 template <class T>
 class LL_SHARED_LIB Singleton {
-	protected:
-		Singleton() {}
-		~Singleton() {}
 	public:
-		static T& getInstance() __LL_EXCEPT__ {
-			static T instance;
-			return instance;
+		using type = traits::template_types<T>;
+		using __Singleton = traits::template_types<Singleton<T>>;
+
+	protected:
+		constexpr Singleton() __LL_EXCEPT__ {}
+
+	public:
+		constexpr ~Singleton() __LL_EXCEPT__ {}
+
+		Singleton(__Singleton::cref) __LL_EXCEPT__ = delete;
+		__Singleton::ref operator=(__Singleton::cref) __LL_EXCEPT__ = delete;
+		Singleton(__Singleton::move) __LL_EXCEPT__ = delete;
+		__Singleton::ref operator=(__Singleton::move) __LL_EXCEPT__ = delete;
+
+		constexpr operator __Singleton::cref() const __LL_EXCEPT__ = delete;
+		constexpr operator __Singleton::ref() __LL_EXCEPT__ = delete;
+		constexpr operator __Singleton::move() __LL_EXCEPT__ = delete;
+
+		// [TOCHECK]
+		template <class... Args>
+		__LL_NODISCARD__ static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {
+			if constexpr (traits::pack_has_args<Args...>) {
+				static T instance(std::forward<Args>(_Args)...));
+				return instance;
+			}
+			else {
+				static T instance;
+				return instance;
+			}
 		}
 };
 
@@ -56,17 +88,38 @@ namespace dynamic {
 
 template <class T>
 class LL_SHARED_LIB Singleton {
-	protected:
-		Singleton() {}
-		~Singleton() {}
-		static T* instance;
 	public:
-		static T& getInstance() __LL_EXCEPT__ {
-			if (!Singleton<T>::instance)
-				Singleton<T>::instance = new T();
+		using type = traits::template_types<T>;
+		using __Singleton = traits::template_types<Singleton<T>>;
+
+	private:
+		static T* instance;
+
+	protected:
+		constexpr Singleton() __LL_EXCEPT__ {}
+
+	public:
+		constexpr ~Singleton() __LL_EXCEPT__ {}
+
+		Singleton(__Singleton::cref) __LL_EXCEPT__ = delete;
+		__Singleton::ref operator=(__Singleton::cref) __LL_EXCEPT__ = delete;
+		Singleton(__Singleton::move) __LL_EXCEPT__ = delete;
+		__Singleton::ref operator=(__Singleton::move) __LL_EXCEPT__ = delete;
+
+		constexpr operator __Singleton::cref() const __LL_EXCEPT__ = delete;
+		constexpr operator __Singleton::ref() __LL_EXCEPT__ = delete;
+		constexpr operator __Singleton::move() __LL_EXCEPT__ = delete;
+
+		template <class... Args>
+		static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {
+			if (!Singleton<T>::instance) {
+				if constexpr (traits::pack_has_args<Args...>)
+					Singleton<T>::instance = new T(std::forward<Args>(_Args)...));
+				else Singleton<T>::instance = new T();
+			}
 			return *Singleton<T>::instance;
 		}
-		static void freeInstance() __LL_EXCEPT__ {
+		static void freeInstance() noexcept(std::is_nothrow_destructible_v<T>) {
 			if (Singleton<T>::instance) {
 				delete Singleton<T>::instance;
 				Singleton<T>::instance = LL_NULLPTR;

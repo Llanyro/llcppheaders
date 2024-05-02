@@ -9,14 +9,17 @@
 
 #if defined(LLANYLIB_OS_HPP_) // Guard && version protector
 	#if LLANYLIB_OS_MAYOR_ != 5 || LLANYLIB_OS_MINOR_ < 0
-		#error "os.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "os.hpp version error!"
+		#else
+			#error "os.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_OS_MAYOR_ || LLANYLIB_OS_MINOR_
 
 #else !defined(LLANYLIB_OS_HPP_)
 #define LLANYLIB_OS_HPP_
 #define LLANYLIB_OS_MAYOR_ 5
 #define LLANYLIB_OS_MINOR_ 0
-
 
 #if defined(__cplusplus)
 	#if __STDC_HOSTED__ != 1
@@ -25,9 +28,9 @@
 
 	#if __cplusplus >= 202302L
 		#define DIRECTIVE_WARNING
+		#define LL_REAL_CXX23
 	#endif // __cplusplus
 #endif // __cplusplus
-
 
 
 // Setting env by OS
@@ -49,8 +52,6 @@
 		#error "This error can be commented to compile!"
 	#endif // DIRECTIVE_WARNING
 #endif // _WIN32 || _WIN64 || __unix__
-
-
 
 // Sets env for exporting libraries
 #if defined(WINDOWS_SYSTEM)
@@ -78,7 +79,6 @@
 #else
 	constexpr unsigned char __BITS_SYSTEM__ = 64u;
 #endif // __x86_64__ || __ILP32__
-
 
 #if defined(WINDOWS_SYSTEM)
 	// Creates a definition to use assert by condition and message

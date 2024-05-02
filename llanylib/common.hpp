@@ -9,7 +9,11 @@
 
 #if defined(LLANYLIB_COMMON_HPP_) // Guard && version protector
 	#if LLANYLIB_COMMON_MAYOR_ != 5 || LLANYLIB_COMMON_MINOR_ < 0
-		#error "common.hpp version error!"
+		#if defined(LL_REAL_CXX23)
+			#warning "common.hpp version error!"
+		#else
+			#error "common.hpp version error!"
+		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_COMMON_MAYOR_ || LLANYLIB_COMMON_MINOR_
 
 #else !defined(LLANYLIB_COMMON_HPP_)

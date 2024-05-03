@@ -17,12 +17,12 @@ namespace traits {
 
 ///////////////////////////////////////////////// Conditional for chars types /////////////////////////////////////////////////
 
-using get_by_char_type_res_1 = traits::get_by_char_type_t<ll_char_t, i8, i16, i32>;
-using get_by_char_type_res_2 = traits::get_by_char_type_t<ll_uchar_t, i8, i16, i32>;
-using get_by_char_type_res_3 = traits::get_by_char_type_t<ll_wchar_t, i8, i16, i32>;
+using get_by_char_type_res_1 = traits::get_by_char_type_t<ll_char_t, i8, i32>;
+using get_by_char_type_res_2 = traits::get_by_char_type_t<ll_uchar_t, i8, i32>;
+using get_by_char_type_res_3 = traits::get_by_char_type_t<ll_wchar_t, i8, i32>;
 
 static_assert(std::is_same_v<get_by_char_type_res_1, i8 >, "Error changed value");
-static_assert(std::is_same_v<get_by_char_type_res_2, i16>, "Error changed value");
+static_assert(std::is_same_v<get_by_char_type_res_2, void>, "Error changed value");
 static_assert(std::is_same_v<get_by_char_type_res_3, i32>, "Error changed value");
 
 ///////////////////////////////////////////////// Getting types /////////////////////////////////////////////////

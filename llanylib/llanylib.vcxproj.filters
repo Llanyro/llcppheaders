@@ -144,6 +144,9 @@
     <ClInclude Include="type_traits.hpp">
       <Filter>Source Files\types</Filter>
     </ClInclude>
+    <ClInclude Include="examples\mathExample.hpp">
+      <Filter>Source Files\examples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

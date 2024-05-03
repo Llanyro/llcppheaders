@@ -43,7 +43,7 @@ class LL_SHARED_LIB StringView {
 	public:
 		using type = llcpp::traits::template_types<T>;
 		using __StringView = llcpp::traits::template_types<StringView<N, T>>;
-		using __StrPair = traits::get_by_char_type_t<T, StrPair, uStrPair, wStrPair>;
+		using __StrPair = traits::get_by_char_type_t<T, StrPair, wStrPair>;
 		using csubstr = std::pair<typename type::cptr, typename type::cptr>;
 
 		template<class U>

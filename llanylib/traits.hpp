@@ -46,7 +46,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_type_v = std::_Is_any_of_v<std
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_bigger_type_v = std::_Is_any_of_v<std::remove_const_t<T>, f128>;
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ll_char_t, ll_uchar_t, ll_wchar_t>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ll_char_t, ll_wchar_t>;
 
 // Packed types
 
@@ -216,18 +216,17 @@ struct type_conversor {
 
 #pragma region Other
 #pragma region CharConditional
-template<class T, class TypeChar, class TypeUChar, class TypeWChar>
+template<class T, class TypeChar, class TypeWChar>
 struct get_by_char_type {
 	template <class U>
 	struct __internal__struct__ { using _val = void; };
 	template<> struct __internal__struct__<ll_char_t> { using _val = TypeChar; };
-	template<> struct __internal__struct__<ll_uchar_t> { using _val = TypeUChar; };
 	template<> struct __internal__struct__<ll_wchar_t> { using _val = TypeWChar; };
 	using value = __internal__struct__<std::remove_const_t<T>>::_val;
 };
 
-template<class T, class TypeChar, class TypeUChar, class TypeWChar>
-using get_by_char_type_t = get_by_char_type<T, TypeChar, TypeUChar, TypeWChar>::value;
+template<class T, class TypeChar, class TypeWChar>
+using get_by_char_type_t = get_by_char_type<T, TypeChar, TypeWChar>::value;
 
 #pragma endregion
 #pragma endregion

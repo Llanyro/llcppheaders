@@ -34,6 +34,7 @@
     <ClInclude Include="examples\algorithmExample.hpp" />
     <ClInclude Include="examples\ArrayViewExample.hpp" />
     <ClInclude Include="examples\bitsExample.hpp" />
+    <ClInclude Include="examples\mathExample.hpp" />
     <ClInclude Include="examples\StringViewExample.hpp" />
     <ClInclude Include="examples\traitsExample.hpp" />
     <ClInclude Include="examples\traits_test_class.hpp" />

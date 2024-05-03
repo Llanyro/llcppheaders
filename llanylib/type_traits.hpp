@@ -110,7 +110,6 @@ class ArrayPair : public CountableL {
 };
 
 using StrPair  = ArrayPair<ll_char_t>;
-using uStrPair = ArrayPair<ll_uchar_t>;
 using wStrPair = ArrayPair<ll_wchar_t>;
 
 namespace traits {

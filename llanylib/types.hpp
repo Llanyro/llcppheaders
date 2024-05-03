@@ -142,19 +142,13 @@ template <class _Elem>
 struct char_traits;
 template <class _Elem, class _Traits, class _Alloc>
 class basic_string;
+template <class _Elem, class _Traits>
+class basic_string_view;
+
 using string  = basic_string<char, char_traits<char>, allocator<char>>;
 using wstring  = basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>>;
-using u8string = basic_string<char8_t, char_traits<char8_t>, allocator<char8_t>>;
-using u16string = basic_string<char16_t, char_traits<char16_t>, allocator<char16_t>>;
-using u32string = basic_string<char32_t, char_traits<char32_t>, allocator<char32_t>>;
-
-//using string_view = basic_string_view<char>;
-//#ifdef __cpp_lib_char8_t
-//using u8string_view = basic_string_view<char8_t>;
-//#endif // __cpp_lib_char8_t
-//using u16string_view = basic_string_view<char16_t>;
-//using u32string_view = basic_string_view<char32_t>;
-//using wstring_view = basic_string_view<wchar_t>;
+using string_view = basic_string_view<char, char_traits<char>>;
+using wstring_view = basic_string_view<wchar_t, char_traits<char>>;
 
 template <class _Fty>
 class function;

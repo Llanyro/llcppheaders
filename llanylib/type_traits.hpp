@@ -40,7 +40,7 @@ class ArrayPair : public CountableL {
 		constexpr ArrayPair() __LL_EXCEPT__ = delete;
 		constexpr ArrayPair(type::cptr __data, const len_t len) __LL_EXCEPT__
 			: CountableL(len), __data(__data) {}
-		constexpr ArrayPair() __LL_EXCEPT__ {}
+		constexpr ~ArrayPair() __LL_EXCEPT__ {}
 		#pragma endregion
 		#pragma region CopyMove
 		constexpr ArrayPair(__ArrayPair::cref other) __LL_EXCEPT__
@@ -85,14 +85,11 @@ class ArrayPair : public CountableL {
 		}
 		#endif // LL_REAL_CXX23
 
-		__LL_NODISCARD__ constexpr type::cptr data() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr typename type::cptr data() const __LL_EXCEPT__ {
 			return this->begin();
 		}
-		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr typename type::cptr begin() const __LL_EXCEPT__ {
 			return this->get(0ull);
-		}
-		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
-			return this->__data;
 		}
 		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
 			return this->__data + this->operator len_t();

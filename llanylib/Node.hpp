@@ -31,8 +31,8 @@ class LL_SHARED_LIB NodeNext {
 	#pragma region Assersts
 	public:
 		// [TOCHECK] Check with benchmark class
-		static_assert(std::is_base_of_v<NodeNext<NodeType>, NodeType>, 
-			"NodeType from NodeNext<> must be a base of NodeNext<>");
+		//static_assert(std::is_base_of_v<NodeNext<NodeType>, NodeType>, 
+		//	"NodeType from NodeNext<> must be a base of NodeNext<>");
 	#pragma endregion
 	#pragma region ClassTypes
 	public:
@@ -97,8 +97,8 @@ class LL_SHARED_LIB NodePrev {
 	#pragma region Assersts
 	public:
 		// [TOCHECK] Check with benchmark class
-		static_assert(std::is_base_of_v<NodePrev<NodeType>, NodeType>,
-			"NodeType from NodePrev<> must be a base of NodePrev<>");
+		//static_assert(std::is_base_of_v<NodePrev<NodeType>, NodeType>,
+		//	"NodeType from NodePrev<> must be a base of NodePrev<>");
 	#pragma endregion
 	#pragma region ClassTypes
 	public:

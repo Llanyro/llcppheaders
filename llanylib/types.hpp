@@ -148,7 +148,7 @@ class basic_string_view;
 using string  = basic_string<char, char_traits<char>, allocator<char>>;
 using wstring  = basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>>;
 using string_view = basic_string_view<char, char_traits<char>>;
-using wstring_view = basic_string_view<wchar_t, char_traits<char>>;
+using wstring_view = basic_string_view<wchar_t, char_traits<wchar_t>>;
 
 template <class _Fty>
 class function;

@@ -10,14 +10,13 @@
 #ifndef LLANYLIB_MATH_HPP_
 #define LLANYLIB_MATH_HPP_
 
-#include "../definitions.hpp"
-#include "../types.hpp"
-#include "../magic_enum_extra.hpp"
+#include "../traits.hpp"
+//#include "../magic_enum_extra.hpp"
 
 namespace llcpp {
 namespace math {
 
-enum class ExponentType : ui8 {
+/*enum class ExponentType : ui8 {
 	None	= 0,
 	Two		= (1 << 0),
 	Three	= (1 << 1),
@@ -66,7 +65,8 @@ constexpr const ExponentType exponent[256] = {
 	0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0
-};
+};*/
+
 
 } // namespace math
 } // namespace llcpp

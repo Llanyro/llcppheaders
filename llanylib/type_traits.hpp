@@ -67,6 +67,27 @@ class ArrayPair : public CountableL {
 
 		#pragma endregion
 		#pragma region ClassFunctions
+		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos) const __LL_EXCEPT__ {
+			return this->__data + pos;
+		}
+		__LL_NODISCARD__ constexpr csubstr get(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
+			return csubstr{ this->get(_begin) , this->get(_end) };
+		}
+		__LL_NODISCARD__ constexpr csubstr substr(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
+			return this->get(_begin, _end);
+		}
+		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
+			return this->__data[pos];
+		}
+		#ifdef LL_REAL_CXX23
+		__LL_NODISCARD__ constexpr csubstr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
+			return this->substr(_begin, _end);
+		}
+		#endif // LL_REAL_CXX23
+
+		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
+			return this->data;
+		}
 		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
 			return this->data;
 		}

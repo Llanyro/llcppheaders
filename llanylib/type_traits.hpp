@@ -32,28 +32,28 @@ class ArrayPair : public CountableL {
 		using __ArrayPair = traits::template_types<ArrayPair<T>>;
 		using csubstr = std::pair<typename type::cptr, typename type::cptr>;
 	protected:
-		type::cptr data;
+		type::cptr __data;
 	protected:
-		constexpr void simple_clear() __LL_EXCEPT__ { this->data = LL_NULLPTR; }
+		constexpr void simple_clear() __LL_EXCEPT__ { this->__data = LL_NULLPTR; }
 	public:
 		#pragma region Constructors
 		constexpr ArrayPair() __LL_EXCEPT__ = delete;
-		constexpr ArrayPair(type::cptr data, const len_t len) __LL_EXCEPT__
-			: CountableL(len), data(data) {}
+		constexpr ArrayPair(type::cptr __data, const len_t len) __LL_EXCEPT__
+			: CountableL(len), __data(__data) {}
 		constexpr ArrayPair() __LL_EXCEPT__ {}
 		#pragma endregion
 		#pragma region CopyMove
 		constexpr ArrayPair(__ArrayPair::cref other) __LL_EXCEPT__
-			: CountableL(other), data(other.data) {}
+			: CountableL(other), __data(other.__data) {}
 		constexpr __ArrayPair::ref operator=(__ArrayPair::cref other) __LL_EXCEPT__ {
 			CountableL::operator=(other);
-			this->data = other.data;
+			this->__data = other.__data;
 			return *this;
 		}
 		constexpr ArrayPair(__ArrayPair::move other) __LL_EXCEPT__
-			: CountableL(other), data(other.data) { other.clear(); }
+			: CountableL(other), __data(other.__data) { other.clear(); }
 		constexpr __ArrayPair::ref operator=(__ArrayPair::move other) __LL_EXCEPT__ {
-			this->data = other.data;
+			this->__data = other.__data;
 			CountableL::operator=(other.operator __ArrayPair::move());
 			other.simple_clear();
 			return *this;
@@ -85,18 +85,21 @@ class ArrayPair : public CountableL {
 		}
 		#endif // LL_REAL_CXX23
 
-		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
-			return this->data;
+		__LL_NODISCARD__ constexpr type::cptr data() const __LL_EXCEPT__ {
+			return this->begin();
 		}
 		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
-			return this->data;
+			return this->get(0ull);
+		}
+		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
+			return this->__data;
 		}
 		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
-			return this->data + this->operator len_t();
+			return this->__data + this->operator len_t();
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t isValid() const __LL_EXCEPT__ {
 			return
-				static_cast<ll_bool_t>(this->data) &&
+				static_cast<ll_bool_t>(this->__data) &&
 				static_cast<ll_bool_t>(this->operator len_t());
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
@@ -114,9 +117,9 @@ using wStrPair = ArrayPair<ll_wchar_t>;
 
 namespace traits {
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_strpair_type_v = std::_Is_any_of_v<std::remove_const_t<T>, StrPair, uStrPair, wStrPair>;
-} // namespace traits
+__LL_VAR_INLINE__ constexpr ll_bool_t is_strpair_type_v = std::_Is_any_of_v<T, StrPair, wStrPair>;
 
+} // namespace traits
 } // namespace llcpp
 
 #endif // LLANYLIB_TYPETRAITS_HPP_

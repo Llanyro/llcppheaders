@@ -455,6 +455,8 @@ struct template_types {
 
 	using input = std::conditional_t<traits::is_basic_type_v<type>, type, ref>;
 	using cinput = std::conditional_t<traits::is_basic_type_v<type>, ctype, cref>;
+
+	using output = ref;
 };
 
 } // namespace traits

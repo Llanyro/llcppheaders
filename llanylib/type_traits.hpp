@@ -30,7 +30,7 @@ class ArrayPair : public CountableL {
 	public:
 		using type = traits::template_types<T>;
 		using __ArrayPair = traits::template_types<ArrayPair<T>>;
-		using csubstr = std::pair<typename type::cptr, typename type::cptr>;
+		using csubarr = std::pair<typename type::cptr, typename type::cptr>;
 	protected:
 		type::cptr __data;
 	protected:

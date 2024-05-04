@@ -72,7 +72,7 @@ class LL_SHARED_LIB Singleton {
 		template <class... Args>
 		__LL_NODISCARD__ static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {
 			if constexpr (traits::pack_has_args<Args...>) {
-				static T instance(std::forward<Args>(_Args)...));
+				static T instance(std::forward<Args>(args)...));
 				return instance;
 			}
 			else {
@@ -114,7 +114,7 @@ class LL_SHARED_LIB Singleton {
 		static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {
 			if (!Singleton<T>::instance) {
 				if constexpr (traits::pack_has_args<Args...>)
-					Singleton<T>::instance = new T(std::forward<Args>(_Args)...));
+					Singleton<T>::instance = new T(std::forward<Args>(args)...));
 				else Singleton<T>::instance = new T();
 			}
 			return *Singleton<T>::instance;

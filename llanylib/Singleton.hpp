@@ -64,9 +64,9 @@ class LL_SHARED_LIB Singleton {
 		Singleton(__Singleton::move) __LL_EXCEPT__ = delete;
 		__Singleton::ref operator=(__Singleton::move) __LL_EXCEPT__ = delete;
 
-		constexpr operator __Singleton::cref() const __LL_EXCEPT__ = delete;
-		constexpr operator __Singleton::ref() __LL_EXCEPT__ = delete;
-		constexpr operator __Singleton::move() __LL_EXCEPT__ = delete;
+		constexpr operator typename __Singleton::cref() const __LL_EXCEPT__ = delete;
+		constexpr operator typename __Singleton::ref() __LL_EXCEPT__ = delete;
+		constexpr operator typename __Singleton::move() __LL_EXCEPT__ = delete;
 
 		// [TOCHECK]
 		template <class... Args>
@@ -106,9 +106,9 @@ class LL_SHARED_LIB Singleton {
 		Singleton(__Singleton::move) __LL_EXCEPT__ = delete;
 		__Singleton::ref operator=(__Singleton::move) __LL_EXCEPT__ = delete;
 
-		constexpr operator __Singleton::cref() const __LL_EXCEPT__ = delete;
-		constexpr operator __Singleton::ref() __LL_EXCEPT__ = delete;
-		constexpr operator __Singleton::move() __LL_EXCEPT__ = delete;
+		constexpr operator typename __Singleton::cref() const __LL_EXCEPT__ = delete;
+		constexpr operator typename __Singleton::ref() __LL_EXCEPT__ = delete;
+		constexpr operator typename __Singleton::move() __LL_EXCEPT__ = delete;
 
 		template <class... Args>
 		static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {

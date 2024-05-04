@@ -123,7 +123,7 @@ class LL_SHARED_LIB StringView {
 			return !this->empty() && static_cast<ll_bool_t>(this->__data);
 		}
 
-		__LL_NODISCARD__ constexpr operator __StrPair() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr operator typename __StrPair() const __LL_EXCEPT__ {
 			return __StrPair(this->__data, this->operator len_t());
 		}
 		__LL_NODISCARD__ constexpr operator typename type::cptr() const __LL_EXCEPT__ {

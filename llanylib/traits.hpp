@@ -451,7 +451,7 @@ struct template_types {
 	using ptr = conversor::get_ptr_remove_reference_t;
 	// [TOFIX]
 	using cptr = conversor::get_const_ptr_remove_reference::value;
-	using ptrref = traits::type_conversor<T>::to_reference_t;
+	using ptrref = traits::type_conversor<typename ptr>::to_reference_t;
 
 	using input = std::conditional_t<traits::is_basic_type_v<type>, type, ref>;
 	using cinput = std::conditional_t<traits::is_basic_type_v<type>, ctype, cref>;

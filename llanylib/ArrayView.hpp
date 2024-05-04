@@ -41,7 +41,7 @@ class LL_SHARED_LIB ArrayView {
 		using type = traits::template_types<T>;
 		using __ArrayView = traits::template_types<ArrayView<T, N>>;
 		using __ArrayPair = ArrayPair<T>;
-		using csubstr = std::pair<typename type::cptr, typename type::cptr>;
+		using csubarr = std::pair<typename type::cptr, typename type::cptr>;
 
 	#pragma endregion
 	#pragma region OtherClassTypes
@@ -111,17 +111,17 @@ class LL_SHARED_LIB ArrayView {
 		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos) const __LL_EXCEPT__ {
 			return this->__data + pos;
 		}
-		__LL_NODISCARD__ constexpr csubstr get(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
-			return csubstr{ this->get(_begin) , this->get(_end) };
+		__LL_NODISCARD__ constexpr csubarr get(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
+			return csubarr{ this->get(_begin) , this->get(_end) };
 		}
-		__LL_NODISCARD__ constexpr csubstr substr(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr csubarr substr(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
 			return this->get(_begin, _end);
 		}
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
 			return this->__data[pos];
 		}
 		#ifdef LL_REAL_CXX23
-		__LL_NODISCARD__ constexpr csubstr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr csubarr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
 			return this->substr(_begin, _end);
 		}
 

@@ -23,19 +23,6 @@
 
 #include "traits.hpp"
 
-// [TOFIX] change to a constexpr template function that gets any function as argument
-#define COUNTABLE_DO_IF_VALID(func) \
-	ll_bool_t result = LL_TRUE; \
-	if ((result = this->inRange(position)) == llcpp::LL_TRUE) \
-		func; \
-	return result;
-
-#define COUNTABLE_DO_IF_VALID_2_POSITIONS(pos1, pos2, func) \
-	ll_bool_t result = LL_TRUE; \
-	if ((result = (this->inRange(pos1) && this->inRange(pos2))) == llcpp::LL_TRUE) \
-		func; \
-	return result;
-
 namespace llcpp {
 
 template<class T, T ZERO_VAL>
@@ -56,8 +43,8 @@ class LL_SHARED_LIB Countable {
 		__LL_NODISCARD__ constexpr type::type operator++(int) __LL_EXCEPT__ { return this->length++; }
 		__LL_NODISCARD__ constexpr type::type operator--(int) __LL_EXCEPT__ { return this->length--; }
 
-		constexpr void operator+=(type::ctype value) __LL_EXCEPT__ { this->length += value; }
-		constexpr void operator-=(type::ctype value) __LL_EXCEPT__ { this->length -= value; }
+		constexpr void operator+=(type::cinput value) __LL_EXCEPT__ { this->length += value; }
+		constexpr void operator-=(type::cinput value) __LL_EXCEPT__ { this->length -= value; }
 		constexpr void operator+=(__Countable::cref other) __LL_EXCEPT__ {
 			this->length += other.length;
 		}
@@ -65,14 +52,14 @@ class LL_SHARED_LIB Countable {
 			this->length -= other.length;
 		}
 
-		constexpr type::type operator=(type::ctype value) __LL_EXCEPT__ {
+		constexpr type::type operator=(type::cinput value) __LL_EXCEPT__ {
 			return this->length = value;
 		}
 		#pragma endregion
 	public:
 		#pragma region Contructors
 		constexpr Countable() __LL_EXCEPT__ : Countable(ZERO_VAL) {}
-		constexpr Countable(type::ctype length) __LL_EXCEPT__ : length(length) {}
+		constexpr Countable(type::cinput length) __LL_EXCEPT__ : length(length) {}
 		constexpr ~Countable() __LL_EXCEPT__ {}
 
 		#pragma endregion
@@ -112,15 +99,15 @@ class LL_SHARED_LIB Countable {
 			return this->operator type::type();
 		}
 		__LL_NODISCARD__ constexpr void clear() __LL_EXCEPT__ { this->length = ZERO_VAL; }
-		__LL_NODISCARD__ constexpr ll_bool_t inRange(type::ctype position) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t inRange(type::cinput position) const __LL_EXCEPT__ {
 			return position < this->operator type::type();
 		}
 
 		#pragma region CountableOperations
-		__LL_NODISCARD__ constexpr __Countable::type operator+(type::ctype value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr __Countable::type operator+(type::cinput value) const __LL_EXCEPT__ {
 			return __Countable::type(this->length + value);
 		}
-		__LL_NODISCARD__ constexpr __Countable::type operator-(type::ctype value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr __Countable::type operator-(type::cinput value) const __LL_EXCEPT__ {
 			return __Countable::type(this->length - value);
 		}
 		__LL_NODISCARD__ constexpr __Countable::type operator+(__Countable::cref other) const __LL_EXCEPT__ {
@@ -151,26 +138,80 @@ class LL_SHARED_LIB Countable {
 			return this->operator type::type() != other.operator type::type();
 		}
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(type::ctype value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(type::cinput value) const __LL_EXCEPT__ {
 			return this->operator type::type() > value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(type::ctype value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(type::cinput value) const __LL_EXCEPT__ {
 			return this->operator type::type() >= value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(type::ctype value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(type::cinput value) const __LL_EXCEPT__ {
 			return this->operator type::type() < value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(type::ctype value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(type::cinput value) const __LL_EXCEPT__ {
 			return this->operator type::type() <= value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(type::ctype value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(type::cinput value) const __LL_EXCEPT__ {
 			return this->operator type::type() == value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(type::ctype value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(type::cinput value) const __LL_EXCEPT__ {
 			return this->operator type::type() != value;
 		}
 
 		#pragma endregion
+		#pragma endregion
+		#pragma region ClassFunctionsRangeBased
+		template<class Function, class... Args>
+		__LL_NODISCARD__ constexpr ll_bool_t doIfValid(type::cinput position, Function func, Args&&... args) {
+			ll_bool_t result{};
+			if ((result = this->inRange(position)) == LL_TRUE) {}
+				func(std::forward<Args>(args)...);
+			return result;
+		}
+		template<class Function, class... Args>
+		__LL_NODISCARD__ constexpr ll_bool_t doIfValid(type::cinput position, Function func, Args&&... args) const {
+			ll_bool_t result{};
+			if ((result = this->inRange(position)) == LL_TRUE) {}
+				func(std::forward<Args>(args)...);
+			return result;
+		}
+
+		template<class Function, class... Args>
+		__LL_NODISCARD__ constexpr ll_bool_t doIfValid(type::cinput pos1, type::cinput pos2, Function func, Args&&... args) {
+			ll_bool_t result{};
+			if ((result = (this->inRange(pos1) && this->inRange(pos2))) == LL_TRUE) {}
+				func(std::forward<Args>(args)...);
+			return result;
+		}
+		template<class Function, class... Args>
+		__LL_NODISCARD__ constexpr ll_bool_t doIfValid(type::cinput pos1, type::cinput pos2, Function func, Args&&... args) const {
+			ll_bool_t result{};
+			if ((result = (this->inRange(pos1) && this->inRange(pos2))) == LL_TRUE) {}
+				func(std::forward<Args>(args)...);
+			return result;
+		}
+
+		//template<class U, class Function, class... Args>
+		//__LL_NODISCARD__ static constexpr ll_bool_t doIfValid(type::cinput pos1, type::cinput pos2, U& context, Function func, Args&&... args) {
+		//	ll_bool_t result{};
+		//	if ((result = (context.inRange(pos1) && context.inRange(pos2))) == LL_TRUE)
+		//		(context.*func)(std::forward<Args>(args)...);
+		//	return result;
+		//}
+		template<class U, class Function, class... Args>
+		__LL_NODISCARD__ static constexpr ll_bool_t doIfValidStatic(type::cinput position, U& context, Function func, Args&&... args) {
+			ll_bool_t result{};
+			if ((result = context.inRange(position)) == LL_TRUE)
+				(context.*func)(std::forward<Args>(args)...);
+			return result;
+		}
+		template<class U, class Function, class... Args>
+		__LL_NODISCARD__ static constexpr ll_bool_t doIfValidStatic(type::cinput pos1, type::cinput pos2, U& context, Function func, Args&&... args) {
+			ll_bool_t result{};
+			if ((result = (context.inRange(pos1) && context.inRange(pos2))) == LL_TRUE)
+				(context.*func)(std::forward<Args>(args)...);
+			return result;
+		}
+
 		#pragma endregion
 	#pragma endregion
 };

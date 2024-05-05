@@ -95,13 +95,13 @@ class ArrayPair {
 
 		#pragma region std
 		__LL_NODISCARD__ constexpr typename type::cptr data() const __LL_EXCEPT__ {
-			return this->begin();
+			return this->_data;
 		}
 		__LL_NODISCARD__ constexpr typename type::cptr begin() const __LL_EXCEPT__ {
-			return this->get(0ull);
+			return this->_data;
 		}
 		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
-			return this->_data + this->operator len_t();
+			return this->_end;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
 			return !this->isValid();
@@ -111,7 +111,7 @@ class ArrayPair {
 		__LL_NODISCARD__ constexpr ll_bool_t isValid() const __LL_EXCEPT__ {
 			return
 				static_cast<ll_bool_t>(this->_data) &&
-				static_cast<ll_bool_t>(this->operator len_t());
+				static_cast<ll_bool_t>(this->_end);
 		}
 		constexpr void clear() __LL_EXCEPT__ { this->simple_clear(); }
 

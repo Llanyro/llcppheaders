@@ -191,6 +191,14 @@ constexpr f32 ZERO_F32 = 0.0f;
 constexpr f64 ZERO_F64 = 0.0;
 constexpr f128 ZERO_F128 = 0.0l;
 #pragma endregion
+#pragma region Types
+
+template<class T>
+class ArrayPair;
+using StrPair = ArrayPair<ll_char_t>;
+using wStrPair = ArrayPair<ll_wchar_t>;
+
+#pragma endregion
 
 namespace functional {
 

@@ -116,7 +116,7 @@ class ArrayPair {
 		constexpr void clear() __LL_EXCEPT__ { this->simple_clear(); }
 
 		__LL_NODISCARD__ constexpr operator len_t() const __LL_EXCEPT__ {
-			return this->end() - this->begin();
+			return static_cast<len_t>(this->end() - this->begin());
 		}
 		__LL_NODISCARD__ constexpr len_t count() const __LL_EXCEPT__ {
 			return this->operator len_t();

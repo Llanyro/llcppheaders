@@ -48,7 +48,7 @@ class ArrayPair {
 		constexpr ArrayPair(std::pair<typename type::cptr, typename type::cptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
 		constexpr ArrayPair(std::pair<typename type::ptr, typename type::cptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
 		constexpr ArrayPair(std::pair<typename type::ptr, typename type::ptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
-		constexpr ArrayPair(std::pair<typename type::ptr, typename type::cptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
+		constexpr ArrayPair(std::pair<typename type::cptr, typename type::ptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
 		constexpr ~ArrayPair() __LL_EXCEPT__ {}
 		#pragma endregion
 		#pragma region CopyMove

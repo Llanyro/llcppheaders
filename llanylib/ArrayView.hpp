@@ -23,11 +23,6 @@
 
 #include "algorithm.hpp"
 
-// [POSIX_CHECK]
-// [UNIX_CHECK]
-// [RASPI_CHECK]
-#include <utility>
-
 namespace llcpp {
 
 template<class T, len_t N>

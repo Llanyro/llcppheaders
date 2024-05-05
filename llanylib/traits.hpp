@@ -442,10 +442,10 @@ struct template_types {
 	using ctype = const T;
 	//using ctype = conversor::to_const_t;
 
+	// Used mostly to reference classes
 	using ref = type&;
-	//using ref = conversor::to_reference_t<LL_TRUE>;
+	// Used mostly to reference const classes
 	using cref = const type&;
-	//using cref = conversor::to_const_reference_t<LL_TRUE>;
 	using move = conversor::to_movement_t;
 
 	using ptr = conversor::get_ptr_remove_reference_t;
@@ -453,7 +453,11 @@ struct template_types {
 	using cptr = conversor::get_const_ptr_remove_reference::value;
 	using ptrref = traits::type_conversor<typename ptr>::to_reference_t;
 
+	// Used mostly to get an object or basic type efficiently (if is basic type you would get a copy)
+	// To get always the original object use ref
 	using input = std::conditional_t<traits::is_basic_type_v<type>, type, ref>;
+	// Used mostly to get a const object or const basic type efficiently (if is basic type you would get a const copy)
+	// To get always the original object use cref
 	using cinput = std::conditional_t<traits::is_basic_type_v<type>, ctype, cref>;
 
 	using output = ref;

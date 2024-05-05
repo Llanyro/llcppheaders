@@ -61,7 +61,7 @@ class LL_SHARED_LIB ArrayView {
 	#pragma endregion
 	#pragma region Attributes
 	protected:
-		type::cptr __data;
+		type::cptr _data;
 	#pragma endregion
 	#pragma region Functions
 	public:
@@ -69,17 +69,17 @@ class LL_SHARED_LIB ArrayView {
 		constexpr ArrayView() __LL_EXCEPT__ = delete;
 		constexpr ~ArrayView() __LL_EXCEPT__ {}
 
-		constexpr ArrayView(type::ctype(&arr)[N]) __LL_EXCEPT__ : __data(arr) {}
+		constexpr ArrayView(type::ctype(&arr)[N]) __LL_EXCEPT__ : _data(arr) {}
 		constexpr __ArrayView::ref operator=(type::ctype(&arr)[N]) __LL_EXCEPT__ {
-			this->__data = arr;
+			this->_data = arr;
 			return *this;
 		}
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr ArrayView(__ArrayView::cref other) __LL_EXCEPT__ : __data(other.__data) {}
+		constexpr ArrayView(__ArrayView::cref other) __LL_EXCEPT__ : _data(other._data) {}
 		constexpr __ArrayView::ref operator=(__ArrayView::cref other) __LL_EXCEPT__ {
-			this->__data = other.__data;
+			this->_data = other._data;
 			return *this;
 		}
 
@@ -101,15 +101,15 @@ class LL_SHARED_LIB ArrayView {
 			return this->operator len_t() == 0;
 		}
 		__LL_NODISCARD__ constexpr operator ll_bool_t() const __LL_EXCEPT__ {
-			return !this->empty() && static_cast<ll_bool_t>(this->__data);
+			return !this->empty() && static_cast<ll_bool_t>(this->_data);
 		}
 
 		__LL_NODISCARD__ constexpr operator typename __ArrayPair() const __LL_EXCEPT__ {
-			return __ArrayPair(this->__data, this->operator len_t());
+			return __ArrayPair(this->_data, this->operator len_t());
 		}
-		__LL_NODISCARD__ constexpr operator type::cptr() const __LL_EXCEPT__ { return this->__data; }
+		__LL_NODISCARD__ constexpr operator type::cptr() const __LL_EXCEPT__ { return this->_data; }
 		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos) const __LL_EXCEPT__ {
-			return this->__data + pos;
+			return this->_data + pos;
 		}
 		__LL_NODISCARD__ constexpr csubarr get(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
 			return csubarr{ this->get(_begin) , this->get(_end) };
@@ -118,7 +118,7 @@ class LL_SHARED_LIB ArrayView {
 			return this->get(_begin, _end);
 		}
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
-			return this->__data[pos];
+			return this->_data[pos];
 		}
 		#ifdef LL_REAL_CXX23
 		__LL_NODISCARD__ constexpr csubarr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {

@@ -73,7 +73,7 @@ class LL_SHARED_LIB StringView {
 	private:
 		// None in this example
 	protected:
-		type::cptr __data;
+		type::cptr _data;
 	public:
 		// This is forbidden
 	#pragma endregion
@@ -87,17 +87,17 @@ class LL_SHARED_LIB StringView {
 		constexpr StringView() __LL_EXCEPT__ = delete;
 		constexpr ~StringView() __LL_EXCEPT__ {}
 
-		constexpr StringView(type::ctype(&arr)[N]) __LL_EXCEPT__ : __data(arr) {}
+		constexpr StringView(type::ctype(&arr)[N]) __LL_EXCEPT__ : _data(arr) {}
 		constexpr __StringView::ref operator=(type::ctype(&arr)[N]) __LL_EXCEPT__ {
-			this->__data = arr;
+			this->_data = arr;
 			return *this;
 		}
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr StringView(__StringView::cref other) __LL_EXCEPT__ : __data(other.__data) {}
+		constexpr StringView(__StringView::cref other) __LL_EXCEPT__ : _data(other._data) {}
 		constexpr __StringView::ref operator=(__StringView::cref other) __LL_EXCEPT__ {
-			this->__data = other.__data;
+			this->_data = other._data;
 			return *this;
 		}
 
@@ -120,17 +120,17 @@ class LL_SHARED_LIB StringView {
 			return /*this->operator len_t() == 0 || */ this->operator[](0) == '\0';
 		}
 		__LL_NODISCARD__ constexpr operator ll_bool_t() const __LL_EXCEPT__ {
-			return !this->empty() && static_cast<ll_bool_t>(this->__data);
+			return !this->empty() && static_cast<ll_bool_t>(this->_data);
 		}
 
 		__LL_NODISCARD__ constexpr operator typename __StrPair() const __LL_EXCEPT__ {
-			return __StrPair(this->__data, this->operator len_t());
+			return __StrPair(this->_data, this->operator len_t());
 		}
 		__LL_NODISCARD__ constexpr operator typename type::cptr() const __LL_EXCEPT__ {
-			return this->__data;
+			return this->_data;
 		}
 		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos) const __LL_EXCEPT__ {
-			return this->__data + pos;
+			return this->_data + pos;
 		}
 		__LL_NODISCARD__ constexpr csubstr get(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
 			return csubstr{ this->get(_begin) , this->get(_end) };
@@ -139,7 +139,7 @@ class LL_SHARED_LIB StringView {
 			return this->get(_begin, _end);
 		}
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
-			return this->__data[pos];
+			return this->_data[pos];
 		}
 		#ifdef LL_REAL_CXX23
 		__LL_NODISCARD__ constexpr csubstr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
@@ -412,8 +412,8 @@ class LL_SHARED_LIB StringView {
 
 
 template<len_t N, class T = ll_char_t>
-constexpr StringView<N, T> make_StringView(const T(&__data)[N]) {
-	return StringView<N, T>(__data);
+constexpr StringView<N, T> make_StringView(const T(&_data)[N]) {
+	return StringView<N, T>(_data);
 }
 
 } // namespace llcpp

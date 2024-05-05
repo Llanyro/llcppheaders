@@ -160,6 +160,7 @@ class LL_SHARED_LIB Countable {
 		#pragma endregion
 		#pragma endregion
 		#pragma region ClassFunctionsRangeBased
+	protected:
 		template<class Function, class... Args>
 		__LL_NODISCARD__ constexpr ll_bool_t doIfValid(type::cinput position, Function func, Args&&... args) {
 			ll_bool_t result{};

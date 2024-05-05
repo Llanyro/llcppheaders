@@ -49,12 +49,12 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		constexpr Array(__move_Array) __LL_EXCEPT__ = delete;
 		constexpr __ref_Array operator=(__move_Array) __LL_EXCEPT__ = delete;
 
-		__LL_NODISCARD__ constexpr operator typename __ptr() __LL_EXCEPT__ { return this->__data; }
-		__LL_NODISCARD__ constexpr __ptr get() __LL_EXCEPT__ { return this->__data; }
-		__LL_NODISCARD__ constexpr __ptr get(const len_t pos) __LL_EXCEPT__ { return this->__data + pos; }
+		__LL_NODISCARD__ constexpr operator typename __ptr() __LL_EXCEPT__ { return this->_data; }
+		__LL_NODISCARD__ constexpr __ptr get() __LL_EXCEPT__ { return this->_data; }
+		__LL_NODISCARD__ constexpr __ptr get(const len_t pos) __LL_EXCEPT__ { return this->_data + pos; }
 
 		__LL_NODISCARD__ constexpr __ref operator[] (const len_t pos) __LL_EXCEPT__ {
-			return this->__data[pos];
+			return this->_data[pos];
 		}
 
 		#pragma region Algorithm_DataManipulation

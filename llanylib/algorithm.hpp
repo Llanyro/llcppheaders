@@ -76,12 +76,12 @@ class CompareData {
 
 		constexpr CompareData(__CompareData::move other) __LL_EXCEPT__
 			: value1(other.value1), value2(other.value2), result(other.result)
-		{ other.simpleClear(); }
+		{ other.__CompareData::type::simpleClear(); }
 		constexpr __CompareData::ref operator=(__CompareData::move other) __LL_EXCEPT__ {
 			this->value1 = other.value1;
 			this->value2 = other.value2;
 			this->result = other.result;
-			other.simpleClear();
+			other.__CompareData::type::simpleClear();
 			return *this;
 		}
 

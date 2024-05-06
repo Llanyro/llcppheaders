@@ -89,11 +89,11 @@ class LL_SHARED_LIB DllHandle {
 		DllHandle& operator=(const DllHandle&) __LL_EXCEPT__ = delete;
 
 		DllHandle(DllHandle&& other) __LL_EXCEPT__
-			: handle(other.handle) { other.simpleClear(); }
+			: handle(other.handle) { other.DllHandle::simpleClear(); }
 		DllHandle& operator=(DllHandle&& other) __LL_EXCEPT__ {
 			this->clear();
 			this->handle = other.handle;
-			other.simpleClear();
+			other.DllHandle::simpleClear();
 			return *this;
 		}
 

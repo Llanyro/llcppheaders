@@ -83,8 +83,8 @@ class LL_SHARED_LIB ArrayView {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename __ArrayView::cref() const __LL_EXCEPT__ { return *this; }
-		__LL_NODISCARD__ constexpr operator typename __ArrayView::ref() __LL_EXCEPT__ { return *this; }
+		__LL_NODISCARD__ constexpr operator typename __ArrayView::cptr() const __LL_EXCEPT__ = delete;
+		__LL_NODISCARD__ constexpr operator typename __ArrayView::ptr() __LL_EXCEPT__ = delete;
 		__LL_NODISCARD__ constexpr operator typename __ArrayView::move() __LL_EXCEPT__ = delete;
 
 		#pragma endregion

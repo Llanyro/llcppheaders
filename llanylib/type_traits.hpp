@@ -69,8 +69,8 @@ class ArrayPair {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename __ArrayPair::cref() const __LL_EXCEPT__ { return *this; }
-		__LL_NODISCARD__ constexpr operator typename __ArrayPair::ref() __LL_EXCEPT__ { return *this; }
+		__LL_NODISCARD__ constexpr operator typename __ArrayPair::cptr() const __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ constexpr operator typename __ArrayPair::ptr() __LL_EXCEPT__ { return this; }
 		__LL_NODISCARD__ constexpr operator typename __ArrayPair::move() __LL_EXCEPT__ { return std::move(*this); }
 
 		#pragma endregion

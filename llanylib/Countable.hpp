@@ -191,13 +191,6 @@ class LL_SHARED_LIB Countable {
 			return result;
 		}
 
-		//template<class U, class Function, class... Args>
-		//__LL_NODISCARD__ static constexpr ll_bool_t doIfValid(type::cinput pos1, type::cinput pos2, U& context, Function func, Args&&... args) {
-		//	ll_bool_t result{};
-		//	if ((result = (context.inRange(pos1) && context.inRange(pos2))) == LL_TRUE)
-		//		(context.*func)(std::forward<Args>(args)...);
-		//	return result;
-		//}
 		template<class U, class Function, class... Args>
 		__LL_NODISCARD__ static constexpr ll_bool_t doIfValidStatic(type::cinput position, U& context, Function func, Args&&... args) {
 			ll_bool_t result{};

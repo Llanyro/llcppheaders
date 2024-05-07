@@ -332,57 +332,57 @@ class LL_SHARED_LIB StringView {
 		using FindFunc = fnc_clss::CompareBool<typename type::input, W>;
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
-			return __find<POSITION>::find<U, W>(this->begin(), this->end(), object, compareFunc);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::find<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object) const __LL_EXCEPT__ {
-			return __find<POSITION>::find<U, W>(this->begin(), this->end(), object);
-		}
-
-		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
-			return __find<POSITION>::rfind<U, W>(this->begin(), this->end(), object, compareFunc);
-		}
-		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object) const __LL_EXCEPT__ {
-			return __find<POSITION>::rfind<U, W>(this->begin(), this->end(), object);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::find<U, W>(this->get(_begin), this->get(_end), object);
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
-			return __find<POSITION>::contains<U, W>(this->begin(), this->end(), object, compareFunc);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::rfind<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object) const __LL_EXCEPT__ {
-			return __find<POSITION>::contains<U, W>(this->begin(), this->end(), object);
-		}
-
-		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
-			return __find<POSITION>::all<U, W>(this->begin(), this->end(), object, compareFunc);
-		}
-		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object) const __LL_EXCEPT__ {
-			return __find<POSITION>::all<U, W>(this->begin(), this->end(), object);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::rfind<U, W>(this->get(_begin), this->get(_end), object);
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
-			return __find<POSITION>::any<U, W>(this->begin(), this->end(), object, compareFunc);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::contains<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object) const __LL_EXCEPT__ {
-			return __find<POSITION>::any<U, W>(this->begin(), this->end(), object);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::contains<U, W>(this->get(_begin), this->get(_end), object);
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object, FindFunc<W> compareFunc) const __LL_EXCEPT__ {
-			return __find<POSITION>::none<U, W>(this->begin(), this->end(), object, compareFunc);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::all<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object) const __LL_EXCEPT__ {
-			return __find<POSITION>::none<U, W>(this->begin(), this->end(), object);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::all<U, W>(this->get(_begin), this->get(_end), object);
+		}
+
+		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
+		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::any<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
+		}
+		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
+		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::any<U, W>(this->get(_begin), this->get(_end), object);
+		}
+
+		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
+		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::none<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
+		}
+		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
+		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::none<U, W>(this->get(_begin), this->get(_end), object);
 		}
 
 		#pragma endregion

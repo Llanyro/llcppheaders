@@ -95,8 +95,6 @@ __LL_NODISCARD__ constexpr ui64 bswap_64(const ui64 value) {
         ((value & 0xFF00000000000000ull) >> 56);
 }
 
-constexpr auto asdf = bswap_64(0x0102030405060708);
-
 // Hash 128 input bits down to 64 bits of output.
 // This is intended to be a reasonably good hash function.
 __LL_NODISCARD__ constexpr ui64 hash128to64(const hash128& x) {
@@ -195,7 +193,7 @@ __LL_NODISCARD__ constexpr hash128 weakHashLen32WithSeeds(const ui64 w, const ui
     return { a + z, b + c };
 }
 // Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
-hash128 weakHashLen32WithSeeds(ll_string_t s, const ui64 a, const ui64 b) {
+__LL_NODISCARD__ constexpr hash128 weakHashLen32WithSeeds(ll_string_t s, const ui64 a, const ui64 b) {
     return weakHashLen32WithSeeds(
         fetch64(s), fetch64(s + 8),
         fetch64(s + 16), fetch64(s + 24),

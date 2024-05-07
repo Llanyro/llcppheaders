@@ -25,7 +25,8 @@
 
 #include "traits.hpp"
 
-#include <limits>
+// [TODO] Move this to bitsExtended.hpp
+//#include <limits>
 
 namespace llcpp {
 namespace bits {
@@ -79,6 +80,27 @@ constexpr void clear(T& value) __LL_EXCEPT__ { return clear<T, 0>(value); }
 #pragma endregion
 
 #pragma endregion
+#pragma region BytesOperations
+__LL_NODISCARD__ constexpr ui32 bytes_swap_32(const ui32 value) __LL_EXCEPT__ {
+	return
+		((value & 0xFF) << 24)
+		| ((value & 0xFF00) << 8)
+		| ((value & 0xFF0000) >> 8)
+		| ((value & 0xFF000000) >> 24);
+}
+__LL_NODISCARD__ constexpr ui64 bytes_swap_64(const ui64 value) __LL_EXCEPT__ {
+	return
+		((value & 0x00000000000000FFull) << 56)
+		| ((value & 0x000000000000FF00ull) << 40)
+		| ((value & 0x0000000000FF0000ull) << 24)
+		| ((value & 0x00000000FF000000ull) << 8)
+		| ((value & 0x000000FF00000000ull) >> 8)
+		| ((value & 0x0000FF0000000000ull) >> 24)
+		| ((value & 0x00FF000000000000ull) >> 40)
+		| ((value & 0xFF00000000000000ull) >> 56);
+}
+
+#pragma endregion
 #pragma region BaseTransformation
 template<class T>
 __LL_NODISCARD__ constexpr T transformToBaseV3(const T value, const ui8 base) __LL_EXCEPT__ {
@@ -100,6 +122,8 @@ __LL_NODISCARD__ constexpr T transformTo8(const T value) __LL_EXCEPT__ {
 }
 
 #pragma endregion
+
+// [TODO] Move this to bitsExtended.hpp
 #pragma region TypeDivision(?)
 template<class T, const ui8 HALF_BITS, class U = traits::type_conversor<T>::demote_t>
 struct TypeDivision {

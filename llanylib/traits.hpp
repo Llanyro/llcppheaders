@@ -404,7 +404,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyabl
 #pragma endregion
 #pragma region Functions
 template<class ReturnType, class ObjectType, ReturnType NULL_VAL>
-static constexpr ReturnType operatorTypeCall(const ObjectType& object) __LL_EXCEPT__ {
+constexpr ReturnType operatorTypeCall(const ObjectType& object) __LL_EXCEPT__ {
 	if constexpr (std::is_pointer_v<ObjectType>) {
 		using __noptr = std::remove_pointer_t<ObjectType>;
 
@@ -462,6 +462,18 @@ struct template_types {
 
 	using output = ref;
 };
+
+#pragma region Functions
+template<class T, class U>
+__LL_NODISCARD__ constexpr U constexpr_cast(T* data) __LL_EXCEPT__ {
+	void* _data = data;
+	return static_cast<U>(_data);
+}
+
+
+
+#pragma endregion
+
 
 } // namespace traits
 } // namespace llcpp

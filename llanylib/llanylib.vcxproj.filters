@@ -40,6 +40,9 @@
     <Filter Include="Source Files\expresions">
       <UniqueIdentifier>{2e8bd116-f9a5-41e4-a404-a361e9f96be3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\cityhash">
+      <UniqueIdentifier>{327d0757-f694-4175-9f9e-ea95018aa03e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\llanylib.hpp">
@@ -146,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="examples\mathExample.hpp">
       <Filter>Source Files\examples</Filter>
+    </ClInclude>
+    <ClInclude Include="cityhash.hpp">
+      <Filter>Source Files\cityhash</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -466,8 +466,14 @@ struct template_types {
 #pragma region Functions
 template<class T, class U>
 __LL_NODISCARD__ constexpr U constexpr_cast(T* data) __LL_EXCEPT__ {
-	void* _data = data;
-	return static_cast<U>(_data);
+	if constexpr (std::is_const_v<T>) {
+		const void* _data = data;
+		return static_cast<U>(_data);
+	}
+	else {
+		void* _data = data;
+		return static_cast<U>(_data);
+	}
 }
 
 

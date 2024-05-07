@@ -132,12 +132,12 @@ struct TypeDivision {
 	static constexpr T __HALF_BITS = HALF_BITS;
 	using __ByteExtender = ByteExtender<U>;
 
-	__LL_NODISCARD__ static constexpr __ByteExtender div(const T v) {
-		return __ByteExtender {
-			static_cast<U>(v & std::numeric_limits<U>::max()),
-			static_cast<U>(v >> HALF_BITS)
-		};
-	}
+	//__LL_NODISCARD__ static constexpr __ByteExtender div(const T v) {
+	//	return __ByteExtender {
+	//		static_cast<U>(v & std::numeric_limits<U>::max()),
+	//		static_cast<U>(v >> HALF_BITS)
+	//	};
+	//}
 };
 
 #pragma region SpecializationTypeDivision

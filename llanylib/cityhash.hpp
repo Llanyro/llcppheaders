@@ -214,6 +214,11 @@ class Hash {
 		}
 	public:
 		__LL_NODISCARD__ static constexpr ui64 cityHash64(DataType s, len_t len) __LL_EXCEPT__ {
+			if not consteval {
+				throw "This is only constevaluated!";
+				return 0;
+			}
+
 			if (len <= 32) {
 				if (len <= 16) return hashLen0to16(s, len);
 				else return hashLen17to32(s, len);
@@ -261,11 +266,14 @@ class Hash {
 		__LL_NODISCARD__ static constexpr ui64 cityHash64(const T(&data)[N]) __LL_EXCEPT__ {
 			return cityHash64(traits::constexpr_cast<const T, DataType>(data), sizeof(T) * N);
 		}
-		template<class T, class W = traits::template_types<T>::cinput>
+		template<class T, class tmp = traits::template_types<T>, class W = typename tmp::cinput>
 		__LL_NODISCARD__ static constexpr ui64 cityHash64(W data) __LL_EXCEPT__ {
 			return
 				cityHash64(
-					traits::constexpr_cast<traits::template_types<T>::ctype, DataType>(&data),
+					traits::constexpr_cast<
+						typename tmp::ctype,
+						DataType
+					>(&data),
 					sizeof(T)
 				);
 		}

@@ -26,7 +26,7 @@
     <ClInclude Include="ArrayView.hpp" />
     <ClInclude Include="ascii.hpp" />
     <ClInclude Include="bits.hpp" />
-    <ClInclude Include="cityhash.hpp" />
+    <ClInclude Include="CityHash.hpp" />
     <ClInclude Include="common.hpp" />
     <ClInclude Include="Countable.hpp" />
     <ClInclude Include="definitions.hpp" />
@@ -53,6 +53,7 @@
     <ClInclude Include="string.hpp" />
     <ClInclude Include="StringView.hpp" />
     <ClInclude Include="traits.hpp" />
+    <ClInclude Include="Typeid.hpp" />
     <ClInclude Include="types.hpp" />
     <ClInclude Include="type_traits.hpp" />
   </ItemGroup>

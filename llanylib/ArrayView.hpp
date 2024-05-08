@@ -107,7 +107,7 @@ class LL_SHARED_LIB ArrayView {
 			return this->_data + pos;
 		}
 		__LL_NODISCARD__ constexpr csubarr get(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
-			return csubarr{ this->get(_begin) , this->get(_end) };
+			return csubarr{ this->get(_begin), this->get(_end) };
 		}
 		__LL_NODISCARD__ constexpr csubarr substr(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
 			return this->get(_begin, _end);
@@ -115,7 +115,7 @@ class LL_SHARED_LIB ArrayView {
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
 			return this->_data[pos];
 		}
-		#ifdef LL_REAL_CXX23
+		#if defined(LL_REAL_CXX23)
 		__LL_NODISCARD__ constexpr csubarr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
 			return this->substr(_begin, _end);
 		}

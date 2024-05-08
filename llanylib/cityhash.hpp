@@ -214,10 +214,12 @@ class CityHash {
 		}
 	public:
 		__LL_NODISCARD__ static constexpr ui64 cityHash64(DataType s, len_t len) __LL_EXCEPT__ {
+			#if defined(LL_REAL_CXX23)
 			if not consteval {
 				throw "This is only constevaluated!";
 				return 0;
 			}
+			#endif
 
 			if (len <= 32) {
 				if (len <= 16) return hashLen0to16(s, len);

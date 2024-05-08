@@ -87,7 +87,7 @@ class ArrayPair {
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
 			return this->_data[pos];
 		}
-		#ifdef LL_REAL_CXX23
+		#if defined(LL_REAL_CXX23)
 		__LL_NODISCARD__ constexpr csubarr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
 			return this->substr(_begin, _end);
 		}

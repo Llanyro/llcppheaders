@@ -234,9 +234,9 @@ using get_by_char_type_t = get_by_char_type<T, TypeChar, TypeWChar>::value;
 #pragma region DefinesAndStructs
 template <class T, class OperatorType>
 struct has_type_operator {
-    template <class U>
+	template <class U>
 	static constexpr auto test(U* p) -> decltype(p->operator OperatorType(), std::true_type{});
-    template <class U>
+	template <class U>
 	static constexpr auto test(const U* p) -> decltype(p->operator OperatorType(), std::true_type{});
 	template <class>
 	static constexpr auto test(...) ->

@@ -55,7 +55,7 @@
     <ClInclude Include="traits.hpp" />
     <ClInclude Include="Typeid.hpp" />
     <ClInclude Include="types.hpp" />
-    <ClInclude Include="type_traits.hpp" />
+    <ClInclude Include="ArrayPair.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

@@ -141,9 +141,6 @@
     <ClInclude Include="RAIIBase.hpp">
       <Filter>Source Files\utils\raii</Filter>
     </ClInclude>
-    <ClInclude Include="type_traits.hpp">
-      <Filter>Source Files\types</Filter>
-    </ClInclude>
     <ClInclude Include="examples\mathExample.hpp">
       <Filter>Source Files\examples</Filter>
     </ClInclude>
@@ -151,6 +148,9 @@
       <Filter>Source Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="Typeid.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrayPair.hpp">
       <Filter>Source Files\utils</Filter>
     </ClInclude>
   </ItemGroup>

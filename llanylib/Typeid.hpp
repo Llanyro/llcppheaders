@@ -28,21 +28,20 @@ namespace llcpp {
 
 class Typeid {
 	public:
-		using NameType = ArrayPair<ll_char_t>;
 		using HashAlgorithmClass = city::CityHash;
 	private:
 		ui64 name_hash;
-		NameType name;
+		StrPair name;
 	private:
 		constexpr void simpleClear() __LL_EXCEPT__ { this->name_hash = ZERO_UI64; }
 	public:
-		constexpr Typeid(const NameType& name) __LL_EXCEPT__
+		constexpr Typeid(const StrPair& name) __LL_EXCEPT__
 			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()))
 			, name(name)
 		{}
-		constexpr Typeid(NameType&& name) __LL_EXCEPT__
+		constexpr Typeid(StrPair&& name) __LL_EXCEPT__
 			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()))
-			, name(name.operator NameType&&())
+			, name(name.operator StrPair&&())
 		{}
 		constexpr ~Typeid() __LL_EXCEPT__ {}
 
@@ -54,11 +53,11 @@ class Typeid {
 			return *this;
 		}
 		constexpr Typeid(Typeid&& other) __LL_EXCEPT__
-			: name_hash(other.name_hash), name(other.name.operator NameType&&())
+			: name_hash(other.name_hash), name(other.name.operator StrPair&&())
 		{ other.Typeid::simpleClear(); }
 		constexpr Typeid& operator=(Typeid&& other) __LL_EXCEPT__ {
 			this->name_hash = other.name_hash;
-			this->name = other.name.operator NameType&&();
+			this->name = other.name.operator StrPair&&();
 			other.Typeid::simpleClear();
 			return *this;
 		}
@@ -68,10 +67,10 @@ class Typeid {
 		__LL_NODISCARD__ constexpr operator Typeid&&() __LL_EXCEPT__ { return std::move(*this); }
 
 		__LL_NODISCARD__ constexpr ui64 hash() const __LL_EXCEPT__ { return this->name_hash; }
-		__LL_NODISCARD__ constexpr NameType getName() const __LL_EXCEPT__ { return this->name; }
+		__LL_NODISCARD__ constexpr StrPair getName() const __LL_EXCEPT__ { return this->name; }
 
 		template<class T>
-		__LL_NODISCARD__ static constexpr Typeid::NameType get_name(ll_bool_t REMOVE_CLASS_STR = LL_TRUE) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr StrPair get_name(ll_bool_t REMOVE_CLASS_STR = LL_TRUE) __LL_EXCEPT__ {
 			//__FUNCSIG__;
 			//__PRETTY_FUNCTION__;
 			//__FUNCDNAME__;
@@ -119,7 +118,7 @@ class Typeid {
 				res = isClass ? (res + classString.size()) : res;
 			}
 			#pragma endregion
-			return Typeid::NameType(res, res2);
+			return StrPair(res, res2);
 		}
 		template<class T>
 		__LL_NODISCARD__ static constexpr Typeid get() __LL_EXCEPT__ {

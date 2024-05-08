@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	type_traits.hpp							//
+//	ArrayPair.hpp							//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -7,19 +7,19 @@
 //	Version: 5.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_TYPETRAITS_HPP_) // Guard && version protector
-	#if LLANYLIB_TYPETRAITS_MAYOR_ != 5 || LLANYLIB_TYPETRAITS_MINOR_ < 0
+#if defined(LLANYLIB_ARRAYPAIRHPP_) // Guard && version protector
+	#if LLANYLIB_ARRAYPAIRMAYOR_ != 5 || LLANYLIB_ARRAYPAIRMINOR_ < 0
 		#if defined(LL_REAL_CXX23)
-			#warning "type_traits.hpp version error!"
+			#warning "ArrayPair.hpp version error!"
 		#else
-			#error "type_traits.hpp version error!"
+			#error "ArrayPair.hpp version error!"
 		#endif // LL_REAL_CXX23
-	#endif // LLANYLIB_TYPETRAITS_MAYOR_ || LLANYLIB_TYPETRAITS_MINOR_
+	#endif // LLANYLIB_ARRAYPAIRMAYOR_ || LLANYLIB_ARRAYPAIRMINOR_
 
-#else !defined(LLANYLIB_TYPETRAITS_HPP_)
-#define LLANYLIB_TYPETRAITS_HPP_
-#define LLANYLIB_TYPETRAITS_MAYOR_ 5
-#define LLANYLIB_TYPETRAITS_MINOR_ 0
+#else !defined(LLANYLIB_ARRAYPAIRHPP_)
+#define LLANYLIB_ARRAYPAIRHPP_
+#define LLANYLIB_ARRAYPAIRMAYOR_ 5
+#define LLANYLIB_ARRAYPAIRMINOR_ 0
 
 #include "traits.hpp"
 
@@ -141,4 +141,4 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_strpair_type_v = std::_Is_any_of_v<T, S
 } // namespace traits
 } // namespace llcpp
 
-#endif // LLANYLIB_TYPETRAITS_HPP_
+#endif // LLANYLIB_ARRAYPAIRHPP_

@@ -381,7 +381,7 @@ class LL_SHARED_LIB ArrayView {
 			return this->begin();
 		}
 		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
-			return this->get(0ull);
+			return this->get(ZERO_UI64);
 		}
 		__LL_NODISCARD__ constexpr type::cptr rbegin() const __LL_EXCEPT__ {
 			return this->get(this->operator len_t() - 1);

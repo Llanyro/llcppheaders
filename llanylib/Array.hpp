@@ -60,13 +60,13 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		#pragma region Algorithm_DataManipulation
 		constexpr void reverse(
 			fnc_clss::SwapFunction<__type> swap,
-			const len_t __begin = 0ull,
+			const len_t __begin = ZERO_UI64,
 			const len_t __end = N - 1
 		) __LL_EXCEPT__ {
 			algorithm::reverse<__type>(this->get(__begin), this->get(__end), swap);
 		}
 		constexpr void reverse(
-			const len_t __begin = 0ull,
+			const len_t __begin = ZERO_UI64,
 			const len_t __end = N - 1
 		) __LL_EXCEPT__ {
 			algorithm::reverse<__type>(this->get(__begin), this->get(__end));
@@ -75,7 +75,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		template<class U = traits::get_object_reference_t<__type>>
 		constexpr void fill(
 			const U object,
-			const len_t __begin = 0ull,
+			const len_t __begin = ZERO_UI64,
 			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::fill<T, U>(this->get(__begin), this->get(__end), object);
@@ -86,7 +86,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 			const len_t num,
 			const U null,
 			fnc_clss::SwapFunction<__type> swap,
-			const len_t __begin = 0ull,
+			const len_t __begin = ZERO_UI64,
 			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shiftLeft<T, U>(this->get(__begin), this->get(__end), num, null, swap);
@@ -95,7 +95,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		constexpr void shiftLeft(
 			const len_t num,
 			const U null,
-			const len_t __begin = 0ull,
+			const len_t __begin = ZERO_UI64,
 			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shiftLeft<T, U>(this->get(__begin), this->get(__end), num, null);
@@ -106,7 +106,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 			const len_t num,
 			const U null,
 			fnc_clss::SwapFunction<__type> swap,
-			const len_t __begin = 0ull,
+			const len_t __begin = ZERO_UI64,
 			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shifRight<T, U>(this->get(__begin), this->get(__end), num, null, swap);
@@ -115,7 +115,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		constexpr void shifRight(
 			const len_t num,
 			const U null,
-			const len_t __begin = 0ull,
+			const len_t __begin = ZERO_UI64,
 			const len_t __end = N
 		) __LL_EXCEPT__ {
 			algorithm::shifRight<T, U>(this->get(__begin), this->get(__end), num, null);

@@ -144,11 +144,11 @@ constexpr auto ui64_div_result_4 = ui64Divisor::div(4294967295ull);
 constexpr auto ui64_div_result_5 = ui64Divisor::div(4294967295 * 2);
 constexpr auto ui64_div_result_6 = ui64Divisor::div(18446744073709551615);
 
-static_assert(cmp(ui64_div_result_0, 10ull, 0ull), "Error changed value");
-static_assert(cmp(ui64_div_result_1, 512ull, 0ull), "Error changed value");
-static_assert(cmp(ui64_div_result_2, 65535ull, 0ull), "Error changed value");
-static_assert(cmp(ui64_div_result_3, 131070ull, 0ull), "Error changed value");
-static_assert(cmp(ui64_div_result_4, 4294967295ull, 0ull), "Error changed value");
+static_assert(cmp(ui64_div_result_0, 10ull, ZERO_UI64), "Error changed value");
+static_assert(cmp(ui64_div_result_1, 512ull, ZERO_UI64), "Error changed value");
+static_assert(cmp(ui64_div_result_2, 65535ull, ZERO_UI64), "Error changed value");
+static_assert(cmp(ui64_div_result_3, 131070ull, ZERO_UI64), "Error changed value");
+static_assert(cmp(ui64_div_result_4, 4294967295ull, ZERO_UI64), "Error changed value");
 static_assert(cmp(ui64_div_result_5, 4294967294ull, 1ull), "Error changed value");
 static_assert(cmp(ui64_div_result_6, 4294967295ull, 4294967295ull), "Error changed value");
 
@@ -162,10 +162,10 @@ static_assert(cmp(ui64_div_result_6, 4294967295ull, 4294967295ull), "Error chang
 //constexpr auto i64_div_result_5 = i64Divisor::div(4294967295ll * 2);
 //constexpr auto i64_div_result_6 = i64Divisor::div(9223372036854775807);
 //
-//static_assert(cmp(i64_div_result_0, 10ull, 0ull), "Error changed value");
-//static_assert(cmp(i64_div_result_1, 512ull, 0ull), "Error changed value");
-//static_assert(cmp(i64_div_result_2, 65535ull, 0ull), "Error changed value");
-//static_assert(cmp(i64_div_result_3, 131070ull, 0ull), "Error changed value");
+//static_assert(cmp(i64_div_result_0, 10ull, ZERO_UI64), "Error changed value");
+//static_assert(cmp(i64_div_result_1, 512ull, ZERO_UI64), "Error changed value");
+//static_assert(cmp(i64_div_result_2, 65535ull, ZERO_UI64), "Error changed value");
+//static_assert(cmp(i64_div_result_3, 131070ull, ZERO_UI64), "Error changed value");
 //static_assert(cmp(i64_div_result_4, 2147483647ull, 1ull), "Error changed value");
 //static_assert(cmp(i64_div_result_5, 2147483646ull, 3ull), "Error changed value");
 //static_assert(cmp(i64_div_result_6, 2147483647ull, 4294967295ull), "Error changed value");

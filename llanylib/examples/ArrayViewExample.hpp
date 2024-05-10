@@ -334,7 +334,7 @@ struct NodeTest1 {
 constexpr len_t __array_test_nodes_example__(
 	const len_t number_to_generate,
 	const len_t number_back,
-	len_t counter = 0ull,
+	len_t counter = ZERO_UI64,
 	NodeTest1<>* prev = LL_NULLPTR)
 {
 	//if (number_to_generate * ARR_TEST_SIZE < number_back) return algorithm::npos;
@@ -446,7 +446,7 @@ class ArrayChain {
 		len_t len;			// Number of nodes
 		len_t moc;
 	public:
-		constexpr ArrayChain() : root(LL_NULLPTR), len(0ull), moc(0ull) {}
+		constexpr ArrayChain() : root(LL_NULLPTR), len(ZERO_UI64), moc(ZERO_UI64) {}
 		constexpr ~ArrayChain() {}
 
 		constexpr void push_back(NodeTest5* n) {
@@ -475,7 +475,7 @@ class ArrayChain {
 //	const len_t number_to_generate,
 //	const len_t number_back,
 //	ArrayChain* chain,
-//	len_t counter = 0ull
+//	len_t counter = ZERO_UI64
 //)
 //{
 //	// Create memory

@@ -158,6 +158,12 @@ class LL_SHARED_LIB Countable {
 		}
 
 		#pragma endregion
+		constexpr void swap(__Countable::ref other) __LL_EXCEPT__ {
+			type::type tmp = this->length;
+			this->length = other.length;
+			other.length = tmp;
+		}
+
 		#pragma endregion
 		#pragma region ClassFunctionsRangeBased
 	protected:
@@ -210,8 +216,8 @@ class LL_SHARED_LIB Countable {
 	#pragma endregion
 };
 
-using CountableB = Countable<b64, 0ull>;
-using CountableL = Countable<len_t, 0ull>;
+using CountableB = Countable<b64, ZERO_UI64>;
+using CountableL = Countable<len_t, ZERO_UI64>;
 
 } // namespace llcpp
 

@@ -475,7 +475,7 @@ struct finders_cluster {
 		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
 		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
 
-		len_t low = 0ull;
+		len_t low = ZERO_UI64;
 		len_t high = end - begin;
 		while (low <= high) {
 			len_t mid = ((high + low) / 2);
@@ -491,7 +491,7 @@ struct finders_cluster {
 		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
 		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
 
-		len_t low = 0ull;
+		len_t low = ZERO_UI64;
 		len_t high = end - begin;
 		while (low <= high) {
 			len_t mid = ((high - low) / 2);

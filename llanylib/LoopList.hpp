@@ -102,7 +102,7 @@ class LL_SHARED_LIB LinkedList : public CountableL {
 			if (!this->root) return;
 			__ptr_DoubleNode n = this->root;
 
-			for (len_t i = this->len(); i > 0ull; --i) {
+			for (len_t i = this->len(); i > ZERO_UI64; --i) {
 				if (func(n->getData(), data, extra_data)) {
 					__ptr_DoubleNode tmp = n;
 					n = n->getNext();

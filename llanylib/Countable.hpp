@@ -159,7 +159,7 @@ class LL_SHARED_LIB Countable {
 
 		#pragma endregion
 		constexpr void swap(__Countable::ref other) __LL_EXCEPT__ {
-			type::type tmp = this->length;
+			typename type::type tmp = this->length;
 			this->length = other.length;
 			other.length = tmp;
 		}

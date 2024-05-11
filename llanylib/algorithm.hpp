@@ -261,6 +261,8 @@ struct finders_cluster {
 	using __t = traits::template_types<T>;
 	using FindResult = std::conditional_t<POSITION, len_t, typename __t::cptr>;
 	template<class W>
+	using CompareFunc = fnc_clss::Compare<typename __t::cinput, W>;
+	template<class W>
 	using CompareFuncBool = fnc_clss::CompareBool<typename __t::cinput, W>;
 	using __ArrayPair_t = ArrayPair<typename __t::type>;
 
@@ -487,7 +489,7 @@ struct finders_cluster {
 	}
 	// This is recommended to use with objects types
 	template<class U, class W = traits::template_types<U>::cinput>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) {
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::cptr begin, __t::cptr end, W object, CompareFunc<W> compareFunc) {
 		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
 		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
 

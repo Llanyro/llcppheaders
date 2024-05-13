@@ -621,7 +621,63 @@ constexpr void shifRight(T* begin, T* end, const len_t num, const U null) __LL_E
 	shifRight<T, U>(begin, end, num, null, common::simple_swap);
 }
 
+template<class T, class U = traits::template_types<T>>
+constexpr T* qsort_div(
+	T* arr,
+	T* begin,
+	T* end,
+	fnc_clss::SwapFunction<typename U::type> swap,
+	fnc_clss::Compare<typename U::cinput> cmp
+) __LL_EXCEPT__ {
+	T* left = begin;
+	T* right = end;
+	T* piv = arr;
+
+	while (left < right) {
+		for (; cmp(*right, *piv) > 0; --right);
+		for (; (left < right) && cmp(*left, *piv) <= 0; ++left);
+		if (left < right) swap(*left, *right);
+	}
+	swap(*right, *begin);
+	return right;
+}
+template<class T, class U = traits::template_types<T>>
+constexpr void quicksort(
+	T* arr, T* begin, T* end,
+	fnc_clss::SwapFunction<typename U::type> swap,
+	fnc_clss::Compare<typename U::cinput> cmp
+) {
+	if (begin < end) {
+		T* pivote = qsort_div<T, U>(arr, begin, end, swap, cmp);
+		//if (pivote >= begin && pivote <= end) {
+			quicksort<T, U>(arr, begin, pivote - 1, swap, cmp);
+			quicksort<T, U>(arr, pivote + 1, end, swap, cmp);
+		//}
+	}
+}
+template<class T, class U = traits::template_types<T>>
+constexpr void quicksort(T* arr, T* begin, T* end) {
+	quicksort<T>(arr, begin, end, common::simple_swap<T>, common::compare_with_operators<T>);
+}
+template<class T, class U = traits::template_types<T>>
+constexpr void quicksort(T* begin, T* end) {
+	quicksort<T, U>(begin, begin, end);
+}
+template<class T, len_t N, class U = traits::template_types<T>>
+constexpr void quicksort(T (&arr)[N]) {
+	quicksort<T, U>(arr, arr, arr + (N - 1));
+}
+
 #pragma endregion
+
+//constexpr int example() {
+//	int arr[] = { 0, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+//	//quicksort(arr);
+//	//return arr[0];
+//	int* piv = qsort_div(arr, arr, arr + 9, common::simple_swap<int>, common::compare_with_operators<int>);
+//	return *piv;
+//}
+//constexpr int asdf1 = example();
 
 } // namespace algorithm
 } // namespace llcpp

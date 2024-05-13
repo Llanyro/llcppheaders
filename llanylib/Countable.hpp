@@ -38,23 +38,6 @@ class LL_SHARED_LIB Countable {
 		#pragma region Protected
 		__LL_NODISCARD__ constexpr type::ref lenRef() __LL_EXCEPT__ { return this->length; }
 
-		constexpr void operator++() __LL_EXCEPT__ { ++this->length; }
-		constexpr void operator--() __LL_EXCEPT__ { --this->length; }
-		__LL_NODISCARD__ constexpr type::type operator++(int) __LL_EXCEPT__ { return this->length++; }
-		__LL_NODISCARD__ constexpr type::type operator--(int) __LL_EXCEPT__ { return this->length--; }
-
-		constexpr void operator+=(type::cinput value) __LL_EXCEPT__ { this->length += value; }
-		constexpr void operator-=(type::cinput value) __LL_EXCEPT__ { this->length -= value; }
-		constexpr void operator+=(__Countable::cref other) __LL_EXCEPT__ {
-			this->length += other.length;
-		}
-		constexpr void operator-=(__Countable::cref other) __LL_EXCEPT__ {
-			this->length -= other.length;
-		}
-
-		constexpr type::type operator=(type::cinput value) __LL_EXCEPT__ {
-			return this->length = value;
-		}
 		#pragma endregion
 	public:
 		#pragma region Contructors
@@ -101,6 +84,24 @@ class LL_SHARED_LIB Countable {
 		__LL_NODISCARD__ constexpr void clear() __LL_EXCEPT__ { this->length = ZERO_VAL; }
 		__LL_NODISCARD__ constexpr ll_bool_t inRange(type::cinput position) const __LL_EXCEPT__ {
 			return position < this->operator type::type();
+		}
+
+		constexpr void operator++() __LL_EXCEPT__ { ++this->length; }
+		constexpr void operator--() __LL_EXCEPT__ { --this->length; }
+		__LL_NODISCARD__ constexpr type::type operator++(int) __LL_EXCEPT__ { return this->length++; }
+		__LL_NODISCARD__ constexpr type::type operator--(int) __LL_EXCEPT__ { return this->length--; }
+
+		constexpr void operator+=(type::cinput value) __LL_EXCEPT__ { this->length += value; }
+		constexpr void operator-=(type::cinput value) __LL_EXCEPT__ { this->length -= value; }
+		constexpr void operator+=(__Countable::cref other) __LL_EXCEPT__ {
+			this->length += other.length;
+		}
+		constexpr void operator-=(__Countable::cref other) __LL_EXCEPT__ {
+			this->length -= other.length;
+		}
+
+		constexpr typename type::type operator=(type::cinput value) __LL_EXCEPT__ {
+			return this->length = value;
 		}
 
 		#pragma region CountableOperations

@@ -222,8 +222,8 @@ template<class T>
 using SearchFunction = std::function<cmp_t(T __t1)>;
 template<class T>
 using SearchFunctionBool = std::function<ll_bool_t(T __t1)>;
-template<class T>
-using SwapFunction = std::function<void(T& __t1, T& __t2)>;
+template<class T, class U = T>
+using SwapFunction = std::function<void(T& __t1, U& __t2)>;
 
 } // namespace lambda
 } // namespace functional

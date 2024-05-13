@@ -28,9 +28,21 @@ namespace common {
 
 template<class T>
 constexpr void simple_swap(T& v1, T& v2) {
-	T tmp = std::move(v1);
-	v1 = std::move(v2);
-	v2 = std::move(tmp);
+	if constexpr (traits::is_basic_type_v<T> || std::is_pointer_v<T>) {
+		T tmp = v1;
+		v1 = v2;
+		v2 = tmp;
+	}
+	//else if constexpr (traits::has_type_operator_v<T, T&&>) {
+	//	T tmp = v1.operator T&&();
+	//	v1 = v2.operator T&&();
+	//	v2 = tmp.operator T&&();
+	//}
+	else {
+		T tmp = std::move(v1);
+		v1 = std::move(v2);
+		v2 = std::move(tmp);
+	}
 }
 
 template<class T, class U = T>

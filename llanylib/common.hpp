@@ -28,9 +28,9 @@ namespace common {
 
 template<class T>
 constexpr void simple_swap(T& v1, T& v2) {
-	T tmp = v1;
-	v1 = v2;
-	v2 = tmp;
+	T tmp = std::move(v1);
+	v1 = std::move(v2);
+	v2 = std::move(tmp);
 }
 
 template<class T, class U = T>

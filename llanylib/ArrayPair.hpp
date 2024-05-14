@@ -32,19 +32,19 @@ class ArrayPair {
 		using __ArrayPair = traits::template_types<ArrayPair<T>>;
 		using csubarr = std::pair<typename type::cptr, typename type::cptr>;
 	protected:
-		type::cptr _begin;
-		type::cptr _end;
+		type::cptr mem;
+		type::cptr mem_end;
 	#pragma region Functions
 	protected:
 		constexpr void simple_clear() __LL_EXCEPT__ {
-			this->_begin = LL_NULLPTR;
-			this->_end = LL_NULLPTR;
+			this->mem = LL_NULLPTR;
+			this->mem_end = LL_NULLPTR;
 		}
 	public:
 		#pragma region Constructors
 		constexpr ArrayPair() __LL_EXCEPT__ = delete;
-		constexpr ArrayPair(type::cptr _begin, type::cptr _end) __LL_EXCEPT__ : _begin(_begin), _end(_end) {}
-		constexpr ArrayPair(type::cptr _begin, const len_t len) __LL_EXCEPT__ : ArrayPair(_begin, _begin + len) {}
+		constexpr ArrayPair(type::cptr mem, type::cptr mem_end) __LL_EXCEPT__ : mem(mem), mem_end(mem_end) {}
+		constexpr ArrayPair(type::cptr mem, const len_t len) __LL_EXCEPT__ : ArrayPair(mem, mem + len) {}
 		constexpr ArrayPair(std::pair<typename type::cptr, typename type::cptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
 		constexpr ArrayPair(std::pair<typename type::ptr, typename type::cptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
 		constexpr ArrayPair(std::pair<typename type::ptr, typename type::ptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
@@ -52,17 +52,17 @@ class ArrayPair {
 		constexpr ~ArrayPair() __LL_EXCEPT__ {}
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr ArrayPair(__ArrayPair::cref other) __LL_EXCEPT__ : _begin(other._begin), _end(other._end) {}
+		constexpr ArrayPair(__ArrayPair::cref other) __LL_EXCEPT__ : mem(other.mem), mem_end(other.mem_end) {}
 		constexpr __ArrayPair::ref operator=(__ArrayPair::cref other) __LL_EXCEPT__ {
-			this->_begin = other._begin;
-			this->_end = other._end;
+			this->mem = other.mem;
+			this->mem_end = other.mem_end;
 			return *this;
 		}
 		constexpr ArrayPair(__ArrayPair::move other) __LL_EXCEPT__
-			: _begin(other._begin), _end(other._end){ other.clear(); }
+			: mem(other.mem), mem_end(other.mem_end){ other.clear(); }
 		constexpr __ArrayPair::ref operator=(__ArrayPair::move other) __LL_EXCEPT__ {
-			this->_begin = other._begin;
-			this->_end = other._end;
+			this->mem = other.mem;
+			this->mem_end = other.mem_end;
 			other.simple_clear();
 			return *this;
 		}
@@ -76,32 +76,32 @@ class ArrayPair {
 		#pragma endregion
 		#pragma region ClassFunctions
 		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos) const __LL_EXCEPT__ {
-			return this->_begin + pos;
+			return this->mem + pos;
 		}
-		__LL_NODISCARD__ constexpr csubarr get(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
-			return csubarr{ this->get(_begin) , this->get(_end) };
+		__LL_NODISCARD__ constexpr csubarr get(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return csubarr{ this->get(first), this->get(last) };
 		}
-		__LL_NODISCARD__ constexpr csubarr substr(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
-			return this->get(_begin, _end);
+		__LL_NODISCARD__ constexpr csubarr substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return this->get(first, last);
 		}
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
-			return this->_begin[pos];
+			return this->mem[pos];
 		}
 		#if defined(LL_REAL_CXX23)
-		__LL_NODISCARD__ constexpr csubarr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
-			return this->substr(_begin, _end);
+		__LL_NODISCARD__ constexpr csubarr operator[](const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return this->substr(first, last);
 		}
 		#endif // LL_REAL_CXX23
 
 		#pragma region std
 		__LL_NODISCARD__ constexpr typename type::cptr data() const __LL_EXCEPT__ {
-			return this->_begin;
+			return this->mem;
 		}
 		__LL_NODISCARD__ constexpr typename type::cptr begin() const __LL_EXCEPT__ {
-			return this->_begin;
+			return this->mem;
 		}
 		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
-			return this->_end;
+			return this->mem_end;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
 			return !this->isValid();
@@ -110,8 +110,8 @@ class ArrayPair {
 
 		__LL_NODISCARD__ constexpr ll_bool_t isValid() const __LL_EXCEPT__ {
 			return
-				static_cast<ll_bool_t>(this->_begin) &&
-				static_cast<ll_bool_t>(this->_end);
+				static_cast<ll_bool_t>(this->mem) &&
+				static_cast<ll_bool_t>(this->mem_end);
 		}
 		constexpr void clear() __LL_EXCEPT__ { this->simple_clear(); }
 

@@ -68,7 +68,7 @@ class LL_SHARED_LIB StringView {
 	private:
 		// None in this example
 	protected:
-		type::cptr _begin;
+		type::cptr mem;
 	public:
 		// This is forbidden
 	#pragma endregion
@@ -82,17 +82,17 @@ class LL_SHARED_LIB StringView {
 		constexpr StringView() __LL_EXCEPT__ = delete;
 		constexpr ~StringView() __LL_EXCEPT__ {}
 
-		constexpr StringView(type::ctype(&arr)[N]) __LL_EXCEPT__ : _begin(arr) {}
-		constexpr __StringView::ref operator=(type::ctype(&arr)[N]) __LL_EXCEPT__ {
-			this->_begin = arr;
+		constexpr StringView(type::ctype(&mem)[N]) __LL_EXCEPT__ : mem(mem) {}
+		constexpr __StringView::ref operator=(type::ctype(&mem)[N]) __LL_EXCEPT__ {
+			this->mem = mem;
 			return *this;
 		}
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr StringView(__StringView::cref other) __LL_EXCEPT__ : _begin(other._begin) {}
+		constexpr StringView(__StringView::cref other) __LL_EXCEPT__ : mem(other.mem) {}
 		constexpr __StringView::ref operator=(__StringView::cref other) __LL_EXCEPT__ {
-			this->_begin = other._begin;
+			this->mem = other.mem;
 			return *this;
 		}
 
@@ -115,30 +115,30 @@ class LL_SHARED_LIB StringView {
 			return /*this->operator len_t() == 0 || */ this->operator[](0) == '\0';
 		}
 		__LL_NODISCARD__ constexpr operator ll_bool_t() const __LL_EXCEPT__ {
-			return !this->empty() && static_cast<ll_bool_t>(this->_begin);
+			return !this->empty() && static_cast<ll_bool_t>(this->mem);
 		}
 
 		__LL_NODISCARD__ constexpr operator typename __StrPair() const __LL_EXCEPT__ {
-			return __StrPair(this->_begin, this->operator len_t());
+			return __StrPair(this->mem, this->len());
 		}
 		__LL_NODISCARD__ constexpr operator typename type::cptr() const __LL_EXCEPT__ {
-			return this->_begin;
+			return this->mem;
 		}
 		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos) const __LL_EXCEPT__ {
-			return this->_begin + pos;
+			return this->mem + pos;
 		}
-		__LL_NODISCARD__ constexpr csubstr get(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
-			return csubstr{ this->get(_begin) , this->get(_end) };
+		__LL_NODISCARD__ constexpr csubstr get(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return csubstr{ this->get(first) , this->get(last) };
 		}
-		__LL_NODISCARD__ constexpr csubstr substr(const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
-			return this->get(_begin, _end);
+		__LL_NODISCARD__ constexpr csubstr substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return this->get(first, last);
 		}
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
-			return this->_begin[pos];
+			return this->mem[pos];
 		}
 		#if defined(LL_REAL_CXX23)
-		__LL_NODISCARD__ constexpr csubstr operator[](const len_t _begin, const len_t _end) const __LL_EXCEPT__ {
-			return this->substr(_begin, _end);
+		__LL_NODISCARD__ constexpr csubstr operator[](const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return this->substr(first, last);
 		}
 
 		#endif // LL_REAL_CXX23
@@ -158,20 +158,20 @@ class LL_SHARED_LIB StringView {
 	public:
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
 		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(const U (&arr)[N], CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::compare(this->begin(), arr, this->operator len_t(), compareFunc);
+			return __cmp<GET_DATA, U>::compare(this->begin(), arr, this->len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
 		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(const U (&arr)[N]) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::compare(this->begin(), arr, this->operator len_t());
+			return __cmp<GET_DATA, U>::compare(this->begin(), arr, this->len());
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
 		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(const StringView<N, U>& arr, CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::compare(this->begin(), arr.begin(), this->operator len_t(), compareFunc);
+			return __cmp<GET_DATA, U>::compare(this->begin(), arr.begin(), this->len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
 		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(const StringView<N, U>& arr) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::compare(this->begin(), arr.begin(), this->operator len_t());
+			return __cmp<GET_DATA, U>::compare(this->begin(), arr.begin(), this->len());
 		}
 
 		#pragma endregion
@@ -179,40 +179,40 @@ class LL_SHARED_LIB StringView {
 	public:
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const U (&arr)[N2], CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(this->begin(), this->operator len_t(), arr, STypesOther<N2>::ARR_SIZE, compareFunc);
+			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr, STypesOther<N2>::ARR_SIZE, compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const U (&arr)[N2]) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(this->begin(), this->operator len_t(), arr, STypesOther<N2>::ARR_SIZE);
+			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr, STypesOther<N2>::ARR_SIZE);
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const U* arr, const len_t size, CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(this->begin(), this->operator len_t(), arr, size, compareFunc);
+			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr, size, compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const U* arr, const len_t size) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(this->begin(), this->operator len_t(), arr, size);
+			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr, size);
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const StringView<N2, U>& arr, CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(this->begin(), this->operator len_t(), arr.begin(), arr.operator len_t(), compareFunc);
+			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr.begin(), arr.len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const StringView<N2, U>& arr) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(this->begin(), this->operator len_t(), arr.begin(), arr.operator len_t());
+			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr.begin(), arr.len());
 		}
 
 		#pragma endregion
 		#pragma region Operators
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> operator==(const U (&arr)[N2]) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(this->begin(), this->operator len_t(), arr, STypesOther<N2>::ARR_SIZE);
+			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr, STypesOther<N2>::ARR_SIZE);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> operator==(const StringView<N2, U>& arr) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(this->begin(), this->operator len_t(), arr.begin(), arr.operator len_t());
+			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr.begin(), arr.len());
 		}
 		
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
@@ -226,43 +226,43 @@ class LL_SHARED_LIB StringView {
 		
 		template<len_t N2>
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(type::ctype (&arr)[N2]) const __LL_EXCEPT__ {
-			return __cmp<LL_FALSE, typename type::type>::equals(this->begin(), this->operator len_t(), arr, STypesOther<N2>::ARR_SIZE);
+			return __cmp<LL_FALSE, typename type::type>::equals(this->begin(), this->len(), arr, STypesOther<N2>::ARR_SIZE);
 		}
 		template<len_t N2>
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const StringView<N2, typename type::type>& arr) const __LL_EXCEPT__ {
-			return __cmp<LL_FALSE, typename type::type>::equals(this->begin(), this->operator len_t(), arr.begin(), arr.operator len_t());
+			return __cmp<LL_FALSE, typename type::type>::equals(this->begin(), this->len(), arr.begin(), arr.len());
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const StringView<N, typename type::type>& arr) const __LL_EXCEPT__ {
-			return __cmp<LL_FALSE, typename type::type>::equals(this->begin(), this->operator len_t(), arr.begin(), arr.len());
+			return __cmp<LL_FALSE, typename type::type>::equals(this->begin(), this->len(), arr.begin(), arr.len());
 		}
 
 		#pragma endregion
 		#pragma region StartsWith
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const U (&needle)[N2], CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->operator len_t(), needle, STypesOther<N2>::ARR_SIZE, compareFunc);
+			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->len(), needle, STypesOther<N2>::ARR_SIZE, compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const U (&needle)[N2]) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->operator len_t(), needle, STypesOther<N2>::ARR_SIZE);
+			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->len(), needle, STypesOther<N2>::ARR_SIZE);
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const U* needle, const len_t size, CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->operator len_t(), needle, size);
+			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->len(), needle, size);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const U* needle, const len_t size) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->operator len_t(), needle, size);
+			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->len(), needle, size);
 		}
 		
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const StringView<N2, U>& needle, CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->operator len_t(), needle.begin(), needle.operator len_t(), compareFunc);
+			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->len(), needle.begin(), needle.len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const StringView<N2, U>& needle) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->operator len_t(), needle.begin(), needle.operator len_t());
+			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->len(), needle.begin(), needle.len());
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
@@ -282,29 +282,29 @@ class LL_SHARED_LIB StringView {
 		#pragma region EndsWith
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const U (&needle)[N2], CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->operator len_t(), needle, STypesOther<N2>::ARR_SIZE, compareFunc);
+			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->len(), needle, STypesOther<N2>::ARR_SIZE, compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const U (&needle)[N2]) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->operator len_t(), needle, STypesOther<N2>::ARR_SIZE);
+			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->len(), needle, STypesOther<N2>::ARR_SIZE);
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const U* needle, const len_t size, CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->operator len_t(), needle, size);
+			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->len(), needle, size);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const U* needle, const len_t size) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->operator len_t(), needle, size);
+			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->len(), needle, size);
 		}
 		
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const StringView<N2, U>& needle, CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->operator len_t(), needle.begin(), needle.operator len_t(), compareFunc);
+			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->len(), needle.begin(), needle.len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const StringView<N2, U>& needle) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->operator len_t(), needle.begin(), needle.operator len_t());
+			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->len(), needle.begin(), needle.len());
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
@@ -332,57 +332,57 @@ class LL_SHARED_LIB StringView {
 		using FindFunc = fnc_clss::CompareBool<typename type::input, W>;
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::find<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object, FindFunc<W> compareFunc, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::find<U, W>(this->get(first), this->get(last), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::find<U, W>(this->get(_begin), this->get(_end), object);
-		}
-
-		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::rfind<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
-		}
-		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::rfind<U, W>(this->get(_begin), this->get(_end), object);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> find(W object, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::find<U, W>(this->get(first), this->get(last), object);
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::contains<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object, FindFunc<W> compareFunc, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::rfind<U, W>(this->get(first), this->get(last), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::contains<U, W>(this->get(_begin), this->get(_end), object);
-		}
-
-		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::all<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
-		}
-		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::all<U, W>(this->get(_begin), this->get(_end), object);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> rfind(W object, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::rfind<U, W>(this->get(first), this->get(last), object);
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::any<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object, FindFunc<W> compareFunc, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::contains<U, W>(this->get(first), this->get(last), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::any<U, W>(this->get(_begin), this->get(_end), object);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> contains(W object, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::contains<U, W>(this->get(first), this->get(last), object);
 		}
 
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object, FindFunc<W> compareFunc, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::none<U, W>(this->get(_begin), this->get(_end), object, compareFunc);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object, FindFunc<W> compareFunc, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::all<U, W>(this->get(first), this->get(last), object, compareFunc);
 		}
 		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object, const len_t _begin = ZERO_UI64, const len_t _end = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
-			return __find<POSITION>::none<U, W>(this->get(_begin), this->get(_end), object);
+		__LL_NODISCARD__ constexpr FindResult<POSITION> all(W object, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::all<U, W>(this->get(first), this->get(last), object);
+		}
+
+		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
+		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object, FindFunc<W> compareFunc, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::any<U, W>(this->get(first), this->get(last), object, compareFunc);
+		}
+		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
+		__LL_NODISCARD__ constexpr FindResult<POSITION> any(W object, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::any<U, W>(this->get(first), this->get(last), object);
+		}
+
+		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
+		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object, FindFunc<W> compareFunc, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::none<U, W>(this->get(first), this->get(last), object, compareFunc);
+		}
+		template<class U, ll_bool_t POSITION = LL_TRUE, class W = traits::template_types<U>::cinput>
+		__LL_NODISCARD__ constexpr FindResult<POSITION> none(W object, const len_t first = ZERO_UI64, const len_t last = __sizes::ARR_SIZE) const __LL_EXCEPT__ {
+			return __find<POSITION>::none<U, W>(this->get(first), this->get(last), object);
 		}
 
 		#pragma endregion
@@ -394,10 +394,10 @@ class LL_SHARED_LIB StringView {
 			return this->get(ZERO_UI64);
 		}
 		__LL_NODISCARD__ constexpr type::cptr rbegin() const __LL_EXCEPT__ {
-			return this->get(this->operator len_t() - 1);
+			return this->get(this->len() - 1);
 		}
 		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
-			return this->get(this->operator len_t());
+			return this->get(this->len());
 		}
 
 		#pragma endregion
@@ -407,8 +407,8 @@ class LL_SHARED_LIB StringView {
 
 
 template<len_t N, class T = ll_char_t>
-constexpr StringView<N, T> make_StringView(const T(&_begin)[N]) {
-	return StringView<N, T>(_begin);
+constexpr StringView<N, T> make_StringView(const T(&mem)[N]) {
+	return StringView<N, T>(mem);
 }
 
 } // namespace llcpp

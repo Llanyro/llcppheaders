@@ -467,12 +467,12 @@ struct template_types {
 template<class T, class U>
 __LL_NODISCARD__ constexpr U constexpr_cast(T* data) __LL_EXCEPT__ {
 	if constexpr (std::is_const_v<T>) {
-		const void* _data = data;
-		return static_cast<U>(_data);
+		const void* mem = data;
+		return static_cast<U>(mem);
 	}
 	else {
-		void* _data = data;
-		return static_cast<U>(_data);
+		void* mem = data;
+		return static_cast<U>(mem);
 	}
 }
 

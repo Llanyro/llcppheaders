@@ -24,7 +24,6 @@
     <ClInclude Include="algorithm.hpp" />
     <ClInclude Include="Array.hpp" />
     <ClInclude Include="ArrayView.hpp" />
-    <ClInclude Include="ascii.hpp" />
     <ClInclude Include="bits.hpp" />
     <ClInclude Include="CityHash.hpp" />
     <ClInclude Include="common.hpp" />
@@ -39,8 +38,10 @@
     <ClInclude Include="examples\StringViewExample.hpp" />
     <ClInclude Include="examples\traitsExample.hpp" />
     <ClInclude Include="examples\traits_test_class.hpp" />
+    <ClInclude Include="expresions\ascii.hpp" />
     <ClInclude Include="expresions\color.hpp" />
     <ClInclude Include="expresions\math.hpp" />
+    <ClInclude Include="expresions\string.hpp" />
     <ClInclude Include="LinkedList.hpp" />
     <ClInclude Include="LoopList.hpp" />
     <ClInclude Include="math.hpp" />

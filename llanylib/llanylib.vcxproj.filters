@@ -132,9 +132,6 @@
     <ClInclude Include="ostypes.hpp">
       <Filter>Source Files\types</Filter>
     </ClInclude>
-    <ClInclude Include="ascii.hpp">
-      <Filter>Source Files\utils\string</Filter>
-    </ClInclude>
     <ClInclude Include="RAIIWrapper.hpp">
       <Filter>Source Files\utils\raii</Filter>
     </ClInclude>
@@ -152,6 +149,12 @@
     </ClInclude>
     <ClInclude Include="ArrayPair.hpp">
       <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="expresions\ascii.hpp">
+      <Filter>Source Files\expresions</Filter>
+    </ClInclude>
+    <ClInclude Include="expresions\string.hpp">
+      <Filter>Source Files\expresions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

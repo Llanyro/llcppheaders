@@ -21,7 +21,7 @@
 #define LLANYLIB_ASCII_MAYOR_ 5
 #define LLANYLIB_ASCII_MINOR_ 0
 
-#include "StringView.hpp"
+#include "../StringView.hpp"
 
 namespace llcpp {
 namespace ascii {
@@ -36,11 +36,6 @@ constexpr auto ALPHABET_CHARS = make_StringView("abcdefghijklmnopqrstuvwxyzABCDE
 constexpr auto SPECIAL_CHARS = make_StringView("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 constexpr auto ALL_VISIBLE_CHARS = make_StringView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 
-constexpr auto NULLPTR = make_StringView("nullptr");
-
-constexpr auto TRUE_STR = make_StringView("True");
-constexpr auto FALSE_STR = make_StringView("False");
-
 namespace wide {
 
 constexpr auto ALPHABET_MINUS_CHARS = make_StringView(L"abcdefghijklmnopqrstuvwxyz");
@@ -50,11 +45,6 @@ constexpr auto ALPHABET_MAYUS_MINUS_CHARS = make_StringView(L"abcdefghijklmnopqr
 constexpr auto ALPHABET_CHARS = make_StringView(L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
 constexpr auto SPECIAL_CHARS = make_StringView(L"!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 constexpr auto ALL_VISIBLE_CHARS = make_StringView(L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
-
-constexpr auto NULLPTR = make_StringView(L"nullptr");
-
-constexpr auto TRUE_STR = make_StringView(L"True");
-constexpr auto FALSE_STR = make_StringView(L"False");
 
 } // namespace wide
 } // namespace ascii

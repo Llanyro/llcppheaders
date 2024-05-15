@@ -26,7 +26,19 @@
 namespace llcpp {
 namespace string {
 
+constexpr auto NULLPTR = make_StringView("nullptr");
+constexpr auto TRUE_STR = make_StringView("True");
+constexpr auto FALSE_STR = make_StringView("False");
+
+constexpr auto INVALID_POINTER = make_StringView("[invalid pointer]: ");
+
 namespace wide {
+
+constexpr auto NULLPTR = make_StringView(L"nullptr");
+constexpr auto TRUE_STR = make_StringView(L"True");
+constexpr auto FALSE_STR = make_StringView(L"False");
+
+constexpr auto INVALID_POINTER = make_StringView(L"[invalid pointer]: ");
 
 } // namespace wide
 } // namespace string

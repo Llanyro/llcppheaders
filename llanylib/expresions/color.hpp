@@ -72,6 +72,10 @@ constexpr auto BG_MAGENTA = make_StringView(L"\033[45m");
 constexpr auto BG_CYAN = make_StringView(L"\033[46m");
 constexpr auto BG_WHITE = make_StringView(L"\033[47m");
 
+constexpr auto DEBUG_WARNING = BG_YELLOW;
+constexpr auto DEBUG_ERROR = BG_RED;
+constexpr auto DEBUG_MESSAGE = BG_CYAN;
+
 } // namespace wide
 } // namespace color
 } // namespace llcpp

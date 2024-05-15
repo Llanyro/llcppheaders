@@ -52,10 +52,8 @@ class LL_SHARED_LIB Singleton {
 	public:
 		using type = traits::template_types<T>;
 		using __Singleton = traits::template_types<Singleton<T>>;
-
 	protected:
 		constexpr Singleton() __LL_EXCEPT__ {}
-
 	public:
 		constexpr ~Singleton() __LL_EXCEPT__ {}
 
@@ -91,13 +89,10 @@ class LL_SHARED_LIB Singleton {
 	public:
 		using type = traits::template_types<T>;
 		using __Singleton = traits::template_types<Singleton<T>>;
-
 	private:
 		static T* instance;
-
 	protected:
 		constexpr Singleton() __LL_EXCEPT__ {}
-
 	public:
 		constexpr ~Singleton() __LL_EXCEPT__ {}
 

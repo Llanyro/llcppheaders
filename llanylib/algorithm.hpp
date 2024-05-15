@@ -115,8 +115,20 @@ struct compare_cluster {
 
 	#pragma region Compare
 	__LL_NODISCARD__ static constexpr CompareResult compare(__t::cptr v1, __u::cptr v2, len_t size, CompareFunc compareFunc) __LL_EXCEPT__ {
-		LL_ASSERT(v1, "[v1] cannot be nullptr. finders_cluster::find()");
-		LL_ASSERT(v2, "[v2] cannot be nullptr. finders_cluster::find()");
+		if (v1 == v2) {
+			if constexpr (GET_DATA) return CompareResult(0);
+			else return 0;
+		}
+		else if (!v1) {
+			if constexpr (GET_DATA) return CompareResult(-1);
+			else return -1;
+		}
+		else if(!v2){
+			if constexpr (GET_DATA) return CompareResult(1);
+			else return 1;
+		}
+
+		__LL_ASSERT_VAR_NULL__(compareFunc, "compareFunc");
 
 		typename __t::cptr begin = v1;
 		for (; 0 < size; --size, ++v1, ++v2) {
@@ -136,9 +148,6 @@ struct compare_cluster {
 
 	#pragma region Equals
 	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::cptr v1, const len_t size1, __u::cptr v2, const len_t size2, CompareFunc compareFunc) __LL_EXCEPT__ {
-		LL_ASSERT(v1, "[v1] cannot be nullptr. finders_cluster::find()");
-		LL_ASSERT(v2, "[v2] cannot be nullptr. finders_cluster::find()");
-
 		if (size1 != size2) {
 			if constexpr (GET_DATA)
 				return CompareResultBool(LL_FALSE);
@@ -150,9 +159,6 @@ struct compare_cluster {
 		else return res == 0;
 	}
 	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::cptr v1, const len_t size1, __u::cptr v2, const len_t size2) __LL_EXCEPT__ {
-		LL_ASSERT(v1, "[v1] cannot be nullptr. finders_cluster::find()");
-		LL_ASSERT(v2, "[v2] cannot be nullptr. finders_cluster::find()");
-
 		if (size1 != size2) {
 			if constexpr (GET_DATA)
 				return CompareResultBool(LL_FALSE);
@@ -185,8 +191,16 @@ struct compare_cluster {
 	#pragma region StartsWith
 	// str size needs to be bigger or equal to needle
 	__LL_NODISCARD__ static constexpr CompareResultBool starts_with_impl(__t::cptr str, __u::cptr needle, len_t size, CompareFuncBool compareFunc) {
-		LL_ASSERT(str, "[str] cannot be nullptr. finders_cluster::find()");
-		LL_ASSERT(needle, "[needle] cannot be nullptr. finders_cluster::find()");
+		if (v1 == v2) {
+			if constexpr (GET_DATA) return CompareResult(LL_TRUE);
+			else return LL_TRUE;
+		}
+		else if (!v1 || !v2) {
+			if constexpr (GET_DATA) return CompareResult(LL_FALSE);
+			else return LL_FALSE;
+		}
+
+		__LL_ASSERT_VAR_NULL__(compareFunc, "compareFunc");
 
 		typename __t::cptr begin = str;
 		for (; 0 < size; --size, ++str, ++needle) {
@@ -281,9 +295,12 @@ struct finders_cluster {
 	#pragma region Find
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr FindResult find(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
-		LL_ASSERT(begin, "[begin] cannot be nullptr. finders_cluster::find()");
-		LL_ASSERT(end, "[end] cannot be nullptr. finders_cluster::find()");
-		LL_ASSERT(end >= begin, "[end >= begin] begin must be lower position than end. finders_cluster::find()");
+		if (!begin || !end || end <= begin) {
+			if constexpr (POSITION) return npos;
+			else return end;
+		}
+
+		__LL_ASSERT_VAR_NULL__(compareFunc, "compareFunc");
 
 		for (typename __t::cptr data = begin; data < end; ++data)
 			if (compareFunc(*data, object)) {
@@ -318,9 +335,12 @@ struct finders_cluster {
 	#pragma region rFind
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr FindResult rfind(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
-		LL_ASSERT(begin, "[begin] cannot be nullptr. finders_cluster::rfind()");
-		LL_ASSERT(end, "[end] cannot be nullptr. finders_cluster::rfind()");
-		LL_ASSERT(end >= begin, "[end >= begin] begin must be lower position than end. finders_cluster::rfind()");
+		if (!begin || !end || end <= begin) {
+			if constexpr (POSITION) return npos;
+			else return end;
+		}
+
+		__LL_ASSERT_VAR_NULL__(compareFunc, "compareFunc");
 
 		for (typename __t::cptr data = end - 1; data > begin; --data)
 			if (compareFunc(*data, object)) {
@@ -386,8 +406,9 @@ struct finders_cluster {
 	#pragma region All
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::cptr begin, __t::cptr end, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
-		LL_ASSERT(begin, "[begin] cannot be nullptr. all(__t::cptr begin, __t::cptr end, const W object)");
-		LL_ASSERT(end, "[end] cannot be nullptr. all(__t::cptr begin, __t::cptr end, const W object)");
+		if (!begin || !end || end <= begin) return LL_FALSE;
+
+		__LL_ASSERT_VAR_NULL__(compareFunc, "compareFunc");
 
 		for (; begin < end; ++begin)
 			if (!compareFunc(*begin, object))
@@ -486,9 +507,6 @@ struct finders_cluster {
 	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::cptr begin, __t::cptr end, W object) {
 		static_assert(traits::has_equal_operator_v<T>, "Error, <T> object has no operator==()");
 		static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
-		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
-		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
-
 		len_t low = ZERO_UI64;
 		len_t high = end - begin;
 		while (low <= high) {
@@ -502,8 +520,7 @@ struct finders_cluster {
 	// This is recommended to use with objects types
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::cptr begin, __t::cptr end, W object, CompareFunc<W> compareFunc) {
-		LL_ASSERT(begin, "[begin] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
-		LL_ASSERT(end, "[end] cannot be nullptr. rfind(__t::cptr begin, __t::cptr end, const W object)");
+		__LL_ASSERT_VAR_NULL__(compareFunc, "compareFunc");
 
 		len_t low = ZERO_UI64;
 		len_t high = end - begin;
@@ -571,9 +588,9 @@ struct finders_cluster {
 #pragma region DataManipulation
 template<class T>
 constexpr void reverse(T* begin, T* end, fnc_clss::SwapFunction<T> swap) __LL_EXCEPT__ {
-	LL_ASSERT(begin, "[begin] cannot be nullptr. reverse(T* begin, T* end, ReveseSwapFunction<T> revSwap)");
-	LL_ASSERT(end, "[end] cannot be nullptr. reverse(T* begin, T* end, ReveseSwapFunction<T> revSwap)");
-	LL_ASSERT(begin < end, "[begin < end] begin of array needs to be lower value than end. reverse(T* begin, T* end, ReveseSwapFunction<T> revSwap)");
+	__LL_ASSERT_VAR_NULL__(begin, "begin");
+	__LL_ASSERT_VAR_NULL__(end, "end");
+	__LL_ASSERT_VAR_NULL__(swap, "swap");
 
 	for (; begin < end; ++begin, --end)
 		swap(*begin, *end);
@@ -605,6 +622,7 @@ template<class T, class U = traits::get_object_reference_t<T>>
 constexpr void shiftLeft(T* begin, T* end, const len_t num, const U null, fnc_clss::SwapFunction<T> swap) __LL_EXCEPT__ {
 	//len_t size = end - begin;
 	//LL_ASSERT(size > num, "[num] num is greater than the array size");
+	__LL_ASSERT_VAR_NULL__(swap, "swap");
 
 	--end;
 	for (T* i = end - num; i > begin; --i, --end)
@@ -622,6 +640,7 @@ template<class T, class U = traits::get_object_reference_t<T>>
 constexpr void shifRight(T* begin, T* end, const len_t num, const U null, fnc_clss::SwapFunction<T> swap) __LL_EXCEPT__ {
 	//len_t size = end - begin;
 	//LL_ASSERT(size > num, "[num] num is greater than the array size");
+	__LL_ASSERT_VAR_NULL__(swap, "swap");
 
 	for (T* i = begin + num; i < end; ++i, ++begin)
 		swap(*begin, *i);
@@ -641,6 +660,12 @@ constexpr T* qsort_div(
 	fnc_clss::SwapFunction<typename U::type> swap,
 	fnc_clss::Compare<typename U::cinput> cmp
 ) __LL_EXCEPT__ {
+	__LL_ASSERT_VAR_NULL__(arr, "arr");
+	__LL_ASSERT_VAR_NULL__(begin, "begin");
+	__LL_ASSERT_VAR_NULL__(end, "end");
+	__LL_ASSERT_VAR_NULL__(swap, "swap");
+	__LL_ASSERT_VAR_NULL__(cmp, "cmp");
+
 	T* left = begin;
 	T* right = end;
 	T* piv = arr;

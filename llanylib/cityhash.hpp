@@ -220,6 +220,7 @@ class CityHash {
 				return 0;
 			}
 			#endif
+			if (!s) return ZERO_UI64;
 
 			if (len <= 32) {
 				if (len <= 16) return hashLen0to16(s, len);
@@ -262,6 +263,7 @@ class CityHash {
 				hashLen16(v.getHigh(), w.getHigh()) + x);
 		}
 		__LL_NODISCARD__ static constexpr ui64 cityHash64(const void* data, const b64 bytes) __LL_EXCEPT__ {
+			if (!data) return ZERO_UI64;
 			return cityHash64(static_cast<DataType>(data), bytes);
 		}
 		template<class T, len_t N>

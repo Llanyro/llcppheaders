@@ -476,8 +476,6 @@ __LL_NODISCARD__ constexpr U constexpr_cast(T* data) __LL_EXCEPT__ {
 	}
 }
 
-
-
 #pragma endregion
 
 

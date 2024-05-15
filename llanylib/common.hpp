@@ -57,6 +57,9 @@ constexpr cmp_t compare_with_operators(T v1, U v2) {
 
 template<class T, class U = T>
 constexpr cmp_t compare_with_operators_void(const void* _a, const void* _b) {
+	__LL_ASSERT_VAR_NULL__(_a, "_a");
+	__LL_ASSERT_VAR_NULL__(_b, "_b");
+
 	static_assert(traits::has_no_equal_operator_v<T>, "Error, <T> object has no operator!=()");
 	static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
 

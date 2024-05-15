@@ -56,6 +56,7 @@ enum class OSEnum { Windows, Posix, Unix, Other };
 
 #define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, "[" var_str "] cannot be 0. " __FUNCSIG__)
 #define __LL_ASSERT_VAR_NULL__(var, var_str) LL_ASSERT(var, "[" var_str "] cannot be nullptr." __FUNCSIG__)
+#define __LL_ASSERT_LIST_EMPTY__(var, var_str) LL_ASSERT(!var.empty(), "[" var_str "] cannot be empty." __FUNCSIG__)
 #define __LL_ASSERT_B_LOWER_THAN_A__(var_a, var_b, var_a_str, var_b_str) \
 	LL_ASSERT(var_a > var_b, "[" var_a_str " > " var_b_str "] " var_a_str " cannot be lower or equal to " var_b_str "." __FUNCSIG__)
 

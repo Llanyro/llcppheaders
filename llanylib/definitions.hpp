@@ -54,4 +54,7 @@ enum class OSEnum { Windows, Posix, Unix, Other };
 #define LL_NULLPTR nullptr
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 
+#define __LL_VAR_ZERO_ASSERT__(var, varstr) LL_ASSERT(var > 0, "[" varstr "] cannot be 0. " __FUNCSIG__)
+#define __LL_VAR_NULL_ASSERT__(var, varstr) LL_ASSERT(var, "[" varstr "] cannot be nullptr." __FUNCSIG__)
+
 #endif // LLANYLIB_DEFINITIONS_HPP_

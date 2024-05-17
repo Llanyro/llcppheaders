@@ -82,8 +82,13 @@ class LL_SHARED_LIB Countable {
 			return this->operator type::type();
 		}
 		__LL_NODISCARD__ constexpr void clear() __LL_EXCEPT__ { this->length = ZERO_VAL; }
+		__LL_NODISCARD__ constexpr type::type half() const __LL_EXCEPT__ { return (this->length >> 1); }
 		__LL_NODISCARD__ constexpr ll_bool_t inRange(type::cinput position) const __LL_EXCEPT__ {
 			return position < this->operator type::type();
+		}
+		// Used to get end of array
+		__LL_NODISCARD__ constexpr ll_bool_t inRangeEnd(type::cinput position) const __LL_EXCEPT__ {
+			return position <= this->operator type::type();
 		}
 
 		constexpr void operator++() __LL_EXCEPT__ { ++this->length; }

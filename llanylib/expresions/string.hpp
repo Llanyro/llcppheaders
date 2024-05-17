@@ -31,6 +31,8 @@ constexpr auto TRUE_STR = make_StringView("True");
 constexpr auto FALSE_STR = make_StringView("False");
 
 constexpr auto INVALID_POINTER = make_StringView("[invalid pointer]: ");
+constexpr auto NOT_NULL_POINTER = make_StringView("[not null pointer]: ");
+constexpr auto OUT_OF_RANGE = make_StringView("[out of range]: ");
 
 namespace wide {
 
@@ -39,6 +41,8 @@ constexpr auto TRUE_STR = make_StringView(L"True");
 constexpr auto FALSE_STR = make_StringView(L"False");
 
 constexpr auto INVALID_POINTER = make_StringView(L"[invalid pointer]: ");
+constexpr auto NOT_NULL_POINTER = make_StringView(L"[not null pointer]: ");
+constexpr auto OUT_OF_RANGE = make_StringView(L"[out of range]: ");
 
 } // namespace wide
 } // namespace string

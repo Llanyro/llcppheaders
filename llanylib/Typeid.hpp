@@ -114,7 +114,11 @@ class Typeid {
 			if (REMOVE_CLASS_STR) {
 				StringView classString = make_StringView("class ");
 				algorithm::compare_cluster<ll_char_t> cmp;
-				ll_bool_t isClass = cmp.starts_with(res, res2 - res, classString.begin(), classString.size());
+				ll_bool_t isClass = cmp.starts_with(res,
+					static_cast<len_t>(res2 - res),
+					classString.begin(),
+					classString.size()
+				);
 				res = isClass ? (res + classString.size()) : res;
 			}
 			#pragma endregion

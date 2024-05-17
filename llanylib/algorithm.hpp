@@ -191,18 +191,17 @@ struct compare_cluster {
 	#pragma region StartsWith
 	// str size needs to be bigger or equal to needle
 	__LL_NODISCARD__ static constexpr CompareResultBool starts_with_impl(__t::cptr str, __u::cptr needle, len_t size, CompareFuncBool compareFunc) {
-		if (v1 == v2) {
+		if (str == needle) {
 			if constexpr (GET_DATA) return CompareResult(LL_TRUE);
 			else return LL_TRUE;
 		}
-		else if (!v1 || !v2) {
+		else if (!str || !needle) {
 			if constexpr (GET_DATA) return CompareResult(LL_FALSE);
 			else return LL_FALSE;
 		}
 
 		__LL_ASSERT_VAR_NULL__(compareFunc, "compareFunc");
 
-		typename __t::cptr begin = str;
 		for (; 0 < size; --size, ++str, ++needle) {
 			ll_bool_t result = compareFunc(*str, *needle);
 			if (!result) {

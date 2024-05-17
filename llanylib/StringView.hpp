@@ -73,10 +73,6 @@ class LL_SHARED_LIB StringView {
 		// This is forbidden
 	#pragma endregion
 	#pragma region Functions
-	private:
-		// Here we store class private functions
-	protected:
-		// Here we store class protected functions
 	public:
 		#pragma region Contructors
 		constexpr StringView() __LL_EXCEPT__ = delete;

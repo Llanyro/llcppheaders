@@ -24,6 +24,13 @@
 #include "ArrayPair.hpp"
 #include "common.hpp"
 
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(push)
+    #if defined(__LL_SPECTRE_FUNCTIONS__)
+		#pragma warning(disable:5045) // Security Spectre mitigation [SECURITY]
+    #endif // __LL_UNSECURE_FUNCTIONS__
+#endif // WINDOWS_SYSTEM
+
 namespace llcpp {
 namespace algorithm {
 
@@ -717,5 +724,9 @@ constexpr void quicksort(T (&arr)[N]) {
 
 } // namespace algorithm
 } // namespace llcpp
+
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(pop)
+#endif // WINDOWS_SYSTEM
 
 #endif // LLANYLIB_ALGORITHM_HPP_

@@ -71,7 +71,6 @@ class Hash128 {
 
 		__LL_NODISCARD__ constexpr operator const Hash128*() const __LL_EXCEPT__ = delete;
 		__LL_NODISCARD__ constexpr operator Hash128*() __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ constexpr operator Hash128&&() __LL_EXCEPT__ = delete;
 
 		__LL_NODISCARD__ constexpr ui64 getLow() const __LL_EXCEPT__ { return this->low; }
 		__LL_NODISCARD__ constexpr ui64 getHigh() const __LL_EXCEPT__ { return this->high; }

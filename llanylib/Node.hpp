@@ -61,7 +61,6 @@ class LL_SHARED_LIB NodeNext {
 		#pragma region ClassReferenceOperators
 		__LL_NODISCARD__ operator __NodeNext::cptr() const __LL_EXCEPT__ { return this; }
 		__LL_NODISCARD__ operator __NodeNext::ptr() __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ operator __NodeNext::move() __LL_EXCEPT__ = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -127,7 +126,6 @@ class LL_SHARED_LIB NodePrev {
 		#pragma region ClassReferenceOperators
 		__LL_NODISCARD__ operator __NodePrev::cptr() const __LL_EXCEPT__ { return this; }
 		__LL_NODISCARD__ operator __NodePrev::ptr() __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ operator __NodePrev::move() __LL_EXCEPT__ = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions

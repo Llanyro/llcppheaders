@@ -65,7 +65,6 @@ class LL_SHARED_LIB Countable {
 		#pragma region ClassReferenceOperators
 		__LL_NODISCARD__ constexpr operator typename __Countable::cptr() const __LL_EXCEPT__ = delete;
 		__LL_NODISCARD__ constexpr operator typename __Countable::ptr() __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ constexpr operator typename __Countable::move() __LL_EXCEPT__ { return std::move(*this); }
 
 		#pragma endregion
 		#pragma region ClassFunctions

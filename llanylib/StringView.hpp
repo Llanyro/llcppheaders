@@ -99,7 +99,6 @@ class LL_SHARED_LIB StringView {
 		#pragma region ClassReferenceOperators
 		__LL_NODISCARD__ constexpr operator typename __StringView::cptr() const __LL_EXCEPT__ { return this; }
 		__LL_NODISCARD__ constexpr operator typename __StringView::ptr() __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ constexpr operator typename __StringView::move() __LL_EXCEPT__ = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions

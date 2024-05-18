@@ -41,7 +41,7 @@ class Typeid {
 		{}
 		constexpr Typeid(StrPair&& name) __LL_EXCEPT__
 			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()))
-			, name(name.operator StrPair&&())
+			, name(std::move(name))
 		{}
 		constexpr ~Typeid() __LL_EXCEPT__ {}
 
@@ -53,11 +53,11 @@ class Typeid {
 			return *this;
 		}
 		constexpr Typeid(Typeid&& other) __LL_EXCEPT__
-			: name_hash(other.name_hash), name(other.name.operator StrPair&&())
+			: name_hash(other.name_hash), name(std::move(other.name))
 		{ other.Typeid::simpleClear(); }
 		constexpr Typeid& operator=(Typeid&& other) __LL_EXCEPT__ {
 			this->name_hash = other.name_hash;
-			this->name = other.name.operator StrPair&&();
+			this->name = std::move(other.name);
 			other.Typeid::simpleClear();
 			return *this;
 		}

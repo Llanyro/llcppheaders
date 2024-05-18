@@ -94,7 +94,6 @@ class CompareData {
 
 		__LL_NODISCARD__ operator __CompareData::cptr() const __LL_EXCEPT__ = delete;
 		__LL_NODISCARD__ operator __CompareData::ptr() __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ operator __CompareData::move() __LL_EXCEPT__ = delete;
 
 		__LL_NODISCARD__ constexpr __t::cptr getValue1() __LL_EXCEPT__ { return this->value1; }
 		__LL_NODISCARD__ constexpr __u::cptr getValue2() __LL_EXCEPT__ { return this->value2; }

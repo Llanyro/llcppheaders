@@ -98,6 +98,7 @@ constexpr ll_bool_t starts_with_06 = stringview_01.starts_with(stringview_09);
 constexpr ll_bool_t starts_with_07 = stringview_01.starts_with("Holo");
 constexpr ll_bool_t starts_with_08 = stringview_06.starts_with('A');
 
+// [TOFIX]
 constexpr auto starts_with_01_res = stringview_06.starts_with<char, true>("A");
 constexpr auto starts_with_02_res = stringview_05.starts_with<char, true>("A");
 constexpr auto starts_with_03_res = stringview_05.starts_with<char, true>("");
@@ -138,6 +139,7 @@ constexpr ll_bool_t ends_with_08 = stringview_03.ends_with('z');
 constexpr ll_bool_t ends_with_09 = stringview_05.ends_with('\0');
 constexpr ll_bool_t ends_with_10 = stringview_06.ends_with('A');
 
+// [TOFIX]
 constexpr auto ends_with_01_res = stringview_01.ends_with<char, true>("*");
 constexpr auto ends_with_02_res = stringview_02.ends_with<char, true>("?");
 constexpr auto ends_with_03_res = stringview_03.ends_with<char, true>("z");

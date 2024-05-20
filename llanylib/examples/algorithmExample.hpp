@@ -346,6 +346,6 @@ constexpr ll_bool_t is_any(const ll_char_t c, const ll_char_t(&str)[N]) {
 */
 
 } // namespace algorithm
-} // namespace traits
+} // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_ALGORITHMEXAMPLE_HPP_

@@ -245,7 +245,7 @@ static_assert( checker_test_9, "Error changed value");
 ///////////////////////////////////////////////// Example strings /////////////////////////////////////////////////
 
 
-} // namespace llcpp
 } // namespace traits
+} // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_TRAITSEXAMPLE_HPP_

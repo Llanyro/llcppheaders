@@ -265,21 +265,22 @@ class CityHash {
 			if (!data) return ZERO_UI64;
 			return cityHash64(static_cast<DataType>(data), bytes);
 		}
-		template<class T, len_t N>
-		__LL_NODISCARD__ static constexpr ui64 cityHash64(const T(&data)[N]) __LL_EXCEPT__ {
-			return cityHash64(traits::constexpr_cast<const T, DataType>(data), sizeof(T) * N);
-		}
-		template<class T, class tmp = traits::template_types<T>, class W = typename tmp::cinput>
-		__LL_NODISCARD__ static constexpr ui64 cityHash64(W data) __LL_EXCEPT__ {
-			return
-				cityHash64(
-					traits::constexpr_cast<
-						typename tmp::ctype,
-						DataType
-					>(&data),
-					sizeof(T)
-				);
-		}
+		// [TOFIX]
+		//template<class T, len_t N>
+		//__LL_NODISCARD__ static constexpr ui64 cityHash64(const T(&data)[N]) __LL_EXCEPT__ {
+		//	return cityHash64(traits::constexpr_cast<const T, DataType>(data), sizeof(T) * N);
+		//}
+		//template<class T, class tmp = traits::template_types<T>, class W = typename tmp::cinput>
+		//__LL_NODISCARD__ static constexpr ui64 cityHash64(W data) __LL_EXCEPT__ {
+		//	return
+		//		cityHash64(
+		//			traits::constexpr_cast<
+		//				typename tmp::ctype,
+		//				DataType
+		//			>(&data),
+		//			sizeof(T)
+		//		);
+		//}
 };
 
 } // namespace city

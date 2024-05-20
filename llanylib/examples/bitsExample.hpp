@@ -174,6 +174,6 @@ static_assert(cmp(ui64_div_result_6, 4294967295ull, 4294967295ull), "Error chang
 */
 
 } // namespace bits
-} // namespace traits
+} // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_BITSEXAMPLE_HPP_

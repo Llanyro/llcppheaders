@@ -91,6 +91,7 @@ class LL_SHARED_LIB ArrayView {
 		__LL_NODISCARD__ constexpr operator len_t() const __LL_EXCEPT__ { return N; }
 		__LL_NODISCARD__ constexpr len_t size() const __LL_EXCEPT__ { return this->operator len_t(); }
 		__LL_NODISCARD__ constexpr len_t len() const __LL_EXCEPT__ { return this->operator len_t(); }
+		__LL_NODISCARD__ constexpr len_t count() const __LL_EXCEPT__ { return this->operator len_t(); }
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
 			return this->operator len_t() == 0;
 		}

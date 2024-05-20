@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	Typeid.hpp							//
+//	Typeid.hpp								//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -64,7 +64,6 @@ class Typeid {
 
 		__LL_NODISCARD__ constexpr operator const Typeid*() const __LL_EXCEPT__ = delete;
 		__LL_NODISCARD__ constexpr operator Typeid*() __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ constexpr operator Typeid&&() __LL_EXCEPT__ { return std::move(*this); }
 
 		__LL_NODISCARD__ constexpr ui64 hash() const __LL_EXCEPT__ { return this->name_hash; }
 		__LL_NODISCARD__ constexpr StrPair getName() const __LL_EXCEPT__ { return this->name; }

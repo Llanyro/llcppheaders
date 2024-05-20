@@ -105,6 +105,7 @@ class LL_SHARED_LIB StringView {
 		__LL_NODISCARD__ constexpr operator len_t() const __LL_EXCEPT__ { return __sizes::ARR_SIZE; }
 		__LL_NODISCARD__ constexpr len_t size() const __LL_EXCEPT__ { return this->operator len_t(); }
 		__LL_NODISCARD__ constexpr len_t len() const __LL_EXCEPT__ { return this->operator len_t(); }
+		__LL_NODISCARD__ constexpr len_t count() const __LL_EXCEPT__ { return this->operator len_t(); }
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
 			// [TOCHECK]
 			return /*this->operator len_t() == 0 || */ this->operator[](0) == '\0';

@@ -51,9 +51,17 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::re
 // Packed types
 
 template<class... Args>
-__LL_VAR_INLINE__ constexpr len_t pack_size = sizeof...(Args);
-template<class... Args>
-__LL_VAR_INLINE__ constexpr ll_bool_t pack_has_args = (pack_size<Args...> > 0);
+struct pack_operations {
+	template <class... uArgs>
+	struct _split_types { using type = void; };
+	template <class T, class... uArgs>
+	struct _split_types<T, uArgs...> { using type = T; };
+
+	static constexpr len_t pack_size = sizeof...(Args);
+	static constexpr ll_bool_t pack_has_args = (pack_size > 0);
+
+	using pack_get_first = typename _split_types<Args...>::type;
+};
 
 
 // Returns a type with reference if object is not basic type

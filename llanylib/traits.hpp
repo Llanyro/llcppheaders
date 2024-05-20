@@ -72,7 +72,7 @@ struct pack_operations {
 	static constexpr ll_bool_t pack_has_args = (pack_size > ZERO_UI64);
 
 	using pack_get_first = typename _split_types<Args...>::type;
-	static constexpr len_t size_of = typename _split_types<Args...>::size_of;
+	static constexpr len_t size_of = _split_types<Args...>::size_of;
 };
 
 // Returns a type with reference if object is not basic type

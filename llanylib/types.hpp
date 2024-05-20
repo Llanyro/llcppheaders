@@ -111,6 +111,7 @@ using ll_wstring_t = const ll_wchar_t*;		// Used to point to non editable string
 using ll_ustring_t = const ll_uchar_t*;		// Used to point to non editable unsigned strings 
 
 using ll_lib_t = void*;						// Handle for dynamic library linked/shared objects
+struct Hash { ui64 value; };
 
 #pragma region BytesTypes
 using size_bytes8_t = ui8;

@@ -106,10 +106,10 @@ class LL_SHARED_LIB ArrayView {
 		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos) const __LL_EXCEPT__ {
 			return this->mem + pos;
 		}
-		__LL_NODISCARD__ constexpr typename csubarr get(const len_t first, const len_t last) const __LL_EXCEPT__ {
-			return typename csubarr{ this->get(first), this->get(last) };
+		__LL_NODISCARD__ constexpr csubarr get(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return csubarr(this->get(first), this->get(last));
 		}
-		__LL_NODISCARD__ constexpr typename csubarr substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr csubarr substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
 			return this->get(first, last);
 		}
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {

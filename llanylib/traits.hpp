@@ -56,16 +56,26 @@ struct pack_operations {
 	struct _split_types {
 		static constexpr len_t size_of = ZERO_UI64;
 		using type = void;
+		static constexpr auto test() { return LL_FALSE; }
 	};
 	template<>
 	struct _split_types<void> {
 		static constexpr len_t size_of = ZERO_UI64;
 		using type = void;
+		static constexpr auto test() { return LL_FALSE; }
 	};
 	template<class T, class... uArgs>
 	struct _split_types<T, uArgs...> {
 		static constexpr len_t size_of = sizeof(T) + pack_operations<uArgs...>::size_of;
 		using type = T;
+
+		static constexpr auto test() {
+			if constexpr (std::is_pointer_v<T>)
+				return LL_TRUE;
+			else if constexpr (_split_types<uArgs...>::test())
+				return LL_TRUE;
+			else return LL_FALSE;
+		}
 	};
 
 	static constexpr len_t pack_size = sizeof...(Args);
@@ -73,6 +83,7 @@ struct pack_operations {
 
 	using pack_get_first = typename _split_types<Args...>::type;
 	static constexpr len_t size_of = _split_types<Args...>::size_of;
+	static constexpr ll_bool_t is_any_pointer = _split_types<Args...>::test();
 };
 
 // Returns a type with reference if object is not basic type

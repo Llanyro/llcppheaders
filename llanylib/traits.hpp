@@ -38,15 +38,15 @@ namespace traits {
 #define ENABLE_FUNCTION_PARAM(condition, ret) class __ret__ = ret, typename = std::enable_if_t<__is_void_type__, __ret__>
 
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64, ll_bool_t>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::is_arithmetic_v<T>;
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_bigger_type_v = std::_Is_any_of_v<std::remove_const_t<T>, i128, i256, ui128, ui256>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_bigger_type_v = std::_Is_any_of_v<std::remove_cv_t<T>, i128, i256, ui128, ui256>;
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_floating_type_v = std::_Is_any_of_v<std::remove_const_t<T>, f32, f64>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_floating_type_v = std::is_floating_point_v<T>;
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_floating_bigger_type_v = std::_Is_any_of_v<std::remove_const_t<T>, f128>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_floating_bigger_type_v = std::_Is_any_of_v<std::remove_cv_t<T>, f128>;
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::remove_const_t<T>, ll_char_t, ll_wchar_t>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::remove_cv_t<T>, ll_char_t, ll_wchar_t>;
 
 // Packed types
 
@@ -401,6 +401,23 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyable_t<T>::value;
 
 #pragma endregion
+#pragma region PointerChecker
+
+template<class T>
+struct is_pointer {
+	template<class T>
+	static constexpr ll_bool_t test() { return std::is_pointer_v<T>; }
+	template<class T, len_t N>
+	static constexpr ll_bool_t test() { return LL_TRUE; }
+
+	static constexpr ll_bool_t val = test<T>();
+};
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_pointer_v = is_pointer<T>::val;
+
+#pragma endregion
+
 
 //template<class T, class U>
 //using is_same_const_t =

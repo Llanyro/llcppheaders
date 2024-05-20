@@ -125,9 +125,6 @@ class CityHash {
 		__LL_NODISCARD__ static constexpr ui64 shiftMix(const ui64 val) __LL_EXCEPT__ {
 			return val ^ (val >> 47);
 		}
-		__LL_NODISCARD__ static constexpr ui64 hashLen16(const ui64 u, const ui64 v) __LL_EXCEPT__ {
-			return Hash128(u, v);
-		}
 		__LL_NODISCARD__ static constexpr ui64 hashLen16(const ui64 u, const ui64 v, const ui64 mul) __LL_EXCEPT__ {
 			// Murmur-inspired hashing.
 			ui64 a = (u ^ v) * mul;
@@ -231,7 +228,7 @@ class CityHash {
 			// loop we keep 56 bytes of state: v, w, x, y, and z.
 			ui64 x = fetch64(s + len - 40);
 			ui64 y = fetch64(s + len - 16) + fetch64(s + len - 56);
-			ui64 z = hashLen16(
+			ui64 z = Hash128(
 				fetch64(s + len - 48) + len,
 				fetch64(s + len - 24));
 			Hash128 v = weakHashLen32WithSeeds(s + len - 64, len, z);
@@ -257,9 +254,15 @@ class CityHash {
 				s += 64;
 				len -= 64;
 			} while (len != 0);
-			return hashLen16(
-				hashLen16(v.getLow(), w.getLow()) + shiftMix(y) * k1 + z,
-				hashLen16(v.getHigh(), w.getHigh()) + x);
+			return Hash128(
+				Hash128(
+					v.getLow(),
+					w.getLow()
+				) + shiftMix(y) * k1 + z,
+				Hash128(
+					v.getHigh(),
+					w.getHigh()
+				) + x);
 		}
 		__LL_NODISCARD__ static constexpr ui64 cityHash64(const void* data, const b64 bytes) __LL_EXCEPT__ {
 			if (!data) return ZERO_UI64;

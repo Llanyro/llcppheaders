@@ -210,6 +210,8 @@ struct Hash {
 
 	constexpr Hash(Hash&&) __LL_EXCEPT__ = delete;
 	constexpr Hash& operator=(Hash&&) __LL_EXCEPT__ = delete;
+
+	constexpr void clear() __LL_EXCEPT__ { this->value = ZERO_UI64; }
 };
 
 #pragma endregion

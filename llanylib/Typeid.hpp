@@ -30,17 +30,17 @@ class Typeid {
 	public:
 		using HashAlgorithmClass = city::CityHash;
 	private:
-		ui64 name_hash;
+		Hash name_hash;
 		StrPair name;
 	private:
-		constexpr void simpleClear() __LL_EXCEPT__ { this->name_hash = ZERO_UI64; }
+		constexpr void simpleClear() __LL_EXCEPT__ { this->name_hash.clear(); }
 	public:
 		constexpr Typeid(const StrPair& name) __LL_EXCEPT__
 			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()))
 			, name(name)
 		{}
 		constexpr Typeid(StrPair&& name) __LL_EXCEPT__
-			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()))
+			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()).value)
 			, name(std::move(name))
 		{}
 		constexpr ~Typeid() __LL_EXCEPT__ {}
@@ -65,8 +65,8 @@ class Typeid {
 		__LL_NODISCARD__ constexpr operator const Typeid*() const __LL_EXCEPT__ = delete;
 		__LL_NODISCARD__ constexpr operator Typeid*() __LL_EXCEPT__ = delete;
 
-		__LL_NODISCARD__ constexpr ui64 hash() const __LL_EXCEPT__ { return this->name_hash; }
-		__LL_NODISCARD__ constexpr StrPair getName() const __LL_EXCEPT__ { return this->name; }
+		__LL_NODISCARD__ constexpr const Hash& hash() const __LL_EXCEPT__ { return this->name_hash; }
+		__LL_NODISCARD__ constexpr const StrPair& getName() const __LL_EXCEPT__ { return this->name; }
 
 		template<class T>
 		__LL_NODISCARD__ static constexpr StrPair get_name(ll_bool_t REMOVE_CLASS_STR = LL_TRUE) __LL_EXCEPT__ {

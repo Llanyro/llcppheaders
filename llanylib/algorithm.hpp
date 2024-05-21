@@ -445,12 +445,12 @@ struct finders_cluster {
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
 	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
 		if (!data || N == ZERO_UI64 || !compareFunc) return LL_FALSE;
-		return __find::all<U, W>(begin, begin + N, object, compareFunc);
+		return __find::all<U, W>(data, data + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
 	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
 		if (!data || N == ZERO_UI64) return LL_FALSE;
-		return __find::all<U, W>(begin, begin + N, object);
+		return __find::all<U, W>(data, data + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr ll_bool_t all(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
@@ -474,12 +474,12 @@ struct finders_cluster {
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
 	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
 		if (!data || N == ZERO_UI64 || !compareFunc) return LL_FALSE;
-		return __find::any<U, W>(begin, begin + N, object, compareFunc);
+		return __find::any<U, W>(data, data + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
 	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
 		if (!data || N == ZERO_UI64) return LL_FALSE;
-		return __find::any<U, W>(begin, begin + N, object);
+		return __find::any<U, W>(data, data + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr ll_bool_t any(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
@@ -503,12 +503,12 @@ struct finders_cluster {
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
 	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
 		if (!data || N == ZERO_UI64 || !compareFunc) return LL_FALSE;
-		return __find::none<U, W>(begin, begin + N, object, compareFunc);
+		return __find::none<U, W>(data, data + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
 	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
 		if (!data || N == ZERO_UI64) return LL_FALSE;
-		return __find::none<U, W>(begin, begin + N, object);
+		return __find::none<U, W>(data, data + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr ll_bool_t none(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
@@ -641,9 +641,9 @@ struct data_manipulation {
 		__data::reverse(data, data + N - 1);
 	}
 	template<len_t N>
-	static constexpr void reverse(__t::type(&data)[N], SwapFunc revSwap) __LL_EXCEPT__ {
-		if (!data || swap || N == ZERO_UI64) return;
-		__data::reverse(v, data + N - 1, revSwap);
+	static constexpr void reverse(__t::type(&data)[N], SwapFunc swap) __LL_EXCEPT__ {
+		if (!data || !swap || N == ZERO_UI64) return;
+		__data::reverse(data, data + N - 1, swap);
 	}
 
 	#pragma endregion

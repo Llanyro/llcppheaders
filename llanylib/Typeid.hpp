@@ -29,35 +29,19 @@ namespace meta {
 
 class Typeid {
 	public:
-		using HashAlgorithmClass = city::CityHash;
+		using HashAlgorithmClass = meta::city::CityHash;
 	private:
 		Hash name_hash;
 		StrPair name;
 	private:
 		constexpr void simpleClear() __LL_EXCEPT__ { this->name_hash.clear(); }
 	public:
-		constexpr Typeid(const StrPair& name) __LL_EXCEPT__
-			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()))
-			, name(name)
-		{}
-		constexpr Typeid(StrPair&& name) __LL_EXCEPT__
-			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()).value)
-			, name(std::move(name))
-		{}
-
-		template<class T, len_t N>
-		constexpr Typeid(const StringView<N, T>& name) __LL_EXCEPT__
-			: name_hash(name.operator meta::Hash())
-			, name(name)
-		{}
-		template<class T, len_t N>
-		constexpr Typeid(const StringView<N, T>& name) __LL_EXCEPT__
-			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()).value)
-			, name(std::move(name))
-		{}
-
+		#pragma region Contructors
+		constexpr Typeid() __LL_EXCEPT__ = delete;
 		constexpr ~Typeid() __LL_EXCEPT__ {}
 
+		#pragma endregion
+		#pragma region CopyMove
 		constexpr Typeid(const Typeid& other) __LL_EXCEPT__
 			: name_hash(other.name_hash), name(other.name) {}
 		constexpr Typeid& operator=(const Typeid& other) __LL_EXCEPT__ {
@@ -75,9 +59,33 @@ class Typeid {
 			return *this;
 		}
 
-		__LL_NODISCARD__ constexpr operator const Typeid*() const __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ constexpr operator Typeid*() __LL_EXCEPT__ = delete;
+		constexpr Typeid(const StrPair& name) __LL_EXCEPT__
+			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()))
+			, name(name)
+		{}
+		constexpr Typeid(StrPair&& name) __LL_EXCEPT__
+			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()).value)
+			, name(std::move(name))
+		{}
 
+		template<class T, len_t N>
+		constexpr Typeid(const StringView<N, T>& name) __LL_EXCEPT__
+			: name_hash(name.operator meta::Hash())
+			, name(name)
+		{}
+		template<class T, len_t N>
+		constexpr Typeid(StringView<N, T>&& name) __LL_EXCEPT__
+			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()).value)
+			, name(std::move(name))
+		{}
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+		__LL_NODISCARD__ constexpr operator const Typeid* () const __LL_EXCEPT__ = delete;
+		__LL_NODISCARD__ constexpr operator Typeid* () __LL_EXCEPT__ = delete;
+
+		#pragma endregion
+		#pragma region ClassFunctions
 		__LL_NODISCARD__ constexpr const Hash& hash() const __LL_EXCEPT__ { return this->name_hash; }
 		__LL_NODISCARD__ constexpr const StrPair& getName() const __LL_EXCEPT__ { return this->name; }
 
@@ -140,6 +148,7 @@ class Typeid {
 		__LL_NODISCARD__ static constexpr Typeid get() __LL_EXCEPT__ {
 			return Typeid(Typeid::get_name<T>());
 		}
+		#pragma endregion
 };
 
 } // namespace meta

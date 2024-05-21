@@ -111,7 +111,6 @@ using ll_wstring_t = const ll_wchar_t*;		// Used to point to non editable string
 using ll_ustring_t = const ll_uchar_t*;		// Used to point to non editable unsigned strings 
 
 using ll_lib_t = void*;						// Handle for dynamic library linked/shared objects
-struct Hash { ui64 value; };
 
 #pragma region BytesTypes
 using size_bytes8_t = ui8;
@@ -198,6 +197,20 @@ template<class T>
 class ArrayPair;
 using StrPair = ArrayPair<ll_char_t>;
 using wStrPair = ArrayPair<ll_wchar_t>;
+
+// Hash container type
+struct Hash {
+	ui64 value;
+	constexpr Hash() __LL_EXCEPT__ : value(ZERO_UI64) {}
+	constexpr Hash(const ui64 value) __LL_EXCEPT__ : value(value) {}
+	constexpr ~Hash() __LL_EXCEPT__ {}
+
+	constexpr Hash(const Hash& other) __LL_EXCEPT__ : value(other.value) {}
+	constexpr Hash& operator=(const Hash& other) __LL_EXCEPT__ { this->value = other.value; return *this; }
+
+	constexpr Hash(Hash&&) __LL_EXCEPT__ = delete;
+	constexpr Hash& operator=(Hash&&) __LL_EXCEPT__ = delete;
+};
 
 #pragma endregion
 

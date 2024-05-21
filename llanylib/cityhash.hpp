@@ -209,20 +209,20 @@ class CityHash {
 				a, b);
 		}
 	public:
-		__LL_NODISCARD__ static constexpr ui64 cityHash64(DataType s, len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr Hash cityHash64(DataType s, len_t len) __LL_EXCEPT__ {
 			#if defined(LL_REAL_CXX23)
 			if not consteval {
 				throw "This is only constevaluated!";
-				return 0;
+				return Hash();
 			}
 			#endif
-			if (!s) return ZERO_UI64;
+			if (!s) return Hash();
 
 			if (len <= 32) {
-				if (len <= 16) return hashLen0to16(s, len);
-				else return hashLen17to32(s, len);
+				if (len <= 16) return Hash(hashLen0to16(s, len));
+				else return Hash(hashLen17to32(s, len));
 			}
-			else if (len <= 64) return hashLen33to64(s, len);
+			else if (len <= 64) return Hash(hashLen33to64(s, len));
 
 			// For strings over 64 bytes we hash the end first, and then as we
 			// loop we keep 56 bytes of state: v, w, x, y, and z.
@@ -254,7 +254,7 @@ class CityHash {
 				s += 64;
 				len -= 64;
 			} while (len != 0);
-			return Hash128(
+			return Hash(Hash128(
 				Hash128(
 					v.getLow(),
 					w.getLow()
@@ -262,9 +262,9 @@ class CityHash {
 				Hash128(
 					v.getHigh(),
 					w.getHigh()
-				) + x);
+				) + x).operator len_t());
 		}
-		__LL_NODISCARD__ static constexpr ui64 cityHash64(const void* data, const b64 bytes) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr Hash cityHash64(const void* data, const b64 bytes) __LL_EXCEPT__ {
 			if (!data) return ZERO_UI64;
 			return cityHash64(static_cast<DataType>(data), bytes);
 		}

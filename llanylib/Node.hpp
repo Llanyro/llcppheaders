@@ -24,6 +24,7 @@
 #include "traits.hpp"
 
 namespace llcpp {
+namespace meta {
 namespace linked {
 
 template <class NodeType>
@@ -157,6 +158,7 @@ class LL_SHARED_LIB NodePrev {
 };
 
 } // namespace linked
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_NODE_HPP_

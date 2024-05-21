@@ -24,7 +24,7 @@
 #include "traits.hpp"
 
 namespace llcpp {
-namespace singleton {
+namespace meta {
 
 /*
 		#pragma region Singleton
@@ -44,8 +44,6 @@ namespace singleton {
 		__CLASS::ref operator=(__CLASS::move) __LL_EXCEPT__ = delete;
 		#pragma endregion
 */
-
-namespace static_ {
 
 template <class T>
 class LL_SHARED_LIB Singleton {
@@ -79,55 +77,54 @@ class LL_SHARED_LIB Singleton {
 		}
 };
 
-} // namespace static_
+// [TOFIX] [TODO] Needs to be with a given allocator and a subscriber
+//namespace dynamic {
+//
+//template <class T>
+//class LL_SHARED_LIB Singleton {
+//	public:
+//		using type = traits::template_types<T>;
+//		using __Singleton = traits::template_types<Singleton<T>>;
+//	private:
+//		static T* instance;
+//	protected:
+//		constexpr Singleton() __LL_EXCEPT__ {}
+//	public:
+//		constexpr ~Singleton() __LL_EXCEPT__ {}
+//
+//		Singleton(__Singleton::cref) __LL_EXCEPT__ = delete;
+//		__Singleton::ref operator=(__Singleton::cref) __LL_EXCEPT__ = delete;
+//		Singleton(__Singleton::move) __LL_EXCEPT__ = delete;
+//		__Singleton::ref operator=(__Singleton::move) __LL_EXCEPT__ = delete;
+//
+//		constexpr operator typename __Singleton::cref() const __LL_EXCEPT__ = delete;
+//		constexpr operator typename __Singleton::ref() __LL_EXCEPT__ = delete;
+//
+//		template <class... Args>
+//		static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {
+//			if (!Singleton<T>::instance) {
+//				if constexpr (traits::pack_has_args<Args...>)
+//					Singleton<T>::instance = new T(std::forward<Args>(args)...));
+//				else Singleton<T>::instance = new T();
+//			}
+//			return *Singleton<T>::instance;
+//		}
+//		static void freeInstance() noexcept(std::is_nothrow_destructible_v<T>) {
+//			if (Singleton<T>::instance) {
+//				delete Singleton<T>::instance;
+//				Singleton<T>::instance = LL_NULLPTR;
+//			}
+//		}
+//};
+//
+//#pragma region Singleton
+//template <class T>
+//T* Singleton<T>::instance = LL_NULLPTR;
+//#pragma endregion
+//
+//} // namespace dynamic
 
-namespace dynamic {
-
-template <class T>
-class LL_SHARED_LIB Singleton {
-	public:
-		using type = traits::template_types<T>;
-		using __Singleton = traits::template_types<Singleton<T>>;
-	private:
-		static T* instance;
-	protected:
-		constexpr Singleton() __LL_EXCEPT__ {}
-	public:
-		constexpr ~Singleton() __LL_EXCEPT__ {}
-
-		Singleton(__Singleton::cref) __LL_EXCEPT__ = delete;
-		__Singleton::ref operator=(__Singleton::cref) __LL_EXCEPT__ = delete;
-		Singleton(__Singleton::move) __LL_EXCEPT__ = delete;
-		__Singleton::ref operator=(__Singleton::move) __LL_EXCEPT__ = delete;
-
-		constexpr operator typename __Singleton::cref() const __LL_EXCEPT__ = delete;
-		constexpr operator typename __Singleton::ref() __LL_EXCEPT__ = delete;
-
-		template <class... Args>
-		static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {
-			if (!Singleton<T>::instance) {
-				if constexpr (traits::pack_has_args<Args...>)
-					Singleton<T>::instance = new T(std::forward<Args>(args)...));
-				else Singleton<T>::instance = new T();
-			}
-			return *Singleton<T>::instance;
-		}
-		static void freeInstance() noexcept(std::is_nothrow_destructible_v<T>) {
-			if (Singleton<T>::instance) {
-				delete Singleton<T>::instance;
-				Singleton<T>::instance = LL_NULLPTR;
-			}
-		}
-};
-
-#pragma region Singleton
-template <class T>
-T* Singleton<T>::instance = LL_NULLPTR;
-#pragma endregion
-
-} // namespace dynamic
-
-} // namespace singleton
+} // namespace meta
 } // namespace llcpp
 
 #endif // !LLANYLIB_SINGLETON_HPP_

@@ -24,6 +24,7 @@
 #include "traits.hpp"
 
 namespace llcpp {
+namespace meta {
 
 template<class T, T ZERO_VAL>
 class LL_SHARED_LIB Countable {
@@ -224,6 +225,7 @@ class LL_SHARED_LIB Countable {
 using CountableB = Countable<b64, ZERO_UI64>;
 using CountableL = Countable<len_t, ZERO_UI64>;
 
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_COUNTABLE_HPP_

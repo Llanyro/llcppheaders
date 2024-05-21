@@ -24,6 +24,7 @@
 #include "../StringView.hpp"
 
 namespace llcpp {
+namespace meta {
 namespace color {
 
 constexpr auto RESET = make_StringView("\033[0m");
@@ -78,6 +79,7 @@ constexpr auto DEBUG_MESSAGE = BG_CYAN;
 
 } // namespace wide
 } // namespace color
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_EXPRESIONS_COLOR_HPP_

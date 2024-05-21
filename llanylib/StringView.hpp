@@ -24,6 +24,7 @@
 #include "algorithm.hpp"
 
 namespace llcpp {
+namespace meta {
 
 template<len_t N, class T = ll_char_t>
 class LL_SHARED_LIB StringView {
@@ -36,13 +37,13 @@ class LL_SHARED_LIB StringView {
 	#pragma region ClassTypes
 	// Class types are always public to user
 	public:
-		using type = llcpp::traits::template_types<T>;
-		using __StringView = llcpp::traits::template_types<StringView<N, T>>;
+		using type = traits::template_types<T>;
+		using __StringView = traits::template_types<StringView<N, T>>;
 		using __StrPair = traits::get_by_char_type_t<T, StrPair, wStrPair>;
 		using csubstr = std::pair<typename type::cptr, typename type::cptr>;
 
 		template<class U>
-		using __StringViewType = llcpp::traits::template_types<StringView<N, U>>;
+		using __StringViewType = traits::template_types<StringView<N, U>>;
 	#pragma endregion
 	#pragma region OtherClassTypes
 	// Algorithm objects
@@ -138,6 +139,10 @@ class LL_SHARED_LIB StringView {
 		}
 
 		#endif // LL_REAL_CXX23
+
+		__LL_NODISCARD__ constexpr operator meta::Hash() const {
+			return algorithm::has_cluster::hash<T, __sizes::ARR_SIZE>(this->begin());
+		}
 
 		#pragma region Compare
 	public:
@@ -407,6 +412,7 @@ constexpr StringView<N, T> make_StringView(const T(&mem)[N]) {
 	return StringView<N, T>(mem);
 }
 
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_STRINGVIEW_HPP_

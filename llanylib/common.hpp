@@ -24,6 +24,7 @@
 #include "types.hpp"
 
 namespace llcpp {
+namespace meta {
 namespace common {
 
 template<class T>
@@ -33,11 +34,6 @@ constexpr void simple_swap(T& v1, T& v2) {
 		v1 = v2;
 		v2 = tmp;
 	}
-	//else if constexpr (traits::has_type_operator_v<T, T&&>) {
-	//	T tmp = v1.operator T&&();
-	//	v1 = v2.operator T&&();
-	//	v2 = tmp.operator T&&();
-	//}
 	else {
 		T tmp = std::move(v1);
 		v1 = std::move(v2);
@@ -76,8 +72,11 @@ constexpr ll_bool_t simple_equals(T v1, U v2) {
 	//static_assert(traits::has_equal_operator_v<T>, "Error, <T> object has no operator==()");
 	return v1 == v2;
 }
+template<class T, class U = T>
+constexpr void simple_set(T& v1, U& v2) { v1 = v2; }
 
 } // namespace common
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_COMMON_HPP_

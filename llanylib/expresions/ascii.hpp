@@ -24,6 +24,7 @@
 #include "../StringView.hpp"
 
 namespace llcpp {
+namespace meta {
 namespace ascii {
 
 constexpr ui8 MAYUS_MINUS_DIFF = 'a' - 'A';
@@ -48,6 +49,7 @@ constexpr auto ALL_VISIBLE_CHARS = make_StringView(L"abcdefghijklmnopqrstuvwxyzA
 
 } // namespace wide
 } // namespace ascii
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_ASCII_HPP_

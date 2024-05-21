@@ -25,6 +25,7 @@
 #include "CityHash.hpp"
 
 namespace llcpp {
+namespace meta {
 
 class Typeid {
 	public:
@@ -43,6 +44,18 @@ class Typeid {
 			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()).value)
 			, name(std::move(name))
 		{}
+
+		template<class T, len_t N>
+		constexpr Typeid(const StringView<N, T>& name) __LL_EXCEPT__
+			: name_hash(name.operator meta::Hash())
+			, name(name)
+		{}
+		template<class T, len_t N>
+		constexpr Typeid(const StringView<N, T>& name) __LL_EXCEPT__
+			: name_hash(HashAlgorithmClass::cityHash64(name.data(), name.len()).value)
+			, name(std::move(name))
+		{}
+
 		constexpr ~Typeid() __LL_EXCEPT__ {}
 
 		constexpr Typeid(const Typeid& other) __LL_EXCEPT__
@@ -129,6 +142,7 @@ class Typeid {
 		}
 };
 
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_TYPEID_HPP_

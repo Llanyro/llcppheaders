@@ -192,6 +192,7 @@ constexpr f64 ZERO_F64 = 0.0;
 constexpr f128 ZERO_F128 = 0.0l;
 #pragma endregion
 #pragma region Types
+namespace meta {
 
 template<class T>
 class ArrayPair;
@@ -248,9 +249,10 @@ using SearchFunctionBool = std::function<ll_bool_t(T __t1)>;
 
 } // namespace lambda
 } // namespace functional
+} // namespace meta
 
-namespace fnc_clss = functional::classic;
-namespace fnc_lmb = functional::lambda;
+namespace fnc_clss = meta::functional::classic;
+namespace fnc_lmb = meta::functional::lambda;
 
 } // namespace llcpp
 

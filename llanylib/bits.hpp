@@ -21,14 +21,13 @@
 #define LLANYLIB_BITS_MAYOR_ 5
 #define LLANYLIB_BITS_MINOR_ 0
 
-#include "definitions.hpp"
-
 #include "traits.hpp"
 
 // [TODO] Move this to bitsExtended.hpp
 //#include <limits>
 
 namespace llcpp {
+namespace meta {
 namespace bits {
 
 using bit_pos = ui8;
@@ -156,6 +155,7 @@ struct TypeDivision {
 #pragma endregion
 
 } // namespace bits
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_BITS_HPP_

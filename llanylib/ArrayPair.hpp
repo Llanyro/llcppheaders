@@ -7,23 +7,24 @@
 //	Version: 5.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_ARRAYPAIRHPP_) // Guard && version protector
-	#if LLANYLIB_ARRAYPAIRMAYOR_ != 5 || LLANYLIB_ARRAYPAIRMINOR_ < 0
+#if defined(LLANYLIB_ARRAYPAIR_HPP_) // Guard && version protector
+	#if LLANYLIB_ARRAYPAIR_MAYOR_ != 5 || LLANYLIB_ARRAYPAIR_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "ArrayPair.hpp version error!"
 		#else
 			#error "ArrayPair.hpp version error!"
 		#endif // LL_REAL_CXX23
-	#endif // LLANYLIB_ARRAYPAIRMAYOR_ || LLANYLIB_ARRAYPAIRMINOR_
+	#endif // LLANYLIB_ARRAYPAIR_MAYOR_ || LLANYLIB_ARRAYPAIR_MINOR_
 
-#else !defined(LLANYLIB_ARRAYPAIRHPP_)
-#define LLANYLIB_ARRAYPAIRHPP_
-#define LLANYLIB_ARRAYPAIRMAYOR_ 5
-#define LLANYLIB_ARRAYPAIRMINOR_ 0
+#else !defined(LLANYLIB_ARRAYPAIR_HPP_)
+#define LLANYLIB_ARRAYPAIR_HPP_
+#define LLANYLIB_ARRAYPAIR_MAYOR_ 5
+#define LLANYLIB_ARRAYPAIR_MINOR_ 0
 
 #include "traits.hpp"
 
 namespace llcpp {
+namespace meta {
 
 template<class T>
 class ArrayPair {
@@ -50,6 +51,7 @@ class ArrayPair {
 		constexpr ArrayPair(std::pair<typename type::ptr, typename type::ptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
 		constexpr ArrayPair(std::pair<typename type::cptr, typename type::ptr>& pair) __LL_EXCEPT__ : ArrayPair(pair.first, pair.second) {}
 		constexpr ~ArrayPair() __LL_EXCEPT__ {}
+
 		#pragma endregion
 		#pragma region CopyMove
 		constexpr ArrayPair(__ArrayPair::cref other) __LL_EXCEPT__ : mem(other.mem), mem_end(other.mem_end) {}
@@ -126,6 +128,7 @@ class ArrayPair {
 		__LL_NODISCARD__ constexpr len_t size() const __LL_EXCEPT__ {
 			return this->operator len_t();
 		}
+
 		#pragma endregion
 	#pragma endregion
 };
@@ -138,6 +141,7 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_strpair_type_v = std::_Is_any_of_v<T, StrPair, wStrPair>;
 
 } // namespace traits
+} // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_ARRAYPAIRHPP_
+#endif // LLANYLIB_ARRAYPAIR_HPP_

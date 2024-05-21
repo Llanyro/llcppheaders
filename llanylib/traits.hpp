@@ -32,6 +32,7 @@
 #include <type_traits>
 
 namespace llcpp {
+namespace meta {
 namespace traits {
 
 // Easy enabler for template functions
@@ -291,6 +292,8 @@ __LL_TEMPLATE_HAS_FUNCTION_BASE__(equal_operator, p->operator==(*p), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(no_equal_operator, p->operator!=(*p), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(greater_operator, p->operator>(*p), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(lower_operator, p->operator<(*p), LL_TRUE);
+constexpr ll_char_t* NULL_CHAR_CONVERTIBLE = LL_NULLPTR;
+__LL_TEMPLATE_HAS_FUNCTION_BASE__(convert_to_chars, p->convertToChars(NULL_CHAR_CONVERTIBLE), LL_FALSE);
 
 __LL_TEMPLATE_HAS_FUNCTION__(swap, p->swap(*p));
 __LL_TEMPLATE_HAS_FUNCTION__(swap_s, p->swap_s(*p));
@@ -377,37 +380,33 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyabl
 
 #pragma endregion
 
-template <class... Args>
-struct parameter_pack_operations {
+#pragma region ParameterPacks
+struct HashSize {
 	template<class T>
-	struct HashSize {
-		static constexpr len_t getSize() __LL_EXCEPT__ {
-			if constexpr (traits::is_pointer_v<T>) {
-				using __noptr = std::remove_pointer_t<T>;
-				if constexpr (traits::is_pointer_v<__noptr>) return ZERO_UI64;
-				else if constexpr (traits::is_basic_type_v<__noptr>) return sizeof(__noptr);
-				else if constexpr (traits::has_type_operator_v<__noptr, Hash>) return sizeof(Hash);
-				else return sizeof(Hash);
-			}
-			else if constexpr (traits::is_basic_type_v<T>) return sizeof(T);
-			else if constexpr (traits::has_type_operator_v<T, Hash>) return sizeof(Hash);
+	static constexpr len_t getSize() __LL_EXCEPT__ {
+		if constexpr (traits::is_pointer_v<T>) {
+			using __noptr = std::remove_pointer_t<T>;
+			if constexpr (traits::is_pointer_v<__noptr>) return ZERO_UI64;
+			else if constexpr (traits::is_basic_type_v<__noptr>) return sizeof(__noptr);
+			else if constexpr (traits::has_type_operator_v<__noptr, Hash>) return sizeof(Hash);
 			else return sizeof(Hash);
 		}
-		//static constexpr len_t value = getSize();
+		else if constexpr (traits::is_basic_type_v<T>) return sizeof(T);
+		else if constexpr (traits::has_type_operator_v<T, Hash>) return sizeof(Hash);
+		else return sizeof(Hash);
+	}
 
-		len_t sizeof_;
-		constexpr HashSize() __LL_EXCEPT__ : sizeof_(getSize()) {}
-		constexpr HashSize(const len_t sizeof_) __LL_EXCEPT__ : sizeof_(sizeof_) {}
-		constexpr ~HashSize() __LL_EXCEPT__ {}
+	len_t sizeof_;
+	constexpr HashSize(const len_t sizeof_) __LL_EXCEPT__ : sizeof_(sizeof_) {}
+	constexpr ~HashSize() __LL_EXCEPT__ {}
 
-		template<class U>
-		constexpr HashSize operator&&(const HashSize<U>& other) const __LL_EXCEPT__ {
-			return HashSize(this->sizeof_ + other.sizeof_);
-		}
-		constexpr HashSize& operator&&(const ll_bool_t) const __LL_EXCEPT__ { return *this; }
-	};
-	template<>
-	struct HashSize<void> { static constexpr len_t value = ZERO_UI64; };
+	constexpr HashSize operator&&(const HashSize& other) const __LL_EXCEPT__ {
+		return HashSize(this->sizeof_ + other.sizeof_);
+	}
+	constexpr const HashSize& operator&&(const ll_bool_t) const __LL_EXCEPT__ { return *this; }
+};
+template <class... Args>
+struct parameter_pack_operations {
 	template<class T, class... uArgs>
 	struct FirstType {
 		using type = T;
@@ -426,27 +425,55 @@ struct parameter_pack_operations {
 	static constexpr ll_bool_t has_a_pointer = (traits::is_pointer_v<Args> || ...);
 
 	// Hash
-	static constexpr len_t sizeof_hash_version = (HashSize<Args>() && ...).sizeof_;
+	static constexpr len_t sizeof_hash_version = (HashSize(HashSize::getSize<Args>()) && ...).sizeof_;
 };
 template <class T>
 struct parameter_pack_operations<T> {
-	using HashSize = parameter_pack_operations<int, int>::HashSize<T>;
 	using FirstType = parameter_pack_operations<int, int>::FirstType<T>;
 
 	using pack_first = typename FirstType;
 	using get_first_type = typename pack_first::type;
-	static constexpr len_t size = 1;
+	static constexpr len_t size = 1ull;
 	static constexpr len_t empty = LL_FALSE;
-	static constexpr ll_bool_t pack_has_args = LL_TRUE;
 	static constexpr ll_bool_t has_a_pointer = traits::is_pointer_v<T>;
 
 	// Hash
-	static constexpr len_t sizeof_hash_version = HashSize().sizeof_;
+	static constexpr len_t sizeof_hash_version = HashSize(HashSize::getSize<T>()).sizeof_;
+};
+template <>
+struct parameter_pack_operations<> {
+	using FirstType = parameter_pack_operations<int, int>::FirstType<void>;
+
+	using pack_first = FirstType;
+	using get_first_type = pack_first::type;
+	static constexpr len_t size = ZERO_UI64;
+	static constexpr len_t empty = LL_TRUE;
+	static constexpr ll_bool_t has_a_pointer = LL_FALSE;
+
+	// Hash
+	static constexpr len_t sizeof_hash_version = ZERO_UI64;
 };
 
-//constexpr auto asdf = parameter_pack_operations<int, char, int*>::sizeof_hash_version;
-//using asdf2 = parameter_pack_operations<int, char, int*>::pack_first::next::next::next;
-//using asdf2 = parameter_pack_operations<int, char, int*>::get_first_type;
+///template <class... Args>
+///constexpr auto get_parameter_pack() {
+///	if constexpr (sizeof...(Args) == ZERO_UI64)
+///		return parameter_pack_operations<Args...>();
+///	else if constexpr (sizeof...(Args) == 1ull)
+///		return parameter_pack_operations<Args>();
+///	else 
+///		return parameter_pack_operations<>();
+///}
+///
+///template <class... Args>
+///constexpr len_t teas() {
+///	return parameter_pack_operations<Args...>::size;
+///}
+///
+///constexpr len_t teas_1 = teas<>();
+///constexpr len_t teas_2 = teas<int>();
+///constexpr len_t teas_3 = teas<int, char, char*>();
+
+#pragma endregion
 
 //template<class T, class U>
 //using is_same_const_t =
@@ -556,6 +583,7 @@ __LL_NODISCARD__ constexpr U constexpr_cast(T* data) __LL_EXCEPT__ {
 
 
 } // namespace traits
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_TRAITS_HPP_

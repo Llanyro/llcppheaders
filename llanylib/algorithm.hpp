@@ -23,6 +23,7 @@
 
 #include "ArrayPair.hpp"
 #include "common.hpp"
+#include "cityhash.hpp"
 
 #if defined(WINDOWS_SYSTEM)
 	#pragma warning(push)
@@ -32,6 +33,7 @@
 #endif // WINDOWS_SYSTEM
 
 namespace llcpp {
+namespace meta {
 namespace algorithm {
 
 constexpr len_t MAX_LIST_SIZE = static_cast<len_t>(-1);
@@ -106,6 +108,8 @@ template<class T, class U, ll_bool_t GET_DATA>
 using CompareConditionalCmpT = CompareConditional<T, U, cmp_t, 0, GET_DATA>;
 template<class T, class U, ll_bool_t GET_DATA>
 using CompareConditionalBool = CompareConditional<T, U, ll_bool_t, LL_FALSE, GET_DATA>;
+
+#pragma endregion
 
 template<class T, class U = T, ll_bool_t GET_DATA = LL_FALSE>
 struct compare_cluster {
@@ -284,8 +288,6 @@ struct compare_cluster {
 	#pragma endregion
 };
 
-#pragma endregion
-#pragma region Finders
 template<class T, ll_bool_t POSITION = LL_TRUE>
 struct finders_cluster {
 	using __find = finders_cluster<T, POSITION>;
@@ -317,7 +319,7 @@ struct finders_cluster {
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr FindResult find(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
-		return __find::find<U, W>(begin, end, object, common::simple_equals<__t::cinput, U>);
+		return __find::find<U, W>(begin, end, object, common::simple_equals<typename __t::cinput, U>);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
 	__LL_NODISCARD__ static constexpr FindResult find(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
@@ -358,7 +360,7 @@ struct finders_cluster {
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr FindResult rfind(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
-		return __find::rfind<U, W>(begin, end, object, common::simple_equals<__t::cinput, U>);
+		return __find::rfind<U, W>(begin, end, object, common::simple_equals<typename __t::cinput, U>);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
 	__LL_NODISCARD__ static constexpr FindResult rfind(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
@@ -422,7 +424,7 @@ struct finders_cluster {
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::cptr begin, __t::cptr end, W object) __LL_EXCEPT__ {
-		return __find::all<U, W>(begin, end, object, common::simple_equals<__t::cinput, U>);
+		return __find::all<U, W>(begin, end, object, common::simple_equals<typename __t::cinput, U>);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
 	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&begin)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
@@ -589,139 +591,238 @@ struct finders_cluster {
 	#pragma endregion
 };
 
-#pragma endregion
-#pragma region DataManipulation
 template<class T>
-constexpr void reverse(T* begin, T* end, fnc_clss::SwapFunction<T> swap) __LL_EXCEPT__ {
-	__LL_ASSERT_VAR_NULL__(begin, "begin");
-	__LL_ASSERT_VAR_NULL__(end, "end");
-	__LL_ASSERT_VAR_NULL__(swap, "swap");
+struct data_manipulation {
+	using __data = data_manipulation<T>;
+	using __t = traits::template_types<T>;
+	using SwapFunc = fnc_clss::SwapFunction<typename __t::type>;
+	template<class W>
+	using FillFunc = fnc_clss::SwapFunction<typename __t::type, W>;
 
-	for (; begin < end; ++begin, --end)
-		swap(*begin, *end);
-}
-template<class T>
-constexpr void reverse(T* begin, T* end) __LL_EXCEPT__ {
-	reverse<T>(begin, end, common::simple_swap);
-}
-template<class T, len_t N>
-constexpr void reverse(T(&v)[N]) __LL_EXCEPT__ {
-	return reverse<T>(v, v + N - 1);
-}
-template<class T, len_t N>
-constexpr void reverse(T(&v)[N], fnc_clss::SwapFunction<T> revSwap) __LL_EXCEPT__ {
-	return reverse<T>(v, v + N - 1, revSwap);
-}
-
-template<class T, class U = traits::get_object_reference_t<T>>
-constexpr void fill(T* begin, T* end, const U object) {
-	for (; begin < end; ++begin) *begin = object;
-}
-template<class T, len_t N, class U = traits::get_object_reference_t<T>>
-constexpr void fill(T(&v)[N], const U object) __LL_EXCEPT__ {
-	return fill<T, U>(v, v + N, object);
-}
-
-// Num => number of positions to move
-template<class T, class U = traits::get_object_reference_t<T>>
-constexpr void shiftLeft(T* begin, T* end, const len_t num, const U null, fnc_clss::SwapFunction<T> swap) __LL_EXCEPT__ {
-	//len_t size = end - begin;
-	//LL_ASSERT(size > num, "[num] num is greater than the array size");
-	__LL_ASSERT_VAR_NULL__(swap, "swap");
-
-	--end;
-	for (T* i = end - num; i > begin; --i, --end)
-		swap(*end, *i);
-	swap(*begin, *(begin + num));
-
-	fill<T, U>(begin, begin + num, null);
-}
-template<class T, class U = traits::get_object_reference_t<T>>
-constexpr void shiftLeft(T* begin, T* end, const len_t num, const U null) __LL_EXCEPT__ {
-	shiftLeft<T, U>(begin, end, num, null, common::simple_swap);
-}
-
-template<class T, class U = traits::get_object_reference_t<T>>
-constexpr void shifRight(T* begin, T* end, const len_t num, const U null, fnc_clss::SwapFunction<T> swap) __LL_EXCEPT__ {
-	//len_t size = end - begin;
-	//LL_ASSERT(size > num, "[num] num is greater than the array size");
-	__LL_ASSERT_VAR_NULL__(swap, "swap");
-
-	for (T* i = begin + num; i < end; ++i, ++begin)
-		swap(*begin, *i);
-
-	fill<T, U>(end - num, end, null);
-}
-template<class T, class U = traits::get_object_reference_t<T>>
-constexpr void shifRight(T* begin, T* end, const len_t num, const U null) __LL_EXCEPT__ {
-	shifRight<T, U>(begin, end, num, null, common::simple_swap);
-}
-
-template<class T, class U = traits::template_types<T>>
-constexpr T* qsort_div(
-	T* arr,
-	T* begin,
-	T* end,
-	fnc_clss::SwapFunction<typename U::type> swap,
-	fnc_clss::Compare<typename U::cinput> cmp
-) __LL_EXCEPT__ {
-	__LL_ASSERT_VAR_NULL__(arr, "arr");
-	__LL_ASSERT_VAR_NULL__(begin, "begin");
-	__LL_ASSERT_VAR_NULL__(end, "end");
-	__LL_ASSERT_VAR_NULL__(swap, "swap");
-	__LL_ASSERT_VAR_NULL__(cmp, "cmp");
-
-	T* left = begin;
-	T* right = end;
-	T* piv = arr;
-
-	while (left < right) {
-		for (; cmp(*right, *piv) > 0; --right);
-		for (; (left < right) && cmp(*left, *piv) <= 0; ++left);
-		if (left < right) swap(*left, *right);
+	#pragma region Reverse
+	constexpr void reverse(__t::ptr begin, __t::ptr end, SwapFunc swap) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin || !swap) return;
+		for (; begin < end; ++begin, --end)
+			swap(*begin, *end);
 	}
-	swap(*right, *begin);
-	return right;
-}
-template<class T, class U = traits::template_types<T>>
-constexpr void quicksort(
-	T* arr, T* begin, T* end,
-	fnc_clss::SwapFunction<typename U::type> swap,
-	fnc_clss::Compare<typename U::cinput> cmp
-) {
-	if (begin < end) {
-		T* pivote = qsort_div<T, U>(arr, begin, end, swap, cmp);
-		//if (pivote >= begin && pivote <= end) {
+	constexpr void reverse(__t::ptr begin, __t::ptr end) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin) return;
+		__data::reverse(begin, end, common::simple_swap<typename __t::type>);
+	}
+	template<len_t N>
+	constexpr void reverse(__t::type(&v)[N]) __LL_EXCEPT__ {
+		if (!begin || N == ZERO_UI64) return;
+		__data::reverse(v, v + N - 1);
+	}
+	template<len_t N>
+	constexpr void reverse(__t::type(&v)[N], SwapFunc revSwap) __LL_EXCEPT__ {
+		if (!begin || swap || N == ZERO_UI64) return;
+		__data::reverse(v, v + N - 1, revSwap);
+	}
+
+	#pragma endregion
+	#pragma region Fillers
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void fill(__t::ptr begin, __t::ptr end, W object, FillFunc<U> setFunc) {
+		if (!begin || !end || end <= begin || !setFunc) return;
+		for (; begin < end; ++begin) setFunc(*begin, object);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void fill(__t::ptr begin, __t::ptr end, W object) {
+		if (!begin || !end || end <= begin) return;
+		__data::fill<U, W>(begin, end, object, common::simple_set<typename __t::type, U>);
+	}
+	template<class U, len_t N, class W = traits::get_object_reference_t<T>>
+	constexpr void fill(__t::type(&v)[N], W object, FillFunc<U> setFunc) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin || !setFunc) return;
+		__data::fill<U, W>(v, v + N, object, setFunc);
+	}
+	template<class U, len_t N, class W = traits::get_object_reference_t<T>>
+	constexpr void fill(__t::type(&v)[N], W object) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin) return;
+		__data::fill<U, W>(v, v + N, object);
+	}
+
+	#pragma endregion
+	#pragma region Shift
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, W null, SwapFunc swap, FillFunc<U> setFunc) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin || !swap || !setFunc) return;
+
+		--end;
+		for (T* i = end - num; i > begin; --i, --end)
+			swap(*end, *i);
+		swap(*begin, *(begin + num));
+
+		__data::fill<U, W>(begin, begin + num, null, setFunc);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, const U null, SwapFunc swap) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin) return;
+		__data::shiftLeft<U, W>(begin, end, num, null, swap, common::simple_set<typename __t::type, U>);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, const U null, FillFunc<U> setFunc) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin) return;
+		__data::shiftLeft<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, setFunc);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, const U null) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin) return;
+		__data::shiftLeft<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, common::simple_set<typename __t::type, U>);
+	}
+
+
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, W null, SwapFunc swap, FillFunc<U> setFunc) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin || !swap || !setFunc) return;
+		for (T* i = begin + num; i < end; ++i, ++begin) swap(*begin, *i);
+		__data::fill<U, W>(end - num, end, null, setFunc);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, const U null, SwapFunc swap) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin) return;
+		__data::shifRight<U, W>(begin, end, num, null, swap, common::simple_set<typename __t::type, U>);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, const U null, FillFunc<U> setFunc) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin) return;
+		__data::shifRight<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, setFunc);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>>
+	constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, const U null) __LL_EXCEPT__ {
+		if (!begin || !end || end <= begin) return;
+		__data::shifRight<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, common::simple_set<typename __t::type, U>);
+	}
+
+	#pragma endregion
+
+	template<class T, class U = traits::template_types<T>>
+	constexpr T* qsort_div(
+		T* arr,
+		T* begin,
+		T* end,
+		fnc_clss::SwapFunction<typename U::type> swap,
+		fnc_clss::Compare<typename U::cinput> cmp
+	) __LL_EXCEPT__ {
+		__LL_ASSERT_VAR_NULL__(arr, "arr");
+		__LL_ASSERT_VAR_NULL__(begin, "begin");
+		__LL_ASSERT_VAR_NULL__(end, "end");
+		__LL_ASSERT_VAR_NULL__(swap, "swap");
+		__LL_ASSERT_VAR_NULL__(cmp, "cmp");
+
+		T* left = begin;
+		T* right = end;
+		T* piv = arr;
+
+		while (left < right) {
+			for (; cmp(*right, *piv) > 0; --right);
+			for (; (left < right) && cmp(*left, *piv) <= 0; ++left);
+			if (left < right) swap(*left, *right);
+		}
+		swap(*right, *begin);
+		return right;
+	}
+	template<class T, class U = traits::template_types<T>>
+	constexpr void quicksort(
+		T* arr, T* begin, T* end,
+		fnc_clss::SwapFunction<typename U::type> swap,
+		fnc_clss::Compare<typename U::cinput> cmp
+	) {
+		if (begin < end) {
+			T* pivote = qsort_div<T, U>(arr, begin, end, swap, cmp);
+			//if (pivote >= begin && pivote <= end) {
 			quicksort<T, U>(arr, begin, pivote - 1, swap, cmp);
 			quicksort<T, U>(arr, pivote + 1, end, swap, cmp);
-		//}
+			//}
+		}
 	}
-}
-template<class T, class U = traits::template_types<T>>
-constexpr void quicksort(T* arr, T* begin, T* end) {
-	quicksort<T>(arr, begin, end, common::simple_swap<T>, common::compare_with_operators<T>);
-}
-template<class T, class U = traits::template_types<T>>
-constexpr void quicksort(T* begin, T* end) {
-	quicksort<T, U>(begin, begin, end);
-}
-template<class T, len_t N, class U = traits::template_types<T>>
-constexpr void quicksort(T (&arr)[N]) {
-	quicksort<T, U>(arr, arr, arr + (N - 1));
-}
+	template<class T, class U = traits::template_types<T>>
+	constexpr void quicksort(T* arr, T* begin, T* end) {
+		quicksort<T>(arr, begin, end, common::simple_swap<T>, common::compare_with_operators<T>);
+	}
+	template<class T, class U = traits::template_types<T>>
+	constexpr void quicksort(T* begin, T* end) {
+		quicksort<T, U>(begin, begin, end);
+	}
+	template<class T, len_t N, class U = traits::template_types<T>>
+	constexpr void quicksort(T(&arr)[N]) {
+		quicksort<T, U>(arr, arr, arr + (N - 1));
+	}
+};
 
-#pragma endregion
+struct has_cluster {
+	__LL_NODISCARD__ static constexpr Hash hash(const ArrayPair<ll_char_t>& arr) {
+		if (arr.empty()) return meta::Hash();
+		else return llcpp::meta::city::CityHash::cityHash64(arr.begin(), arr.len());
+	}
+	template<len_t N, class T>
+	__LL_NODISCARD__ static constexpr Hash hash(const ArrayPair<T>& arr) {
+		if constexpr (traits::has_convert_to_chars_v<T> && N != ZERO_UI64) {
+			constexpr len_t BUFFERLEN = sizeof(T) * N;
+			ll_char_t buffer[BUFFERLEN]{};
+			ll_char_t* i = buffer;
+			const T* data = arr.begin();
+			const T* data_end = arr.end();
+			for (; data < data_end; ++data, i += sizeof(T))
+				data->convertToChars(i);
+			return llcpp::meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
+		}
+		else return meta::Hash();
+	}
+	template<class T, len_t N>
+	__LL_NODISCARD__ static constexpr Hash hash(const T(&arr)[N]) {
+		if constexpr (traits::has_convert_to_chars_v<T> && N != ZERO_UI64) {
+			constexpr len_t BUFFERLEN = sizeof(T) * N;
+			ll_char_t buffer[BUFFERLEN]{};
+			ll_char_t* i = buffer;
+			const T* data = arr;
+			const T* data_end = arr + N;
+			for (; data < data_end; ++data, i += sizeof(T))
+				data->convertToChars(i);
+			return llcpp::meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
+		}
+		else return meta::Hash();
+	}
+	template<class T, len_t N>
+	__LL_NODISCARD__ static constexpr Hash hash(const T* arr) {
+		if constexpr (traits::has_convert_to_chars_v<T> && N != ZERO_UI64) {
+			constexpr len_t BUFFERLEN = sizeof(T) * N;
+			ll_char_t buffer[BUFFERLEN]{};
+			ll_char_t* i = buffer;
+			const T* data = arr;
+			const T* data_end = arr + N;
+			for (; data < data_end; ++data, i += sizeof(T))
+				data->convertToChars(i);
+			return llcpp::meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
+		}
+		else return meta::Hash();
+	}
+	template<class T>
+	__LL_NODISCARD__ static constexpr Hash hash(const T& object) {
+		if constexpr (traits::has_convert_to_chars_v<T>) {
+			constexpr len_t BUFFERLEN = sizeof(T);
+			ll_char_t buffer[BUFFERLEN]{};
+			if constexpr (traits::is_pointer_v<T>)
+				object->convertToChars(buffer);
+			else object.convertToChars(buffer);
+			return llcpp::meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
+		}
+		else return meta::Hash();
+	}
+};
 
-//constexpr int example() {
-//	int arr[] = { 0, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
-//	//quicksort(arr);
-//	//return arr[0];
-//	int* piv = qsort_div(arr, arr, arr + 9, common::simple_swap<int>, common::compare_with_operators<int>);
-//	return *piv;
-//}
-//constexpr int asdf1 = example();
+///constexpr int example() {
+///	int arr[] = { 0, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+///	//quicksort(arr);
+///	//return arr[0];
+///	int* piv = qsort_div(arr, arr, arr + 9, common::simple_swap<int>, common::compare_with_operators<int>);
+///	return *piv;
+///}
+///constexpr int asdf1 = example();
 
 } // namespace algorithm
+} // namespace meta
 } // namespace llcpp
 
 #if defined(WINDOWS_SYSTEM)

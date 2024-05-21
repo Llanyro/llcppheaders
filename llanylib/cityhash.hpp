@@ -29,14 +29,15 @@
 #include "bits.hpp"
 
 #if defined(WORDS_BIGENDIAN)
-#define ui32_in_expected_order(x) (bswap_32(x))
-#define ui64_in_expected_order(x) (bswap_64(x))
+#define ui32_in_expected_order(x) (bits::bytes_swap_32(x))
+#define ui64_in_expected_order(x) (bits::bytes_swap_64(x))
 #else
 #define ui32_in_expected_order(x) (x)
 #define ui64_in_expected_order(x) (x)
 #endif
 
 namespace llcpp {
+namespace meta {
 namespace city {
 
 class Hash128 {
@@ -213,16 +214,16 @@ class CityHash {
 			#if defined(LL_REAL_CXX23)
 			if not consteval {
 				throw "This is only constevaluated!";
-				return Hash();
+				return meta::Hash();
 			}
 			#endif
-			if (!s) return Hash();
+			if (!s) return meta::Hash();
 
 			if (len <= 32) {
-				if (len <= 16) return Hash(hashLen0to16(s, len));
-				else return Hash(hashLen17to32(s, len));
+				if (len <= 16) return meta::Hash(hashLen0to16(s, len));
+				else return meta::Hash(hashLen17to32(s, len));
 			}
-			else if (len <= 64) return Hash(hashLen33to64(s, len));
+			else if (len <= 64) return meta::Hash(hashLen33to64(s, len));
 
 			// For strings over 64 bytes we hash the end first, and then as we
 			// loop we keep 56 bytes of state: v, w, x, y, and z.
@@ -245,48 +246,28 @@ class CityHash {
 				z = rotate(z + w.getLow(), 33) * k1;
 				v = weakHashLen32WithSeeds(s, v.getHigh() * k1, x + w.getLow());
 				w = weakHashLen32WithSeeds(s + 32, z + w.getHigh(), y + fetch64(s + 16));
-				//std::swap(z, x);
-				{
-					ui64 tmp = z;
-					z = x;
-					x = tmp;
-				}
+				std::swap(z, x);
+				//{
+				//	ui64 tmp = z;
+				//	z = x;
+				//	x = tmp;
+				//}
 				s += 64;
 				len -= 64;
 			} while (len != 0);
-			return Hash(Hash128(
+			return meta::Hash(
 				Hash128(
-					v.getLow(),
-					w.getLow()
-				) + shiftMix(y) * k1 + z,
-				Hash128(
-					v.getHigh(),
-					w.getHigh()
-				) + x).operator len_t());
+					Hash128(v.getLow(), w.getLow())
+					+ shiftMix(y) * k1 + z,
+					Hash128(v.getHigh(), w.getHigh())
+					+ x
+				).operator len_t()
+			);
 		}
-		__LL_NODISCARD__ static constexpr Hash cityHash64(const void* data, const b64 bytes) __LL_EXCEPT__ {
-			if (!data) return ZERO_UI64;
-			return cityHash64(static_cast<DataType>(data), bytes);
-		}
-		// [TOFIX]
-		//template<class T, len_t N>
-		//__LL_NODISCARD__ static constexpr ui64 cityHash64(const T(&data)[N]) __LL_EXCEPT__ {
-		//	return cityHash64(traits::constexpr_cast<const T, DataType>(data), sizeof(T) * N);
-		//}
-		//template<class T, class tmp = traits::template_types<T>, class W = typename tmp::cinput>
-		//__LL_NODISCARD__ static constexpr ui64 cityHash64(W data) __LL_EXCEPT__ {
-		//	return
-		//		cityHash64(
-		//			traits::constexpr_cast<
-		//				typename tmp::ctype,
-		//				DataType
-		//			>(&data),
-		//			sizeof(T)
-		//		);
-		//}
 };
 
 } // namespace city
+} // namespace meta
 } // namespace llcpp
 
 #undef ui32_in_expected_order

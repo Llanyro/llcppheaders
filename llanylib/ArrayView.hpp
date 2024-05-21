@@ -24,6 +24,7 @@
 #include "algorithm.hpp"
 
 namespace llcpp {
+namespace meta {
 
 template<class T, len_t N>
 class LL_SHARED_LIB ArrayView {
@@ -121,6 +122,10 @@ class LL_SHARED_LIB ArrayView {
 		}
 
 		#endif // LL_REAL_CXX23
+
+		__LL_NODISCARD__ constexpr operator meta::Hash() const {
+			return algorithm::has_cluster::hash<T, N>(this->begin());
+		}
 
 		#pragma region Compare
 	public:
@@ -400,6 +405,7 @@ constexpr ArrayView<T, N> make_ArrayView(const T (&arr)[N]) {
 	return ArrayView<T, N>(arr);
 }
 
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_ARRAYVIEW_HPP_

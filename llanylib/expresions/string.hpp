@@ -24,6 +24,7 @@
 #include "../StringView.hpp"
 
 namespace llcpp {
+namespace meta {
 namespace string {
 
 constexpr auto NULLPTR = make_StringView("nullptr");
@@ -46,6 +47,7 @@ constexpr auto OUT_OF_RANGE = make_StringView(L"[out of range]: ");
 
 } // namespace wide
 } // namespace string
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_STRING_HPP_

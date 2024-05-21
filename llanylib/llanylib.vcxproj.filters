@@ -156,6 +156,9 @@
     <ClInclude Include="expresions\string.hpp">
       <Filter>Source Files\expresions</Filter>
     </ClInclude>
+    <ClInclude Include="BasicTypeWrapper.hpp">
+      <Filter>Source Files\types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

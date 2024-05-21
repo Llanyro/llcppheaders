@@ -14,6 +14,7 @@
 #include "algorithmExample.hpp"
 
 namespace llcpp {
+namespace meta {
 
 ///////////////////////////////////////////////// ArrayView Storage /////////////////////////////////////////////////
 
@@ -235,6 +236,7 @@ static_assert(*rfind_04 == 'A', "Error changed value");
 static_assert( rfind_05 == stringview_05.end(), "Error changed value");
 static_assert( rfind_06 == stringview_06.end(), "Error changed value");
 
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_STRINGVIEWEXAMPLE_HPP_

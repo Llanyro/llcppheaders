@@ -13,6 +13,7 @@
 #define LLANYLIB_EXAMPLES_ALGORITHMEXAMPLE_HPP_
 
 namespace llcpp {
+namespace meta {
 namespace algorithm {
 
 ///////////////////////////////////////////////// Example strings /////////////////////////////////////////////////
@@ -142,9 +143,8 @@ static_assert(*rfind_ptr_04 == '\0', "Error changed value");
 
 constexpr len_t reverse_example(int pos) {
 	len_t block[10]{};
-	for (len_t i{}; i < 10; ++i)
-		block[i] = i;
-	reverse<len_t>(block);
+	for (len_t i{}; i < 10; ++i) block[i] = i;
+	data_manipulation<len_t>::reverse(block);
 	return block[pos];
 }
 
@@ -175,9 +175,7 @@ static_assert(reverse_09 == 0, "Error changed value");
 constexpr len_t fill_example(int pos, int val) {
 	len_t block[10]{};
 	for (len_t i{}; i < 10; ++i) block[i] = i;
-
-	fill<len_t>(block, val);
-
+	data_manipulation<len_t>::fill<int>(block, val);
 	return block[pos];
 }
 
@@ -209,7 +207,7 @@ constexpr len_t shift_left_example(int pos) {
 	len_t block[10]{};
 	for (len_t i{}; i < 10; ++i) block[i] = i;
 
-	shiftLeft<len_t>(block, block + 10, 5, 999);
+	data_manipulation<len_t>::shiftLeft<len_t>(block, 5, 999);
 
 	return block[pos];
 }
@@ -242,7 +240,7 @@ constexpr len_t shift_right_example(int pos) {
 	len_t block[10]{};
 	for (len_t i{}; i < 10; ++i) block[i] = i;
 
-	shifRight<len_t>(block, block + 10, 5, 999);
+	data_manipulation<len_t>::shifRight<len_t>(block, block + 10, 5, 999);
 
 	return block[pos];
 }
@@ -346,6 +344,7 @@ constexpr ll_bool_t is_any(const ll_char_t c, const ll_char_t(&str)[N]) {
 */
 
 } // namespace algorithm
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_ALGORITHMEXAMPLE_HPP_

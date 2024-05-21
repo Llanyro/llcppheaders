@@ -24,6 +24,7 @@
     <ClInclude Include="algorithm.hpp" />
     <ClInclude Include="Array.hpp" />
     <ClInclude Include="ArrayView.hpp" />
+    <ClInclude Include="BasicTypeWrapper.hpp" />
     <ClInclude Include="bits.hpp" />
     <ClInclude Include="CityHash.hpp" />
     <ClInclude Include="common.hpp" />

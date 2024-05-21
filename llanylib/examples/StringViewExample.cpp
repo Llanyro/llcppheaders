@@ -15,11 +15,11 @@
 #include <string>
 #include <list>
 
-constexpr auto HELLO_WORLD_1 = llcpp::make_StringView("Hello world");
-constexpr auto HELLO_WORLD_2 = llcpp::make_StringView("Hello world!");
-constexpr auto EMPTY_STRING = llcpp::make_StringView("");
-constexpr auto QUESTION_STRING = llcpp::make_StringView("?");
-constexpr auto EXTRA_STRING = llcpp::make_StringView(L"à");
+constexpr auto HELLO_WORLD_1 = llcpp::meta::make_StringView("Hello world");
+constexpr auto HELLO_WORLD_2 = llcpp::meta::make_StringView("Hello world!");
+constexpr auto EMPTY_STRING = llcpp::meta::make_StringView("");
+constexpr auto QUESTION_STRING = llcpp::meta::make_StringView("?");
+constexpr auto EXTRA_STRING = llcpp::meta::make_StringView(L"à");
 
 template<class T>
 class LinkedListB : public llcpp::linked::LinkedList<T> {
@@ -80,7 +80,7 @@ class LinkedListB : public llcpp::linked::LinkedList<T> {
 };
 
 template<class T, len_t N>
-void printStringData(const llcpp::StringView<N, T>& s) {
+void printStringData(const llcpp::meta::StringView<N, T>& s) {
 	std::cout << "******** Starting ********\n";
 
 	auto f = [&s](std::conditional_t<std::is_same_v<T, const wchar_t>, std::wostream, std::ostream>& cout, const T(&hello)[6], const T(&rld)[4]) -> void {

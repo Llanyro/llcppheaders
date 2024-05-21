@@ -322,12 +322,20 @@ struct finders_cluster {
 		return __find::find<U, W>(begin, end, object, common::simple_equals<typename __t::cinput, U>);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr FindResult find(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
-		return __find::find<U, W>(v, v + N, object, compareFunc);
+	__LL_NODISCARD__ static constexpr FindResult find(__t::ctype(&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !compareFunc) {
+			if constexpr (POSITION) return npos;
+			else return data + N;
+		}
+		return __find::find<U, W>(data, data + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr FindResult find(__t::ctype (&v)[N], W object) __LL_EXCEPT__ {
-		return __find::find<U, W>(v, v + N, object);
+	__LL_NODISCARD__ static constexpr FindResult find(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) {
+			if constexpr (POSITION) return npos;
+			else return data + N;
+		}
+		return __find::find<U, W>(data, data + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr FindResult find(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
@@ -363,12 +371,20 @@ struct finders_cluster {
 		return __find::rfind<U, W>(begin, end, object, common::simple_equals<typename __t::cinput, U>);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr FindResult rfind(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
-		return __find::rfind<U, W>(v, v + N, object, compareFunc);
+	__LL_NODISCARD__ static constexpr FindResult rfind(__t::ctype (&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !compareFunc) {
+			if constexpr (POSITION) return npos;
+			else return data + N;
+		}
+		return __find::rfind<U, W>(data, data + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr FindResult rfind(__t::ctype (&v)[N], W object) __LL_EXCEPT__ {
-		return __find::rfind<U, W>(v, v + N, object);
+	__LL_NODISCARD__ static constexpr FindResult rfind(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) {
+			if constexpr (POSITION) return npos;
+			else return data + N;
+		}
+		return __find::rfind<U, W>(data, data + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr FindResult rfind(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
@@ -392,12 +408,12 @@ struct finders_cluster {
 		else return __find::find<U, W>(begin, end, object) != end;
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::ctype(&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
-		return __find::contains<U, W>(v, v + N, object, compareFunc);
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::ctype(&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		return __find::contains<U, W>(data, data + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::ctype(&v)[N], W object) __LL_EXCEPT__ {
-		return __find::contains<U, W>(v, v + N, object);
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(__t::ctype(&data)[N], W object) __LL_EXCEPT__ {
+		return __find::contains<U, W>(data, data + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
 	__LL_NODISCARD__ static constexpr ll_bool_t contains(const __ArrayPair_t& arr, W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
@@ -427,11 +443,13 @@ struct finders_cluster {
 		return __find::all<U, W>(begin, end, object, common::simple_equals<typename __t::cinput, U>);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&begin)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !compareFunc) return LL_FALSE;
 		return __find::all<U, W>(begin, begin + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&begin)[N], W object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t all(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) return LL_FALSE;
 		return __find::all<U, W>(begin, begin + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
@@ -454,11 +472,13 @@ struct finders_cluster {
 		return static_cast<ll_bool_t>(__find::find<U, W>(begin, end, object));
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&begin)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !compareFunc) return LL_FALSE;
 		return __find::any<U, W>(begin, begin + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&begin)[N], W object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t any(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) return LL_FALSE;
 		return __find::any<U, W>(begin, begin + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
@@ -481,11 +501,13 @@ struct finders_cluster {
 		return !static_cast<ll_bool_t>(__find::find<U, W>(begin, end, object));
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&begin)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !compareFunc) return LL_FALSE;
 		return __find::none<U, W>(begin, begin + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&begin)[N], W object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t none(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) return LL_FALSE;
 		return __find::none<U, W>(begin, begin + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput>
@@ -554,20 +576,24 @@ struct finders_cluster {
 	}
 
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
-		return __find::binarysearch(v, v + N, object, compareFunc);
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::ctype (&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !compareFunc) return data + N;
+		return __find::binarysearch(data, data + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::ctype (&v)[N], W object) __LL_EXCEPT__ {
-		return __find::binarysearch(v, v + N, object);
+	__LL_NODISCARD__ static constexpr __t::cptr binarysearch(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) return data + N;
+		return __find::binarysearch(data, data + N, object);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::ctype (&v)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
-		return __find::binarysearch_pos(v, v + N, object, compareFunc);
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::ctype (&data)[N], W object, CompareFuncBool<W> compareFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !compareFunc) return data + N;
+		return __find::binarysearch_pos(data, data + N, object, compareFunc);
 	}
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
-	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::ctype (&v)[N], W object) __LL_EXCEPT__ {
-		return __find::binarysearch_pos(v, v + N, object);
+	__LL_NODISCARD__ static constexpr len_t binarysearch_pos(__t::ctype (&data)[N], W object) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) return data + N;
+		return __find::binarysearch_pos(data, data + N, object);
 	}
 
 	template<class U, class W = traits::template_types<U>::cinput, len_t N>
@@ -600,53 +626,53 @@ struct data_manipulation {
 	using FillFunc = fnc_clss::SwapFunction<typename __t::type, W>;
 
 	#pragma region Reverse
-	constexpr void reverse(__t::ptr begin, __t::ptr end, SwapFunc swap) __LL_EXCEPT__ {
+	static constexpr void reverse(__t::ptr begin, __t::ptr end, SwapFunc swap) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin || !swap) return;
 		for (; begin < end; ++begin, --end)
 			swap(*begin, *end);
 	}
-	constexpr void reverse(__t::ptr begin, __t::ptr end) __LL_EXCEPT__ {
+	static constexpr void reverse(__t::ptr begin, __t::ptr end) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin) return;
 		__data::reverse(begin, end, common::simple_swap<typename __t::type>);
 	}
 	template<len_t N>
-	constexpr void reverse(__t::type(&v)[N]) __LL_EXCEPT__ {
-		if (!begin || N == ZERO_UI64) return;
-		__data::reverse(v, v + N - 1);
+	static constexpr void reverse(__t::type(&data)[N]) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) return;
+		__data::reverse(data, data + N - 1);
 	}
 	template<len_t N>
-	constexpr void reverse(__t::type(&v)[N], SwapFunc revSwap) __LL_EXCEPT__ {
-		if (!begin || swap || N == ZERO_UI64) return;
-		__data::reverse(v, v + N - 1, revSwap);
+	static constexpr void reverse(__t::type(&data)[N], SwapFunc revSwap) __LL_EXCEPT__ {
+		if (!data || swap || N == ZERO_UI64) return;
+		__data::reverse(v, data + N - 1, revSwap);
 	}
 
 	#pragma endregion
 	#pragma region Fillers
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void fill(__t::ptr begin, __t::ptr end, W object, FillFunc<U> setFunc) {
+	static constexpr void fill(__t::ptr begin, __t::ptr end, W object, FillFunc<U> setFunc) {
 		if (!begin || !end || end <= begin || !setFunc) return;
 		for (; begin < end; ++begin) setFunc(*begin, object);
 	}
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void fill(__t::ptr begin, __t::ptr end, W object) {
+	static constexpr void fill(__t::ptr begin, __t::ptr end, W object) {
 		if (!begin || !end || end <= begin) return;
 		__data::fill<U, W>(begin, end, object, common::simple_set<typename __t::type, U>);
 	}
 	template<class U, len_t N, class W = traits::get_object_reference_t<T>>
-	constexpr void fill(__t::type(&v)[N], W object, FillFunc<U> setFunc) __LL_EXCEPT__ {
-		if (!begin || !end || end <= begin || !setFunc) return;
-		__data::fill<U, W>(v, v + N, object, setFunc);
+	static constexpr void fill(__t::type(&data)[N], W object, FillFunc<U> setFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !setFunc) return;
+		__data::fill<U, W>(data, data + N, object, setFunc);
 	}
 	template<class U, len_t N, class W = traits::get_object_reference_t<T>>
-	constexpr void fill(__t::type(&v)[N], W object) __LL_EXCEPT__ {
-		if (!begin || !end || end <= begin) return;
-		__data::fill<U, W>(v, v + N, object);
+	static constexpr void fill(__t::type(&data)[N], W object) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) return;
+		__data::fill<U, W>(data, data + N, object);
 	}
 
 	#pragma endregion
-	#pragma region Shift
+	#pragma region ShiftLeft
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, W null, SwapFunc swap, FillFunc<U> setFunc) __LL_EXCEPT__ {
+	static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, W null, SwapFunc swap, FillFunc<U> setFunc) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin || !swap || !setFunc) return;
 
 		--end;
@@ -657,48 +683,79 @@ struct data_manipulation {
 		__data::fill<U, W>(begin, begin + num, null, setFunc);
 	}
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, const U null, SwapFunc swap) __LL_EXCEPT__ {
+	static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, const U null, SwapFunc swap) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin) return;
 		__data::shiftLeft<U, W>(begin, end, num, null, swap, common::simple_set<typename __t::type, U>);
 	}
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, const U null, FillFunc<U> setFunc) __LL_EXCEPT__ {
+	static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, const U null, FillFunc<U> setFunc) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin) return;
 		__data::shiftLeft<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, setFunc);
 	}
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, const U null) __LL_EXCEPT__ {
+	static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, const U null) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin) return;
 		__data::shiftLeft<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, common::simple_set<typename __t::type, U>);
 	}
+	template<class U, class W = traits::get_object_reference_t<T>, len_t N>
+	static constexpr void shiftLeft(__t::type(&data)[N], const len_t num, const U null, SwapFunc swap) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !swap) return;
+		__data::shiftLeft<U, W>(data, data + N, num, null, swap, common::simple_set<typename __t::type, U>);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>, len_t N>
+	static constexpr void shiftLeft(__t::type(&data)[N], const len_t num, const U null, FillFunc<U> setFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !setFunc) return;
+		__data::shiftLeft<U, W>(data, data + N, num, null, common::simple_swap<typename __t::type>, setFunc);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>, len_t N>
+	static constexpr void shiftLeft(__t::type(&data)[N], const len_t num, const U null) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) return;
+		__data::shiftLeft<U, W>(data, data + N, num, null, common::simple_swap<typename __t::type>, common::simple_set<typename __t::type, U>);
+	}
 
-
+	#pragma endregion
+	#pragma region ShiftRight
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, W null, SwapFunc swap, FillFunc<U> setFunc) __LL_EXCEPT__ {
+	static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, W null, SwapFunc swap, FillFunc<U> setFunc) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin || !swap || !setFunc) return;
 		for (T* i = begin + num; i < end; ++i, ++begin) swap(*begin, *i);
 		__data::fill<U, W>(end - num, end, null, setFunc);
 	}
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, const U null, SwapFunc swap) __LL_EXCEPT__ {
+	static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, const U null, SwapFunc swap) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin) return;
 		__data::shifRight<U, W>(begin, end, num, null, swap, common::simple_set<typename __t::type, U>);
 	}
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, const U null, FillFunc<U> setFunc) __LL_EXCEPT__ {
+	static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, const U null, FillFunc<U> setFunc) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin) return;
 		__data::shifRight<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, setFunc);
 	}
 	template<class U, class W = traits::get_object_reference_t<T>>
-	constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, const U null) __LL_EXCEPT__ {
+	static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, const U null) __LL_EXCEPT__ {
 		if (!begin || !end || end <= begin) return;
 		__data::shifRight<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, common::simple_set<typename __t::type, U>);
 	}
+	template<class U, class W = traits::get_object_reference_t<T>, len_t N>
+	static constexpr void shifRight(__t::type(&data)[N], const len_t num, const U null, SwapFunc swap) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !swap) return;
+		__data::shifRight<U, W>(data, data + N, num, null, swap, common::simple_set<typename __t::type, U>);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>, len_t N>
+	static constexpr void shifRight(__t::type(&data)[N], const len_t num, const U null, FillFunc<U> setFunc) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64 || !setFunc) return;
+		__data::shifRight<U, W>(data, data + N, num, null, common::simple_swap<typename __t::type>, setFunc);
+	}
+	template<class U, class W = traits::get_object_reference_t<T>, len_t N>
+	static constexpr void shifRight(__t::type(&data)[N], const len_t num, const U null) __LL_EXCEPT__ {
+		if (!data || N == ZERO_UI64) return;
+		__data::shifRight<U, W>(data, data + N, num, null, common::simple_swap<typename __t::type>, common::simple_set<typename __t::type, U>);
+	}
 
 	#pragma endregion
-
+	#pragma region Qsort
 	template<class T, class U = traits::template_types<T>>
-	constexpr T* qsort_div(
+	static constexpr T* qsort_div(
 		T* arr,
 		T* begin,
 		T* end,
@@ -710,11 +767,11 @@ struct data_manipulation {
 		__LL_ASSERT_VAR_NULL__(end, "end");
 		__LL_ASSERT_VAR_NULL__(swap, "swap");
 		__LL_ASSERT_VAR_NULL__(cmp, "cmp");
-
+	
 		T* left = begin;
 		T* right = end;
 		T* piv = arr;
-
+	
 		while (left < right) {
 			for (; cmp(*right, *piv) > 0; --right);
 			for (; (left < right) && cmp(*left, *piv) <= 0; ++left);
@@ -724,7 +781,7 @@ struct data_manipulation {
 		return right;
 	}
 	template<class T, class U = traits::template_types<T>>
-	constexpr void quicksort(
+	static constexpr void quicksort(
 		T* arr, T* begin, T* end,
 		fnc_clss::SwapFunction<typename U::type> swap,
 		fnc_clss::Compare<typename U::cinput> cmp
@@ -738,17 +795,19 @@ struct data_manipulation {
 		}
 	}
 	template<class T, class U = traits::template_types<T>>
-	constexpr void quicksort(T* arr, T* begin, T* end) {
+	static constexpr void quicksort(T* arr, T* begin, T* end) {
 		quicksort<T>(arr, begin, end, common::simple_swap<T>, common::compare_with_operators<T>);
 	}
 	template<class T, class U = traits::template_types<T>>
-	constexpr void quicksort(T* begin, T* end) {
+	static constexpr void quicksort(T* begin, T* end) {
 		quicksort<T, U>(begin, begin, end);
 	}
 	template<class T, len_t N, class U = traits::template_types<T>>
-	constexpr void quicksort(T(&arr)[N]) {
+	static constexpr void quicksort(T(&arr)[N]) {
 		quicksort<T, U>(arr, arr, arr + (N - 1));
 	}
+
+	#pragma endregion
 };
 
 struct has_cluster {

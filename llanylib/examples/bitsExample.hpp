@@ -13,6 +13,7 @@
 #define LLANYLIB_EXAMPLES_BITSEXAMPLE_HPP_
 
 namespace llcpp {
+namespace meta {
 namespace bits {
 
 ///////////////////////////////////////////////// Base transformation /////////////////////////////////////////////////
@@ -174,6 +175,7 @@ static_assert(cmp(ui64_div_result_6, 4294967295ull, 4294967295ull), "Error chang
 */
 
 } // namespace bits
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_BITSEXAMPLE_HPP_

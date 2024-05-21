@@ -16,6 +16,7 @@
 #include "algorithmExample.hpp"
 
 namespace llcpp {
+namespace meta {
 
 ///////////////////////////////////////////////// Data /////////////////////////////////////////////////
 
@@ -540,6 +541,7 @@ constexpr len_t __array_test_nodes5_example__(const len_t number_to_generate, co
 constexpr len_t array_test_nodes5_1 = __array_test_nodes5_example__(11, 10);
 constexpr len_t array_test_nodes5_2 = __array_test_nodes5_example__(110, 27);
 */
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_ARRAYVIEWEXAMPLE_HPP_

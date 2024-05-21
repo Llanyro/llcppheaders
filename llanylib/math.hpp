@@ -20,6 +20,7 @@
 #include "traits.hpp"
 
 namespace llcpp {
+namespace meta {
 namespace math {
 
 template<class T, class U = traits::template_types<T>::cinput>
@@ -77,6 +78,7 @@ __LL_NODISCARD__ constexpr ll_bool_t compareBool(const void* a, const void* b) _
 //}
 
 } // namespace math
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_MATH_HPP_

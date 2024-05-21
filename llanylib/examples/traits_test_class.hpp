@@ -20,6 +20,7 @@
 #include "../types.hpp"
 
 namespace llcpp {
+namespace meta {
 namespace traits {
 
 #if defined(WINDOWS_SYSTEM)
@@ -90,6 +91,7 @@ struct TestClassThrow {
 #endif // WINDOWS_SYSTEM
 
 } // namespace traits
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_

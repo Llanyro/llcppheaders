@@ -13,6 +13,7 @@
 #define LLANYLIB_EXAMPLES_TRAITSEXAMPLE_HPP_
 
 namespace llcpp {
+namespace meta {
 namespace traits {
 
 ///////////////////////////////////////////////// Conditional for chars types /////////////////////////////////////////////////
@@ -62,39 +63,39 @@ static_assert(std::is_same_v<get_const_type_test_6, const int* const* const>, "E
 
 using get_reference_type_test_1 = traits::type_conversor<int>::to_reference_t;
 using get_reference_type_test_2 = traits::type_conversor<float>::to_reference_t;
-using get_reference_type_test_3 = traits::type_conversor<llcpp::traits::TestClass>::to_reference_all_t;
-using get_reference_type_test_4 = traits::type_conversor<llcpp::traits::TestClassThrow>::to_reference_all_t;
+using get_reference_type_test_3 = traits::type_conversor<traits::TestClass>::to_reference_all_t;
+using get_reference_type_test_4 = traits::type_conversor<traits::TestClassThrow>::to_reference_all_t;
 using get_reference_type_test_5 = traits::type_conversor<int*>::to_reference_all_t;
 using get_reference_type_test_6 = traits::type_conversor<float*>::to_reference_all_t;
-using get_reference_type_test_7 = traits::type_conversor<llcpp::traits::TestClass*>::to_reference_all_t;
-using get_reference_type_test_8 = traits::type_conversor<llcpp::traits::TestClassThrow*>::to_reference_all_t;
+using get_reference_type_test_7 = traits::type_conversor<traits::TestClass*>::to_reference_all_t;
+using get_reference_type_test_8 = traits::type_conversor<traits::TestClassThrow*>::to_reference_all_t;
 
 static_assert(std::is_same_v<get_reference_type_test_1, int>, "Error changed value");
 static_assert(std::is_same_v<get_reference_type_test_2, float>, "Error changed value");
-static_assert(std::is_same_v<get_reference_type_test_3, llcpp::traits::TestClass&>, "Error changed value");
-static_assert(std::is_same_v<get_reference_type_test_4, llcpp::traits::TestClassThrow&>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_3, traits::TestClass&>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_4, traits::TestClassThrow&>, "Error changed value");
 static_assert(std::is_same_v<get_reference_type_test_5, int*&>, "Error changed value");
 static_assert(std::is_same_v<get_reference_type_test_6, float*&>, "Error changed value");
-static_assert(std::is_same_v<get_reference_type_test_7, llcpp::traits::TestClass*&>, "Error changed value");
-static_assert(std::is_same_v<get_reference_type_test_8, llcpp::traits::TestClassThrow*&>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_7, traits::TestClass*&>, "Error changed value");
+static_assert(std::is_same_v<get_reference_type_test_8, traits::TestClassThrow*&>, "Error changed value");
 
 using get_const_reference_type_test_1 = traits::type_conversor<int>::to_const_reference_t;
 using get_const_reference_type_test_2 = traits::type_conversor<float>::to_const_reference_t;
-using get_const_reference_type_test_3 = traits::type_conversor<llcpp::traits::TestClass>::to_const_reference_all_t;
-using get_const_reference_type_test_4 = traits::type_conversor<llcpp::traits::TestClassThrow>::to_const_reference_all_t;
+using get_const_reference_type_test_3 = traits::type_conversor<traits::TestClass>::to_const_reference_all_t;
+using get_const_reference_type_test_4 = traits::type_conversor<traits::TestClassThrow>::to_const_reference_all_t;
 using get_const_reference_type_test_5 = traits::type_conversor<int*>::to_const_reference_t;
 using get_const_reference_type_test_6 = traits::type_conversor<float*>::to_const_reference_t;
-using get_const_reference_type_test_7 = traits::type_conversor<llcpp::traits::TestClass*>::to_const_reference_all_t;
-using get_const_reference_type_test_8 = traits::type_conversor<llcpp::traits::TestClassThrow*>::to_const_reference_all_t;
+using get_const_reference_type_test_7 = traits::type_conversor<traits::TestClass*>::to_const_reference_all_t;
+using get_const_reference_type_test_8 = traits::type_conversor<traits::TestClassThrow*>::to_const_reference_all_t;
 
 static_assert(std::is_same_v<get_const_reference_type_test_1, const int>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_2, const float>, "Error changed value");
-static_assert(std::is_same_v<get_const_reference_type_test_3, const llcpp::traits::TestClass&>, "Error changed value");
-static_assert(std::is_same_v<get_const_reference_type_test_4, const llcpp::traits::TestClassThrow&>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_3, const traits::TestClass&>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_4, const traits::TestClassThrow&>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_5, const int*>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_6, const float*>, "Error changed value");
-static_assert(std::is_same_v<get_const_reference_type_test_7, const llcpp::traits::TestClass*&>, "Error changed value");
-static_assert(std::is_same_v<get_const_reference_type_test_8, const llcpp::traits::TestClassThrow*&>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_7, const traits::TestClass*&>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_8, const traits::TestClassThrow*&>, "Error changed value");
 
 using get_promote_type_test_01 = traits::type_conversor<i8>::promote_t;
 using get_promote_type_test_02 = traits::type_conversor<i16>::promote_t;
@@ -118,8 +119,8 @@ using get_promote_type_test_19 = traits::type_conversor<ui64>::demote_t;
 using get_promote_type_test_20 = traits::type_conversor<f32>::demote_t;
 using get_promote_type_test_21 = traits::type_conversor<f64>::demote_t;
 using get_promote_type_test_22 = traits::type_conversor<f128>::demote_t;
-using get_promote_type_test_23 = traits::type_conversor<llcpp::traits::TestClass>::promote_t;
-using get_promote_type_test_24 = traits::type_conversor<llcpp::traits::TestClass>::demote_t;
+using get_promote_type_test_23 = traits::type_conversor<traits::TestClass>::promote_t;
+using get_promote_type_test_24 = traits::type_conversor<traits::TestClass>::demote_t;
 
 static_assert(std::is_same_v<get_promote_type_test_01, i16>, "Error changed value");
 static_assert(std::is_same_v<get_promote_type_test_02, i32>, "Error changed value");
@@ -143,8 +144,8 @@ static_assert(std::is_same_v<get_promote_type_test_19, ui32>, "Error changed val
 static_assert(std::is_same_v<get_promote_type_test_20, f32>, "Error changed value");
 static_assert(std::is_same_v<get_promote_type_test_21, f32>, "Error changed value");
 static_assert(std::is_same_v<get_promote_type_test_22, f64>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_23, llcpp::traits::TestClass>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_24, llcpp::traits::TestClass>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_23, traits::TestClass>, "Error changed value");
+static_assert(std::is_same_v<get_promote_type_test_24, traits::TestClass>, "Error changed value");
 
 ///////////////////////////////////////////////// Operator and functions checker /////////////////////////////////////////////////
 
@@ -183,12 +184,12 @@ static_assert(!test_copy_operator_class_no_copy,		"Error changed value");
 constexpr ll_bool_t nothrow_copy_test_1 = traits::is_nothrow_copyable_v<int>;
 constexpr ll_bool_t nothrow_copy_test_2 = traits::is_nothrow_copyable_v<int*>;
 constexpr ll_bool_t nothrow_copy_test_3 = traits::is_nothrow_copyable_v<int**>;
-constexpr ll_bool_t nothrow_copy_test_4 = traits::is_nothrow_copyable_v<llcpp::traits::TestClass>;
-constexpr ll_bool_t nothrow_copy_test_5 = traits::is_nothrow_copyable_v<llcpp::traits::TestClass*>;
-constexpr ll_bool_t nothrow_copy_test_6 = traits::is_nothrow_copyable_v<llcpp::traits::TestClass**>;
-constexpr ll_bool_t nothrow_copy_test_7 = traits::is_nothrow_copyable_v<llcpp::traits::TestClassThrow>;
-constexpr ll_bool_t nothrow_copy_test_8 = traits::is_nothrow_copyable_v<llcpp::traits::TestClassThrow*>;
-constexpr ll_bool_t nothrow_copy_test_9 = traits::is_nothrow_copyable_v<llcpp::traits::TestClassThrow**>;
+constexpr ll_bool_t nothrow_copy_test_4 = traits::is_nothrow_copyable_v<traits::TestClass>;
+constexpr ll_bool_t nothrow_copy_test_5 = traits::is_nothrow_copyable_v<traits::TestClass*>;
+constexpr ll_bool_t nothrow_copy_test_6 = traits::is_nothrow_copyable_v<traits::TestClass**>;
+constexpr ll_bool_t nothrow_copy_test_7 = traits::is_nothrow_copyable_v<traits::TestClassThrow>;
+constexpr ll_bool_t nothrow_copy_test_8 = traits::is_nothrow_copyable_v<traits::TestClassThrow*>;
+constexpr ll_bool_t nothrow_copy_test_9 = traits::is_nothrow_copyable_v<traits::TestClassThrow**>;
 
 static_assert( nothrow_copy_test_1, "Error changed value");
 static_assert( nothrow_copy_test_2, "Error changed value");
@@ -203,12 +204,12 @@ static_assert(!nothrow_copy_test_9, "Error changed value");
 constexpr ll_bool_t nothrow_swappeable_test_1 = traits::is_nothrow_swappeable_v<int>;
 constexpr ll_bool_t nothrow_swappeable_test_2 = traits::is_nothrow_swappeable_v<int*>;
 constexpr ll_bool_t nothrow_swappeable_test_3 = traits::is_nothrow_swappeable_v<int**>;
-constexpr ll_bool_t nothrow_swappeable_test_4 = traits::is_nothrow_swappeable_v<llcpp::traits::TestClass>;
-constexpr ll_bool_t nothrow_swappeable_test_5 = traits::is_nothrow_swappeable_v<llcpp::traits::TestClass*>;
-constexpr ll_bool_t nothrow_swappeable_test_6 = traits::is_nothrow_swappeable_v<llcpp::traits::TestClass**>;
-constexpr ll_bool_t nothrow_swappeable_test_7 = traits::is_nothrow_swappeable_v<llcpp::traits::TestClassThrow>;
-constexpr ll_bool_t nothrow_swappeable_test_8 = traits::is_nothrow_swappeable_v<llcpp::traits::TestClassThrow*>;
-constexpr ll_bool_t nothrow_swappeable_test_9 = traits::is_nothrow_swappeable_v<llcpp::traits::TestClassThrow**>;
+constexpr ll_bool_t nothrow_swappeable_test_4 = traits::is_nothrow_swappeable_v<traits::TestClass>;
+constexpr ll_bool_t nothrow_swappeable_test_5 = traits::is_nothrow_swappeable_v<traits::TestClass*>;
+constexpr ll_bool_t nothrow_swappeable_test_6 = traits::is_nothrow_swappeable_v<traits::TestClass**>;
+constexpr ll_bool_t nothrow_swappeable_test_7 = traits::is_nothrow_swappeable_v<traits::TestClassThrow>;
+constexpr ll_bool_t nothrow_swappeable_test_8 = traits::is_nothrow_swappeable_v<traits::TestClassThrow*>;
+constexpr ll_bool_t nothrow_swappeable_test_9 = traits::is_nothrow_swappeable_v<traits::TestClassThrow**>;
 
 static_assert( nothrow_swappeable_test_1, "Error changed value");
 static_assert( nothrow_swappeable_test_2, "Error changed value");
@@ -246,6 +247,7 @@ static_assert( checker_test_9, "Error changed value");
 
 
 } // namespace traits
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_EXAMPLES_TRAITSEXAMPLE_HPP_

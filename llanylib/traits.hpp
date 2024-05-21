@@ -403,10 +403,12 @@ struct parameter_pack_operations {
 	template<class T, class... uArgs>
 	struct FirstType {
 		using type = T;
-		using next = std::conditional_t<
-			parameter_pack_operations<uArgs...>::empty, EnOfParameterPack,
-			parameter_pack_operations<uArgs...>::pack_first
-		>;
+		using next = parameter_pack_operations<uArgs...>::pack_first;
+	};
+	template<class T>
+	struct FirstType<T> {
+		using type = T;
+		using next = EnOfParameterPack;
 	};
 
 	using pack_first = typename FirstType<Args...>;
@@ -422,13 +424,9 @@ struct parameter_pack_operations {
 
 
 
-constexpr auto asdf = parameter_pack_operations<int, char, int*>::sizeof_hash_version;
-using asdf2 = parameter_pack_operations<int, char, int*>::pack_first::next::next::next;
-using asdf2 = parameter_pack_operations<int, char, int*>::get_first_type;
-
-
-
-
+//constexpr auto asdf = parameter_pack_operations<int, char, int*>::sizeof_hash_version;
+//using asdf2 = parameter_pack_operations<int, char, int*>::pack_first::next::next::next;
+//using asdf2 = parameter_pack_operations<int, char, int*>::get_first_type;
 
 //template<class T, class U>
 //using is_same_const_t =

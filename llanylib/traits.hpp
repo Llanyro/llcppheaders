@@ -70,7 +70,7 @@ struct is_pointer {
 };
 
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_pointer_v = is_pointer<T>::val;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_pointer_v = is_pointer<std::remove_cv_t<T>>::val;
 
 
 template<class T>

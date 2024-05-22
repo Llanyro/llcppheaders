@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 5.0							//
+//	Version: 6.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_DOUBLENODE_HPP_) // Guard && version protector
-	#if LLANYLIB_DOUBLENODE_MAYOR_ != 5 || LLANYLIB_DOUBLENODE_MINOR_ < 0
+	#if LLANYLIB_DOUBLENODE_MAYOR_ != 6 || LLANYLIB_DOUBLENODE_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "Node.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_DOUBLENODE_HPP_)
 #define LLANYLIB_DOUBLENODE_HPP_
-#define LLANYLIB_DOUBLENODE_MAYOR_ 5
+#define LLANYLIB_DOUBLENODE_MAYOR_ 6
 #define LLANYLIB_DOUBLENODE_MINOR_ 0
 
 #include "Node.hpp"

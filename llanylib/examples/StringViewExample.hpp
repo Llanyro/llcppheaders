@@ -4,7 +4,7 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 5.0							//
+//	Version: 6.0							//
 //////////////////////////////////////////////
 
 #ifndef LLANYLIB_EXAMPLES_STRINGVIEWEXAMPLE_HPP_

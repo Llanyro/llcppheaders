@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 5.0							//
+//	Version: 6.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_ASCII_HPP_) // Guard && version protector
-	#if LLANYLIB_ASCII_MAYOR_ != 5 || LLANYLIB_ASCII_MINOR_ < 0
+	#if LLANYLIB_ASCII_MAYOR_ != 6 || LLANYLIB_ASCII_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "ascii.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_ASCII_HPP_)
 #define LLANYLIB_ASCII_HPP_
-#define LLANYLIB_ASCII_MAYOR_ 5
+#define LLANYLIB_ASCII_MAYOR_ 6
 #define LLANYLIB_ASCII_MINOR_ 0
 
 #include "../StringView.hpp"

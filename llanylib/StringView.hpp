@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 5.0							//
+//	Version: 6.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_STRINGVIEW_HPP_) // Guard && version protector
-	#if LLANYLIB_STRINGVIEW_MAYOR_ != 5 || LLANYLIB_STRINGVIEW_MINOR_ < 0
+	#if LLANYLIB_STRINGVIEW_MAYOR_ != 6 || LLANYLIB_STRINGVIEW_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "StringView.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_STRINGVIEW_HPP_)
 #define LLANYLIB_STRINGVIEW_HPP_
-#define LLANYLIB_STRINGVIEW_MAYOR_ 5
+#define LLANYLIB_STRINGVIEW_MAYOR_ 6
 #define LLANYLIB_STRINGVIEW_MINOR_ 0
 
 #include "algorithm.hpp"

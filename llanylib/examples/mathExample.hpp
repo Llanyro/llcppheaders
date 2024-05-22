@@ -1,10 +1,10 @@
 //////////////////////////////////////////////
-//	mathExample.hpp					//
+//	mathExample.hpp							//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 5.0							//
+//	Version: 6.0							//
 //////////////////////////////////////////////
 
 #include "../math.hpp"

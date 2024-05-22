@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 5.0							//
+//	Version: 6.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_BASICTYPEWRAPPER_HPP_) // Guard && version protector
-	#if LLANYLIB_BASICTYPEWRAPPER_MAYOR_ != 5 || LLANYLIB_BASICTYPEWRAPPER_MINOR_ < 0
+	#if LLANYLIB_BASICTYPEWRAPPER_MAYOR_ != 6 || LLANYLIB_BASICTYPEWRAPPER_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "BasicTypeWrapper.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_BASICTYPEWRAPPERHPP_)
 #define LLANYLIB_BASICTYPEWRAPPER_HPP_
-#define LLANYLIB_BASICTYPEWRAPPER_MAYOR_ 5
+#define LLANYLIB_BASICTYPEWRAPPER_MAYOR_ 6
 #define LLANYLIB_BASICTYPEWRAPPER_MINOR_ 0
 
 #include "traits.hpp"

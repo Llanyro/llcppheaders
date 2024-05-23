@@ -13,6 +13,9 @@
 	#endif // LLANYLIB_STRING_MAYOR_ || LLANYLIB_STRING_MINOR_
 
 #else !defined(LLANYLIB_STRING_HPP_)
+
+#error "This is in WIP. Wait to Release 7"
+
 #define LLANYLIB_STRING_HPP_
 #define LLANYLIB_STRING_MAYOR_ 6
 #define LLANYLIB_STRING_MINOR_ 0
@@ -160,7 +163,7 @@ __LL_NODISCARD__ constexpr ll_bool_t equals(const ll_char_t (&v1)[N1], const ll_
 template<class T>
 constexpr ui64 number_of_chars_to_display_value() {
 	ui64 bits = sizeof(T) * 8;
-	ui64 maxChars = bits / 3 + (bits % 3 == 0 ? 0 : 1);
+	ui64 maxChars = bits / 3 + (bits % 3 == ZERO_UI64 ? 0 : 1);
 	if constexpr (!std::is_unsigned_v<T>) return maxChars + 1;
 	else return maxChars;
 }

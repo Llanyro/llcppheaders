@@ -13,6 +13,9 @@
 	#endif // LLANYLIB_RAIIBASE_MAYOR_ || LLANYLIB_RAIIBASE_MINOR_
 
 #else !defined(LLANYLIB_RAIIBASE_HPP_)
+
+#error "This is in WIP. Wait to Release 7"
+
 #define LLANYLIB_RAIIBASE_HPP_
 #define LLANYLIB_RAIIBASE_MAYOR_ 6
 #define LLANYLIB_RAIIBASE_MINOR_ 0

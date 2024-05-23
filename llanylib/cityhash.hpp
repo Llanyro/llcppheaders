@@ -86,7 +86,6 @@ class Hash128 {
 			b *= kMul;
 			return b;
 		}
-		__LL_NODISCARD__ constexpr operator ui64() const __LL_EXCEPT__ { return this->toui64(); }
 };
 
 class CityHash {
@@ -106,7 +105,7 @@ class CityHash {
 		template<class T>
 		__LL_NODISCARD__ static constexpr T unalignedLoad(DataType p) __LL_EXCEPT__ {
 			T result{};
-			for (ui8 i = 0; i < sizeof(T); ++i)
+			for (ui8 i{}; i < sizeof(T); ++i)
 				result |= static_cast<T>(p[i]) << (i * 8);
 			return result;
 		}
@@ -121,7 +120,7 @@ class CityHash {
 		// [OPTIMIZE?]
 		__LL_NODISCARD__ static constexpr ui64 rotate(const ui64 val, const i8 /*i32*/ shift) __LL_EXCEPT__ {
 			// Avoid shifting by 64: doing so yields an undefined result.
-			return shift == 0 ? val : ((val >> shift) | (val << (64 - shift)));
+			return shift == ZERO_I8 ? val : ((val >> shift) | (val << (64 - shift)));
 		}
 		__LL_NODISCARD__ static constexpr ui64 shiftMix(const ui64 val) __LL_EXCEPT__ {
 			return val ^ (val >> 47);
@@ -230,8 +229,9 @@ class CityHash {
 			ui64 x = fetch64(s + len - 40);
 			ui64 y = fetch64(s + len - 16) + fetch64(s + len - 56);
 			ui64 z = Hash128(
-				fetch64(s + len - 48) + len,
-				fetch64(s + len - 24));
+					fetch64(s + len - 48) + len,
+					fetch64(s + len - 24)
+				).toui64();
 			Hash128 v = weakHashLen32WithSeeds(s + len - 64, len, z);
 			Hash128 w = weakHashLen32WithSeeds(s + len - 32, y + k1, x);
 			x = x * k1 + fetch64(s);
@@ -254,14 +254,14 @@ class CityHash {
 				//}
 				s += 64;
 				len -= 64;
-			} while (len != 0);
+			} while (len != ZERO_UI64);
 			return meta::Hash(
 				Hash128(
-					Hash128(v.getLow(), w.getLow())
+					Hash128(v.getLow(), w.getLow()).toui64()
 					+ shiftMix(y) * k1 + z,
-					Hash128(v.getHigh(), w.getHigh())
+					Hash128(v.getHigh(), w.getHigh()).toui64()
 					+ x
-				).operator len_t()
+				).toui64()
 			);
 		}
 };

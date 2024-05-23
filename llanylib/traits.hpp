@@ -151,7 +151,7 @@ struct type_conversor {
 	};
 	struct get_const_ptr_remove_reference {
 		static constexpr auto test() __LL_EXCEPT__ {
-			return traits::type_container<type_conversor<get_ptr_remove_reference_t>::to_const_t>{};
+			return traits::type_container<type_conversor<get_ptr_remove_reference::value>::to_const_t>{};
 		}
 		using value = typename decltype(test())::value;
 	};
@@ -214,6 +214,7 @@ struct type_conversor {
 	using get_ptr_remove_reference_t = get_ptr_remove_reference::value;
 	// Get a const ptr type, and removes reference if it has
 	//using _t = get_cptr_remove_reference;
+	/// [TOFIX] This breaks something...
 	//using get_const_ptr_remove_reference_t = get_const_ptr_remove_reference::value;
 	// Promote a type to a bigger or smaller type
 	using promote_t = type_promotion<LL_TRUE>::value;
@@ -552,7 +553,7 @@ struct template_types {
 	using move = conversor::to_movement_t;
 
 	using ptr = conversor::get_ptr_remove_reference_t;
-	// [TOFIX]
+	// [PATCH] 
 	using cptr = conversor::get_const_ptr_remove_reference::value;
 	using ptrref = traits::type_conversor<typename ptr>::to_reference_t;
 

@@ -164,5 +164,8 @@
     <ClCompile Include="examples\StringViewExample.cpp">
       <Filter>Source Files\examples</Filter>
     </ClCompile>
+    <ClCompile Include="examples\main.cpp">
+      <Filter>Source Files\examples</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

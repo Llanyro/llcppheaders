@@ -72,8 +72,8 @@ constexpr ll_bool_t simple_equals(T v1, U v2) {
 	//static_assert(traits::has_equal_operator_v<T>, "Error, <T> object has no operator==()");
 	return v1 == v2;
 }
-template<class T, class U = T>
-constexpr void simple_set(T& v1, U& v2) { v1 = v2; }
+template<class T, class U = T&>
+constexpr void simple_set(T& v1, U v2) { v1 = v2; }
 
 } // namespace common
 } // namespace meta

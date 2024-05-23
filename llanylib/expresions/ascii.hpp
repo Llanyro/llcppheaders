@@ -7,19 +7,19 @@
 //	Version: 6.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_ASCII_HPP_) // Guard && version protector
-	#if LLANYLIB_ASCII_MAYOR_ != 6 || LLANYLIB_ASCII_MINOR_ < 0
+#if defined(LLANYLIB_EXPRESIONS_ASCII_HPP_) // Guard && version protector
+	#if LLANYLIB_EXPRESIONS_ASCII_MAYOR_ != 6 || LLANYLIB_EXPRESIONS_ASCII_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "ascii.hpp version error!"
 		#else
 			#error "ascii.hpp version error!"
 		#endif // LL_REAL_CXX23
-	#endif // LLANYLIB_ASCII_MAYOR_ || LLANYLIB_ASCII_MINOR_
+	#endif // LLANYLIB_EXPRESIONS_ASCII_MAYOR_ || LLANYLIB_EXPRESIONS_ASCII_MINOR_
 
-#else !defined(LLANYLIB_ASCII_HPP_)
-#define LLANYLIB_ASCII_HPP_
-#define LLANYLIB_ASCII_MAYOR_ 6
-#define LLANYLIB_ASCII_MINOR_ 0
+#else !defined(LLANYLIB_EXPRESIONS_ASCII_HPP_)
+#define LLANYLIB_EXPRESIONS_ASCII_HPP_
+#define LLANYLIB_EXPRESIONS_ASCII_MAYOR_ 6
+#define LLANYLIB_EXPRESIONS_ASCII_MINOR_ 0
 
 #include "../StringView.hpp"
 
@@ -52,4 +52,4 @@ constexpr auto ALL_VISIBLE_CHARS = make_StringView(L"abcdefghijklmnopqrstuvwxyzA
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_ASCII_HPP_
+#endif // LLANYLIB_EXPRESIONS_ASCII_HPP_

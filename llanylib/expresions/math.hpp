@@ -7,8 +7,8 @@
 //	Version: 6.0							//
 //////////////////////////////////////////////
 
-#ifndef LLANYLIB_MATH_HPP_
-#define LLANYLIB_MATH_HPP_
+#ifndef LLANYLIB_EXPRESIONS_MATH_HPP_
+#define LLANYLIB_EXPRESIONS_MATH_HPP_
 
 #include "../traits.hpp"
 //#include "../magic_enum_extra.hpp"
@@ -71,4 +71,4 @@ constexpr const ExponentType exponent[256] = {
 } // namespace math
 } // namespace llcpp
 
-#endif // LLANYLIB_MATH_HPP_
+#endif // LLANYLIB_EXPRESIONS_MATH_HPP_

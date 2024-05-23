@@ -11,7 +11,7 @@
 #define LLANYLIB_EXAMPLES_ARRAYVIEWEXAMPLE_HPP_
 
 #include "../Array.hpp"
-#include "../DoubleNode.hpp"
+//#include "../DoubleNode.hpp" WIP
 
 #include "algorithmExample.hpp"
 

@@ -19,6 +19,9 @@
 
 #include "traits.hpp"
 
+#undef min
+#undef max
+
 namespace llcpp {
 namespace meta {
 namespace math {

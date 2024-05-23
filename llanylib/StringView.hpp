@@ -40,7 +40,6 @@ class LL_SHARED_LIB StringView {
 		using type = traits::template_types<T>;
 		using __StringView = traits::template_types<StringView<N, T>>;
 		using __StrPair = traits::get_by_char_type_t<T, StrPair, wStrPair>;
-		using csubstr = std::pair<typename type::cptr, typename type::cptr>;
 
 		template<class U>
 		using __StringViewType = traits::template_types<StringView<N, U>>;
@@ -103,62 +102,68 @@ class LL_SHARED_LIB StringView {
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr operator len_t() const __LL_EXCEPT__ { return __sizes::ARR_SIZE; }
-		__LL_NODISCARD__ constexpr len_t size() const __LL_EXCEPT__ { return this->operator len_t(); }
-		__LL_NODISCARD__ constexpr len_t len() const __LL_EXCEPT__ { return this->operator len_t(); }
-		__LL_NODISCARD__ constexpr len_t count() const __LL_EXCEPT__ { return this->operator len_t(); }
-		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
-			// [TOCHECK]
-			return /*this->operator len_t() == 0 || */ this->operator[](0) == '\0';
-		}
-		__LL_NODISCARD__ constexpr operator ll_bool_t() const __LL_EXCEPT__ {
-			return !this->empty() && static_cast<ll_bool_t>(this->mem);
-		}
-
-		__LL_NODISCARD__ constexpr operator typename __StrPair() const __LL_EXCEPT__ {
-			return __StrPair(this->mem, this->len());
-		}
-		__LL_NODISCARD__ constexpr operator typename type::cptr() const __LL_EXCEPT__ {
-			return this->mem;
-		}
+		#pragma region Getters
 		__LL_NODISCARD__ constexpr type::cptr get(const len_t pos) const __LL_EXCEPT__ {
 			return this->mem + pos;
 		}
-		__LL_NODISCARD__ constexpr csubstr get(const len_t first, const len_t last) const __LL_EXCEPT__ {
-			return csubstr{ this->get(first) , this->get(last) };
+		__LL_NODISCARD__ constexpr __StrPair get(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return __StrPair(this->get(first), this->get(last));
 		}
-		__LL_NODISCARD__ constexpr csubstr substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr __StrPair substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
 			return this->get(first, last);
 		}
 		__LL_NODISCARD__ constexpr type::cref operator[] (const len_t pos) const __LL_EXCEPT__ {
-			return this->mem[pos];
+			return *this->get(pos);
 		}
-		#if defined(LL_REAL_CXX23)
-		__LL_NODISCARD__ constexpr csubstr operator[](const len_t first, const len_t last) const __LL_EXCEPT__ {
+#if defined(LL_REAL_CXX23)
+		__LL_NODISCARD__ constexpr __StrPair operator[](const len_t first, const len_t last) const __LL_EXCEPT__ {
 			return this->substr(first, last);
 		}
 
-		#endif // LL_REAL_CXX23
+#endif // LL_REAL_CXX23
 
-		__LL_NODISCARD__ constexpr operator meta::Hash() const {
-			return algorithm::has_cluster::hash<T, __sizes::ARR_SIZE>(this->begin());
+
+		#pragma endregion
+		#pragma region Countable
+		__LL_NODISCARD__ constexpr len_t len() const __LL_EXCEPT__ { return __sizes::ARR_SIZE; }
+		__LL_NODISCARD__ constexpr len_t size() const __LL_EXCEPT__ { return this->len(); }
+		__LL_NODISCARD__ constexpr len_t count() const __LL_EXCEPT__ { return this->len(); }
+
+		#pragma endregion
+		#pragma region std
+		__LL_NODISCARD__ constexpr type::cptr data() const __LL_EXCEPT__ {
+			return this->begin();
+		}
+		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
+			return this->get(ZERO_UI64);
+		}
+		__LL_NODISCARD__ constexpr type::cptr rbegin() const __LL_EXCEPT__ {
+			return this->get(this->len() - 1);
+		}
+		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
+			return this->get(this->len());
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
+			// [TOCHECK]
+			return /*this->len() == 0 || */ this->operator[](0) == '\0';
 		}
 
+		#pragma endregion
 		#pragma region Compare
 	public:
 		template<ll_bool_t GET_DATA, class U>
 		using CompareResult = typename __cmp<GET_DATA, U>::CompareResult;
 		template<ll_bool_t GET_DATA, class U>
 		using CompareResultBool = typename __cmp<GET_DATA, U>::CompareResultBool;
-		template<ll_bool_t GET_DATA, class W>
-		using CompareFunc = typename __cmp<GET_DATA, W>::CompareFunc;
-		template<ll_bool_t GET_DATA, class W>
-		using CompareFuncBool = typename __cmp<GET_DATA, W>::CompareFuncBool;
+		template<ll_bool_t GET_DATA, class U>
+		using CompareFunc = typename __cmp<GET_DATA, U>::CompareFunc;
+		template<ll_bool_t GET_DATA, class U>
+		using CompareFuncBool = typename __cmp<GET_DATA, U>::CompareFuncBool;
 
 		#pragma region Compare
 	public:
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(const U (&arr)[N], CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(const U (&arr)[N], CompareFunc<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::compare(this->begin(), arr, this->len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
@@ -167,7 +172,7 @@ class LL_SHARED_LIB StringView {
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(const StringView<N, U>& arr, CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(const StringView<N, U>& arr, CompareFunc<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::compare(this->begin(), arr.begin(), this->len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
@@ -179,7 +184,7 @@ class LL_SHARED_LIB StringView {
 		#pragma region Equals
 	public:
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const U (&arr)[N2], CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const U (&arr)[N2], CompareFunc<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr, STypesOther<N2>::ARR_SIZE, compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
@@ -188,7 +193,7 @@ class LL_SHARED_LIB StringView {
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const U* arr, const len_t size, CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const U* arr, const len_t size, CompareFunc<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr, size, compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
@@ -197,7 +202,7 @@ class LL_SHARED_LIB StringView {
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const StringView<N2, U>& arr, CompareFunc<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const StringView<N2, U>& arr, CompareFunc<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::equals(this->begin(), this->len(), arr.begin(), arr.len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
@@ -227,20 +232,20 @@ class LL_SHARED_LIB StringView {
 		
 		template<len_t N2>
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(type::ctype (&arr)[N2]) const __LL_EXCEPT__ {
-			return __cmp<LL_FALSE, typename type::type>::equals(this->begin(), this->len(), arr, STypesOther<N2>::ARR_SIZE);
+			return __cmp<LL_FALSE, type::type>::equals(this->begin(), this->len(), arr, STypesOther<N2>::ARR_SIZE);
 		}
 		template<len_t N2>
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const StringView<N2, typename type::type>& arr) const __LL_EXCEPT__ {
-			return __cmp<LL_FALSE, typename type::type>::equals(this->begin(), this->len(), arr.begin(), arr.len());
+			return __cmp<LL_FALSE, type::type>::equals(this->begin(), this->len(), arr.begin(), arr.len());
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const StringView<N, typename type::type>& arr) const __LL_EXCEPT__ {
-			return __cmp<LL_FALSE, typename type::type>::equals(this->begin(), this->len(), arr.begin(), arr.len());
+			return __cmp<LL_FALSE, type::type>::equals(this->begin(), this->len(), arr.begin(), arr.len());
 		}
 
 		#pragma endregion
 		#pragma region StartsWith
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const U (&needle)[N2], CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const U (&needle)[N2], CompareFuncBool<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->len(), needle, STypesOther<N2>::ARR_SIZE, compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
@@ -249,7 +254,7 @@ class LL_SHARED_LIB StringView {
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const U* needle, const len_t size, CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const U* needle, const len_t size, CompareFuncBool<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->len(), needle, size);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
@@ -258,7 +263,7 @@ class LL_SHARED_LIB StringView {
 		}
 		
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const StringView<N2, U>& needle, CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const StringView<N2, U>& needle, CompareFuncBool<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::starts_with(this->begin(), this->len(), needle.begin(), needle.len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
@@ -282,7 +287,7 @@ class LL_SHARED_LIB StringView {
 		#pragma endregion
 		#pragma region EndsWith
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const U (&needle)[N2], CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const U (&needle)[N2], CompareFuncBool<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->len(), needle, STypesOther<N2>::ARR_SIZE, compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2>
@@ -291,7 +296,7 @@ class LL_SHARED_LIB StringView {
 		}
 
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const U* needle, const len_t size, CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const U* needle, const len_t size, CompareFuncBool<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->len(), needle, size);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
@@ -300,7 +305,7 @@ class LL_SHARED_LIB StringView {
 		}
 		
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const StringView<N2, U>& needle, CompareFuncBool<GET_DATA, W> compareFunc) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const StringView<N2, U>& needle, CompareFuncBool<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::ends_with(this->begin(), this->len(), needle.begin(), needle.len(), compareFunc);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE, class W = traits::template_types<U>::cinput, len_t N2>
@@ -387,25 +392,21 @@ class LL_SHARED_LIB StringView {
 		}
 
 		#pragma endregion
-		#pragma region std
-		__LL_NODISCARD__ constexpr type::cptr data() const __LL_EXCEPT__ {
-			return this->begin();
+		#pragma region Other
+		__LL_NODISCARD__ constexpr ll_bool_t isValid() const __LL_EXCEPT__ {
+			return !this->empty() && this->begin();
 		}
-		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
-			return this->get(ZERO_UI64);
+		__LL_NODISCARD__ constexpr operator meta::Hash() const {
+			return algorithm::has_cluster::hash<T, __sizes::ARR_SIZE>(this->begin());
 		}
-		__LL_NODISCARD__ constexpr type::cptr rbegin() const __LL_EXCEPT__ {
-			return this->get(this->len() - 1);
-		}
-		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
-			return this->get(this->len());
+		__LL_NODISCARD__ constexpr operator __StrPair() const __LL_EXCEPT__ {
+			return __StrPair(this->begin(), this->end());
 		}
 
 		#pragma endregion
 		#pragma endregion
 	#pragma endregion
 };
-
 
 template<len_t N, class T = ll_char_t>
 constexpr StringView<N, T> make_StringView(const T(&mem)[N]) {

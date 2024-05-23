@@ -66,20 +66,18 @@ class LL_SHARED_LIB Singleton {
 		// [TOCHECK]
 		template <class... Args>
 		__LL_NODISCARD__ static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {
-			if constexpr (traits::pack_has_args<Args...>) {
-				static T instance(std::forward<Args>(args)...));
+			if constexpr (traits::parameter_pack_operations<Args...>::empty) {
+				static T instance;
 				return instance;
 			}
 			else {
-				static T instance;
+				static T instance(std::forward<Args>(args)...);
 				return instance;
 			}
 		}
 };
 
-// [TOFIX] [TODO] Needs to be with a given allocator and a subscriber
-//namespace dynamic {
-//
+// [TODO] Needs to be with a given allocator and a subscriber
 //template <class T>
 //class LL_SHARED_LIB Singleton {
 //	public:
@@ -121,10 +119,8 @@ class LL_SHARED_LIB Singleton {
 //template <class T>
 //T* Singleton<T>::instance = LL_NULLPTR;
 //#pragma endregion
-//
-//} // namespace dynamic
 
 } // namespace meta
 } // namespace llcpp
 
-#endif // !LLANYLIB_SINGLETON_HPP_
+#endif // LLANYLIB_SINGLETON_HPP_

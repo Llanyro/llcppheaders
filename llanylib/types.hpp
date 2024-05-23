@@ -231,6 +231,8 @@ template<class T, class U = T>
 using CompareBool = ll_bool_t(*)(T __t1, U __t2);
 template<class T, class U = T>
 using SwapFunction = void(*)(T& __t1, U& __t2);
+template<class T, class U = T&>
+using SetFunction = void(*)(T& __t1, U __t2);
 
 } // namespace classic
 namespace lambda {
@@ -241,6 +243,8 @@ template<class T, class U = T>
 using CompareBool = std::function<ll_bool_t(T __t1, U __t2)>;
 template<class T, class U = T>
 using SwapFunction = std::function<void(T& __t1, U& __t2)>;
+template<class T, class U = T&>
+using SetFunction = std::function<void(T& __t1, U __t2)>;
 
 template<class T>
 using SearchFunction = std::function<cmp_t(T __t1)>;

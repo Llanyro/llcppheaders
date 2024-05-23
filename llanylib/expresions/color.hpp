@@ -7,19 +7,19 @@
 //	Version: 6.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_COLOR_HPP_) // Guard && version protector
-	#if LLANYLIB_COLOR_MAYOR_ != 6 || LLANYLIB_COLOR_MINOR_ < 0
+#if defined(LLANYLIB_EXPRESIONS_COLOR_HPP_) // Guard && version protector
+	#if LLANYLIB_EXPRESIONS_COLOR_MAYOR_ != 6 || LLANYLIB_EXPRESIONS_COLOR_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "color.hpp version error!"
 		#else
 			#error "color.hpp version error!"
 		#endif // LL_REAL_CXX23
-	#endif // LLANYLIB_COLOR_MAYOR_ || LLANYLIB_COLOR_MINOR_
+	#endif // LLANYLIB_EXPRESIONS_COLOR_MAYOR_ || LLANYLIB_EXPRESIONS_COLOR_MINOR_
 
-#else !defined(LLANYLIB_COLOR_HPP_)
-#define LLANYLIB_COLOR_HPP_
-#define LLANYLIB_COLOR_MAYOR_ 6
-#define LLANYLIB_COLOR_MINOR_ 0
+#else !defined(LLANYLIB_EXPRESIONS_COLOR_HPP_)
+#define LLANYLIB_EXPRESIONS_COLOR_HPP_
+#define LLANYLIB_EXPRESIONS_COLOR_MAYOR_ 6
+#define LLANYLIB_EXPRESIONS_COLOR_MINOR_ 0
 
 #include "../StringView.hpp"
 

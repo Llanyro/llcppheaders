@@ -60,6 +60,7 @@
     <ClInclude Include="ArrayPair.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="examples\main.cpp" />
     <ClCompile Include="examples\StringViewExample.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

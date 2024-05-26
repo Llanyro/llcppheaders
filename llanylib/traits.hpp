@@ -248,7 +248,7 @@ struct has_type_operator {
 	template <class>
 	static constexpr auto test(...) ->
 		std::conditional_t<
-			traits::is_basic_type_v<T>,
+			meta::traits::is_basic_type_v<T>,
 			std::bool_constant<std::is_same_v<T, OperatorType>>,
 			std::false_type
 		>;
@@ -271,7 +271,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v = has_type_operator_t<
 		template <class> \
 		static constexpr auto test(...) -> \
 			std::conditional_t< \
-				traits::is_basic_type_v<T>, \
+				meta::traits::is_basic_type_v<T>, \
 				std::bool_constant<basic_value>, \
 				std::false_type \
 			>; \
@@ -293,8 +293,6 @@ __LL_TEMPLATE_HAS_FUNCTION_BASE__(equal_operator, p->operator==(*p), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(no_equal_operator, p->operator!=(*p), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(greater_operator, p->operator>(*p), LL_TRUE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(lower_operator, p->operator<(*p), LL_TRUE);
-constexpr ll_char_t* NULL_CHAR_CONVERTIBLE = LL_NULLPTR;
-__LL_TEMPLATE_HAS_FUNCTION_BASE__(convert_to_chars, p->convertToChars(NULL_CHAR_CONVERTIBLE), LL_FALSE);
 
 __LL_TEMPLATE_HAS_FUNCTION__(swap, p->swap(*p));
 __LL_TEMPLATE_HAS_FUNCTION__(swap_s, p->swap_s(*p));

@@ -22,6 +22,7 @@
     <ClInclude Include="..\llanylib.hpp" />
     <ClInclude Include="..\llanylibsimple.hpp" />
     <ClInclude Include="algorithm.hpp" />
+    <ClInclude Include="ArgumentsHasher.hpp" />
     <ClInclude Include="Array.hpp" />
     <ClInclude Include="ArrayView.hpp" />
     <ClInclude Include="BasicTypeWrapper.hpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="examples\ArrayViewExample.hpp" />
     <ClInclude Include="examples\bitsExample.hpp" />
     <ClInclude Include="examples\mathExample.hpp" />
+    <ClInclude Include="examples\RandomExample.hpp" />
     <ClInclude Include="examples\StringViewExample.hpp" />
     <ClInclude Include="examples\traitsExample.hpp" />
     <ClInclude Include="examples\traits_test_class.hpp" />
@@ -51,6 +53,7 @@
     <ClInclude Include="ostypes.hpp" />
     <ClInclude Include="RAIIBase.hpp" />
     <ClInclude Include="RAIIWrapper.hpp" />
+    <ClInclude Include="Random.hpp" />
     <ClInclude Include="Singleton.hpp" />
     <ClInclude Include="string.hpp" />
     <ClInclude Include="StringView.hpp" />

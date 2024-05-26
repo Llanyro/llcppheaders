@@ -49,14 +49,15 @@ __LL_NODISCARD__ constexpr T string_to_value(ll_string_t str, T val) __LL_EXCEPT
 #define STRING_TO_UNSIGNED_VALUE_BODY(ZERO_VALUE, type) \
 	if (!str) return ZERO_VALUE; \
 	else if (*str == '\0') return val; \
-	else if (is_digit(*str)) return string_to_value<type>(str + 1, dctdn(*str) + val * 10); \
+	//																						val times 10
+	else if (is_digit(*str)) return string_to_value<type>(str + 1, dctdn(*str) + ((val << 3) + (val << 1))); \
 	else return val;
 
 #define STRING_TO_SIGNED_VALUE_BODY(ZERO_VALUE, type) \
 	if (!str) return ZERO_VALUE; \
 	else if (*str == '\0') return val; \
 	else if(*str == '-')  return -string_to_value<type>(str + 1, val); \
-	else if (is_digit(*str)) return string_to_value<type>(str + 1, dctdn(*str) + val * 10); \
+	else if (is_digit(*str)) return string_to_value<type>(str + 1, dctdn(*str) + ((val << 3) + (val << 1))); \
 	else return val;
 
 
@@ -162,7 +163,7 @@ __LL_NODISCARD__ constexpr ll_bool_t equals(const ll_char_t (&v1)[N1], const ll_
 #pragma region Other
 template<class T>
 constexpr ui64 number_of_chars_to_display_value() {
-	ui64 bits = sizeof(T) * 8;
+	constexpr ui64 bits = sizeof(T) << 3;
 	ui64 maxChars = bits / 3 + (bits % 3 == ZERO_UI64 ? 0 : 1);
 	if constexpr (!std::is_unsigned_v<T>) return maxChars + 1;
 	else return maxChars;

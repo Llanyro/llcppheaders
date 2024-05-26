@@ -49,19 +49,35 @@ class BasicTypeWrapper {
 		constexpr __BasicTypeWrapper::ref operator=(__BasicTypeWrapper::move) __LL_EXCEPT__ = delete;
 
 		constexpr void clear() __LL_EXCEPT__ { this->value = ZERO_I32; }
-
-		constexpr void convertToChars(ll_char_t* mem) const __LL_EXCEPT__ {
-			if constexpr (std::_Is_any_of_v<typename type::type, i8, ui8>)
-				*mem = value;
+		// Buffer is a pointer of a vector of chars (NOT A VECTOR OF POINTERS!)
+		// Buffer needs to be used like this function
+		// When this function is closed (exiting the function), *buffer must point to the initial point
+		//	given plus size given
+		// 
+		// Error is a pointer of a vector of booleans (NOT A VECTOR OF POINTERS!)
+		// If there is an error write a true in the *error position
+		//	or otherwise true. Also point to the next position like you can see in this function
+		constexpr void convertToChars(ll_char_t** buffer, ui8** errors, const len_t size) const __LL_EXCEPT__ {
+			convertToChars(buffer, errors, size, this->value);
+		}
+		constexpr static void convertToChars(ll_char_t** buffer, ui8** errors, const len_t size, type::cinput value) __LL_EXCEPT__ {
+			ll_char_t*& mem = *buffer;
+			ui8*& err = *errors;
+			if constexpr (std::_Is_any_of_v<typename type::type, i8, ui8>) {
+				*mem++ = value;
+				*err++ = 0;
+			}
 			else if constexpr (std::_Is_any_of_v<typename type::type, i16, ui16>) {
 				*mem++ = (value >> 8) & 0xFF;
-				*mem = value & 0xFF;
+				*mem++ = value & 0xFF;
+				*err++ = 0;
 			}
 			else if constexpr (std::_Is_any_of_v<typename type::type, i32, ui32>) {
 				*mem++ = (value >> 24) & 0xFF;
 				*mem++ = (value >> 16) & 0xFF;
 				*mem++ = (value >> 8) & 0xFF;
-				*mem = value & 0xFF;
+				*mem++ = value & 0xFF;
+				*err++ = 0;
 			}
 			else if constexpr (std::_Is_any_of_v<typename type::type, i32, ui32>) {
 				*mem++ = (value >> 56) & 0xFF;
@@ -71,7 +87,15 @@ class BasicTypeWrapper {
 				*mem++ = (value >> 24) & 0xFF;
 				*mem++ = (value >> 16) & 0xFF;
 				*mem++ = (value >> 8) & 0xFF;
-				*mem = value & 0xFF;
+				*mem++ = value & 0xFF;
+				*err++ = 0;
+			}
+			// Other types...
+			// None defined types
+			else {
+				for (len_t i{}; i < sizeof(typename type::type); ++i, ++mem)
+					mem = '\0';
+				*err++ = LL_TRUE;
 			}
 		}
 };

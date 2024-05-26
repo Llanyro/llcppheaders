@@ -411,7 +411,7 @@ constexpr len_t __array_test_nodes3_example__(int v, int v2) {
 	// Create memory
 	len_t block3[ARR_TEST_SIZE_3]{};
 	// Create an array container for memory
-	ArrayType_3 arr3 = block3; for (len_t i{}; i < arr3.len(); ++i) arr3[i] = i + (ARR_TEST_SIZE_3 * 2);
+	ArrayType_3 arr3 = block3; for (len_t i{}; i < arr3.len(); ++i) arr3[i] = i + (ARR_TEST_SIZE_3 << 1);
 
 	NodeTest3 n1, n2, n3;
 	n1.__autopoint();
@@ -519,7 +519,7 @@ constexpr len_t __array_test_nodes5_impl_example__(
 	// Create memory
 	len_t block3[ARR_TEST_SIZE_5]{};
 	// Create an array container for memory
-	ArrayType_5 arr3 = block3; for (len_t i{}; i < arr3.len(); ++i) arr3[i] = i + (ARR_TEST_SIZE_5 * 2);
+	ArrayType_5 arr3 = block3; for (len_t i{}; i < arr3.len(); ++i) arr3[i] = i + (ARR_TEST_SIZE_5 << 1);
 
 	NodeTest5 n1, n2, n3;
 	chain.push_back(&n1);

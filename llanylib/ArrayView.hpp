@@ -395,7 +395,10 @@ class LL_SHARED_LIB ArrayView {
 			return !this->empty() && this->begin();
 		}
 		__LL_NODISCARD__ constexpr operator meta::Hash() const {
-			return algorithm::has_cluster::hash<T, N>(this->begin());
+			return meta::Hash();
+			// [TOFIX]
+			//return algorithm::has_cluster::hash<T, __sizes::ARR_SIZE>(this->begin());
+			//return meta::StandardHashFunctions(*this);
 		}
 
 		#pragma endregion

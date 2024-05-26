@@ -30,6 +30,7 @@ template<class T, len_t N, T NULL_ITEM>
 class LL_SHARED_LIB Array : public ArrayView<T, N> {
 	#pragma region Assersts
 	public:
+
 	#pragma endregion
 	#pragma region ClassTypes
 	public:
@@ -42,7 +43,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 	#pragma region OtherClassTypes
 	// Algorithm objects
 	public:
-		using __data = algorithm::data_manipulation<typename type::raw>;
+		using __data = algorithm::data_manipulation_cluster<typename type::raw>;
 
 	#pragma endregion
 	#pragma region Attributes
@@ -53,7 +54,10 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		#pragma region Constructors
 	public:
 		constexpr Array() __LL_EXCEPT__ : __ArrayView::type(this->mem_array), mem_array() {}
+		constexpr Array(typename type::cinput object) __LL_EXCEPT__
+			: Array() { this->fill<typename type::type>(object); }
 		constexpr ~Array() __LL_EXCEPT__ {}
+
 		#pragma endregion
 		#pragma region CopyMove
 	public:
@@ -158,6 +162,9 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		constexpr void reverse(SwapFunc swap, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
 			__data::reverse(this->get(first), this->get(last), swap);
 		}
+		constexpr void reverse(const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::reverse(this->get(first), this->get(last));
+		}
 
 		#pragma endregion
 		#pragma region Fill
@@ -165,7 +172,7 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		// [TOFIX]
 		template<class W>
 		//using FillFunc = typename __data::FillFunc<W>;
-		using FillFunc = fnc_clss::CompareBool<typename type::cinput, W>;
+		using FillFunc = fnc_clss::SetFunction<typename type::type, W>;
 
 		template<class U, class W = traits::template_types<U>>
 		constexpr void fill(typename W::cinput object, FillFunc<typename W::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
@@ -176,43 +183,55 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 			__data::fill<U, W>(this->get(first), this->get(last), object);
 		}
 
-
 		#pragma endregion
 		#pragma region Copy
 	public:
 		template<class U, class W = traits::template_types<U>>
-		constexpr void copy(W::cptr src, const len_t size, FillFunc<typename W::type> setFunc,
-			const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+		constexpr void copy(W::cptr src, const len_t size, FillFunc<typename W::type> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
 			len_t this_size = last - first;
 			if (!setFunc || size != this_size) return;
-			__data::copy<U, W>(src, this->begin(), this_size, setFunc);
+			__data::copy<U, W>(src, this->get(first), this_size, setFunc);
 		}
 		template<class U, class W = traits::template_types<U>>
 		constexpr void copy(W::cptr src, const len_t size, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
 			len_t this_size = last - first;
 			if (size != this_size) return;
-			__data::copy<U, W>(src, this->begin(), N);
+			__data::copy<U, W>(src, this->get(first), N);
 		}
 		template<class U, class W = traits::template_types<U>, len_t N2>
-		constexpr void copy(W::ctype(&src)[N2], FillFunc<typename W::type> setFunc,
-			const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+		constexpr void copy(W::ctype(&src)[N2], FillFunc<typename W::type> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
 			len_t this_size = last - first;
 			if (!setFunc || N2 != this_size) return;
-			__data::copy<U, W>(src, this->begin(), N, setFunc);
+			__data::copy<U, W>(src, this->get(first), N, setFunc);
 		}
 		template<class U, class W = traits::template_types<U>, len_t N2>
-		constexpr void copy(W::ctype(&src)[N2],
-			const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+		constexpr void copy(W::ctype(&src)[N2], const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
 			len_t this_size = last - first;
 			if (N2 != this_size) return;
-			__data::copy<U, W>(src, this->begin(), N);
+			__data::copy<U, W>(src, this->get(first), N);
 		}
 
 		#pragma endregion
 		#pragma region Shift
+		//constexpr void fill(const len_t first, const len_t last, len_t num, typename W::cinput null, SwapFunc swap, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
+
+		//constexpr void shiftLeft(const len_t num, SwapFunc swap, FillFunc<typename type::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+		constexpr void shiftLeft(const len_t num, SwapFunc swap, FillFunc<typename type::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::shiftLeft<type::type>(this->get(first), last - first, 0, num, NULL_ITEM, setFunc, setFunc);
+		}
+		constexpr void shiftLeft(const len_t num, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::shiftLeft<type::type>(this->get(first), last - first, 0, num, NULL_ITEM);
+		}
+		constexpr void shifRight(const len_t num, SwapFunc swap, FillFunc<typename type::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::shifRight<type::type>(this->get(first), last - first, 0, num, NULL_ITEM, setFunc, setFunc);
+		}
+		constexpr void shifRight(const len_t num, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::shifRight<type::type>(this->get(first), last - first, 0, num, NULL_ITEM);
+		}
 
 		#pragma endregion
 		#pragma region Qsort
+		// WIP
 
 		#pragma endregion
 		#pragma region Other
@@ -220,27 +239,32 @@ class LL_SHARED_LIB Array : public ArrayView<T, N> {
 		constexpr void clear(typename W::cinput null, FillFunc<typename W::type> setFunc) __LL_EXCEPT__ {
 			this->fill<U, W>(null, setFunc);
 		}
-		template<class U, class W = traits::get_object_reference_t<U>>
+		template<class U, class W = traits::template_types<U>>
 		constexpr void clear(typename W::cinput null) __LL_EXCEPT__ {
 			this->fill<U, W>(null);
 		}
 		constexpr void clear() __LL_EXCEPT__ {
-			this->fill<typename type::type>(NULL_ITEM);
+			this->fill<type::type>(NULL_ITEM);
 		}
 
 		#pragma endregion
 	#pragma endregion
 };
 
-constexpr int testing() {
-	Array<int, 10, 0> arr;
-	arr.fill<int>(5);
-	arr.clear();
-	arr[9] = 8;
-	return arr[0];
-}
-
-constexpr int val = testing();
+//constexpr int testing() {
+//	Array<ll_int_t, 10, 0> arr;
+//	decltype(arr)::FillFunc<const ll_char_t> f = [](ll_int_t& a, const ll_char_t b) -> void {
+//		a = b;
+//	};
+//	arr.fill<ll_char_t>(5, f);
+//	arr.clear();
+//	arr[9] = 8;
+//	arr.shifRight(9);
+//	arr.reverse();
+//	return arr[0];
+//}
+//
+//constexpr int val = testing();
 
 } // namespace meta
 } // namespace llcpp

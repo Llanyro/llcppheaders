@@ -59,7 +59,7 @@ __LL_NODISCARD__ constexpr ll_bool_t check(W value) __LL_EXCEPT__ {
 
 #pragma region UI16
 static_assert(check<ui16Divisor, ui16>(10), "Error changed value");
-static_assert(check<ui16Divisor, ui16>(256 * 2), "Error changed value");
+static_assert(check<ui16Divisor, ui16>(256 << 1), "Error changed value");
 static_assert(check<ui16Divisor, ui16>(std::numeric_limits<ui16>::max()), "Error changed value");
 
 constexpr auto ui16Divisor_val0 = ui16Divisor::div(std::numeric_limits<ui16>::max());
@@ -70,7 +70,7 @@ constexpr auto ui16Divisor_val1 = std::numeric_limits<ui16>::max();
 
 //static_assert(check<i16Divisor, i16>(10), "Error changed value");
 //static_assert(check<i16Divisor, i16>(255), "Error changed value");
-//static_assert(check<i16Divisor, i16>(256 * 2), "Error changed value");
+//static_assert(check<i16Divisor, i16>(256 << 1), "Error changed value");
 //static_assert(check<i16Divisor, i16>(std::numeric_limits<i16>::max()), "Error changed value");
 //
 //constexpr auto ui16Divisor_val1 = i16Divisor::div(std::numeric_limits<i16>::max());
@@ -79,15 +79,15 @@ constexpr auto ui16Divisor_val1 = std::numeric_limits<ui16>::max();
 //
 //constexpr auto ui16Divisor_val3 = std::numeric_limits<i16>::max();
 //constexpr auto ui16Divisor_val4 = std::numeric_limits<i16>::max() & I8_MAX;
-//constexpr auto ui16Divisor_val4 = ((I8_MAX << 7) * 2) + I8_MAX * 2;
+//constexpr auto ui16Divisor_val4 = ((I8_MAX << 7) << 1) + I8_MAX << 1;
 //constexpr auto ui16Divisor_val5 = std::numeric_limits<i16>::max() >> 7;
 
 #pragma endregion
 #pragma region UI32
 static_assert(check<ui32Divisor, ui32>(10), "Error changed value");
-static_assert(check<ui32Divisor, ui32>(256 * 2), "Error changed value");
+static_assert(check<ui32Divisor, ui32>(256 << 1), "Error changed value");
 static_assert(check<ui32Divisor, ui32>(65535), "Error changed value");
-static_assert(check<ui32Divisor, ui32>(65535 * 2), "Error changed value");
+static_assert(check<ui32Divisor, ui32>(65535 << 1), "Error changed value");
 static_assert(check<ui32Divisor, ui32>(2147483647), "Error changed value");
 static_assert(check<ui32Divisor, ui32>(4294967295u), "Error changed value");
 static_assert(check<ui32Divisor, ui32>(std::numeric_limits<ui32>::max()), "Error changed value");
@@ -96,15 +96,15 @@ static_assert(check<ui32Divisor, ui32>(std::numeric_limits<ui32>::max()), "Error
 #pragma region I32
 
 //static_assert(check<i32Divisor, i32>(10), "Error changed value");
-//static_assert(check<i32Divisor, i32>(256 * 2), "Error changed value");
+//static_assert(check<i32Divisor, i32>(256 << 1), "Error changed value");
 //static_assert(check<i32Divisor, i32>(65535), "Error changed value");
-//static_assert(check<i32Divisor, i32>(65535 * 2), "Error changed value");
+//static_assert(check<i32Divisor, i32>(65535 << 1), "Error changed value");
 //static_assert(check<i32Divisor, i32>(2147483647), "Error changed value");
 //
 //constexpr auto i32_div_result_0 = i32Divisor::div(10);
-//constexpr auto i32_div_result_1 = i32Divisor::div(256 * 2);
+//constexpr auto i32_div_result_1 = i32Divisor::div(256 << 1);
 //constexpr auto i32_div_result_2 = i32Divisor::div(65535);
-//constexpr auto i32_div_result_3 = i32Divisor::div(65535 * 2);
+//constexpr auto i32_div_result_3 = i32Divisor::div(65535 << 1);
 //constexpr auto i32_div_result_4 = i32Divisor::div(2147483647);
 
 //constexpr i64 asdf1 = 2147483647 & I16_MAX;
@@ -124,11 +124,11 @@ static_assert(check<ui32Divisor, ui32>(std::numeric_limits<ui32>::max()), "Error
 #pragma endregion
 #pragma region UI64
 static_assert(check<ui64Divisor, ui64>(10ull), "Error changed value");
-static_assert(check<ui64Divisor, ui64>(256ull * 2), "Error changed value");
+static_assert(check<ui64Divisor, ui64>(256ull << 1), "Error changed value");
 static_assert(check<ui64Divisor, ui64>(65535ull), "Error changed value");
-static_assert(check<ui64Divisor, ui64>(65535ull * 2), "Error changed value");
+static_assert(check<ui64Divisor, ui64>(65535ull << 1), "Error changed value");
 static_assert(check<ui64Divisor, ui64>(4294967295ull), "Error changed value");
-static_assert(check<ui64Divisor, ui64>(4294967295 * 2), "Error changed value");
+static_assert(check<ui64Divisor, ui64>(4294967295 << 1), "Error changed value");
 static_assert(check<ui64Divisor, ui64>(18446744073709551615), "Error changed value");
 
 
@@ -138,11 +138,11 @@ constexpr ui64 asdf2 = asdf << 32;
 constexpr ui64 asdf9 = std::numeric_limits<ui64>::max();
 
 constexpr auto ui64_div_result_0 = ui64Divisor::div(10ull);
-constexpr auto ui64_div_result_1 = ui64Divisor::div(256ull * 2);
+constexpr auto ui64_div_result_1 = ui64Divisor::div(256ull << 1);
 constexpr auto ui64_div_result_2 = ui64Divisor::div(65535ull);
-constexpr auto ui64_div_result_3 = ui64Divisor::div(65535ull * 2);
+constexpr auto ui64_div_result_3 = ui64Divisor::div(65535ull << 1);
 constexpr auto ui64_div_result_4 = ui64Divisor::div(4294967295ull);
-constexpr auto ui64_div_result_5 = ui64Divisor::div(4294967295 * 2);
+constexpr auto ui64_div_result_5 = ui64Divisor::div(4294967295 << 1);
 constexpr auto ui64_div_result_6 = ui64Divisor::div(18446744073709551615);
 
 static_assert(cmp(ui64_div_result_0, 10ull, ZERO_UI64), "Error changed value");
@@ -156,11 +156,11 @@ static_assert(cmp(ui64_div_result_6, 4294967295ull, 4294967295ull), "Error chang
 #pragma endregion
 #pragma region I64
 //constexpr auto i64_div_result_0 = i64Divisor::div(10ll);
-//constexpr auto i64_div_result_1 = i64Divisor::div(256ll * 2);
+//constexpr auto i64_div_result_1 = i64Divisor::div(256ll << 1);
 //constexpr auto i64_div_result_2 = i64Divisor::div(65535ll);
-//constexpr auto i64_div_result_3 = i64Divisor::div(65535ll * 2);
+//constexpr auto i64_div_result_3 = i64Divisor::div(65535ll << 1);
 //constexpr auto i64_div_result_4 = i64Divisor::div(4294967295ll);
-//constexpr auto i64_div_result_5 = i64Divisor::div(4294967295ll * 2);
+//constexpr auto i64_div_result_5 = i64Divisor::div(4294967295ll << 1);
 //constexpr auto i64_div_result_6 = i64Divisor::div(9223372036854775807);
 //
 //static_assert(cmp(i64_div_result_0, 10ull, ZERO_UI64), "Error changed value");

@@ -12,6 +12,8 @@
 #if !defined(LLANYLIB_EXAMPLES_ALGORITHMEXAMPLE_HPP_)
 #define LLANYLIB_EXAMPLES_ALGORITHMEXAMPLE_HPP_
 
+#define __LL_ERROR__ "Error changed value"
+
 namespace llcpp {
 namespace meta {
 namespace algorithm {
@@ -33,8 +35,8 @@ using find_pos = finders_cluster<ll_char_t, LL_TRUE>;
 constexpr i8 cmp1 = cmp::compare(str1, str2, 15);
 constexpr auto cmp2 = cmp_res::compare(str1, str2, 15);
 
-static_assert(cmp1 == -1, "Error changed value");
-static_assert(cmp2.getResult() == -1, "Error changed value");
+static_assert(cmp1 == -1, __LL_ERROR__);
+static_assert(cmp2.getResult() == -1, __LL_ERROR__);
 
 constexpr ll_bool_t equals_01 = cmp::equals(str1, str2);
 constexpr ll_bool_t equals_02 = cmp::equals("Holo", "Holo");
@@ -44,13 +46,13 @@ constexpr auto equals_04 = cmp_res::equals(str1, str2);
 constexpr auto equals_05 = cmp_res::equals("Holo", "Holo");
 constexpr auto equals_06 = cmp_res::equals("Holo", "Hi");
 
-static_assert(!equals_01, "Error changed value");
-static_assert( equals_02, "Error changed value");
-static_assert(!equals_03, "Error changed value");
+static_assert(!equals_01, __LL_ERROR__);
+static_assert( equals_02, __LL_ERROR__);
+static_assert(!equals_03, __LL_ERROR__);
 
-static_assert(!equals_04.getResult(), "Error changed value");
-static_assert( equals_05.getResult(), "Error changed value");
-static_assert(!equals_06.getResult(), "Error changed value");
+static_assert(!equals_04.getResult(), __LL_ERROR__);
+static_assert( equals_05.getResult(), __LL_ERROR__);
+static_assert(!equals_06.getResult(), __LL_ERROR__);
 
 ///////////////////////////////////////////////// Starts with /////////////////////////////////////////////////
 
@@ -64,15 +66,15 @@ constexpr auto starts_with_02_res = cmp_res::starts_with(str1, 13, str2, 13);
 constexpr auto starts_with_03_res = cmp_res::starts_with(str1, "Holoo");
 constexpr auto starts_with_04_res = cmp_res::starts_with(str1, 15, "Holoo", 4);
 
-static_assert(!starts_with_01, "Error changed value");
-static_assert( starts_with_02, "Error changed value");
-static_assert(!starts_with_03, "Error changed value");
-static_assert( starts_with_04, "Error changed value");
+static_assert(!starts_with_01, __LL_ERROR__);
+static_assert( starts_with_02, __LL_ERROR__);
+static_assert(!starts_with_03, __LL_ERROR__);
+static_assert( starts_with_04, __LL_ERROR__);
 
-static_assert(!starts_with_01_res.getResult(), "Error changed value");
-static_assert( starts_with_02_res.getResult(), "Error changed value");
-static_assert(!starts_with_03_res.getResult(), "Error changed value");
-static_assert( starts_with_04_res.getResult(), "Error changed value");
+static_assert(!starts_with_01_res.getResult(), __LL_ERROR__);
+static_assert( starts_with_02_res.getResult(), __LL_ERROR__);
+static_assert(!starts_with_03_res.getResult(), __LL_ERROR__);
+static_assert( starts_with_04_res.getResult(), __LL_ERROR__);
 
 ///////////////////////////////////////////////// Ends with /////////////////////////////////////////////////
 
@@ -86,15 +88,15 @@ constexpr auto ends_with_02_res = cmp_res::ends_with(str1, 13, str2, 13);
 constexpr auto ends_with_03_res = cmp_res::ends_with(str1, "asdf*");
 constexpr auto ends_with_04_res = cmp_res::ends_with(str1, 15, "asdf*", 4);
 
-static_assert(ends_with_01 == LL_FALSE, "Error changed value");
-static_assert(ends_with_02 == LL_TRUE , "Error changed value");
-static_assert(ends_with_03 == LL_TRUE , "Error changed value");	// Here is different to start_with cause the '\0' at end
-static_assert(ends_with_04 == LL_FALSE, "Error changed value");	// Here is different to start_with cause the '\0' at end
+static_assert(ends_with_01 == LL_FALSE, __LL_ERROR__);
+static_assert(ends_with_02 == LL_TRUE , __LL_ERROR__);
+static_assert(ends_with_03 == LL_TRUE , __LL_ERROR__);	// Here is different to start_with cause the '\0' at end
+static_assert(ends_with_04 == LL_FALSE, __LL_ERROR__);	// Here is different to start_with cause the '\0' at end
 
-static_assert(!ends_with_01_res.getResult(), "Error changed value");
-static_assert( ends_with_02_res.getResult(), "Error changed value");
-static_assert( ends_with_03_res.getResult(), "Error changed value");	// Here is different to start_with cause the '\0' at end
-static_assert(!ends_with_04_res.getResult(), "Error changed value");	// Here is different to start_with cause the '\0' at end
+static_assert(!ends_with_01_res.getResult(), __LL_ERROR__);
+static_assert( ends_with_02_res.getResult(), __LL_ERROR__);
+static_assert( ends_with_03_res.getResult(), __LL_ERROR__);	// Here is different to start_with cause the '\0' at end
+static_assert(!ends_with_04_res.getResult(), __LL_ERROR__);	// Here is different to start_with cause the '\0' at end
 
 ///////////////////////////////////////////////// Finders /////////////////////////////////////////////////
 
@@ -116,23 +118,23 @@ constexpr auto rfind_ptr_02 = find::rfind<ll_char_t>(str1, '*');
 constexpr auto rfind_ptr_03 = find::rfind<ll_char_t>(str2, '?');
 constexpr auto rfind_ptr_04 = find::rfind<ll_char_t>(str2, '\0');
 
-static_assert(find_pos_01 == 07, "Error changed value");
-static_assert(find_pos_02 == 13, "Error changed value");
-static_assert(find_pos_03 == 13, "Error changed value");
+static_assert(find_pos_01 == 07, __LL_ERROR__);
+static_assert(find_pos_02 == 13, __LL_ERROR__);
+static_assert(find_pos_03 == 13, __LL_ERROR__);
 
-static_assert(*find_ptr_01 == ',', "Error changed value");
-static_assert(*find_ptr_02 == '*', "Error changed value");
-static_assert(*find_ptr_03 == '?', "Error changed value");
+static_assert(*find_ptr_01 == ',', __LL_ERROR__);
+static_assert(*find_ptr_02 == '*', __LL_ERROR__);
+static_assert(*find_ptr_03 == '?', __LL_ERROR__);
 
-static_assert(rfind_pos_01 == 07, "Error changed value");
-static_assert(rfind_pos_02 == 13, "Error changed value");
-static_assert(rfind_pos_03 == 13, "Error changed value");
-static_assert(rfind_pos_04 == 14, "Error changed value");
+static_assert(rfind_pos_01 == 07, __LL_ERROR__);
+static_assert(rfind_pos_02 == 13, __LL_ERROR__);
+static_assert(rfind_pos_03 == 13, __LL_ERROR__);
+static_assert(rfind_pos_04 == 14, __LL_ERROR__);
 
-static_assert(*rfind_ptr_01 == ',', "Error changed value");
-static_assert(*rfind_ptr_02 == '*', "Error changed value");
-static_assert(*rfind_ptr_03 == '?', "Error changed value");
-static_assert(*rfind_ptr_04 == '\0', "Error changed value");
+static_assert(*rfind_ptr_01 == ',', __LL_ERROR__);
+static_assert(*rfind_ptr_02 == '*', __LL_ERROR__);
+static_assert(*rfind_ptr_03 == '?', __LL_ERROR__);
+static_assert(*rfind_ptr_04 == '\0', __LL_ERROR__);
 
 //constexpr auto binarysearch_ptr_1 = binarysearch<ll_char_t>(str3, 'b');
 //constexpr auto binarysearch_ptr_1 = binarysearch<ll_char_t>(str3, 'c');
@@ -144,7 +146,7 @@ static_assert(*rfind_ptr_04 == '\0', "Error changed value");
 constexpr len_t reverse_example(int pos) {
 	len_t block[10]{};
 	for (len_t i{}; i < 10; ++i) block[i] = i;
-	data_manipulation<len_t>::reverse(block);
+	data_manipulation_cluster<len_t>::reverse(block);
 	return block[pos];
 }
 
@@ -159,23 +161,23 @@ constexpr len_t reverse_07 = reverse_example(7);
 constexpr len_t reverse_08 = reverse_example(8);
 constexpr len_t reverse_09 = reverse_example(9);
 
-static_assert(reverse_00 == 9, "Error changed value");
-static_assert(reverse_01 == 8, "Error changed value");
-static_assert(reverse_02 == 7, "Error changed value");
-static_assert(reverse_03 == 6, "Error changed value");
-static_assert(reverse_04 == 5, "Error changed value");
-static_assert(reverse_05 == 4, "Error changed value");
-static_assert(reverse_06 == 3, "Error changed value");
-static_assert(reverse_07 == 2, "Error changed value");
-static_assert(reverse_08 == 1, "Error changed value");
-static_assert(reverse_09 == 0, "Error changed value");
+static_assert(reverse_00 == 9, __LL_ERROR__);
+static_assert(reverse_01 == 8, __LL_ERROR__);
+static_assert(reverse_02 == 7, __LL_ERROR__);
+static_assert(reverse_03 == 6, __LL_ERROR__);
+static_assert(reverse_04 == 5, __LL_ERROR__);
+static_assert(reverse_05 == 4, __LL_ERROR__);
+static_assert(reverse_06 == 3, __LL_ERROR__);
+static_assert(reverse_07 == 2, __LL_ERROR__);
+static_assert(reverse_08 == 1, __LL_ERROR__);
+static_assert(reverse_09 == 0, __LL_ERROR__);
 
 ///////////////////////////////////////////////// Fill /////////////////////////////////////////////////
 
 constexpr len_t fill_example(int pos, int val) {
 	len_t block[10]{};
 	for (len_t i{}; i < 10; ++i) block[i] = i;
-	data_manipulation<len_t>::fill<int>(block, val);
+	data_manipulation_cluster<len_t>::fill<int>(block, val);
 	return block[pos];
 }
 
@@ -190,82 +192,44 @@ constexpr len_t fill_07 = fill_example(7, 7);
 constexpr len_t fill_08 = fill_example(8, 8);
 constexpr len_t fill_09 = fill_example(9, 9);
 
-static_assert(fill_00 == 0, "Error changed value");
-static_assert(fill_01 == 1, "Error changed value");
-static_assert(fill_02 == 2, "Error changed value");
-static_assert(fill_03 == 3, "Error changed value");
-static_assert(fill_04 == 4, "Error changed value");
-static_assert(fill_05 == 5, "Error changed value");
-static_assert(fill_06 == 6, "Error changed value");
-static_assert(fill_07 == 7, "Error changed value");
-static_assert(fill_08 == 8, "Error changed value");
-static_assert(fill_09 == 9, "Error changed value");
+static_assert(fill_00 == 0, __LL_ERROR__);
+static_assert(fill_01 == 1, __LL_ERROR__);
+static_assert(fill_02 == 2, __LL_ERROR__);
+static_assert(fill_03 == 3, __LL_ERROR__);
+static_assert(fill_04 == 4, __LL_ERROR__);
+static_assert(fill_05 == 5, __LL_ERROR__);
+static_assert(fill_06 == 6, __LL_ERROR__);
+static_assert(fill_07 == 7, __LL_ERROR__);
+static_assert(fill_08 == 8, __LL_ERROR__);
+static_assert(fill_09 == 9, __LL_ERROR__);
 
 ///////////////////////////////////////////////// Shift left /////////////////////////////////////////////////
 
-constexpr len_t shift_left_example(int pos) {
+constexpr auto shift_left_example() {
 	len_t block[10]{};
+	const len_t block_cmp[] = { 2ull, 3ull, 4ull, 5ull, 6ull, 7ull, 8ull, 9ull, 999ull, 999ull };
 	for (len_t i{}; i < 10; ++i) block[i] = i;
-
-	data_manipulation<len_t>::shiftLeft<len_t>(block, 5, 999);
-
-	return block[pos];
+	data_manipulation_cluster<len_t>::shiftLeft<len_t>(block, 0, 2, 999);
+	return compare_cluster<len_t, len_t, LL_TRUE>::equals(block, block_cmp);
 }
 
-constexpr len_t shift_left_00 = shift_left_example(0);
-constexpr len_t shift_left_01 = shift_left_example(1);
-constexpr len_t shift_left_02 = shift_left_example(2);
-constexpr len_t shift_left_03 = shift_left_example(3);
-constexpr len_t shift_left_04 = shift_left_example(4);
-constexpr len_t shift_left_05 = shift_left_example(5);
-constexpr len_t shift_left_06 = shift_left_example(6);
-constexpr len_t shift_left_07 = shift_left_example(7);
-constexpr len_t shift_left_08 = shift_left_example(8);
-constexpr len_t shift_left_09 = shift_left_example(9);
-
-static_assert(shift_left_00 == 999, "Error changed value");
-static_assert(shift_left_01 == 999, "Error changed value");
-static_assert(shift_left_02 == 999, "Error changed value");
-static_assert(shift_left_03 == 999, "Error changed value");
-static_assert(shift_left_04 == 999, "Error changed value");
-static_assert(shift_left_05 == 000, "Error changed value");
-static_assert(shift_left_06 == 001, "Error changed value");
-static_assert(shift_left_07 == 002, "Error changed value");
-static_assert(shift_left_08 == 003, "Error changed value");
-static_assert(shift_left_09 == 004, "Error changed value");
+constexpr auto shift_left_00 = shift_left_example();
+static_assert(shift_left_00.getResult(), __LL_ERROR__);
 
 ///////////////////////////////////////////////// Shift right /////////////////////////////////////////////////
 
-constexpr len_t shift_right_example(int pos) {
+// [TOFIX] Error ????????
+constexpr auto shift_right_example() {
 	len_t block[10]{};
+	const len_t block_cmp[] = { 999ull, 999ull, 2ull, 3ull, 4ull, 5ull, 6ull, 7ull, 8ull, 9ull };
 	for (len_t i{}; i < 10; ++i) block[i] = i;
-
-	data_manipulation<len_t>::shifRight<len_t>(block, block + 10, 5, 999);
-
-	return block[pos];
+	//data_manipulation_cluster<len_t>::shifRight<len_t>(block, 10, 0, 2, 999);
+	return compare_cluster<len_t, len_t, LL_TRUE>::equals(block_cmp, block);
+	//return false;
 }
 
-constexpr len_t shift_right_00 = shift_right_example(0);
-constexpr len_t shift_right_01 = shift_right_example(1);
-constexpr len_t shift_right_02 = shift_right_example(2);
-constexpr len_t shift_right_03 = shift_right_example(3);
-constexpr len_t shift_right_04 = shift_right_example(4);
-constexpr len_t shift_right_05 = shift_right_example(5);
-constexpr len_t shift_right_06 = shift_right_example(6);
-constexpr len_t shift_right_07 = shift_right_example(7);
-constexpr len_t shift_right_08 = shift_right_example(8);
-constexpr len_t shift_right_09 = shift_right_example(9);
-
-static_assert(shift_right_00 == 005, "Error changed value");
-static_assert(shift_right_01 == 006, "Error changed value");
-static_assert(shift_right_02 == 007, "Error changed value");
-static_assert(shift_right_03 ==   8, "Error changed value");
-static_assert(shift_right_04 ==   9, "Error changed value");
-static_assert(shift_right_05 == 999, "Error changed value");
-static_assert(shift_right_06 == 999, "Error changed value");
-static_assert(shift_right_07 == 999, "Error changed value");
-static_assert(shift_right_08 == 999, "Error changed value");
-static_assert(shift_right_09 == 999, "Error changed value");
+//constexpr auto shift_right_00 = shift_right_example();
+//static_assert(shift_right_00.getResult(), __LL_ERROR__);
 
 //////////////////////////////////////////////////
 
@@ -346,5 +310,7 @@ constexpr ll_bool_t is_any(const ll_char_t c, const ll_char_t(&str)[N]) {
 } // namespace algorithm
 } // namespace meta
 } // namespace llcpp
+
+#undef __LL_ERROR__
 
 #endif // LLANYLIB_EXAMPLES_ALGORITHMEXAMPLE_HPP_

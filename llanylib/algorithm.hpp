@@ -21,15 +21,15 @@
 #define LLANYLIB_ALGORITHM_MAYOR_ 6
 #define LLANYLIB_ALGORITHM_MINOR_ 0
 
-#include "ArrayPair.hpp"
 #include "common.hpp"
 #include "cityhash.hpp"
+#include "BasicTypeWrapper.hpp"
 
 #if defined(WINDOWS_SYSTEM)
 	#pragma warning(push)
-    #if defined(__LL_SPECTRE_FUNCTIONS__)
+	#if defined(__LL_SPECTRE_FUNCTIONS__)
 		#pragma warning(disable:5045) // Security Spectre mitigation [SECURITY]
-    #endif // __LL_UNSECURE_FUNCTIONS__
+	#endif // __LL_UNSECURE_FUNCTIONS__
 #endif // WINDOWS_SYSTEM
 
 namespace llcpp {
@@ -157,6 +157,7 @@ struct compare_cluster {
 	}
 
 	#pragma region Equals
+	#pragma region Ptr
 	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::cptr v1, const len_t size1, __u::cptr v2, const len_t size2, CompareFunc compareFunc) __LL_EXCEPT__ {
 		if (size1 != size2) {
 			if constexpr (GET_DATA)
@@ -179,22 +180,72 @@ struct compare_cluster {
 			return CompareResultBool(res.getValue1(), res.getValue2(), res.getResult() == ZERO_I32);
 		else return res == ZERO_I32;
 	}
+	//template<len_t N2>
+	//__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::cptr v1, const len_t size1, __u::ctype(&v2)[N2], CompareFunc compareFunc) __LL_EXCEPT__ {
+	//	return __cmp::equals(v1, size1, v2, N2, compareFunc);
+	//}
+	//template<len_t N2>
+	//__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::cptr v1, const len_t size1, __u::ctype(&v2)[N2]) __LL_EXCEPT__ {
+	//	return __cmp::equals(v1, size1, v2, N2);
+	//}
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::cptr v1, const len_t size1, const __ArrayPair_u& v2, CompareFunc compareFunc) __LL_EXCEPT__ {
+		return __cmp::equals(v1, size1, v2.begin(), v2.size(), compareFunc);
+	}
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::cptr v1, const len_t size1, const __ArrayPair_u& v2) __LL_EXCEPT__ {
+		return __cmp::equals(v1, size1, v2.begin(), v2.size());
+	}
 
+	#pragma endregion
+	#pragma region Array
+	template<len_t N1>
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype(&v1)[N1], __u::cptr v2, const len_t size2, CompareFunc compareFunc) __LL_EXCEPT__ {
+		return __cmp::equals(v1, N1, v2, size2, compareFunc);
+	}
+	template<len_t N1>
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype(&v1)[N1], __u::cptr v2, const len_t size2) __LL_EXCEPT__ {
+		return __cmp::equals(v1, N1, v2, size2);
+	}
 	template<len_t N1, len_t N2>
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype (&v1)[N1], __u::ctype (&v2)[N2], CompareFunc compareFunc) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype(&v1)[N1], __u::ctype(&v2)[N2], CompareFunc compareFunc) __LL_EXCEPT__ {
 		return __cmp::equals(v1, N1, v2, N2, compareFunc);
 	}
 	template<len_t N1, len_t N2>
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype (&v1)[N1], __u::ctype(&v2)[N2]) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype(&v1)[N1], __u::ctype(&v2)[N2]) __LL_EXCEPT__ {
 		return __cmp::equals(v1, N1, v2, N2);
 	}
+	template<len_t N1>
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype(&v1)[N1], const __ArrayPair_u& v2, CompareFunc compareFunc) __LL_EXCEPT__ {
+		return __cmp::equals(v1, N1, v2.begin(), v2.size(), compareFunc);
+	}
+	template<len_t N1>
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(__t::ctype(&v1)[N1], const __ArrayPair_u& v2) __LL_EXCEPT__ {
+		return __cmp::equals(v1, N1, v2.begin(), v2.size());
+	}
 
+	#pragma endregion
+	#pragma region ArrayPair
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& v1, __u::cptr v2, const len_t size2, CompareFunc compareFunc) __LL_EXCEPT__ {
+		return __cmp::equals(v1.begin(), v1.size(), v2, size2, compareFunc);
+	}
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& v1, __u::cptr v2, const len_t size2) __LL_EXCEPT__ {
+		return __cmp::equals(v1.begin(), v1.size(), v2, size2);
+	}
 	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& v1, const __ArrayPair_u& v2, CompareFunc compareFunc) __LL_EXCEPT__ {
-		return __cmp::equals(v1.begin(), v1.len(), v2.begin(), v2.len(), compareFunc);
+		return __cmp::equals(v1.begin(), v1.size(), v2.begin(), v2.size(), compareFunc);
 	}
 	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& v1, const __ArrayPair_u& v2) __LL_EXCEPT__ {
-		return __cmp::equals(v1.begin(), v1.len(), v2.begin(), v2.len());
+		return __cmp::equals(v1.begin(), v1.size(), v2.begin(), v2.size());
 	}
+	//template<len_t N2>
+	//__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& v1, const len_t size1, __u::ctype(&v2)[N2], CompareFunc compareFunc) __LL_EXCEPT__ {
+	//	return __cmp::equals(v1.begin(), v1.size(), v2, N2, compareFunc);
+	//}
+	//template<len_t N2>
+	//__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& v1, const len_t size1, __u::ctype(&v2)[N2]) __LL_EXCEPT__ {
+	//	return __cmp::equals(v1.begin(), v1.size(), v2, N2);
+	//}
+
+	#pragma endregion
 
 	#pragma endregion
 	#pragma endregion
@@ -249,10 +300,10 @@ struct compare_cluster {
 	}
 
 	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2, CompareFuncBool compareFunc) {
-		return __cmp::starts_with(v1.begin(), v1.len(), v2.begin(), v2.len(), compareFunc);
+		return __cmp::starts_with(v1.begin(), v1.size(), v2.begin(), v2.size(), compareFunc);
 	}
 	__LL_NODISCARD__ static constexpr CompareResultBool starts_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2) {
-		return __cmp::starts_with(v1.begin(), v1.len(), v2.begin(), v2.len());
+		return __cmp::starts_with(v1.begin(), v1.size(), v2.begin(), v2.size());
 	}
 
 	#pragma endregion
@@ -279,10 +330,10 @@ struct compare_cluster {
 	}
 
 	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2, CompareFuncBool compareFunc) {
-		return __cmp::ends_with(v1.begin(), v1.len(), v2.begin(), v2.len(), compareFunc);
+		return __cmp::ends_with(v1.begin(), v1.size(), v2.begin(), v2.size(), compareFunc);
 	}
 	__LL_NODISCARD__ static constexpr CompareResultBool ends_with(const __ArrayPair_t& v1, const __ArrayPair_u& v2) {
-		return __cmp::ends_with(v1.begin(), v1.len(), v2.begin(), v2.len());
+		return __cmp::ends_with(v1.begin(), v1.size(), v2.begin(), v2.size());
 	}
 
 	#pragma endregion
@@ -514,7 +565,7 @@ struct finders_cluster {
 		len_t low = ZERO_UI64;
 		len_t high = end - begin;
 		while (low <= high) {
-			len_t mid = ((high + low) / 2);
+			len_t mid = ((high + low) >> 1);
 			if(begin[mid] == object) return begin + mid;
 			else if(begin[mid] > object) high = mid;
 			else low = mid + 1;
@@ -529,7 +580,7 @@ struct finders_cluster {
 		len_t low = ZERO_UI64;
 		len_t high = end - begin;
 		while (low <= high) {
-			len_t mid = ((high - low) / 2);
+			len_t mid = ((high - low) >> 1);
 			cmp_t res = compareFunc(begin[mid], object);
 			if (res == ZERO_I32) return begin + mid;
 			else if (res > 0) high = mid;
@@ -593,8 +644,8 @@ struct finders_cluster {
 };
 
 template<class T>
-struct data_manipulation {
-	using __data = data_manipulation<T>;
+struct data_manipulation_cluster {
+	using __data = data_manipulation_cluster<T>;
 	using __t = traits::template_types<T>;
 	using SwapFunc = fnc_clss::SwapFunction<typename __t::type>;
 	template<class W>
@@ -623,7 +674,7 @@ struct data_manipulation {
 	template<class U, class W = traits::template_types<U>>
 	static constexpr void fill(__t::ptr begin, __t::ptr end, typename W::cinput object, FillFunc<typename W::cinput> setFunc) {
 		if (!begin || !end || end <= begin || !setFunc) return;
-		for (; begin < end; ++begin) setFunc(*begin, object);
+		for (; begin <= end; ++begin) setFunc(*begin, object);
 	}
 	template<class U, class W = traits::template_types<U>>
 	static constexpr void fill(__t::ptr begin, __t::ptr end, typename W::cinput object) {
@@ -631,11 +682,11 @@ struct data_manipulation {
 	}
 	template<class U, class W = traits::template_types<U>, len_t N>
 	static constexpr void fill(__t::type(&data)[N], typename W::cinput object, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
-		__data::fill<U, W>(data, data + N, object, setFunc);
+		__data::fill<U, W>(data, data + N - 1, object, setFunc);
 	}
 	template<class U, class W = traits::template_types<U>, len_t N>
 	static constexpr void fill(__t::type(&data)[N], typename W::cinput object) __LL_EXCEPT__ {
-		__data::fill<U, W>(data, data + N, object);
+		__data::fill<U, W>(data, data + N - 1, object);
 	}
 
 	#pragma endregion
@@ -661,72 +712,82 @@ struct data_manipulation {
 	#pragma endregion
 	#pragma region ShiftLeft
 	template<class U, class W = traits::template_types<U>>
-	static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, SwapFunc swap, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
-		if (!begin || !end || end <= begin || num == ZERO_UI64 || !swap || !setFunc) return;
+	static constexpr void shiftLeft(__t::ptr arr, const len_t size, const len_t first, len_t num, typename W::cinput null, FillFunc<typename __t::cinput> moveFunc, FillFunc<typename W::cinput> setNullFunc) __LL_EXCEPT__ {
+		if (!arr || !moveFunc || !setNullFunc) return;
+		if (size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return;
+		if (first + num >= size) num = size - first - 1ull;
 
-		--end;
-		for (T* i = end - num; i > begin; --i, --end)
-			swap(*end, *i);
-		swap(*begin, *(begin + num));
-
-		__data::fill<U, W>(begin, begin + num, null, setFunc);
+		len_t size_loop = size - num;
+		typename __t::ptr last = arr + size_loop;
+		for (typename __t::ptr src = arr + num; arr < last; ++arr, ++src)
+			moveFunc(*arr, *src);
+		last += num - 1ull;
+		__data::fill<U, W>(arr, last, null, setNullFunc);
 	}
 	template<class U, class W = traits::template_types<U>>
-	static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null) __LL_EXCEPT__ {
-		__data::shiftLeft<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, common::simple_set<typename __t::type, typename W::cinput>);
+	static constexpr void shiftLeft(__t::ptr arr, const len_t size, const len_t first, const len_t num, typename W::cinput null) __LL_EXCEPT__ {
+		__data::shiftLeft<U, W>(arr, size, first, num, null, common::simple_set<typename __t::type, typename __t::cinput>, common::simple_set<typename __t::type, typename W::cinput>);
 	}
-	template<class U, class W = traits::template_types<U>>
-	static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, SwapFunc swap) __LL_EXCEPT__ {
-		__data::shiftLeft<U, W>(begin, end, num, null, swap, common::simple_set<typename __t::type, typename W::cinput>);
-	}
-	template<class U, class W = traits::template_types<U>>
-	static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
-		__data::shiftLeft<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, setFunc);
-	}
+	//template<class U, class W = traits::template_types<U>>
+	//static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, SwapFunc swap) __LL_EXCEPT__ {
+	//	__data::shiftLeft<U, W>(begin, end, num, null, swap, common::simple_set<typename __t::type, typename W::cinput>);
+	//}
+	//template<class U, class W = traits::template_types<U>>
+	//static constexpr void shiftLeft(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
+	//	__data::shiftLeft<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, setFunc);
+	//}
+	//template<class U, class W = traits::template_types<U>, len_t N>
+	//static constexpr void shiftLeft(__t::type(&data)[N], const len_t num, typename W::cinput null, SwapFunc swap) __LL_EXCEPT__ {
+	//	__data::shiftLeft<U, W>(data, data + N, num, null, swap);
+	//}
+	//template<class U, class W = traits::template_types<U>, len_t N>
+	//static constexpr void shiftLeft(__t::type(&data)[N], const len_t num, typename W::cinput null, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
+	//	__data::shiftLeft<U, W>(data, data + N, num, null, setFunc);
+	//}
 	template<class U, class W = traits::template_types<U>, len_t N>
-	static constexpr void shiftLeft(__t::type(&data)[N], const len_t num, typename W::cinput null, SwapFunc swap) __LL_EXCEPT__ {
-		__data::shiftLeft<U, W>(data, data + N, num, null, swap);
-	}
-	template<class U, class W = traits::template_types<U>, len_t N>
-	static constexpr void shiftLeft(__t::type(&data)[N], const len_t num, typename W::cinput null, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
-		__data::shiftLeft<U, W>(data, data + N, num, null, setFunc);
-	}
-	template<class U, class W = traits::template_types<U>, len_t N>
-	static constexpr void shiftLeft(__t::type(&data)[N], const len_t num, typename W::cinput null) __LL_EXCEPT__ {
-		__data::shiftLeft<U, W>(data, data + N, num, null);
+	static constexpr void shiftLeft(__t::type(&data)[N], const len_t first, const len_t num, typename W::cinput null) __LL_EXCEPT__ {
+		__data::shiftLeft<U, W>(data, N, first, num, null);
 	}
 
 	#pragma endregion
 	#pragma region ShiftRight
 	template<class U, class W = traits::template_types<U>>
-	static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, SwapFunc swap, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
-		if (!begin || !end || end <= begin || num == ZERO_UI64 || !swap || !setFunc) return;
-		for (T* i = begin + num; i < end; ++i, ++begin) swap(*begin, *i);
-		__data::fill<U, W>(end - num, end, null, setFunc);
+	static constexpr void shifRight(__t::ptr arr, const len_t size, const len_t first, len_t num, typename W::cinput null, FillFunc<typename __t::cinput> moveFunc, FillFunc<typename W::cinput> setNullFunc) __LL_EXCEPT__ {
+		if (!arr || !moveFunc || !setNullFunc) return;
+		if (size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return;
+
+		len_t size_loop = first + num;
+		if (size_loop >= size) num = size - first - 1ull;
+
+		typename __t::ptr dst = arr + size - 1ull;
+		typename __t::ptr last = arr + size_loop;
+		for (typename __t::ptr src = dst - num; dst >= last ; --dst, --src)
+			moveFunc(*dst, *src);
+		__data::fill<U, W>(arr + first, --last, null, setNullFunc);
 	}
 	template<class U, class W = traits::template_types<U>>
-	static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, SwapFunc swap) __LL_EXCEPT__ {
-		__data::shifRight<U, W>(begin, end, num, null, swap, common::simple_set<typename __t::type, U>);
+	static constexpr void shifRight(__t::ptr arr, const len_t size, const len_t first, const len_t num, typename W::cinput null) __LL_EXCEPT__ {
+		__data::shifRight<U, W>(arr, size, first, num, null, common::simple_set<typename __t::type, typename __t::cinput>, common::simple_set<typename __t::type, typename W::cinput>);
 	}
-	template<class U, class W = traits::template_types<U>>
-	static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
-		__data::shifRight<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, setFunc);
-	}
-	template<class U, class W = traits::template_types<U>>
-	static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null) __LL_EXCEPT__ {
-		__data::shifRight<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, common::simple_set<typename __t::type, typename W::cinput>);
-	}
+	//template<class U, class W = traits::template_types<U>>
+	//static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, SwapFunc swap) __LL_EXCEPT__ {
+	//	__data::shifRight<U, W>(begin, end, num, null, swap, common::simple_set<typename __t::type, U>);
+	//}
+	//template<class U, class W = traits::template_types<U>>
+	//static constexpr void shifRight(__t::ptr begin, __t::ptr end, const len_t num, typename W::cinput null, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
+	//	__data::shifRight<U, W>(begin, end, num, null, common::simple_swap<typename __t::type>, setFunc);
+	//}
+	//template<class U, class W = traits::template_types<U>, len_t N>
+	//static constexpr void shifRight(__t::type(&data)[N], const len_t num, typename W::cinput null, SwapFunc swap) __LL_EXCEPT__ {
+	//	__data::shifRight<U, W>(data, data + N, num, null, swap, common::simple_set<typename __t::type, U>);
+	//}
+	//template<class U, class W = traits::template_types<U>, len_t N>
+	//static constexpr void shifRight(__t::type(&data)[N], const len_t num, typename W::cinput null, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
+	//	__data::shifRight<U, W>(data, data + N, num, null, common::simple_swap<typename __t::type>, setFunc);
+	//}
 	template<class U, class W = traits::template_types<U>, len_t N>
-	static constexpr void shifRight(__t::type(&data)[N], const len_t num, typename W::cinput null, SwapFunc swap) __LL_EXCEPT__ {
-		__data::shifRight<U, W>(data, data + N, num, null, swap, common::simple_set<typename __t::type, U>);
-	}
-	template<class U, class W = traits::template_types<U>, len_t N>
-	static constexpr void shifRight(__t::type(&data)[N], const len_t num, typename W::cinput null, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
-		__data::shifRight<U, W>(data, data + N, num, null, common::simple_swap<typename __t::type>, setFunc);
-	}
-	template<class U, class W = traits::template_types<U>, len_t N>
-	static constexpr void shifRight(__t::type(&data)[N], const len_t num, typename W::cinput null) __LL_EXCEPT__ {
-		__data::shifRight<U, W>(data, data + N, num, null);
+	static constexpr void shifRight(__t::type(&data)[N], const len_t first, const len_t num, typename W::cinput null) __LL_EXCEPT__ {
+		__data::shiftLeft<U, W>(data, N, first, num, null);
 	}
 
 	#pragma endregion
@@ -787,66 +848,232 @@ struct data_manipulation {
 	#pragma endregion
 };
 
-struct has_cluster {
-	__LL_NODISCARD__ static constexpr Hash hash(const ArrayPair<ll_char_t>& arr) {
-		if (arr.empty()) return meta::Hash();
-		else return llcpp::meta::city::CityHash::cityHash64(arr.begin(), arr.len());
-	}
-	template<len_t N, class T>
-	__LL_NODISCARD__ static constexpr Hash hash(const ArrayPair<T>& arr) {
-		if constexpr (traits::has_convert_to_chars_v<T> && N != ZERO_UI64) {
-			constexpr len_t BUFFERLEN = sizeof(T) * N;
-			ll_char_t buffer[BUFFERLEN]{};
-			ll_char_t* i = buffer;
-			const T* data = arr.begin();
-			const T* data_end = arr.end();
-			for (; data < data_end; ++data, i += sizeof(T))
-				data->convertToChars(i);
-			return llcpp::meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
-		}
-		else return meta::Hash();
-	}
-	template<class T, len_t N>
-	__LL_NODISCARD__ static constexpr Hash hash(const T(&arr)[N]) {
-		if constexpr (traits::has_convert_to_chars_v<T> && N != ZERO_UI64) {
-			constexpr len_t BUFFERLEN = sizeof(T) * N;
-			ll_char_t buffer[BUFFERLEN]{};
-			ll_char_t* i = buffer;
-			const T* data = arr;
-			const T* data_end = arr + N;
-			for (; data < data_end; ++data, i += sizeof(T))
-				data->convertToChars(i);
-			return llcpp::meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
-		}
-		else return meta::Hash();
-	}
-	template<class T, len_t N>
-	__LL_NODISCARD__ static constexpr Hash hash(const T* arr) {
-		if constexpr (traits::has_convert_to_chars_v<T> && N != ZERO_UI64) {
-			constexpr len_t BUFFERLEN = sizeof(T) * N;
-			ll_char_t buffer[BUFFERLEN]{};
-			ll_char_t* i = buffer;
-			const T* data = arr;
-			const T* data_end = arr + N;
-			for (; data < data_end; ++data, i += sizeof(T))
-				data->convertToChars(i);
-			return llcpp::meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
-		}
-		else return meta::Hash();
-	}
-	template<class T>
-	__LL_NODISCARD__ static constexpr Hash hash(const T& object) {
-		if constexpr (traits::has_convert_to_chars_v<T>) {
-			constexpr len_t BUFFERLEN = sizeof(T);
-			ll_char_t buffer[BUFFERLEN]{};
-			if constexpr (traits::is_pointer_v<T>)
-				object->convertToChars(buffer);
-			else object.convertToChars(buffer);
-			return llcpp::meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
-		}
-		else return meta::Hash();
-	}
+#pragma region HashCluster
+
+// Hash modes:
+//	1. Copy all object data into a string and hash that data
+//	2. Copy all object Hash into a string and hash all the hashes
+//	3. Add to any method TypeId to hash
+//		3.1: Use type as raw data to hash
+//		3.2: Use type hash to hash
+//		3.3: Use both
+//	
+struct hash_cluster {
+	public:
+		enum class HashVersion {
+			// Converts objects to chars in a contiguous vector
+			// Then using CityHash hash all vector
+			// Objects are transformed to chars using a function in the object class
+			// The function signature is: constexpr void convertToChars(ll_char_t** buffer, HashV1Status** errors, const len_t size) const __LL_EXCEPT__;
+			// If you need an example go to BasicTypeWrapper, it has that function implemented and explained
+			V1,
+			// Hashes every object one by one
+			// Then hashes the generated hash vector
+			// Objects are transformed to chars using a function in the object class
+			// The function signature is: constexpr operator llcpp::meta::Hash() const __LL_EXCEPT__;
+			V2
+		};
+		enum class HashV1Status {
+			Ok,
+			ErrorPointer,
+			CustomFunctionInternalError,
+			ErrorNoFunctionAvaible
+		};
+
+		static constexpr ll_char_t** NULL_CHAR_CONVERTIBLE = LL_NULLPTR;
+		static constexpr HashV1Status** NULL_ERROR = LL_NULLPTR;
+		static constexpr ui8** NULL_ERROR2 = LL_NULLPTR;
+	protected:
+		//template<HashVersion VERSION, class U, class W = traits::template_types<U>>
+		//static void genericPointerTemplateHash(ll_char_t*& mem, HashV1Status*& errors, W::cinput object) __LL_EXCEPT__;
+		//// This function does not accepts pointers!
+		//template<class U, class W = traits::template_types<U>>
+		//static void genericPointerTemplateHash<HashVersion::V1, U, W>(ll_char_t*& buffer, HashV1Status*& errors, W::cinput object) __LL_EXCEPT__;
+
+
 };
+
+__LL_TEMPLATE_HAS_FUNCTION_BASE__(convert_to_chars, p->convertToChars(hash_cluster::NULL_CHAR_CONVERTIBLE, hash_cluster::NULL_ERROR, ZERO_UI64), LL_FALSE);
+__LL_TEMPLATE_HAS_FUNCTION_BASE__(convert_to_chars2, p->convertToChars2(hash_cluster::NULL_CHAR_CONVERTIBLE, hash_cluster::NULL_ERROR2, ZERO_UI64), LL_FALSE);
+
+#pragma region Protected
+//template<hash_cluster::HashVersion VERSION, class U, class W>
+//__LL_INLINE__ void hash_cluster::genericPointerTemplateHash(ll_char_t*& mem, HashV1Status*& error, W::cinput object) __LL_EXCEPT__ {
+//	*error++ = LL_TRUE;
+//}
+//// This function does not accepts pointers!
+//template<class U, class W>
+//__LL_INLINE__ void hash_cluster::genericPointerTemplateHash<hash_cluster::HashVersion::V1, U, W>(ll_char_t*& buffer, HashV1Status*& error, W::cinput object) {
+//	if constexpr (traits::is_pointer_v<U>) {
+//		*error++ = LL_TRUE;
+//		mem += sizeof(U);
+//	}
+//	else if constexpr (traits::is_basic_type_v<U>)
+//		BasicTypeWrapper<U>::convertToChars(&buffer, &error, sizeof(U), object);
+//	else if constexpr (std::is_same_v<U, meta::Hash>)
+//		BasicTypeWrapper<decltype(object.value)>::convertToChars(&buffer, &error, sizeof(U), object.value);
+//	else if constexpr (algorithm::has_convert_to_chars_v<U>) {
+//		object.convertToChars(buffer);
+//	}
+//	else {
+//
+//	}
+//}
+
+#pragma endregion
+#pragma region Public
+
+#pragma endregion
+
+
+
+/*struct has_cluster {
+
+	protected:
+
+
+
+		template<class T>
+		static constexpr void hash(ll_char_t*& mem, ll_bool_t*& err, const T& object) __LL_EXCEPT__ {
+			if constexpr (traits::is_pointer_v<T>) {
+
+			}
+				*err++ = LL_TRUE;
+			else if constexpr (traits::is_basic_type_v<T>) {
+				ll_string_t data = reinterpret_cast<ll_string_t>(&object);
+				ll_string_t end = data + sizeof(T);
+				for (; data < end; ++data, ++mem) *mem = *data;
+				*err++ = LL_FALSE;
+			}
+			else if constexpr (std::is_same_v<T, Hash>)
+				getHashes(mem, err, object.value);
+			else if constexpr (traits::has_type_operator_v<T, meta::Hash>)
+				getHashes(mem, err, object.operator meta::Hash());
+			else getHashes(mem, err, meta::city::CityHash64<T>(object));
+		}
+
+	public:
+		template<class U, HashVersion VERSION = HashVersion::V1, class W = traits::template_types<U>>
+		__LL_NODISCARD__ static constexpr Hash hash(W::cinput object) {
+			if constexpr (std::is_pointer_v<typename W::type>) {
+				using __noptr = std::remove_pointer_t<typename W::type>;
+				return has_cluster::hash<__noptr, VERSION>(*object);
+			}
+			else if constexpr (std::is_same_v<typename W::type, meta::Hash>)
+				return object;
+			else if constexpr (VERSION == HashVersion::V1) {
+				if constexpr (traits::has_convert_to_chars_v<typename W::type> || traits::is_basic_type_v<typename W::type>) {
+					constexpr len_t BUFFERLEN = sizeof(typename W::type);
+					ll_char_t buffer[BUFFERLEN]{};
+
+					if constexpr (traits::is_basic_type_v<typename W::type>)
+						has_cluster::convertToChars<typename W::type>(buffer, object);
+					else object.convertToChars(buffer);
+
+					return meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
+				}
+			}
+			else if constexpr (VERSION == HashVersion::V2) {
+				if constexpr (traits::has_type_operator_v<typename W::type, meta::Hash>)
+					return object.operator meta::Hash();
+				else if constexpr (traits::is_basic_type_v<typename W::type>)
+					return has_cluster::hash<U, HashVersion::V1, W>(object);
+			}
+			return meta::Hash();
+		}
+		template<class T, len_t N, HashVersion VERSION = HashVersion::V1>
+		__LL_NODISCARD__ static constexpr Hash hash(const T* arr) {
+			if constexpr (VERSION == HashVersion::V1) {
+				using U = std::conditional_t<std::is_pointer_v<T>, std::remove_pointer_t<T>, T>;
+				auto generic_hash = [](const U& arr, ll_char_t* buffer) -> void {
+					if constexpr (traits::is_basic_type_v<U>)
+						has_cluster::convertToChars<U>(buffer, arr);
+					else if constexpr (std::is_same_v<U, meta::Hash>)
+						has_cluster::convertToChars<decltype(arr.value)>(buffer, arr.value);
+					else arr.convertToChars(buffer);
+				};
+
+				if constexpr (std::is_pointer_v<T>) {
+					using __noptr = std::remove_pointer_t<T>;
+					if constexpr (!traits::has_convert_to_chars_v<T> && !traits::is_basic_type_v<T> && !std::is_same_v<T, meta::Hash>)
+						return meta::Hash();
+
+					constexpr len_t BUFFERLEN = sizeof(__noptr) * N;
+					ll_char_t buffer[BUFFERLEN]{};
+
+					ll_char_t* i = buffer;
+					for (const T* data_end = arr + N; arr < data_end; ++arr, i += sizeof(__noptr))
+						generic_hash(**arr, buffer);
+
+					return meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
+				}
+				else if constexpr (traits::has_convert_to_chars_v<T> || traits::is_basic_type_v<T> || std::is_same_v<T, meta::Hash>) {
+					constexpr len_t BUFFERLEN = sizeof(T) * N;
+					ll_char_t buffer[BUFFERLEN]{};
+
+					ll_char_t* i = buffer;
+					for (const T* data_end = arr + N; arr < data_end; ++arr, i += sizeof(T))
+						generic_hash(*arr, buffer);
+
+					return meta::city::CityHash::cityHash64(buffer, BUFFERLEN);
+				}
+			}
+			else if constexpr (VERSION == HashVersion::V2) {
+
+			}
+			return meta::Hash();
+		}
+		template<class T, len_t N>
+		__LL_NODISCARD__ static constexpr Hash hash(const T(&arr)[N]) {
+			const T* ptr = arr;
+			return has_cluster::hash<T, N>(ptr);
+			// This is the same
+			///return has_cluster::hash<T, N>(&*arr);
+		}
+		template<class T, len_t N>
+		__LL_NODISCARD__ static constexpr Hash hash(const ArrayPair<T>& arr) {
+			return has_cluster::hash<T, N>(arr.begin());
+		}
+
+	public:
+		__LL_NODISCARD__ static constexpr Hash hash(ll_char_t object) {
+			return meta::city::CityHash::cityHash64(&object, 1);
+		}
+		__LL_NODISCARD__ static constexpr Hash hash(ll_string_t arr, const len_t size) {
+			if (!arr || size == ZERO_UI64) return meta::Hash();
+			else return meta::city::CityHash::cityHash64(arr, size);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ static constexpr Hash hash(const ll_char_t(&arr)[N]) {
+			if (!arr || N == ZERO_UI64) return meta::Hash();
+			else return meta::city::CityHash::cityHash64(arr, N);
+		}
+		__LL_NODISCARD__ static constexpr Hash hash(const ArrayPair<ll_char_t>& arr) {
+			if (arr.empty()) return meta::Hash();
+			else return meta::city::CityHash::cityHash64(arr.begin(), arr.size());
+		}
+	public:
+		template<class... Args, len_t NUM_ARGS = sizeof...(Args)>
+		__LL_NODISCARD__ static constexpr Hash hash(ll_bool_t(&err)[NUM_ARGS], const Args&... args) {
+			using pack = traits::parameter_pack_operations<Args...>;
+			if constexpr (pack::size == 1ull)
+				return has_cluster::hash<Args>(args);
+			if constexpr (!pack::empty) {
+				ll_char_t buffer[pack::sizeof_hash_version]{};
+
+
+
+			}
+			else return meta::Hash();
+		}
+};*/
+
+
+#pragma endregion
+
+
+
+
 
 ///constexpr int example() {
 ///	int arr[] = { 0, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };

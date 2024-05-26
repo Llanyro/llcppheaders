@@ -159,6 +159,15 @@
     <ClInclude Include="BasicTypeWrapper.hpp">
       <Filter>Source Files\types</Filter>
     </ClInclude>
+    <ClInclude Include="ArgumentsHasher.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\RandomExample.hpp">
+      <Filter>Source Files\examples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

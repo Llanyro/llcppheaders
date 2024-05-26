@@ -207,12 +207,119 @@ struct Hash {
 	constexpr ~Hash() __LL_EXCEPT__ {}
 
 	constexpr Hash(const Hash& other) __LL_EXCEPT__ : value(other.value) {}
-	constexpr Hash& operator=(const Hash& other) __LL_EXCEPT__ { this->value = other.value; return *this; }
+	constexpr Hash& operator=(const Hash& other) __LL_EXCEPT__ {
+		this->value = other.value;
+		return *this;
+	}
 
-	constexpr Hash(Hash&&) __LL_EXCEPT__ = delete;
-	constexpr Hash& operator=(Hash&&) __LL_EXCEPT__ = delete;
+	constexpr Hash(Hash&& other) __LL_EXCEPT__ : Hash(other) { other.clear(); }
+	constexpr Hash& operator=(Hash&& other) __LL_EXCEPT__ {
+		Hash::operator=(other);
+		other.clear();
+		return *this;
+	}
+
+	__LL_NODISCARD__ constexpr operator typename const Hash*() const __LL_EXCEPT__ = delete;
+	__LL_NODISCARD__ constexpr operator typename Hash*() __LL_EXCEPT__ = delete;
 
 	constexpr void clear() __LL_EXCEPT__ { this->value = ZERO_UI64; }
+};
+
+using StrPairHashFunction = meta::Hash(*)(const meta::StrPair&);
+using HashFunction = meta::Hash(*)(ll_string_t, const len_t);
+using HashRecursiveFunction = meta::Hash(*)(const meta::Hash&);
+
+struct HashFunctionPack {
+	StrPairHashFunction strPairHashFunction;
+	HashFunction hashFunction;
+	HashRecursiveFunction hashRecursiveFunction;
+
+#pragma region Functions
+	#pragma region Constructors
+	constexpr HashFunctionPack(
+		StrPairHashFunction strPairHashFunction,
+		HashFunction hashFunction,
+		HashRecursiveFunction hashRecursiveFunction
+	) __LL_EXCEPT__
+		: strPairHashFunction(strPairHashFunction)
+		, hashFunction(hashFunction)
+		, hashRecursiveFunction(hashRecursiveFunction)
+	{}
+	constexpr HashFunctionPack() __LL_EXCEPT__
+		: HashFunctionPack(LL_NULLPTR, LL_NULLPTR, LL_NULLPTR) {}
+	constexpr ~HashFunctionPack() __LL_EXCEPT__ {}
+
+	#pragma endregion
+	#pragma region CopyMove
+	constexpr HashFunctionPack(const HashFunctionPack& other) __LL_EXCEPT__
+		: HashFunctionPack(
+			other.strPairHashFunction,
+			other.hashFunction,
+			other.hashRecursiveFunction
+		)
+	{}
+	constexpr HashFunctionPack& operator=(const HashFunctionPack& other) __LL_EXCEPT__ {
+		this->strPairHashFunction = other.strPairHashFunction;
+		this->hashFunction = other.hashFunction;
+		this->hashRecursiveFunction = other.hashRecursiveFunction;
+		return *this;
+	}
+
+	constexpr HashFunctionPack(HashFunctionPack&& other) __LL_EXCEPT__
+		: HashFunctionPack(other)
+	{ other.clear(); }
+	constexpr HashFunctionPack& operator=(HashFunctionPack&& other) __LL_EXCEPT__ {
+		HashFunctionPack::operator=(other);
+		other.clear();
+		return *this;
+	}
+
+	#pragma endregion
+	#pragma region ClassReferenceOperators
+	__LL_NODISCARD__ constexpr operator typename const HashFunctionPack*() const __LL_EXCEPT__ = delete;
+	__LL_NODISCARD__ constexpr operator typename HashFunctionPack*() __LL_EXCEPT__ = delete;
+
+	#pragma endregion
+	#pragma region ClassFunctions
+	constexpr void clear() __LL_EXCEPT__ {
+		this->strPairHashFunction = LL_NULLPTR;
+		this->hashFunction = LL_NULLPTR;
+		this->hashRecursiveFunction = LL_NULLPTR;
+	}
+
+	#pragma region Calls
+	constexpr meta::Hash call(const meta::StrPair& s) const __LL_EXCEPT__ {
+		return this->strPairHashFunction(s);
+	}
+	constexpr meta::Hash call(ll_string_t s, const len_t n) const __LL_EXCEPT__ {
+		return this->hashFunction(s, n);
+	}
+	constexpr meta::Hash call(const meta::Hash& h) const __LL_EXCEPT__ {
+		return this->hashRecursiveFunction(h);
+	}
+	constexpr meta::Hash call_s(const meta::StrPair& s) const __LL_EXCEPT__ {
+		return (this->strPairHashFunction) ? this->strPairHashFunction(s) : meta::Hash();
+	}
+	constexpr meta::Hash call_s(ll_string_t s, const len_t n) const __LL_EXCEPT__ {
+		return (this->hashFunction) ? this->hashFunction(s, n) : meta::Hash();
+	}
+	constexpr meta::Hash call_s(const meta::Hash& h) const __LL_EXCEPT__ {
+		return (this->hashRecursiveFunction) ? this->hashRecursiveFunction(h) : meta::Hash();
+	}
+
+	constexpr meta::Hash operator()(const meta::StrPair& s) const __LL_EXCEPT__ {
+		return this->call(s);
+	}
+	constexpr meta::Hash operator()(ll_string_t s, const len_t n) const __LL_EXCEPT__ {
+		return this->call(s, n);
+	}
+	constexpr meta::Hash operator()(const meta::Hash& h) const __LL_EXCEPT__ {
+		return this->call(h);
+	}
+
+	#pragma endregion
+	#pragma endregion
+#pragma endregion
 };
 
 #pragma endregion

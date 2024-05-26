@@ -21,7 +21,7 @@
 #define LLANYLIB_COMMON_MAYOR_ 6
 #define LLANYLIB_COMMON_MINOR_ 0
 
-#include "types.hpp"
+#include "traits.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -29,7 +29,7 @@ namespace common {
 
 template<class T>
 constexpr void simple_swap(T& v1, T& v2) {
-	if constexpr (traits::is_basic_type_v<T> || traits::is_pointer_v<T>) {
+	if constexpr (traits::is_basic_type_v<T> || std::is_pointer_v<T>) {
 		T tmp = v1;
 		v1 = v2;
 		v2 = tmp;

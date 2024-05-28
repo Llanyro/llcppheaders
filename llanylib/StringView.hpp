@@ -39,7 +39,7 @@ class LL_SHARED_LIB StringView {
 	public:
 		using type = traits::template_types<T>;
 		using __StringView = traits::template_types<StringView<N, T>>;
-		using __StrPair = traits::get_by_char_type_t<T, StrPair, wStrPair>;
+		using __StrPair = ArrayPair<T>;
 
 		template<class U>
 		using __StringViewType = traits::template_types<StringView<N, U>>;
@@ -395,13 +395,6 @@ class LL_SHARED_LIB StringView {
 		#pragma region Other
 		__LL_NODISCARD__ constexpr ll_bool_t isValid() const __LL_EXCEPT__ {
 			return !this->empty() && this->begin();
-		}
-		__LL_NODISCARD__ constexpr operator meta::Hash() const {
-			if constexpr (std::is_same_v<typename type::typpe, ll_char_t>)
-				return meta::StandardHashFunctions(*this);
-			// [TOFIX]
-			//return algorithm::has_cluster::hash<T, __sizes::ARR_SIZE>(this->begin());
-			else return meta::Hash();
 		}
 		__LL_NODISCARD__ constexpr operator __StrPair() const __LL_EXCEPT__ {
 			return __StrPair(this->begin(), this->end());

@@ -28,6 +28,7 @@
 
 #include "ArrayPair.hpp"
 #include "bits.hpp"
+#include "Hash64.hpp"
 
 #if defined(WORDS_BIGENDIAN)
 #define ui32_in_expected_order(x) (bits::bytes_swap_32(x))
@@ -39,6 +40,7 @@
 
 namespace llcpp {
 namespace meta {
+namespace hash {
 namespace city {
 
 class Hash128 {
@@ -87,7 +89,7 @@ class Hash128 {
 			b *= kMul;
 			return b;
 		}
-		__LL_NODISCARD__ constexpr meta::Hash toHash() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::Hash64 toHash() const __LL_EXCEPT__ {
 			// Murmur-inspired hashing.
 			constexpr ui64 kMul = 0x9ddfea08eb382d69ull;
 			ui64 a = (this->low ^ this->high) * kMul;
@@ -95,7 +97,7 @@ class Hash128 {
 			ui64 b = (this->high ^ a) * kMul;
 			b ^= (b >> 47);
 			b *= kMul;
-			return meta::Hash(b);
+			return hash::Hash64(b);
 		}
 };
 
@@ -111,15 +113,7 @@ class CityHash {
 		// Magic numbers for 32-bit hashing.  Copied from Murmur3.
 		static constexpr ui32 c1 = 0xcc9e2d51;
 		static constexpr ui32 c2 = 0x1b873593;
-	private:
-		template<class T, len_t N = sizeof(T)>
-		constexpr static void conversor(ll_char_t(&buffer)[N], const T value) {
-			if constexpr (!traits::is_basic_type_v<T>) return;
-			ll_char_t* mem = buffer;
-			len_t byte = (N << 3) - 8;
-			for (len_t i{}; i < N; ++i, ++mem, byte -= 8)
-				*mem = (value >> byte) & 0xFF;
-		}
+	protected:
 		template<class T>
 		__LL_NODISCARD__ static constexpr T unalignedLoad(DataType p) __LL_EXCEPT__ {
 			T result{};
@@ -209,7 +203,7 @@ class CityHash {
 		}
 		// Return a 16-byte hash for 48 bytes.  Quick and dirty.
 		// Callers do best to use "random-looking" values for a and b.
-		__LL_NODISCARD__ static constexpr Hash128 weakHashLen32WithSeeds(const ui64 w, const ui64 x, const ui64 y, const ui64 z, ui64 a, ui64 b) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr city::Hash128 weakHashLen32WithSeeds(const ui64 w, const ui64 x, const ui64 y, const ui64 z, ui64 a, ui64 b) __LL_EXCEPT__ {
 			a += w;
 			b = rotate(b + a + z, 21);
 			ui64 c = a;
@@ -220,38 +214,38 @@ class CityHash {
 			return { a + z, b + c };
 		}
 		// Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
-		__LL_NODISCARD__ static constexpr Hash128 weakHashLen32WithSeeds(DataType s, const ui64 a, const ui64 b) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr city::Hash128 weakHashLen32WithSeeds(DataType s, const ui64 a, const ui64 b) __LL_EXCEPT__ {
 			return weakHashLen32WithSeeds(
 				fetch64(s), fetch64(s + 8),
 				fetch64(s + 16), fetch64(s + 24),
 				a, b);
 		}
 	public:
-		__LL_NODISCARD__ static constexpr Hash cityHash64(DataType s, len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(DataType s, len_t len) __LL_EXCEPT__ {
 			#if defined(LL_REAL_CXX23)
 			if not consteval {
 				throw "This is only constevaluated!";
-				return meta::Hash();
+				return hash::Hash64();
 			}
 			#endif
-			if (!s) return meta::Hash();
+			if (!s) return hash::Hash64();
 
 			if (len <= 32) {
-				if (len <= 16) return meta::Hash(hashLen0to16(s, len));
-				else return meta::Hash(hashLen17to32(s, len));
+				if (len <= 16) return hash::Hash64(hashLen0to16(s, len));
+				else return hash::Hash64(hashLen17to32(s, len));
 			}
-			else if (len <= 64) return meta::Hash(hashLen33to64(s, len));
+			else if (len <= 64) return hash::Hash64(hashLen33to64(s, len));
 
 			// For strings over 64 bytes we hash the end first, and then as we
 			// loop we keep 56 bytes of state: v, w, x, y, and z.
 			ui64 x = fetch64(s + len - 40);
 			ui64 y = fetch64(s + len - 16) + fetch64(s + len - 56);
-			ui64 z = Hash128(
+			ui64 z = city::Hash128(
 					fetch64(s + len - 48) + len,
 					fetch64(s + len - 24)
 				).toui64();
-			Hash128 v = weakHashLen32WithSeeds(s + len - 64, len, z);
-			Hash128 w = weakHashLen32WithSeeds(s + len - 32, y + k1, x);
+			city::Hash128 v = weakHashLen32WithSeeds(s + len - 64, len, z);
+			city::Hash128 w = weakHashLen32WithSeeds(s + len - 32, y + k1, x);
 			x = x * k1 + fetch64(s);
 
 			// Decrease len to the nearest multiple of 64, and operate on 64-byte chunks.
@@ -273,34 +267,42 @@ class CityHash {
 				s += 64;
 				len -= 64;
 			} while (len != ZERO_UI64);
-			return Hash128(
-				Hash128(v.getLow(), w.getLow()).toui64() + shiftMix(y) * k1 + z,
-				Hash128(v.getHigh(), w.getHigh()).toui64() + x
-			).toHash();
+			return city::Hash128(
+				city::Hash128(v.getLow(), w.getLow()).toui64() + shiftMix(y) * k1 + z,
+				city::Hash128(v.getHigh(), w.getHigh()).toui64() + x
+			).city::Hash128::toHash();
 		}
-		__LL_NODISCARD__ static constexpr Hash cityHash64(const StrPair& s) __LL_EXCEPT__ {
-			if (s.empty()) return meta::Hash();
+		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(const StrPair& s) __LL_EXCEPT__ {
+			if (s.empty()) return hash::Hash64();
 			else return city::CityHash::cityHash64(s.begin(), s.len());
 		}
 		// Only admits traits::is_basic_type_v<> 
 		template<class T>
-		__LL_NODISCARD__ static constexpr Hash cityHash64(const T value) __LL_EXCEPT__ {
-			if constexpr (!traits::is_basic_type_v<T>) return meta::Hash();
+		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(const T value) __LL_EXCEPT__ {
+			if constexpr (!traits::is_basic_type_v<T>) return hash::Hash64();
 			else {
 				ll_char_t buffer[sizeof(T)]{};
-				city::CityHash::conversor(buffer, value);
+				// [CRITICAL]
+				///DataHashConversor::conversor(buffer, value);
 				return city::CityHash::cityHash64(buffer, sizeof(T));
 			}
 		}
-		__LL_NODISCARD__ static constexpr Hash cityHash64(const meta::Hash& hash) __LL_EXCEPT__ {
-			return city::CityHash::cityHash64(hash.value);
+		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(const hash::Hash64& hash) __LL_EXCEPT__ {
+			return city::CityHash::cityHash64(hash.get());
 		}
+
 };
 
 } // namespace city
 
-constexpr HashFunctionPack StandardHashFunctions(city::CityHash::cityHash64, city::CityHash::cityHash64, city::CityHash::cityHash64);
+//constexpr HashFunctionPack StandardHashFunctions(
+//	city::CityHash::cityHash64,
+//	city::CityHash::cityHash64,
+//	city::CityHash::cityHash64,
+//	LL_NULLPTR
+//);
 
+} // namespace hash
 } // namespace meta
 } // namespace llcpp
 

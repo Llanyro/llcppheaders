@@ -18,11 +18,11 @@ namespace traits {
 
 ///////////////////////////////////////////////// Conditional for chars types /////////////////////////////////////////////////
 
-using get_by_char_type_res_1 = traits::get_by_char_type_t<ll_char_t, i8, i32>;
-using get_by_char_type_res_2 = traits::get_by_char_type_t<ll_uchar_t, i8, i32>;
-using get_by_char_type_res_3 = traits::get_by_char_type_t<ll_wchar_t, i8, i32>;
+using get_by_char_type_res_1 = traits::get_by_char_type_t<ll_char_t, i8, i32, void>;
+using get_by_char_type_res_2 = traits::get_by_char_type_t<ll_uchar_t, i8, i32, void>;
+using get_by_char_type_res_3 = traits::get_by_char_type_t<ll_wchar_t, i8, i32, void>;
 
-static_assert(std::is_same_v<get_by_char_type_res_1, i8 >, "Error changed value");
+static_assert(std::is_same_v<get_by_char_type_res_1, i8>, "Error changed value");
 static_assert(std::is_same_v<get_by_char_type_res_2, void>, "Error changed value");
 static_assert(std::is_same_v<get_by_char_type_res_3, i32>, "Error changed value");
 
@@ -81,21 +81,25 @@ static_assert(std::is_same_v<get_reference_type_test_8, traits::TestClassThrow*&
 
 using get_const_reference_type_test_1 = traits::type_conversor<int>::to_const_reference_t;
 using get_const_reference_type_test_2 = traits::type_conversor<float>::to_const_reference_t;
-using get_const_reference_type_test_3 = traits::type_conversor<traits::TestClass>::to_const_reference_all_t;
-using get_const_reference_type_test_4 = traits::type_conversor<traits::TestClassThrow>::to_const_reference_all_t;
-using get_const_reference_type_test_5 = traits::type_conversor<int*>::to_const_reference_t;
-using get_const_reference_type_test_6 = traits::type_conversor<float*>::to_const_reference_t;
+using get_const_reference_type_test_3 = traits::type_conversor<traits::TestClass>::to_const_reference_t;
+using get_const_reference_type_test_4 = traits::type_conversor<traits::TestClassThrow>::to_const_reference_t;
+using get_const_reference_type_test_9 = traits::type_conversor<int[5]>::to_const_reference_t;
+using get_const_reference_type_test_5 = traits::type_conversor<int*>::to_const_reference_all_t;
+using get_const_reference_type_test_6 = traits::type_conversor<float*>::to_const_reference_all_t;
 using get_const_reference_type_test_7 = traits::type_conversor<traits::TestClass*>::to_const_reference_all_t;
 using get_const_reference_type_test_8 = traits::type_conversor<traits::TestClassThrow*>::to_const_reference_all_t;
+using get_const_reference_type_test_10 = traits::type_conversor<int[5]>::to_const_reference_all_t;
 
 static_assert(std::is_same_v<get_const_reference_type_test_1, const int>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_2, const float>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_3, const traits::TestClass&>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_4, const traits::TestClassThrow&>, "Error changed value");
-static_assert(std::is_same_v<get_const_reference_type_test_5, const int*>, "Error changed value");
-static_assert(std::is_same_v<get_const_reference_type_test_6, const float*>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_9, const int[5]>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_5, const int*&>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_6, const float*&>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_7, const traits::TestClass*&>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_8, const traits::TestClassThrow*&>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_10, const int(&)[5]>, "Error changed value");
 
 using get_promote_type_test_01 = traits::type_conversor<i8>::promote_t;
 using get_promote_type_test_02 = traits::type_conversor<i16>::promote_t;
@@ -235,13 +239,13 @@ constexpr ll_bool_t checker_test_9 = traits::operator_type_call_checker_v<TestCl
 
 static_assert( checker_test_1, "Error changed value");
 static_assert( checker_test_2, "Error changed value");
-static_assert( checker_test_3, "Error changed value");
+static_assert(!checker_test_3, "Error changed value");
 static_assert( checker_test_4, "Error changed value");
 static_assert( checker_test_5, "Error changed value");
-static_assert( checker_test_6, "Error changed value");
+static_assert(!checker_test_6, "Error changed value");
 static_assert(!checker_test_7, "Error changed value");
 static_assert(!checker_test_8, "Error changed value");
-static_assert( checker_test_9, "Error changed value");
+static_assert(!checker_test_9, "Error changed value");
 
 ///////////////////////////////////////////////// Example strings /////////////////////////////////////////////////
 

@@ -394,8 +394,8 @@ class LL_SHARED_LIB ArrayView {
 		__LL_NODISCARD__ constexpr ll_bool_t isValid() const __LL_EXCEPT__ {
 			return !this->empty() && this->begin();
 		}
-		__LL_NODISCARD__ constexpr operator meta::Hash() const {
-			return meta::Hash();
+		__LL_NODISCARD__ constexpr operator hash::Hash64() const __LL_EXCEPT__ {
+			return hash::Hash64();
 			// [TOFIX]
 			//return algorithm::has_cluster::hash<T, __sizes::ARR_SIZE>(this->begin());
 			//return meta::StandardHashFunctions(*this);

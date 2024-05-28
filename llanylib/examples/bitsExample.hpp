@@ -50,6 +50,7 @@ static_assert(transform_to_base_64_res_3 == 64, "Error changed value");
 static_assert(transform_to_base_64_res_4 == 64, "Error changed value");
 
 ///////////////////////////////////////////////// Type division /////////////////////////////////////////////////
+// [TODO]
 /*
 template<class _TypeDivision, class U, class W = traits::template_types<U>::cinput>
 __LL_NODISCARD__ constexpr ll_bool_t check(W value) __LL_EXCEPT__ {

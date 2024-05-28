@@ -58,21 +58,11 @@ using get_const_object_reference_t = std::conditional_t<traits::is_basic_type_v<
 
 template<class T>
 struct type_container { using value = T; };
-struct EnOfParameterPack {};
 
-template<class T>
-struct is_pointer {
-	template<class T>
-	static constexpr ll_bool_t test() __LL_EXCEPT__ { return std::is_pointer_v<T>; }
-	template<class T, len_t N>
-	static constexpr ll_bool_t test() __LL_EXCEPT__ { return LL_TRUE; }
-
-	static constexpr ll_bool_t val = test<T>();
-};
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_pointer_v = is_pointer<std::remove_cv_t<T>>::val;
-
+template<class>
+__LL_VAR_INLINE__ constexpr len_t array_size = ZERO_UI64;
+template<class T, len_t N>
+__LL_VAR_INLINE__ constexpr len_t array_size<T[N]> = N;
 
 template<class T>
 struct type_conversor {
@@ -80,8 +70,12 @@ struct type_conversor {
 		static constexpr auto test() __LL_EXCEPT__ {
 			if constexpr (std::is_reference_v<T>)
 				return type_conversor<std::remove_reference_t<T>>::to_raw::test();
-			else if constexpr (traits::is_pointer_v<T>)
+			else if constexpr (std::is_pointer_v<T>)
 				return type_conversor<std::remove_pointer_t<T>>::to_raw::test();
+			else if constexpr (std::is_array_v<T>) {
+				T _{};
+				return type_conversor<decltype(*_)>::to_raw::test();
+			}
 			else if constexpr (std::is_const_v<T>)
 				return type_conversor<std::remove_const_t<T>>::to_raw::test();
 			else return traits::type_container<T>{};
@@ -101,7 +95,7 @@ struct type_conversor {
 				using __type = decltype(type_conversor<std::remove_const_t<T>>::to_const::test())::value;
 				return traits::type_container<const __type>{};
 			}
-			else if constexpr (traits::is_pointer_v<T>) {
+			else if constexpr (std::is_pointer_v<T>) {
 				using __type = decltype(type_conversor<std::remove_pointer_t<T>>::to_const::test())::value;
 				return traits::type_container<std::add_pointer_t<__type>>{};
 			}
@@ -113,7 +107,7 @@ struct type_conversor {
 		static constexpr auto test() __LL_EXCEPT__ {
 			using __raw_type = type_conversor<T>::to_raw_t;
 
-			if constexpr (traits::is_pointer_v<T> || !traits::is_basic_type_v<__raw_type> || ALL)
+			if constexpr (std::is_pointer_v<T> || std::is_array_v<T> || !traits::is_basic_type_v<__raw_type> || ALL)
 				return traits::type_container<std::add_lvalue_reference_t<T>>{};
 			else return traits::type_container<T>{};
 		}
@@ -123,7 +117,7 @@ struct type_conversor {
 		static constexpr auto test() __LL_EXCEPT__ {
 			using __raw_type = type_conversor<T>::to_raw_t;
 			using __const_type = type_conversor<T>::to_const_t;
-			if constexpr (traits::is_pointer_v<__raw_type> || !traits::is_basic_type_v<__raw_type> || ALL)
+			if constexpr (ALL || !(std::is_pointer_v<T> || std::is_array_v<T> || traits::is_basic_type_v<__raw_type>))
 				return traits::type_container<std::add_lvalue_reference_t<__const_type>>{};
 			else return traits::type_container<__const_type>{};
 		}
@@ -195,6 +189,16 @@ struct type_conversor {
 		static constexpr ll_bool_t isPromoted = promote;
 		using value = __type_promotion<promote>::value;
 	};
+	struct array_to_type {
+		static constexpr auto test() __LL_EXCEPT__ {
+			if constexpr (std::is_array_v<T>) {
+				T _{};
+				return std::remove_reference_t<decltype(*_)>{};
+			}
+			else return T{};
+		}
+		using value = typename decltype(test());
+	};
 
 	// Gets raw type, no pointers, no references (rvalue || lvalue)
 	using to_raw_t = to_raw::value;
@@ -219,21 +223,23 @@ struct type_conversor {
 	// Promote a type to a bigger or smaller type
 	using promote_t = type_promotion<LL_TRUE>::value;
 	using demote_t = type_promotion<LL_FALSE>::value;
+
+	using array_to_type_t = array_to_type::value;
 };
 
 #pragma region Other
 #pragma region CharConditional
-template<class T, class TypeChar, class TypeWChar>
+template<class T, class TypeChar, class TypeWChar, class ExtraType = void>
 struct get_by_char_type {
 	template <class U>
-	struct __internal__struct__ { using _val = void; };
+	struct __internal__struct__ { using _val = ExtraType; };
 	template<> struct __internal__struct__<ll_char_t> { using _val = TypeChar; };
 	template<> struct __internal__struct__<ll_wchar_t> { using _val = TypeWChar; };
 	using value = __internal__struct__<std::remove_const_t<T>>::_val;
 };
 
-template<class T, class TypeChar, class TypeWChar>
-using get_by_char_type_t = get_by_char_type<T, TypeChar, TypeWChar>::value;
+template<class T, class TypeChar, class TypeWChar, class ExtraType = void>
+using get_by_char_type_t = get_by_char_type<T, TypeChar, TypeWChar, ExtraType>::value;
 
 #pragma endregion
 #pragma endregion
@@ -252,14 +258,13 @@ struct has_type_operator {
 			std::bool_constant<std::is_same_v<T, OperatorType>>,
 			std::false_type
 		>;
-	using val = decltype(test<T>(nullptr));
+	using val = decltype(has_type_operator<T, OperatorType>::test<T>(nullptr));
 };
 
 template <class T, class OperatorType>
 using has_type_operator_t = has_type_operator<T, OperatorType>::val;
 template <class T, class OperatorType>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v = has_type_operator_t<T, OperatorType>::value;
-
 
 #define __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, basic_value) \
 	template<class T> \
@@ -300,23 +305,44 @@ __TEMPLATE_HAS_SIMPLE_FUNCTION__(clear);
 
 #pragma endregion
 #pragma region OperatorTypeChecker
+struct can_cast {
+	template<class T, class U> static constexpr ll_bool_t value = LL_FALSE;
+	template<class T> static constexpr ll_bool_t value<T, ll_bool_t> = traits::is_basic_type_v<T>;
+
+	template<class T> static constexpr ll_bool_t value<T, ui8> = traits::is_basic_type_v<T>;
+	template<class T> static constexpr ll_bool_t value<T, i8> = traits::is_basic_type_v<T>;
+	template<class T> static constexpr ll_bool_t value<T, ui16> = traits::is_basic_type_v<T>;
+	template<class T> static constexpr ll_bool_t value<T, i16> = traits::is_basic_type_v<T>;
+	
+	template<class T> static constexpr ll_bool_t value<T, ui32> = traits::is_basic_type_v<T>;
+	template<class T> static constexpr ll_bool_t value<T, i32> = traits::is_basic_type_v<T>;
+	template<class T> static constexpr ll_bool_t value<T, ui64> = traits::is_basic_type_v<T>;
+	template<class T> static constexpr ll_bool_t value<T, i64> = traits::is_basic_type_v<T>;
+
+	template<class T> static constexpr ll_bool_t value<T, f32> = traits::is_basic_type_v<T>;
+	template<class T> static constexpr ll_bool_t value<T, f64> = traits::is_basic_type_v<T>;
+};
+
+template<class ObjectType, class TypeCall>
+__LL_VAR_INLINE__ constexpr ll_bool_t can_cast_v = can_cast::value<ObjectType, TypeCall>;
+
+
 template<class ObjectType, class TypeCall>
 struct operator_type_call_checker {
 	static constexpr auto test() __LL_EXCEPT__ {
-		if constexpr (traits::is_pointer_v<ObjectType>) {
+		if constexpr (std::is_pointer_v<ObjectType>) {
 			using __noptr = std::remove_pointer_t<ObjectType>;
-
-			if constexpr (traits::is_pointer_v<__noptr>)
-				return std::true_type{};
-			else if constexpr (traits::has_type_operator_v<__noptr, TypeCall>)
-				return std::true_type{};
-			else if constexpr (traits::is_basic_type_v<__noptr>)
-				return std::true_type{};
-			else return std::false_type{};
+			if constexpr (std::is_pointer_v<__noptr>) return std::false_type{};
+			else return operator_type_call_checker<__noptr, TypeCall>::test();
+		}
+		else if constexpr (std::is_array_v<ObjectType>) {
+			using arr_type = traits::type_conversor<ObjectType>::array_to_type_t;
+			if constexpr (std::is_pointer_v<arr_type>) return std::false_type{};
+			else return operator_type_call_checker<arr_type, TypeCall>::test();
 		}
 		else if constexpr (traits::has_type_operator_v<ObjectType, TypeCall>)
 			return std::true_type{};
-		else if constexpr (traits::is_basic_type_v<ObjectType>)
+		else if constexpr (traits::is_basic_type_v<ObjectType> && traits::can_cast_v<ObjectType, TypeCall>)
 			return std::true_type{};
 		else return std::false_type{};
 	}
@@ -332,8 +358,13 @@ __LL_VAR_INLINE__ constexpr ll_bool_t operator_type_call_checker_v = operator_ty
 template<class T>
 struct is_nothrow_swappeable {
 	static constexpr auto test() __LL_EXCEPT__ {
-		if constexpr (traits::is_pointer_v<T> || traits::is_basic_type_v<T>)
+		if constexpr (std::is_pointer_v<T> || traits::is_basic_type_v<T>)
 			return std::true_type{};
+		else if constexpr (std::is_array_v<T>) {
+			using arr_type = traits::type_conversor<T>::array_to_type_t;
+			return is_nothrow_swappeable<arr_type>::test();
+		}
+		// Already includes basic types
 		else if constexpr (std::is_move_constructible_v<T> && std::is_move_assignable_v<T>) {
 			if constexpr (std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_assignable_v<T>)
 				return std::true_type{};
@@ -353,20 +384,17 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_swappeable_v = is_nothrow_swapp
 template<class T>
 struct is_nothrow_copyable {
 	static constexpr auto test() __LL_EXCEPT__ {
-		if constexpr (traits::is_pointer_v<T>) {
+		if constexpr (std::is_pointer_v<T>) {
 			using __noptr = std::remove_pointer_t<T>;
-
-			if constexpr (traits::is_pointer_v<__noptr>)
-				return std::false_type{};
-			else if constexpr (std::is_copy_assignable_v<__noptr> && std::is_nothrow_copy_assignable_v<__noptr>)
-				return std::true_type{};
-			else if constexpr (traits::is_basic_type_v<__noptr>)
-				return std::true_type{};
-			else return std::false_type{};
+			if constexpr (std::is_pointer_v<__noptr>) return std::false_type{};
+			else return is_nothrow_copyable<__noptr>::test();
 		}
+		else if constexpr (std::is_array_v<T>) {
+			using arr_type = traits::type_conversor<T>::array_to_type_t;
+			return is_nothrow_copyable<arr_type>::test();
+		}
+		// Already includes basic types
 		else if constexpr (std::is_copy_assignable_v<T> && std::is_nothrow_copy_assignable_v<T>)
-			return std::true_type{};
-		else if constexpr (traits::is_basic_type_v<T>)
 			return std::true_type{};
 		else return std::false_type{};
 	}
@@ -380,30 +408,31 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyabl
 #pragma endregion
 
 #pragma region ParameterPacks
-struct HashSize {
-	template<class T>
-	static constexpr len_t getSize() __LL_EXCEPT__ {
-		if constexpr (traits::is_pointer_v<T>) {
-			using __noptr = std::remove_pointer_t<T>;
-			if constexpr (traits::is_pointer_v<__noptr>) return ZERO_UI64;
-			else if constexpr (traits::is_basic_type_v<__noptr>) return sizeof(__noptr);
-			else if constexpr (traits::has_type_operator_v<__noptr, Hash>) return sizeof(Hash);
-			else return sizeof(Hash);
-		}
-		else if constexpr (traits::is_basic_type_v<T>) return sizeof(T);
-		else if constexpr (traits::has_type_operator_v<T, Hash>) return sizeof(Hash);
-		else return sizeof(Hash);
-	}
-
-	len_t sizeof_;
-	constexpr HashSize(const len_t sizeof_) __LL_EXCEPT__ : sizeof_(sizeof_) {}
-	constexpr ~HashSize() __LL_EXCEPT__ {}
-
-	constexpr HashSize operator&&(const HashSize& other) const __LL_EXCEPT__ {
-		return HashSize(this->sizeof_ + other.sizeof_);
-	}
-	constexpr const HashSize& operator&&(const ll_bool_t) const __LL_EXCEPT__ { return *this; }
-};
+///struct HashSize {
+///	template<class T>
+///	static constexpr len_t getSize() __LL_EXCEPT__ {
+///		if constexpr (traits::is_pointer_v<T>) {
+///			//using __noptr = std::remove_pointer_t<T>;
+///			//if constexpr (traits::is_pointer_v<__noptr>) return ZERO_UI64;
+///			//else if constexpr (traits::is_basic_type_v<__noptr>) return sizeof(__noptr);
+///			//else if constexpr (traits::has_type_operator_v<__noptr, hash::Hash64>) return sizeof(hash::Hash64);
+///			//else return sizeof(hash::Hash64);
+///			return ZERO_UI64;
+///		}
+///		else if constexpr (traits::is_basic_type_v<T>) return sizeof(T);
+///		else if constexpr (traits::has_type_operator_v<T, hash::Hash64>) return sizeof(hash::Hash64);
+///		else return sizeof(hash::Hash64);
+///	}
+///
+///	len_t sizeof_;
+///	constexpr HashSize(const len_t sizeof_) __LL_EXCEPT__ : sizeof_(sizeof_) {}
+///	constexpr ~HashSize() __LL_EXCEPT__ {}
+///
+///	constexpr HashSize operator&&(const HashSize& other) const __LL_EXCEPT__ {
+///		return HashSize(this->sizeof_ + other.sizeof_);
+///	}
+///	constexpr const HashSize& operator&&(const ll_bool_t) const __LL_EXCEPT__ { return *this; }
+///};
 template <class... Args>
 struct parameter_pack_operations {
 	template<class T, class... uArgs>
@@ -414,17 +443,18 @@ struct parameter_pack_operations {
 	template<class T>
 	struct FirstType<T> {
 		using type = T;
-		using next = EnOfParameterPack;
+		using next = EmptyStruct;
 	};
 
 	using pack_first = typename FirstType<Args...>;
 	using get_first_type = typename FirstType<Args...>::type;
 	static constexpr len_t size = sizeof...(Args);
 	static constexpr len_t empty = (size == ZERO_UI64);
-	static constexpr ll_bool_t has_a_pointer = (traits::is_pointer_v<Args> || ...);
+	static constexpr ll_bool_t has_a_pointer = (std::is_pointer_v<Args> || ...);
+	static constexpr ll_bool_t has_a_array = (std::is_array_v<Args> || ...);
 
 	// Hash
-	static constexpr len_t sizeof_hash_version = (HashSize(HashSize::getSize<Args>()) && ...).sizeof_;
+	///static constexpr len_t sizeof_hash_version = (HashSize(HashSize::getSize<Args>()) && ...).sizeof_;
 };
 template <class T>
 struct parameter_pack_operations<T> {
@@ -434,10 +464,11 @@ struct parameter_pack_operations<T> {
 	using get_first_type = typename pack_first::type;
 	static constexpr len_t size = 1ull;
 	static constexpr len_t empty = LL_FALSE;
-	static constexpr ll_bool_t has_a_pointer = traits::is_pointer_v<T>;
+	static constexpr ll_bool_t has_a_pointer = std::is_pointer_v<T>;
+	static constexpr ll_bool_t has_a_array = std::is_array_v<T>;
 
 	// Hash
-	static constexpr len_t sizeof_hash_version = HashSize(HashSize::getSize<T>()).sizeof_;
+	///static constexpr len_t sizeof_hash_version = HashSize(HashSize::getSize<T>()).sizeof_;
 };
 template <>
 struct parameter_pack_operations<> {
@@ -448,9 +479,10 @@ struct parameter_pack_operations<> {
 	static constexpr len_t size = ZERO_UI64;
 	static constexpr len_t empty = LL_TRUE;
 	static constexpr ll_bool_t has_a_pointer = LL_FALSE;
+	static constexpr ll_bool_t has_a_array = LL_FALSE;
 
 	// Hash
-	static constexpr len_t sizeof_hash_version = ZERO_UI64;
+	///static constexpr len_t sizeof_hash_version = ZERO_UI64;
 };
 
 ///template <class... Args>
@@ -465,7 +497,7 @@ struct parameter_pack_operations<> {
 ///
 ///template <class... Args>
 ///constexpr len_t teas() {
-///	return parameter_pack_operations<Args...>::size;
+///	return 0;//parameter_pack_operations<Args...>::sizeof_hash_version;
 ///}
 ///
 ///constexpr len_t teas_1 = teas<>();
@@ -474,61 +506,33 @@ struct parameter_pack_operations<> {
 
 #pragma endregion
 
-//template<class T, class U>
-//using is_same_const_t =
-//	std::conditional_t<
-//		(traits::is_pointer_v<T> || traits::is_pointer_v<U>) && !(traits::is_pointer_v<T> && traits::is_pointer_v<U>),
-//		std::false_type,
-//		std::conditional_t<
-//			std::is_same_v<
-//				std::remove_const_t<std::remove_pointer_t<T>>,
-//				std::remove_const_t<std::remove_pointer_t<U>>
-//			>,
-//			std::true_type,
-//			std::false_type
-//		>
-//	>;
-//
-//template<class T, class U>
-//__LL_VAR_INLINE__ constexpr ll_bool_t is_same_const_v = is_same_const_t<T, U>::value;
-
-//template<class T>
-//__LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_constructible_v =
-//	traits::is_pointer_v<T> ||
-//	traits::is_basic_type_v<T> ||
-//	noexcept(T());
-//template<class T>
-//__LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_destructible_v =
-//	traits::is_pointer_v<T> ||
-//	traits::is_basic_type_v<T> ||
-//	noexcept(std::declval<T>().~T());
-
 #pragma endregion
 #pragma region Functions
-template<class ReturnType, class ObjectType, ReturnType NULL_VAL>
-constexpr ReturnType operatorTypeCall(const ObjectType& object) __LL_EXCEPT__ {
-	if constexpr (traits::is_pointer_v<ObjectType>) {
-		using __noptr = std::remove_pointer_t<ObjectType>;
-
-		if constexpr (traits::is_pointer_v<__noptr>)
-			return static_cast<ReturnType>(object);
-		else if constexpr (has_type_operator_v<__noptr, ReturnType>) {
-			if constexpr (is_basic_type_v<__noptr>) return *object;
-			else return object->operator ReturnType();
-		}
-		else if constexpr (is_basic_type_v<__noptr>)
-			return static_cast<ReturnType>(*object);
-		else return NULL_VAL;
-	}
-	else if constexpr (traits::has_type_operator_v<ObjectType, ReturnType>) {
-		if constexpr (traits::is_basic_type_v<ObjectType>) return object;
-		//else return object.operator ReturnType();
-		else return object;
-	}
-	else if constexpr (traits::is_basic_type_v<ObjectType>)
-		return static_cast<ReturnType>(object);
-	else return NULL_VAL;
-}
+/// [TODO] [UPGRADE]
+//template<class ReturnType, class ObjectType>
+//__LL_NODISCARD__ constexpr ReturnType operatorTypeCall(const ObjectType& object, ReturnType NULL_VAL) __LL_EXCEPT__ {
+//	if constexpr (traits::is_pointer_v<ObjectType>) {
+//		using __noptr = std::remove_pointer_t<ObjectType>;
+//
+//		if constexpr (traits::is_pointer_v<__noptr>)
+//			return static_cast<ReturnType>(object);
+//		else if constexpr (has_type_operator_v<__noptr, ReturnType>) {
+//			if constexpr (is_basic_type_v<__noptr>) return *object;
+//			else return object->operator ReturnType();
+//		}
+//		else if constexpr (is_basic_type_v<__noptr>)
+//			return static_cast<ReturnType>(*object);
+//		else return NULL_VAL;
+//	}
+//	else if constexpr (traits::has_type_operator_v<ObjectType, ReturnType>) {
+//		if constexpr (traits::is_basic_type_v<ObjectType>) return object;
+//		//else return object.operator ReturnType();
+//		else return object;
+//	}
+//	else if constexpr (traits::is_basic_type_v<ObjectType>)
+//		return static_cast<ReturnType>(object);
+//	else return NULL_VAL;
+//}
 
 #pragma endregion
 
@@ -557,29 +561,13 @@ struct template_types {
 
 	// Used mostly to get an object or basic type efficiently (if is basic type you would get a copy)
 	// To get always the original object use ref
-	using input = std::conditional_t<traits::is_basic_type_v<type>, type, ref>;
+	using input = std::conditional_t<traits::is_basic_type_v<type> || std::is_array_v<type>, type, ref>;
 	// Used mostly to get a const object or const basic type efficiently (if is basic type you would get a const copy)
 	// To get always the original object use cref
-	using cinput = std::conditional_t<traits::is_basic_type_v<type>, ctype, cref>;
+	using cinput = std::conditional_t<traits::is_basic_type_v<type> || std::is_array_v<type>, ctype, cref>;
 
 	using output = ref;
 };
-
-#pragma region Functions
-template<class T, class U>
-__LL_NODISCARD__ constexpr U constexpr_cast(T* data) __LL_EXCEPT__ {
-	if constexpr (std::is_const_v<T>) {
-		const void* mem = data;
-		return static_cast<U>(mem);
-	}
-	else {
-		void* mem = data;
-		return static_cast<U>(mem);
-	}
-}
-
-#pragma endregion
-
 
 } // namespace traits
 } // namespace meta

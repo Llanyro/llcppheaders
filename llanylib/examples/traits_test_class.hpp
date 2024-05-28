@@ -30,6 +30,7 @@ namespace traits {
 
 struct TestClassBase {
 	operator bool() const { return false; }
+	operator llcpp::meta::hash::Hash64() const { return 0; }
 	void swap(TestClassBase& other) {}
 	ll_bool_t swap_s(TestClassBase& other) {}
 	void clear() {}

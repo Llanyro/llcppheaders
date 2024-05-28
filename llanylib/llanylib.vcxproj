@@ -45,6 +45,8 @@
     <ClInclude Include="expresions\color.hpp" />
     <ClInclude Include="expresions\math.hpp" />
     <ClInclude Include="expresions\string.hpp" />
+    <ClInclude Include="Hash64.hpp" />
+    <ClInclude Include="HashTools.hpp" />
     <ClInclude Include="LinkedList.hpp" />
     <ClInclude Include="LoopList.hpp" />
     <ClInclude Include="math.hpp" />
@@ -54,6 +56,7 @@
     <ClInclude Include="RAIIBase.hpp" />
     <ClInclude Include="RAIIWrapper.hpp" />
     <ClInclude Include="Random.hpp" />
+    <ClInclude Include="reflection.hpp" />
     <ClInclude Include="Singleton.hpp" />
     <ClInclude Include="string.hpp" />
     <ClInclude Include="StringView.hpp" />

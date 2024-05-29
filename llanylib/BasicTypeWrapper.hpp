@@ -60,7 +60,7 @@ class BasicTypeWrapper {
 		constexpr void convertToChars(ll_char_t** buffer, ui8** errors, const len_t size) const __LL_EXCEPT__ {
 			convertToChars(buffer, errors, size, this->value);
 		}
-		constexpr static void convertToChars(ll_char_t** buffer, ui8** errors, const len_t size, type::cinput value) __LL_EXCEPT__ {
+		static constexpr void convertToChars(ll_char_t** buffer, ui8** errors, const len_t size, type::cinput value) __LL_EXCEPT__ {
 			ll_char_t*& mem = *buffer;
 			ui8*& err = *errors;
 			if constexpr (std::_Is_any_of_v<typename type::type, i8, ui8>) {

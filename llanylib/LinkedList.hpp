@@ -27,7 +27,7 @@ namespace llcpp {
 namespace linked {
 
 template<class T>
-class LL_SHARED_LIB LinkedList : public CountableL {
+class LinkedList : public CountableL {
 	public:
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(LinkedList<T>, LinkedList);

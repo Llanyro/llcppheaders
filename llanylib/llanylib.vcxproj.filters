@@ -22,9 +22,6 @@
     <Filter Include="Source Files\utils\lists\linked">
       <UniqueIdentifier>{6c0ee5bc-f841-4796-b6bb-6259973006da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\utils\string">
-      <UniqueIdentifier>{4c089b09-ec5e-4c61-8da1-67fe487eb8f2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\utils\raii">
       <UniqueIdentifier>{0d5a2a76-0644-4c82-9a4b-281f974c96dd}</UniqueIdentifier>
     </Filter>
@@ -42,6 +39,9 @@
     </Filter>
     <Filter Include="Source Files\standards">
       <UniqueIdentifier>{00e40e75-2a5a-4a48-aedf-c92e8f19e94d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hash">
+      <UniqueIdentifier>{e03b962a-c161-4c48-a3fd-0f3a46df8209}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -84,17 +84,11 @@
     <ClInclude Include="algorithm.hpp">
       <Filter>Source Files\utils\lists</Filter>
     </ClInclude>
-    <ClInclude Include="Array.hpp">
+    <ClInclude Include="StaticArray.hpp">
       <Filter>Source Files\utils\lists</Filter>
     </ClInclude>
     <ClInclude Include="ArrayView.hpp">
       <Filter>Source Files\utils\lists</Filter>
-    </ClInclude>
-    <ClInclude Include="StringView.hpp">
-      <Filter>Source Files\utils\string</Filter>
-    </ClInclude>
-    <ClInclude Include="string.hpp">
-      <Filter>Source Files\utils\string</Filter>
     </ClInclude>
     <ClInclude Include="dynamiclibrarylinking.hpp">
       <Filter>Source Files\utils</Filter>
@@ -144,13 +138,7 @@
     <ClInclude Include="examples\mathExample.hpp">
       <Filter>Source Files\examples</Filter>
     </ClInclude>
-    <ClInclude Include="CityHash.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
     <ClInclude Include="Typeid.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="ArrayPair.hpp">
       <Filter>Source Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="expresions\ascii.hpp">
@@ -171,14 +159,35 @@
     <ClInclude Include="examples\RandomExample.hpp">
       <Filter>Source Files\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Hash64.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="HashTools.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
     <ClInclude Include="reflection.hpp">
       <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.hpp">
+      <Filter>Source Files\utils\lists</Filter>
+    </ClInclude>
+    <ClInclude Include="string.hpp">
+      <Filter>Source Files\utils\lists</Filter>
+    </ClInclude>
+    <ClInclude Include="cityhash.hpp">
+      <Filter>Source Files\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="Hash64.hpp">
+      <Filter>Source Files\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="hashtools.hpp">
+      <Filter>Source Files\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="hash.hpp">
+      <Filter>Source Files\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrayPair.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardRandom.hpp">
+      <Filter>Source Files\standards</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardHash.hpp">
+      <Filter>Source Files\standards</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

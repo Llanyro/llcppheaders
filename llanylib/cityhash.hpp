@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	CityHash.hpp							//
+//	cityhash.hpp							//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -15,9 +15,9 @@
 #if defined(LLANYLIB_CITYHASH_HPP_) // Guard && version protector
 	#if LLANYLIB_CITYHASH_MAYOR_ != 6 || LLANYLIB_CITYHASH_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
-			#warning "CityHash.hpp version error!"
+			#warning "cityhash.hpp version error!"
 		#else
-			#error "CityHash.hpp version error!"
+			#error "cityhash.hpp version error!"
 		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_CITYHASH_MAYOR_ || LLANYLIB_CITYHASH_MINOR_
 
@@ -26,9 +26,8 @@
 #define LLANYLIB_CITYHASH_MAYOR_ 6
 #define LLANYLIB_CITYHASH_MINOR_ 0
 
-#include "ArrayPair.hpp"
 #include "bits.hpp"
-#include "Hash64.hpp"
+#include "hashtools.hpp"
 
 #if defined(WORDS_BIGENDIAN)
 #define ui32_in_expected_order(x) (bits::bytes_swap_32(x))
@@ -276,21 +275,19 @@ class CityHash {
 			if (s.empty()) return hash::Hash64();
 			else return city::CityHash::cityHash64(s.begin(), s.len());
 		}
-		// Only admits traits::is_basic_type_v<> 
-		template<class T>
-		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(const T value) __LL_EXCEPT__ {
-			if constexpr (!traits::is_basic_type_v<T>) return hash::Hash64();
-			else {
-				ll_char_t buffer[sizeof(T)]{};
-				// [CRITICAL]
-				///DataHashConversor::conversor(buffer, value);
-				return city::CityHash::cityHash64(buffer, sizeof(T));
-			}
+		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(const Str& s) __LL_EXCEPT__ {
+			if (s.empty()) return hash::Hash64();
+			else return city::CityHash::cityHash64(s.begin(), s.len());
+		}
+		// Only admits hash::basic_type_hash::is_convertible_v<>
+		// Returns hash::Hash64() if invalid type or hash error
+		template<class U, class W = traits::template_types<U>>
+		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(typename W::cinput value) __LL_EXCEPT__ {
+			return hash::basic_type_hash::hashValue<U, W>(value, city::CityHash::cityHash64);
 		}
 		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(const hash::Hash64& hash) __LL_EXCEPT__ {
-			return city::CityHash::cityHash64(hash.get());
+			return hash::basic_type_hash::hashValue<ui64>(hash.get(), city::CityHash::cityHash64);
 		}
-
 };
 
 } // namespace city

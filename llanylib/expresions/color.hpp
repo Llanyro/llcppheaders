@@ -21,7 +21,7 @@
 #define LLANYLIB_EXPRESIONS_COLOR_MAYOR_ 6
 #define LLANYLIB_EXPRESIONS_COLOR_MINOR_ 0
 
-#include "../StringView.hpp"
+#include "../ArrayView.hpp"
 
 namespace llcpp {
 namespace meta {

@@ -46,7 +46,7 @@ namespace meta {
 */
 
 template <class T>
-class LL_SHARED_LIB Singleton {
+class  Singleton {
 	public:
 		using type = traits::template_types<T>;
 		using __Singleton = traits::template_types<Singleton<T>>;
@@ -79,7 +79,7 @@ class LL_SHARED_LIB Singleton {
 
 // [TODO] Needs to be with a given allocator and a subscriber
 //template <class T>
-//class LL_SHARED_LIB Singleton {
+//class  Singleton {
 //	public:
 //		using type = traits::template_types<T>;
 //		using __Singleton = traits::template_types<Singleton<T>>;

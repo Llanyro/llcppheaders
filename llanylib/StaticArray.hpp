@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	ArrayView.hpp							//
+//	StaticArray.hpp							//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -7,94 +7,94 @@
 //	Version: 6.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_ARRAYVIEW_HPP_) // Guard && version protector
-	#if LLANYLIB_ARRAYVIEW_MAYOR_ != 6 || LLANYLIB_ARRAYVIEW_MINOR_ < 0
+#if defined(LLANYLIB_STATICARRAY_HPP_) // Guard && version protector
+	#if LLANYLIB_STATICARRAY_MAYOR_ != 6 || LLANYLIB_STATICARRAY_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
-			#warning "ArrayView.hpp version error!"
+			#warning "StaticArray.hpp version error!"
 		#else
-			#error "ArrayView.hpp version error!"
+			#error "StaticArray.hpp version error!"
 		#endif // LL_REAL_CXX23
-	#endif // LLANYLIB_ARRAYVIEW_MAYOR_ || LLANYLIB_ARRAYVIEW_MINOR_
+	#endif // LLANYLIB_STATICARRAY_MAYOR_ || LLANYLIB_STATICARRAY_MINOR_
 
-#else !defined(LLANYLIB_ARRAYVIEW_HPP_)
-#define LLANYLIB_ARRAYVIEW_HPP_
-#define LLANYLIB_ARRAYVIEW_MAYOR_ 6
-#define LLANYLIB_ARRAYVIEW_MINOR_ 0
+#else !defined(LLANYLIB_STATICARRAY_HPP_)
+#define LLANYLIB_STATICARRAY_HPP_
+#define LLANYLIB_STATICARRAY_MAYOR_ 6
+#define LLANYLIB_STATICARRAY_MINOR_ 0
 
 #include "algorithm.hpp"
 
 namespace llcpp {
 namespace meta {
 
-template<class T, ll_bool_t IS_STRINGVIEW = LL_FALSE>
-class ArrayView : public meta::ArrayPair<T> {
-	#pragma region Assert
-	public:
-		static_assert(std::conditional_t<IS_STRINGVIEW, std::conditional_t<traits::is_char_type_v<T>, std::true_type, std::false_type>, std::true_type>::value, "A stringview needs a char type!");
-	#pragma endregion
+template<class T, len_t N, T NULL_ITEM>
+class StaticArray : public meta::Array<T> {
 	#pragma region ClassTypes
 	public:
 		using type = traits::template_types<T>;
-		using __ArrayView = traits::template_types<ArrayView<T, IS_STRINGVIEW>>;
-		using __ArrayPair = traits::template_types<meta::ArrayPair<T>>;
+		using __StaticArray = traits::template_types<meta::StaticArray<T, N, NULL_ITEM>>;
 		using __Array = traits::template_types<meta::Array<T>>;
+		using __ArrayPair = traits::template_types<ArrayPair<T>>;
 
-	#pragma endregion
-	#pragma region OtherClassTypes
-	// Algorithm objects
 	public:
+		using __data = algorithm::data_manipulation_cluster<typename type::raw>;
 		template<ll_bool_t GET_DATA, class U>
 		using __cmp = algorithm::compare_cluster<typename type::raw, U, GET_DATA>;
 		template<ll_bool_t POSITION>
 		using __find = algorithm::finders_cluster<typename type::raw, POSITION>;
-	protected:
-		template<len_t N, ll_bool_t _>
-		struct GetSize { static constexpr len_t SIZE = N; };
-		template<len_t N>
-		struct GetSize<N, LL_TRUE> { static constexpr len_t SIZE = N - 1; };
-		template<len_t N>
-		using SizeConversor = GetSize<N, IS_STRINGVIEW>;
 
 	#pragma endregion
+	#pragma region Attributes
+	protected:
+		type::type mem_array[N];
+	#pragma endregion
 	#pragma region Functions
+		#pragma region Constructors
 	public:
-		#pragma region Contructors
-		constexpr ArrayView() __LL_EXCEPT__ = delete;
-		constexpr ArrayView(type::cptr mem, type::cptr mem_end) __LL_EXCEPT__ : __ArrayPair::type(mem, mem_end) {}
-		constexpr ArrayView(type::cptr mem, const len_t len) __LL_EXCEPT__ : __ArrayPair::type(mem, len) {}
-		constexpr ~ArrayView() __LL_EXCEPT__ {}
+		constexpr StaticArray() __LL_EXCEPT__ : __Array::type(LL_NULLPTR, LL_NULLPTR), mem_array() {
+			this->mem = this->mem_array;
+			this->mem_end = this->mem_array + N;
+		}
+		constexpr StaticArray(typename type::cinput object) __LL_EXCEPT__
+			: StaticArray() { this->fill<typename type::type>(object); }
+		constexpr ~StaticArray() __LL_EXCEPT__ {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr ArrayView(__ArrayView::cref other) __LL_EXCEPT__ : __ArrayPair::type(other) {}
-		constexpr __ArrayView::ref operator=(__ArrayView::cref other) __LL_EXCEPT__ {
-			__ArrayPair::type::operator=(other);
+	public:
+		constexpr StaticArray(__StaticArray::cref other) __LL_EXCEPT__ : StaticArray() {
+			this->copy<typename type::type>(other.mem_array);
+		}
+		constexpr __StaticArray::ref operator=(__StaticArray::cref other) __LL_EXCEPT__ {
+			this->copy<typename type::type>(other.mem_array);
 			return *this;
 		}
-		constexpr ArrayView(__ArrayView::move other) __LL_EXCEPT__ : __ArrayPair::type(std::move(other)) {}
-		constexpr __ArrayView::ref operator=(__ArrayView::move other) __LL_EXCEPT__ {
-			__ArrayPair::type::operator=(std::move(other));
+		constexpr StaticArray(__StaticArray::move other) __LL_EXCEPT__ : StaticArray(other) {
+			other.clear();
+		}
+		constexpr __StaticArray::ref operator=(__StaticArray::move other) __LL_EXCEPT__ {
+			__StaticArray::type::operator=(other);
+			other.__StaticArray::type::clear();
 			return *this;
 		}
-
-		constexpr ArrayView(__ArrayPair::cref other) __LL_EXCEPT__ : __ArrayPair::type(other) {}
-		constexpr __ArrayView::ref operator=(__ArrayPair::cref other) __LL_EXCEPT__ {
-			__ArrayPair::type::operator=(other);
+		
+		constexpr StaticArray(__Array::cref other) __LL_EXCEPT__ : StaticArray() {
+			this->copy<typename type::type>(other.begin(), other.len());
+		}
+		constexpr __StaticArray::ref operator=(__Array::cref other) __LL_EXCEPT__ {
+			this->copy<typename type::type>(other.begin(), other.len());
 			return *this;
 		}
-		constexpr ArrayView(__ArrayPair::move other) __LL_EXCEPT__ : __ArrayPair::type(std::move(other)) {}
-		constexpr __ArrayView::ref operator=(__ArrayPair::move other) __LL_EXCEPT__ {
-			__ArrayPair::type::operator=(std::move(other));
-			return *this;
-		}
+		constexpr StaticArray(__Array::move) __LL_EXCEPT__ = delete;
+		constexpr __StaticArray::ref operator=(__Array::move) __LL_EXCEPT__ = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename __ArrayView::cptr() const __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ constexpr operator typename __ArrayView::ptr() __LL_EXCEPT__ { return this; }
+	public:
+		__LL_NODISCARD__ constexpr operator typename __StaticArray::ptr() __LL_EXCEPT__ = delete;
+		__LL_NODISCARD__ constexpr operator typename __StaticArray::cptr() const __LL_EXCEPT__ = delete;
 
 		#pragma endregion
-		#pragma region ClassFunctions
+
 		#pragma region Compare
 	public:
 		template<ll_bool_t GET_DATA, class U>
@@ -120,15 +120,15 @@ class ArrayView : public meta::ArrayPair<T> {
 				return CompareResult<GET_DATA, U>(-2);
 			else return __cmp<GET_DATA, U>::compare(this->begin(), arr, this->len());
 		}
-		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N, class W = traits::template_types<U>>
-		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(typename W::ctype(&arr)[N], CompareFunc<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
-			if (this->len() != SizeConversor<N>::SIZE)
+		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2, class W = traits::template_types<U>>
+		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(typename W::ctype(&arr)[N2], CompareFunc<GET_DATA, U> compareFunc) const __LL_EXCEPT__ {
+			if (this->len() != N2)
 				return CompareResult<GET_DATA, U>(-2);
 			return __cmp<GET_DATA, U>::compare(this->begin(), arr, this->len(), compareFunc);
 		}
-		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N, class W = traits::template_types<U>>
-		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(typename W::ctype(&arr)[N]) const __LL_EXCEPT__ {
-			if (this->len() != SizeConversor<N>::SIZE)
+		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2, class W = traits::template_types<U>>
+		__LL_NODISCARD__ constexpr CompareResult<GET_DATA, U> compare(typename W::ctype(&arr)[N2]) const __LL_EXCEPT__ {
+			if (this->len() != N2)
 				return CompareResult<GET_DATA, U>(-2);
 			else return __cmp<GET_DATA, U>::compare(this->begin(), arr, this->len());
 		}
@@ -180,13 +180,13 @@ class ArrayView : public meta::ArrayPair<T> {
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(typename W::cptr arr, const len_t size) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::equals(*this, arr, size);
 		}
-		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N, class W = traits::template_types<U>>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(typename W::ctype(&arr)[N], CompareFunc<GET_DATA, U> cmp) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(*this, arr, SizeConversor<N>::SIZE, cmp);
+		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2, class W = traits::template_types<U>>
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(typename W::ctype(&arr)[N2], CompareFunc<GET_DATA, U> cmp) const __LL_EXCEPT__ {
+			return __cmp<GET_DATA, U>::equals<N2>(*this, arr, cmp);
 		}
-		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N, class W = traits::template_types<U>>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(typename W::ctype(&arr)[N]) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::equals(*this, arr, SizeConversor<N>::SIZE);
+		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2, class W = traits::template_types<U>>
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(typename W::ctype(&arr)[N2]) const __LL_EXCEPT__ {
+			return __cmp<GET_DATA, U>::equals<N2>(*this, arr);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> equals(const ArrayPair<U>& arr, CompareFunc<GET_DATA, U> cmp) const __LL_EXCEPT__ {
@@ -215,9 +215,9 @@ class ArrayView : public meta::ArrayPair<T> {
 
 		#pragma endregion
 		#pragma region Operators
-		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N, class W = traits::template_types<U>>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> operator==(typename W::ctype(&arr)[N]) const __LL_EXCEPT__ {
-			return this->equals<U, GET_DATA, W>(arr, SizeConversor<N>::SIZE);
+		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2, class W = traits::template_types<U>>
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> operator==(typename W::ctype(&arr)[N2]) const __LL_EXCEPT__ {
+			return this->equals<U, GET_DATA, N2, W>(arr);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> operator==(const ArrayPair<U>& arr) const __LL_EXCEPT__ {
@@ -232,18 +232,15 @@ class ArrayView : public meta::ArrayPair<T> {
 			return this->equals<U, GET_DATA>(arr);
 		}
 
-		template<len_t N>
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(typename type::ctype(&arr)[N]) const __LL_EXCEPT__ {
-			return this->equals<typename type::type, LL_FALSE, type>(arr, SizeConversor<N>::SIZE);
+		template<len_t N2>
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(typename type::ctype(&arr)[N2]) const __LL_EXCEPT__ {
+			return this->equals<typename type::type, LL_FALSE, N2, type>(arr);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(__ArrayPair::cref arr) const __LL_EXCEPT__ {
 			return this->equals<typename type::type, LL_FALSE>(arr);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(__Array::cref arr) const __LL_EXCEPT__ {
 			return this->equals<typename type::type, LL_FALSE>(arr);
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(__ArrayView::cref arr) const __LL_EXCEPT__ {
-			return this->equals<typename type::type, LL_FALSE, IS_STRINGVIEW>(arr);
 		}
 
 		#pragma endregion
@@ -256,13 +253,13 @@ class ArrayView : public meta::ArrayPair<T> {
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(typename W::cptr needle, const len_t size) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::starts_with(*this, needle, size);
 		}
-		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N, class W = traits::template_types<U>>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(typename W::ctype(&needle)[N], CompareFuncBool<GET_DATA, U> cmp) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::starts_with(*this, needle, SizeConversor<N>::SIZE, cmp);
+		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2, class W = traits::template_types<U>>
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(typename W::ctype(&needle)[N2], CompareFuncBool<GET_DATA, U> cmp) const __LL_EXCEPT__ {
+			return __cmp<GET_DATA, U>::starts_with<N2>(*this, needle, cmp);
 		}
-		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N, class W = traits::template_types<U>>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(typename W::ctype(&needle)[N]) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::starts_with(*this, needle, SizeConversor<N>::SIZE);
+		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2, class W = traits::template_types<U>>
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(typename W::ctype(&needle)[N2]) const __LL_EXCEPT__ {
+			return __cmp<GET_DATA, U>::starts_with<N2>(*this, needle);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> starts_with(const ArrayPair<U>& needle, CompareFuncBool<GET_DATA, U> cmp) const __LL_EXCEPT__ {
@@ -309,13 +306,13 @@ class ArrayView : public meta::ArrayPair<T> {
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(typename W::cptr needle, const len_t size) const __LL_EXCEPT__ {
 			return __cmp<GET_DATA, U>::ends_with(*this, needle, size);
 		}
-		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N, class W = traits::template_types<U>>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(typename W::ctype(&needle)[N], CompareFuncBool<GET_DATA, U> cmp) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::ends_with(*this, needle, SizeConversor<N>::SIZE, cmp);
+		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2, class W = traits::template_types<U>>
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(typename W::ctype(&needle)[N2], CompareFuncBool<GET_DATA, U> cmp) const __LL_EXCEPT__ {
+			return __cmp<GET_DATA, U>::ends_with<N2>(*this, needle, cmp);
 		}
-		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N, class W = traits::template_types<U>>
-		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(typename W::ctype(&needle)[N]) const __LL_EXCEPT__ {
-			return __cmp<GET_DATA, U>::ends_with(*this, needle, SizeConversor<N>::SIZE);
+		template<class U, ll_bool_t GET_DATA = LL_FALSE, len_t N2, class W = traits::template_types<U>>
+		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(typename W::ctype(&needle)[N2]) const __LL_EXCEPT__ {
+			return __cmp<GET_DATA, U>::ends_with<N2>(*this, needle);
 		}
 		template<class U, ll_bool_t GET_DATA = LL_FALSE>
 		__LL_NODISCARD__ constexpr CompareResultBool<GET_DATA, U> ends_with(const ArrayPair<U>& needle, CompareFuncBool<GET_DATA, U> cmp) const __LL_EXCEPT__ {
@@ -417,24 +414,120 @@ class ArrayView : public meta::ArrayPair<T> {
 		}
 
 		#pragma endregion
+
+		#pragma region Reverse
+	public:
+		using SwapFunc = typename __data::SwapFunc;
+
+		constexpr void reverse(SwapFunc swap, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::reverse(this->get(first), this->get(last), swap);
+		}
+		constexpr void reverse(const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::reverse(this->get(first), this->get(last));
+		}
+
 		#pragma endregion
+		#pragma region Fill
+	public:
+		// [TOFIX]
+		template<class W>
+		//using FillFunc = typename __data::FillFunc<W>;
+		using FillFunc = fnc_clss::SetFunction<typename type::type, W>;
+
+		template<class U, class W = traits::template_types<U>>
+		constexpr void fill(typename W::cinput object, FillFunc<typename W::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::fill<U, W>(this->get(first), this->get(last), object, setFunc);
+		}
+		template<class U, class W = traits::template_types<U>>
+		constexpr void fill(typename W::cinput object, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::fill<U, W>(this->get(first), this->get(last), object);
+		}
+
+		#pragma endregion
+		#pragma region Copy
+	public:
+		template<class U, class W = traits::template_types<U>>
+		constexpr void copy(W::cptr src, const len_t size, FillFunc<typename W::type> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			len_t this_size = last - first;
+			if (!setFunc || size != this_size) return;
+			__data::copy<U, W>(src, this->get(first), this_size, setFunc);
+		}
+		template<class U, class W = traits::template_types<U>>
+		constexpr void copy(W::cptr src, const len_t size, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			len_t this_size = last - first;
+			if (size != this_size) return;
+			__data::copy<U, W>(src, this->get(first), N);
+		}
+		template<class U, class W = traits::template_types<U>, len_t N2>
+		constexpr void copy(W::ctype(&src)[N2], FillFunc<typename W::type> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			len_t this_size = last - first;
+			if (!setFunc || N2 != this_size) return;
+			__data::copy<U, W>(src, this->get(first), N2, setFunc);
+		}
+		template<class U, class W = traits::template_types<U>, len_t N2>
+		constexpr void copy(W::ctype(&src)[N2], const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			len_t this_size = last - first;
+			if (N2 != this_size) return;
+			__data::copy<U, W>(src, this->get(first), N2);
+		}
+
+		#pragma endregion
+		#pragma region Shift
+		//constexpr void fill(const len_t first, const len_t last, len_t num, typename W::cinput null, SwapFunc swap, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
+
+		//constexpr void shiftLeft(const len_t num, SwapFunc swap, FillFunc<typename type::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+		constexpr void shiftLeft(const len_t num, SwapFunc swap, FillFunc<typename type::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::shiftLeft<type::type>(this->get(first), last - first, 0, num, NULL_ITEM, setFunc, setFunc);
+		}
+		constexpr void shiftLeft(const len_t num, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::shiftLeft<type::type>(this->get(first), last - first, 0, num, NULL_ITEM);
+		}
+		constexpr void shifRight(const len_t num, SwapFunc swap, FillFunc<typename type::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::shifRight<type::type>(this->get(first), last - first, 0, num, NULL_ITEM, setFunc, setFunc);
+		}
+		constexpr void shifRight(const len_t num, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+			__data::shifRight<type::type>(this->get(first), last - first, 0, num, NULL_ITEM);
+		}
+
+		#pragma endregion
+		#pragma region Qsort
+		// WIP
+
+		#pragma endregion
+		#pragma region Other
+		template<class U, class W = traits::template_types<U>>
+		constexpr void clear(typename W::cinput null, FillFunc<typename W::type> setFunc) __LL_EXCEPT__ {
+			this->fill<U, W>(null, setFunc);
+		}
+		template<class U, class W = traits::template_types<U>>
+		constexpr void clear(typename W::cinput null) __LL_EXCEPT__ {
+			this->fill<U, W>(null);
+		}
+		constexpr void clear() __LL_EXCEPT__ {
+			this->fill<type::type>(NULL_ITEM);
+		}
+
+		#pragma endregion
+
 	#pragma endregion
 };
 
-template<class T, len_t N>
-constexpr ArrayView<T, LL_FALSE> make_ArrayView(const T(&arr)[N]) {
-	return ArrayView<T, LL_FALSE>(arr, N);
+constexpr int testing() {
+	StaticArray<ll_int_t, 10, 0> arr;
+	decltype(arr)::FillFunc<const ll_char_t> f = [](ll_int_t& a, const ll_char_t b) -> void {
+		a = b;
+	};
+	arr.fill<ll_char_t>(5, f);
+	arr.clear();
+	arr[9] = 8;
+	arr.shifRight(9);
+	arr.reverse();
+	return arr[0];
 }
-template<len_t N>
-constexpr StringView make_StringView(const ll_char_t(&mem)[N]) {
-	return StringView(mem, mem + N - 1);
-}
-template<len_t N>
-constexpr wStringView make_StringView(const ll_wchar_t(&mem)[N]) {
-	return wStringView(mem, mem + N - 1);
-}
+
+constexpr int val = testing();
 
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_ARRAYVIEW_HPP_
+#endif // LLANYLIB_STATICARRAY_HPP_

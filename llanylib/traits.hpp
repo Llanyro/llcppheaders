@@ -193,11 +193,11 @@ struct type_conversor {
 		static constexpr auto test() __LL_EXCEPT__ {
 			if constexpr (std::is_array_v<T>) {
 				T _{};
-				return std::remove_reference_t<decltype(*_)>{};
+				return traits::type_container<std::remove_reference_t<decltype(*_)>>{};
 			}
-			else return T{};
+			else return traits::type_container<T>{};
 		}
-		using value = typename decltype(test());
+		using value = typename decltype(test())::value;
 	};
 
 	// Gets raw type, no pointers, no references (rvalue || lvalue)
@@ -408,37 +408,12 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyabl
 #pragma endregion
 
 #pragma region ParameterPacks
-///struct HashSize {
-///	template<class T>
-///	static constexpr len_t getSize() __LL_EXCEPT__ {
-///		if constexpr (traits::is_pointer_v<T>) {
-///			//using __noptr = std::remove_pointer_t<T>;
-///			//if constexpr (traits::is_pointer_v<__noptr>) return ZERO_UI64;
-///			//else if constexpr (traits::is_basic_type_v<__noptr>) return sizeof(__noptr);
-///			//else if constexpr (traits::has_type_operator_v<__noptr, hash::Hash64>) return sizeof(hash::Hash64);
-///			//else return sizeof(hash::Hash64);
-///			return ZERO_UI64;
-///		}
-///		else if constexpr (traits::is_basic_type_v<T>) return sizeof(T);
-///		else if constexpr (traits::has_type_operator_v<T, hash::Hash64>) return sizeof(hash::Hash64);
-///		else return sizeof(hash::Hash64);
-///	}
-///
-///	len_t sizeof_;
-///	constexpr HashSize(const len_t sizeof_) __LL_EXCEPT__ : sizeof_(sizeof_) {}
-///	constexpr ~HashSize() __LL_EXCEPT__ {}
-///
-///	constexpr HashSize operator&&(const HashSize& other) const __LL_EXCEPT__ {
-///		return HashSize(this->sizeof_ + other.sizeof_);
-///	}
-///	constexpr const HashSize& operator&&(const ll_bool_t) const __LL_EXCEPT__ { return *this; }
-///};
 template <class... Args>
 struct parameter_pack_operations {
 	template<class T, class... uArgs>
 	struct FirstType {
 		using type = T;
-		using next = typename parameter_pack_operations<uArgs...>::pack_first;
+		using next = FirstType<uArgs...>;
 	};
 	template<class T>
 	struct FirstType<T> {
@@ -452,9 +427,6 @@ struct parameter_pack_operations {
 	static constexpr len_t empty = (size == ZERO_UI64);
 	static constexpr ll_bool_t has_a_pointer = (std::is_pointer_v<Args> || ...);
 	static constexpr ll_bool_t has_a_array = (std::is_array_v<Args> || ...);
-
-	// Hash
-	///static constexpr len_t sizeof_hash_version = (HashSize(HashSize::getSize<Args>()) && ...).sizeof_;
 };
 template <class T>
 struct parameter_pack_operations<T> {
@@ -466,9 +438,6 @@ struct parameter_pack_operations<T> {
 	static constexpr len_t empty = LL_FALSE;
 	static constexpr ll_bool_t has_a_pointer = std::is_pointer_v<T>;
 	static constexpr ll_bool_t has_a_array = std::is_array_v<T>;
-
-	// Hash
-	///static constexpr len_t sizeof_hash_version = HashSize(HashSize::getSize<T>()).sizeof_;
 };
 template <>
 struct parameter_pack_operations<> {
@@ -480,9 +449,6 @@ struct parameter_pack_operations<> {
 	static constexpr len_t empty = LL_TRUE;
 	static constexpr ll_bool_t has_a_pointer = LL_FALSE;
 	static constexpr ll_bool_t has_a_array = LL_FALSE;
-
-	// Hash
-	///static constexpr len_t sizeof_hash_version = ZERO_UI64;
 };
 
 ///template <class... Args>

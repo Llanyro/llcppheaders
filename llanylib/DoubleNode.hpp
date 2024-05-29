@@ -30,7 +30,7 @@ namespace llcpp {
 namespace linked {
 
 template<class T>
-class LL_SHARED_LIB DoubleNode : public NodePrev<DoubleNode<T>>, public NodeNext<DoubleNode<T>> {
+class DoubleNode : public NodePrev<DoubleNode<T>>, public NodeNext<DoubleNode<T>> {
 	public:
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(DoubleNode<T>, DoubleNode);

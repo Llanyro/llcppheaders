@@ -21,7 +21,7 @@
 #define LLANYLIB_TYPEID_MAYOR_ 6
 #define LLANYLIB_TYPEID_MINOR_ 0
 
-#include "StringView.hpp"
+#include "ArrayPair.hpp"
 #include "Hash64.hpp"
 
 namespace llcpp {
@@ -51,13 +51,10 @@ class Typeid {
 		constexpr Typeid(NameType&& name, HashFunction hashFunction) __LL_EXCEPT__
 			: name_hash(hashFunction(name)), name(std::move(name)) {}
 
-		template<class T, len_t N>
-		constexpr Typeid(const StringView<N, T>& name, HashFunction hashFunction) __LL_EXCEPT__
+		constexpr Typeid(const meta::StringView& name, HashFunction hashFunction) __LL_EXCEPT__
 			: name_hash(hashFunction(name)), name(name) {}
-		template<class T, len_t N>
-		constexpr Typeid(StringView<N, T>&& name) __LL_EXCEPT__
-			: name_hash(name.operator hash::Hash64()), name(std::move(name)) {}
-
+		constexpr Typeid(StringView&& name, HashFunction hashFunction) __LL_EXCEPT__
+			: name_hash(hashFunction(name)), name(std::move(name)) {}
 
 		#pragma endregion
 		#pragma region CopyMove

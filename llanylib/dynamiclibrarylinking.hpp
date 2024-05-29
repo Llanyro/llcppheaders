@@ -17,7 +17,7 @@
 #define LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ 6
 #define LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ 0
 
-#include "StringView.hpp"
+#include "ArrayView.hpp"
 
 #if defined(WINDOWS_SYSTEM)
 	#include <Windows.h>
@@ -65,7 +65,7 @@ inline void closeLibrary(ll_lib_t libraryHandle) {
 	close_lib(libraryHandle);
 }
 
-class LL_SHARED_LIB DllHandle {
+class DllHandle {
 	protected:
 		ll_lib_t handle;
 	protected:

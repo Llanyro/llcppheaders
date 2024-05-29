@@ -196,8 +196,20 @@ namespace meta {
 
 template<class T>
 class ArrayPair;
+template<class T>
+class Array;
+template<class T, ll_bool_t IS_STRINGVIEW>
+class ArrayView;
+
+using StringView = ArrayView<ll_char_t, LL_TRUE>;
+using wStringView = ArrayView<ll_wchar_t, LL_TRUE>;
+
 using StrPair = ArrayPair<ll_char_t>;
 using wStrPair = ArrayPair<ll_wchar_t>;
+
+using Str = Array<ll_char_t>;
+using wStr = Array<ll_wchar_t>;
+
 template<class T>
 class Typeid;
 using StrTypeid = Typeid<ll_char_t>;
@@ -206,10 +218,18 @@ using wStrTypeid = Typeid<ll_wchar_t>;
 namespace hash {
 class Hash64;
 class HashFunctionPack;
+
+using HashFunction = hash::Hash64(*)(ll_string_t, len_t);
+using wHashFunction = hash::Hash64(*)(ll_wstring_t, len_t);
+
 using StrPairHashFunction = hash::Hash64(*)(const meta::StrPair&);
 using wStrPairHashFunction = hash::Hash64(*)(const meta::wStrPair&);
-using HashFunction = hash::Hash64(*)(ll_string_t, len_t);
+
+using StrHashFunction = hash::Hash64(*)(const meta::Str&);
+using wStrHashFunction = hash::Hash64(*)(const meta::wStr&);
+
 using HashRecursiveFunction = hash::Hash64(*)(const hash::Hash64&);
+
 using HashStrTypeidFunction = hash::Hash64(*)(const void*, const StrTypeid&);
 using HashwStrTypeidFunction = hash::Hash64(*)(const void*, const wStrTypeid&);
 

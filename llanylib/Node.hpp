@@ -28,7 +28,7 @@ namespace meta {
 namespace linked {
 
 template <class NodeType>
-class LL_SHARED_LIB NodeNext {
+class NodeNext {
 	#pragma region Assersts
 	public:
 		// [TOCHECK] Check with benchmark class
@@ -93,7 +93,7 @@ class LL_SHARED_LIB NodeNext {
 };
 
 template <class NodeType>
-class LL_SHARED_LIB NodePrev {
+class NodePrev {
 	#pragma region Assersts
 	public:
 		// [TOCHECK] Check with benchmark class

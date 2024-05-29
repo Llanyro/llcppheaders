@@ -21,7 +21,7 @@
 #define LLANYLIB_EXPRESIONS_ASCII_MAYOR_ 6
 #define LLANYLIB_EXPRESIONS_ASCII_MINOR_ 0
 
-#include "../StringView.hpp"
+#include "../ArrayView.hpp"
 
 namespace llcpp {
 namespace meta {

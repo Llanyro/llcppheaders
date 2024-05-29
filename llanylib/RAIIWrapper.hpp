@@ -26,7 +26,7 @@ namespace llcpp {
 namespace raii {
 
 template<class OnGenerateData>
-class LL_SHARED_LIB RAIIWrapperCreation {
+class RAIIWrapperCreation {
 	private:
 		using __internal__OnGenerateObject__ = RAIIContainer<OnGenerateData, void>;
 	public:
@@ -84,7 +84,7 @@ class LL_SHARED_LIB RAIIWrapperCreation {
 };
 
 template<class OnDestructionData>
-class LL_SHARED_LIB RAIIWrapperDestruction {
+class RAIIWrapperDestruction {
 	private:
 		using __internal__OnDestructionObject__ = RAIIContainer<OnDestructionData, void>;
 	public:
@@ -142,7 +142,7 @@ class LL_SHARED_LIB RAIIWrapperDestruction {
 };
 
 template<class OnGenerateData, class OnDestructionData>
-class LL_SHARED_LIB RAIIWrapper : public RAIIWrapperCreation<OnGenerateData>, public RAIIWrapperDestruction<OnDestructionData> {
+class  RAIIWrapper : public RAIIWrapperCreation<OnGenerateData>, public RAIIWrapperDestruction<OnDestructionData> {
 	protected:
 		using __internal__RAIIWrapper__ = RAIIWrapper<OnGenerateData, OnDestructionData>;
 	public:
@@ -212,7 +212,7 @@ class LL_SHARED_LIB RAIIWrapper : public RAIIWrapperCreation<OnGenerateData>, pu
 };
 
 template<class OnGenerateData, class OnDestructionData, class ActionInput, class ActionOutput = void>
-class LL_SHARED_LIB RAIIWrapperExtra : public RAIIWrapper<OnGenerateData, OnDestructionData> {
+class  RAIIWrapperExtra : public RAIIWrapper<OnGenerateData, OnDestructionData> {
 	protected:
 		using __internal__OnActionObject__ = RAIIContainer<ActionInput, ActionOutput>;
 		using __internal__RAIIWrapper__ = RAIIWrapper<OnGenerateData, OnDestructionData>;

@@ -10,7 +10,7 @@
 #ifndef LLANYLIB_EXAMPLES_ARRAYVIEWEXAMPLE_HPP_
 #define LLANYLIB_EXAMPLES_ARRAYVIEWEXAMPLE_HPP_
 
-#include "../Array.hpp"
+#include "../ArrayView.hpp"
 //#include "../DoubleNode.hpp" WIP
 
 #include "algorithmExample.hpp"
@@ -76,9 +76,9 @@ constexpr ll_bool_t equals_01 = arrayview_01.equals(arrayview_01);
 constexpr ll_bool_t equals_02 = arrayview_01.equals<int>(arrayview_02, [](const int, const int) { return 0; } );
 constexpr ll_bool_t equals_03 = arrayview_01.equals(arrayview_02);
 constexpr ll_bool_t equals_04 = arrayview_01.equals(arrayview_05);
-constexpr ll_bool_t equals_05 = arrayview_05.equals(algorithm::str1);
-constexpr ll_bool_t equals_06 = arrayview_05.equals(algorithm::str2);
-constexpr ll_bool_t equals_07 = arrayview_05.equals(algorithm::str1, 14);
+constexpr ll_bool_t equals_05 = arrayview_05.equals<ll_char_t>(algorithm::str1);
+constexpr ll_bool_t equals_06 = arrayview_05.equals<ll_char_t>(algorithm::str2);
+constexpr ll_bool_t equals_07 = arrayview_05.equals<ll_char_t>(algorithm::str1, 14);
 
 constexpr ll_bool_t equals_08 = arrayview_01 == arrayview_01;
 constexpr ll_bool_t equals_09 = arrayview_01 == arrayview_02;

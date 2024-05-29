@@ -21,7 +21,7 @@
 #define LLANYLIB_EXPRESIONS_STRING_MAYOR_ 6
 #define LLANYLIB_EXPRESIONS_STRING_MINOR_ 0
 
-#include "../StringView.hpp"
+#include "../ArrayView.hpp"
 
 namespace llcpp {
 namespace meta {

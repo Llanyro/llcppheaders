@@ -27,7 +27,7 @@ namespace llcpp {
 namespace meta {
 
 template<class T, T ZERO_VAL>
-class LL_SHARED_LIB Countable {
+class Countable {
 	public:
 		static constexpr T ZERO = ZERO_VAL;
 		using type = traits::template_types<T>;

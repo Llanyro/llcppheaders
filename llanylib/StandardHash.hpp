@@ -27,15 +27,11 @@ namespace llcpp {
 namespace meta {
 namespace hash {
 namespace __internal__ {
-constexpr len_t PARSER_BUFFER_SIZE = 512;
-thread_local ll_char_t HASH_BUFFER[256];
-
 __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_t size) {
 	len_t BUFFERLEN = sizeof(ll_wchar_t) * size;
 	if (BUFFERLEN > PARSER_BUFFER_SIZE) return hash::INVALID_HASH;
 
-	ll_char_t buffer[PARSER_BUFFER_SIZE]{};
-	ll_char_t* i = buffer;
+	ll_char_t* i = HASH_BUFFER;
 	for (ll_wstring_t data_end = str + size; str < data_end; ++str)
 		(void)basic_type_hash::conversor<ll_wchar_t>(i, *str);
 	return city::CityHash::cityHash64(HASH_BUFFER, BUFFERLEN);
@@ -55,7 +51,6 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::S
 __LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::wStrTypeid&) {
 	return hash::INVALID_HASH;
 }
-
 } // namespace __internal__
 
 constexpr Hash64Function STANDARD_Hash64Function = city::CityHash::cityHash64;

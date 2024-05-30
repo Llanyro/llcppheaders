@@ -23,11 +23,14 @@
 
 #include "hash.hpp"
 #include "reflection.hpp"
-#include "algorithm.hpp"
 
 namespace llcpp {
 namespace meta {
 namespace hash {
+namespace __internal__ {
+constexpr len_t PARSER_BUFFER_SIZE = 512;
+thread_local ll_char_t HASH_BUFFER[PARSER_BUFFER_SIZE];
+} // namespace __internal__
 
 struct basic_type_hash {
 	template<class T>
@@ -54,10 +57,10 @@ struct basic_type_hash {
 		if constexpr (!is_convertible_v<typename W::type>) return hash::INVALID_HASH;
 		else {
 			constexpr len_t BUFFERLEN = sizeof(typename W::type);
-			ll_char_t buffer[BUFFERLEN]{};
-			ll_char_t* _ = buffer;
+			//ll_char_t buffer[BUFFERLEN]{};
+			ll_char_t* _ = __internal__::HASH_BUFFER;
 			if(!basic_type_hash::conversor<U, W>(_, value)) return hash::INVALID_HASH;
-			return hashFunction(buffer, BUFFERLEN);
+			return hashFunction(__internal__::HASH_BUFFER, BUFFERLEN);
 		}
 	}
 };

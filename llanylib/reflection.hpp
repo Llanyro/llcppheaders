@@ -22,6 +22,7 @@
 #define LLANYLIB_REFLECTION_MINOR_ 0
 
 #include "Typeid.hpp"
+#include "ArrayView.hpp"
 
 namespace llcpp {
 namespace meta {

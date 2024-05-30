@@ -52,6 +52,7 @@ class Hash128 {
 			this->high = ZERO_UI64;
 		}
 	public:
+		constexpr Hash128() __LL_EXCEPT__ : low(ZERO_UI64), high(ZERO_UI64) {}
 		constexpr Hash128(const ui64 low, const ui64 high) __LL_EXCEPT__
 			: low(low), high(high) {}
 		constexpr ~Hash128() __LL_EXCEPT__ {}
@@ -97,6 +98,13 @@ class Hash128 {
 			b ^= (b >> 47);
 			b *= kMul;
 			return hash::Hash64(b);
+		}
+
+		__LL_NODISCARD__ constexpr ui64& operator[](const len_t pos) __LL_EXCEPT__ {
+			return (pos == ZERO_UI64) ? this->low : this->high;
+		}
+		__LL_NODISCARD__ constexpr ui64 operator[](const len_t pos) const __LL_EXCEPT__ {
+			return (pos == ZERO_UI64) ? this->low : this->high;
 		}
 };
 
@@ -265,7 +273,7 @@ class CityHash {
 			return city::Hash128(
 				city::Hash128(v.getLow(), w.getLow()).toui64() + shiftMix(y) * k1 + z,
 				city::Hash128(v.getHigh(), w.getHigh()).toui64() + x
-			).city::Hash128::toHash();
+			).toHash();
 		}
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const StrPair& s) __LL_EXCEPT__ {
 			if (s.empty()) return hash::INVALID_HASH;

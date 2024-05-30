@@ -4,7 +4,7 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 6.0							//
+//	Version: 7.0							//
 //////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 #if defined(LLANYLIB_CITYHASH_HPP_) // Guard && version protector
-	#if LLANYLIB_CITYHASH_MAYOR_ != 6 || LLANYLIB_CITYHASH_MINOR_ < 0
+	#if LLANYLIB_CITYHASH_MAYOR_ != 7 || LLANYLIB_CITYHASH_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "cityhash.hpp version error!"
 		#else
@@ -23,7 +23,7 @@
 
 #else !defined(LLANYLIB_CITYHASH_HPP_)
 #define LLANYLIB_CITYHASH_HPP_
-#define LLANYLIB_CITYHASH_MAYOR_ 6
+#define LLANYLIB_CITYHASH_MAYOR_ 7
 #define LLANYLIB_CITYHASH_MINOR_ 0
 
 #include "bits.hpp"
@@ -220,14 +220,15 @@ class CityHash {
 				a, b);
 		}
 	public:
-		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(DataType s, len_t len) __LL_EXCEPT__ {
-			#if defined(LL_REAL_CXX23)
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(DataType s, len_t len) __LL_EXCEPT__ {
+#if defined(LL_REAL_CXX23)
 			if not consteval {
 				throw "This is only constevaluated!";
-				return hash::Hash64();
+				return hash::INVALID_HASH;
 			}
-			#endif
-			if (!s) return hash::Hash64();
+#endif
+
+			if (!s) return hash::INVALID_HASH;
 
 			if (len <= 32) {
 				if (len <= 16) return hash::Hash64(hashLen0to16(s, len));
@@ -240,9 +241,9 @@ class CityHash {
 			ui64 x = fetch64(s + len - 40);
 			ui64 y = fetch64(s + len - 16) + fetch64(s + len - 56);
 			ui64 z = city::Hash128(
-					fetch64(s + len - 48) + len,
-					fetch64(s + len - 24)
-				).toui64();
+				fetch64(s + len - 48) + len,
+				fetch64(s + len - 24)
+			).toui64();
 			city::Hash128 v = weakHashLen32WithSeeds(s + len - 64, len, z);
 			city::Hash128 w = weakHashLen32WithSeeds(s + len - 32, y + k1, x);
 			x = x * k1 + fetch64(s);
@@ -258,11 +259,6 @@ class CityHash {
 				v = weakHashLen32WithSeeds(s, v.getHigh() * k1, x + w.getLow());
 				w = weakHashLen32WithSeeds(s + 32, z + w.getHigh(), y + fetch64(s + 16));
 				std::swap(z, x);
-				//{
-				//	ui64 tmp = z;
-				//	z = x;
-				//	x = tmp;
-				//}
 				s += 64;
 				len -= 64;
 			} while (len != ZERO_UI64);
@@ -271,34 +267,26 @@ class CityHash {
 				city::Hash128(v.getHigh(), w.getHigh()).toui64() + x
 			).city::Hash128::toHash();
 		}
-		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(const StrPair& s) __LL_EXCEPT__ {
-			if (s.empty()) return hash::Hash64();
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const StrPair& s) __LL_EXCEPT__ {
+			if (s.empty()) return hash::INVALID_HASH;
 			else return city::CityHash::cityHash64(s.begin(), s.len());
 		}
-		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(const Str& s) __LL_EXCEPT__ {
-			if (s.empty()) return hash::Hash64();
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const Str& s) __LL_EXCEPT__ {
+			if (s.empty()) return hash::INVALID_HASH;
 			else return city::CityHash::cityHash64(s.begin(), s.len());
 		}
 		// Only admits hash::basic_type_hash::is_convertible_v<>
-		// Returns hash::Hash64() if invalid type or hash error
+		// Returns hash::INVALID_HASH if invalid type or hash error
 		template<class U, class W = traits::template_types<U>>
-		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(typename W::cinput value) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(typename W::cinput value) __LL_EXCEPT__ {
 			return hash::basic_type_hash::hashValue<U, W>(value, city::CityHash::cityHash64);
 		}
-		__LL_NODISCARD__ static constexpr hash::Hash64 cityHash64(const hash::Hash64& hash) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const hash::Hash64& hash) __LL_EXCEPT__ {
 			return hash::basic_type_hash::hashValue<ui64>(hash.get(), city::CityHash::cityHash64);
 		}
 };
 
 } // namespace city
-
-//constexpr HashFunctionPack StandardHashFunctions(
-//	city::CityHash::cityHash64,
-//	city::CityHash::cityHash64,
-//	city::CityHash::cityHash64,
-//	LL_NULLPTR
-//);
-
 } // namespace hash
 } // namespace meta
 } // namespace llcpp

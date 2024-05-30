@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 6.0							//
+//	Version: 7.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_TYPES_HPP_) // Guard && version protector
-	#if LLANYLIB_TYPES_MAYOR_ != 6 || LLANYLIB_TYPES_MINOR_ < 0
+	#if LLANYLIB_TYPES_MAYOR_ != 7 || LLANYLIB_TYPES_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "types.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_TYPES_HPP_)
 #define LLANYLIB_TYPES_HPP_
-#define LLANYLIB_TYPES_MAYOR_ 6
+#define LLANYLIB_TYPES_MAYOR_ 7
 #define LLANYLIB_TYPES_MINOR_ 0
 
 #include "definitions.hpp"
@@ -160,6 +160,9 @@ class function;
 template <class T1, class T2>
 struct pair;
 
+template <class _Ty>
+class optional;
+
 namespace filesystem {
 class directory_entry;
 } // namespace filesystem
@@ -217,21 +220,19 @@ using wStrTypeid = Typeid<ll_wchar_t>;
 
 namespace hash {
 class Hash64;
-class HashFunctionPack;
+class Hash64FunctionPack;
 
-using HashFunction = hash::Hash64(*)(ll_string_t, len_t);
-using wHashFunction = hash::Hash64(*)(ll_wstring_t, len_t);
+using OptionalHash64 = std::optional<hash::Hash64>;
 
-using StrPairHashFunction = hash::Hash64(*)(const meta::StrPair&);
-using wStrPairHashFunction = hash::Hash64(*)(const meta::wStrPair&);
-
-using StrHashFunction = hash::Hash64(*)(const meta::Str&);
-using wStrHashFunction = hash::Hash64(*)(const meta::wStr&);
-
-using HashRecursiveFunction = hash::Hash64(*)(const hash::Hash64&);
-
-using HashStrTypeidFunction = hash::Hash64(*)(const void*, const StrTypeid&);
-using HashwStrTypeidFunction = hash::Hash64(*)(const void*, const wStrTypeid&);
+using Hash64Function = hash::OptionalHash64(*)(ll_string_t, len_t);
+using wHash64Function = hash::OptionalHash64(*)(ll_wstring_t, len_t);
+using StrPairHash64Function = hash::OptionalHash64(*)(const meta::StrPair&);
+using wStrPairHash64Function = hash::OptionalHash64(*)(const meta::wStrPair&);
+using StrHash64Function = hash::OptionalHash64(*)(const meta::Str&);
+using wStrHash64Function = hash::OptionalHash64(*)(const meta::wStr&);
+using RecursiveHash64Function = hash::OptionalHash64(*)(const hash::Hash64&);
+using StrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const StrTypeid&);
+using wStrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const wStrTypeid&);
 
 } // namespace hash
 

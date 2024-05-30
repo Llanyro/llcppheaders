@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 6.0							//
+//	Version: 7.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_ARRAYVIEW_HPP_) // Guard && version protector
-	#if LLANYLIB_ARRAYVIEW_MAYOR_ != 6 || LLANYLIB_ARRAYVIEW_MINOR_ < 0
+	#if LLANYLIB_ARRAYVIEW_MAYOR_ != 7 || LLANYLIB_ARRAYVIEW_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "ArrayView.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_ARRAYVIEW_HPP_)
 #define LLANYLIB_ARRAYVIEW_HPP_
-#define LLANYLIB_ARRAYVIEW_MAYOR_ 6
+#define LLANYLIB_ARRAYVIEW_MAYOR_ 7
 #define LLANYLIB_ARRAYVIEW_MINOR_ 0
 
 #include "algorithm.hpp"

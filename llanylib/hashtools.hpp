@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 6.0							//
+//	Version: 7.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_HASHTOOLS_HPP_) // Guard && version protector
-	#if LLANYLIB_HASHTOOLS_MAYOR_ != 6 || LLANYLIB_HASHTOOLS_MINOR_ < 0
+	#if LLANYLIB_HASHTOOLS_MAYOR_ != 7 || LLANYLIB_HASHTOOLS_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "hashtools.hpp version error!"
 		#else
@@ -18,11 +18,12 @@
 
 #else !defined(LLANYLIB_HASHTOOLS_HPP_)
 #define LLANYLIB_HASHTOOLS_HPP_
-#define LLANYLIB_HASHTOOLS_MAYOR_ 6
+#define LLANYLIB_HASHTOOLS_MAYOR_ 7
 #define LLANYLIB_HASHTOOLS_MINOR_ 0
 
 #include "hash.hpp"
 #include "reflection.hpp"
+#include "algorithm.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -30,7 +31,7 @@ namespace hash {
 
 struct basic_type_hash {
 	template<class T>
-	static constexpr ll_bool_t is_convertible_v = std::_Is_any_of_v<T, i8, ui8, i16, ui16, i32, ui32, i64, ui64>;
+	static constexpr ll_bool_t is_convertible_v = std::_Is_any_of_v<T, i8, ui8, i16, ui16, i32, ui32, i64, ui64, ll_wchar_t>;
 
 	// Uses bitwise operators: [ ">>", "&" ]
 	template<class U, class W = traits::template_types<U>>
@@ -49,13 +50,13 @@ struct basic_type_hash {
 		}
 	}
 	template<class U, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr hash::Hash64 hashValue(typename W::cinput value, hash::HashFunction hashFunction) __LL_EXCEPT__ {
-		if constexpr (!traits::is_basic_type_v<typename W::type>) return hash::Hash64();
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValue(typename W::cinput value, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
+		if constexpr (!is_convertible_v<typename W::type>) return hash::INVALID_HASH;
 		else {
 			constexpr len_t BUFFERLEN = sizeof(typename W::type);
 			ll_char_t buffer[BUFFERLEN]{};
 			ll_char_t* _ = buffer;
-			if(!basic_type_hash::conversor<U, W>(_, value)) return hash::Hash64();
+			if(!basic_type_hash::conversor<U, W>(_, value)) return hash::INVALID_HASH;
 			return hashFunction(buffer, BUFFERLEN);
 		}
 	}
@@ -65,20 +66,24 @@ class Test {
 	public:
 		constexpr Test() {}
 		constexpr ~Test() {}
-		__LL_NODISCARD__ constexpr operator hash::Hash64() const __LL_EXCEPT__ { return hash::Hash64(); }
-		__LL_NODISCARD__ constexpr operator hash::Hash64() __LL_EXCEPT__ { return hash::Hash64(); }
+		__LL_NODISCARD__ constexpr operator hash::OptionalHash64() const __LL_EXCEPT__ { return hash::INVALID_HASH; }
+		__LL_NODISCARD__ constexpr operator hash::OptionalHash64() __LL_EXCEPT__ { return hash::INVALID_HASH; }
 		__LL_NODISCARD__ constexpr operator ll_bool_t() const __LL_EXCEPT__ { return LL_FALSE; }
 };
 
 class HashTool {
+	public:
+		template<class T>
+		static constexpr ll_bool_t is_convertible_object_v = std::_Is_any_of_v<T, hash::Hash64, meta::StrPair, meta::wStrPair, meta::Str, meta::wStr>;
+
 	private:
-		HashFunctionPack hashFunctionPack;
+		Hash64FunctionPack hashFunctionPack;
 	public:
 		#pragma region Constructors
 		constexpr HashTool() __LL_EXCEPT__ = delete;
-		constexpr HashTool(const HashFunctionPack& hashFunctionPack) __LL_EXCEPT__
+		constexpr HashTool(const Hash64FunctionPack& hashFunctionPack) __LL_EXCEPT__
 			: hashFunctionPack(hashFunctionPack) {}
-		constexpr HashTool(HashFunctionPack&& hashFunctionPack) __LL_EXCEPT__
+		constexpr HashTool(Hash64FunctionPack&& hashFunctionPack) __LL_EXCEPT__
 			: hashFunctionPack(std::move(hashFunctionPack)) {}
 		constexpr ~HashTool() __LL_EXCEPT__ {}
 
@@ -105,16 +110,16 @@ class HashTool {
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr const HashFunctionPack& getHashFunctionPack() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const Hash64FunctionPack& getHash64FunctionPack() const __LL_EXCEPT__ {
 			return this->hashFunctionPack;
 		}
-		__LL_NODISCARD__ constexpr HashFunctionPack& getHashFunctionPack() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr Hash64FunctionPack& getHash64FunctionPack() __LL_EXCEPT__ {
 			return this->hashFunctionPack;
 		}
-		__LL_NODISCARD__ constexpr void setHashFunctionPack(const HashFunctionPack& hashFunctionPack) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr void setHash64FunctionPack(const Hash64FunctionPack& hashFunctionPack) __LL_EXCEPT__ {
 			this->hashFunctionPack = hashFunctionPack;
 		}
-		__LL_NODISCARD__ constexpr void setHashFunctionPack(HashFunctionPack&& hashFunctionPack) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr void setHash64FunctionPack(Hash64FunctionPack&& hashFunctionPack) __LL_EXCEPT__ {
 			this->hashFunctionPack = std::move(hashFunctionPack);
 		}
 
@@ -122,101 +127,169 @@ class HashTool {
 	public:
 		#pragma region HashArray
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::Hash64 hashArray(const T* arr) const __LL_EXCEPT__ {
-			if constexpr (basic_type_hash::is_convertible_v<T>) {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const T* arr) const __LL_EXCEPT__ {
+			if constexpr (N == ZERO_UI64) return hash::INVALID_HASH;
+			if constexpr (std::is_pointer_v<T>) return hash::INVALID_HASH;
+			// Calls defined function to hash arrays
+			else if constexpr (std::is_array_v<T>) {
+				using array_type_t = traits::type_conversor<T>::array_to_type_t;
+
+				auto h = this->hashArray<traits::array_size<T>, array_type_t>(*arr++);
+				// If first element hashed is invalid, other elements will be invalid too
+				if (!h.has_value()) return hash::INVALID_HASH;
+
+				hash::Hash64 hashes[N]{};
+				// If not, we store the hash
+				hashes[0] = *h;
+
+				// Now, we will hash other elements
+				hash::Hash64* i = hashes + 1;
+				for (hash::Hash64* end = hashes + N; i < end; ++i, ++arr)
+					*i = *this->hashArray<traits::array_size<T>, array_type_t>(*arr);
+
+				// An then hash the hash array
+				return this->hashArray<N>(hashes);
+			}
+			// Hashses values using a converting to chars algorithm, and hashing the string
+			else if constexpr (basic_type_hash::is_convertible_v<T>) {
 				constexpr len_t BUFFERLEN = sizeof(T) * N;
 				ll_char_t buffer[BUFFERLEN]{};
 
 				ll_char_t* i = buffer;
 				for (const T* data_end = arr + N; arr < data_end; ++arr)
-					basic_type_hash::conversor<T>(i, *arr);
+					(void)basic_type_hash::conversor<T>(i, *arr);
 
 				return this->hashFunctionPack.call(buffer, BUFFERLEN);
 			}
-			else {
-				meta::StrTypeid id = traits::getStrTypeId<T>(this->hashFunctionPack.getStrPairHashFunction());
+			else if constexpr (is_convertible_object_v<T>) {
+				auto h = this->hashObject(*arr++);
+				if (!h.has_value()) return hash::INVALID_HASH;
+
 				hash::Hash64 hashes[N]{};
+				hashes[0] = *h;
 
-				hash::Hash64* i = hashes;
-				for (const T* data_end = arr + N; arr < data_end; ++arr, ++i)
-					*i = this->hashFunctionPack.call(arr, id);
+				hash::Hash64* i = hashes + 1;
+				for (hash::Hash64* end = hashes + N; i < end; ++i, ++arr)
+					*i = *this->hashObject(*arr);
 
-				return this->hashArray(hashes);
+				return this->hashArray<N>(hashes);
 			}
+			else if constexpr (traits::has_type_operator_v<T, hash::OptionalHash64>) {
+				auto h = arr->operator hash::OptionalHash64();
+				if (!h.has_value()) return hash::INVALID_HASH;
+
+				hash::Hash64 hashes[N]{};
+				hashes[0] = *h;
+
+				hash::Hash64* i = hashes + 1;
+				for (hash::Hash64* end = hashes + N; i < end; ++i, ++arr)
+					*i = *arr->operator hash::OptionalHash64();
+
+				return this->hashArray<N>(hashes);
+			}
+			// Hashes undefined objects
+			else {
+				meta::StrTypeid id = traits::getStrTypeId<T>(this->hashFunctionPack.getStrPairHash64Function());
+
+				auto h = this->hashFunctionPack.call(arr++, id);
+				if (!h.has_value()) return hash::INVALID_HASH;
+
+				hash::Hash64 hashes[N]{};
+				hashes[0] = *h;
+
+				hash::Hash64* i = hashes + 1;
+				for (hash::Hash64* end = hashes + N; i < end; ++i, ++arr)
+					*i = *this->hashFunctionPack.call(arr, id);
+
+				return this->hashArray<N>(hashes);
+			}
+			//else if constexpr (basic_type_hash::is_convertible_v<T>) {
+			//	hash::Hash64 h = basic_type_hash::hashValue<T>(object, this->hashFunctionPack.getHashFunction());
+			//	*buffer++ = h;
+			//	*status++ = (h.get() == ZERO_UI64) ? HashStatus::HashTypeError : HashStatus::Ok;
+			//}
+			//else if constexpr (std::_Is_any_of_v<T, hash::Hash64, meta::StrPair, meta::wStrPair, meta::Str, meta::wStr>) {
+			//	hash::Hash64 h = this->hashObject(object);
+			//	*buffer++ = h;
+			//	*status++ = (h.get() == ZERO_UI64) ? HashStatus::HashTypeError : HashStatus::Ok;
+			//}
+
 		}
 		template<class T, len_t N>
-		__LL_NODISCARD__ constexpr hash::Hash64 hashArray(const T(&arr)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const T(&arr)[N]) const __LL_EXCEPT__ {
 			return this->hashArray<N, T>(arr);
 		}
 		// Predefined hasheables
 		template<len_t N>
-		__LL_NODISCARD__ constexpr hash::Hash64 hashArray(const hash::Hash64(&hashes)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N]) const __LL_EXCEPT__ {
 			constexpr len_t BUFFERLEN = sizeof(ui64) * N;
 			ll_char_t buffer[BUFFERLEN]{};
 
 			ll_char_t* i = buffer;
 			const hash::Hash64* arr = hashes;
 			for (const hash::Hash64* data_end = arr + N; arr < data_end; ++arr)
-				basic_type_hash::conversor<ui64>(i, arr->get());
+				(void)basic_type_hash::conversor<ui64>(i, arr->get());
 
 			return this->hashFunctionPack.call(buffer, BUFFERLEN);
 		}
 		template<len_t N>
-		__LL_NODISCARD__ constexpr hash::Hash64 hashArray(const ll_char_t(&str)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const ll_char_t(&str)[N]) const __LL_EXCEPT__ {
 			return this->hashFunctionPack.call(str, N);
 		}
 		template<len_t N>
-		__LL_NODISCARD__ constexpr hash::Hash64 hashArray(const ll_wchar_t(&str)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const ll_wchar_t(&str)[N]) const __LL_EXCEPT__ {
 			return this->hashFunctionPack.call(str, N);
 		}
 
 		#pragma endregion
 		#pragma region HashObject
-		__LL_NODISCARD__ constexpr hash::Hash64 hashObject(const meta::StrPair& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::StrPair& str) const __LL_EXCEPT__ {
 			return this->hashFunctionPack.call(str);
 		}
-		__LL_NODISCARD__ constexpr hash::Hash64 hashObject(const meta::wStrPair& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::wStrPair& str) const __LL_EXCEPT__ {
 			return this->hashFunctionPack.call(str);
 		}
-		__LL_NODISCARD__ constexpr hash::Hash64 hashObject(const meta::Str& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::Str& str) const __LL_EXCEPT__ {
 			return this->hashFunctionPack.call(str);
 		}
-		__LL_NODISCARD__ constexpr hash::Hash64 hashObject(const meta::wStr& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::wStr& str) const __LL_EXCEPT__ {
 			return this->hashFunctionPack.call(str);
 		}
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::Hash64 hashObject(const meta::ArrayPair<T>& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::ArrayPair<T>& str) const __LL_EXCEPT__ {
 			return this->hashArray<N, T>(str.begin());
 		}
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::Hash64 hashObject(const meta::Array<T>& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::Array<T>& str) const __LL_EXCEPT__ {
 			return this->hashArray<N, T>(str.begin());
 		}
 		template<class T, len_t N>
-		__LL_NODISCARD__ constexpr hash::Hash64 hashObject(const meta::ArrayPair<T>& str, hash::Hash64* hashesh) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::ArrayPair<T>& str, hash::Hash64* hashesh) const __LL_EXCEPT__ {
 			return this->hashFunctionPack.call(str);
 		}
 
 		#pragma endregion
 		#pragma region HashHashArray
 		template<class T, len_t N>
-		__LL_NODISCARD__ constexpr hash::Hash64 hash_hashArray(const T(&arr)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T(&arr)[N]) const __LL_EXCEPT__ {
 			return this->hash_hashArray<N, T>(arr);
 		}
 		// Hashes objects individually and then hash all as one
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::Hash64 hash_hashArray(const T* arr) const __LL_EXCEPT__ {
-			meta::StrTypeid id = traits::getStrTypeId<T>(this->hashFunctionPack.getStrPairHashFunction());
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T* arr) const __LL_EXCEPT__ {
+			if constexpr (N == ZERO_UI64) return hash::INVALID_HASH;
+
+			auto h = this->hashArray<1, T>(arr++);
+			if (!h.has_value()) return hash::INVALID_HASH;
+
 			hash::Hash64 hashes[N]{};
+			hashes[0] = *h;
 
-			hash::Hash64* i = hashes;
-			for (const T* data_end = arr + N; arr < data_end; ++arr, ++i) {
-				if constexpr (basic_type_hash::is_convertible_v<T>)
-					*i = basic_type_hash::hashValue<T>(*arr, this->hashFunctionPack.getHashFunction());
-				else *i = this->hashFunctionPack.call(arr, id);
-			}
+			hash::Hash64* i = hashes + 1;
+			for (hash::Hash64* end = hashes + N; i < end; ++i, ++arr)
+				*i = *this->hashArray<1, T>(arr);
 
-			return this->hashArray<hash::Hash64, N>(hashes);
+			return this->hashArray<N>(hashes);
 		}
 
 		#pragma endregion
@@ -230,6 +303,63 @@ class HashTool {
 			return this->hash_hashArray<N, T>(str.begin());
 		}
 
+		#pragma endregion
+		#pragma region Args
+	public:
+		enum class HashStatus : i8 {
+			// All good
+			Ok,
+			// Args contains no arguments
+			Empty,
+			// Hash type returned invalid
+			HashTypeError,
+			// Cannot hash a pointer or vector
+			ErrorPointer
+		};
+	protected:
+		template<class T>
+		constexpr void hashArgumentsV1Priv(HashStatus*& status, hash::Hash64*& hashes, const T& object) const __LL_EXCEPT__ {
+			if constexpr (std::is_pointer_v<T>) {
+				*status++ = HashStatus::ErrorPointer;
+				*hashes++ = hash::Hash64();
+				return;
+			}
+
+			auto h = this->hashArray<1, T>(&object);
+			if (h.has_value()) {
+				*status++ = HashStatus::Ok;
+				*hashes++ = *h;
+			}
+			else {
+				*status++ = HashStatus::HashTypeError;
+				*hashes++ = hash::Hash64();
+			}
+		}
+		template<class T, class... Args>
+		constexpr void hashArgumentsV1Priv(HashStatus*& status, hash::Hash64*& hashes, const T& object, const Args&... args) const __LL_EXCEPT__ {
+			this->hashArgumentsV1Priv(status, hashes, object);
+			this->hashArgumentsV1Priv(status, hashes, args...);
+		}
+	public:
+		template<class... Args, len_t NUM_ARGS = (sizeof...(Args) + 1)>
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArgumentsV1(HashStatus(&_status)[NUM_ARGS], const Args&... args) const __LL_EXCEPT__ {
+			using pack = traits::parameter_pack_operations<Args...>;
+			HashStatus* status = _status;
+
+			if constexpr (pack::empty) {
+				*status = HashStatus::Empty;
+				return hash::INVALID_HASH;
+			}
+			else {
+				hash::Hash64 hashes[NUM_ARGS - 1]{};
+				hash::Hash64* hashesptr = hashes;
+
+				this->hashArgumentsV1Priv(status, hashesptr, args...);
+				*status = HashStatus::Ok;
+
+				return this->hashArray(hashes);
+			}
+		}
 		#pragma endregion
 };
 
@@ -252,14 +382,14 @@ class HashTool {
 		};
 
 	private:
-		HashFunctionPack hashFunctionPack;
+		Hash64FunctionPack hashFunctionPack;
 		HashFormationPack hashFormationPack;
 	public:
 		#pragma region Constructors
 		constexpr DataHashConversor() __LL_EXCEPT__ = delete;
-		constexpr DataHashConversor(const HashFunctionPack& hashFunctionPack) __LL_EXCEPT__
+		constexpr DataHashConversor(const Hash64FunctionPack& hashFunctionPack) __LL_EXCEPT__
 			: hashFunctionPack(hashFunctionPack) {}
-		constexpr DataHashConversor(HashFunctionPack&& hashFunctionPack) __LL_EXCEPT__
+		constexpr DataHashConversor(Hash64FunctionPack&& hashFunctionPack) __LL_EXCEPT__
 			: hashFunctionPack(std::move(hashFunctionPack)) {}
 		constexpr ~DataHashConversor() __LL_EXCEPT__ {}
 
@@ -286,16 +416,16 @@ class HashTool {
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr const HashFunctionPack& getHashFunctionPack() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const Hash64FunctionPack& getHash64FunctionPack() const __LL_EXCEPT__ {
 			return this->hashFunctionPack;
 		}
-		__LL_NODISCARD__ constexpr HashFunctionPack& getHashFunctionPack() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr Hash64FunctionPack& getHash64FunctionPack() __LL_EXCEPT__ {
 			return this->hashFunctionPack;
 		}
-		__LL_NODISCARD__ constexpr void setHashFunctionPack(const HashFunctionPack& hashFunctionPack) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr void setHash64FunctionPack(const Hash64FunctionPack& hashFunctionPack) __LL_EXCEPT__ {
 			this->hashFunctionPack = hashFunctionPack;
 		}
-		__LL_NODISCARD__ constexpr void setHashFunctionPack(HashFunctionPack&& hashFunctionPack) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr void setHash64FunctionPack(Hash64FunctionPack&& hashFunctionPack) __LL_EXCEPT__ {
 			this->hashFunctionPack = std::move(hashFunctionPack);
 		}
 
@@ -307,7 +437,7 @@ class HashTool {
 		// This function hashes with V2 or V1_Object
 		template<class U, class W = traits::template_types<U>>
 		__LL_NODISCARD__ constexpr hash::Hash64 hashData(W::cinput object) const __LL_EXCEPT__ {
-			if constexpr (std::is_pointer_v<typename W::type>) return hash::Hash64();
+			if constexpr (std::is_pointer_v<typename W::type>) return hash::INVALID_HASH;
 			// if is a hash, we just hash it with a specific function
 			else if constexpr (std::is_same_v<typename W::type, hash::Hash64>)
 				return this->hashFunctionPack.call(object);
@@ -324,10 +454,10 @@ class HashTool {
 				else object.convertToCharsSimple(buffer);
 				return this->hashFunctionPack.call(buffer, BUFFERLEN);
 			}
-			// If hash version 2 is avaible for this object, is has operator llcpp::meta::hash::Hash64() avaible
+			// If hash version 2 is avaible for this object, is has operator llcpp::meta::hash::INVALID_HASH avaible
 			else if constexpr (DataHashConversor::isHasheable<typename W::type, HashVersion::V2>())
-				return object.operator llcpp::meta::hash::Hash64();
-			else return hash::Hash64();
+				return object.operator llcpp::meta::hash::INVALID_HASH;
+			else return hash::INVALID_HASH;
 		}
 		template<HashVersion VERSION = HashVersion::V1, class T, len_t N>
 		__LL_NODISCARD__ constexpr hash::Hash64 hashData(const T(&arr)[N]) const __LL_EXCEPT__ {
@@ -335,7 +465,7 @@ class HashTool {
 		}
 		template<len_t N, HashVersion VERSION = HashVersion::V1, class T>
 		__LL_NODISCARD__ constexpr hash::Hash64 hashData(const T* arr) const __LL_EXCEPT__ {
-			if constexpr (std::is_pointer_v<T> || N == ZERO_UI64) return hash::Hash64();
+			if constexpr (std::is_pointer_v<T> || N == ZERO_UI64) return hash::INVALID_HASH;
 			else if constexpr (std::is_array_v<T>) return this->hashData<N, VERSION, traits::type_conversor<T>::array_to_type_t>(arr);
 			// If is an array of hashes
 			else if constexpr (std::is_same_v<T, hash::Hash64>) {
@@ -351,7 +481,7 @@ class HashTool {
 			else if constexpr (std::is_same_v<T, ll_char_t>)
 				return this->hashFunctionPack.call(arr, N);
 			else if constexpr (!DataHashConversor::isHasheable<T, VERSION>())
-				return hash::Hash64();
+				return hash::INVALID_HASH;
 			else if constexpr (VERSION == HashVersion::V1 || DataHashConversor::is_convertible_v<T>) {
 				constexpr len_t BUFFERLEN = sizeof(T) * N;
 				ll_char_t buffer[BUFFERLEN]{};
@@ -370,12 +500,12 @@ class HashTool {
 
 				hash::Hash64* i = buffer;
 				for (const T* data_end = arr + N; arr < data_end; ++arr, ++i)
-					*i = arr->operator llcpp::meta::hash::Hash64();
+					*i = arr->operator llcpp::meta::hash::INVALID_HASH;
 
 				return this->hashData<VERSION>(buffer);
 			}
 			// We ignore V1_Object and others not defined
-			else return hash::Hash64();
+			else return hash::INVALID_HASH;
 		}
 
 		#pragma endregion
@@ -390,7 +520,7 @@ class HashTool {
 /*
 		template<class U, class W = traits::template_types<U>>
 		__LL_NODISCARD__ constexpr hash::Hash64 hashData(W::cinput object) const __LL_EXCEPT__ {
-			if constexpr (std::is_pointer_v<typename W::type>) return hash::Hash64();
+			if constexpr (std::is_pointer_v<typename W::type>) return hash::INVALID_HASH;
 			// if is a hash, we just hash it with a specific function
 			else if constexpr (std::is_same_v<typename W::type, hash::Hash64>)
 				return this->hashFunctionPack.call(object);
@@ -407,10 +537,10 @@ class HashTool {
 				else object.convertToCharsSimple(buffer);
 				return this->hashFunctionPack.call(buffer, BUFFERLEN);
 			}
-			// If hash version 2 is avaible for this object, is has operator llcpp::meta::hash::Hash64() avaible
+			// If hash version 2 is avaible for this object, is has operator llcpp::meta::hash::INVALID_HASH avaible
 			else if constexpr (DataHashConversor::isHasheable<typename W::type, HashVersion::V2>())
-				return object.operator llcpp::meta::hash::Hash64();
-			else return hash::Hash64();
+				return object.operator llcpp::meta::hash::INVALID_HASH;
+			else return hash::INVALID_HASH;
 		}
 		template<HashVersion VERSION = HashVersion::V1, class T, len_t N>
 		__LL_NODISCARD__ constexpr hash::Hash64 hashData(const T(&arr)[N]) const __LL_EXCEPT__ {
@@ -418,7 +548,7 @@ class HashTool {
 		}
 		template<len_t N, HashVersion VERSION = HashVersion::V1, class T>
 		__LL_NODISCARD__ constexpr hash::Hash64 hashData(const T* arr) const __LL_EXCEPT__ {
-			if constexpr (std::is_pointer_v<T> || N == ZERO_UI64) return hash::Hash64();
+			if constexpr (std::is_pointer_v<T> || N == ZERO_UI64) return hash::INVALID_HASH;
 			else if constexpr (std::is_array_v<T>) return this->hashData<N, VERSION, traits::type_conversor<T>::array_to_type_t>(arr);
 			// If is an array of hashes
 			else if constexpr (std::is_same_v<T, hash::Hash64>) {
@@ -434,7 +564,7 @@ class HashTool {
 			else if constexpr (std::is_same_v<T, ll_char_t>)
 				return this->hashFunctionPack.call(arr, N);
 			else if constexpr (!DataHashConversor::isHasheable<T, VERSION>())
-				return hash::Hash64();
+				return hash::INVALID_HASH;
 			else if constexpr (VERSION == HashVersion::V1 || DataHashConversor::is_convertible_v<T>) {
 				constexpr len_t BUFFERLEN = sizeof(T) * N;
 				ll_char_t buffer[BUFFERLEN]{};
@@ -453,12 +583,12 @@ class HashTool {
 
 				hash::Hash64* i = buffer;
 				for (const T* data_end = arr + N; arr < data_end; ++arr, ++i)
-					*i = arr->operator llcpp::meta::hash::Hash64();
+					*i = arr->operator llcpp::meta::hash::INVALID_HASH;
 
 				return this->hashData<VERSION>(buffer);
 			}
 			// We ignore V1_Object and others not defined
-			else return hash::Hash64();
+			else return hash::INVALID_HASH;
 		}
 */
 /*class ASDAFA {
@@ -474,7 +604,7 @@ class HashTool {
 			// Hashes every object one by one
 			// Then hashes the generated hash vector
 			// Objects are transformed to chars using a function in the object class
-			// The function signature is: constexpr operator llcpp::meta::hash::Hash64() const __LL_EXCEPT__;
+			// The function signature is: constexpr operator llcpp::meta::hash::INVALID_HASH const __LL_EXCEPT__;
 			V2,
 
 			// Converts object to chars in a contiguous vector
@@ -619,7 +749,7 @@ class HashTool {
 
 			if constexpr (pack::empty) {
 				*status = HashStatus::Empty;
-				return hash::Hash64();
+				return hash::INVALID_HASH;
 			}
 			// Only one element
 			//else if constexpr (pack::size == 1ull) {
@@ -663,11 +793,11 @@ class HashTool {
 				
 				// Return hash generated. Even if any hash wasnt correctly generated
 				return this->hashFunctionPack.call(buffer, SIZE);
-				//return hash::Hash64();
+				//return hash::INVALID_HASH;
 			}
 			else {
 				*status = HashStatus::InvalidHashVersion;
-				return hash::Hash64();
+				return hash::INVALID_HASH;
 			}
 		}
 
@@ -758,7 +888,7 @@ __LL_NODISCARD__ __LL_INLINE__ static constexpr len_t DataHashConversor::HashSiz
 //};
 ///
 //constexpr LastError valueget() {
-//	HashFunctionPack pack(
+//	Hash64FunctionPack pack(
 //		[](const meta::StrPair&) -> hash::Hash64 { return hash::Hash64(999); },
 //		[](ll_string_t str, len_t size) -> hash::Hash64 {
 //			len_t buffer{};
@@ -790,44 +920,6 @@ __LL_NODISCARD__ __LL_INLINE__ static constexpr len_t DataHashConversor::HashSiz
 //
 //	return err;
 //}
-
-constexpr hash::HashFunctionPack pack(
-	[](ll_string_t str, len_t size) -> hash::Hash64 {
-		len_t buffer{};
-		for (; size > ZERO_UI64; --size, ++str) buffer += *str;
-		return hash::Hash64(buffer);
-	},
-	[](ll_wstring_t str, len_t size) -> hash::Hash64 {
-		len_t buffer{};
-		for (; size > ZERO_UI64; --size, ++str) buffer += *str;
-		return hash::Hash64(buffer);
-	},
-	[](const meta::StrPair&) -> hash::Hash64 { return hash::Hash64(999); },
-	[](const meta::wStrPair&) -> hash::Hash64 { return hash::Hash64(999); },
-
-	[](const meta::Str&) -> hash::Hash64 { return hash::Hash64(999); },
-	[](const meta::wStr&) -> hash::Hash64 { return hash::Hash64(999); },
-
-	[](const hash::Hash64& h) -> hash::Hash64 { return h; },
-
-	[](const void*, const meta::StrTypeid&) -> hash::Hash64 { return hash::Hash64(888); },
-	[](const void*, const meta::wStrTypeid&) -> hash::Hash64 { return hash::Hash64(888); }
-);
-
-constexpr auto valueget() {
-
-	hash::HashTool tool(pack);
-	hash::Hash64 hashes[] = { 257ul, 1ull, 2ull, 3ull, 4ull, 5ull, 6ull, 7ull };
-	//return tool.hash(hashes).get();
-	//return tool.hash_hash(hashes).get();
-	//return tool.hash<1>(hashes).get();
-	//return tool.hash_hash<1>(hashes).get();
-	//return basic_type_hash::hashValue<ui64>(hashes->get(), pack.getHashFunction()).get();
-	return basic_type_hash::hashValue<ui64>(888, pack.getHashFunction()).get();
-	//return hash::Hash64();
-}
-
-constexpr auto val = valueget();
 
 } // namespace hash
 } // namespace meta

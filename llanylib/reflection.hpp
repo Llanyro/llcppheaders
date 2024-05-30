@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 6.0							//
+//	Version: 7.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_REFLECTION_HPP_) // Guard && version protector
-	#if LLANYLIB_REFLECTION_MAYOR_ != 6 || LLANYLIB_REFLECTION_MINOR_ < 0
+	#if LLANYLIB_REFLECTION_MAYOR_ != 7 || LLANYLIB_REFLECTION_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "reflection.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_REFLECTION_HPP_)
 #define LLANYLIB_REFLECTION_HPP_
-#define LLANYLIB_REFLECTION_MAYOR_ 6
+#define LLANYLIB_REFLECTION_MAYOR_ 7
 #define LLANYLIB_REFLECTION_MINOR_ 0
 
 #include "Typeid.hpp"
@@ -100,11 +100,11 @@ __LL_NODISCARD__ constexpr meta::wStrPair getwName(ll_bool_t REMOVE_CLASS_STR = 
 }
 
 template<class T>
-__LL_NODISCARD__ constexpr meta::StrTypeid getStrTypeId(hash::StrPairHashFunction hashFunction) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::StrTypeid getStrTypeId(hash::StrPairHash64Function hashFunction) __LL_EXCEPT__ {
 	return meta::StrTypeid(traits::getName<T>(), hashFunction);
 }
 template<class T>
-__LL_NODISCARD__ constexpr meta::wStrTypeid getwStrTypeid(hash::wStrPairHashFunction hashFunction) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::wStrTypeid getwStrTypeid(hash::wStrPairHash64Function hashFunction) __LL_EXCEPT__ {
 	return meta::wStrTypeid(traits::getwName<T>(), hashFunction);
 }
 

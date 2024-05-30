@@ -4,17 +4,17 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 6.0							//
+//	Version: 7.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_DYNAMICLIBRARYLINKING_HPP_) // Guard && version protector
-	#if LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ != 6 || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ < 0
+	#if LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ != 7 || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ < 0
 		#error "dynamiclibrarylinking.hpp version error!"
 	#endif // LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_
 
 #else !defined(LLANYLIB_DYNAMICLIBRARYLINKING_HPP_)
 #define LLANYLIB_DYNAMICLIBRARYLINKING_HPP_
-#define LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ 6
+#define LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ 7
 #define LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ 0
 
 #include "ArrayView.hpp"

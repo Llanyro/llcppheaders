@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 6.0							//
+//	Version: 7.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_LINKEDLIST_HPP_) // Guard && version protector
-	#if LLANYLIB_LINKEDLIST_MAYOR_ != 6 || LLANYLIB_LINKEDLIST_MINOR_ < 0
+	#if LLANYLIB_LINKEDLIST_MAYOR_ != 7 || LLANYLIB_LINKEDLIST_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "LoopList.hpp version error!"
 		#else
@@ -21,7 +21,7 @@
 #error "This is in WIP. Wait to Release 7"
 
 #define LLANYLIB_LINKEDLIST_HPP_
-#define LLANYLIB_LINKEDLIST_MAYOR_ 6
+#define LLANYLIB_LINKEDLIST_MAYOR_ 7
 #define LLANYLIB_LINKEDLIST_MINOR_ 0
 
 #include "DoubleNode.hpp"

@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 6.0							//
+//	Version: 7.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_EXPRESIONS_STRING_HPP_) // Guard && version protector
-	#if LLANYLIB_EXPRESIONS_STRING_MAYOR_ != 6 || LLANYLIB_EXPRESIONS_STRING_MINOR_ < 0
+	#if LLANYLIB_EXPRESIONS_STRING_MAYOR_ != 7 || LLANYLIB_EXPRESIONS_STRING_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "string.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_EXPRESIONS_STRING_HPP_)
 #define LLANYLIB_EXPRESIONS_STRING_HPP_
-#define LLANYLIB_EXPRESIONS_STRING_MAYOR_ 6
+#define LLANYLIB_EXPRESIONS_STRING_MAYOR_ 7
 #define LLANYLIB_EXPRESIONS_STRING_MINOR_ 0
 
 #include "../ArrayView.hpp"

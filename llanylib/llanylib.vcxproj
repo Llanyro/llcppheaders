@@ -24,6 +24,7 @@
     <ClInclude Include="algorithm.hpp" />
     <ClInclude Include="StandardHash.hpp" />
     <ClInclude Include="StandardRandom.hpp" />
+    <ClInclude Include="StandardTypeid.hpp" />
     <ClInclude Include="StaticArray.hpp" />
     <ClInclude Include="ArrayView.hpp" />
     <ClInclude Include="bits.hpp" />

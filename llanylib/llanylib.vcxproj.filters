@@ -183,6 +183,9 @@
     <ClInclude Include="StandardHash.hpp">
       <Filter>Source Files\standards</Filter>
     </ClInclude>
+    <ClInclude Include="StandardTypeid.hpp">
+      <Filter>Source Files\standards</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="examples\StringViewExample.cpp">

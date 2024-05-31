@@ -33,7 +33,7 @@ class Typeid {
 	public:
 		static_assert(traits::is_char_type_v<T>, "Type must be a char type");
 		using NameType = meta::ArrayPair<T>;
-		using HashFunction = hash::Hash64(*)(const NameType&);
+		using HashFunction = hash::OptionalHash64(*)(const NameType&);
 		using __Typeid = traits::template_types<Typeid<T>>;
 	private:
 		hash::Hash64 name_hash;
@@ -46,15 +46,27 @@ class Typeid {
 		constexpr ~Typeid() __LL_EXCEPT__ {}
 
 		constexpr Typeid(const NameType& name, HashFunction hashFunction) __LL_EXCEPT__
-			: name_hash(hashFunction(name)), name(name) {}
+			: name_hash(), name(name) {
+			auto h = hashFunction(name);
+			if (h.has_value()) name_hash(*h);
+		}
 
 		constexpr Typeid(NameType&& name, HashFunction hashFunction) __LL_EXCEPT__
-			: name_hash(hashFunction(name)), name(std::move(name)) {}
+			: name_hash(), name(std::move(name)) {
+			auto h = hashFunction(name);
+			if (h.has_value()) name_hash(*h);
+		}
 
 		constexpr Typeid(const meta::StringView& name, HashFunction hashFunction) __LL_EXCEPT__
-			: name_hash(hashFunction(name)), name(name) {}
+			: name_hash(), name(name) {
+			auto h = hashFunction(name);
+			if (h.has_value()) name_hash(*h);
+		}
 		constexpr Typeid(StringView&& name, HashFunction hashFunction) __LL_EXCEPT__
-			: name_hash(hashFunction(name)), name(std::move(name)) {}
+			: name_hash(), name(std::move(name)) {
+			auto h = hashFunction(name);
+			if (h.has_value()) name_hash(*h);
+		}
 
 		#pragma endregion
 		#pragma region CopyMove

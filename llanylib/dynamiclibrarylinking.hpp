@@ -73,6 +73,8 @@ class DllHandle {
 			this->handle = LL_NULLPTR;
 		}
 	public:
+		ll_lib_t getHandle() { return this->handle; }
+
 		DllHandle() __LL_EXCEPT__ = delete;
 
 		DllHandle(ll_lib_t handle) __LL_EXCEPT__
@@ -97,34 +99,46 @@ class DllHandle {
 			return *this;
 		}
 
-		template<ll_bool_t SAFE_MODE>
+		template<ll_bool_t SAFE_MODE = LL_FALSE>
 		__LL_NODISCARD__ void* getFunction(ll_string_t libraryFunctionName) __LL_EXCEPT__ {
 			if constexpr (SAFE_MODE)
 				return (this->isValid()) ? getLibraryFunction(this->handle, libraryFunctionName) : LL_NULLPTR;
 			else return getLibraryFunction(this->handle, libraryFunctionName);
 		}
-		template<ll_bool_t SAFE_MODE>
+		template<ll_bool_t SAFE_MODE = LL_FALSE>
 		__LL_NODISCARD__ void* getFunction(const std::string& libraryFunctionName) __LL_EXCEPT__ {
 			return this->getFunction<SAFE_MODE>(libraryFunctionName.c_str());
 		}
-		template<ll_bool_t SAFE_MODE>
+		template<ll_bool_t SAFE_MODE = LL_FALSE>
 		__LL_NODISCARD__ void* getFunction(const std::string_view& libraryFunctionName) __LL_EXCEPT__ {
 			return this->getFunction<SAFE_MODE>(libraryFunctionName.data());
 		}
+		template<ll_bool_t SAFE_MODE = LL_FALSE>
+		__LL_NODISCARD__ void* getFunction(const len_t mem_position) __LL_EXCEPT__ {
+			if constexpr (SAFE_MODE)
+				return (this->isValid()) ? (reinterpret_cast<ll_char_t*>(this->handle) + mem_position) : LL_NULLPTR;
+			else return reinterpret_cast<ll_char_t*>(this->handle) + mem_position;
+		}
 
-		template<class T, ll_bool_t SAFE_MODE>
+
+		template<class T, ll_bool_t SAFE_MODE = LL_FALSE>
 		__LL_NODISCARD__ T getFunction(ll_string_t libraryFunctionName) __LL_EXCEPT__ {
 			//static_assert(std::is_function_v<T>, "Template type can only be a function");
 			return reinterpret_cast<T>(this->getFunction<SAFE_MODE>(libraryFunctionName));
 		}
-		template<class T, ll_bool_t SAFE_MODE>
+		template<class T, ll_bool_t SAFE_MODE = LL_FALSE>
 		__LL_NODISCARD__ T getFunction(const std::string& libraryFunctionName) __LL_EXCEPT__ {
 			return this->getFunction<T, SAFE_MODE>(libraryFunctionName.c_str());
 		}
-		template<class T, ll_bool_t SAFE_MODE>
+		template<class T, ll_bool_t SAFE_MODE = LL_FALSE>
 		__LL_NODISCARD__ T getFunction(const std::string_view& libraryFunctionName) __LL_EXCEPT__ {
 			return this->getFunction<T, SAFE_MODE>(libraryFunctionName.data());
 		}
+		template<class T, ll_bool_t SAFE_MODE = LL_FALSE>
+		__LL_NODISCARD__ T getFunction(const len_t mem_position) __LL_EXCEPT__ {
+			return reinterpret_cast<T>(this->getFunction<SAFE_MODE>(mem_position));
+		}
+
 
 		void clear() __LL_EXCEPT__ {
 			if(this->handle) {

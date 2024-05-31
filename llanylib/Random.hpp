@@ -47,9 +47,8 @@ class Random {
 					this->seed = *h;
 					break;
 				}
-				else if (tries > 5) break;
 				else ++tries;
-			} while (true);
+			} while (tries < 5);
 		}
 	public:
 		#pragma region Constructors
@@ -70,11 +69,11 @@ class Random {
 		#pragma endregion
 		#pragma region StrPair
 		constexpr Random(const StrPair& seed, const hash::Hash64FunctionPack& generator) __LL_EXCEPT__ : Random(generator) {
-			auto h = generator.call(seed);
+			auto h = this->generator.call(seed);
 			if (h.has_value()) this->seed = *h;
 		}
 		constexpr Random(const StrPair& seed, hash::Hash64FunctionPack&& generator) __LL_EXCEPT__ : Random(std::move(generator)) {
-			auto h = generator.call(seed);
+			auto h = this->generator.call(seed);
 			if (h.has_value()) this->seed = *h;
 		}
 

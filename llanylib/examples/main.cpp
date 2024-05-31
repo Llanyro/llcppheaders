@@ -23,7 +23,6 @@
 #include "../StandardHash.hpp"
 #include "../StandardRandom.hpp"
 
-#include "../BasicTypeWrapper.hpp"
 #include "../ostypes.hpp"
 #include "../traits.hpp"
 #include "../types.hpp"
@@ -107,8 +106,8 @@ constexpr hash::Hash64FunctionPack pack(
 );
 
 constexpr auto valueget() {
-	hash::HashTool tool(pack);
-	hash::Hash64 hashes[] = { 257ul, 1ull, 2ull, 3ull, 4ull, 5ull, 6ull, 7ull };
+	//hash::HashTool tool(pack);
+	//hash::Hash64 hashes[] = { 257ul, 1ull, 2ull, 3ull, 4ull, 5ull, 6ull, 7ull };
 	//return tool.hash(hashes).get();
 	//return tool.hash_hash(hashes).get();
 	//return tool.hash<1>(hashes).get();
@@ -116,14 +115,23 @@ constexpr auto valueget() {
 	//return basic_type_hash::hashValue<ui64>(hashes->get(), pack.getHashFunction()).get();
 	//return basic_type_hash::hashValue<ui64>(888, pack.getHashFunction()).get();
 	//return hash::INVALID_HASH;
-	hash::HashTool::HashStatus status[5];
+	hash::HashTool<>::HashStatus status[5];
 	return hash::STANDARD_HASH_TOOLS.hashArgumentsV1(status, 1, 2, 3, 4);
 	//return tool.hashArgumentsV1(status, 1, 2, 3, 4);
 }
 
 constexpr auto val = valueget();
+static_assert((*val).get() == 9444077356073661613, "Error");
+
 #pragma endregion
 
+__LL_NODISCARD__ constexpr len_t valueget2(len_t value) {
+	if constexpr (std::is_constant_evaluated())
+		return value + 1;
+	else return value;
+}
+
+constexpr len_t is_eval = valueget2(999);
 
 int main() {
 	using Buff = llcpp::meta::Buffer<len_t, 10ul, llcpp::ZERO_UI64>;
@@ -146,14 +154,42 @@ int main() {
 	
 	//std::cout << "res: " << getBool(llcpp::meta::algorithm::compare_cluster<len_t, len_t, llcpp::LL_FALSE>::equals(block_cmp, array0())) << "\n";
 	std::cout << "res: " << getBool(array0().equals<len_t>(block_cmp)) << "\n";
-	
-	//for (len_t i{}; i < 999; ++i)
-	//	std::cout << "Value: " << i << "\t" << getBool((i * 2) == (i << 1)) << "\n";
-	
+		
 	printthis(array0);
 	printthis(block_cmp);
 
-	auto val = valueget();
+	auto val2 = valueget();
+
+	auto rd = llcpp::meta::STANDARD_RANDOM(std::time(NULL));
+	ui64 rd_value = rd.rand<ui64>();
+	std::cout << "Rd_Value: " << rd_value << "\n";
+	std::cout << "Evaluated: " << valueget2(rd_value) << "\n";
+	std::cout << "Evaluated: " << (*val2).get() << "\n";
+
+	llcpp::dll::DllHandle lib("C:\\Users\\Fran-Administrador\\Documents\\GitHub\\llanylib\\mal-7532-crypt\\mal-7532-crypt\\x64\\Debug\\TestDLL.dll");
+	ll_char_t* handle_char = reinterpret_cast<ll_char_t*>(lib.getHandle());
+	std::printf("Lib point: %p\n", handle_char);
+
+	ll_char_t* function = lib.getFunction<ll_char_t*>("get2");
+	std::printf("Get2 point: %p\n", function);
+
+	std::cout << "Diff: " << (function - handle_char) << "\n";
+	std::cout << "Diff: " << (function - handle_char) - 0x000112C6 << "\n";
+
+	std::printf("Get3 point: %p\n", (handle_char + 0x000112C6));
+
+	using Get = std::optional<int>(*)();
+	Get get_function = lib.getFunction<Get>(0x000110F5);
+	std::printf("Get point: %p\n", get_function);
+	auto get_value = get_function();
+	if(get_value.has_value()) std::cout << "Get value: " << *get_value << "\n";
+	else std::cout << "Get value: no value\n";
+
+	Get get_function2 = lib.getFunction<Get>("get@@YA?AV?$optional@H@std@@XZ");
+	std::printf("Getf2 point: %p\n", get_function);
+	//auto get_value = get_function2();
+	//if(get_value.has_value()) std::cout << "Get value: " << *get_value << "\n";
+	//else std::cout << "Get value: no value\n";
 
 	return 0;
 }

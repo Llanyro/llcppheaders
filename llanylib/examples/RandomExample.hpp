@@ -7,10 +7,10 @@
 //	Version: 7.0							//
 //////////////////////////////////////////////
 
-#include "../StandardRandom.hpp"
-
 #if !defined(LLANYLIB_EXAMPLES_RANDOMEXAMPLE_)
 #define LLANYLIB_EXAMPLES_RANDOMEXAMPLE_
+
+#include "../StandardRandom.hpp"
 
 namespace llcpp {
 namespace meta {

@@ -273,7 +273,7 @@ class CityHash {
 			return city::Hash128(
 				city::Hash128(v.getLow(), w.getLow()).toui64() + shiftMix(y) * k1 + z,
 				city::Hash128(v.getHigh(), w.getHigh()).toui64() + x
-			).toHash();
+			).city::Hash128::toHash();
 		}
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const StrPair& s) __LL_EXCEPT__ {
 			if (s.empty()) return hash::INVALID_HASH;

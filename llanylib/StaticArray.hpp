@@ -512,20 +512,20 @@ class StaticArray : public meta::Array<T> {
 	#pragma endregion
 };
 
-constexpr int testing() {
-	StaticArray<ll_int_t, 10, 0> arr;
-	decltype(arr)::FillFunc<const ll_char_t> f = [](ll_int_t& a, const ll_char_t b) -> void {
-		a = b;
-	};
-	arr.fill<ll_char_t>(5, f);
-	arr.clear();
-	arr[9] = 8;
-	arr.shifRight(9);
-	arr.reverse();
-	return arr[0];
-}
-
-constexpr int val = testing();
+//constexpr int testing() {
+//	StaticArray<ll_int_t, 10, 0> arr;
+//	decltype(arr)::FillFunc<const ll_char_t> f = [](ll_int_t& a, const ll_char_t b) -> void {
+//		a = b;
+//	};
+//	arr.fill<ll_char_t>(5, f);
+//	arr.clear();
+//	arr[9] = 8;
+//	arr.shifRight(9);
+//	arr.reverse();
+//	return arr[0];
+//}
+//
+//constexpr int test_array = testing();
 
 } // namespace meta
 } // namespace llcpp

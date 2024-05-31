@@ -56,6 +56,8 @@ class Hash64 {
 		constexpr void clear() __LL_EXCEPT__ { this->value = ZERO_UI64; }
 };
 
+// Hash 128 + combine
+
 } // namespace hash
 } // namespace meta
 } // namespace llcpp

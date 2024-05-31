@@ -451,25 +451,6 @@ struct parameter_pack_operations<> {
 	static constexpr ll_bool_t has_a_array = LL_FALSE;
 };
 
-///template <class... Args>
-///constexpr auto get_parameter_pack() {
-///	if constexpr (sizeof...(Args) == ZERO_UI64)
-///		return parameter_pack_operations<Args...>();
-///	else if constexpr (sizeof...(Args) == 1ull)
-///		return parameter_pack_operations<Args>();
-///	else 
-///		return parameter_pack_operations<>();
-///}
-///
-///template <class... Args>
-///constexpr len_t teas() {
-///	return 0;//parameter_pack_operations<Args...>::sizeof_hash_version;
-///}
-///
-///constexpr len_t teas_1 = teas<>();
-///constexpr len_t teas_2 = teas<int>();
-///constexpr len_t teas_3 = teas<int, char, char*>();
-
 #pragma endregion
 
 #pragma endregion

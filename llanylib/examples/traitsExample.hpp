@@ -250,6 +250,15 @@ static_assert(!checker_test_9, "Error changed value");
 ///////////////////////////////////////////////// Example strings /////////////////////////////////////////////////
 
 
+template <class... Args>
+constexpr len_t teas() {
+	return parameter_pack_operations<Args...>::size;
+}
+
+constexpr len_t teas_1 = teas<>();
+constexpr len_t teas_2 = teas<int>();
+constexpr len_t teas_3 = teas<int, char, char*>();
+
 } // namespace traits
 } // namespace meta
 } // namespace llcpp

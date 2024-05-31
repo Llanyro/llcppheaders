@@ -77,7 +77,7 @@ constexpr hash::Hash64FunctionPack STANDARD_HASH_FUNCTION_PACK = {
 	STANDARD_wStrTypeidHash64Function
 };
 
-constexpr hash::HashTool<> STANDARD_HASH_TOOLS = hash::HashTool(STANDARD_HASH_FUNCTION_PACK);
+constexpr hash::HashTool STANDARD_HASH_TOOLS = hash::HashTool<>(STANDARD_HASH_FUNCTION_PACK);
 
 } // namespace hash
 } // namespace meta

@@ -262,10 +262,10 @@ class Array {
 
 		#pragma endregion
 		#pragma region std
-		__LL_NODISCARD__ constexpr type::cptr data() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr type::ptr data() __LL_EXCEPT__ {
 			return this->begin();
 		}
-		__LL_NODISCARD__ constexpr type::ptr data() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr type::cptr data() const __LL_EXCEPT__ {
 			return this->begin();
 		}
 		__LL_NODISCARD__ constexpr type::ptr begin() __LL_EXCEPT__ {

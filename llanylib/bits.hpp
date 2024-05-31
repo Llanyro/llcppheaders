@@ -27,6 +27,11 @@
 
 #undef max
 
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(push)
+	#pragma warning(disable:4499) // ignore static specialization [TOCHECK]
+#endif // WINDOWS_SYSTEM
+
 namespace llcpp {
 namespace meta {
 namespace bits {
@@ -265,5 +270,9 @@ struct type_division_cluster {
 } // namespace bits
 } // namespace meta
 } // namespace llcpp
+
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(pop)
+#endif // WINDOWS_SYSTEM
 
 #endif // LLANYLIB_BITS_HPP_

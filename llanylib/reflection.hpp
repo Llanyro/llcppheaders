@@ -31,7 +31,6 @@ namespace __internal__ {
 
 template<class T>
 __LL_NODISCARD__ constexpr const T* getNamePart1(const meta::ArrayView<T, LL_TRUE>& funcName) {
-	using Str = meta::ArrayView<T, LL_TRUE>;
 	constexpr len_t NUM_TEMPLATES_BEFORE_TYPE = 1;
 
 	// Ignore the first template argument
@@ -62,7 +61,6 @@ __LL_NODISCARD__ constexpr ClassStr getNamePart2(ClassStr res, ClassStr end) {
 }
 template<class T>
 __LL_NODISCARD__ constexpr const T* getNamePart3(const meta::ArrayView<T, LL_TRUE>& classString, const T* res, const T* res2) {
-	meta::StringView classString = meta::make_StringView("class ");
 	meta::algorithm::compare_cluster<T> cmp;
 	ll_bool_t isClass = cmp.starts_with(res,
 		static_cast<len_t>(res2 - res),

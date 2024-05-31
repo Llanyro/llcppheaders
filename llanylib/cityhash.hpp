@@ -37,6 +37,13 @@
 #define ui64_in_expected_order(x) (x)
 #endif
 
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(push)
+    #if defined(__LL_SPECTRE_FUNCTIONS__)
+		#pragma warning(disable:5045) // Security Spectre mitigation [SECURITY]
+    #endif // __LL_UNSECURE_FUNCTIONS__
+#endif // WINDOWS_SYSTEM
+
 namespace llcpp {
 namespace meta {
 namespace hash {
@@ -301,5 +308,9 @@ class CityHash {
 
 #undef ui32_in_expected_order
 #undef ui64_in_expected_order
+
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(pop)
+#endif // WINDOWS_SYSTEM
 
 #endif // LLANYLIB_CITYHASH_HPP_

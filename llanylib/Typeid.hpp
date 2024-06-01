@@ -94,8 +94,12 @@ class Typeid {
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr const hash::Hash64& hash() const __LL_EXCEPT__ { return this->name_hash; }
-		__LL_NODISCARD__ constexpr const meta::StrPair& getName() const __LL_EXCEPT__ { return this->name; }
+		__LL_NODISCARD__ constexpr const hash::Hash64& hash() const __LL_EXCEPT__ {
+			return this->name_hash;
+		}
+		__LL_NODISCARD__ constexpr const NameType& getName() const __LL_EXCEPT__ {
+			return this->name;
+		}
 
 		#pragma endregion
 };

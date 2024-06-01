@@ -41,7 +41,7 @@ struct basic_type_hash {
 	template<len_t N, class T>
 	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
 		if constexpr (!basic_type_hash::is_convertible_v<T> || N == ZERO_UI64)
-			return hash::INVALID_HASH;
+			return hash::INVALID_HASH64;
 		else if constexpr (N == 1) return basic_type_hash::hashValue<T>(*values, hashFunction);
 		else {
 			constexpr len_t BUFFERLEN = sizeof(T) * N;
@@ -86,12 +86,12 @@ struct basic_type_hash {
 	}
 	template<class U, class W = traits::template_types<U>>
 	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValue(typename W::cinput value, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
-		if constexpr (!basic_type_hash::is_convertible_v<U>) return hash::INVALID_HASH;
+		if constexpr (!basic_type_hash::is_convertible_v<U>) return hash::INVALID_HASH64;
 		else {
 			constexpr len_t BUFFERLEN = sizeof(U);
 			ll_char_t buffer[BUFFERLEN]{};
 			ll_char_t* _ = buffer;
-			if(!basic_type_hash::conversor<U, W>(_, value)) return hash::INVALID_HASH;
+			if(!basic_type_hash::conversor<U, W>(_, value)) return hash::INVALID_HASH64;
 			return hashFunction(buffer, BUFFERLEN);
 		}
 	}
@@ -100,13 +100,13 @@ struct basic_type_hash {
 	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
 	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shl(typename V::cinput value1, typename W::cinput value2, const ui8 shift) __LL_EXCEPT__ {
 		if constexpr (!basic_type_hash::is_convertible_v<T> || !basic_type_hash::is_convertible_v<U>)
-			return hash::INVALID_HASH;
+			return hash::INVALID_HASH64;
 		else return value1 ^ (value2 << shift);
 	}
 	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
 	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shr(typename V::cinput value1, typename W::cinput value2, const ui8 shift) __LL_EXCEPT__ {
 		if constexpr (!basic_type_hash::is_convertible_v<T> || !basic_type_hash::is_convertible_v<U>)
-			return hash::INVALID_HASH;
+			return hash::INVALID_HASH64;
 		else return value1 ^ (value2 >> shift);
 	}
 	template<class T, class V = traits::template_types<T>>
@@ -123,7 +123,7 @@ struct basic_type_hash {
 	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
 	__LL_NODISCARD__ static constexpr hash::OptionalHash64 mur(typename W::cinput value1, typename V::cinput value2) __LL_EXCEPT__ {
 		if constexpr (!basic_type_hash::is_convertible_v<T> || !basic_type_hash::is_convertible_v<U>)
-			return hash::INVALID_HASH;
+			return hash::INVALID_HASH64;
 		else {
 			ui64 a = (value1 ^ value2) * __internal__::kMul;
 			a ^= (a >> 47);
@@ -154,7 +154,7 @@ struct basic_type_hash_no_constexpr {
 	template<len_t N, class T>
 	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
 		if constexpr (!basic_type_hash::is_convertible_v<T> || N == ZERO_UI64)
-			return hash::INVALID_HASH;
+			return hash::INVALID_HASH64;
 		else return hashFunction(reinterpret_cast<ll_string_t>(values), sizeof(T) * N);
 	}
 };
@@ -217,14 +217,14 @@ class HashTool {
 		#pragma region HashArray
 		template<len_t N, class T>
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const T* arr) const __LL_EXCEPT__ {
-			if constexpr (N == ZERO_UI64) return hash::INVALID_HASH;
-			if constexpr (std::is_pointer_v<T>) return hash::INVALID_HASH;
+			if constexpr (N == ZERO_UI64) return hash::INVALID_HASH64;
+			if constexpr (std::is_pointer_v<T>) return hash::INVALID_HASH64;
 			// Calls defined function to hash arrays
 			else if constexpr (std::is_array_v<T>) {
 				using array_type_t = traits::type_conversor<T>::array_to_type_t;
 				auto h = this->hashArray<traits::array_size<T>, array_type_t>(*arr++);
 				// If first element hashed is invalid, other elements will be invalid too
-				if (!h.has_value()) return hash::INVALID_HASH;
+				if (!h.has_value()) return hash::INVALID_HASH64;
 				
 				hash::Hash64 hashes[N]{};
 				// If not, we store the hash
@@ -244,7 +244,7 @@ class HashTool {
 			else if constexpr (is_convertible_object_v<T>) {
 				COMMON_HASH_MODE(this->hashObject);
 				auto h = this->hashObject(*arr++);
-				if (!h.has_value()) return hash::INVALID_HASH;
+				if (!h.has_value()) return hash::INVALID_HASH64;
 				
 				hash::Hash64 hashes[N]{};
 				hashes[0] = *h;
@@ -257,7 +257,7 @@ class HashTool {
 			}
 			else if constexpr (traits::has_type_operator_v<T, hash::OptionalHash64>) {
 				auto h = (arr++)->operator hash::OptionalHash64();
-				if (!h.has_value()) return hash::INVALID_HASH;
+				if (!h.has_value()) return hash::INVALID_HASH64;
 
 				hash::Hash64 hashes[N]{};
 				hashes[0] = *h;
@@ -273,7 +273,7 @@ class HashTool {
 				meta::StrTypeid id = traits::getStrTypeId<T>(this->hashFunctionPack.getStrPairHash64Function());
 
 				auto h = this->hashFunctionPack.call(arr++, id);
-				if (!h.has_value()) return hash::INVALID_HASH;
+				if (!h.has_value()) return hash::INVALID_HASH64;
 
 				hash::Hash64 hashes[N]{};
 				hashes[0] = *h;
@@ -339,10 +339,10 @@ class HashTool {
 		// Hashes objects individually and then hash all as one
 		template<len_t N, class T>
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T* arr) const __LL_EXCEPT__ {
-			if constexpr (N == ZERO_UI64) return hash::INVALID_HASH;
+			if constexpr (N == ZERO_UI64) return hash::INVALID_HASH64;
 
 			auto h = this->hashArray<1, T>(arr++);
-			if (!h.has_value()) return hash::INVALID_HASH;
+			if (!h.has_value()) return hash::INVALID_HASH64;
 
 			hash::Hash64 hashes[N]{};
 			hashes[0] = *h;
@@ -410,7 +410,7 @@ class HashTool {
 
 			if constexpr (pack::empty) {
 				*status = HashStatus::Empty;
-				return hash::INVALID_HASH;
+				return hash::INVALID_HASH64;
 			}
 			else {
 				hash::Hash64 hashes[NUM_ARGS - 1]{};

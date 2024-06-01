@@ -29,7 +29,8 @@ namespace llcpp {
 namespace meta {
 namespace hash {
 
-inline constexpr hash::OptionalHash64 INVALID_HASH = std::nullopt;
+inline constexpr hash::OptionalHash64 INVALID_HASH64 = std::nullopt;
+inline constexpr hash::OptionalHash64 INVALID_HASH128 = std::nullopt;
 
 class Hash64FunctionPack {
 	private:
@@ -167,31 +168,31 @@ class Hash64FunctionPack {
 		#pragma endregion
 		#pragma region SecureCalls
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(ll_string_t s, const len_t n) const __LL_EXCEPT__ {
-			return (this->hash64Function) ? this->hash64Function(s, n) : hash::INVALID_HASH;
+			return (this->hash64Function) ? this->hash64Function(s, n) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
-			return (this->whash64Function) ? this->whash64Function(s, n) : hash::INVALID_HASH;
+			return (this->whash64Function) ? this->whash64Function(s, n) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::StrPair& s) const __LL_EXCEPT__ {
-			return (this->strPairHash64Function) ? this->strPairHash64Function(s) : hash::INVALID_HASH;
+			return (this->strPairHash64Function) ? this->strPairHash64Function(s) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::wStrPair& s) const __LL_EXCEPT__ {
-			return (this->wstrPairHash64Function) ? this->wstrPairHash64Function(s) : hash::INVALID_HASH;
+			return (this->wstrPairHash64Function) ? this->wstrPairHash64Function(s) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::Str& s) const __LL_EXCEPT__ {
-			return (this->strHash64Function) ? this->strHash64Function(s) : hash::INVALID_HASH;
+			return (this->strHash64Function) ? this->strHash64Function(s) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::wStr& s) const __LL_EXCEPT__ {
-			return (this->wstrHash64Function) ? this->wstrHash64Function(s) : hash::INVALID_HASH;
+			return (this->wstrHash64Function) ? this->wstrHash64Function(s) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const hash::Hash64& h) const __LL_EXCEPT__ {
-			return (this->recursiveHash64Function) ? this->recursiveHash64Function(h) : hash::INVALID_HASH;
+			return (this->recursiveHash64Function) ? this->recursiveHash64Function(h) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const void* o, const meta::StrTypeid& id) const __LL_EXCEPT__ {
-			return (this->strTypeidHash64Function) ? this->strTypeidHash64Function(o, id) : hash::INVALID_HASH;
+			return (this->strTypeidHash64Function) ? this->strTypeidHash64Function(o, id) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const void* o, const meta::wStrTypeid& id) const __LL_EXCEPT__ {
-			return (this->wstrTypeidHash64Function) ? this->wstrTypeidHash64Function(o, id) : hash::INVALID_HASH;
+			return (this->wstrTypeidHash64Function) ? this->wstrTypeidHash64Function(o, id) : hash::INVALID_HASH64;
 		}
 
 		#pragma endregion

@@ -220,9 +220,11 @@ using wStrTypeid = Typeid<ll_wchar_t>;
 
 namespace hash {
 class Hash64;
+class Hash128;
 class Hash64FunctionPack;
 
 using OptionalHash64 = std::optional<hash::Hash64>;
+using OptionalHash128 = std::optional<hash::Hash128>;
 
 using Hash64Function = hash::OptionalHash64(*)(ll_string_t, len_t);
 using wHash64Function = hash::OptionalHash64(*)(ll_wstring_t, len_t);

@@ -93,16 +93,16 @@ constexpr hash::Hash64FunctionPack pack(
 		for (; size > ZERO_UI64; --size, ++str) buffer += *str;
 		return hash::Hash64(buffer);
 	},
-	[](const meta::StrPair&) -> hash::OptionalHash64 { return hash::INVALID_HASH; },
-	[](const meta::wStrPair&) -> hash::OptionalHash64 { return hash::INVALID_HASH; },
+	[](const meta::StrPair&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
+	[](const meta::wStrPair&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
 
-	[](const meta::Str&) -> hash::OptionalHash64 { return hash::INVALID_HASH; },
-	[](const meta::wStr&) -> hash::OptionalHash64 { return hash::INVALID_HASH; },
+	[](const meta::Str&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
+	[](const meta::wStr&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
 
 	[](const hash::Hash64& h) -> hash::OptionalHash64 { return h; },
 
-	[](const void*, const meta::StrTypeid&) -> hash::OptionalHash64 { return hash::INVALID_HASH; },
-	[](const void*, const meta::wStrTypeid&) -> hash::OptionalHash64 { return hash::INVALID_HASH; }
+	[](const void*, const meta::StrTypeid&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
+	[](const void*, const meta::wStrTypeid&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; }
 );
 
 constexpr auto valueget() {
@@ -114,7 +114,7 @@ constexpr auto valueget() {
 	//return tool.hash_hash<1>(hashes).get();
 	//return basic_type_hash::hashValue<ui64>(hashes->get(), pack.getHashFunction()).get();
 	//return basic_type_hash::hashValue<ui64>(888, pack.getHashFunction()).get();
-	//return hash::INVALID_HASH;
+	//return hash::INVALID_HASH64;
 	hash::HashTool<>::HashStatus status[5];
 	return hash::STANDARD_HASH_TOOLS.hashArgumentsV1(status, 1, 2, 3, 4);
 	//return tool.hashArgumentsV1(status, 1, 2, 3, 4);

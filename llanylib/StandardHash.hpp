@@ -31,7 +31,7 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_
 	constexpr len_t PARSER_BUFFER_SIZE = 512;
 	ll_char_t HASH_BUFFER[PARSER_BUFFER_SIZE]{};
 	len_t BUFFERLEN = sizeof(ll_wchar_t) * size;
-	if (BUFFERLEN > PARSER_BUFFER_SIZE) return hash::INVALID_HASH;
+	if (BUFFERLEN > PARSER_BUFFER_SIZE) return hash::INVALID_HASH64;
 
 	ll_char_t* i = HASH_BUFFER;
 	for (ll_wstring_t data_end = str + size; str < data_end; ++str)
@@ -48,10 +48,10 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 hash(const hash::Hash64& h) {
 	return hash::basic_type_hash::hashValue<ui64>(h.get(), city::CityHash::cityHash64);
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::StrTypeid&) {
-	return hash::INVALID_HASH;
+	return hash::INVALID_HASH64;
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::wStrTypeid&) {
-	return hash::INVALID_HASH;
+	return hash::INVALID_HASH64;
 }
 } // namespace __internal__
 

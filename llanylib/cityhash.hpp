@@ -174,11 +174,11 @@ class CityHash {
 #if defined(LL_REAL_CXX23)
 			if not consteval {
 				throw "This is only constevaluated!";
-				return hash::INVALID_HASH;
+				return hash::INVALID_HASH64;
 			}
 #endif
 
-			if (!s) return hash::INVALID_HASH;
+			if (!s) return hash::INVALID_HASH64;
 
 			if (len <= 32) {
 				if (len <= 16) return hash::Hash64(hashLen0to16(s, len));
@@ -215,15 +215,15 @@ class CityHash {
 			).hash::Hash128::toHash64();
 		}
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const StrPair& s) __LL_EXCEPT__ {
-			if (s.empty()) return hash::INVALID_HASH;
+			if (s.empty()) return hash::INVALID_HASH64;
 			else return city::CityHash::cityHash64(s.begin(), s.len());
 		}
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const Str& s) __LL_EXCEPT__ {
-			if (s.empty()) return hash::INVALID_HASH;
+			if (s.empty()) return hash::INVALID_HASH64;
 			else return city::CityHash::cityHash64(s.begin(), s.len());
 		}
 		// Only admits hash::basic_type_hash::is_convertible_v<>
-		// Returns hash::INVALID_HASH if invalid type or hash error
+		// Returns hash::INVALID_HASH64 if invalid type or hash error
 		template<class U, class W = traits::template_types<U>>
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(typename W::cinput value) __LL_EXCEPT__ {
 			return hash::basic_type_hash::hashValue<U, W>(value, city::CityHash::cityHash64);

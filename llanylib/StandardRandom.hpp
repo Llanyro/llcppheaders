@@ -27,15 +27,15 @@
 namespace llcpp {
 namespace meta {
 
-constexpr Random STANDARD_RANDOM() {
+__LL_NODISCARD__ constexpr Random STANDARD_RANDOM() {
 	return Random("Seed", hash::STANDARD_HASH_FUNCTION_PACK);
 }
 template<class T>
-constexpr Random STANDARD_RANDOM(const T& seed) {
+__LL_NODISCARD__ constexpr Random STANDARD_RANDOM(const T& seed) {
 	return Random(seed, hash::STANDARD_HASH_FUNCTION_PACK);
 }
 template<class T>
-constexpr Random STANDARD_RANDOM(T&& seed) {
+__LL_NODISCARD__ constexpr Random STANDARD_RANDOM(T&& seed) {
 	return Random(std::move(seed), hash::STANDARD_HASH_FUNCTION_PACK);
 }
 

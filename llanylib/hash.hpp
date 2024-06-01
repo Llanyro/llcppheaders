@@ -29,8 +29,8 @@ namespace llcpp {
 namespace meta {
 namespace hash {
 
-inline constexpr hash::OptionalHash64 INVALID_HASH64 = std::nullopt;
-inline constexpr hash::OptionalHash64 INVALID_HASH128 = std::nullopt;
+__LL_VAR_INLINE__ constexpr hash::OptionalHash64 INVALID_HASH64 = std::nullopt;
+__LL_VAR_INLINE__ constexpr hash::OptionalHash64 INVALID_HASH128 = std::nullopt;
 
 class Hash64FunctionPack {
 	private:

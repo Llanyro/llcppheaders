@@ -27,23 +27,23 @@ namespace llcpp {
 namespace meta {
 namespace string {
 
-constexpr auto NULLPTR = make_StringView("nullptr");
-constexpr auto TRUE_STR = make_StringView("True");
-constexpr auto FALSE_STR = make_StringView("False");
+__LL_VAR_INLINE__ constexpr auto NULLPTR = make_StringView("nullptr");
+__LL_VAR_INLINE__ constexpr auto TRUE_STR = make_StringView("True");
+__LL_VAR_INLINE__ constexpr auto FALSE_STR = make_StringView("False");
 
-constexpr auto INVALID_POINTER = make_StringView("[invalid pointer]: ");
-constexpr auto NOT_NULL_POINTER = make_StringView("[not null pointer]: ");
-constexpr auto OUT_OF_RANGE = make_StringView("[out of range]: ");
+__LL_VAR_INLINE__ constexpr auto INVALID_POINTER = make_StringView("[invalid pointer]: ");
+__LL_VAR_INLINE__ constexpr auto NOT_NULL_POINTER = make_StringView("[not null pointer]: ");
+__LL_VAR_INLINE__ constexpr auto OUT_OF_RANGE = make_StringView("[out of range]: ");
 
 namespace wide {
 
-constexpr auto NULLPTR = make_StringView(L"nullptr");
-constexpr auto TRUE_STR = make_StringView(L"True");
-constexpr auto FALSE_STR = make_StringView(L"False");
+__LL_VAR_INLINE__ constexpr auto NULLPTR = make_StringView(L"nullptr");
+__LL_VAR_INLINE__ constexpr auto TRUE_STR = make_StringView(L"True");
+__LL_VAR_INLINE__ constexpr auto FALSE_STR = make_StringView(L"False");
 
-constexpr auto INVALID_POINTER = make_StringView(L"[invalid pointer]: ");
-constexpr auto NOT_NULL_POINTER = make_StringView(L"[not null pointer]: ");
-constexpr auto OUT_OF_RANGE = make_StringView(L"[out of range]: ");
+__LL_VAR_INLINE__ constexpr auto INVALID_POINTER = make_StringView(L"[invalid pointer]: ");
+__LL_VAR_INLINE__ constexpr auto NOT_NULL_POINTER = make_StringView(L"[not null pointer]: ");
+__LL_VAR_INLINE__ constexpr auto OUT_OF_RANGE = make_StringView(L"[out of range]: ");
 
 } // namespace wide
 } // namespace string

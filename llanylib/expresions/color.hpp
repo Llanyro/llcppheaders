@@ -27,55 +27,55 @@ namespace llcpp {
 namespace meta {
 namespace color {
 
-constexpr auto RESET = make_StringView("\033[0m");
-constexpr auto BLACK = make_StringView("\033[30m");
-constexpr auto RED = make_StringView("\033[31m");
-constexpr auto GREEN = make_StringView("\033[32m");
-constexpr auto YELLOW = make_StringView("\033[33m");
-constexpr auto BLUE = make_StringView("\033[34m");
-constexpr auto MAGENTA = make_StringView("\033[35m");
-constexpr auto CYAN = make_StringView("\033[36m");
-constexpr auto WHITE = make_StringView("\033[37m");
+__LL_VAR_INLINE__ constexpr auto RESET = make_StringView("\033[0m");
+__LL_VAR_INLINE__ constexpr auto BLACK = make_StringView("\033[30m");
+__LL_VAR_INLINE__ constexpr auto RED = make_StringView("\033[31m");
+__LL_VAR_INLINE__ constexpr auto GREEN = make_StringView("\033[32m");
+__LL_VAR_INLINE__ constexpr auto YELLOW = make_StringView("\033[33m");
+__LL_VAR_INLINE__ constexpr auto BLUE = make_StringView("\033[34m");
+__LL_VAR_INLINE__ constexpr auto MAGENTA = make_StringView("\033[35m");
+__LL_VAR_INLINE__ constexpr auto CYAN = make_StringView("\033[36m");
+__LL_VAR_INLINE__ constexpr auto WHITE = make_StringView("\033[37m");
 
-constexpr auto BG_RESET = make_StringView("\033[49m");
-constexpr auto BG_BLACK = make_StringView("\033[40m");
-constexpr auto BG_RED = make_StringView("\033[41m");
-constexpr auto BG_GREEN = make_StringView("\033[42m");
-constexpr auto BG_YELLOW = make_StringView("\033[43m");
-constexpr auto BG_BLUE = make_StringView("\033[44m");
-constexpr auto BG_MAGENTA = make_StringView("\033[45m");
-constexpr auto BG_CYAN = make_StringView("\033[46m");
-constexpr auto BG_WHITE = make_StringView("\033[47m");
+__LL_VAR_INLINE__ constexpr auto BG_RESET = make_StringView("\033[49m");
+__LL_VAR_INLINE__ constexpr auto BG_BLACK = make_StringView("\033[40m");
+__LL_VAR_INLINE__ constexpr auto BG_RED = make_StringView("\033[41m");
+__LL_VAR_INLINE__ constexpr auto BG_GREEN = make_StringView("\033[42m");
+__LL_VAR_INLINE__ constexpr auto BG_YELLOW = make_StringView("\033[43m");
+__LL_VAR_INLINE__ constexpr auto BG_BLUE = make_StringView("\033[44m");
+__LL_VAR_INLINE__ constexpr auto BG_MAGENTA = make_StringView("\033[45m");
+__LL_VAR_INLINE__ constexpr auto BG_CYAN = make_StringView("\033[46m");
+__LL_VAR_INLINE__ constexpr auto BG_WHITE = make_StringView("\033[47m");
 
-constexpr auto DEBUG_WARNING = BG_YELLOW;
-constexpr auto DEBUG_ERROR = BG_RED;
-constexpr auto DEBUG_MESSAGE = BG_CYAN;
+__LL_VAR_INLINE__ constexpr auto DEBUG_WARNING = BG_YELLOW;
+__LL_VAR_INLINE__ constexpr auto DEBUG_ERROR = BG_RED;
+__LL_VAR_INLINE__ constexpr auto DEBUG_MESSAGE = BG_CYAN;
 
 namespace wide {
 
-constexpr auto RESET = make_StringView(L"\033[0m");
-constexpr auto BLACK = make_StringView(L"\033[30m");
-constexpr auto RED = make_StringView(L"\033[31m");
-constexpr auto GREEN = make_StringView(L"\033[32m");
-constexpr auto YELLOW = make_StringView(L"\033[33m");
-constexpr auto BLUE = make_StringView(L"\033[34m");
-constexpr auto MAGENTA = make_StringView(L"\033[35m");
-constexpr auto CYAN = make_StringView(L"\033[36m");
-constexpr auto WHITE = make_StringView(L"\033[37m");
+__LL_VAR_INLINE__ constexpr auto RESET = make_StringView(L"\033[0m");
+__LL_VAR_INLINE__ constexpr auto BLACK = make_StringView(L"\033[30m");
+__LL_VAR_INLINE__ constexpr auto RED = make_StringView(L"\033[31m");
+__LL_VAR_INLINE__ constexpr auto GREEN = make_StringView(L"\033[32m");
+__LL_VAR_INLINE__ constexpr auto YELLOW = make_StringView(L"\033[33m");
+__LL_VAR_INLINE__ constexpr auto BLUE = make_StringView(L"\033[34m");
+__LL_VAR_INLINE__ constexpr auto MAGENTA = make_StringView(L"\033[35m");
+__LL_VAR_INLINE__ constexpr auto CYAN = make_StringView(L"\033[36m");
+__LL_VAR_INLINE__ constexpr auto WHITE = make_StringView(L"\033[37m");
 
-constexpr auto BG_RESET = make_StringView(L"\033[49m");
-constexpr auto BG_BLACK = make_StringView(L"\033[40m");
-constexpr auto BG_RED = make_StringView(L"\033[41m");
-constexpr auto BG_GREEN = make_StringView(L"\033[42m");
-constexpr auto BG_YELLOW = make_StringView(L"\033[43m");
-constexpr auto BG_BLUE = make_StringView(L"\033[44m");
-constexpr auto BG_MAGENTA = make_StringView(L"\033[45m");
-constexpr auto BG_CYAN = make_StringView(L"\033[46m");
-constexpr auto BG_WHITE = make_StringView(L"\033[47m");
+__LL_VAR_INLINE__ constexpr auto BG_RESET = make_StringView(L"\033[49m");
+__LL_VAR_INLINE__ constexpr auto BG_BLACK = make_StringView(L"\033[40m");
+__LL_VAR_INLINE__ constexpr auto BG_RED = make_StringView(L"\033[41m");
+__LL_VAR_INLINE__ constexpr auto BG_GREEN = make_StringView(L"\033[42m");
+__LL_VAR_INLINE__ constexpr auto BG_YELLOW = make_StringView(L"\033[43m");
+__LL_VAR_INLINE__ constexpr auto BG_BLUE = make_StringView(L"\033[44m");
+__LL_VAR_INLINE__ constexpr auto BG_MAGENTA = make_StringView(L"\033[45m");
+__LL_VAR_INLINE__ constexpr auto BG_CYAN = make_StringView(L"\033[46m");
+__LL_VAR_INLINE__ constexpr auto BG_WHITE = make_StringView(L"\033[47m");
 
-constexpr auto DEBUG_WARNING = BG_YELLOW;
-constexpr auto DEBUG_ERROR = BG_RED;
-constexpr auto DEBUG_MESSAGE = BG_CYAN;
+__LL_VAR_INLINE__ constexpr auto DEBUG_WARNING = BG_YELLOW;
+__LL_VAR_INLINE__ constexpr auto DEBUG_ERROR = BG_RED;
+__LL_VAR_INLINE__ constexpr auto DEBUG_MESSAGE = BG_CYAN;
 
 } // namespace wide
 } // namespace color

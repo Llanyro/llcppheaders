@@ -55,17 +55,17 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::w
 }
 } // namespace __internal__
 
-constexpr Hash64Function STANDARD_Hash64Function = city::CityHash::cityHash64;
-constexpr wHash64Function STANDARD_wHash64Function = __internal__::hash_wstr;
-constexpr StrPairHash64Function STANDARD_StrPairHash64Function = city::CityHash::cityHash64;
-constexpr wStrPairHash64Function STANDARD_wStrPairHash64Function = __internal__::hash_wstr;
-constexpr StrHash64Function STANDARD_StrHash64Function = city::CityHash::cityHash64;
-constexpr wStrHash64Function STANDARD_wStrHash64Function = __internal__::hash_wstr;
-constexpr RecursiveHash64Function STANDARD_RecursiveHash64Function = __internal__::hash;
-constexpr StrTypeidHash64Function STANDARD_StrTypeidHash64Function = __internal__::empty;
-constexpr wStrTypeidHash64Function STANDARD_wStrTypeidHash64Function = __internal__::empty;
+__LL_VAR_INLINE__ constexpr Hash64Function STANDARD_Hash64Function = city::CityHash::cityHash64;
+__LL_VAR_INLINE__ constexpr wHash64Function STANDARD_wHash64Function = __internal__::hash_wstr;
+__LL_VAR_INLINE__ constexpr StrPairHash64Function STANDARD_StrPairHash64Function = city::CityHash::cityHash64;
+__LL_VAR_INLINE__ constexpr wStrPairHash64Function STANDARD_wStrPairHash64Function = __internal__::hash_wstr;
+__LL_VAR_INLINE__ constexpr StrHash64Function STANDARD_StrHash64Function = city::CityHash::cityHash64;
+__LL_VAR_INLINE__ constexpr wStrHash64Function STANDARD_wStrHash64Function = __internal__::hash_wstr;
+__LL_VAR_INLINE__ constexpr RecursiveHash64Function STANDARD_RecursiveHash64Function = __internal__::hash;
+__LL_VAR_INLINE__ constexpr StrTypeidHash64Function STANDARD_StrTypeidHash64Function = __internal__::empty;
+__LL_VAR_INLINE__ constexpr wStrTypeidHash64Function STANDARD_wStrTypeidHash64Function = __internal__::empty;
 
-constexpr hash::Hash64FunctionPack STANDARD_HASH_FUNCTION_PACK = {
+__LL_VAR_INLINE__ constexpr hash::Hash64FunctionPack STANDARD_HASH_FUNCTION_PACK = {
 	STANDARD_Hash64Function,
 	STANDARD_wHash64Function,
 	STANDARD_StrPairHash64Function,
@@ -77,7 +77,7 @@ constexpr hash::Hash64FunctionPack STANDARD_HASH_FUNCTION_PACK = {
 	STANDARD_wStrTypeidHash64Function
 };
 
-constexpr hash::HashTool STANDARD_HASH_TOOLS = hash::HashTool<>(STANDARD_HASH_FUNCTION_PACK);
+__LL_VAR_INLINE__ constexpr hash::HashTool STANDARD_HASH_TOOLS = hash::HashTool<>(STANDARD_HASH_FUNCTION_PACK);
 
 } // namespace hash
 } // namespace meta

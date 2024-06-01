@@ -28,9 +28,9 @@ namespace meta {
 namespace hash {
 
 namespace __internal__ {
-constexpr ui64 kMul = 0x9ddfea08eb382d69ull;
-constexpr ui64 kll = 0xc3a5c85c97cb3171ull;
-constexpr ui8 llshift = 47;
+__LL_VAR_INLINE__ constexpr ui64 kMul = 0x9ddfea08eb382d69ull;
+__LL_VAR_INLINE__ constexpr ui64 kll = 0xc3a5c85c97cb3171ull;
+__LL_VAR_INLINE__ constexpr ui8 llshift = 47;
 } // namespace __internal__
 
 // Murmur-inspired hashing.

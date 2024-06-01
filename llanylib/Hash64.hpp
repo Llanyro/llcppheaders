@@ -51,6 +51,18 @@ class Hash64 {
 		__LL_NODISCARD__ constexpr operator typename const Hash64*() const __LL_EXCEPT__ = delete;
 		__LL_NODISCARD__ constexpr operator typename Hash64*() __LL_EXCEPT__ = delete;
 
+		__LL_NODISCARD__ constexpr void operator==(const hash::Hash64& other) __LL_EXCEPT__ {
+			this->value = other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const hash::Hash64& other) const __LL_EXCEPT__ {
+			return this->value == other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const hash::Hash64& other) const __LL_EXCEPT__ {
+			return this->value != other.value;
+		}
+
+		__LL_NODISCARD__ constexpr operator ui64() const __LL_EXCEPT__ { return this->value; }
+
 		__LL_NODISCARD__ constexpr ui64 get() const __LL_EXCEPT__ { return this->value; }
 
 		constexpr void clear() __LL_EXCEPT__ { this->value = ZERO_UI64; }

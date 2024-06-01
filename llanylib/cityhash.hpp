@@ -49,72 +49,6 @@ namespace meta {
 namespace hash {
 namespace city {
 
-class Hash128 {
-	protected:
-		ui64 low;
-		ui64 high;
-	protected:
-		constexpr void simpleClear() __LL_EXCEPT__ {
-			this->low = ZERO_UI64;
-			this->high = ZERO_UI64;
-		}
-	public:
-		constexpr Hash128() __LL_EXCEPT__ : low(ZERO_UI64), high(ZERO_UI64) {}
-		constexpr Hash128(const ui64 low, const ui64 high) __LL_EXCEPT__
-			: low(low), high(high) {}
-		constexpr ~Hash128() __LL_EXCEPT__ {}
-
-		constexpr Hash128(const Hash128& other) __LL_EXCEPT__
-			: low(other.low), high(other.high) {}
-		constexpr Hash128& operator=(const Hash128& other) __LL_EXCEPT__ {
-			this->low = other.low;
-			this->high = other.high;
-			return *this;
-		}
-		constexpr Hash128(Hash128&& other) __LL_EXCEPT__
-			: low(other.low), high(other.high) { other.Hash128::simpleClear(); }
-		constexpr Hash128& operator=(Hash128&& other) __LL_EXCEPT__ {
-			this->low = other.low;
-			this->high = other.high;
-			other.Hash128::simpleClear();
-			return *this;
-		}
-
-		__LL_NODISCARD__ constexpr operator const Hash128*() const __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ constexpr operator Hash128*() __LL_EXCEPT__ = delete;
-
-		__LL_NODISCARD__ constexpr ui64 getLow() const __LL_EXCEPT__ { return this->low; }
-		__LL_NODISCARD__ constexpr ui64 getHigh() const __LL_EXCEPT__ { return this->high; }
-
-		__LL_NODISCARD__ constexpr ui64 toui64() const __LL_EXCEPT__ {
-			// Murmur-inspired hashing.
-			constexpr ui64 kMul = 0x9ddfea08eb382d69ull;
-			ui64 a = (this->low ^ this->high) * kMul;
-			a ^= (a >> 47);
-			ui64 b = (this->high ^ a) * kMul;
-			b ^= (b >> 47);
-			b *= kMul;
-			return b;
-		}
-		__LL_NODISCARD__ constexpr hash::Hash64 toHash() const __LL_EXCEPT__ {
-			// Murmur-inspired hashing.
-			constexpr ui64 kMul = 0x9ddfea08eb382d69ull;
-			ui64 a = (this->low ^ this->high) * kMul;
-			a ^= (a >> 47);
-			ui64 b = (this->high ^ a) * kMul;
-			b ^= (b >> 47);
-			b *= kMul;
-			return hash::Hash64(b);
-		}
-
-		__LL_NODISCARD__ constexpr ui64& operator[](const len_t pos) __LL_EXCEPT__ {
-			return (pos == ZERO_UI64) ? this->low : this->high;
-		}
-		__LL_NODISCARD__ constexpr ui64 operator[](const len_t pos) const __LL_EXCEPT__ {
-			return (pos == ZERO_UI64) ? this->low : this->high;
-		}
-};
-
 class CityHash {
 	public:
 		using DataType = ll_string_t;
@@ -127,6 +61,7 @@ class CityHash {
 		// Magic numbers for 32-bit hashing.  Copied from Murmur3.
 		static constexpr ui32 c1 = 0xcc9e2d51;
 		static constexpr ui32 c2 = 0x1b873593;
+
 	protected:
 		template<class T>
 		__LL_NODISCARD__ static constexpr T unalignedLoad(DataType p) __LL_EXCEPT__ {
@@ -217,7 +152,7 @@ class CityHash {
 		}
 		// Return a 16-byte hash for 48 bytes.  Quick and dirty.
 		// Callers do best to use "random-looking" values for a and b.
-		__LL_NODISCARD__ static constexpr city::Hash128 weakHashLen32WithSeeds(const ui64 w, const ui64 x, const ui64 y, const ui64 z, ui64 a, ui64 b) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::Hash128 weakHashLen32WithSeeds(const ui64 w, const ui64 x, const ui64 y, const ui64 z, ui64 a, ui64 b) __LL_EXCEPT__ {
 			a += w;
 			b = rotate(b + a + z, 21);
 			ui64 c = a;
@@ -228,7 +163,7 @@ class CityHash {
 			return { a + z, b + c };
 		}
 		// Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
-		__LL_NODISCARD__ static constexpr city::Hash128 weakHashLen32WithSeeds(DataType s, const ui64 a, const ui64 b) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::Hash128 weakHashLen32WithSeeds(DataType s, const ui64 a, const ui64 b) __LL_EXCEPT__ {
 			return weakHashLen32WithSeeds(
 				fetch64(s), fetch64(s + 8),
 				fetch64(s + 16), fetch64(s + 24),
@@ -255,12 +190,9 @@ class CityHash {
 			// loop we keep 56 bytes of state: v, w, x, y, and z.
 			ui64 x = fetch64(s + len - 40);
 			ui64 y = fetch64(s + len - 16) + fetch64(s + len - 56);
-			ui64 z = city::Hash128(
-				fetch64(s + len - 48) + len,
-				fetch64(s + len - 24)
-			).toui64();
-			city::Hash128 v = weakHashLen32WithSeeds(s + len - 64, len, z);
-			city::Hash128 w = weakHashLen32WithSeeds(s + len - 32, y + k1, x);
+			ui64 z = hash::Hash128(fetch64(s + len - 48) + len, fetch64(s + len - 24));
+			hash::Hash128 v = weakHashLen32WithSeeds(s + len - 64, len, z);
+			hash::Hash128 w = weakHashLen32WithSeeds(s + len - 32, y + k1, x);
 			x = x * k1 + fetch64(s);
 
 			// Decrease len to the nearest multiple of 64, and operate on 64-byte chunks.
@@ -277,10 +209,10 @@ class CityHash {
 				s += 64;
 				len -= 64;
 			} while (len != ZERO_UI64);
-			return city::Hash128(
-				city::Hash128(v.getLow(), w.getLow()).toui64() + shiftMix(y) * k1 + z,
-				city::Hash128(v.getHigh(), w.getHigh()).toui64() + x
-			).city::Hash128::toHash();
+			return hash::Hash128(
+				hash::Hash128(v.getLow(), w.getLow()) + shiftMix(y) * k1 + z,
+				hash::Hash128(v.getHigh(), w.getHigh()) + x
+			).hash::Hash128::toHash64();
 		}
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const StrPair& s) __LL_EXCEPT__ {
 			if (s.empty()) return hash::INVALID_HASH;

@@ -96,18 +96,53 @@ struct basic_type_hash {
 		}
 	}
 
+	#pragma region Combine
 	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shl(typename W::cinput value1, typename V::cinput value2, const ui8 shift) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shl(typename V::cinput value1, typename W::cinput value2, const ui8 shift) __LL_EXCEPT__ {
 		if constexpr (!basic_type_hash::is_convertible_v<T> || !basic_type_hash::is_convertible_v<U>)
 			return hash::INVALID_HASH;
 		else return value1 ^ (value2 << shift);
 	}
 	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shr(typename W::cinput value1, typename V::cinput value2, const ui8 shift) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shr(typename V::cinput value1, typename W::cinput value2, const ui8 shift) __LL_EXCEPT__ {
 		if constexpr (!basic_type_hash::is_convertible_v<T> || !basic_type_hash::is_convertible_v<U>)
 			return hash::INVALID_HASH;
 		else return value1 ^ (value2 >> shift);
 	}
+	template<class T, class V = traits::template_types<T>>
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shl(typename V::cinput value, const ui8 shift) __LL_EXCEPT__ {
+		return basic_type_hash::combine_shl(value, __internal__::kll, shift);
+	}
+	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shr(typename V::cinput value, const ui8 shift) __LL_EXCEPT__ {
+		return basic_type_hash::combine_shr(value, __internal__::kll, shift);
+	}
+
+	#pragma endregion
+	#pragma region Mur
+	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 mur(typename W::cinput value1, typename V::cinput value2) __LL_EXCEPT__ {
+		if constexpr (!basic_type_hash::is_convertible_v<T> || !basic_type_hash::is_convertible_v<U>)
+			return hash::INVALID_HASH;
+		else {
+			ui64 a = (value1 ^ value2) * __internal__::kMul;
+			a ^= (a >> 47);
+			ui64 b = (value2 ^ a) * __internal__::kMul;
+			b ^= (b >> 47);
+			b *= __internal__::kMul;
+			return b;
+		}
+	}
+	template<class T, class V = traits::template_types<T>>
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 mur_l(typename V::cinput value) __LL_EXCEPT__ {
+		basic_type_hash::mur(value, __internal__::kll);
+	}
+	template<class T, class V = traits::template_types<T>>
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 mur_r(typename V::cinput value) __LL_EXCEPT__ {
+		basic_type_hash::mur(__internal__::kll, value);
+	}
+
+	#pragma endregion
 };
 
 // Struct for use in HashTool in an more optimized way (for not constexpr data)

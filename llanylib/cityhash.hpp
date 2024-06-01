@@ -52,7 +52,7 @@ namespace city {
 class CityHash {
 	public:
 		using DataType = ll_string_t;
-	private:
+	public:
 		// Some primes between 2^63 and 2^64 for various uses.
 		static constexpr ui64 k0 = 0xc3a5c85c97cb3127ull;
 		static constexpr ui64 k1 = 0xb492b66fbe98f273ull;

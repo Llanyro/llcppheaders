@@ -152,7 +152,7 @@ class Array {
 		using __ArrayPair = traits::template_types<ArrayPair<T>>;
 	protected:
 		type::ptr mem;
-		type::cptr mem_end;
+		type::ptr mem_end;
 	#pragma region Functions
 	protected:
 		constexpr void simpleClear() __LL_EXCEPT__ {
@@ -162,7 +162,7 @@ class Array {
 	public:
 		#pragma region Constructors
 		constexpr Array() __LL_EXCEPT__ = delete;
-		constexpr Array(type::ptr mem, type::cptr mem_end) __LL_EXCEPT__ : mem(mem), mem_end(mem_end) {}
+		constexpr Array(type::ptr mem, type::ptr mem_end) __LL_EXCEPT__ : mem(mem), mem_end(mem_end) {}
 		constexpr Array(type::ptr mem, const len_t len) __LL_EXCEPT__ : Array(mem, mem + len) {}
 		constexpr ~Array() __LL_EXCEPT__ {}
 
@@ -279,6 +279,9 @@ class Array {
 		}
 		__LL_NODISCARD__ constexpr type::cptr rbegin() const __LL_EXCEPT__ {
 			return this->mem_end - 1;
+		}
+		__LL_NODISCARD__ constexpr type::ptr end() __LL_EXCEPT__ {
+			return this->mem_end;
 		}
 		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
 			return this->mem_end;

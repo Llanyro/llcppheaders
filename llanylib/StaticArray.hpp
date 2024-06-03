@@ -54,6 +54,12 @@ class StaticArray : public meta::Array<T> {
 			this->mem = this->mem_array;
 			this->mem_end = this->mem_array + N;
 		}
+		template<class... Args, std::enable_if_t<N == sizeof...(Args), int> = 0>
+		constexpr StaticArray(const Args&... args) __LL_EXCEPT__
+			: __Array::type(LL_NULLPTR, LL_NULLPTR), mem_array{ args... } {
+			this->mem = this->mem_array;
+			this->mem_end = this->mem_array + N;
+		}
 		constexpr StaticArray(typename type::cinput object) __LL_EXCEPT__
 			: StaticArray() { this->fill<typename type::type>(object); }
 		constexpr ~StaticArray() __LL_EXCEPT__ {}
@@ -73,7 +79,7 @@ class StaticArray : public meta::Array<T> {
 		}
 		constexpr __StaticArray::ref operator=(__StaticArray::move other) __LL_EXCEPT__ {
 			__StaticArray::type::operator=(other);
-			other.__StaticArray::type::clear();
+			other.clear();
 			return *this;
 		}
 		
@@ -447,31 +453,61 @@ class StaticArray : public meta::Array<T> {
 		#pragma region Copy
 	public:
 		template<class U, class W = traits::template_types<U>>
-		constexpr void copy(W::cptr src, const len_t size, FillFunc<typename W::type> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+		constexpr void copy(W::cptr src, const len_t size, FillFunc<typename W::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N) __LL_EXCEPT__ {
 			len_t this_size = last - first;
-			if (!setFunc || size != this_size) return;
+			if (!setFunc || size != this_size || this_size > N || size != N) return;
 			__data::copy<U, W>(src, this->get(first), this_size, setFunc);
 		}
 		template<class U, class W = traits::template_types<U>>
-		constexpr void copy(W::cptr src, const len_t size, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+		constexpr void copy(W::cptr src, const len_t size, const len_t first = ZERO_UI64, const len_t last = N) __LL_EXCEPT__ {
 			len_t this_size = last - first;
-			if (size != this_size) return;
+			if (size != this_size || this_size > N || size != N) return;
 			__data::copy<U, W>(src, this->get(first), N);
 		}
 		template<class U, class W = traits::template_types<U>, len_t N2>
-		constexpr void copy(W::ctype(&src)[N2], FillFunc<typename W::type> setFunc, const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+		constexpr void copy(W::ctype(&src)[N2], FillFunc<typename W::cinput> setFunc, const len_t first = ZERO_UI64, const len_t last = N) __LL_EXCEPT__ {
 			len_t this_size = last - first;
-			if (!setFunc || N2 != this_size) return;
+			if (!setFunc || N2 != this_size || this_size > N || N2 != N) return;
 			__data::copy<U, W>(src, this->get(first), N2, setFunc);
 		}
 		template<class U, class W = traits::template_types<U>, len_t N2>
-		constexpr void copy(W::ctype(&src)[N2], const len_t first = ZERO_UI64, const len_t last = N - 1) __LL_EXCEPT__ {
+		constexpr void copy(W::ctype(&src)[N2], const len_t first = ZERO_UI64, const len_t last = N) __LL_EXCEPT__ {
 			len_t this_size = last - first;
-			if (N2 != this_size) return;
+			if (N2 != this_size || this_size > N || N2 != N) return;
 			__data::copy<U, W>(src, this->get(first), N2);
 		}
 
 		#pragma endregion
+
+		#pragma region Move
+	public:
+		template<class U, class W = traits::template_types<U>>
+		constexpr void move(W::ptr src, const len_t size, FillFunc<typename W::ref> setFunc, const len_t first = ZERO_UI64, const len_t last = N) __LL_EXCEPT__ {
+			len_t this_size = last - first;
+			if (!setFunc || size != this_size || this_size > N || size != N) return;
+			__data::move<U, W>(src, this->get(first), this_size, setFunc);
+		}
+		template<class U, class W = traits::template_types<U>>
+		constexpr void move(W::ptr src, const len_t size, const len_t first = ZERO_UI64, const len_t last = N) __LL_EXCEPT__ {
+			len_t this_size = last - first;
+			if (size != this_size || this_size > N || size != N) return;
+			__data::move<U, W>(src, this->get(first), N);
+		}
+		template<class U, class W = traits::template_types<U>, len_t N2>
+		constexpr void move(W::type(&src)[N2], FillFunc<typename W::ref> setFunc, const len_t first = ZERO_UI64, const len_t last = N) __LL_EXCEPT__ {
+			len_t this_size = last - first;
+			if (!setFunc || N2 != this_size || this_size > N || N2 != N) return;
+			__data::move<U, W>(src, this->get(first), N2, setFunc);
+		}
+		template<class U, class W = traits::template_types<U>, len_t N2>
+		constexpr void move(W::type(&src)[N2], const len_t first = ZERO_UI64, const len_t last = N) __LL_EXCEPT__ {
+			len_t this_size = last - first;
+			if (N2 != this_size || this_size > N || N2 != N) return;
+			__data::move<U, W>(src, this->get(first), N2);
+		}
+
+		#pragma endregion
+
 		#pragma region Shift
 		//constexpr void fill(const len_t first, const len_t last, len_t num, typename W::cinput null, SwapFunc swap, FillFunc<typename W::cinput> setFunc) __LL_EXCEPT__ {
 
@@ -511,6 +547,15 @@ class StaticArray : public meta::Array<T> {
 
 	#pragma endregion
 };
+
+#if defined(LLANYLIB_UTILITY_HPP_)
+
+template<class T, len_t N, T NULL_ITEM, class... Args>
+constexpr StaticArray<T, N, NULL_ITEM> make_filled_StaticArray(const Args&... args) {
+	return utils::make_constructed_array<StaticArray<T, N, NULL_ITEM>, T, Args...>(args..., std::make_index_sequence<N>{});
+}
+
+#endif
 
 //constexpr int testing() {
 //	StaticArray<ll_int_t, 10, 0> arr;

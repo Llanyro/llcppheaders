@@ -1003,7 +1003,7 @@ struct data_manipulation_cluster {
 	template<class U, class W = traits::template_types<U>>
 	static constexpr void copy(W::cptr src, __t::ptr dst, len_t size, FillFunc<typename W::cinput> setFunc) {
 		if (!src || !dst || size == ZERO_UI64 || !setFunc) return;
-		for (; size > ZERO_UI64; ++src, ++dst) setFunc(*dst, *src);
+		for (; size > ZERO_UI64; ++src, ++dst, --size) setFunc(*dst, *src);
 	}
 	template<class U, class W = traits::template_types<U>>
 	static constexpr void copy(W::cptr src, __t::ptr dst, len_t size) {
@@ -1048,6 +1048,42 @@ struct data_manipulation_cluster {
 	template<class U, len_t N, class W = traits::template_types<U>>
 	static constexpr void copy(typename W::ctype(&src)[N], __Array_t& dst) {
 		__data::copy<U, W>(src, dst.begin(), math::min<len_t>(N, dst.len()));
+	}
+
+	#pragma endregion
+	#pragma region Move
+	template<class U, class W = traits::template_types<U>>
+	static constexpr void move(W::ptr src, __t::ptr dst, len_t size, FillFunc<typename W::ref> setFunc) {
+		if (!src || !dst || size == ZERO_UI64 || !setFunc) return;
+		for (; size > ZERO_UI64; ++src, ++dst, --size) setFunc(*dst, *src);
+	}
+	template<class U, class W = traits::template_types<U>>
+	static constexpr void move(W::ptr src, __t::ptr dst, len_t size) {
+		__data::move<U, W>(src, dst, size, common::simple_set<typename __t::type, typename W::ref>);
+	}
+	template<class U, class W = traits::template_types<U>>
+	static constexpr void move(meta::Array<U>& src, __Array_t& dst, FillFunc<typename W::ref> setFunc) {
+		__data::move<U, W>(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()), setFunc);
+	}
+	template<class U, class W = traits::template_types<U>>
+	static constexpr void move(meta::Array<U>& src, __Array_t& dst) {
+		__data::move<U, W>(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()));
+	}
+	template<class U, len_t N, class W = traits::template_types<U>>
+	static constexpr void move(typename W::type(&src)[N], __t::ptr dst, const len_t size, FillFunc<typename W::ref> setFunc) {
+		__data::move<U, W>(src, dst, math::min<len_t>(N, size), setFunc);
+	}
+	template<class U, len_t N, class W = traits::template_types<U>>
+	static constexpr void move(typename W::type(&src)[N], __t::ptr dst, const len_t size) {
+		__data::move<U, W>(src, dst, math::min<len_t>(N, size));
+	}
+	template<class U, len_t N, class W = traits::template_types<U>>
+	static constexpr void move(typename W::type(&src)[N], __Array_t& dst, FillFunc<typename W::ref> setFunc) {
+		__data::move<U, W>(src, dst.begin(), math::min<len_t>(N, dst.len()), setFunc);
+	}
+	template<class U, len_t N, class W = traits::template_types<U>>
+	static constexpr void move(typename W::type(&src)[N], __Array_t& dst) {
+		__data::move<U, W>(src, dst.begin(), math::min<len_t>(N, dst.len()));
 	}
 
 	#pragma endregion
@@ -1189,6 +1225,15 @@ struct data_manipulation_cluster {
 ///	return *piv;
 ///}
 ///constexpr int asdf1 = example();
+
+template<class U, class T, class... Args, len_t... Idx>
+constexpr auto make_filled_object(const Args&... args, std::index_sequence<Idx...>) -> U {
+	return U((Idx, T(args...))...);
+}
+template<class T, class... Args, len_t... Indexes>
+constexpr auto make_filled_new_mem(T* mem, const Args&... args, std::index_sequence<Indexes...>) -> T* {
+	return new (mem) T[sizeof...(Indexes)]{ (Indexes, T(args...))... };
+}
 
 } // namespace algorithm
 } // namespace meta

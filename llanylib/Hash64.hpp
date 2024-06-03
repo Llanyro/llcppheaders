@@ -246,7 +246,7 @@ class Hash128 {
 		#pragma endregion
 };
 
-#undef MURMUR_BODY_TEMPLATE
+#undef __LL_MURMUR_BODY_TEMPLATE__
 
 } // namespace hash
 } // namespace meta

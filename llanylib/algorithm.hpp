@@ -1226,15 +1226,6 @@ struct data_manipulation_cluster {
 ///}
 ///constexpr int asdf1 = example();
 
-template<class U, class T, class... Args, len_t... Idx>
-constexpr auto make_filled_object(const Args&... args, std::index_sequence<Idx...>) -> U {
-	return U((Idx, T(args...))...);
-}
-template<class T, class... Args, len_t... Indexes>
-constexpr auto make_filled_new_mem(T* mem, const Args&... args, std::index_sequence<Indexes...>) -> T* {
-	return new (mem) T[sizeof...(Indexes)]{ (Indexes, T(args...))... };
-}
-
 } // namespace algorithm
 } // namespace meta
 } // namespace llcpp

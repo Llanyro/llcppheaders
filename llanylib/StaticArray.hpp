@@ -548,15 +548,6 @@ class StaticArray : public meta::Array<T> {
 	#pragma endregion
 };
 
-#if defined(LLANYLIB_UTILITY_HPP_)
-
-template<class T, len_t N, T NULL_ITEM, class... Args>
-constexpr StaticArray<T, N, NULL_ITEM> make_filled_StaticArray(const Args&... args) {
-	return utils::make_constructed_array<StaticArray<T, N, NULL_ITEM>, T, Args...>(args..., std::make_index_sequence<N>{});
-}
-
-#endif
-
 //constexpr int testing() {
 //	StaticArray<ll_int_t, 10, 0> arr;
 //	decltype(arr)::FillFunc<const ll_char_t> f = [](ll_int_t& a, const ll_char_t b) -> void {

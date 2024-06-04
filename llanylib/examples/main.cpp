@@ -51,6 +51,7 @@
 #include "../reflection.hpp"
 #include "../Singleton.hpp"
 #include "../Typeid.hpp"
+#include "../utility.hpp"
 
 #include <iostream>
 #include <array>
@@ -133,7 +134,7 @@ __LL_NODISCARD__ constexpr len_t valueget2(len_t value) {
 
 constexpr len_t is_eval = valueget2(999);
 
-int main() {
+int main2() {
 	using Buff = llcpp::meta::Buffer<len_t, 10ul, llcpp::ZERO_UI64>;
 	Buff array0;
 	//const len_t block_cmp[] = { 2ull, 3ull, 4ull, 5ull, 6ull, 7ull, 8ull, 9ull, 1000ull, 1000ull };
@@ -192,4 +193,63 @@ int main() {
 	//else std::cout << "Get value: no value\n";
 
 	return 0;
+}
+
+//#include <cstddef>
+#include <array>
+//#include <string>
+//#include <iostream>
+#include <iomanip>
+
+struct Test {
+	std::string str;
+	int n;
+
+	Test(std::string str, int n) noexcept : str(std::move(str)), n(n) { }
+	Test() noexcept(true) : str(), n() {
+		std::cout << "Inited!\n";
+	}
+};
+std::ostream& operator <<(std::ostream& os, Test const& t) {
+	return os << '{' << std::quoted(t.str) << ", " << t.n << '}';
+}
+
+int main() {
+	//auto print_arr = [](const auto* arr, const len_t size) {
+	//	const auto* end = arr + size;
+	//	for (; arr < end; ++arr)
+	//		std::cout << *arr << ", ";
+	//	std::cout << "\n\n";
+	//};
+	auto print_arr = [](const auto& arr) {
+		for(auto& i : arr)
+			std::cout << i << ", ";
+		std::cout << "\n\n";
+	};
+
+	//auto asdf = std::make_index_sequence<10>{};
+	//asdf.size();
+	//std::initializer_list
+
+	auto a = llcpp::meta::utils::make_constructed_array<std::array<len_t, 10>, len_t, 10>(999);
+	len_t* mem = (len_t*)std::malloc(sizeof(len_t) * 10);
+	mem = llcpp::meta::utils::make_constructed_new_mem<len_t, 10>(mem, 999);
+	auto c = llcpp::meta::utils::make_filled_StaticArray<len_t, 10, 0ull>(999);
+	llcpp::meta::ArrayPair<len_t> b_arr(mem, 10);
+
+	print_arr(a);
+	print_arr(b_arr);
+	print_arr(c);
+	free(mem);
+
+	Test* m = (Test*)std::malloc(sizeof(Test) * 5);
+	m = new (m) Test[5]();
+	delete[] m;
+	free(m);
+
+	std::index_sequence idx_seq = std::make_index_sequence<10>();
+
+
+	//print_arr(make_filled_array<int, 10>(23));
+	//print_arr(make_filled_array<Test, 10>("asd", 123));
 }

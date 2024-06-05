@@ -28,6 +28,7 @@
 
 #include "bits.hpp"
 #include "hash_pack.hpp"
+#include "ArrayView.hpp"
 
 #if defined(WORDS_BIGENDIAN)
 #define ui32_in_expected_order(x) (bits::bytes_swap_32(x))

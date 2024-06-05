@@ -23,6 +23,7 @@
 
 #include "bits.hpp"
 #include "hash_pack.hpp"
+#include "ArrayView.hpp"
 
 namespace llcpp {
 namespace meta {

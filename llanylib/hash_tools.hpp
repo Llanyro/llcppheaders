@@ -1,27 +1,27 @@
 //////////////////////////////////////////////
-//	hashtools.hpp							//
+//	hash_tools.hpp							//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_HASHTOOLS_HPP_) // Guard && version protector
-	#if LLANYLIB_HASHTOOLS_MAYOR_ != 7 || LLANYLIB_HASHTOOLS_MINOR_ < 0
+	#if LLANYLIB_HASHTOOLS_MAYOR_ != 7 || LLANYLIB_HASHTOOLS_MINOR_ < 3
 		#if defined(LL_REAL_CXX23)
-			#warning "hashtools.hpp version error!"
+			#warning "hash_tools.hpp version error!"
 		#else
-			#error "hashtools.hpp version error!"
+			#error "hash_tools.hpp version error!"
 		#endif // LL_REAL_CXX23
 	#endif // LLANYLIB_HASHTOOLS_MAYOR_ || LLANYLIB_HASHTOOLS_MINOR_
 
 #else !defined(LLANYLIB_HASHTOOLS_HPP_)
 #define LLANYLIB_HASHTOOLS_HPP_
 #define LLANYLIB_HASHTOOLS_MAYOR_ 7
-#define LLANYLIB_HASHTOOLS_MINOR_ 0
+#define LLANYLIB_HASHTOOLS_MINOR_ 3
 
-#include "hash.hpp"
+#include "hash_pack.hpp"
 #include "reflection.hpp"
 
 #if defined(WINDOWS_SYSTEM)
@@ -33,138 +33,11 @@ namespace llcpp {
 namespace meta {
 namespace hash {
 
-struct basic_type_hash {
-	template<class T>
-	static constexpr ll_bool_t is_convertible_v = std::_Is_any_of_v<T, i8, ui8, i16, ui16, i32, ui32, i64, ui64, ll_wchar_t>;
-
-	#pragma region UsedInTools
-	template<len_t N, class T>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
-		if constexpr (!basic_type_hash::is_convertible_v<T> || N == ZERO_UI64)
-			return hash::INVALID_HASH64;
-		else if constexpr (N == 1) return basic_type_hash::hashValue<T>(*values, hashFunction);
-		else {
-			constexpr len_t BUFFERLEN = sizeof(T) * N;
-			ll_char_t buffer[BUFFERLEN]{};
-
-			ll_char_t* i = buffer;
-			for (const T* data_end = values + N; values < data_end; ++values)
-				(void)basic_type_hash::conversor<T>(i, *values);
-			return hashFunction(buffer, BUFFERLEN);
-		}
-	}
-	template<len_t N>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N], hash::Hash64Function hashFunction) __LL_EXCEPT__ {
-		constexpr len_t BUFFERLEN = sizeof(ui64) * N;
-		ll_char_t buffer[BUFFERLEN]{};
-
-		ll_char_t* i = buffer;
-		const hash::Hash64* arr = hashes;
-		for (const hash::Hash64* data_end = arr + N; arr < data_end; ++arr)
-			(void)basic_type_hash::conversor<ui64>(i, arr->get());
-
-		return hashFunction(buffer, BUFFERLEN);
-	}
-
-	#pragma endregion
-
-	// Uses bitwise operators: [ ">>", "&" ]
-	template<class U, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr ll_bool_t conversor(ll_char_t*& buffer, typename W::cinput value) __LL_EXCEPT__ {
-		constexpr len_t N = sizeof(U);
-		if constexpr (!basic_type_hash::is_convertible_v<U>) {
-			buffer += N;
-			return LL_FALSE;
-		}
-		else {
-			constexpr len_t BYTES = (N << 3) - 8;
-			len_t byte = BYTES;
-			for (len_t i{}; i < N; ++i, ++buffer, byte -= 8)
-				*buffer = (value >> byte) & 0xFF;
-			return LL_TRUE;
-		}
-	}
-	template<class U, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValue(typename W::cinput value, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
-		if constexpr (!basic_type_hash::is_convertible_v<U>) return hash::INVALID_HASH64;
-		else {
-			constexpr len_t BUFFERLEN = sizeof(U);
-			ll_char_t buffer[BUFFERLEN]{};
-			ll_char_t* _ = buffer;
-			if(!basic_type_hash::conversor<U, W>(_, value)) return hash::INVALID_HASH64;
-			return hashFunction(buffer, BUFFERLEN);
-		}
-	}
-
-	#pragma region Combine
-	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shl(typename V::cinput value1, typename W::cinput value2, const ui8 shift) __LL_EXCEPT__ {
-		if constexpr (!basic_type_hash::is_convertible_v<T> || !basic_type_hash::is_convertible_v<U>)
-			return hash::INVALID_HASH64;
-		else return value1 ^ (value2 << shift);
-	}
-	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shr(typename V::cinput value1, typename W::cinput value2, const ui8 shift) __LL_EXCEPT__ {
-		if constexpr (!basic_type_hash::is_convertible_v<T> || !basic_type_hash::is_convertible_v<U>)
-			return hash::INVALID_HASH64;
-		else return value1 ^ (value2 >> shift);
-	}
-	template<class T, class V = traits::template_types<T>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shl(typename V::cinput value, const ui8 shift) __LL_EXCEPT__ {
-		return basic_type_hash::combine_shl(value, __internal__::kll, shift);
-	}
-	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 combine_shr(typename V::cinput value, const ui8 shift) __LL_EXCEPT__ {
-		return basic_type_hash::combine_shr(value, __internal__::kll, shift);
-	}
-
-	#pragma endregion
-	#pragma region Mur
-	template<class T, class U, class V = traits::template_types<T>, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 mur(typename W::cinput value1, typename V::cinput value2) __LL_EXCEPT__ {
-		if constexpr (!basic_type_hash::is_convertible_v<T> || !basic_type_hash::is_convertible_v<U>)
-			return hash::INVALID_HASH64;
-		else {
-			ui64 a = (value1 ^ value2) * __internal__::kMul;
-			a ^= (a >> 47);
-			ui64 b = (value2 ^ a) * __internal__::kMul;
-			b ^= (b >> 47);
-			b *= __internal__::kMul;
-			return b;
-		}
-	}
-	template<class T, class V = traits::template_types<T>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 mur_l(typename V::cinput value) __LL_EXCEPT__ {
-		basic_type_hash::mur(value, __internal__::kll);
-	}
-	template<class T, class V = traits::template_types<T>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 mur_r(typename V::cinput value) __LL_EXCEPT__ {
-		basic_type_hash::mur(__internal__::kll, value);
-	}
-
-	#pragma endregion
-};
-
-// Struct for use in HashTool in an more optimized way (for not constexpr data)
-struct basic_type_hash_no_constexpr {
-	template<len_t N>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N], hash::Hash64Function hashFunction) __LL_EXCEPT__ {
-		return hashFunction(reinterpret_cast<ll_string_t>(hashes), sizeof(hash::Hash64) * N);
-	}
-	template<len_t N, class T>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
-		if constexpr (!basic_type_hash::is_convertible_v<T> || N == ZERO_UI64)
-			return hash::INVALID_HASH64;
-		else return hashFunction(reinterpret_cast<ll_string_t>(values), sizeof(T) * N);
-	}
-};
-
 template<class basic_type_hash_class = basic_type_hash>
 class HashTool {
 	public:
 		template<class T>
 		static constexpr ll_bool_t is_convertible_object_v = std::_Is_any_of_v<T, hash::Hash64, meta::StrPair, meta::wStrPair, meta::Str, meta::wStr>;
-
 	private:
 		Hash64FunctionPack hashFunctionPack;
 	public:

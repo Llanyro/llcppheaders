@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_MATH_HPP_) // Guard && version protector
-	#if LLANYLIB_MATH_MAYOR_ != 7 || LLANYLIB_MATH_MINOR_ < 0
+	#if LLANYLIB_MATH_MAYOR_ != 7 || LLANYLIB_MATH_MINOR_ < 3
 		#error "math.hpp version error!"
 	#endif // LLANYLIB_MATH_MAYOR_ || LLANYLIB_MATH_MINOR_
 
 #else !defined(LLANYLIB_MATH_HPP_)
 #define LLANYLIB_MATH_HPP_
 #define LLANYLIB_MATH_MAYOR_ 7
-#define LLANYLIB_MATH_MINOR_ 0
+#define LLANYLIB_MATH_MINOR_ 3
 
 #include "traits.hpp"
 
@@ -50,9 +50,6 @@ template<class T, class U = traits::template_types<T>::cinput>
 __LL_NODISCARD__ constexpr ll_bool_t isBetween(U minVal, U value, U maxVal) __LL_EXCEPT__ {
 	return (minVal <= value && value <= maxVal);
 }
-
-
-
 template<class T, T minVal, T maxVal>
 __LL_NODISCARD__ constexpr ll_bool_t isBetween(const T val) __LL_EXCEPT__ {
 	 return (minVal <= val && val <= maxVal);

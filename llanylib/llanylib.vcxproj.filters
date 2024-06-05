@@ -165,13 +165,13 @@
     <ClInclude Include="cityhash.hpp">
       <Filter>Source Files\hash</Filter>
     </ClInclude>
-    <ClInclude Include="Hash64.hpp">
+    <ClInclude Include="hash_types.hpp">
       <Filter>Source Files\hash</Filter>
     </ClInclude>
-    <ClInclude Include="hashtools.hpp">
+    <ClInclude Include="hash_tools.hpp">
       <Filter>Source Files\hash</Filter>
     </ClInclude>
-    <ClInclude Include="hash.hpp">
+    <ClInclude Include="hash_pack.hpp">
       <Filter>Source Files\hash</Filter>
     </ClInclude>
     <ClInclude Include="ArrayPair.hpp">
@@ -188,6 +188,12 @@
     </ClInclude>
     <ClInclude Include="utility.hpp">
       <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="llanyhash.hpp">
+      <Filter>Source Files\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="hash_algorithm.hpp">
+      <Filter>Source Files\hash</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

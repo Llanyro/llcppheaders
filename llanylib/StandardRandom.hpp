@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_STANDARDRANDOM_HPP_) // Guard && version protector
-	#if LLANYLIB_STANDARDRANDOM_MAYOR_ != 7 || LLANYLIB_STANDARDRANDOM_MINOR_ < 0
+	#if LLANYLIB_STANDARDRANDOM_MAYOR_ != 7 || LLANYLIB_STANDARDRANDOM_MINOR_ < 3
 		#if defined(LL_REAL_CXX23)
 			#warning "StandardRandom.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 #else !defined(LLANYLIB_STANDARDRANDOM_HPP_)
 #define LLANYLIB_STANDARDRANDOM_HPP_
 #define LLANYLIB_STANDARDRANDOM_MAYOR_ 7
-#define LLANYLIB_STANDARDRANDOM_MINOR_ 0
+#define LLANYLIB_STANDARDRANDOM_MINOR_ 3
 
 #include "StandardHash.hpp"
 #include "Random.hpp"
@@ -37,6 +37,18 @@ __LL_NODISCARD__ constexpr Random STANDARD_RANDOM(const T& seed) {
 template<class T>
 __LL_NODISCARD__ constexpr Random STANDARD_RANDOM(T&& seed) {
 	return Random(std::move(seed), hash::STANDARD_HASH_FUNCTION_PACK);
+}
+
+__LL_NODISCARD__ constexpr Random FAST_RANDOM() {
+	return Random("Seed", hash::FAST_HASH_FUNCTION_PACK);
+}
+template<class T>
+__LL_NODISCARD__ constexpr Random FAST_RANDOM(const T& seed) {
+	return Random(seed, hash::FAST_HASH_FUNCTION_PACK);
+}
+template<class T>
+__LL_NODISCARD__ constexpr Random FAST_RANDOM(T&& seed) {
+	return Random(std::move(seed), hash::FAST_HASH_FUNCTION_PACK);
 }
 
 } // namespace meta

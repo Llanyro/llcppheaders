@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_OS_HPP_) // Guard && version protector
-	#if LLANYLIB_OS_MAYOR_ != 7 || LLANYLIB_OS_MINOR_ < 0
+	#if LLANYLIB_OS_MAYOR_ != 7 || LLANYLIB_OS_MINOR_ < 3
 		#if defined(LL_REAL_CXX23)
 			#warning "os.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 #else !defined(LLANYLIB_OS_HPP_)
 #define LLANYLIB_OS_HPP_
 #define LLANYLIB_OS_MAYOR_ 7
-#define LLANYLIB_OS_MINOR_ 0
+#define LLANYLIB_OS_MINOR_ 3
 
 #if defined(__cplusplus)
 	#if __STDC_HOSTED__ != 1

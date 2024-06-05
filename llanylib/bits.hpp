@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_BITS_HPP_) // Guard && version protector
-	#if LLANYLIB_BITS_MAYOR_ != 7 || LLANYLIB_BITS_MINOR_ < 0
+	#if LLANYLIB_BITS_MAYOR_ != 7 || LLANYLIB_BITS_MINOR_ < 3
 		#if defined(LL_REAL_CXX23)
 			#warning "bits.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 #else !defined(LLANYLIB_BITS_HPP_)
 #define LLANYLIB_BITS_HPP_
 #define LLANYLIB_BITS_MAYOR_ 7
-#define LLANYLIB_BITS_MINOR_ 0
+#define LLANYLIB_BITS_MINOR_ 3
 
 #include "traits.hpp"
 
@@ -88,21 +88,21 @@ constexpr void clear(T& value) __LL_EXCEPT__ { return clear<T, 0>(value); }
 #pragma region BytesOperations
 __LL_NODISCARD__ constexpr ui32 bytes_swap_32(const ui32 value) __LL_EXCEPT__ {
 	return
-		((value & 0xFF) << 24)
-		| ((value & 0xFF00) << 8)
-		| ((value & 0xFF0000) >> 8)
-		| ((value & 0xFF000000) >> 24);
+		((value & 0xff) << 24)
+		| ((value & 0xff00) << 8)
+		| ((value & 0xff0000) >> 8)
+		| ((value & 0xff000000) >> 24);
 }
 __LL_NODISCARD__ constexpr ui64 bytes_swap_64(const ui64 value) __LL_EXCEPT__ {
 	return
-		((value & 0x00000000000000FFull) << 56)
-		| ((value & 0x000000000000FF00ull) << 40)
-		| ((value & 0x0000000000FF0000ull) << 24)
-		| ((value & 0x00000000FF000000ull) << 8)
-		| ((value & 0x000000FF00000000ull) >> 8)
-		| ((value & 0x0000FF0000000000ull) >> 24)
-		| ((value & 0x00FF000000000000ull) >> 40)
-		| ((value & 0xFF00000000000000ull) >> 56);
+		((value & 0x00000000000000ffull) << 56)
+		| ((value & 0x000000000000ff00ull) << 40)
+		| ((value & 0x0000000000ff0000ull) << 24)
+		| ((value & 0x00000000ff000000ull) << 8)
+		| ((value & 0x000000ff00000000ull) >> 8)
+		| ((value & 0x0000ff0000000000ull) >> 24)
+		| ((value & 0x00ff000000000000ull) >> 40)
+		| ((value & 0xff00000000000000ull) >> 56);
 }
 
 #pragma endregion

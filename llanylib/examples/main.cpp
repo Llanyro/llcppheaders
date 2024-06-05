@@ -16,12 +16,15 @@
 #include "../expresions/string.hpp"
 
 #include "../cityhash.hpp"
-#include "../hash.hpp"
-#include "../Hash64.hpp"
-#include "../hashtools.hpp"
+#include "../hash_algorithm.hpp"
+#include "../hash_pack.hpp"
+#include "../hash_types.hpp"
+#include "../hash_tools.hpp"
+#include "../llanyhash.hpp"
 
 #include "../StandardHash.hpp"
 #include "../StandardRandom.hpp"
+#include "../StandardTypeid.hpp"
 
 #include "../ostypes.hpp"
 #include "../traits.hpp"
@@ -33,10 +36,10 @@
 #include "../Node.hpp"
 
 #include "../algorithm.hpp"
-#include "../StaticArray.hpp"
 #include "../ArrayView.hpp"
 #include "../Buffer.hpp"
 #include "../Countable.hpp"
+#include "../StaticArray.hpp"
 //#include "../string.hpp"
 
 //#include "../RAIIBase.hpp"
@@ -55,6 +58,12 @@
 
 #include <iostream>
 #include <array>
+#include <array>
+#include <iomanip>
+//#include <cstddef>
+//#include <string>
+//#include <iostream>
+
 
 using namespace llcpp;
 using namespace llcpp::meta;
@@ -134,7 +143,7 @@ __LL_NODISCARD__ constexpr len_t valueget2(len_t value) {
 
 constexpr len_t is_eval = valueget2(999);
 
-int main2() {
+int main() {
 	using Buff = llcpp::meta::Buffer<len_t, 10ul, llcpp::ZERO_UI64>;
 	Buff array0;
 	//const len_t block_cmp[] = { 2ull, 3ull, 4ull, 5ull, 6ull, 7ull, 8ull, 9ull, 1000ull, 1000ull };
@@ -192,29 +201,24 @@ int main2() {
 	//if(get_value.has_value()) std::cout << "Get value: " << *get_value << "\n";
 	//else std::cout << "Get value: no value\n";
 
+	
+
+
 	return 0;
 }
-
-//#include <cstddef>
-#include <array>
-//#include <string>
-//#include <iostream>
-#include <iomanip>
 
 struct Test {
 	std::string str;
 	int n;
 
 	Test(std::string str, int n) noexcept : str(std::move(str)), n(n) { }
-	Test() noexcept(true) : str(), n() {
-		std::cout << "Inited!\n";
-	}
+	Test() noexcept(true) : str(), n() { std::cout << "Inited!\n"; }
 };
-std::ostream& operator <<(std::ostream& os, Test const& t) {
+std::ostream& operator <<(std::ostream& os, const Test& t) {
 	return os << '{' << std::quoted(t.str) << ", " << t.n << '}';
 }
 
-int main() {
+int main3() {
 	//auto print_arr = [](const auto* arr, const len_t size) {
 	//	const auto* end = arr + size;
 	//	for (; arr < end; ++arr)
@@ -249,7 +253,7 @@ int main() {
 
 	std::index_sequence idx_seq = std::make_index_sequence<10>();
 
-
 	//print_arr(make_filled_array<int, 10>(23));
 	//print_arr(make_filled_array<Test, 10>("asd", 123));
+	return 0;
 }

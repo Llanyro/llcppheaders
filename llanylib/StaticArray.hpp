@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_STATICARRAY_HPP_) // Guard && version protector
-	#if LLANYLIB_STATICARRAY_MAYOR_ != 7 || LLANYLIB_STATICARRAY_MINOR_ < 0
+	#if LLANYLIB_STATICARRAY_MAYOR_ != 7 || LLANYLIB_STATICARRAY_MINOR_ < 3
 		#if defined(LL_REAL_CXX23)
 			#warning "StaticArray.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 #else !defined(LLANYLIB_STATICARRAY_HPP_)
 #define LLANYLIB_STATICARRAY_HPP_
 #define LLANYLIB_STATICARRAY_MAYOR_ 7
-#define LLANYLIB_STATICARRAY_MINOR_ 0
+#define LLANYLIB_STATICARRAY_MINOR_ 3
 
 #include "algorithm.hpp"
 

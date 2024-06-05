@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_RANDOM_HPP_) // Guard && version protector
-	#if LLANYLIB_RANDOM_MAYOR_ != 7 || LLANYLIB_RANDOM_MINOR_ < 0
+	#if LLANYLIB_RANDOM_MAYOR_ != 7 || LLANYLIB_RANDOM_MINOR_ < 3
 		#if defined(LL_REAL_CXX23)
 			#warning "Random.hpp version error!"
 		#else
@@ -19,10 +19,10 @@
 #else !defined(LLANYLIB_RANDOM_HPP_)
 #define LLANYLIB_RANDOM_HPP_
 #define LLANYLIB_RANDOM_MAYOR_ 7
-#define LLANYLIB_RANDOM_MINOR_ 0
+#define LLANYLIB_RANDOM_MINOR_ 3
 
 #include "bits.hpp"
-#include "hash.hpp"
+#include "hash_pack.hpp"
 #include "StaticArray.hpp"
 
 namespace llcpp {

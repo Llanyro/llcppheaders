@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_TYPES_HPP_) // Guard && version protector
-	#if LLANYLIB_TYPES_MAYOR_ != 7 || LLANYLIB_TYPES_MINOR_ < 0
+	#if LLANYLIB_TYPES_MAYOR_ != 7 || LLANYLIB_TYPES_MINOR_ < 3
 		#if defined(LL_REAL_CXX23)
 			#warning "types.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 #else !defined(LLANYLIB_TYPES_HPP_)
 #define LLANYLIB_TYPES_HPP_
 #define LLANYLIB_TYPES_MAYOR_ 7
-#define LLANYLIB_TYPES_MINOR_ 0
+#define LLANYLIB_TYPES_MINOR_ 3
 
 #include "definitions.hpp"
 
@@ -219,13 +219,30 @@ using StrTypeid = Typeid<ll_char_t>;
 using wStrTypeid = Typeid<ll_wchar_t>;
 
 namespace hash {
+class Hash32;
 class Hash64;
 class Hash128;
+class Hash32FunctionPack;
 class Hash64FunctionPack;
+class Hash128FunctionPack;
 
+using OptionalHash32 = std::optional<hash::Hash32>;
 using OptionalHash64 = std::optional<hash::Hash64>;
 using OptionalHash128 = std::optional<hash::Hash128>;
 
+#pragma region 32
+using Hash32Function = hash::OptionalHash32(*)(ll_string_t, len_t);
+using wHash32Function = hash::OptionalHash32(*)(ll_wstring_t, len_t);
+using StrPairHash32Function = hash::OptionalHash32(*)(const meta::StrPair&);
+using wStrPairHash32Function = hash::OptionalHash32(*)(const meta::wStrPair&);
+using StrHash32Function = hash::OptionalHash32(*)(const meta::Str&);
+using wStrHash32Function = hash::OptionalHash32(*)(const meta::wStr&);
+using RecursiveHash32Function = hash::OptionalHash32(*)(const hash::Hash32&);
+using StrTypeidHash32Function = hash::OptionalHash32(*)(const void*, const StrTypeid&);
+using wStrTypeidHash32Function = hash::OptionalHash32(*)(const void*, const wStrTypeid&);
+
+#pragma endregion
+#pragma region 64
 using Hash64Function = hash::OptionalHash64(*)(ll_string_t, len_t);
 using wHash64Function = hash::OptionalHash64(*)(ll_wstring_t, len_t);
 using StrPairHash64Function = hash::OptionalHash64(*)(const meta::StrPair&);
@@ -235,6 +252,20 @@ using wStrHash64Function = hash::OptionalHash64(*)(const meta::wStr&);
 using RecursiveHash64Function = hash::OptionalHash64(*)(const hash::Hash64&);
 using StrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const StrTypeid&);
 using wStrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const wStrTypeid&);
+
+#pragma endregion
+#pragma region 128
+using Hash128Function = hash::OptionalHash128(*)(ll_string_t, len_t);
+using wHash128Function = hash::OptionalHash128(*)(ll_wstring_t, len_t);
+using StrPairHash128Function = hash::OptionalHash128(*)(const meta::StrPair&);
+using wStrPairHash128Function = hash::OptionalHash128(*)(const meta::wStrPair&);
+using StrHash128Function = hash::OptionalHash128(*)(const meta::Str&);
+using wStrHash128Function = hash::OptionalHash128(*)(const meta::wStr&);
+using RecursiveHash128Function = hash::OptionalHash128(*)(const hash::Hash128&);
+using StrTypeidHash128Function = hash::OptionalHash128(*)(const void*, const StrTypeid&);
+using wStrTypeidHash128Function = hash::OptionalHash128(*)(const void*, const wStrTypeid&);
+
+#pragma endregion
 
 } // namespace hash
 

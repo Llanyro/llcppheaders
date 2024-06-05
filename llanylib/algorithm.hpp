@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_ALGORITHM_HPP_) // Guard && version protector
-	#if LLANYLIB_ALGORITHM_MAYOR_ != 7 || LLANYLIB_ALGORITHM_MINOR_ < 0
+	#if LLANYLIB_ALGORITHM_MAYOR_ != 7 || LLANYLIB_ALGORITHM_MINOR_ < 3
 		#if defined(LL_REAL_CXX23)
 			#warning "algorithm.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 #else !defined(LLANYLIB_ALGORITHM_HPP_)
 #define LLANYLIB_ALGORITHM_HPP_
 #define LLANYLIB_ALGORITHM_MAYOR_ 7
-#define LLANYLIB_ALGORITHM_MINOR_ 0
+#define LLANYLIB_ALGORITHM_MINOR_ 3
 
 #include "ArrayPair.hpp"
 #include "common.hpp"

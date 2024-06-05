@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_RAIIBASE_HPP_) // Guard && version protector
-	#if LLANYLIB_RAIIBASE_MAYOR_ != 7 || LLANYLIB_RAIIBASE_MINOR_ < 0
+	#if LLANYLIB_RAIIBASE_MAYOR_ != 7 || LLANYLIB_RAIIBASE_MINOR_ < 3
 		#error "RAIIBase.hpp version error!"
 	#endif // LLANYLIB_RAIIBASE_MAYOR_ || LLANYLIB_RAIIBASE_MINOR_
 
@@ -18,7 +18,7 @@
 
 #define LLANYLIB_RAIIBASE_HPP_
 #define LLANYLIB_RAIIBASE_MAYOR_ 7
-#define LLANYLIB_RAIIBASE_MINOR_ 0
+#define LLANYLIB_RAIIBASE_MINOR_ 3
 
 #include "traits.hpp"
 

@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_) // Guard && version protector
-	#if LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ != 7 || LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ < 0
+	#if LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ != 7 || LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ < 3
 		#error "traits_test_class.hpp version error!"
 	#endif // LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ || LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_
 
 #else !defined(LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_)
 #define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_
 #define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ 7
-#define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ 0
+#define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ 3
 
 #include "../types.hpp"
 

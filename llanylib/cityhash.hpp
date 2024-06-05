@@ -4,7 +4,7 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.0							//
+//	Version: 7.3							//
 //////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 #if defined(LLANYLIB_CITYHASH_HPP_) // Guard && version protector
-	#if LLANYLIB_CITYHASH_MAYOR_ != 7 || LLANYLIB_CITYHASH_MINOR_ < 0
+	#if LLANYLIB_CITYHASH_MAYOR_ != 7 || LLANYLIB_CITYHASH_MINOR_ < 3
 		#if defined(LL_REAL_CXX23)
 			#warning "cityhash.hpp version error!"
 		#else
@@ -24,10 +24,10 @@
 #else !defined(LLANYLIB_CITYHASH_HPP_)
 #define LLANYLIB_CITYHASH_HPP_
 #define LLANYLIB_CITYHASH_MAYOR_ 7
-#define LLANYLIB_CITYHASH_MINOR_ 0
+#define LLANYLIB_CITYHASH_MINOR_ 3
 
 #include "bits.hpp"
-#include "hashtools.hpp"
+#include "hash_pack.hpp"
 
 #if defined(WORDS_BIGENDIAN)
 #define ui32_in_expected_order(x) (bits::bytes_swap_32(x))
@@ -49,9 +49,7 @@ namespace meta {
 namespace hash {
 namespace city {
 
-class CityHash {
-	public:
-		using DataType = ll_string_t;
+struct CityHash {
 	public:
 		// Some primes between 2^63 and 2^64 for various uses.
 		static constexpr ui64 k0 = 0xc3a5c85c97cb3127ull;
@@ -64,16 +62,16 @@ class CityHash {
 
 	protected:
 		template<class T>
-		__LL_NODISCARD__ static constexpr T unalignedLoad(DataType p) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr T unalignedLoad(ll_string_t p) __LL_EXCEPT__ {
 			T result{};
 			for (ui8 i{}; i < sizeof(T); ++i)
 				result |= static_cast<T>(p[i]) << (i << 3);
 			return result;
 		}
-		__LL_NODISCARD__ static constexpr ui64 fetch64(DataType p) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui64 fetch64(ll_string_t p) __LL_EXCEPT__ {
 			return ui64_in_expected_order(unalignedLoad<ui64>(p));
 		}
-		__LL_NODISCARD__ static constexpr ui32 fetch32(DataType p) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui32 fetch32(ll_string_t p) __LL_EXCEPT__ {
 			return ui32_in_expected_order(unalignedLoad<ui32>(p));
 		}
 		// Bitwise right rotate.  Normally this will compile to a single
@@ -95,14 +93,14 @@ class CityHash {
 			b *= mul;
 			return b;
 		}
-		__LL_NODISCARD__ static constexpr ui64 hashLen0to16(DataType s, const len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui64 hashLen0to16(ll_string_t s, const len_t len) __LL_EXCEPT__ {
 			if (len >= 8) {
 				ui64 mul = k2 + (len << 1);
 				ui64 a = fetch64(s) + k2;
 				ui64 b = fetch64(s + len - 8);
 				ui64 c = rotate(b, 37) * mul + a;
 				ui64 d = (rotate(a, 25) + b) * mul;
-				return hashLen16(c, d, mul);
+				return CityHash::hashLen16(c, d, mul);
 			}
 			if (len >= 4) {
 				ui64 mul = k2 + (len << 1);
@@ -121,7 +119,7 @@ class CityHash {
 		}
 		// This probably works well for 16-byte strings as well, but it may be overkill
 		// in that case.
-		__LL_NODISCARD__ static constexpr ui64 hashLen17to32(DataType s, const len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui64 hashLen17to32(ll_string_t s, const len_t len) __LL_EXCEPT__ {
 			ui64 mul = k2 + (len << 1);
 			ui64 a = fetch64(s) * k1;
 			ui64 b = fetch64(s + 8);
@@ -130,7 +128,7 @@ class CityHash {
 			return hashLen16(rotate(a + b, 43) + rotate(c, 30) + d, a + rotate(b + k2, 18) + c, mul);
 		}
 		// Return an 8-byte hash for 33 to 64 bytes.
-		__LL_NODISCARD__ static constexpr ui64 hashLen33to64(DataType s, const len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui64 hashLen33to64(ll_string_t s, const len_t len) __LL_EXCEPT__ {
 			ui64 mul = k2 + (len << 1);
 			ui64 a = fetch64(s) * k2;
 			ui64 b = fetch64(s + 8);
@@ -163,14 +161,14 @@ class CityHash {
 			return { a + z, b + c };
 		}
 		// Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
-		__LL_NODISCARD__ static constexpr hash::Hash128 weakHashLen32WithSeeds(DataType s, const ui64 a, const ui64 b) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::Hash128 weakHashLen32WithSeeds(ll_string_t s, const ui64 a, const ui64 b) __LL_EXCEPT__ {
 			return weakHashLen32WithSeeds(
 				fetch64(s), fetch64(s + 8),
 				fetch64(s + 16), fetch64(s + 24),
 				a, b);
 		}
 	public:
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(DataType s, len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(ll_string_t s, len_t len) __LL_EXCEPT__ {
 #if defined(LL_REAL_CXX23)
 			if not consteval {
 				throw "This is only constevaluated!";
@@ -214,13 +212,18 @@ class CityHash {
 				hash::Hash128(v.getHigh(), w.getHigh()) + x
 			).hash::Hash128::toHash64();
 		}
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const StrPair& s) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const meta::StrPair& s) __LL_EXCEPT__ {
 			if (s.empty()) return hash::INVALID_HASH64;
 			else return city::CityHash::cityHash64(s.begin(), s.len());
 		}
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const Str& s) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const meta::Str& s) __LL_EXCEPT__ {
 			if (s.empty()) return hash::INVALID_HASH64;
 			else return city::CityHash::cityHash64(s.begin(), s.len());
+		}
+		template<len_t N>
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const ll_char_t(&s)[N]) __LL_EXCEPT__ {
+			if (!s) return hash::INVALID_HASH64;
+			else return city::CityHash::cityHash64(s, N - 1);
 		}
 		// Only admits hash::basic_type_hash::is_convertible_v<>
 		// Returns hash::INVALID_HASH64 if invalid type or hash error

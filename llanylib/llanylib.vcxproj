@@ -22,6 +22,8 @@
     <ClInclude Include="..\llanylib.hpp" />
     <ClInclude Include="..\llanylibsimple.hpp" />
     <ClInclude Include="algorithm.hpp" />
+    <ClInclude Include="hash_algorithm.hpp" />
+    <ClInclude Include="llanyhash.hpp" />
     <ClInclude Include="StandardHash.hpp" />
     <ClInclude Include="StandardRandom.hpp" />
     <ClInclude Include="StandardTypeid.hpp" />
@@ -47,9 +49,9 @@
     <ClInclude Include="expresions\color.hpp" />
     <ClInclude Include="expresions\math.hpp" />
     <ClInclude Include="expresions\string.hpp" />
-    <ClInclude Include="hash.hpp" />
-    <ClInclude Include="Hash64.hpp" />
-    <ClInclude Include="hashtools.hpp" />
+    <ClInclude Include="hash_pack.hpp" />
+    <ClInclude Include="hash_types.hpp" />
+    <ClInclude Include="hash_tools.hpp" />
     <ClInclude Include="LinkedList.hpp" />
     <ClInclude Include="LoopList.hpp" />
     <ClInclude Include="math.hpp" />

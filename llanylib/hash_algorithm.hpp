@@ -47,9 +47,9 @@ struct combine {
 	#pragma region Murmur
 	#pragma region 8
 	__LL_NODISCARD__ static constexpr ui8 murmur8Combine(const ui8 value1, const ui8 value2) __LL_EXCEPT__ {
-		ui8 a = (value1 ^ value2) * combine::kMul8;
+		ui8 a = static_cast<ui8>((value1 ^ value2) * combine::kMul8);
 		a ^= (a >> combine::llshift8);
-		ui8 b = (value2 ^ a) * combine::kMul8;
+		ui8 b = static_cast<ui8>((value2 ^ a) * combine::kMul8);
 		b ^= (b >> combine::llshift8);
 		b *= combine::kMul8;
 		return b;
@@ -108,8 +108,8 @@ struct combine {
 	#pragma region Template
 	template<class T, ll_bool_t IS_REVERSE = LL_FALSE>
 	__LL_NODISCARD__ static constexpr T simpleCombine(const T value1, const T value2, const ui8 shift) __LL_EXCEPT__ {
-		if constexpr (IS_REVERSE) return value1 ^ (value2 << shift);
-		else return value1 ^ (value2 >> shift);
+		if constexpr (IS_REVERSE) return static_cast<T>(value1 ^ (value2 << shift));
+		else return static_cast<T>(value1 ^ (value2 >> shift));
 	}
 
 	#pragma endregion
@@ -244,7 +244,7 @@ struct basic_type_hash {
 		constexpr len_t BYTES = (N << 3) - 8;
 		len_t byte = BYTES;
 		for (len_t i{}; i < N; ++i, ++buffer, byte -= 8)
-			*buffer = (value >> byte) & 0xff;
+			*buffer = static_cast<ui8>(value >> byte) & 0xff;
 	}
 	template<class U, class W = traits::template_types<U>>
 	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValue(typename W::cinput value, hash::Hash64Function hashFunction) __LL_EXCEPT__ {

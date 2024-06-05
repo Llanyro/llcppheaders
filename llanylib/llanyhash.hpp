@@ -60,7 +60,7 @@ struct LlanyHash {
 
 			return result;
 		}
-		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64Combine(ll_string_t s, const len_t len, Combine64 combine) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64Combine(ll_string_t s, const len_t len) __LL_EXCEPT__ {
 			return hash::LlanyHash::llanyHash64Combine_impl(s, len, hash::combine::murmur64Combine);
 			//return hash::LlanyHash::llanyHash64Combine_impl(s, len, hash::combine::simple64Combine_noshift);
 		}
@@ -74,8 +74,8 @@ struct LlanyHash {
 				if (pos >= 8) pos = ZERO_UI8;
 				ui8 pos_b = (pos << 3);
 				ui8 result_8b_part = (result >> pos_b) && 0xff;
-				ui8 result = hash::combine::simple8Combine_noshift<LL_FALSE>(result_8b_part, *s);
-				result |= (static_cast<ui64>(result) << pos_b);
+				ui8 result_new = hash::combine::simple8Combine_noshift<LL_FALSE>(result_8b_part, *s);
+				result |= (static_cast<ui64>(result_new) << pos_b);
 			}
 
 			return result;
@@ -89,8 +89,8 @@ struct LlanyHash {
 				if (pos >= 8) pos = ZERO_UI8;
 				ui8 pos_b = (pos << 3);
 				ui8 result_8b_part = (result >> pos_b) && 0xff;
-				ui8 result = hash::combine::simple8Combine_noshift<LL_FALSE>(result_8b_part, *s);
-				result = (result << 8) | result;
+				ui8 result_new = hash::combine::simple8Combine_noshift<LL_FALSE>(result_8b_part, *s);
+				result = (result << 8) | result_new;
 			}
 
 			return result;
@@ -101,8 +101,8 @@ struct LlanyHash {
 			ui64 result = hash::combine::kMul64;
 			for (ll_string_t end = s + len; s < end; ++s) {
 				ui8 buffer = (result >> 56);
-				ui8 result = hash::combine::simple8Combine_noshift<LL_FALSE>(buffer, *s);
-				result = (result << 8) | result;
+				ui8 result_new = hash::combine::simple8Combine_noshift<LL_FALSE>(buffer, *s);
+				result = (result << 8) | result_new;
 			}
 
 			return result;

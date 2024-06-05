@@ -31,16 +31,16 @@ constexpr auto arrayview_01 = make_ArrayView(numbers_01);
 constexpr auto arrayview_02 = make_ArrayView(numbers_02);
 constexpr auto arrayview_03 = make_ArrayView(numbers_03);
 constexpr auto arrayview_04 = make_ArrayView(numbers_04);
-constexpr auto arrayview_05 = make_ArrayView(algorithm::str1);
-constexpr auto arrayview_06 = make_ArrayView(algorithm::str2);
+constexpr auto arrayview_05 = make_ArrayView(algorithm::example_str1);
+constexpr auto arrayview_06 = make_ArrayView(algorithm::example_str2);
 
-constexpr ArrayView HOLA_WORLD = make_ArrayView(algorithm::str4);
+constexpr ArrayView HOLA_WORLD = make_ArrayView(algorithm::example_str4);
 
 ///////////////////////////////////////////////// ArrayView Copy /////////////////////////////////////////////////
 
 constexpr auto arrayview_07 = make_ArrayView("Hola mundo");
 constexpr auto arrayview_08 = ArrayView(HOLA_WORLD);
-constexpr auto arrayview_09 = make_ArrayView(algorithm::str4);
+constexpr auto arrayview_09 = make_ArrayView(algorithm::example_str4);
 
 ///////////////////////////////////////////////// ArrayView access /////////////////////////////////////////////////
 
@@ -76,16 +76,16 @@ constexpr ll_bool_t equals_01 = arrayview_01.equals(arrayview_01);
 constexpr ll_bool_t equals_02 = arrayview_01.equals<int>(arrayview_02, [](const int, const int) { return 0; } );
 constexpr ll_bool_t equals_03 = arrayview_01.equals(arrayview_02);
 constexpr ll_bool_t equals_04 = arrayview_01.equals(arrayview_05);
-constexpr ll_bool_t equals_05 = arrayview_05.equals<ll_char_t>(algorithm::str1);
-constexpr ll_bool_t equals_06 = arrayview_05.equals<ll_char_t>(algorithm::str2);
-constexpr ll_bool_t equals_07 = arrayview_05.equals<ll_char_t>(algorithm::str1, 14);
+constexpr ll_bool_t equals_05 = arrayview_05.equals<ll_char_t>(algorithm::example_str1);
+constexpr ll_bool_t equals_06 = arrayview_05.equals<ll_char_t>(algorithm::example_str2);
+constexpr ll_bool_t equals_07 = arrayview_05.equals<ll_char_t>(algorithm::example_str1, 14);
 
 constexpr ll_bool_t equals_08 = arrayview_01 == arrayview_01;
 constexpr ll_bool_t equals_09 = arrayview_01 == arrayview_02;
 constexpr ll_bool_t equals_00 = arrayview_01.operator==<int>(arrayview_02);
 constexpr ll_bool_t equals_10 = arrayview_01.operator==<char>(arrayview_05);
-constexpr ll_bool_t equals_12 = arrayview_05 == algorithm::str1;
-constexpr ll_bool_t equals_13 = arrayview_05 == algorithm::str2;
+constexpr ll_bool_t equals_12 = arrayview_05 == algorithm::example_str1;
+constexpr ll_bool_t equals_13 = arrayview_05 == algorithm::example_str2;
 
 static_assert( equals_01, "Error changed value");
 static_assert( equals_02, "Error changed value");
@@ -137,8 +137,8 @@ constexpr ll_bool_t starts_with_01 = arrayview_01.starts_with<int>(numbers_01);
 constexpr ll_bool_t starts_with_02 = arrayview_02.starts_with<int>(numbers_02);
 constexpr ll_bool_t starts_with_03 = arrayview_03.starts_with<int>(numbers_03);
 constexpr ll_bool_t starts_with_04 = arrayview_04.starts_with<int>(numbers_04);
-constexpr ll_bool_t starts_with_05 = arrayview_05.starts_with<char>(algorithm::str1);
-constexpr ll_bool_t starts_with_06 = arrayview_06.starts_with<char>(algorithm::str2);
+constexpr ll_bool_t starts_with_05 = arrayview_05.starts_with<char>(algorithm::example_str1);
+constexpr ll_bool_t starts_with_06 = arrayview_06.starts_with<char>(algorithm::example_str2);
 
 constexpr ll_bool_t starts_with_07 = arrayview_05.starts_with<char>("Holoo", 5);
 constexpr ll_bool_t starts_with_08 = arrayview_06.starts_with<char>("Holoo", 5);

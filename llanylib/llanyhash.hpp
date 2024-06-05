@@ -72,10 +72,10 @@ struct LlanyHash {
 			ui8 pos{};
 			for (ll_string_t end = s + len; s < end; ++s, ++pos) {
 				if (pos >= 8) pos = ZERO_UI8;
-				ui8 pos_b = (pos << 3);
-				ui8 result_8b_part = (result >> pos_b) && 0xff;
+				ui8 bit_position = (pos << 3);
+				ui8 result_8b_part = (result >> bit_position) && 0xff;
 				ui8 result_new = hash::combine::simple8Combine_noshift<LL_FALSE>(result_8b_part, *s);
-				result |= (static_cast<ui64>(result_new) << pos_b);
+				result |= (static_cast<ui64>(result_new) << bit_position);
 			}
 
 			return result;

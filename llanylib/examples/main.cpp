@@ -130,9 +130,15 @@ constexpr auto valueget() {
 	return hash::STANDARD_HASH_TOOLS.hashArgumentsV1(status, 1, 2, 3, 4);
 	//return tool.hashArgumentsV1(status, 1, 2, 3, 4);
 }
+constexpr auto valueget_2() {
+	hash::HashTool<>::HashStatus status[5];
+	return hash::FAST_HASH_TOOLS.hashArgumentsV1(status, 1, 2, 3, 4);
+}
 
 constexpr auto val = valueget();
 static_assert((*val).get() == 9444077356073661613, "Error");
+
+constexpr auto val2 = valueget_2();
 
 #pragma endregion
 

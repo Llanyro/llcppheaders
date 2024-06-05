@@ -144,7 +144,6 @@ struct compare_cluster {
 
 		__LL_ASSERT_VAR_NULL__(cmp, "cmp");
 
-		typename __t::cptr begin = str1;
 		for (; size > ZERO_UI64; --size, ++str1, ++str2) {
 			cmp_t result = cmp(*str1, *str2);
 			if (result != ZERO_I32) {

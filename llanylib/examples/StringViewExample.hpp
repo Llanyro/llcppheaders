@@ -17,10 +17,10 @@ namespace meta {
 
 ///////////////////////////////////////////////// ArrayView Storage /////////////////////////////////////////////////
 
-constexpr auto stringview_01 = make_StringView(algorithm::str1);
-constexpr auto stringview_02 = make_StringView(algorithm::str2);
-constexpr auto stringview_03 = make_StringView(algorithm::str3);
-constexpr auto stringview_04 = make_StringView(algorithm::str4);
+constexpr auto stringview_01 = make_StringView(algorithm::example_str1);
+constexpr auto stringview_02 = make_StringView(algorithm::example_str2);
+constexpr auto stringview_03 = make_StringView(algorithm::example_str3);
+constexpr auto stringview_04 = make_StringView(algorithm::example_str4);
 constexpr auto stringview_05 = make_StringView("");
 constexpr auto stringview_06 = make_StringView("A");
 constexpr auto stringview_07 = make_StringView("Hello");

@@ -16,11 +16,12 @@
 #include "../expresions/string.hpp"
 
 #include "../cityhash.hpp"
+#include "../llanyhash.hpp"
+
 #include "../hash_algorithm.hpp"
 #include "../hash_pack.hpp"
 #include "../hash_types.hpp"
 #include "../hash_tools.hpp"
-#include "../llanyhash.hpp"
 
 #include "../StandardHash.hpp"
 #include "../StandardRandom.hpp"

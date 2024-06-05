@@ -23,6 +23,8 @@
 
 #include "hash_algorithm.hpp"
 
+#include <optional>
+
 namespace llcpp {
 namespace meta {
 namespace hash {
@@ -318,6 +320,10 @@ class Hash128 {
 
 		#pragma endregion
 };
+
+__LL_VAR_INLINE__ constexpr hash::OptionalHash32 INVALID_HASH32 = std::nullopt;
+__LL_VAR_INLINE__ constexpr hash::OptionalHash64 INVALID_HASH64 = std::nullopt;
+__LL_VAR_INLINE__ constexpr hash::OptionalHash128 INVALID_HASH128 = std::nullopt;
 
 } // namespace hash
 } // namespace meta

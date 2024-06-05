@@ -39,7 +39,7 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_
 
 	ll_char_t* i = buffer;
 	for (ll_wstring_t data_end = str + size; str < data_end; ++str)
-		(void)basic_type_hash::conversor<ll_wchar_t>(i, *str);
+		basic_type_hash::conversor<ll_wchar_t>(i, *str);
 	return hash::city::CityHash::cityHash64(buffer, buffer_len);
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStrPair& str) {
@@ -68,7 +68,7 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_
 
 	ll_char_t* i = buffer;
 	for (ll_wstring_t data_end = str + size; str < data_end; ++str)
-		(void)basic_type_hash::conversor<ll_wchar_t>(i, *str);
+		basic_type_hash::conversor<ll_wchar_t>(i, *str);
 	return hash::LlanyHash::llanyHash64(buffer, buffer_len);
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStrPair& str) {

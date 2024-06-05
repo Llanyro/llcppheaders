@@ -23,15 +23,10 @@
 
 #include "hash_types.hpp"
 
-#include <optional>
 
 namespace llcpp {
 namespace meta {
 namespace hash {
-
-__LL_VAR_INLINE__ constexpr hash::OptionalHash32 INVALID_HASH32 = std::nullopt;
-__LL_VAR_INLINE__ constexpr hash::OptionalHash64 INVALID_HASH64 = std::nullopt;
-__LL_VAR_INLINE__ constexpr hash::OptionalHash128 INVALID_HASH128 = std::nullopt;
 
 class Hash32FunctionPack {
 	private:

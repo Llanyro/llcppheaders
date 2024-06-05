@@ -43,6 +43,9 @@
     <Filter Include="Source Files\hash">
       <UniqueIdentifier>{e03b962a-c161-4c48-a3fd-0f3a46df8209}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hash\hashes">
+      <UniqueIdentifier>{55852399-2688-4e6e-a48e-283bc4f6351b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\llanylib.hpp">
@@ -162,9 +165,6 @@
     <ClInclude Include="string.hpp">
       <Filter>Source Files\utils\lists</Filter>
     </ClInclude>
-    <ClInclude Include="cityhash.hpp">
-      <Filter>Source Files\hash</Filter>
-    </ClInclude>
     <ClInclude Include="hash_types.hpp">
       <Filter>Source Files\hash</Filter>
     </ClInclude>
@@ -189,11 +189,14 @@
     <ClInclude Include="utility.hpp">
       <Filter>Source Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="llanyhash.hpp">
-      <Filter>Source Files\hash</Filter>
-    </ClInclude>
     <ClInclude Include="hash_algorithm.hpp">
       <Filter>Source Files\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="llanyhash.hpp">
+      <Filter>Source Files\hash\hashes</Filter>
+    </ClInclude>
+    <ClInclude Include="cityhash.hpp">
+      <Filter>Source Files\hash\hashes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

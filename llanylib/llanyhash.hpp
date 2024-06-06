@@ -31,7 +31,7 @@ namespace hash {
 
 struct LlanyHash {
 	public:
-		using Combine64 = ui64(*)(ui64, ui64);
+		using Combine64 = ui64(*)(ui64, ui64) __LL_EXCEPT__;
 		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64Combine_impl(ll_string_t s, const len_t len, Combine64 combine) __LL_EXCEPT__ {
 			if (!s || !combine) return hash::INVALID_HASH64;
 

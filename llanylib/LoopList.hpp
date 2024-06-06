@@ -36,11 +36,11 @@ class LinkedList : public CountableL {
 		__LL_CLASS_TEMPLATE_TYPE__(T);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(LinkedList<T>, LinkedList);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(DoubleNode<T>, DoubleNode);
-		using Foreach = void(*)(__ref);
-		using ForeachConst = void(*)(__cref);
-		using RemoveCoincidences = ll_bool_t(*)(__cref, __cref, void* extra_data);
-		using LoopUntil = ll_bool_t(*)(__ref);
-		using LoopUntilConst = ll_bool_t(*)(__cref);
+		using Foreach = void(*)(__ref) __LL_EXCEPT__;
+		using ForeachConst = void(*)(__cref) __LL_EXCEPT__;
+		using RemoveCoincidences = ll_bool_t(*)(__cref, __cref, void* extra_data) __LL_EXCEPT__;
+		using LoopUntil = ll_bool_t(*)(__ref) __LL_EXCEPT__;
+		using LoopUntilConst = ll_bool_t(*)(__cref) __LL_EXCEPT__;
 	protected:
 		__ptr_DoubleNode root;	// Nodes
 	protected:

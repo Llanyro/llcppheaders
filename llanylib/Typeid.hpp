@@ -33,7 +33,7 @@ class Typeid {
 	public:
 		static_assert(traits::is_char_type_v<T>, "Type must be a char type");
 		using NameType = meta::ArrayPair<T>;
-		using HashFunction = hash::OptionalHash64(*)(const NameType&);
+		using HashFunction = hash::OptionalHash64(*)(const NameType&) __LL_EXCEPT__;
 		using __Typeid = traits::template_types<Typeid<T>>;
 	private:
 		hash::Hash64 name_hash;

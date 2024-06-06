@@ -49,8 +49,8 @@ class RAIIBase {
 		static_assert(!std::is_reference_v<_DataType_>, "[DataType] cannot be a reference!");
 		static_assert(traits::operator_type_call_checker_v<_DataType_, ll_bool_t>, "[DataType] cannot be a reference!");
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(_DataType_, DataType);
-		using Function = FuncReturnType(*)(__ref_DataType);
-		using __ClearFunction = void(*)(__ref_DataType);
+		using Function = FuncReturnType(*)(__ref_DataType) __LL_EXCEPT__;
+		using __ClearFunction = void(*)(__ref_DataType) __LL_EXCEPT__;
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(Function, Function);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__RAIIBase__, RAIIBase);
 	private:
@@ -117,7 +117,7 @@ template<class DataType, class FuncReturnType = void>
 using RAIIContainer =
 	std::conditional_t<
 		std::is_same_v<DataType, void>,
-		FuncReturnType(*)(void),
+		FuncReturnType(*)(void) __LL_EXCEPT__,
 		RAIIBase<DataType, FuncReturnType>
 	>;
 

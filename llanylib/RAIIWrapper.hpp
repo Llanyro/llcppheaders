@@ -30,7 +30,7 @@ class RAIIWrapperCreation {
 	private:
 		using __internal__OnGenerateObject__ = RAIIContainer<OnGenerateData, void>;
 	public:
-		using __DoOnGenerate = void(*)(std::add_lvalue_reference_t<OnGenerateData>);
+		using __DoOnGenerate = void(*)(std::add_lvalue_reference_t<OnGenerateData>) __LL_EXCEPT__;
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__OnGenerateObject__, OnGenerateObject);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(RAIIWrapperCreation<OnGenerateData>, RAIIWrapperCreation);
 	private:
@@ -88,7 +88,7 @@ class RAIIWrapperDestruction {
 	private:
 		using __internal__OnDestructionObject__ = RAIIContainer<OnDestructionData, void>;
 	public:
-		using __DoOnDestruction = void(*)(std::add_lvalue_reference_t<OnDestructionData>);
+		using __DoOnDestruction = void(*)(std::add_lvalue_reference_t<OnDestructionData>) __LL_EXCEPT__;
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(__internal__OnDestructionObject__, OnDestructionObject);
 		__LL_CLASS_TEMPLATE_CUSTOM_TYPE__(RAIIWrapperDestruction<OnDestructionData>, RAIIWrapperDestruction);
 	private:

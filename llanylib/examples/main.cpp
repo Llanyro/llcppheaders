@@ -195,7 +195,7 @@ int main() {
 
 	std::printf("Get3 point: %p\n", (handle_char + 0x000112C6));
 
-	using Get = std::optional<int>(*)();
+	using Get = std::optional<int>(*)() __LL_EXCEPT__;
 	Get get_function = lib.getFunction<Get>(0x000110F5);
 	std::printf("Get point: %p\n", get_function);
 	auto get_value = get_function();

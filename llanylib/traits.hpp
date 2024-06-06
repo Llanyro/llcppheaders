@@ -424,7 +424,7 @@ struct parameter_pack_operations {
 	using pack_first = typename FirstType<Args...>;
 	using get_first_type = typename FirstType<Args...>::type;
 	static constexpr len_t size = sizeof...(Args);
-	static constexpr len_t empty = (size == ZERO_UI64);
+	static constexpr ll_bool_t empty = (size == ZERO_UI64);
 	static constexpr ll_bool_t has_a_pointer = (std::is_pointer_v<Args> || ...);
 	static constexpr ll_bool_t has_a_array = (std::is_array_v<Args> || ...);
 };
@@ -435,7 +435,7 @@ struct parameter_pack_operations<T> {
 	using pack_first = typename FirstType;
 	using get_first_type = typename pack_first::type;
 	static constexpr len_t size = 1ull;
-	static constexpr len_t empty = LL_FALSE;
+	static constexpr ll_bool_t empty = LL_FALSE;
 	static constexpr ll_bool_t has_a_pointer = std::is_pointer_v<T>;
 	static constexpr ll_bool_t has_a_array = std::is_array_v<T>;
 };
@@ -446,7 +446,7 @@ struct parameter_pack_operations<> {
 	using pack_first = FirstType;
 	using get_first_type = pack_first::type;
 	static constexpr len_t size = ZERO_UI64;
-	static constexpr len_t empty = LL_TRUE;
+	static constexpr ll_bool_t empty = LL_TRUE;
 	static constexpr ll_bool_t has_a_pointer = LL_FALSE;
 	static constexpr ll_bool_t has_a_array = LL_FALSE;
 };

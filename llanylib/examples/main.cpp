@@ -253,10 +253,10 @@ int main3() {
 	print_arr(c);
 	free(mem);
 
-	Test* m = (Test*)std::malloc(sizeof(Test) * 5);
-	m = new (m) Test[5]();
-	delete[] m;
-	free(m);
+	//Test* m = (Test*)std::malloc(sizeof(Test) * 5);
+	//m = new (m) Test[5]();
+	//delete[] m;
+	//free(m);
 
 	std::index_sequence idx_seq = std::make_index_sequence<10>();
 

@@ -73,7 +73,7 @@ static_assert(compare_03_res.getResult() == 01, "Error changed value");
 static_assert(compare_04_res.getResult() == 00, "Error changed value");
 
 constexpr ll_bool_t equals_01 = arrayview_01.equals(arrayview_01);
-constexpr ll_bool_t equals_02 = arrayview_01.equals<int>(arrayview_02, [](const int, const int) { return 0; } );
+constexpr ll_bool_t equals_02 = arrayview_01.equals<int>(arrayview_02, [](const int, const int) __LL_EXCEPT__{ return 0; } );
 constexpr ll_bool_t equals_03 = arrayview_01.equals(arrayview_02);
 constexpr ll_bool_t equals_04 = arrayview_01.equals(arrayview_05);
 constexpr ll_bool_t equals_05 = arrayview_05.equals<ll_char_t>(algorithm::example_str1);

@@ -27,6 +27,7 @@ namespace llcpp { enum class OSEnum { Windows, Posix, Unix, Other }; } // namesp
 
 // Sets more env definitions by OS
 #if defined(WINDOWS_SYSTEM)
+	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ _NODISCARD
 	#define __LL_UNSECURE_FUNCTIONS__
 	#define __LL_SPECTRE_FUNCTIONS__
@@ -34,6 +35,7 @@ namespace llcpp { enum class OSEnum { Windows, Posix, Unix, Other }; } // namesp
 	#define __LL_VAR_INLINE__ inline
 	__LL_VAR_INLINE__ constexpr llcpp::OSEnum OS_SYSTEM = llcpp::OSEnum::Windows;
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
+	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ NODISCARD
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline
@@ -43,6 +45,7 @@ namespace llcpp { enum class OSEnum { Windows, Posix, Unix, Other }; } // namesp
 		__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Unix;
 	#endif // defined(POSIX_SYSTEM)
 #else
+	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ [[nodiscard]]
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline

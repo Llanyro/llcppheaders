@@ -31,7 +31,7 @@ namespace hash {
 namespace __internal__ {
 
 namespace city {
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_t size) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_t size) __LL_EXCEPT__ {
 	constexpr len_t PARSER_BUFFER_SIZE = 512;
 	ll_char_t buffer[PARSER_BUFFER_SIZE]{};
 	len_t buffer_len = sizeof(ll_wchar_t) * size;
@@ -42,25 +42,25 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_
 		basic_type_hash::conversor<ll_wchar_t>(i, *str);
 	return hash::city::CityHash::cityHash64(buffer, buffer_len);
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStrPair& str) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStrPair& str) __LL_EXCEPT__ {
 	return city::hash_wstr(str.begin(), str.len());
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStr& str) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStr& str) __LL_EXCEPT__ {
 	return city::hash_wstr(str.begin(), str.len());
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hash(const hash::Hash64& h) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hash(const hash::Hash64& h) __LL_EXCEPT__ {
 	return hash::basic_type_hash::hashValue<ui64>(h.get(), hash::city::CityHash::cityHash64);
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::StrTypeid&) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::StrTypeid&) __LL_EXCEPT__ {
 	return hash::INVALID_HASH64;
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::wStrTypeid&) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::wStrTypeid&) __LL_EXCEPT__ {
 	return hash::INVALID_HASH64;
 }
 } // namespace city
 
 namespace llany {
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_t size) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_t size) __LL_EXCEPT__ {
 	constexpr len_t PARSER_BUFFER_SIZE = 512;
 	ll_char_t buffer[PARSER_BUFFER_SIZE]{};
 	len_t buffer_len = sizeof(ll_wchar_t) * size;
@@ -71,19 +71,19 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(ll_wstring_t str, len_
 		basic_type_hash::conversor<ll_wchar_t>(i, *str);
 	return hash::LlanyHash::llanyHash64(buffer, buffer_len);
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStrPair& str) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStrPair& str) __LL_EXCEPT__ {
 	return llany::hash_wstr(str.begin(), str.len());
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStr& str) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStr& str) __LL_EXCEPT__ {
 	return llany::hash_wstr(str.begin(), str.len());
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hash(const hash::Hash64& h) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hash(const hash::Hash64& h) __LL_EXCEPT__ {
 	return hash::basic_type_hash::hashValue<ui64>(h.get(), hash::LlanyHash::llanyHash64);
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::StrTypeid&) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::StrTypeid&) __LL_EXCEPT__ {
 	return hash::INVALID_HASH64;
 }
-__LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::wStrTypeid&) {
+__LL_NODISCARD__ constexpr hash::OptionalHash64 empty(const void*, const meta::wStrTypeid&) __LL_EXCEPT__ {
 	return hash::INVALID_HASH64;
 }
 } // namespace llany

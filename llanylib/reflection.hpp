@@ -30,13 +30,13 @@ namespace traits {
 namespace __internal__ {
 
 template<class T>
-__LL_NODISCARD__ constexpr const T* getNamePart1(const meta::ArrayView<T, LL_TRUE>& funcName) {
+__LL_NODISCARD__ constexpr const T* getNamePart1(const meta::ArrayView<T, LL_TRUE>& funcName) __LL_EXCEPT__ {
 	constexpr len_t NUM_TEMPLATES_BEFORE_TYPE = 1;
 
 	// Ignore the first template argument
 	// Then when we found other template we continue processing the string to get the end of the type
 	struct TempStruct { T ch; int num; using cinput = TempStruct&; };
-	auto f = [](const T c, TempStruct& t) -> ll_bool_t {
+	auto f = [](const T c, TempStruct& t) __LL_EXCEPT__ -> ll_bool_t {
 		if (t.num == NUM_TEMPLATES_BEFORE_TYPE) return t.ch == c;
 		else if (t.ch == c) ++t.num;
 		return LL_FALSE;
@@ -45,7 +45,7 @@ __LL_NODISCARD__ constexpr const T* getNamePart1(const meta::ArrayView<T, LL_TRU
 	return funcName.find<TempStruct, LL_FALSE, TempStruct>(t1, f) + 1;
 }
 template<class ClassStr>
-__LL_NODISCARD__ constexpr ClassStr getNamePart2(ClassStr res, ClassStr end) {
+__LL_NODISCARD__ constexpr ClassStr getNamePart2(ClassStr res, ClassStr end) __LL_EXCEPT__ {
 	// We try to figure out the end of the type we have
 	// This checks the type start '<' and the end '>' and takes all types and templates types
 	len_t found{};
@@ -60,7 +60,7 @@ __LL_NODISCARD__ constexpr ClassStr getNamePart2(ClassStr res, ClassStr end) {
 	return LL_NULLPTR;
 }
 template<class T>
-__LL_NODISCARD__ constexpr const T* getNamePart3(const meta::ArrayView<T, LL_TRUE>& classString, const T* res, const T* res2) {
+__LL_NODISCARD__ constexpr const T* getNamePart3(const meta::ArrayView<T, LL_TRUE>& classString, const T* res, const T* res2) __LL_EXCEPT__ {
 	meta::algorithm::compare_cluster<T> cmp;
 	ll_bool_t isClass = cmp.starts_with(res,
 		static_cast<len_t>(res2 - res),

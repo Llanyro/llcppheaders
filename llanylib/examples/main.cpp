@@ -94,26 +94,26 @@ ll_string_t getBool(const ll_bool_t value) {
 
 #pragma region Hash
 constexpr hash::Hash64FunctionPack pack(
-	[](ll_string_t str, len_t size) -> hash::OptionalHash64 {
+	[](ll_string_t str, len_t size) __LL_EXCEPT__ -> hash::OptionalHash64 {
 		len_t buffer{};
 		for (; size > ZERO_UI64; --size, ++str) buffer += *str;
 		return hash::Hash64(buffer);
 	},
-	[](ll_wstring_t str, len_t size) -> hash::OptionalHash64 {
+	[](ll_wstring_t str, len_t size) __LL_EXCEPT__-> hash::OptionalHash64 {
 		len_t buffer{};
 		for (; size > ZERO_UI64; --size, ++str) buffer += *str;
 		return hash::Hash64(buffer);
 	},
-	[](const meta::StrPair&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
-	[](const meta::wStrPair&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
+	[](const meta::StrPair&) __LL_EXCEPT__-> hash::OptionalHash64 { return hash::INVALID_HASH64; },
+	[](const meta::wStrPair&) __LL_EXCEPT__ -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
 
-	[](const meta::Str&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
-	[](const meta::wStr&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
+	[](const meta::Str&) __LL_EXCEPT__ -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
+	[](const meta::wStr&) __LL_EXCEPT__ -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
 
-	[](const hash::Hash64& h) -> hash::OptionalHash64 { return h; },
+	[](const hash::Hash64& h) __LL_EXCEPT__ -> hash::OptionalHash64 { return h; },
 
-	[](const void*, const meta::StrTypeid&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
-	[](const void*, const meta::wStrTypeid&) -> hash::OptionalHash64 { return hash::INVALID_HASH64; }
+	[](const void*, const meta::StrTypeid&) __LL_EXCEPT__ -> hash::OptionalHash64 { return hash::INVALID_HASH64; },
+	[](const void*, const meta::wStrTypeid&) __LL_EXCEPT__ -> hash::OptionalHash64 { return hash::INVALID_HASH64; }
 );
 
 constexpr auto valueget() {

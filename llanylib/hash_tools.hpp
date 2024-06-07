@@ -37,7 +37,7 @@ template<class basic_type_hash_class = basic_type_hash>
 class HashTool {
 	public:
 		template<class T>
-		static constexpr ll_bool_t is_convertible_object_v = std::_Is_any_of_v<T, hash::Hash64, meta::StrPair, meta::wStrPair, meta::Str, meta::wStr>;
+		static constexpr ll_bool_t is_convertible_object_v = std::_Is_any_of_v<T, hash::Hash64, meta::StrPair, meta::wStrPair, meta::Str, meta::wStr, std::string, std::wstring>;
 	private:
 		Hash64FunctionPack hashFunctionPack;
 	public:
@@ -178,6 +178,12 @@ class HashTool {
 
 		#pragma endregion
 		#pragma region HashObject
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const std::string& str) const __LL_EXCEPT__ {
+			return this->hashFunctionPack.call(str);
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const std::wstring& str) const __LL_EXCEPT__ {
+			return this->hashFunctionPack.call(str);
+		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::StrPair& str) const __LL_EXCEPT__ {
 			return this->hashFunctionPack.call(str);
 		}
@@ -189,6 +195,9 @@ class HashTool {
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::wStr& str) const __LL_EXCEPT__ {
 			return this->hashFunctionPack.call(str);
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const hash::Hash64& h) const __LL_EXCEPT__ {
+			return this->hashFunctionPack.call(h);
 		}
 		template<len_t N, class T>
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::ArrayPair<T>& str) const __LL_EXCEPT__ {
@@ -259,15 +268,20 @@ class HashTool {
 				*hashes++ = hash::Hash64();
 				return;
 			}
-
-			auto h = this->hashArray<1, T>(&object);
-			if (h.has_value()) {
-				*status++ = HashStatus::Ok;
-				*hashes++ = *h;
-			}
 			else {
-				*status++ = HashStatus::HashTypeError;
-				*hashes++ = hash::Hash64();
+				hash::OptionalHash64 h;
+
+				if constexpr (is_convertible_object_v<T>)
+					h = this->hashObject<T>(object);
+				else h = this->hashArray<1, T>(&object);
+				if (h.has_value()) {
+					*status++ = HashStatus::Ok;
+					*hashes++ = *h;
+				}
+				else {
+					*status++ = HashStatus::HashTypeError;
+					*hashes++ = hash::Hash64();
+				}
 			}
 		}
 		template<class T, class... Args>

@@ -32,6 +32,8 @@ class Hash32FunctionPack {
 	private:
 		hash::Hash32Function hash32Function;
 		hash::wHash32Function whash32Function;
+		hash::StringPairHash32Function stringPairHash32Function;
+		hash::wStringPairHash32Function wstringPairHash32Function;
 		hash::StrPairHash32Function strPairHash32Function;
 		hash::wStrPairHash32Function wstrPairHash32Function;
 		hash::StrHash32Function strHash32Function;
@@ -46,6 +48,8 @@ class Hash32FunctionPack {
 		constexpr Hash32FunctionPack(
 			hash::Hash32Function hash32Function,
 			hash::wHash32Function whash32Function,
+			hash::StringPairHash32Function stringPairHash32Function,
+			hash::wStringPairHash32Function wstringPairHash32Function,
 			hash::StrPairHash32Function strPairHash32Function,
 			hash::wStrPairHash32Function wstrPairHash32Function,
 			hash::StrHash32Function strHash32Function,
@@ -56,6 +60,8 @@ class Hash32FunctionPack {
 		) __LL_EXCEPT__
 			: hash32Function(hash32Function)
 			, whash32Function(whash32Function)
+			, stringPairHash32Function(stringPairHash32Function)
+			, wstringPairHash32Function(wstringPairHash32Function)
 			, strPairHash32Function(strPairHash32Function)
 			, wstrPairHash32Function(wstrPairHash32Function)
 			, strHash32Function(strHash32Function)
@@ -72,6 +78,8 @@ class Hash32FunctionPack {
 			: Hash32FunctionPack(
 				other.hash32Function,
 				other.whash32Function,
+				other.stringPairHash32Function,
+				other.wstringPairHash32Function,
 				other.strPairHash32Function,
 				other.wstrPairHash32Function,
 				other.strHash32Function,
@@ -83,6 +91,8 @@ class Hash32FunctionPack {
 		constexpr Hash32FunctionPack& operator=(const Hash32FunctionPack& other) __LL_EXCEPT__ {
 			this->hash32Function = other.hash32Function;
 			this->whash32Function = other.whash32Function;
+			this->stringPairHash32Function = other.stringPairHash32Function;
+			this->wstringPairHash32Function = other.wstringPairHash32Function;
 			this->strPairHash32Function = other.strPairHash32Function;
 			this->wstrPairHash32Function = other.wstrPairHash32Function;
 			this->strHash32Function = other.strHash32Function;
@@ -111,6 +121,8 @@ class Hash32FunctionPack {
 		constexpr void clear() __LL_EXCEPT__ {
 			this->hash32Function = LL_NULLPTR;
 			this->whash32Function = LL_NULLPTR;
+			this->stringPairHash32Function = LL_NULLPTR;
+			this->wstringPairHash32Function = LL_NULLPTR;
 			this->strPairHash32Function = LL_NULLPTR;
 			this->wstrPairHash32Function = LL_NULLPTR;
 			this->strHash32Function = LL_NULLPTR;
@@ -123,6 +135,8 @@ class Hash32FunctionPack {
 		#pragma region Getters
 		__LL_NODISCARD__ constexpr hash::Hash32Function getHash32Function() const __LL_EXCEPT__ { return this->hash32Function; }
 		__LL_NODISCARD__ constexpr hash::wHash32Function getwHash32Function() const __LL_EXCEPT__ { return this->whash32Function; }
+		__LL_NODISCARD__ constexpr hash::StringPairHash32Function getStringPairHash32Function() const __LL_EXCEPT__ { return this->stringPairHash32Function; }
+		__LL_NODISCARD__ constexpr hash::wStringPairHash32Function getwStringPairHash32Function() const __LL_EXCEPT__ { return this->wstringPairHash32Function; }
 		__LL_NODISCARD__ constexpr hash::StrPairHash32Function getStrPairHash32Function() const __LL_EXCEPT__ { return this->strPairHash32Function; }
 		__LL_NODISCARD__ constexpr hash::wStrPairHash32Function getwStrPairHash32Function() const __LL_EXCEPT__ { return this->wstrPairHash32Function; }
 		__LL_NODISCARD__ constexpr hash::StrHash32Function getStrHash32Function() const __LL_EXCEPT__ { return this->strHash32Function; }
@@ -138,6 +152,12 @@ class Hash32FunctionPack {
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
 			return this->whash32Function(s, n);
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const std::string& s) const __LL_EXCEPT__ {
+			return this->stringPairHash32Function(s);
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const std::wstring& s) const __LL_EXCEPT__ {
+			return this->wstringPairHash32Function(s);
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const meta::StrPair& s) const __LL_EXCEPT__ {
 			return this->strPairHash32Function(s);
@@ -168,6 +188,12 @@ class Hash32FunctionPack {
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
 			return (this->whash32Function) ? this->whash32Function(s, n) : hash::INVALID_HASH32;
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const std::string& s) const __LL_EXCEPT__ {
+			return (this->stringPairHash32Function) ? this->stringPairHash32Function(s) : hash::INVALID_HASH32;
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const std::wstring& s) const __LL_EXCEPT__ {
+			return (this->wstringPairHash32Function) ? this->wstringPairHash32Function(s) : hash::INVALID_HASH32;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const meta::StrPair& s) const __LL_EXCEPT__ {
 			return (this->strPairHash32Function) ? this->strPairHash32Function(s) : hash::INVALID_HASH32;
@@ -200,6 +226,8 @@ class Hash64FunctionPack {
 	private:
 		hash::Hash64Function hash64Function;
 		hash::wHash64Function whash64Function;
+		hash::StringPairHash64Function stringPairHash64Function;
+		hash::wStringPairHash64Function wstringPairHash64Function;
 		hash::StrPairHash64Function strPairHash64Function;
 		hash::wStrPairHash64Function wstrPairHash64Function;
 		hash::StrHash64Function strHash64Function;
@@ -214,6 +242,8 @@ class Hash64FunctionPack {
 		constexpr Hash64FunctionPack(
 			hash::Hash64Function hash64Function,
 			hash::wHash64Function whash64Function,
+			hash::StringPairHash64Function stringPairHash64Function,
+			hash::wStringPairHash64Function wstringPairHash64Function,
 			hash::StrPairHash64Function strPairHash64Function,
 			hash::wStrPairHash64Function wstrPairHash64Function,
 			hash::StrHash64Function strHash64Function,
@@ -224,6 +254,8 @@ class Hash64FunctionPack {
 		) __LL_EXCEPT__
 			: hash64Function(hash64Function)
 			, whash64Function(whash64Function)
+			, stringPairHash64Function(stringPairHash64Function)
+			, wstringPairHash64Function(wstringPairHash64Function)
 			, strPairHash64Function(strPairHash64Function)
 			, wstrPairHash64Function(wstrPairHash64Function)
 			, strHash64Function(strHash64Function)
@@ -240,6 +272,8 @@ class Hash64FunctionPack {
 			: Hash64FunctionPack(
 				other.hash64Function,
 				other.whash64Function,
+				other.stringPairHash64Function,
+				other.wstringPairHash64Function,
 				other.strPairHash64Function,
 				other.wstrPairHash64Function,
 				other.strHash64Function,
@@ -251,6 +285,8 @@ class Hash64FunctionPack {
 		constexpr Hash64FunctionPack& operator=(const Hash64FunctionPack& other) __LL_EXCEPT__ {
 			this->hash64Function = other.hash64Function;
 			this->whash64Function = other.whash64Function;
+			this->stringPairHash64Function = other.stringPairHash64Function;
+			this->wstringPairHash64Function = other.wstringPairHash64Function;
 			this->strPairHash64Function = other.strPairHash64Function;
 			this->wstrPairHash64Function = other.wstrPairHash64Function;
 			this->strHash64Function = other.strHash64Function;
@@ -279,6 +315,8 @@ class Hash64FunctionPack {
 		constexpr void clear() __LL_EXCEPT__ {
 			this->hash64Function = LL_NULLPTR;
 			this->whash64Function = LL_NULLPTR;
+			this->stringPairHash64Function = LL_NULLPTR;
+			this->wstringPairHash64Function = LL_NULLPTR;
 			this->strPairHash64Function = LL_NULLPTR;
 			this->wstrPairHash64Function = LL_NULLPTR;
 			this->strHash64Function = LL_NULLPTR;
@@ -291,6 +329,8 @@ class Hash64FunctionPack {
 		#pragma region Getters
 		__LL_NODISCARD__ constexpr hash::Hash64Function getHash64Function() const __LL_EXCEPT__ { return this->hash64Function; }
 		__LL_NODISCARD__ constexpr hash::wHash64Function getwHash64Function() const __LL_EXCEPT__ { return this->whash64Function; }
+		__LL_NODISCARD__ constexpr hash::StringPairHash64Function getStringPairHash64Function() const __LL_EXCEPT__ { return this->stringPairHash64Function; }
+		__LL_NODISCARD__ constexpr hash::wStringPairHash64Function getwStringPairHash64Function() const __LL_EXCEPT__ { return this->wstringPairHash64Function; }
 		__LL_NODISCARD__ constexpr hash::StrPairHash64Function getStrPairHash64Function() const __LL_EXCEPT__ { return this->strPairHash64Function; }
 		__LL_NODISCARD__ constexpr hash::wStrPairHash64Function getwStrPairHash64Function() const __LL_EXCEPT__ { return this->wstrPairHash64Function; }
 		__LL_NODISCARD__ constexpr hash::StrHash64Function getStrHash64Function() const __LL_EXCEPT__ { return this->strHash64Function; }
@@ -306,6 +346,12 @@ class Hash64FunctionPack {
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
 			return this->whash64Function(s, n);
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const std::string& s) const __LL_EXCEPT__ {
+			return this->stringPairHash64Function(s);
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const std::wstring& s) const __LL_EXCEPT__ {
+			return this->wstringPairHash64Function(s);
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const meta::StrPair& s) const __LL_EXCEPT__ {
 			return this->strPairHash64Function(s);
@@ -336,6 +382,12 @@ class Hash64FunctionPack {
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
 			return (this->whash64Function) ? this->whash64Function(s, n) : hash::INVALID_HASH64;
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const std::string& s) const __LL_EXCEPT__ {
+			return (this->stringPairHash64Function) ? this->stringPairHash64Function(s) : hash::INVALID_HASH64;
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const std::wstring& s) const __LL_EXCEPT__ {
+			return (this->wstringPairHash64Function) ? this->wstringPairHash64Function(s) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::StrPair& s) const __LL_EXCEPT__ {
 			return (this->strPairHash64Function) ? this->strPairHash64Function(s) : hash::INVALID_HASH64;
@@ -368,6 +420,8 @@ class Hash128FunctionPack {
 	private:
 		hash::Hash128Function hash128Function;
 		hash::wHash128Function whash128Function;
+		hash::StringPairHash128Function stringPairHash128Function;
+		hash::wStringPairHash128Function wstringPairHash128Function;
 		hash::StrPairHash128Function strPairHash128Function;
 		hash::wStrPairHash128Function wstrPairHash128Function;
 		hash::StrHash128Function strHash128Function;
@@ -382,6 +436,8 @@ class Hash128FunctionPack {
 		constexpr Hash128FunctionPack(
 			hash::Hash128Function hash128Function,
 			hash::wHash128Function whash128Function,
+			hash::StringPairHash128Function stringPairHash128Function,
+			hash::wStringPairHash128Function wstringPairHash128Function,
 			hash::StrPairHash128Function strPairHash128Function,
 			hash::wStrPairHash128Function wstrPairHash128Function,
 			hash::StrHash128Function strHash128Function,
@@ -392,6 +448,8 @@ class Hash128FunctionPack {
 		) __LL_EXCEPT__
 			: hash128Function(hash128Function)
 			, whash128Function(whash128Function)
+			, stringPairHash128Function(stringPairHash128Function)
+			, wstringPairHash128Function(wstringPairHash128Function)
 			, strPairHash128Function(strPairHash128Function)
 			, wstrPairHash128Function(wstrPairHash128Function)
 			, strHash128Function(strHash128Function)
@@ -408,6 +466,8 @@ class Hash128FunctionPack {
 			: Hash128FunctionPack(
 				other.hash128Function,
 				other.whash128Function,
+				other.stringPairHash128Function,
+				other.wstringPairHash128Function,
 				other.strPairHash128Function,
 				other.wstrPairHash128Function,
 				other.strHash128Function,
@@ -419,6 +479,8 @@ class Hash128FunctionPack {
 		constexpr Hash128FunctionPack& operator=(const Hash128FunctionPack& other) __LL_EXCEPT__ {
 			this->hash128Function = other.hash128Function;
 			this->whash128Function = other.whash128Function;
+			this->stringPairHash128Function = other.stringPairHash128Function;
+			this->wstringPairHash128Function = other.wstringPairHash128Function;
 			this->strPairHash128Function = other.strPairHash128Function;
 			this->wstrPairHash128Function = other.wstrPairHash128Function;
 			this->strHash128Function = other.strHash128Function;
@@ -447,6 +509,8 @@ class Hash128FunctionPack {
 		constexpr void clear() __LL_EXCEPT__ {
 			this->hash128Function = LL_NULLPTR;
 			this->whash128Function = LL_NULLPTR;
+			this->stringPairHash128Function = LL_NULLPTR;
+			this->wstringPairHash128Function = LL_NULLPTR;
 			this->strPairHash128Function = LL_NULLPTR;
 			this->wstrPairHash128Function = LL_NULLPTR;
 			this->strHash128Function = LL_NULLPTR;
@@ -459,6 +523,8 @@ class Hash128FunctionPack {
 		#pragma region Getters
 		__LL_NODISCARD__ constexpr hash::Hash128Function getHash128Function() const __LL_EXCEPT__ { return this->hash128Function; }
 		__LL_NODISCARD__ constexpr hash::wHash128Function getwHash128Function() const __LL_EXCEPT__ { return this->whash128Function; }
+		__LL_NODISCARD__ constexpr hash::StringPairHash128Function getStringPairHash128Function() const __LL_EXCEPT__ { return this->stringPairHash128Function; }
+		__LL_NODISCARD__ constexpr hash::wStringPairHash128Function getwStringPairHash128Function() const __LL_EXCEPT__ { return this->wstringPairHash128Function; }
 		__LL_NODISCARD__ constexpr hash::StrPairHash128Function getStrPairHash128Function() const __LL_EXCEPT__ { return this->strPairHash128Function; }
 		__LL_NODISCARD__ constexpr hash::wStrPairHash128Function getwStrPairHash128Function() const __LL_EXCEPT__ { return this->wstrPairHash128Function; }
 		__LL_NODISCARD__ constexpr hash::StrHash128Function getStrHash128Function() const __LL_EXCEPT__ { return this->strHash128Function; }
@@ -474,6 +540,12 @@ class Hash128FunctionPack {
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
 			return this->whash128Function(s, n);
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const std::string& s) const __LL_EXCEPT__ {
+			return this->stringPairHash128Function(s);
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const std::wstring& s) const __LL_EXCEPT__ {
+			return this->wstringPairHash128Function(s);
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const meta::StrPair& s) const __LL_EXCEPT__ {
 			return this->strPairHash128Function(s);
@@ -504,6 +576,12 @@ class Hash128FunctionPack {
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
 			return (this->whash128Function) ? this->whash128Function(s, n) : hash::INVALID_HASH128;
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const std::string& s) const __LL_EXCEPT__ {
+			return (this->stringPairHash128Function) ? this->stringPairHash128Function(s) : hash::INVALID_HASH128;
+		}
+		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const std::wstring& s) const __LL_EXCEPT__ {
+			return (this->wstringPairHash128Function) ? this->wstringPairHash128Function(s) : hash::INVALID_HASH128;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const meta::StrPair& s) const __LL_EXCEPT__ {
 			return (this->strPairHash128Function) ? this->strPairHash128Function(s) : hash::INVALID_HASH128;

@@ -135,9 +135,6 @@ struct LlanyHash {
 		}
 };
 
-constexpr auto opt_1 = *hash::LlanyHash::llanyHash64("Hola mundo");
-constexpr auto opt_2 = *hash::LlanyHash::llanyHash64("Hola mundo2");
-
 } // namespace hash
 } // namespace meta
 } // namespace llcpp

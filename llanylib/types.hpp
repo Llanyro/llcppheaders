@@ -233,6 +233,8 @@ using OptionalHash128 = std::optional<hash::Hash128>;
 #pragma region 32
 using Hash32Function = hash::OptionalHash32(*)(ll_string_t, len_t) __LL_EXCEPT__;
 using wHash32Function = hash::OptionalHash32(*)(ll_wstring_t, len_t) __LL_EXCEPT__;
+using StringPairHash32Function = hash::OptionalHash32(*)(const std::string&) __LL_EXCEPT__;
+using wStringPairHash32Function = hash::OptionalHash32(*)(const std::wstring&) __LL_EXCEPT__;
 using StrPairHash32Function = hash::OptionalHash32(*)(const meta::StrPair&) __LL_EXCEPT__;
 using wStrPairHash32Function = hash::OptionalHash32(*)(const meta::wStrPair&) __LL_EXCEPT__;
 using StrHash32Function = hash::OptionalHash32(*)(const meta::Str&) __LL_EXCEPT__;
@@ -245,6 +247,8 @@ using wStrTypeidHash32Function = hash::OptionalHash32(*)(const void*, const wStr
 #pragma region 64
 using Hash64Function = hash::OptionalHash64(*)(ll_string_t, len_t) __LL_EXCEPT__;
 using wHash64Function = hash::OptionalHash64(*)(ll_wstring_t, len_t) __LL_EXCEPT__;
+using StringPairHash64Function = hash::OptionalHash64(*)(const std::string&) __LL_EXCEPT__;
+using wStringPairHash64Function = hash::OptionalHash64(*)(const std::wstring&) __LL_EXCEPT__;
 using StrPairHash64Function = hash::OptionalHash64(*)(const meta::StrPair&) __LL_EXCEPT__;
 using wStrPairHash64Function = hash::OptionalHash64(*)(const meta::wStrPair&) __LL_EXCEPT__;
 using StrHash64Function = hash::OptionalHash64(*)(const meta::Str&) __LL_EXCEPT__;
@@ -257,6 +261,8 @@ using wStrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const wStr
 #pragma region 128
 using Hash128Function = hash::OptionalHash128(*)(ll_string_t, len_t) __LL_EXCEPT__;
 using wHash128Function = hash::OptionalHash128(*)(ll_wstring_t, len_t) __LL_EXCEPT__;
+using StringPairHash128Function = hash::OptionalHash128(*)(const std::string&) __LL_EXCEPT__;
+using wStringPairHash128Function = hash::OptionalHash128(*)(const std::wstring&) __LL_EXCEPT__;
 using StrPairHash128Function = hash::OptionalHash128(*)(const meta::StrPair&) __LL_EXCEPT__;
 using wStrPairHash128Function = hash::OptionalHash128(*)(const meta::wStrPair&) __LL_EXCEPT__;
 using StrHash128Function = hash::OptionalHash128(*)(const meta::Str&) __LL_EXCEPT__;

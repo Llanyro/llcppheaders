@@ -25,6 +25,11 @@
 #include "cityhash.hpp"
 #include "hash_tools.hpp"
 
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(push)
+	#pragma warning(disable:4100) // Ignore unused variables
+#endif // WINDOWS_SYSTEM
+
 namespace llcpp {
 namespace meta {
 namespace hash {
@@ -160,5 +165,9 @@ __LL_VAR_INLINE__ constexpr hash::HashTool FAST_HASH_TOOLS = hash::HashTool<>(FA
 } // namespace hash
 } // namespace meta
 } // namespace llcpp
+
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(pop)
+#endif // WINDOWS_SYSTEM
 
 #endif // LLANYLIB_STANDARDHASH_HPP_

@@ -23,6 +23,12 @@
 
 #include "traits.hpp"
 
+#if defined(WINDOWS_SYSTEM)
+    #if defined(__LL_SPECTRE_FUNCTIONS__)
+		#pragma warning(disable:5045) // Security Spectre mitigation [SECURITY]
+    #endif // __LL_UNSECURE_FUNCTIONS__
+#endif
+
 namespace llcpp {
 namespace meta {
 namespace hash {
@@ -275,5 +281,9 @@ struct basic_type_hash_no_constexpr {
 } // namespace hash
 } // namespace meta
 } // namespace llcpp
+
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(pop)
+#endif // WINDOWS_SYSTEM
 
 #endif // LLANYLIB_HASHALGORITHM_HPP_

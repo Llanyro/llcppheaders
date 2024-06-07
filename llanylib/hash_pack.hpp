@@ -189,10 +189,10 @@ class Hash32FunctionPack {
 		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
 			return (this->whash32Function) ? this->whash32Function(s, n) : hash::INVALID_HASH32;
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const std::string& s) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const std::string& s) const __LL_EXCEPT__ {
 			return (this->stringPairHash32Function) ? this->stringPairHash32Function(s) : hash::INVALID_HASH32;
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const std::wstring& s) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const std::wstring& s) const __LL_EXCEPT__ {
 			return (this->wstringPairHash32Function) ? this->wstringPairHash32Function(s) : hash::INVALID_HASH32;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const meta::StrPair& s) const __LL_EXCEPT__ {
@@ -383,10 +383,10 @@ class Hash64FunctionPack {
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
 			return (this->whash64Function) ? this->whash64Function(s, n) : hash::INVALID_HASH64;
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const std::string& s) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const std::string& s) const __LL_EXCEPT__ {
 			return (this->stringPairHash64Function) ? this->stringPairHash64Function(s) : hash::INVALID_HASH64;
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const std::wstring& s) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const std::wstring& s) const __LL_EXCEPT__ {
 			return (this->wstringPairHash64Function) ? this->wstringPairHash64Function(s) : hash::INVALID_HASH64;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::StrPair& s) const __LL_EXCEPT__ {
@@ -577,10 +577,10 @@ class Hash128FunctionPack {
 		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(ll_wstring_t s, const len_t n) const __LL_EXCEPT__ {
 			return (this->whash128Function) ? this->whash128Function(s, n) : hash::INVALID_HASH128;
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const std::string& s) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const std::string& s) const __LL_EXCEPT__ {
 			return (this->stringPairHash128Function) ? this->stringPairHash128Function(s) : hash::INVALID_HASH128;
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const std::wstring& s) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const std::wstring& s) const __LL_EXCEPT__ {
 			return (this->wstringPairHash128Function) ? this->wstringPairHash128Function(s) : hash::INVALID_HASH128;
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const meta::StrPair& s) const __LL_EXCEPT__ {

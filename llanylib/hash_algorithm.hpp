@@ -24,6 +24,7 @@
 #include "traits.hpp"
 
 #if defined(WINDOWS_SYSTEM)
+	#pragma warning(push)
     #if defined(__LL_SPECTRE_FUNCTIONS__)
 		#pragma warning(disable:5045) // Security Spectre mitigation [SECURITY]
     #endif // __LL_UNSECURE_FUNCTIONS__

@@ -272,7 +272,7 @@ class HashTool {
 				hash::OptionalHash64 h;
 
 				if constexpr (is_convertible_object_v<T>)
-					h = this->hashObject<T>(object);
+					h = this->hashObject(object);
 				else h = this->hashArray<1, T>(&object);
 				if (h.has_value()) {
 					*status++ = HashStatus::Ok;

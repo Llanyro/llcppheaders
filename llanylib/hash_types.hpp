@@ -71,6 +71,19 @@ class Hash32 {
 			return !this->operator==(other);
 		}
 
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const Hash32& other) const __LL_EXCEPT__ {
+			return this->value > other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const Hash32& other) const __LL_EXCEPT__ {
+			return this->value >= other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const Hash32& other) const __LL_EXCEPT__ {
+			return this->value < other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const Hash32& other) const __LL_EXCEPT__ {
+			return this->value <= other.value;
+		}
+
 		constexpr void clear() __LL_EXCEPT__ { this->value = ZERO_UI32; }
 
 		#pragma endregion
@@ -166,6 +179,19 @@ class Hash64 {
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const Hash64& other) const __LL_EXCEPT__ {
 			return !this->operator==(other);
+		}
+
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const Hash64& other) const __LL_EXCEPT__ {
+			return this->value > other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const Hash64& other) const __LL_EXCEPT__ {
+			return this->value >= other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const Hash64& other) const __LL_EXCEPT__ {
+			return this->value < other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const Hash64& other) const __LL_EXCEPT__ {
+			return this->value <= other.value;
 		}
 
 		constexpr void clear() __LL_EXCEPT__ { this->value = ZERO_UI64; }
@@ -268,6 +294,27 @@ class Hash128 {
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const Hash128& other) const __LL_EXCEPT__ {
 			return !this->operator==(other);
+		}
+
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const Hash128& other) const __LL_EXCEPT__ {
+			if (this->high > other.high) return LL_TRUE;
+			else if (this->high < other.high) return LL_FALSE;
+			else return this->low > other.low;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const Hash128& other) const __LL_EXCEPT__ {
+			if (this->high > other.high) return LL_TRUE;
+			else if (this->high < other.high) return LL_FALSE;
+			else return this->low >= other.low;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const Hash128& other) const __LL_EXCEPT__ {
+			if (this->high < other.high) return LL_TRUE;
+			else if (this->high > other.high) return LL_FALSE;
+			else return this->low < other.low;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const Hash128& other) const __LL_EXCEPT__ {
+			if (this->high < other.high) return LL_TRUE;
+			else if (this->high > other.high) return LL_FALSE;
+			else return this->low <= other.low;
 		}
 
 		__LL_NODISCARD__ constexpr ui64& operator[](const len_t pos) __LL_EXCEPT__ {

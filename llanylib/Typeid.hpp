@@ -55,17 +55,6 @@ class Typeid {
 			if (h.has_value()) this->name_hash = *h;
 		}
 
-		constexpr Typeid(const meta::StringView& name, HashFunction hashFunction) __LL_EXCEPT__
-			: name_hash(), name(name) {
-			auto h = hashFunction(this->name);
-			if (h.has_value()) this->name_hash = *h;
-		}
-		constexpr Typeid(StringView&& name, HashFunction hashFunction) __LL_EXCEPT__
-			: name_hash(), name(std::move(name)) {
-			auto h = hashFunction(this->name);
-			if (h.has_value()) this->name_hash = *h;
-		}
-
 		#pragma endregion
 		#pragma region CopyMove
 		constexpr Typeid(const Typeid& other) __LL_EXCEPT__

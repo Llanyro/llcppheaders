@@ -315,7 +315,7 @@ __LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(const Array<T>& ot
 }
 template<class T>
 __LL_INLINE__ constexpr ArrayPair<T>::ArrayPair(Array<T>&& other) __LL_EXCEPT__
-	: mem(other.mem), mem_end(other.mem_end){ other.simpleClear(); }
+	: mem(other.begin()), mem_end(other.end()) {}
 template<class T>
 __LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(Array<T>&& other) __LL_EXCEPT__ {
 	this->mem = other.mem;
@@ -329,6 +329,10 @@ __LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(Array<T>&& other) 
 template<class T, len_t N>
 __LL_NODISCARD__ constexpr Array<T> make_Array(T(&arr)[N]) {
 	return Array<T>(arr, arr + N);
+}
+template<class T, len_t N>
+__LL_NODISCARD__ constexpr ArrayPair<T> make_ArrayPair(const T(&arr)[N]) {
+	return ArrayPair<T>(arr, arr + N);
 }
 
 #pragma endregion

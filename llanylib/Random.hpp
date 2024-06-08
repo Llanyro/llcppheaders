@@ -101,9 +101,9 @@ class Random {
 			: Random(hash::Hash64(seed), std::move(generator)) {}
 
 		constexpr Random(const i8 seed, const hash::Hash64FunctionPack& generator) __LL_EXCEPT__
-			: Random(hash::Hash64(seed), generator) {}
+			: Random(hash::Hash64(static_cast<ui64>(seed)), generator) {}
 		constexpr Random(const i8 seed, hash::Hash64FunctionPack&& generator) __LL_EXCEPT__
-			: Random(hash::Hash64(seed), std::move(generator)) {}
+			: Random(hash::Hash64(static_cast<ui64>(seed)), std::move(generator)) {}
 
 		#pragma endregion
 		#pragma region 16
@@ -113,9 +113,9 @@ class Random {
 			: Random(hash::Hash64(seed), std::move(generator)) {}
 
 		constexpr Random(const i16 seed, const hash::Hash64FunctionPack& generator) __LL_EXCEPT__
-			: Random(hash::Hash64(seed), generator) {}
+			: Random(hash::Hash64(static_cast<ui64>(seed)), generator) {}
 		constexpr Random(const i16 seed, hash::Hash64FunctionPack&& generator) __LL_EXCEPT__
-			: Random(hash::Hash64(seed), std::move(generator)) {}
+			: Random(hash::Hash64(static_cast<ui64>(seed)), std::move(generator)) {}
 
 		#pragma endregion
 		#pragma region 32
@@ -125,9 +125,9 @@ class Random {
 			: Random(hash::Hash64(seed), std::move(generator)) {}
 
 		constexpr Random(const i32 seed, const hash::Hash64FunctionPack& generator) __LL_EXCEPT__
-			: Random(hash::Hash64(seed), generator) {}
+			: Random(hash::Hash64(static_cast<ui64>(seed)), generator) {}
 		constexpr Random(const i32 seed, hash::Hash64FunctionPack&& generator) __LL_EXCEPT__
-			: Random(hash::Hash64(seed), std::move(generator)) {}
+			: Random(hash::Hash64(static_cast<ui64>(seed)), std::move(generator)) {}
 
 		#pragma endregion
 		#pragma region 64
@@ -137,9 +137,9 @@ class Random {
 			: Random(hash::Hash64(seed), std::move(generator)) {}
 
 		constexpr Random(const i64 seed, const hash::Hash64FunctionPack& generator) __LL_EXCEPT__
-			: Random(hash::Hash64(seed), generator) {}
+			: Random(hash::Hash64(static_cast<ui64>(seed)), generator) {}
 		constexpr Random(const i64 seed, hash::Hash64FunctionPack&& generator) __LL_EXCEPT__
-			: Random(hash::Hash64(seed), std::move(generator)) {}
+			: Random(hash::Hash64(static_cast<ui64>(seed)), std::move(generator)) {}
 
 		#pragma endregion
 
@@ -176,15 +176,15 @@ class Random {
 		}
 		template<> __LL_NODISCARD__ constexpr i8 rand<i8>(const ll_bool_t* pattern) __LL_EXCEPT__ {
 			this->updateSeed();
-			return Divisor::convert<i64, i8>(this->seed.get(), pattern);
+			return Divisor::convert<i64, i8>(static_cast<i64>(this->seed.get()), pattern);
 		}
 		template<> __LL_NODISCARD__ constexpr i16 rand<i16>(const ll_bool_t* pattern) __LL_EXCEPT__ {
 			this->updateSeed();
-			return Divisor::convert<i64, i16>(this->seed.get(), pattern);
+			return Divisor::convert<i64, i16>(static_cast<i64>(this->seed.get()), pattern);
 		}
 		template<> __LL_NODISCARD__ constexpr i32 rand<i32>(const ll_bool_t* pattern) __LL_EXCEPT__ {
 			this->updateSeed();
-			return Divisor::convert<i64, i32>(this->seed.get(), pattern);
+			return Divisor::convert<i64, i32>(static_cast<i64>(this->seed.get()), pattern);
 		}
 		template<> __LL_NODISCARD__ constexpr f64 rand<f64>(const ll_bool_t* pattern) __LL_EXCEPT__ {
 			ui128 r = this->rand<ui128>();
@@ -228,7 +228,7 @@ class Random {
 		}
 		template<> __LL_NODISCARD__ constexpr i64 rand<i64>() __LL_EXCEPT__ {
 			this->updateSeed();
-			return this->seed.get();
+			return static_cast<i64>(this->seed.get());
 		}
 		template<> __LL_NODISCARD__ constexpr i128 rand<i128>() __LL_EXCEPT__ {
 			return i128(this->rand<i64>(), this->rand<i64>());

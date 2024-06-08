@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_TYPEID_HPP_) // Guard && version protector
-	#if LLANYLIB_TYPEID_MAYOR_ != 7 || LLANYLIB_TYPEID_MINOR_ < 3
+	#if LLANYLIB_TYPEID_MAYOR_ != 8 || LLANYLIB_TYPEID_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "Typeid.hpp version error!"
 		#else
@@ -18,8 +18,8 @@
 
 #else !defined(LLANYLIB_TYPEID_HPP_)
 #define LLANYLIB_TYPEID_HPP_
-#define LLANYLIB_TYPEID_MAYOR_ 7
-#define LLANYLIB_TYPEID_MINOR_ 3
+#define LLANYLIB_TYPEID_MAYOR_ 8
+#define LLANYLIB_TYPEID_MINOR_ 0
 
 #include "ArrayPair.hpp"
 #include "hash_types.hpp"
@@ -34,7 +34,6 @@ class Typeid {
 		static_assert(traits::is_char_type_v<T>, "Type must be a char type");
 		using NameType = meta::ArrayPair<T>;
 		using HashFunction = hash::OptionalHash64(*)(const NameType&) __LL_EXCEPT__;
-		using __Typeid = traits::template_types<Typeid<T>>;
 	private:
 		hash::Hash64 name_hash;
 		NameType name;
@@ -69,28 +68,28 @@ class Typeid {
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr Typeid(__Typeid::cref other) __LL_EXCEPT__
+		constexpr Typeid(const Typeid& other) __LL_EXCEPT__
 			: name_hash(other.name_hash), name(other.name) {}
-		constexpr __Typeid::ref operator=(__Typeid::cref other) __LL_EXCEPT__ {
+		constexpr Typeid& operator=(const Typeid& other) __LL_EXCEPT__ {
 			this->name_hash = other.name_hash;
 			this->name = other.name;
 			return *this;
 		}
-		constexpr Typeid(__Typeid::move other) __LL_EXCEPT__
+		constexpr Typeid(Typeid&& other) __LL_EXCEPT__
 			: name_hash(std::move(other.name_hash))
 			, name(std::move(other.name))
-		{ other.Typeid::simpleClear(); }
-		constexpr __Typeid::ref operator=(__Typeid::move other) __LL_EXCEPT__ {
+		{ other.simpleClear(); }
+		constexpr Typeid& operator=(Typeid&& other) __LL_EXCEPT__ {
 			this->name_hash = other.name_hash;
 			this->name = std::move(other.name);
-			other.Typeid::simpleClear();
+			other.simpleClear();
 			return *this;
 		}
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator const Typeid* () const __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ constexpr operator Typeid* () __LL_EXCEPT__ = delete;
+		__LL_NODISCARD__ constexpr operator const Typeid*() const __LL_EXCEPT__ = delete;
+		__LL_NODISCARD__ constexpr operator Typeid*() __LL_EXCEPT__ = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions

@@ -4,7 +4,7 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if !defined(LLANYLIB_EXAMPLES_RANDOMEXAMPLE_)

@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_HASHALGORITHM_HPP_) // Guard && version protector
-	#if LLANYLIB_HASHALGORITHM_MAYOR_ != 7 || LLANYLIB_HASHALGORITHM_MINOR_ < 3
+	#if LLANYLIB_HASHALGORITHM_MAYOR_ != 8 || LLANYLIB_HASHALGORITHM_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "hash_algorithm.hpp version error!"
 		#else
@@ -18,8 +18,8 @@
 
 #else !defined(LLANYLIB_HASHALGORITHM_HPP_)
 #define LLANYLIB_HASHALGORITHM_HPP_
-#define LLANYLIB_HASHALGORITHM_MAYOR_ 7
-#define LLANYLIB_HASHALGORITHM_MINOR_ 3
+#define LLANYLIB_HASHALGORITHM_MAYOR_ 8
+#define LLANYLIB_HASHALGORITHM_MINOR_ 0
 
 #include "traits.hpp"
 
@@ -244,8 +244,8 @@ struct basic_type_hash {
 	#pragma endregion
 
 	// Uses bitwise operators: [ ">>", "&" ]
-	template<class U, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr void conversor(ll_char_t*& buffer, typename W::cinput value) __LL_EXCEPT__ {
+	template<class U, class W = traits::cinput<U>>
+	__LL_NODISCARD__ static constexpr void conversor(ll_char_t*& buffer, W value) __LL_EXCEPT__ {
 		static_assert(basic_type_hash::is_convertible_v<U>, "Invalid type to hash");
 		constexpr len_t N = sizeof(U);
 		constexpr len_t BYTES = (N << 3) - 8;
@@ -253,8 +253,8 @@ struct basic_type_hash {
 		for (len_t i{}; i < N; ++i, ++buffer, byte -= 8)
 			*buffer = static_cast<ui8>(value >> byte) & 0xff;
 	}
-	template<class U, class W = traits::template_types<U>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValue(typename W::cinput value, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
+	template<class U, class W = traits::cinput<U>>
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValue(W value, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
 		static_assert(basic_type_hash::is_convertible_v<U>, "Invalid type to hash");
 		constexpr len_t BUFFERLEN = sizeof(U);
 		ll_char_t buffer[BUFFERLEN]{};

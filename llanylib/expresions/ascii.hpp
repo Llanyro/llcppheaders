@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_EXPRESIONS_ASCII_HPP_) // Guard && version protector
-	#if LLANYLIB_EXPRESIONS_ASCII_MAYOR_ != 7 || LLANYLIB_EXPRESIONS_ASCII_MINOR_ < 3
+	#if LLANYLIB_EXPRESIONS_ASCII_MAYOR_ != 8 || LLANYLIB_EXPRESIONS_ASCII_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "ascii.hpp version error!"
 		#else
@@ -18,10 +18,11 @@
 
 #else !defined(LLANYLIB_EXPRESIONS_ASCII_HPP_)
 #define LLANYLIB_EXPRESIONS_ASCII_HPP_
-#define LLANYLIB_EXPRESIONS_ASCII_MAYOR_ 7
-#define LLANYLIB_EXPRESIONS_ASCII_MINOR_ 3
+#define LLANYLIB_EXPRESIONS_ASCII_MAYOR_ 8
+#define LLANYLIB_EXPRESIONS_ASCII_MINOR_ 0
 
-#include "../ArrayView.hpp"
+#include "../types.hpp"
+#include <string_view>
 
 namespace llcpp {
 namespace meta {
@@ -29,23 +30,23 @@ namespace ascii {
 
 __LL_VAR_INLINE__ constexpr ui8 MAYUS_MINUS_DIFF = 'a' - 'A';
 
-__LL_VAR_INLINE__ constexpr auto ALPHABET_MINUS_CHARS = make_StringView("abcdefghijklmnopqrstuvwxyz");
-__LL_VAR_INLINE__ constexpr auto ALPHABET_MAYUS_CHARS = make_StringView("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-__LL_VAR_INLINE__ constexpr auto ALPHABET_NUMS_CHARS = make_StringView("0123456789");
-__LL_VAR_INLINE__ constexpr auto ALPHABET_MAYUS_MINUS_CHARS = make_StringView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-__LL_VAR_INLINE__ constexpr auto ALPHABET_CHARS = make_StringView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-__LL_VAR_INLINE__ constexpr auto SPECIAL_CHARS = make_StringView("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
-__LL_VAR_INLINE__ constexpr auto ALL_VISIBLE_CHARS = make_StringView("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
+__LL_VAR_INLINE__ constexpr std::string_view ALPHABET_MINUS_CHARS = "abcdefghijklmnopqrstuvwxyz";
+__LL_VAR_INLINE__ constexpr std::string_view ALPHABET_MAYUS_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+__LL_VAR_INLINE__ constexpr std::string_view ALPHABET_NUMS_CHARS = "0123456789";
+__LL_VAR_INLINE__ constexpr std::string_view ALPHABET_MAYUS_MINUS_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+__LL_VAR_INLINE__ constexpr std::string_view ALPHABET_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+__LL_VAR_INLINE__ constexpr std::string_view SPECIAL_CHARS = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+__LL_VAR_INLINE__ constexpr std::string_view ALL_VISIBLE_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
 namespace wide {
 
-__LL_VAR_INLINE__ constexpr auto ALPHABET_MINUS_CHARS = make_StringView(L"abcdefghijklmnopqrstuvwxyz");
-__LL_VAR_INLINE__ constexpr auto ALPHABET_MAYUS_CHARS = make_StringView(L"ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-__LL_VAR_INLINE__ constexpr auto ALPHABET_NUMS_CHARS = make_StringView(L"0123456789");
-__LL_VAR_INLINE__ constexpr auto ALPHABET_MAYUS_MINUS_CHARS = make_StringView(L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-__LL_VAR_INLINE__ constexpr auto ALPHABET_CHARS = make_StringView(L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-__LL_VAR_INLINE__ constexpr auto SPECIAL_CHARS = make_StringView(L"!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
-__LL_VAR_INLINE__ constexpr auto ALL_VISIBLE_CHARS = make_StringView(L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
+__LL_VAR_INLINE__ constexpr std::wstring_view ALPHABET_MINUS_CHARS = L"abcdefghijklmnopqrstuvwxyz";
+__LL_VAR_INLINE__ constexpr std::wstring_view ALPHABET_MAYUS_CHARS = L"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+__LL_VAR_INLINE__ constexpr std::wstring_view ALPHABET_NUMS_CHARS = L"0123456789";
+__LL_VAR_INLINE__ constexpr std::wstring_view ALPHABET_MAYUS_MINUS_CHARS = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+__LL_VAR_INLINE__ constexpr std::wstring_view ALPHABET_CHARS = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+__LL_VAR_INLINE__ constexpr std::wstring_view SPECIAL_CHARS = L"!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+__LL_VAR_INLINE__ constexpr std::wstring_view ALL_VISIBLE_CHARS = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
 } // namespace wide
 } // namespace ascii

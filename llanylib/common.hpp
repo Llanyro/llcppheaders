@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_COMMON_HPP_) // Guard && version protector
-	#if LLANYLIB_COMMON_MAYOR_ != 7 || LLANYLIB_COMMON_MINOR_ < 3
+	#if LLANYLIB_COMMON_MAYOR_ != 8 || LLANYLIB_COMMON_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "common.hpp version error!"
 		#else
@@ -18,8 +18,8 @@
 
 #else !defined(LLANYLIB_COMMON_HPP_)
 #define LLANYLIB_COMMON_HPP_
-#define LLANYLIB_COMMON_MAYOR_ 7
-#define LLANYLIB_COMMON_MINOR_ 3
+#define LLANYLIB_COMMON_MAYOR_ 8
+#define LLANYLIB_COMMON_MINOR_ 0
 
 #include "traits.hpp"
 
@@ -43,8 +43,8 @@ constexpr void simple_swap(T& v1, T& v2) __LL_EXCEPT__ {
 
 template<class T, class U = T>
 constexpr cmp_t compare_with_operators(T v1, U v2) __LL_EXCEPT__ {
-	static_assert(traits::has_no_equal_operator_v<T>, "Error, <T> object has no operator!=()");
-	static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
+	//static_assert(traits::has_no_equal_operator_v<T>, "Error, <T> object has no operator!=()");
+	//static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
 
 	if (v1 == v2) return 0;
 	else if (v1 > v2) return 1;
@@ -56,8 +56,8 @@ constexpr cmp_t compare_with_operators_void(const void* _a, const void* _b) __LL
 	__LL_ASSERT_VAR_NULL__(_a, "_a");
 	__LL_ASSERT_VAR_NULL__(_b, "_b");
 
-	static_assert(traits::has_no_equal_operator_v<T>, "Error, <T> object has no operator!=()");
-	static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
+	//static_assert(traits::has_no_equal_operator_v<T>, "Error, <T> object has no operator!=()");
+	//static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
 
 	const T* a = reinterpret_cast<const T*>(_a);
 	const U* b = reinterpret_cast<const U*>(_b);

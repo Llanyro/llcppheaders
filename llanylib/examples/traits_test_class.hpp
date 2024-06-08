@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_) // Guard && version protector
-	#if LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ != 7 || LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ < 3
+	#if LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ != 8 || LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ < 0
 		#error "traits_test_class.hpp version error!"
 	#endif // LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ || LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_
 
 #else !defined(LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_)
 #define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_HPP_
-#define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ 7
-#define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ 3
+#define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ 8
+#define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ 0
 
 #include "../types.hpp"
 
@@ -29,12 +29,37 @@ namespace traits {
 #endif // WINDOWS_SYSTEM
 
 struct TestClassBase {
-	operator bool() const { return false; }
+	operator bool() const __LL_EXCEPT__ { return false; }
 	void swap(TestClassBase& other) {}
 	ll_bool_t swap_s(TestClassBase& other) {}
+	ll_bool_t move(TestClassBase&& other) {}
 	void clear() {}
 	ll_bool_t clear_s() {}
 	int operator<=>(const TestClassBase& other) const { return 0; }
+
+	//virtual operator int() const = 0;
+	//
+	//virtual void test0() const = 0;
+	//virtual void test1(TestClassBase&) const = 0;
+	//virtual void test2(const TestClassBase&) const = 0;
+	//virtual void test3(TestClassBase&&) const = 0;
+	//virtual void test4() = 0;
+	//virtual void test5(TestClassBase&) = 0;
+	//virtual void test6(const TestClassBase&) = 0;
+	//virtual void test7(TestClassBase&&) = 0;
+	//
+	//virtual int test8() const __LL_EXCEPT__ = 0;
+	//virtual int test9(TestClassBase&) const __LL_EXCEPT__ = 0;
+	//virtual int test10(const TestClassBase&) const __LL_EXCEPT__ = 0;
+	//virtual int test11(TestClassBase&&) const __LL_EXCEPT__ = 0;
+	//virtual int test12() __LL_EXCEPT__ = 0;
+	//virtual int test13(TestClassBase&) __LL_EXCEPT__ = 0;
+	//virtual int test14(const TestClassBase&) __LL_EXCEPT__ = 0;
+	//virtual int test15(TestClassBase&&) __LL_EXCEPT__ = 0;
+	//
+	//
+	//static int test16() noexcept(false);
+	//static int test17() noexcept(true);
 };
 
 struct TestClass : public TestClassBase {

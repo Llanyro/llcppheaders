@@ -4,18 +4,18 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_MATH_HPP_) // Guard && version protector
-	#if LLANYLIB_MATH_MAYOR_ != 7 || LLANYLIB_MATH_MINOR_ < 3
+	#if LLANYLIB_MATH_MAYOR_ != 8 || LLANYLIB_MATH_MINOR_ < 0
 		#error "math.hpp version error!"
 	#endif // LLANYLIB_MATH_MAYOR_ || LLANYLIB_MATH_MINOR_
 
 #else !defined(LLANYLIB_MATH_HPP_)
 #define LLANYLIB_MATH_HPP_
-#define LLANYLIB_MATH_MAYOR_ 7
-#define LLANYLIB_MATH_MINOR_ 3
+#define LLANYLIB_MATH_MAYOR_ 8
+#define LLANYLIB_MATH_MINOR_ 0
 
 #include "traits.hpp"
 
@@ -26,32 +26,32 @@ namespace llcpp {
 namespace meta {
 namespace math {
 
-template<class T, class U = traits::template_types<T>::cinput>
-__LL_NODISCARD__ constexpr ll_bool_t is_odd(U value) __LL_EXCEPT__ {
+template<class U, class W = traits::cinput<U>>
+__LL_NODISCARD__ constexpr ll_bool_t is_odd(W value) __LL_EXCEPT__ {
 	return static_cast<ll_bool_t>(value & 1);
 }
-template<class T, class U = traits::template_types<T>::cinput>
-__LL_NODISCARD__ constexpr ll_bool_t is_even(U value) __LL_EXCEPT__ {
-	return !is_odd<T, U>(value);
+template<class U, class W = traits::cinput<U>>
+__LL_NODISCARD__ constexpr ll_bool_t is_even(W value) __LL_EXCEPT__ {
+	return !is_odd<U, W>(value);
 }
-template<class T, class U = traits::template_types<T>::cinput>
-__LL_NODISCARD__ constexpr U min(U value1, U value2) __LL_EXCEPT__ {
+template<class U, class W = traits::cinput<U>>
+__LL_NODISCARD__ constexpr U min(W value1, W value2) __LL_EXCEPT__ {
 	return (value1 > value2) ? value2 : value1;
 }
-template<class T, class U = traits::template_types<T>::cinput>
-__LL_NODISCARD__ constexpr U max(U value1, U value2) __LL_EXCEPT__ {
+template<class U, class W = traits::cinput<U>>
+__LL_NODISCARD__ constexpr U max(W value1, W value2) __LL_EXCEPT__ {
 	return (value1 > value2) ? value1 : value2;
 }
-template<class T, class U = traits::template_types<T>::cinput>
-__LL_NODISCARD__ constexpr U minMax(U minVal, U value, U maxVal) __LL_EXCEPT__ {
+template<class U, class W = traits::cinput<U>>
+__LL_NODISCARD__ constexpr U minMax(W minVal, W value, W maxVal) __LL_EXCEPT__ {
 	 return min(max(minVal, value), maxVal);
 }
-template<class T, class U = traits::template_types<T>::cinput>
-__LL_NODISCARD__ constexpr ll_bool_t isBetween(U minVal, U value, U maxVal) __LL_EXCEPT__ {
+template<class U, class W = traits::cinput<U>>
+__LL_NODISCARD__ constexpr ll_bool_t isBetween(W minVal, W value, W maxVal) __LL_EXCEPT__ {
 	return (minVal <= value && value <= maxVal);
 }
-template<class T, T minVal, T maxVal>
-__LL_NODISCARD__ constexpr ll_bool_t isBetween(const T val) __LL_EXCEPT__ {
+template<class U, U minVal, U maxVal, class W = traits::cinput<U>>
+__LL_NODISCARD__ constexpr ll_bool_t isBetween(U val) __LL_EXCEPT__ {
 	 return (minVal <= val && val <= maxVal);
 }
 

@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_RANDOM_HPP_) // Guard && version protector
-	#if LLANYLIB_RANDOM_MAYOR_ != 7 || LLANYLIB_RANDOM_MINOR_ < 3
+	#if LLANYLIB_RANDOM_MAYOR_ != 8 || LLANYLIB_RANDOM_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "Random.hpp version error!"
 		#else
@@ -18,12 +18,13 @@
 
 #else !defined(LLANYLIB_RANDOM_HPP_)
 #define LLANYLIB_RANDOM_HPP_
-#define LLANYLIB_RANDOM_MAYOR_ 7
-#define LLANYLIB_RANDOM_MINOR_ 3
+#define LLANYLIB_RANDOM_MAYOR_ 8
+#define LLANYLIB_RANDOM_MINOR_ 0
 
 #include "bits.hpp"
 #include "hash_pack.hpp"
-#include "StaticArray.hpp"
+
+#include <array>
 
 namespace llcpp {
 namespace meta {
@@ -31,7 +32,7 @@ namespace meta {
 class Random {
 	public:
 		using Divisor = bits::type_division_cluster;
-		using Pattern = StaticArray<ll_bool_t, 3, LL_FALSE>;
+		using Pattern = std::array<ll_bool_t, 3>;
 	protected:
 		hash::Hash64 seed;	// Seed for next hash
 		hash::Hash64FunctionPack generator;
@@ -53,18 +54,18 @@ class Random {
 	public:
 		#pragma region Constructors
 		#pragma region Base
-		constexpr Random(const hash::Hash64FunctionPack& generator) __LL_EXCEPT__ : seed(), generator(generator), pattern(LL_TRUE) {}
-		constexpr Random(hash::Hash64FunctionPack&& generator) __LL_EXCEPT__ : seed(), generator(std::move(generator)), pattern(LL_TRUE) {}
+		constexpr Random(const hash::Hash64FunctionPack& generator) __LL_EXCEPT__ : seed(), generator(generator), pattern() { pattern.fill(LL_TRUE); }
+		constexpr Random(hash::Hash64FunctionPack&& generator) __LL_EXCEPT__ : seed(), generator(std::move(generator)), pattern() { pattern.fill(LL_TRUE); }
 		constexpr ~Random() __LL_EXCEPT__ {}
 
 		constexpr Random(const hash::Hash64& seed, const hash::Hash64FunctionPack& generator) __LL_EXCEPT__
-			: seed(seed), generator(generator), pattern(LL_TRUE) {}
+			: seed(seed), generator(generator), pattern() { pattern.fill(LL_TRUE); }
 		constexpr Random(hash::Hash64&& seed, hash::Hash64FunctionPack&& generator) __LL_EXCEPT__
-			: seed(std::move(seed)), generator(std::move(generator)), pattern(LL_TRUE) {}
+			: seed(std::move(seed)), generator(std::move(generator)), pattern() { pattern.fill(LL_TRUE); }
 		constexpr Random(hash::Hash64&& seed, const hash::Hash64FunctionPack& generator) __LL_EXCEPT__
-			: seed(std::move(seed)), generator(generator), pattern(LL_TRUE) {}
+			: seed(std::move(seed)), generator(generator), pattern() { pattern.fill(LL_TRUE); }
 		constexpr Random(const hash::Hash64& seed, hash::Hash64FunctionPack&& generator) __LL_EXCEPT__
-			: seed(seed), generator(std::move(generator)), pattern(LL_TRUE) {}
+			: seed(seed), generator(std::move(generator)), pattern() { pattern.fill(LL_TRUE); }
 
 		#pragma endregion
 		#pragma region StrPair
@@ -201,13 +202,13 @@ class Random {
 		#pragma region Random
 		template<class T> __LL_NODISCARD__ constexpr  T rand() __LL_EXCEPT__ { return T(); }
 		template<> __LL_NODISCARD__ constexpr ui8 rand<ui8>() __LL_EXCEPT__ {
-			return this->rand<ui8>(this->pattern.begin());
+			return this->rand<ui8>(this->pattern.data());
 		}
 		template<> __LL_NODISCARD__ constexpr ui16 rand<ui16>() __LL_EXCEPT__ {
-			return this->rand<ui16>(this->pattern.begin());
+			return this->rand<ui16>(this->pattern.data());
 		}
 		template<> __LL_NODISCARD__ constexpr ui32 rand<ui32>() __LL_EXCEPT__ {
-			return this->rand<ui32>(this->pattern.begin());
+			return this->rand<ui32>(this->pattern.data());
 		}
 		template<> __LL_NODISCARD__ constexpr ui64 rand<ui64>() __LL_EXCEPT__ {
 			this->updateSeed();
@@ -217,13 +218,13 @@ class Random {
 			return ui128(this->rand<ui64>(), this->rand<ui64>());
 		}
 		template<> __LL_NODISCARD__ constexpr i8 rand<i8>() __LL_EXCEPT__ {
-			return this->rand<i8>(this->pattern.begin());
+			return this->rand<i8>(this->pattern.data());
 		}
 		template<> __LL_NODISCARD__ constexpr i16 rand<i16>() __LL_EXCEPT__ {
-			return this->rand<i16>(this->pattern.begin());
+			return this->rand<i16>(this->pattern.data());
 		}
 		template<> __LL_NODISCARD__ constexpr i32 rand<i32>() __LL_EXCEPT__ {
-			return this->rand<i32>(this->pattern.begin());
+			return this->rand<i32>(this->pattern.data());
 		}
 		template<> __LL_NODISCARD__ constexpr i64 rand<i64>() __LL_EXCEPT__ {
 			this->updateSeed();
@@ -233,10 +234,10 @@ class Random {
 			return i128(this->rand<i64>(), this->rand<i64>());
 		}
 		template<> __LL_NODISCARD__ constexpr f64 rand<f64>() __LL_EXCEPT__ {
-			return this->rand<f64>(this->pattern.begin());
+			return this->rand<f64>(this->pattern.data());
 		}
 		template<> __LL_NODISCARD__ constexpr f32 rand<f32>() __LL_EXCEPT__ {
-			return this->rand<f32>(this->pattern.begin());
+			return this->rand<f32>(this->pattern.data());
 		}
 
 		#pragma endregion

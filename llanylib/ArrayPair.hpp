@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_ARRAYPAIR_HPP_) // Guard && version protector
-	#if LLANYLIB_ARRAYPAIR_MAYOR_ != 7 || LLANYLIB_ARRAYPAIR_MINOR_ < 3
+	#if LLANYLIB_ARRAYPAIR_MAYOR_ != 8 || LLANYLIB_ARRAYPAIR_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "ArrayPair.hpp version error!"
 		#else
@@ -18,8 +18,8 @@
 
 #else !defined(LLANYLIB_ARRAYPAIR_HPP_)
 #define LLANYLIB_ARRAYPAIR_HPP_
-#define LLANYLIB_ARRAYPAIR_MAYOR_ 7
-#define LLANYLIB_ARRAYPAIR_MINOR_ 3
+#define LLANYLIB_ARRAYPAIR_MAYOR_ 8
+#define LLANYLIB_ARRAYPAIR_MINOR_ 0
 
 #include "traits.hpp"
 
@@ -32,11 +32,12 @@ class Array;
 template<class T>
 class ArrayPair {
 	public:
-		using type = traits::template_types<T>;
-		using __ArrayPair = traits::template_types<ArrayPair<T>>;
+		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
+		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+		using ArrayPair_t = ArrayPair;
 	protected:
-		type::cptr mem;
-		type::cptr mem_end;
+		const T* mem;
+		const T* mem_end;
 	#pragma region Functions
 	protected:
 		constexpr void simpleClear() __LL_EXCEPT__ {
@@ -46,22 +47,22 @@ class ArrayPair {
 	public:
 		#pragma region Constructors
 		constexpr ArrayPair() __LL_EXCEPT__ = delete;
-		constexpr ArrayPair(type::cptr mem, type::cptr mem_end) __LL_EXCEPT__ : mem(mem), mem_end(mem_end) {}
-		constexpr ArrayPair(type::cptr mem, const len_t len) __LL_EXCEPT__ : __ArrayPair::type(mem, mem + len) {}
+		constexpr ArrayPair(const T* mem, const T* mem_end) __LL_EXCEPT__ : mem(mem), mem_end(mem_end) {}
+		constexpr ArrayPair(const T* mem, const len_t len) __LL_EXCEPT__ : ArrayPair(mem, mem + len) {}
 		constexpr ~ArrayPair() __LL_EXCEPT__ {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr ArrayPair(__ArrayPair::cref other) __LL_EXCEPT__
+		constexpr ArrayPair(const ArrayPair& other) __LL_EXCEPT__
 			: mem(other.mem), mem_end(other.mem_end) {}
-		constexpr __ArrayPair::ref operator=(__ArrayPair::cref other) __LL_EXCEPT__ {
+		constexpr ArrayPair& operator=(const ArrayPair& other) __LL_EXCEPT__ {
 			this->mem = other.mem;
 			this->mem_end = other.mem_end;
 			return *this;
 		}
-		constexpr ArrayPair(__ArrayPair::move other) __LL_EXCEPT__
+		constexpr ArrayPair(ArrayPair&& other) __LL_EXCEPT__
 			: mem(other.mem), mem_end(other.mem_end){ other.simpleClear(); }
-		constexpr __ArrayPair::ref operator=(__ArrayPair::move other) __LL_EXCEPT__ {
+		constexpr ArrayPair& operator=(ArrayPair&& other) __LL_EXCEPT__ {
 			this->mem = other.mem;
 			this->mem_end = other.mem_end;
 			other.simpleClear();
@@ -69,41 +70,41 @@ class ArrayPair {
 		}
 
 		constexpr ArrayPair(const Array<T>& other) __LL_EXCEPT__;
-		constexpr __ArrayPair::ref operator=(const Array<T>& other) __LL_EXCEPT__;
+		constexpr ArrayPair& operator=(const Array<T>& other) __LL_EXCEPT__;
 		constexpr ArrayPair(Array<T>&& other) __LL_EXCEPT__;
-		constexpr __ArrayPair::ref operator=(Array<T>&& other) __LL_EXCEPT__;
+		constexpr ArrayPair& operator=(Array<T>&& other) __LL_EXCEPT__;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename __ArrayPair::cptr() const __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ constexpr operator typename __ArrayPair::ptr() __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ constexpr operator const ArrayPair*() const __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ constexpr operator ArrayPair*() __LL_EXCEPT__ { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
 		#pragma region Getters
-		__LL_NODISCARD__ constexpr typename type::cptr get(const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* get(const len_t pos) const __LL_EXCEPT__ {
 			return this->mem + pos;
 		}
-		__LL_NODISCARD__ constexpr typename __ArrayPair::type get(const len_t first, const len_t last) const __LL_EXCEPT__ {
-			return typename __ArrayPair::type(this->get(first), this->get(last));
+		__LL_NODISCARD__ constexpr ArrayPair get(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return ArrayPair(this->get(first), this->get(last));
 		}
-		__LL_NODISCARD__ constexpr typename type::cptr rget(const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* rget(const len_t pos) const __LL_EXCEPT__ {
 			return this->mem_end - pos;
 		}
-		__LL_NODISCARD__ constexpr typename __ArrayPair::type rget(const len_t first, const len_t last) const __LL_EXCEPT__ {
-			return typename __ArrayPair::type(this->rget(first), this->rget(last));
+		__LL_NODISCARD__ constexpr ArrayPair rget(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return ArrayPair(this->rget(first), this->rget(last));
 		}
-		__LL_NODISCARD__ constexpr typename __ArrayPair::type substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ArrayPair substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
 			return this->get(first, last);
 		}
-		__LL_NODISCARD__ constexpr typename type::cref operator[](const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T& operator[](const len_t pos) const __LL_EXCEPT__ {
 			return *this->get(pos);
 		}
-		__LL_NODISCARD__ constexpr typename type::cref operator^(const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T& operator^(const len_t pos) const __LL_EXCEPT__ {
 			return this->rget(pos);
 		}
 #if defined(LL_REAL_CXX23)
-		__LL_NODISCARD__ constexpr typename __ArrayPair::type operator[](const len_t first, const len_t last) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ArrayPair operator[](const len_t first, const len_t last) const __LL_EXCEPT__ {
 			return this->substr(first, last);
 		}
 
@@ -119,13 +120,13 @@ class ArrayPair {
 
 		#pragma endregion
 		#pragma region std
-		__LL_NODISCARD__ constexpr type::cptr data() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* data() const __LL_EXCEPT__ {
 			return this->begin();
 		}
-		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* begin() const __LL_EXCEPT__ {
 			return this->get(ZERO_UI64);
 		}
-		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* end() const __LL_EXCEPT__ {
 			return this->mem_end;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
@@ -147,12 +148,12 @@ class ArrayPair {
 template<class T>
 class Array {
 	public:
-		using type = traits::template_types<T>;
-		using __Array = traits::template_types<Array<T>>;
-		using __ArrayPair = traits::template_types<ArrayPair<T>>;
+		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
+		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+		using Array_t = Array;
 	protected:
-		type::ptr mem;
-		type::ptr mem_end;
+		T* mem;
+		T* mem_end;
 	#pragma region Functions
 	protected:
 		constexpr void simpleClear() __LL_EXCEPT__ {
@@ -162,91 +163,91 @@ class Array {
 	public:
 		#pragma region Constructors
 		constexpr Array() __LL_EXCEPT__ = delete;
-		constexpr Array(type::ptr mem, type::ptr mem_end) __LL_EXCEPT__ : mem(mem), mem_end(mem_end) {}
-		constexpr Array(type::ptr mem, const len_t len) __LL_EXCEPT__ : Array(mem, mem + len) {}
+		constexpr Array(T* mem, T* mem_end) __LL_EXCEPT__ : mem(mem), mem_end(mem_end) {}
+		constexpr Array(T* mem, const len_t len) __LL_EXCEPT__ : Array(mem, mem + len) {}
 		constexpr ~Array() __LL_EXCEPT__ {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr Array(__Array::cref other) __LL_EXCEPT__
+		constexpr Array(const Array& other) __LL_EXCEPT__
 			: Array(other.mem, other.mem_end) {}
-		constexpr __Array::ref operator=(__Array::cref other) __LL_EXCEPT__ {
+		constexpr Array& operator=(const Array& other) __LL_EXCEPT__ {
 			this->mem = other.mem;
 			this->mem_end = other.mem_end;
 			return *this;
 		}
-		constexpr Array(__Array::move other) __LL_EXCEPT__ : Array(other) {}
-		constexpr __Array::ref operator=(__Array::move other) __LL_EXCEPT__ {
-			__Array::operator=(other);
-			other.__Array::type::simpleClear();
+		constexpr Array(Array&& other) __LL_EXCEPT__ : Array(other) {}
+		constexpr Array& operator=(Array&& other) __LL_EXCEPT__ {
+			Array::operator=(other);
+			other.simpleClear();
 			return *this;
 		}
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename __Array::cptr() const __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ constexpr operator typename __Array::ptr() __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ constexpr operator typename __ArrayPair::type() const __LL_EXCEPT__ {
-			return typename __ArrayPair::type(*this);
+		__LL_NODISCARD__ constexpr operator const Array*() const __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ constexpr operator Array*() __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ constexpr operator ArrayPair<T>() const __LL_EXCEPT__ {
+			return ArrayPair<T>(*this);
 		}
-		__LL_NODISCARD__ constexpr typename __ArrayPair::type operator()() const __LL_EXCEPT__ {
-			return typename __ArrayPair::type(*this);
+		__LL_NODISCARD__ constexpr ArrayPair<T> operator()() const __LL_EXCEPT__ {
+			return ArrayPair<T>(*this);
 		}
 
 		#pragma endregion
 		#pragma region ClassFunctions
 		#pragma region Getters
-		__LL_NODISCARD__ constexpr typename type::ptr get(const len_t pos) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T* get(const len_t pos) __LL_EXCEPT__ {
 			return this->mem + pos;
 		}
-		__LL_NODISCARD__ constexpr typename type::cptr get(const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* get(const len_t pos) const __LL_EXCEPT__ {
 			return this->mem + pos;
 		}
-		__LL_NODISCARD__ constexpr typename __Array::type get(const len_t first, const len_t last) __LL_EXCEPT__ {
-			return typename __Array::type(this->get(first), this->get(last));
+		__LL_NODISCARD__ constexpr Array get(const len_t first, const len_t last) __LL_EXCEPT__ {
+			return Array(this->get(first), this->get(last));
 		}
-		__LL_NODISCARD__ constexpr typename __ArrayPair::type get(const len_t first, const len_t last) const __LL_EXCEPT__ {
-			return typename __ArrayPair::type(this->get(first), this->get(last));
+		__LL_NODISCARD__ constexpr ArrayPair<T> get(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return ArrayPair<T>(this->get(first), this->get(last));
 		}
 
-		__LL_NODISCARD__ constexpr typename type::ptr rget(const len_t pos) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T* rget(const len_t pos) __LL_EXCEPT__ {
 			return this->mem_end - pos;
 		}
-		__LL_NODISCARD__ constexpr typename type::cptr rget(const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* rget(const len_t pos) const __LL_EXCEPT__ {
 			return this->mem_end - pos;
 		}
-		__LL_NODISCARD__ constexpr typename __Array::type rget(const len_t first, const len_t last) __LL_EXCEPT__ {
-			return typename __Array::type(this->rget(first), this->rget(last));
+		__LL_NODISCARD__ constexpr Array rget(const len_t first, const len_t last) __LL_EXCEPT__ {
+			return Array(this->rget(first), this->rget(last));
 		}
-		__LL_NODISCARD__ constexpr typename __ArrayPair::type rget(const len_t first, const len_t last) const __LL_EXCEPT__ {
-			return typename __ArrayPair::type(this->rget(first), this->rget(last));
-		}
-
-		__LL_NODISCARD__ constexpr typename __Array::type substr(const len_t first, const len_t last) __LL_EXCEPT__ {
-			return this->get(first, last);
-		}
-		__LL_NODISCARD__ constexpr typename __ArrayPair::type substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
-			return this->get(first, last);
+		__LL_NODISCARD__ constexpr ArrayPair<T> rget(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return ArrayPair<T>(this->rget(first), this->rget(last));
 		}
 
-		__LL_NODISCARD__ constexpr typename type::ref operator[](const len_t pos) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr Array substr(const len_t first, const len_t last) __LL_EXCEPT__ {
+			return this->get(first, last);
+		}
+		__LL_NODISCARD__ constexpr ArrayPair<T> substr(const len_t first, const len_t last) const __LL_EXCEPT__ {
+			return this->get(first, last);
+		}
+
+		__LL_NODISCARD__ constexpr T& operator[](const len_t pos) __LL_EXCEPT__ {
 			return *this->get(pos);
 		}
-		__LL_NODISCARD__ constexpr typename type::cref operator[](const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T& operator[](const len_t pos) const __LL_EXCEPT__ {
 			return *this->get(pos);
 		}
-		__LL_NODISCARD__ constexpr typename type::ref operator^(const len_t pos) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T& operator^(const len_t pos) __LL_EXCEPT__ {
 			return *this->rget(pos);
 		}
-		__LL_NODISCARD__ constexpr typename type::cref operator^(const len_t pos) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T& operator^(const len_t pos) const __LL_EXCEPT__ {
 			return *this->rget(pos);
 		}
 
 #if defined(LL_REAL_CXX23)
-		__LL_NODISCARD__ constexpr typename __Array::type operator[](const len_t first, const len_t last) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr Array operator[](const len_t first, const len_t last) __LL_EXCEPT__ {
 			return this->substr(first, last);
 		}
-		__LL_NODISCARD__ constexpr typename __ArrayPair::type operator[](const len_t first, const len_t last) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ArrayPair operator[](const len_t first, const len_t last) const __LL_EXCEPT__ {
 			return this->substr(first, last);
 		}
 
@@ -262,28 +263,28 @@ class Array {
 
 		#pragma endregion
 		#pragma region std
-		__LL_NODISCARD__ constexpr type::ptr data() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T* data() __LL_EXCEPT__ {
 			return this->begin();
 		}
-		__LL_NODISCARD__ constexpr type::cptr data() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* data() const __LL_EXCEPT__ {
 			return this->begin();
 		}
-		__LL_NODISCARD__ constexpr type::ptr begin() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T* begin() __LL_EXCEPT__ {
 			return this->get(ZERO_UI64);
 		}
-		__LL_NODISCARD__ constexpr type::cptr begin() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* begin() const __LL_EXCEPT__ {
 			return this->get(ZERO_UI64);
 		}
-		__LL_NODISCARD__ constexpr type::ptr rbegin() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T* rbegin() __LL_EXCEPT__ {
 			return this->mem_end - 1;
 		}
-		__LL_NODISCARD__ constexpr type::cptr rbegin() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* rbegin() const __LL_EXCEPT__ {
 			return this->mem_end - 1;
 		}
-		__LL_NODISCARD__ constexpr type::ptr end() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T* end() __LL_EXCEPT__ {
 			return this->mem_end;
 		}
-		__LL_NODISCARD__ constexpr type::cptr end() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const T* end() const __LL_EXCEPT__ {
 			return this->mem_end;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const __LL_EXCEPT__ {
@@ -307,7 +308,7 @@ template<class T>
 __LL_INLINE__ constexpr ArrayPair<T>::ArrayPair(const Array<T>& other) __LL_EXCEPT__
 	: mem(other.begin()), mem_end(other.end()) {}
 template<class T>
-__LL_INLINE__  constexpr ArrayPair<T>::__ArrayPair::ref ArrayPair<T>::operator=(const Array<T>& other) __LL_EXCEPT__ {
+__LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(const Array<T>& other) __LL_EXCEPT__ {
 	this->mem = other.mem;
 	this->mem_end = other.mem_end;
 	return *this;
@@ -316,7 +317,7 @@ template<class T>
 __LL_INLINE__ constexpr ArrayPair<T>::ArrayPair(Array<T>&& other) __LL_EXCEPT__
 	: mem(other.mem), mem_end(other.mem_end){ other.simpleClear(); }
 template<class T>
-__LL_INLINE__ constexpr ArrayPair<T>::__ArrayPair::ref ArrayPair<T>::operator=(Array<T>&& other) __LL_EXCEPT__ {
+__LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(Array<T>&& other) __LL_EXCEPT__ {
 	this->mem = other.mem;
 	this->mem_end = other.mem_end;
 	other.simpleClear();

@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_STANDARDHASH_HPP_) // Guard && version protector
-	#if LLANYLIB_STANDARDHASH_MAYOR_ != 7 || LLANYLIB_STANDARDHASH_MINOR_ < 3
+	#if LLANYLIB_STANDARDHASH_MAYOR_ != 8 || LLANYLIB_STANDARDHASH_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "StandardHash.hpp version error!"
 		#else
@@ -18,8 +18,8 @@
 
 #else !defined(LLANYLIB_STANDARDHASH_HPP_)
 #define LLANYLIB_STANDARDHASH_HPP_
-#define LLANYLIB_STANDARDHASH_MAYOR_ 7
-#define LLANYLIB_STANDARDHASH_MINOR_ 3
+#define LLANYLIB_STANDARDHASH_MAYOR_ 8
+#define LLANYLIB_STANDARDHASH_MINOR_ 0
 
 #include "llanyhash.hpp"
 #include "cityhash.hpp"

@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_HASHTOOLS_HPP_) // Guard && version protector
-	#if LLANYLIB_HASHTOOLS_MAYOR_ != 7 || LLANYLIB_HASHTOOLS_MINOR_ < 3
+	#if LLANYLIB_HASHTOOLS_MAYOR_ != 8 || LLANYLIB_HASHTOOLS_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "hash_tools.hpp version error!"
 		#else
@@ -18,8 +18,8 @@
 
 #else !defined(LLANYLIB_HASHTOOLS_HPP_)
 #define LLANYLIB_HASHTOOLS_HPP_
-#define LLANYLIB_HASHTOOLS_MAYOR_ 7
-#define LLANYLIB_HASHTOOLS_MINOR_ 3
+#define LLANYLIB_HASHTOOLS_MAYOR_ 8
+#define LLANYLIB_HASHTOOLS_MINOR_ 0
 
 #include "hash_pack.hpp"
 #include "reflection.hpp"
@@ -128,7 +128,8 @@ class HashTool {
 				
 				return this->hashArray<N>(hashes);
 			}
-			else if constexpr (traits::has_type_operator_v<T, hash::OptionalHash64>) {
+			//else if constexpr (traits::has_type_operator_v<T, hash::OptionalHash64>) {
+			else if constexpr (traits::has_type_operator_const_v<T, hash::OptionalHash64> || traits::has_type_operator_const_except_v<T, hash::OptionalHash64>) {
 				auto h = (arr++)->operator hash::OptionalHash64();
 				if (!h.has_value()) return hash::INVALID_HASH64;
 

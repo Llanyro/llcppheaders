@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_LLANYHASH_HPP_) // Guard && version protector
-	#if LLANYLIB_LLANYHASH_MAYOR_ != 7 || LLANYLIB_LLANYHASH_MINOR_ < 3
+	#if LLANYLIB_LLANYHASH_MAYOR_ != 8 || LLANYLIB_LLANYHASH_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "llanyhash.hpp version error!"
 		#else
@@ -18,12 +18,12 @@
 
 #else !defined(LLANYLIB_LLANYHASH_HPP_)
 #define LLANYLIB_LLANYHASH_HPP_
-#define LLANYLIB_LLANYHASH_MAYOR_ 7
-#define LLANYLIB_LLANYHASH_MINOR_ 3
+#define LLANYLIB_LLANYHASH_MAYOR_ 8
+#define LLANYLIB_LLANYHASH_MINOR_ 0
 
 #include "bits.hpp"
 #include "hash_pack.hpp"
-#include "ArrayView.hpp"
+#include "ArrayPair.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -126,8 +126,8 @@ struct LlanyHash {
 		}
 		// Only admits hash::basic_type_hash::is_convertible_v<>
 		// Returns hash::INVALID_HASH64 if invalid type or hash error
-		template<class U, class W = traits::template_types<U>>
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(typename W::cinput value) __LL_EXCEPT__ {
+		template<class U, class W = traits::cinput<U>>
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(W value) __LL_EXCEPT__ {
 			return hash::basic_type_hash::hashValue<U, W>(value, hash::LlanyHash::llanyHash64);
 		}
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const hash::Hash64& hash) __LL_EXCEPT__ {

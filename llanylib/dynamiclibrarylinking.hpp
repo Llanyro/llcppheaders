@@ -4,20 +4,20 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_DYNAMICLIBRARYLINKING_HPP_) // Guard && version protector
-	#if LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ != 7 || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ < 3
+	#if LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ != 8 || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ < 0
 		#error "dynamiclibrarylinking.hpp version error!"
 	#endif // LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_
 
 #else !defined(LLANYLIB_DYNAMICLIBRARYLINKING_HPP_)
 #define LLANYLIB_DYNAMICLIBRARYLINKING_HPP_
-#define LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ 7
-#define LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ 3
+#define LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ 8
+#define LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ 0
 
-#include "ArrayView.hpp"
+#include "types.hpp"
 
 #if defined(WINDOWS_SYSTEM)
 	#include <Windows.h>

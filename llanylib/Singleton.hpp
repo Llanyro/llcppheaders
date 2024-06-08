@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_SINGLETON_HPP_) // Guard && version protector
-	#if LLANYLIB_SINGLETON_MAYOR_ != 7 || LLANYLIB_SINGLETON_MINOR_ < 3
+	#if LLANYLIB_SINGLETON_MAYOR_ != 8 || LLANYLIB_SINGLETON_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "Singleton.hpp version error!"
 		#else
@@ -18,8 +18,8 @@
 
 #else !defined(LLANYLIB_SINGLETON_HPP_)
 #define LLANYLIB_SINGLETON_HPP_
-#define LLANYLIB_SINGLETON_MAYOR_ 7
-#define LLANYLIB_SINGLETON_MINOR_ 3
+#define LLANYLIB_SINGLETON_MAYOR_ 8
+#define LLANYLIB_SINGLETON_MINOR_ 0
 
 #include "traits.hpp"
 
@@ -47,25 +47,22 @@ namespace meta {
 
 template <class T>
 class  Singleton {
-	public:
-		using type = traits::template_types<T>;
-		using __Singleton = traits::template_types<Singleton<T>>;
 	protected:
 		constexpr Singleton() __LL_EXCEPT__ {}
 	public:
 		constexpr ~Singleton() __LL_EXCEPT__ {}
 
-		Singleton(__Singleton::cref) __LL_EXCEPT__ = delete;
-		__Singleton::ref operator=(__Singleton::cref) __LL_EXCEPT__ = delete;
-		Singleton(__Singleton::move) __LL_EXCEPT__ = delete;
-		__Singleton::ref operator=(__Singleton::move) __LL_EXCEPT__ = delete;
+		Singleton(const Singleton&) __LL_EXCEPT__ = delete;
+		Singleton& operator=(const Singleton&) __LL_EXCEPT__ = delete;
+		Singleton(Singleton&&) __LL_EXCEPT__ = delete;
+		Singleton& operator=(Singleton&&) __LL_EXCEPT__ = delete;
 
-		constexpr operator typename __Singleton::cref() const __LL_EXCEPT__ = delete;
-		constexpr operator typename __Singleton::ref() __LL_EXCEPT__ = delete;
+		constexpr operator const Singleton*() const __LL_EXCEPT__ = delete;
+		constexpr operator Singleton* () __LL_EXCEPT__ = delete;
 
 		// [TOCHECK]
 		template <class... Args>
-		__LL_NODISCARD__ static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {
+		__LL_NODISCARD__ static T& getInstance(Args&&... args) noexcept(LL_FALSE) {
 			if constexpr (traits::parameter_pack_operations<Args...>::empty) {
 				static T instance;
 				return instance;

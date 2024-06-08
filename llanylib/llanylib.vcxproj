@@ -22,60 +22,41 @@
     <ClInclude Include="..\llanylib.hpp" />
     <ClInclude Include="..\llanylibsimple.hpp" />
     <ClInclude Include="algorithm.hpp" />
-    <ClInclude Include="hash_algorithm.hpp" />
-    <ClInclude Include="llanyhash.hpp" />
-    <ClInclude Include="StandardHash.hpp" />
-    <ClInclude Include="StandardRandom.hpp" />
-    <ClInclude Include="StandardTypeid.hpp" />
-    <ClInclude Include="StaticArray.hpp" />
-    <ClInclude Include="ArrayView.hpp" />
+    <ClInclude Include="ArrayPair.hpp" />
     <ClInclude Include="bits.hpp" />
-    <ClInclude Include="Buffer.hpp" />
     <ClInclude Include="cityhash.hpp" />
     <ClInclude Include="common.hpp" />
     <ClInclude Include="Countable.hpp" />
     <ClInclude Include="definitions.hpp" />
-    <ClInclude Include="DoubleNode.hpp" />
     <ClInclude Include="dynamiclibrarylinking.hpp" />
-    <ClInclude Include="examples\algorithmExample.hpp" />
-    <ClInclude Include="examples\ArrayViewExample.hpp" />
     <ClInclude Include="examples\bitsExample.hpp" />
     <ClInclude Include="examples\mathExample.hpp" />
     <ClInclude Include="examples\RandomExample.hpp" />
-    <ClInclude Include="examples\StringViewExample.hpp" />
     <ClInclude Include="examples\traitsExample.hpp" />
     <ClInclude Include="examples\traits_test_class.hpp" />
     <ClInclude Include="expresions\ascii.hpp" />
     <ClInclude Include="expresions\color.hpp" />
     <ClInclude Include="expresions\math.hpp" />
     <ClInclude Include="expresions\string.hpp" />
+    <ClInclude Include="hash_algorithm.hpp" />
     <ClInclude Include="hash_pack.hpp" />
-    <ClInclude Include="hash_types.hpp" />
     <ClInclude Include="hash_tools.hpp" />
-    <ClInclude Include="LinkedList.hpp" />
-    <ClInclude Include="LoopList.hpp" />
+    <ClInclude Include="hash_types.hpp" />
+    <ClInclude Include="llanyhash.hpp" />
     <ClInclude Include="math.hpp" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="os.hpp" />
     <ClInclude Include="ostypes.hpp" />
-    <ClInclude Include="RAIIBase.hpp" />
-    <ClInclude Include="RAIIWrapper.hpp" />
     <ClInclude Include="Random.hpp" />
     <ClInclude Include="reflection.hpp" />
     <ClInclude Include="Singleton.hpp" />
-    <ClInclude Include="string.hpp" />
+    <ClInclude Include="StandardHash.hpp" />
+    <ClInclude Include="StandardRandom.hpp" />
+    <ClInclude Include="StandardTypeid.hpp" />
     <ClInclude Include="traits.hpp" />
     <ClInclude Include="Typeid.hpp" />
     <ClInclude Include="types.hpp" />
-    <ClInclude Include="ArrayPair.hpp" />
     <ClInclude Include="utility.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="examples\main.cpp" />
-    <ClCompile Include="examples\StringViewExample.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

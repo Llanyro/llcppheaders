@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_NODE_HPP_) // Guard && version protector
-	#if LLANYLIB_NODE_MAYOR_ != 7 || LLANYLIB_NODE_MINOR_ < 3
+	#if LLANYLIB_NODE_MAYOR_ != 8 || LLANYLIB_NODE_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "Node.hpp version error!"
 		#else
@@ -18,10 +18,10 @@
 
 #else !defined(LLANYLIB_NODE_HPP_)
 #define LLANYLIB_NODE_HPP_
-#define LLANYLIB_NODE_MAYOR_ 7
-#define LLANYLIB_NODE_MINOR_ 3
+#define LLANYLIB_NODE_MAYOR_ 8
+#define LLANYLIB_NODE_MINOR_ 0
 
-#include "traits.hpp"
+//#include "traits.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -35,55 +35,50 @@ class NodeNext {
 		//static_assert(std::is_base_of_v<NodeNext<NodeType>, NodeType>, 
 		//	"NodeType from NodeNext<> must be a base of NodeNext<>");
 	#pragma endregion
-	#pragma region ClassTypes
-	public:
-		using __NodeType = traits::template_types<NodeType>;
-		using __NodeNext = traits::template_types<NodeNext<NodeType>>;
-	#pragma endregion
 	#pragma region Attributes
 	private:
-		__NodeType::ptr next;
+		NodeType* next;
 	#pragma endregion
 	#pragma region Functions
 	public:
 		#pragma region Contructors
 		constexpr NodeNext() __LL_EXCEPT__ : NodeNext(LL_NULLPTR) {}
-		constexpr NodeNext(__NodeType::ptr next) __LL_EXCEPT__ : next(next) {}
+		constexpr NodeNext(NodeType* next) __LL_EXCEPT__ : next(next) {}
 		constexpr ~NodeNext() __LL_EXCEPT__ {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		NodeNext(__NodeNext::cref) __LL_EXCEPT__ = delete;
-		__NodeNext::ref operator=(__NodeNext::cref) __LL_EXCEPT__ = delete;
-		NodeNext(__NodeNext::move) __LL_EXCEPT__ = delete;
-		__NodeNext::ref operator=(__NodeNext::move) __LL_EXCEPT__ = delete;
+		NodeNext(const NodeNext&) __LL_EXCEPT__ = delete;
+		NodeNext& operator=(const NodeNext&) __LL_EXCEPT__ = delete;
+		NodeNext(NodeNext&&) __LL_EXCEPT__ = delete;
+		NodeNext& operator=(NodeNext&&) __LL_EXCEPT__ = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ operator __NodeNext::cptr() const __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ operator __NodeNext::ptr() __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ operator const NodeNext*() const __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ operator NodeNext*() __LL_EXCEPT__ { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr __NodeType::cptr getNext() const __LL_EXCEPT__ { return this->next; }
-		__LL_NODISCARD__ constexpr __NodeType::ptr getNext() __LL_EXCEPT__ { return this->next; }
-		constexpr void setNext(__NodeType::ptr next) __LL_EXCEPT__ { this->next = next; }
+		__LL_NODISCARD__ constexpr const NodeType* getNext() const __LL_EXCEPT__ { return this->next; }
+		__LL_NODISCARD__ constexpr NodeType* getNext() __LL_EXCEPT__ { return this->next; }
+		constexpr void setNext(NodeType* next) __LL_EXCEPT__ { this->next = next; }
 		//constexpr void clear() __LL_EXCEPT__ {}
 
-		__LL_NODISCARD__ constexpr __NodeType::ptr getNextNoThis() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr NodeType* getNextNoThis() __LL_EXCEPT__ {
 			return (this->getNext() != this) ? this->getNext() : LL_NULLPTR;
 		}
-		__LL_NODISCARD__ constexpr __NodeType::cptr getNextNoThis() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const NodeType* getNextNoThis() const __LL_EXCEPT__ {
 			return (this->getNext() != this) ? this->getNext() : LL_NULLPTR;
 		}
-		__LL_NODISCARD__ constexpr __NodeType::ptr getNext(len_t moves) __LL_EXCEPT__ {
-			typename __NodeType::ptr result = this;
+		__LL_NODISCARD__ constexpr NodeType* getNext(len_t moves) __LL_EXCEPT__ {
+			NodeType* result = this;
 			for (; moves > 0; --moves)
 				result = result->getNext();
 			return result;
 		}
-		__LL_NODISCARD__ constexpr __NodeType::cptr getNext(len_t moves) const __LL_EXCEPT__ {
-			typename __NodeType::cptr result = this;
+		__LL_NODISCARD__ constexpr const NodeType* getNext(len_t moves) const __LL_EXCEPT__ {
+			const NodeType* result = this;
 			for (; moves > 0; --moves)
 				result = result->getNext();
 			return result;
@@ -100,55 +95,50 @@ class NodePrev {
 		//static_assert(std::is_base_of_v<NodePrev<NodeType>, NodeType>,
 		//	"NodeType from NodePrev<> must be a base of NodePrev<>");
 	#pragma endregion
-	#pragma region ClassTypes
-	public:
-		using __NodeType = traits::template_types<NodeType>;
-		using __NodePrev = traits::template_types<NodePrev<NodeType>>;
-	#pragma endregion
 	#pragma region Attributes
 	private:
-		__NodeType::ptr prev;
+		NodeType* prev;
 	#pragma endregion
 	#pragma region Functions
 	public:
 		#pragma region Contructors
 		constexpr NodePrev() __LL_EXCEPT__ : NodePrev(LL_NULLPTR) {}
-		constexpr NodePrev(__NodeType::ptr prev) __LL_EXCEPT__ : prev(prev) {}
+		constexpr NodePrev(NodeType* prev) __LL_EXCEPT__ : prev(prev) {}
 		constexpr ~NodePrev() __LL_EXCEPT__ {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		NodePrev(__NodePrev::cref) __LL_EXCEPT__ = delete;
-		__NodePrev::ref operator=(__NodePrev::cref) __LL_EXCEPT__ = delete;
-		NodePrev(__NodePrev::move) __LL_EXCEPT__ = delete;
-		__NodePrev::ref operator=(__NodePrev::move) __LL_EXCEPT__ = delete;
+		NodePrev(const NodePrev&) __LL_EXCEPT__ = delete;
+		NodePrev& operator=(const NodePrev&) __LL_EXCEPT__ = delete;
+		NodePrev(NodePrev&&) __LL_EXCEPT__ = delete;
+		NodePrev& operator=(NodePrev&&) __LL_EXCEPT__ = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ operator __NodePrev::cptr() const __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ operator __NodePrev::ptr() __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ operator const NodePrev*() const __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ operator NodePrev*() __LL_EXCEPT__ { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr __NodeType::cptr getPrev() const __LL_EXCEPT__ { return this->prev; }
-		__LL_NODISCARD__ constexpr __NodeType::ptr getPrev() __LL_EXCEPT__ { return this->prev; }
-		constexpr void setPrev(__NodeType::ptr prev) __LL_EXCEPT__ { this->prev = prev; }
+		__LL_NODISCARD__ constexpr const NodeType* getPrev() const __LL_EXCEPT__ { return this->prev; }
+		__LL_NODISCARD__ constexpr NodeType* getPrev() __LL_EXCEPT__ { return this->prev; }
+		constexpr void setPrev(NodeType* prev) __LL_EXCEPT__ { this->prev = prev; }
 		//constexpr void clear() __LL_EXCEPT__ {}
 
-		__LL_NODISCARD__ constexpr __NodeType::ptr getPrevNoThis() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr NodeType* getPrevNoThis() __LL_EXCEPT__ {
 			return (this->getPrev() != this) ? this->getPrev() : LL_NULLPTR;
 		}
-		__LL_NODISCARD__ constexpr __NodeType::cptr getPrevNoThis() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const NodeType* getPrevNoThis() const __LL_EXCEPT__ {
 			return (this->getPrev() != this) ? this->getPrev() : LL_NULLPTR;
 		}
-		__LL_NODISCARD__ constexpr __NodeType::ptr getPrev(len_t moves) __LL_EXCEPT__ {
-			typename __NodeType::ptr result = this;
+		__LL_NODISCARD__ constexpr NodeType* getPrev(len_t moves) __LL_EXCEPT__ {
+			NodeType* result = this;
 			for (; moves > 0; --moves)
 				result = result->getPrev();
 			return result;
 		}
-		__LL_NODISCARD__ constexpr __NodeType::cptr getPrev(len_t moves) const __LL_EXCEPT__ {
-			typename __NodeType::cptr result = this;
+		__LL_NODISCARD__ constexpr const NodeType* getPrev(len_t moves) const __LL_EXCEPT__ {
+			const NodeType* result = this;
 			for (; moves > 0; --moves)
 				result = result->getPrev();
 			return result;

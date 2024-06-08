@@ -4,13 +4,13 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #ifndef LLANYLIB_EXPRESIONS_MATH_HPP_
 #define LLANYLIB_EXPRESIONS_MATH_HPP_
 
-#include "../traits.hpp"
+//#include "../traits.hpp"
 //#include "../magic_enum_extra.hpp"
 
 namespace llcpp {

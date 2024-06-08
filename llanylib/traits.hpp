@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_TRAITS_HPP_) // Guard && version protector
-	#if LLANYLIB_TRAITS_MAYOR_ != 7 || LLANYLIB_TRAITS_MINOR_ < 3
+	#if LLANYLIB_TRAITS_MAYOR_ != 8 || LLANYLIB_TRAITS_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "traits.hpp version error!"
 		#else
@@ -18,8 +18,8 @@
 
 #else !defined(LLANYLIB_TRAITS_HPP_)
 #define LLANYLIB_TRAITS_HPP_
-#define LLANYLIB_TRAITS_MAYOR_ 7
-#define LLANYLIB_TRAITS_MINOR_ 3
+#define LLANYLIB_TRAITS_MAYOR_ 8
+#define LLANYLIB_TRAITS_MINOR_ 0
 
 #define LL_TRAITS_TEST
 
@@ -35,8 +35,23 @@ namespace llcpp {
 namespace meta {
 namespace traits {
 
-// Easy enabler for template functions
-#define ENABLE_FUNCTION_PARAM(condition, ret) class __ret__ = ret, typename = std::enable_if_t<__is_void_type__, __ret__>
+#pragma region Types
+template<class T>
+struct type_container { using value = T; };
+
+template<class T, class U, T VALUE>
+struct integral_constant_container {
+	using integral_constant = std::integral_constant<T, VALUE>;
+	using container = type_container<U>;
+};
+
+template<ll_bool_t VALUE, class U>
+using bool_constant_container = integral_constant_container<ll_bool_t, U, VALUE>;
+
+template<class U>
+using true_type  = bool_constant_container<LL_TRUE, U>;
+template<class U>
+using false_type = bool_constant_container<LL_FALSE, U>;
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::is_arithmetic_v<T>;
@@ -49,20 +64,16 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_bigger_type_v = std::_Is_any_o
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::remove_cv_t<T>, ll_char_t, ll_wchar_t>;
 
-// Returns a type with reference if object is not basic type
-// Is only used when type parameter will be const
-template<class T>
-using get_object_reference_t = std::conditional_t<traits::is_basic_type_v<T>, T, std::add_lvalue_reference_t<T>>;
-template<class T>
-using get_const_object_reference_t = std::conditional_t<traits::is_basic_type_v<T>, const T, const std::add_lvalue_reference_t<T>>;
-
-template<class T>
-struct type_container { using value = T; };
-
 template<class>
 __LL_VAR_INLINE__ constexpr len_t array_size = ZERO_UI64;
 template<class T, len_t N>
 __LL_VAR_INLINE__ constexpr len_t array_size<T[N]> = N;
+
+template<class T>
+using input = std::conditional_t<traits::is_basic_type_v<T> || std::is_pointer_v<T>, T, T&>;
+template<class T>
+using cinput = std::conditional_t<traits::is_basic_type_v<T> || std::is_pointer_v<T>, const T, const T&>;
+
 
 template<class T>
 struct type_conversor {
@@ -227,7 +238,7 @@ struct type_conversor {
 	using array_to_type_t = array_to_type::value;
 };
 
-#pragma region Other
+#pragma endregion
 #pragma region CharConditional
 template<class T, class TypeChar, class TypeWChar, class ExtraType = void>
 struct get_by_char_type {
@@ -242,116 +253,413 @@ template<class T, class TypeChar, class TypeWChar, class ExtraType = void>
 using get_by_char_type_t = get_by_char_type<T, TypeChar, TypeWChar, ExtraType>::value;
 
 #pragma endregion
-#pragma endregion
-#pragma region FunctionCheckers
-#pragma region DefinesAndStructs
+#pragma region FunctionalReflector
+
+template<class Func>
+struct member_function_traits {
+	using return_type = void;
+	using instance_type = EmptyStruct;
+	static constexpr len_t argument_count = ZERO_UI64;
+};
+template<class Return, class Object, class... Args>
+struct member_function_traits<Return(Object::*)(Args...)> {
+	using return_type = Return;
+	using instance_type = Object;
+	static constexpr len_t argument_count = sizeof...(Args);
+};
+template<class Return, class Object, class... Args>
+struct member_function_traits<Return(Object::*)(Args...) __LL_EXCEPT__> {
+	using return_type = Return;
+	using instance_type = Object;
+	static constexpr len_t argument_count = sizeof...(Args);
+};
+//template<class Return, class Object, class... Args>
+//struct member_function_traits<Return(Object::*)(Args...) const> {
+//	using return_type = Return;
+//	using instance_type = Object;
+//	static constexpr len_t argument_count = sizeof...(Args);
+//};
+//template<class Return, class Object, class... Args>
+//struct member_function_traits<Return(Object::*)(Args...) const __LL_EXCEPT__> {
+//	using return_type = Return;
+//	using instance_type = Object;
+//	static constexpr len_t argument_count = sizeof...(Args);
+//};
+
+
+
+namespace internal_has_functional {
+
+enum class HasFunctionResult { True, False, Unknown };
+
+template<HasFunctionResult _Val>
+struct operation_result { static constexpr HasFunctionResult value = _Val; };
+using operation_true = operation_result<HasFunctionResult::True>;
+using operation_false = operation_result<HasFunctionResult::False>;
+using operation_unknown = operation_result<HasFunctionResult::Unknown>;
+
+template<class T = operation_unknown, class U = void>
+struct operation_container {
+	using result = T;
+	using value = U;
+};
+
+template<class U = void>
+using operation_container_true = operation_container<operation_true, U>;
+template<class U = void>
+using operation_container_false = operation_container<operation_false, U>;
+using operation_container_unknown = operation_container<operation_unknown>;
+
+using op_unknown = operation_container_unknown;
+
+template<
+	class _Tbase = operation_container_unknown,
+	class _Tconst = operation_container_unknown,
+	class _Tstatic = operation_container_unknown,
+	class _Texcept = operation_container_unknown,
+	class _Tbasic_type = operation_container_unknown
+>
+struct has_function_results {
+	using result_base = _Tbase;
+	using result_const = _Tconst;
+	using result_static = _Tstatic;
+	using result_except = _Texcept;
+	using result_basic_type = _Tbasic_type;
+};
+
+template<class _Tbasic_type = operation_container_unknown>
+using has_function_results_basic_type = has_function_results<op_unknown, op_unknown, op_unknown, op_unknown, _Tbasic_type>;
+
+} // namespace internal_has_functional
+
 template <class T, class OperatorType>
 struct has_type_operator {
-	template <class U>
-	static constexpr auto test(U* p) -> decltype(p->operator OperatorType(), std::true_type{});
-	template <class U>
-	static constexpr auto test(const U* p) -> decltype(p->operator OperatorType(), std::true_type{});
-	template <class>
-	static constexpr auto test(...) ->
-		std::conditional_t<
-			meta::traits::is_basic_type_v<T>,
-			std::bool_constant<std::is_same_v<T, OperatorType>>,
-			std::false_type
+	using _has_type_operator = has_type_operator;
+	using HasFunctionResult = internal_has_functional::HasFunctionResult;
+	using op_unknown = internal_has_functional::op_unknown;
+
+	using type_default_result =
+		internal_has_functional::has_function_results_basic_type<
+			std::conditional_t<
+				traits::is_basic_type_v<T> && std::is_same_v<T, OperatorType>,
+				internal_has_functional::operation_container_true<T>,
+				internal_has_functional::operation_container_false<T>
+			>
 		>;
-	using val = decltype(has_type_operator<T, OperatorType>::test<T>(nullptr));
+
+	template <class U>
+	using FunctionSignature = OperatorType(U::*)();
+	template <class U>
+	using FunctionSignatureExcept = OperatorType(U::*)() __LL_EXCEPT__;
+
+	template <class U>
+	static constexpr auto test_noconst(U* p) __LL_EXCEPT__ {
+		using FunctionType = decltype(&U::operator OperatorType);
+		using BaseClassType = member_function_traits<FunctionType>::instance_type;
+
+		using operation_const = internal_has_functional::operation_container_false<FunctionType>;
+		using operation_static = internal_has_functional::operation_container_false<FunctionType>;
+
+		using operation_base = std::conditional_t<
+			std::is_same_v<FunctionType, FunctionSignature<BaseClassType>> || std::is_same_v<FunctionType, FunctionSignatureExcept<BaseClassType>>,
+			internal_has_functional::operation_container_true<FunctionType>,
+			internal_has_functional::operation_container_false<FunctionType>
+		>;
+		using operation_except = std::conditional_t<
+			std::is_same_v<FunctionType, FunctionSignatureExcept<BaseClassType>>,
+			internal_has_functional::operation_container_true<FunctionType>,
+			internal_has_functional::operation_container_false<FunctionType>
+		>;
+		return internal_has_functional::has_function_results<operation_base, operation_const, operation_static, operation_except, op_unknown>{};
+	}
+	template <class>
+	static constexpr auto test_noconst(...) __LL_EXCEPT__-> type_default_result;
+
+	template <class U>
+	using FunctionSignatureConst = OperatorType(U::*)() const;
+	template <class U>
+	using FunctionSignatureExceptConst = OperatorType(U::*)() const __LL_EXCEPT__;
+
+	template <class U>
+	static constexpr auto test_const(const U* p) __LL_EXCEPT__ {
+		using FunctionType = decltype(&U::operator OperatorType);
+		using BaseClassType = member_function_traits<FunctionType>::instance_type;
+
+		using operation_base = internal_has_functional::operation_container_false<FunctionType>;
+		using operation_static = internal_has_functional::operation_container_false<FunctionType>;
+
+		using operation_const = std::conditional_t<
+			std::is_same_v<FunctionType, FunctionSignatureConst<BaseClassType>> || std::is_same_v<FunctionType, FunctionSignatureExceptConst<BaseClassType>>,
+			internal_has_functional::operation_container_true<FunctionType>,
+			internal_has_functional::operation_container_false<FunctionType>
+		>;
+		using operation_except = std::conditional_t<
+			std::is_same_v<FunctionType, FunctionSignatureExceptConst<BaseClassType>>,
+			internal_has_functional::operation_container_true<FunctionType>,
+			internal_has_functional::operation_container_false<FunctionType>
+		>;
+		return internal_has_functional::has_function_results<operation_base, operation_const, operation_static, operation_except, op_unknown>{};
+	}
+	template <class>
+	static constexpr auto test_const(...) __LL_EXCEPT__-> type_default_result;
+
+	static constexpr ll_bool_t check_const() __LL_EXCEPT__ {
+		if constexpr (traits::is_basic_type_v<T>)
+			return std::is_same_v<T, OperatorType>;
+		else {
+			using const_result = decltype(test_const<T>(nullptr));
+			if constexpr (const_result::result_basic_type::result::value != HasFunctionResult::Unknown)
+				return LL_FALSE;
+			else if constexpr (const_result::result_base::result::value != HasFunctionResult::False)
+				return LL_FALSE;
+			else if constexpr (const_result::result_const::result::value != HasFunctionResult::True)
+				return LL_FALSE;
+			else if constexpr (const_result::result_except::result::value != HasFunctionResult::False)
+				return LL_FALSE;
+			else if constexpr (const_result::result_static::result::value != HasFunctionResult::False)
+				return LL_FALSE;
+			return LL_TRUE;
+		}
+	}
+	static constexpr ll_bool_t check_const_except() __LL_EXCEPT__ {
+		using const_result = decltype(test_const<T>(nullptr));
+		if constexpr (const_result::result_basic_type::result::value != HasFunctionResult::Unknown)
+			return LL_FALSE;
+		else if constexpr (const_result::result_base::result::value != HasFunctionResult::False)
+			return LL_FALSE;
+		else if constexpr (const_result::result_const::result::value != HasFunctionResult::True)
+			return LL_FALSE;
+		else if constexpr (const_result::result_except::result::value != HasFunctionResult::True)
+			return LL_FALSE;
+		else if constexpr (const_result::result_static::result::value != HasFunctionResult::False)
+			return LL_FALSE;
+		return LL_TRUE;
+	}
+	static constexpr ll_bool_t check_base() __LL_EXCEPT__ {
+		using no_const_result = decltype(test_noconst<T>(nullptr));
+		if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown)
+			return LL_FALSE;
+		else if constexpr (no_const_result::result_base::result::value != HasFunctionResult::True)
+			return LL_FALSE;
+		else if constexpr (no_const_result::result_const::result::value != HasFunctionResult::False)
+			return LL_FALSE;
+		else if constexpr (no_const_result::result_except::result::value != HasFunctionResult::False)
+			return LL_FALSE;
+		else if constexpr (no_const_result::result_static::result::value != HasFunctionResult::False)
+			return LL_FALSE;
+		return LL_TRUE;
+	}
+	static constexpr ll_bool_t check_base_except() __LL_EXCEPT__ {
+		using no_const_result = decltype(test_noconst<T>(nullptr));
+		if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown)
+			return LL_FALSE;
+		else if constexpr (no_const_result::result_base::result::value != HasFunctionResult::True)
+			return LL_FALSE;
+		else if constexpr (no_const_result::result_const::result::value != HasFunctionResult::False)
+			return LL_FALSE;
+		else if constexpr (no_const_result::result_except::result::value != HasFunctionResult::True)
+			return LL_FALSE;
+		else if constexpr (no_const_result::result_static::result::value != HasFunctionResult::False)
+			return LL_FALSE;
+		return LL_TRUE;
+	}
 };
 
 template <class T, class OperatorType>
-using has_type_operator_t = has_type_operator<T, OperatorType>::val;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_base_v = has_type_operator<T, OperatorType>::check_base();
 template <class T, class OperatorType>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v = has_type_operator_t<T, OperatorType>::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_base_except_v = has_type_operator<T, OperatorType>::check_base_except();
+
+template <class T, class OperatorType>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_v = has_type_operator<T, OperatorType>::check_const();
+template <class T, class OperatorType>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_type_operator<T, OperatorType>::check_const_except();
+
 
 #define __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, basic_value) \
-	template<class T> \
+	template <class T, class ReturnType, class... SignarureArgs> \
 	struct has_##name## { \
-		template <class U> \
-		static constexpr auto test(U* p) -> decltype(##function##, std::true_type{}); \
-		template <class U> \
-		static constexpr auto test(const U* p) -> decltype(##function##, std::true_type{}); \
-		template <class> \
-		static constexpr auto test(...) -> \
-			std::conditional_t< \
-				meta::traits::is_basic_type_v<T>, \
-				std::bool_constant<basic_value>, \
-				std::false_type \
+		using _has_##name## = has_##name##; \
+		using HasFunctionResult = internal_has_functional::HasFunctionResult; \
+		using op_unknown = internal_has_functional::op_unknown; \
+		 \
+		using type_default_result =  \
+			internal_has_functional::has_function_results_basic_type< \
+				std::conditional_t< \
+					traits::is_basic_type_v<T> && basic_value, \
+					internal_has_functional::operation_container_true<T>, \
+					internal_has_functional::operation_container_false<T> \
+				> \
 			>; \
-		using val = decltype(test<T>(nullptr)); \
+		 \
+		template <class U> \
+		using FunctionSignature = ReturnType(U::*)(SignarureArgs...); \
+		template <class U> \
+		using FunctionSignatureExcept = ReturnType(U::*)(SignarureArgs...) __LL_EXCEPT__; \
+		template <class U> \
+		using FunctionSignatureStatic = ReturnType(*)(SignarureArgs...); \
+		template <class U> \
+		using FunctionSignatureExceptStatic = ReturnType(*)(SignarureArgs...) __LL_EXCEPT__; \
+	 \
+		template <class U> \
+		static constexpr auto test_noconst(U* p) __LL_EXCEPT__ { \
+			using FunctionType = decltype(&U::function); \
+			using BaseClassType = member_function_traits<FunctionType>::instance_type; \
+			 \
+			using operation_const = internal_has_functional::operation_container_false<FunctionType>; \
+			 \
+			using operation_base = std::conditional_t< \
+				std::is_same_v<FunctionType, FunctionSignature<BaseClassType>> || std::is_same_v<FunctionType, FunctionSignatureExcept<BaseClassType>>, \
+				internal_has_functional::operation_container_true<FunctionType>, \
+				internal_has_functional::operation_container_false<FunctionType> \
+			>; \
+			using operation_static = std::conditional_t< \
+				std::is_same_v<FunctionType, FunctionSignatureStatic<BaseClassType>> || std::is_same_v<FunctionType, FunctionSignatureExceptStatic<BaseClassType>>, \
+				internal_has_functional::operation_container_true<FunctionType>, \
+				internal_has_functional::operation_container_false<FunctionType> \
+			>; \
+			using operation_except = std::conditional_t< \
+				std::is_same_v<FunctionType, FunctionSignatureExcept<BaseClassType>> || std::is_same_v<FunctionType, FunctionSignatureExceptStatic<BaseClassType>>, \
+				internal_has_functional::operation_container_true<FunctionType>, \
+				internal_has_functional::operation_container_false<FunctionType> \
+			>; \
+			return internal_has_functional::has_function_results<operation_base, operation_const, operation_static, operation_except, op_unknown>{}; \
+		} \
+		template <class> \
+		static constexpr auto test_noconst(...) __LL_EXCEPT__-> type_default_result; \
+		 \
+		template <class U> \
+		using FunctionSignatureConst = ReturnType(U::*)(SignarureArgs...) const; \
+		template <class U> \
+		using FunctionSignatureExceptConst = ReturnType(U::*)(SignarureArgs...) const __LL_EXCEPT__; \
+		 \
+		template <class U> \
+		static constexpr auto test_const(const U* p) __LL_EXCEPT__ { \
+			using FunctionType = decltype(&U::function); \
+			using BaseClassType = member_function_traits<FunctionType>::instance_type; \
+			 \
+			using operation_base = internal_has_functional::operation_container_false<FunctionType>; \
+			using operation_static = internal_has_functional::operation_container_false<FunctionType>; \
+			 \
+			using operation_const = std::conditional_t< \
+				std::is_same_v<FunctionType, FunctionSignatureConst<BaseClassType>> || std::is_same_v<FunctionType, FunctionSignatureExceptConst<BaseClassType>>, \
+				internal_has_functional::operation_container_true<FunctionType>, \
+				internal_has_functional::operation_container_false<FunctionType> \
+			>; \
+			using operation_except = std::conditional_t< \
+				std::is_same_v<FunctionType, FunctionSignatureExceptConst<BaseClassType>>, \
+				internal_has_functional::operation_container_true<FunctionType>, \
+				internal_has_functional::operation_container_false<FunctionType> \
+			>; \
+			return internal_has_functional::has_function_results<operation_base, operation_const, operation_static, operation_except, op_unknown>{}; \
+		} \
+		template <class> \
+		static constexpr auto test_const(...) __LL_EXCEPT__-> type_default_result; \
+		 \
+		 \
+		static constexpr ll_bool_t check_static() __LL_EXCEPT__ { \
+			using no_const_result = decltype(test_noconst<T>(nullptr)); \
+			if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_base::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_const::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_except::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_static::result::value != HasFunctionResult::True) \
+				return LL_FALSE; \
+			return LL_TRUE; \
+		} \
+		static constexpr ll_bool_t check_static_except() __LL_EXCEPT__ { \
+			using no_const_result = decltype(test_noconst<T>(nullptr)); \
+			if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_base::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_const::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_except::result::value != HasFunctionResult::True) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_static::result::value != HasFunctionResult::True) \
+				return LL_FALSE; \
+			return LL_TRUE; \
+		} \
+		static constexpr ll_bool_t check_const() __LL_EXCEPT__ { \
+			using const_result = decltype(test_const<T>(nullptr)); \
+			if constexpr (const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
+				return LL_FALSE; \
+			else if constexpr (const_result::result_base::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (const_result::result_const::result::value != HasFunctionResult::True) \
+				return LL_FALSE; \
+			else if constexpr (const_result::result_except::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (const_result::result_static::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			return LL_TRUE; \
+		} \
+		static constexpr ll_bool_t check_const_except() __LL_EXCEPT__ { \
+			using const_result = decltype(test_const<T>(nullptr)); \
+			if constexpr (const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
+				return LL_FALSE; \
+			else if constexpr (const_result::result_base::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (const_result::result_const::result::value != HasFunctionResult::True) \
+				return LL_FALSE; \
+			else if constexpr (const_result::result_except::result::value != HasFunctionResult::True) \
+				return LL_FALSE; \
+			else if constexpr (const_result::result_static::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			return LL_TRUE; \
+		} \
+		static constexpr ll_bool_t check_base() __LL_EXCEPT__ { \
+			using no_const_result = decltype(test_noconst<T>(nullptr)); \
+			if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_base::result::value != HasFunctionResult::True) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_const::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_except::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_static::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			return LL_TRUE; \
+		} \
+		static constexpr ll_bool_t check_base_except() __LL_EXCEPT__ { \
+			using no_const_result = decltype(test_noconst<T>(nullptr)); \
+			if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_base::result::value != HasFunctionResult::True) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_const::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_except::result::value != HasFunctionResult::True) \
+				return LL_FALSE; \
+			else if constexpr (no_const_result::result_static::result::value != HasFunctionResult::False) \
+				return LL_FALSE; \
+			return LL_TRUE; \
+		} \
 	}; \
-template <class T> \
-using has_##name##_t = has_##name##<T>::val; \
-template <class T> \
-__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_v = has_##name##_t<T>::value
+	 \
+	template <class T, class ReturnType, class... SignarureArgs> \
+	__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_static_v = has_##name##<T, ReturnType, SignarureArgs...>::check_static(); \
+	template <class T, class ReturnType, class... SignarureArgs> \
+	__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_static_except_v = has_##name##<T, ReturnType, SignarureArgs...>::check_static_except(); \
+	 \
+	template <class T, class ReturnType, class... SignarureArgs> \
+	__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_base_v = has_##name##<T, ReturnType, SignarureArgs...>::check_base(); \
+	template <class T, class ReturnType, class... SignarureArgs> \
+	__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_base_except_v = has_##name##<T, ReturnType, SignarureArgs...>::check_base_except(); \
+	 \
+	template <class T, class ReturnType, class... SignarureArgs> \
+	__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_const_v = has_##name##<T, ReturnType, SignarureArgs...>::check_const(); \
+	template <class T, class ReturnType, class... SignarureArgs> \
+	__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_const_except_v = has_##name##<T, ReturnType, SignarureArgs...>::check_const_except();
 
-
-#define __LL_TEMPLATE_HAS_FUNCTION__(name, function) __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, LL_FALSE)
-#define __TEMPLATE_HAS_SIMPLE_FUNCTION__(function) __LL_TEMPLATE_HAS_FUNCTION__(function, p->##function())
-
-//__LL_TEMPLATE_HAS_FUNCTION_BASE__(copy_operator, p->operator=(*p), LL_TRUE);
-__LL_TEMPLATE_HAS_FUNCTION_BASE__(move_operator, p->operator=(std::move(*p)), LL_TRUE);
-__LL_TEMPLATE_HAS_FUNCTION_BASE__(three_compare_operator, p->operator<=>(*p), LL_TRUE);
-__LL_TEMPLATE_HAS_FUNCTION_BASE__(equal_operator, p->operator==(*p), LL_TRUE);
-__LL_TEMPLATE_HAS_FUNCTION_BASE__(no_equal_operator, p->operator!=(*p), LL_TRUE);
-__LL_TEMPLATE_HAS_FUNCTION_BASE__(greater_operator, p->operator>(*p), LL_TRUE);
-__LL_TEMPLATE_HAS_FUNCTION_BASE__(lower_operator, p->operator<(*p), LL_TRUE);
-
-__LL_TEMPLATE_HAS_FUNCTION__(swap, p->swap(*p));
-__LL_TEMPLATE_HAS_FUNCTION__(swap_s, p->swap_s(*p));
-__TEMPLATE_HAS_SIMPLE_FUNCTION__(clear);
-
-#pragma endregion
-#pragma region OperatorTypeChecker
-struct can_cast {
-	template<class T, class U> static constexpr ll_bool_t value = LL_FALSE;
-	template<class T> static constexpr ll_bool_t value<T, ll_bool_t> = traits::is_basic_type_v<T>;
-
-	template<class T> static constexpr ll_bool_t value<T, ui8> = traits::is_basic_type_v<T>;
-	template<class T> static constexpr ll_bool_t value<T, i8> = traits::is_basic_type_v<T>;
-	template<class T> static constexpr ll_bool_t value<T, ui16> = traits::is_basic_type_v<T>;
-	template<class T> static constexpr ll_bool_t value<T, i16> = traits::is_basic_type_v<T>;
-	
-	template<class T> static constexpr ll_bool_t value<T, ui32> = traits::is_basic_type_v<T>;
-	template<class T> static constexpr ll_bool_t value<T, i32> = traits::is_basic_type_v<T>;
-	template<class T> static constexpr ll_bool_t value<T, ui64> = traits::is_basic_type_v<T>;
-	template<class T> static constexpr ll_bool_t value<T, i64> = traits::is_basic_type_v<T>;
-
-	template<class T> static constexpr ll_bool_t value<T, f32> = traits::is_basic_type_v<T>;
-	template<class T> static constexpr ll_bool_t value<T, f64> = traits::is_basic_type_v<T>;
-};
-
-template<class ObjectType, class TypeCall>
-__LL_VAR_INLINE__ constexpr ll_bool_t can_cast_v = can_cast::value<ObjectType, TypeCall>;
-
-
-template<class ObjectType, class TypeCall>
-struct operator_type_call_checker {
-	static constexpr auto test() __LL_EXCEPT__ {
-		if constexpr (std::is_pointer_v<ObjectType>) {
-			using __noptr = std::remove_pointer_t<ObjectType>;
-			if constexpr (std::is_pointer_v<__noptr>) return std::false_type{};
-			else return operator_type_call_checker<__noptr, TypeCall>::test();
-		}
-		else if constexpr (std::is_array_v<ObjectType>) {
-			using arr_type = traits::type_conversor<ObjectType>::array_to_type_t;
-			if constexpr (std::is_pointer_v<arr_type>) return std::false_type{};
-			else return operator_type_call_checker<arr_type, TypeCall>::test();
-		}
-		else if constexpr (traits::has_type_operator_v<ObjectType, TypeCall>)
-			return std::true_type{};
-		else if constexpr (traits::is_basic_type_v<ObjectType> && traits::can_cast_v<ObjectType, TypeCall>)
-			return std::true_type{};
-		else return std::false_type{};
-	}
-	using val = typename decltype(test());
-};
-template<class ObjectType, class TypeCall>
-using operator_type_call_checker_t = operator_type_call_checker<ObjectType, TypeCall>::val;
-template<class ObjectType, class TypeCall>
-__LL_VAR_INLINE__ constexpr ll_bool_t operator_type_call_checker_v = operator_type_call_checker_t<ObjectType, TypeCall>::value;
+__LL_TEMPLATE_HAS_FUNCTION_BASE__(swap, swap, LL_FALSE);
+__LL_TEMPLATE_HAS_FUNCTION_BASE__(clear, clear, LL_FALSE);
 
 #pragma endregion
 #pragma region SwapChecker
@@ -372,7 +680,7 @@ struct is_nothrow_swappeable {
 		}
 		else return std::false_type{};
 	}
-	using val = typename decltype(test());
+	using val = decltype(test());
 };
 template<class T>
 using is_nothrow_swappeable_t = is_nothrow_swappeable<T>::val;
@@ -398,7 +706,7 @@ struct is_nothrow_copyable {
 			return std::true_type{};
 		else return std::false_type{};
 	}
-	using val = typename decltype(test());
+	using val = decltype(test());
 };
 template<class T>
 using is_nothrow_copyable_t = is_nothrow_copyable<T>::val;
@@ -406,7 +714,6 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyable_t<T>::value;
 
 #pragma endregion
-
 #pragma region ParameterPacks
 template <class... Args>
 struct parameter_pack_operations {
@@ -452,69 +759,6 @@ struct parameter_pack_operations<> {
 };
 
 #pragma endregion
-
-#pragma endregion
-#pragma region Functions
-/// [TODO] [UPGRADE]
-//template<class ReturnType, class ObjectType>
-//__LL_NODISCARD__ constexpr ReturnType operatorTypeCall(const ObjectType& object, ReturnType NULL_VAL) __LL_EXCEPT__ {
-//	if constexpr (traits::is_pointer_v<ObjectType>) {
-//		using __noptr = std::remove_pointer_t<ObjectType>;
-//
-//		if constexpr (traits::is_pointer_v<__noptr>)
-//			return static_cast<ReturnType>(object);
-//		else if constexpr (has_type_operator_v<__noptr, ReturnType>) {
-//			if constexpr (is_basic_type_v<__noptr>) return *object;
-//			else return object->operator ReturnType();
-//		}
-//		else if constexpr (is_basic_type_v<__noptr>)
-//			return static_cast<ReturnType>(*object);
-//		else return NULL_VAL;
-//	}
-//	else if constexpr (traits::has_type_operator_v<ObjectType, ReturnType>) {
-//		if constexpr (traits::is_basic_type_v<ObjectType>) return object;
-//		//else return object.operator ReturnType();
-//		else return object;
-//	}
-//	else if constexpr (traits::is_basic_type_v<ObjectType>)
-//		return static_cast<ReturnType>(object);
-//	else return NULL_VAL;
-//}
-
-#pragma endregion
-
-template<class T>
-struct template_types {
-	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
-	static_assert(!std::is_const_v<T>, "T cannot be const!\nFunctions will use all types as const internally.");
-
-	using conversor = traits::type_conversor<T>;
-
-	using raw = conversor::to_raw_t;
-	using type = T;
-	using ctype = const T;
-	//using ctype = conversor::to_const_t;
-
-	// Used mostly to reference classes
-	using ref = type&;
-	// Used mostly to reference const classes
-	using cref = const type&;
-	using move = conversor::to_movement_t;
-
-	using ptr = conversor::get_ptr_remove_reference_t;
-	// [PATCH] 
-	using cptr = conversor::get_const_ptr_remove_reference::value;
-	using ptrref = traits::type_conversor<typename ptr>::to_reference_t;
-
-	// Used mostly to get an object or basic type efficiently (if is basic type you would get a copy)
-	// To get always the original object use ref
-	using input = std::conditional_t<traits::is_basic_type_v<type> || std::is_array_v<type>, type, ref>;
-	// Used mostly to get a const object or const basic type efficiently (if is basic type you would get a const copy)
-	// To get always the original object use cref
-	using cinput = std::conditional_t<traits::is_basic_type_v<type> || std::is_array_v<type>, ctype, cref>;
-
-	using output = ref;
-};
 
 } // namespace traits
 } // namespace meta

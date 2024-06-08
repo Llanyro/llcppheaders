@@ -4,7 +4,7 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 7.3							//
+//	Version: 8.0							//
 //////////////////////////////////////////////
 
 #include "../traits.hpp"
@@ -153,15 +153,15 @@ static_assert(std::is_same_v<get_promote_type_test_24, traits::TestClass>, "Erro
 
 ///////////////////////////////////////////////// Operator and functions checker /////////////////////////////////////////////////
 
-constexpr ll_bool_t has_operator_or_func_res_1 = traits::has_type_operator_v<TestClassBase, ll_bool_t>;
-constexpr ll_bool_t has_operator_or_func_res_2 = traits::has_type_operator_v<TestClass, ll_bool_t>;
-constexpr ll_bool_t has_operator_or_func_res_3 = traits::has_type_operator_v<TestClassNoCopy, ll_bool_t>;
-constexpr ll_bool_t has_operator_or_func_res_4 = traits::has_type_operator_v<int, ll_bool_t>;
-constexpr ll_bool_t has_operator_or_func_res_5 = traits::has_clear_v<TestClass>;
-constexpr ll_bool_t has_operator_or_func_res_6 = traits::has_clear_v<int>;
-constexpr ll_bool_t has_operator_or_func_res_7 = traits::has_swap_v<TestClass>;
-constexpr ll_bool_t has_operator_or_func_res_8 = traits::has_swap_v<int>;
-constexpr ll_bool_t has_operator_or_func_res_9 = has_type_operator_v<int, int>;
+constexpr ll_bool_t has_operator_or_func_res_1 = traits::has_type_operator_const_except_v<TestClassBase, ll_bool_t>;
+constexpr ll_bool_t has_operator_or_func_res_2 = traits::has_type_operator_const_except_v<TestClass, ll_bool_t>;
+constexpr ll_bool_t has_operator_or_func_res_3 = traits::has_type_operator_const_v<TestClassNoCopy, ll_bool_t>;
+constexpr ll_bool_t has_operator_or_func_res_4 = traits::has_type_operator_const_v<int, ll_bool_t>;
+constexpr ll_bool_t has_operator_or_func_res_5 = traits::has_clear_base_v<TestClass, void>;
+constexpr ll_bool_t has_operator_or_func_res_6 = traits::has_clear_base_v<int, void>;
+constexpr ll_bool_t has_operator_or_func_res_7 = traits::has_swap_base_v<TestClass, void, TestClassBase&>;
+constexpr ll_bool_t has_operator_or_func_res_8 = traits::has_swap_base_v<int, void>;
+constexpr ll_bool_t has_operator_or_func_res_9 = traits::has_type_operator_const_v<int, int>;
 constexpr ll_bool_t test_copy_operator_int = std::is_copy_assignable_v<int>;
 constexpr ll_bool_t test_copy_operator_class = std::is_copy_assignable_v<TestClass>;
 constexpr ll_bool_t test_copy_operator_class_bad = std::is_copy_assignable_v<TestClassBad>;
@@ -227,25 +227,25 @@ static_assert( nothrow_swappeable_test_9, "Error changed value");
 
 ///////////////////////////////////////////////// Example strings /////////////////////////////////////////////////
 
-constexpr ll_bool_t checker_test_1 = traits::operator_type_call_checker_v<int, ll_bool_t>;
-constexpr ll_bool_t checker_test_2 = traits::operator_type_call_checker_v<int*, ll_bool_t>;
-constexpr ll_bool_t checker_test_3 = traits::operator_type_call_checker_v<int**, ll_bool_t>;
-constexpr ll_bool_t checker_test_4 = traits::operator_type_call_checker_v<TestClass, ll_bool_t>;
-constexpr ll_bool_t checker_test_5 = traits::operator_type_call_checker_v<TestClass*, ll_bool_t>;
-constexpr ll_bool_t checker_test_6 = traits::operator_type_call_checker_v<TestClass**, ll_bool_t>;
-constexpr ll_bool_t checker_test_7 = traits::operator_type_call_checker_v<TestClassThrow, ll_bool_t>;
-constexpr ll_bool_t checker_test_8 = traits::operator_type_call_checker_v<TestClassThrow*, ll_bool_t>;
-constexpr ll_bool_t checker_test_9 = traits::operator_type_call_checker_v<TestClassThrow**, ll_bool_t>;
+//constexpr ll_bool_t checker_test_1 = traits::operator_type_call_checker_v<int, ll_bool_t>;
+//constexpr ll_bool_t checker_test_2 = traits::operator_type_call_checker_v<int*, ll_bool_t>;
+//constexpr ll_bool_t checker_test_3 = traits::operator_type_call_checker_v<int**, ll_bool_t>;
+//constexpr ll_bool_t checker_test_4 = traits::operator_type_call_checker_v<TestClass, ll_bool_t>;
+//constexpr ll_bool_t checker_test_5 = traits::operator_type_call_checker_v<TestClass*, ll_bool_t>;
+//constexpr ll_bool_t checker_test_6 = traits::operator_type_call_checker_v<TestClass**, ll_bool_t>;
+//constexpr ll_bool_t checker_test_7 = traits::operator_type_call_checker_v<TestClassThrow, ll_bool_t>;
+//constexpr ll_bool_t checker_test_8 = traits::operator_type_call_checker_v<TestClassThrow*, ll_bool_t>;
+//constexpr ll_bool_t checker_test_9 = traits::operator_type_call_checker_v<TestClassThrow**, ll_bool_t>;
 
-static_assert( checker_test_1, "Error changed value");
-static_assert( checker_test_2, "Error changed value");
-static_assert(!checker_test_3, "Error changed value");
-static_assert( checker_test_4, "Error changed value");
-static_assert( checker_test_5, "Error changed value");
-static_assert(!checker_test_6, "Error changed value");
-static_assert(!checker_test_7, "Error changed value");
-static_assert(!checker_test_8, "Error changed value");
-static_assert(!checker_test_9, "Error changed value");
+//static_assert( checker_test_1, "Error changed value");
+//static_assert( checker_test_2, "Error changed value");
+//static_assert(!checker_test_3, "Error changed value");
+//static_assert( checker_test_4, "Error changed value");
+//static_assert( checker_test_5, "Error changed value");
+//static_assert(!checker_test_6, "Error changed value");
+//static_assert(!checker_test_7, "Error changed value");
+//static_assert(!checker_test_8, "Error changed value");
+//static_assert(!checker_test_9, "Error changed value");
 
 ///////////////////////////////////////////////// Example strings /////////////////////////////////////////////////
 
@@ -258,6 +258,21 @@ constexpr len_t teas() {
 constexpr len_t teas_1 = teas<>();
 constexpr len_t teas_2 = teas<int>();
 constexpr len_t teas_3 = teas<int, char, char*>();
+
+///////////////////////////////////////////////// Example other /////////////////////////////////////////////////
+
+constexpr ll_bool_t st1 = has_swap_static_v<TestClassBase, int>;
+constexpr ll_bool_t st2 = has_swap_static_except_v<TestClassBase, int>;
+constexpr ll_bool_t st3 = has_swap_base_v<TestClassBase, void, TestClassBase&>;
+constexpr ll_bool_t st4 = has_swap_base_except_v<TestClassBase, int>;
+constexpr ll_bool_t st5 = has_swap_const_v<TestClassBase, int>;
+constexpr ll_bool_t st6 = has_swap_const_except_v<TestClassBase, int>;
+
+constexpr ll_bool_t st_3 = has_type_operator_base_v<TestClassBase, ll_bool_t>;
+constexpr ll_bool_t st_4 = has_type_operator_base_except_v<TestClassBase, ll_bool_t>;
+constexpr ll_bool_t st_5 = has_type_operator_const_v<TestClassBase, ll_bool_t>;
+constexpr ll_bool_t st_6 = has_type_operator_const_except_v<TestClassBase, ll_bool_t>;
+
 
 } // namespace traits
 } // namespace meta

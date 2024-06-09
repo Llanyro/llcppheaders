@@ -228,45 +228,45 @@ using OptionalHash64 = std::optional<hash::Hash64>;
 using OptionalHash128 = std::optional<hash::Hash128>;
 
 #pragma region 32
-using Hash32Function = hash::OptionalHash32(*)(ll_string_t, len_t) __LL_EXCEPT__;
-using wHash32Function = hash::OptionalHash32(*)(ll_wstring_t, len_t) __LL_EXCEPT__;
-using StringPairHash32Function = hash::OptionalHash32(*)(const std::string&) __LL_EXCEPT__;
-using wStringPairHash32Function = hash::OptionalHash32(*)(const std::wstring&) __LL_EXCEPT__;
-using StrPairHash32Function = hash::OptionalHash32(*)(const meta::StrPair&) __LL_EXCEPT__;
-using wStrPairHash32Function = hash::OptionalHash32(*)(const meta::wStrPair&) __LL_EXCEPT__;
-using StrHash32Function = hash::OptionalHash32(*)(const meta::Str&) __LL_EXCEPT__;
-using wStrHash32Function = hash::OptionalHash32(*)(const meta::wStr&) __LL_EXCEPT__;
-using RecursiveHash32Function = hash::OptionalHash32(*)(const hash::Hash32&) __LL_EXCEPT__;
-using StrTypeidHash32Function = hash::OptionalHash32(*)(const void*, const StrTypeid&) __LL_EXCEPT__;
-using wStrTypeidHash32Function = hash::OptionalHash32(*)(const void*, const wStrTypeid&) __LL_EXCEPT__;
+using Hash32Function = hash::OptionalHash32(*)(ll_string_t, len_t) noexcept;
+using wHash32Function = hash::OptionalHash32(*)(ll_wstring_t, len_t) noexcept;
+using StringPairHash32Function = hash::OptionalHash32(*)(const std::string&) noexcept;
+using wStringPairHash32Function = hash::OptionalHash32(*)(const std::wstring&) noexcept;
+using StrPairHash32Function = hash::OptionalHash32(*)(const meta::StrPair&) noexcept;
+using wStrPairHash32Function = hash::OptionalHash32(*)(const meta::wStrPair&) noexcept;
+using StrHash32Function = hash::OptionalHash32(*)(const meta::Str&) noexcept;
+using wStrHash32Function = hash::OptionalHash32(*)(const meta::wStr&) noexcept;
+using RecursiveHash32Function = hash::OptionalHash32(*)(const hash::Hash32&) noexcept;
+using StrTypeidHash32Function = hash::OptionalHash32(*)(const void*, const StrTypeid&) noexcept;
+using wStrTypeidHash32Function = hash::OptionalHash32(*)(const void*, const wStrTypeid&) noexcept;
 
 #pragma endregion
 #pragma region 64
-using Hash64Function = hash::OptionalHash64(*)(ll_string_t, len_t) __LL_EXCEPT__;
-using wHash64Function = hash::OptionalHash64(*)(ll_wstring_t, len_t) __LL_EXCEPT__;
-using StringPairHash64Function = hash::OptionalHash64(*)(const std::string&) __LL_EXCEPT__;
-using wStringPairHash64Function = hash::OptionalHash64(*)(const std::wstring&) __LL_EXCEPT__;
-using StrPairHash64Function = hash::OptionalHash64(*)(const meta::StrPair&) __LL_EXCEPT__;
-using wStrPairHash64Function = hash::OptionalHash64(*)(const meta::wStrPair&) __LL_EXCEPT__;
-using StrHash64Function = hash::OptionalHash64(*)(const meta::Str&) __LL_EXCEPT__;
-using wStrHash64Function = hash::OptionalHash64(*)(const meta::wStr&) __LL_EXCEPT__;
-using RecursiveHash64Function = hash::OptionalHash64(*)(const hash::Hash64&) __LL_EXCEPT__;
-using StrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const StrTypeid&) __LL_EXCEPT__;
-using wStrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const wStrTypeid&) __LL_EXCEPT__;
+using Hash64Function = hash::OptionalHash64(*)(ll_string_t, len_t) noexcept;
+using wHash64Function = hash::OptionalHash64(*)(ll_wstring_t, len_t) noexcept;
+using StringPairHash64Function = hash::OptionalHash64(*)(const std::string&) noexcept;
+using wStringPairHash64Function = hash::OptionalHash64(*)(const std::wstring&) noexcept;
+using StrPairHash64Function = hash::OptionalHash64(*)(const meta::StrPair&) noexcept;
+using wStrPairHash64Function = hash::OptionalHash64(*)(const meta::wStrPair&) noexcept;
+using StrHash64Function = hash::OptionalHash64(*)(const meta::Str&) noexcept;
+using wStrHash64Function = hash::OptionalHash64(*)(const meta::wStr&) noexcept;
+using RecursiveHash64Function = hash::OptionalHash64(*)(const hash::Hash64&) noexcept;
+using StrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const StrTypeid&) noexcept;
+using wStrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const wStrTypeid&) noexcept;
 
 #pragma endregion
 #pragma region 128
-using Hash128Function = hash::OptionalHash128(*)(ll_string_t, len_t) __LL_EXCEPT__;
-using wHash128Function = hash::OptionalHash128(*)(ll_wstring_t, len_t) __LL_EXCEPT__;
-using StringPairHash128Function = hash::OptionalHash128(*)(const std::string&) __LL_EXCEPT__;
-using wStringPairHash128Function = hash::OptionalHash128(*)(const std::wstring&) __LL_EXCEPT__;
-using StrPairHash128Function = hash::OptionalHash128(*)(const meta::StrPair&) __LL_EXCEPT__;
-using wStrPairHash128Function = hash::OptionalHash128(*)(const meta::wStrPair&) __LL_EXCEPT__;
-using StrHash128Function = hash::OptionalHash128(*)(const meta::Str&) __LL_EXCEPT__;
-using wStrHash128Function = hash::OptionalHash128(*)(const meta::wStr&) __LL_EXCEPT__;
-using RecursiveHash128Function = hash::OptionalHash128(*)(const hash::Hash128&) __LL_EXCEPT__;
-using StrTypeidHash128Function = hash::OptionalHash128(*)(const void*, const StrTypeid&) __LL_EXCEPT__;
-using wStrTypeidHash128Function = hash::OptionalHash128(*)(const void*, const wStrTypeid&) __LL_EXCEPT__;
+using Hash128Function = hash::OptionalHash128(*)(ll_string_t, len_t) noexcept;
+using wHash128Function = hash::OptionalHash128(*)(ll_wstring_t, len_t) noexcept;
+using StringPairHash128Function = hash::OptionalHash128(*)(const std::string&) noexcept;
+using wStringPairHash128Function = hash::OptionalHash128(*)(const std::wstring&) noexcept;
+using StrPairHash128Function = hash::OptionalHash128(*)(const meta::StrPair&) noexcept;
+using wStrPairHash128Function = hash::OptionalHash128(*)(const meta::wStrPair&) noexcept;
+using StrHash128Function = hash::OptionalHash128(*)(const meta::Str&) noexcept;
+using wStrHash128Function = hash::OptionalHash128(*)(const meta::wStr&) noexcept;
+using RecursiveHash128Function = hash::OptionalHash128(*)(const hash::Hash128&) noexcept;
+using StrTypeidHash128Function = hash::OptionalHash128(*)(const void*, const StrTypeid&) noexcept;
+using wStrTypeidHash128Function = hash::OptionalHash128(*)(const void*, const wStrTypeid&) noexcept;
 
 #pragma endregion
 
@@ -276,20 +276,20 @@ using wStrTypeidHash128Function = hash::OptionalHash128(*)(const void*, const wS
 
 namespace functional {
 
-using Compare = cmp_t(*)(const void* __t1, const void* __t2) __LL_EXCEPT__;
-using CompareBool = ll_bool_t(*)(const void* __t1, const void* __t2) __LL_EXCEPT__;
-using CompareExtra = cmp_t(*)(const void* __t1, const void* __t2, void* __extra__) __LL_EXCEPT__;
-using CompareBoolExtra = ll_bool_t(*)(const void* __t1, const void* __t2, void* __extra__) __LL_EXCEPT__;
+using Compare = cmp_t(*)(const void* __t1, const void* __t2) noexcept;
+using CompareBool = ll_bool_t(*)(const void* __t1, const void* __t2) noexcept;
+using CompareExtra = cmp_t(*)(const void* __t1, const void* __t2, void* __extra__) noexcept;
+using CompareBoolExtra = ll_bool_t(*)(const void* __t1, const void* __t2, void* __extra__) noexcept;
 
 namespace classic {
 template<class T, class U = T>
-using Compare = cmp_t(*)(T __t1, U __t2) __LL_EXCEPT__;
+using Compare = cmp_t(*)(T __t1, U __t2) noexcept;
 template<class T, class U = T>
-using CompareBool = ll_bool_t(*)(T __t1, U __t2) __LL_EXCEPT__;
+using CompareBool = ll_bool_t(*)(T __t1, U __t2) noexcept;
 template<class T, class U = T>
-using SwapFunction = void(*)(T& __t1, U& __t2) __LL_EXCEPT__;
+using SwapFunction = void(*)(T& __t1, U& __t2) noexcept;
 template<class T, class U = T&>
-using SetFunction = void(*)(T& __t1, U __t2) __LL_EXCEPT__;
+using SetFunction = void(*)(T& __t1, U __t2) noexcept;
 
 } // namespace classic
 namespace lambda {

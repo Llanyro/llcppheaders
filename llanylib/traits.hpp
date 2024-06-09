@@ -78,7 +78,7 @@ using cinput = std::conditional_t<traits::is_basic_type_v<T> || std::is_pointer_
 template<class T>
 struct type_conversor {
 	struct to_raw {
-		static constexpr auto test() __LL_EXCEPT__ {
+		static constexpr auto test() noexcept {
 			if constexpr (std::is_reference_v<T>)
 				return type_conversor<std::remove_reference_t<T>>::to_raw::test();
 			else if constexpr (std::is_pointer_v<T>)
@@ -94,7 +94,7 @@ struct type_conversor {
 		using value = typename decltype(test())::value;
 	};
 	struct to_const {
-		static constexpr auto test() __LL_EXCEPT__ {
+		static constexpr auto test() noexcept {
 			if constexpr (std::is_reference_v<T>) {
 				using __type = decltype(type_conversor<std::remove_reference_t<T>>::to_const::test())::value;
 				if constexpr (std::is_lvalue_reference_v<T>)
@@ -115,7 +115,7 @@ struct type_conversor {
 		using value = typename decltype(test())::value;
 	};
 	template<ll_bool_t ALL> struct to_reference {
-		static constexpr auto test() __LL_EXCEPT__ {
+		static constexpr auto test() noexcept {
 			using __raw_type = type_conversor<T>::to_raw_t;
 
 			if constexpr (std::is_pointer_v<T> || std::is_array_v<T> || !traits::is_basic_type_v<__raw_type> || ALL)
@@ -125,7 +125,7 @@ struct type_conversor {
 		using value = typename decltype(test())::value;
 	};
 	template<ll_bool_t ALL> struct to_const_reference {
-		static constexpr auto test() __LL_EXCEPT__ {
+		static constexpr auto test() noexcept {
 			using __raw_type = type_conversor<T>::to_raw_t;
 			using __const_type = type_conversor<T>::to_const_t;
 			if constexpr (ALL || !(std::is_pointer_v<T> || std::is_array_v<T> || traits::is_basic_type_v<__raw_type>))
@@ -135,7 +135,7 @@ struct type_conversor {
 		using value = typename decltype(test())::value;
 	};
 	struct to_movement {
-		static constexpr auto test() __LL_EXCEPT__ {
+		static constexpr auto test() noexcept {
 			if constexpr (std::is_reference_v<T>) {
 				using __noreference = std::remove_reference_t<T>;
 				return traits::type_container<__noreference&&>{};
@@ -145,7 +145,7 @@ struct type_conversor {
 		using value = typename decltype(test())::value;
 	};
 	struct get_ptr_remove_reference {
-		static constexpr auto test() __LL_EXCEPT__ {
+		static constexpr auto test() noexcept {
 			if constexpr (std::is_reference_v<T>) {
 				using __noreference = std::remove_reference_t<T>;
 				return traits::type_container<__noreference*>{};
@@ -155,7 +155,7 @@ struct type_conversor {
 		using value = typename decltype(test())::value;
 	};
 	struct get_const_ptr_remove_reference {
-		static constexpr auto test() __LL_EXCEPT__ {
+		static constexpr auto test() noexcept {
 			return traits::type_container<type_conversor<get_ptr_remove_reference::value>::to_const_t>{};
 		}
 		using value = typename decltype(test())::value;
@@ -201,7 +201,7 @@ struct type_conversor {
 		using value = __type_promotion<promote>::value;
 	};
 	struct array_to_type {
-		static constexpr auto test() __LL_EXCEPT__ {
+		static constexpr auto test() noexcept {
 			if constexpr (std::is_array_v<T>) {
 				T _{};
 				return traits::type_container<std::remove_reference_t<decltype(*_)>>{};
@@ -268,7 +268,7 @@ struct member_function_traits<Return(Object::*)(Args...)> {
 	static constexpr len_t argument_count = sizeof...(Args);
 };
 template<class Return, class Object, class... Args>
-struct member_function_traits<Return(Object::*)(Args...) __LL_EXCEPT__> {
+struct member_function_traits<Return(Object::*)(Args...) noexcept> {
 	using return_type = Return;
 	using instance_type = Object;
 	static constexpr len_t argument_count = sizeof...(Args);
@@ -280,7 +280,7 @@ struct member_function_traits<Return(Object::*)(Args...) __LL_EXCEPT__> {
 //	static constexpr len_t argument_count = sizeof...(Args);
 //};
 //template<class Return, class Object, class... Args>
-//struct member_function_traits<Return(Object::*)(Args...) const __LL_EXCEPT__> {
+//struct member_function_traits<Return(Object::*)(Args...) const noexcept> {
 //	using return_type = Return;
 //	using instance_type = Object;
 //	static constexpr len_t argument_count = sizeof...(Args);
@@ -350,10 +350,10 @@ struct has_type_operator {
 	template <class U>
 	using FunctionSignature = OperatorType(U::*)();
 	template <class U>
-	using FunctionSignatureExcept = OperatorType(U::*)() __LL_EXCEPT__;
+	using FunctionSignatureExcept = OperatorType(U::*)() noexcept;
 
 	template <class U>
-	static constexpr auto test_noconst(U* p) __LL_EXCEPT__ {
+	static constexpr auto test_noconst(U* p) noexcept {
 		using FunctionType = decltype(&U::operator OperatorType);
 		using BaseClassType = member_function_traits<FunctionType>::instance_type;
 
@@ -373,15 +373,15 @@ struct has_type_operator {
 		return internal_has_functional::has_function_results<operation_base, operation_const, operation_static, operation_except, op_unknown>{};
 	}
 	template <class>
-	static constexpr auto test_noconst(...) __LL_EXCEPT__-> type_default_result;
+	static constexpr auto test_noconst(...) noexcept-> type_default_result;
 
 	template <class U>
 	using FunctionSignatureConst = OperatorType(U::*)() const;
 	template <class U>
-	using FunctionSignatureExceptConst = OperatorType(U::*)() const __LL_EXCEPT__;
+	using FunctionSignatureExceptConst = OperatorType(U::*)() const noexcept;
 
 	template <class U>
-	static constexpr auto test_const(const U* p) __LL_EXCEPT__ {
+	static constexpr auto test_const(const U* p) noexcept {
 		using FunctionType = decltype(&U::operator OperatorType);
 		using BaseClassType = member_function_traits<FunctionType>::instance_type;
 
@@ -401,9 +401,9 @@ struct has_type_operator {
 		return internal_has_functional::has_function_results<operation_base, operation_const, operation_static, operation_except, op_unknown>{};
 	}
 	template <class>
-	static constexpr auto test_const(...) __LL_EXCEPT__-> type_default_result;
+	static constexpr auto test_const(...) noexcept-> type_default_result;
 
-	static constexpr ll_bool_t check_const() __LL_EXCEPT__ {
+	static constexpr ll_bool_t check_const() noexcept {
 		if constexpr (traits::is_basic_type_v<T>)
 			return std::is_same_v<T, OperatorType>;
 		else {
@@ -421,7 +421,7 @@ struct has_type_operator {
 			return LL_TRUE;
 		}
 	}
-	static constexpr ll_bool_t check_const_except() __LL_EXCEPT__ {
+	static constexpr ll_bool_t check_const_except() noexcept {
 		using const_result = decltype(test_const<T>(nullptr));
 		if constexpr (const_result::result_basic_type::result::value != HasFunctionResult::Unknown)
 			return LL_FALSE;
@@ -435,7 +435,7 @@ struct has_type_operator {
 			return LL_FALSE;
 		return LL_TRUE;
 	}
-	static constexpr ll_bool_t check_base() __LL_EXCEPT__ {
+	static constexpr ll_bool_t check_base() noexcept {
 		using no_const_result = decltype(test_noconst<T>(nullptr));
 		if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown)
 			return LL_FALSE;
@@ -449,7 +449,7 @@ struct has_type_operator {
 			return LL_FALSE;
 		return LL_TRUE;
 	}
-	static constexpr ll_bool_t check_base_except() __LL_EXCEPT__ {
+	static constexpr ll_bool_t check_base_except() noexcept {
 		using no_const_result = decltype(test_noconst<T>(nullptr));
 		if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown)
 			return LL_FALSE;
@@ -495,14 +495,14 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_typ
 		template <class U> \
 		using FunctionSignature = ReturnType(U::*)(SignarureArgs...); \
 		template <class U> \
-		using FunctionSignatureExcept = ReturnType(U::*)(SignarureArgs...) __LL_EXCEPT__; \
+		using FunctionSignatureExcept = ReturnType(U::*)(SignarureArgs...) noexcept; \
 		template <class U> \
 		using FunctionSignatureStatic = ReturnType(*)(SignarureArgs...); \
 		template <class U> \
-		using FunctionSignatureExceptStatic = ReturnType(*)(SignarureArgs...) __LL_EXCEPT__; \
+		using FunctionSignatureExceptStatic = ReturnType(*)(SignarureArgs...) noexcept; \
 	 \
 		template <class U> \
-		static constexpr auto test_noconst(U* p) __LL_EXCEPT__ { \
+		static constexpr auto test_noconst(U* p) noexcept { \
 			using FunctionType = decltype(&U::function); \
 			using BaseClassType = member_function_traits<FunctionType>::instance_type; \
 			 \
@@ -526,15 +526,15 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_typ
 			return internal_has_functional::has_function_results<operation_base, operation_const, operation_static, operation_except, op_unknown>{}; \
 		} \
 		template <class> \
-		static constexpr auto test_noconst(...) __LL_EXCEPT__-> type_default_result; \
+		static constexpr auto test_noconst(...) noexcept-> type_default_result; \
 		 \
 		template <class U> \
 		using FunctionSignatureConst = ReturnType(U::*)(SignarureArgs...) const; \
 		template <class U> \
-		using FunctionSignatureExceptConst = ReturnType(U::*)(SignarureArgs...) const __LL_EXCEPT__; \
+		using FunctionSignatureExceptConst = ReturnType(U::*)(SignarureArgs...) const noexcept; \
 		 \
 		template <class U> \
-		static constexpr auto test_const(const U* p) __LL_EXCEPT__ { \
+		static constexpr auto test_const(const U* p) noexcept { \
 			using FunctionType = decltype(&U::function); \
 			using BaseClassType = member_function_traits<FunctionType>::instance_type; \
 			 \
@@ -554,10 +554,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_typ
 			return internal_has_functional::has_function_results<operation_base, operation_const, operation_static, operation_except, op_unknown>{}; \
 		} \
 		template <class> \
-		static constexpr auto test_const(...) __LL_EXCEPT__-> type_default_result; \
+		static constexpr auto test_const(...) noexcept-> type_default_result; \
 		 \
 		 \
-		static constexpr ll_bool_t check_static() __LL_EXCEPT__ { \
+		static constexpr ll_bool_t check_static() noexcept { \
 			using no_const_result = decltype(test_noconst<T>(nullptr)); \
 			if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
 				return LL_FALSE; \
@@ -571,7 +571,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_typ
 				return LL_FALSE; \
 			return LL_TRUE; \
 		} \
-		static constexpr ll_bool_t check_static_except() __LL_EXCEPT__ { \
+		static constexpr ll_bool_t check_static_except() noexcept { \
 			using no_const_result = decltype(test_noconst<T>(nullptr)); \
 			if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
 				return LL_FALSE; \
@@ -585,7 +585,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_typ
 				return LL_FALSE; \
 			return LL_TRUE; \
 		} \
-		static constexpr ll_bool_t check_const() __LL_EXCEPT__ { \
+		static constexpr ll_bool_t check_const() noexcept { \
 			using const_result = decltype(test_const<T>(nullptr)); \
 			if constexpr (const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
 				return LL_FALSE; \
@@ -599,7 +599,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_typ
 				return LL_FALSE; \
 			return LL_TRUE; \
 		} \
-		static constexpr ll_bool_t check_const_except() __LL_EXCEPT__ { \
+		static constexpr ll_bool_t check_const_except() noexcept { \
 			using const_result = decltype(test_const<T>(nullptr)); \
 			if constexpr (const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
 				return LL_FALSE; \
@@ -613,7 +613,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_typ
 				return LL_FALSE; \
 			return LL_TRUE; \
 		} \
-		static constexpr ll_bool_t check_base() __LL_EXCEPT__ { \
+		static constexpr ll_bool_t check_base() noexcept { \
 			using no_const_result = decltype(test_noconst<T>(nullptr)); \
 			if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
 				return LL_FALSE; \
@@ -627,7 +627,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_typ
 				return LL_FALSE; \
 			return LL_TRUE; \
 		} \
-		static constexpr ll_bool_t check_base_except() __LL_EXCEPT__ { \
+		static constexpr ll_bool_t check_base_except() noexcept { \
 			using no_const_result = decltype(test_noconst<T>(nullptr)); \
 			if constexpr (no_const_result::result_basic_type::result::value != HasFunctionResult::Unknown) \
 				return LL_FALSE; \
@@ -665,7 +665,7 @@ __LL_TEMPLATE_HAS_FUNCTION_BASE__(clear, clear, LL_FALSE);
 #pragma region SwapChecker
 template<class T>
 struct is_nothrow_swappeable {
-	static constexpr auto test() __LL_EXCEPT__ {
+	static constexpr auto test() noexcept {
 		if constexpr (std::is_pointer_v<T> || traits::is_basic_type_v<T>)
 			return std::true_type{};
 		else if constexpr (std::is_array_v<T>) {
@@ -691,7 +691,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_swappeable_v = is_nothrow_swapp
 #pragma region CopyChecker
 template<class T>
 struct is_nothrow_copyable {
-	static constexpr auto test() __LL_EXCEPT__ {
+	static constexpr auto test() noexcept {
 		if constexpr (std::is_pointer_v<T>) {
 			using __noptr = std::remove_pointer_t<T>;
 			if constexpr (std::is_pointer_v<__noptr>) return std::false_type{};

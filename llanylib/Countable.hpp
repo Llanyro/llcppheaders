@@ -36,134 +36,134 @@ class Countable {
 	#pragma region Functions
 	protected:
 		#pragma region Protected
-		__LL_NODISCARD__ constexpr T& lenRef() __LL_EXCEPT__ { return this->length; }
+		__LL_NODISCARD__ constexpr T& lenRef() noexcept { return this->length; }
 
 		#pragma endregion
 	public:
 		#pragma region Contructors
-		constexpr Countable() __LL_EXCEPT__ : Countable(ZERO_VAL) {}
-		constexpr Countable(cinput length) __LL_EXCEPT__ : length(length) {}
-		constexpr ~Countable() __LL_EXCEPT__ {}
+		constexpr Countable() noexcept : Countable(ZERO_VAL) {}
+		constexpr Countable(cinput length) noexcept : length(length) {}
+		constexpr ~Countable() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr Countable(const Countable& other) __LL_EXCEPT__
+		constexpr Countable(const Countable& other) noexcept
 			: Countable(other.length) {}
-		constexpr Countable& operator=(const Countable& other) __LL_EXCEPT__ {
+		constexpr Countable& operator=(const Countable& other) noexcept {
 			this->length = other.length;
 			return *this;
 		}
 
-		constexpr Countable(Countable&& other) __LL_EXCEPT__
+		constexpr Countable(Countable&& other) noexcept
 			: Countable(other.length) { other.clear(); }
-		constexpr Countable& operator=(Countable&& other) __LL_EXCEPT__ {
+		constexpr Countable& operator=(Countable&& other) noexcept {
 			this->length = other.length;
 			other.length = ZERO_VAL;
 			return *this;
 		}
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator const Countable*() const __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ constexpr operator Countable*() __LL_EXCEPT__ = delete;
+		__LL_NODISCARD__ constexpr operator const Countable*() const noexcept = delete;
+		__LL_NODISCARD__ constexpr operator Countable*() noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr operator T() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr operator T() const noexcept {
 			return this->length;
 		}
-		__LL_NODISCARD__ constexpr T count() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T count() const noexcept {
 			return this->operator T();
 		}
-		__LL_NODISCARD__ constexpr T len() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T len() const noexcept {
 			return this->operator T();
 		}
-		__LL_NODISCARD__ constexpr T size() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr T size() const noexcept {
 			return this->operator T();
 		}
-		__LL_NODISCARD__ constexpr void clear() __LL_EXCEPT__ { this->length = ZERO_VAL; }
-		__LL_NODISCARD__ constexpr T half() const __LL_EXCEPT__ { return (this->length >> 1); }
-		__LL_NODISCARD__ constexpr ll_bool_t inRange(cinput position) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr void clear() noexcept { this->length = ZERO_VAL; }
+		__LL_NODISCARD__ constexpr T half() const noexcept { return (this->length >> 1); }
+		__LL_NODISCARD__ constexpr ll_bool_t inRange(cinput position) const noexcept {
 			return position < this->operator T();
 		}
 		// Used to get end of array
-		__LL_NODISCARD__ constexpr ll_bool_t inRangeEnd(cinput position) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t inRangeEnd(cinput position) const noexcept {
 			return position <= this->operator T();
 		}
 
-		constexpr void operator++() __LL_EXCEPT__ { ++this->length; }
-		constexpr void operator--() __LL_EXCEPT__ { --this->length; }
-		__LL_NODISCARD__ constexpr T operator++(int) __LL_EXCEPT__ { return this->length++; }
-		__LL_NODISCARD__ constexpr T operator--(int) __LL_EXCEPT__ { return this->length--; }
+		constexpr void operator++() noexcept { ++this->length; }
+		constexpr void operator--() noexcept { --this->length; }
+		__LL_NODISCARD__ constexpr T operator++(int) noexcept { return this->length++; }
+		__LL_NODISCARD__ constexpr T operator--(int) noexcept { return this->length--; }
 
-		constexpr void operator+=(cinput value) __LL_EXCEPT__ { this->length += value; }
-		constexpr void operator-=(cinput value) __LL_EXCEPT__ { this->length -= value; }
-		constexpr void operator+=(const Countable& other) __LL_EXCEPT__ {
+		constexpr void operator+=(cinput value) noexcept { this->length += value; }
+		constexpr void operator-=(cinput value) noexcept { this->length -= value; }
+		constexpr void operator+=(const Countable& other) noexcept {
 			this->length += other.length;
 		}
-		constexpr void operator-=(const Countable& other) __LL_EXCEPT__ {
+		constexpr void operator-=(const Countable& other) noexcept {
 			this->length -= other.length;
 		}
 
-		constexpr typename T operator=(cinput value) __LL_EXCEPT__ {
+		constexpr typename T operator=(cinput value) noexcept {
 			return this->length = value;
 		}
 
 		#pragma region CountableOperations
-		__LL_NODISCARD__ constexpr Countable operator+(cinput value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr Countable operator+(cinput value) const noexcept {
 			return Countable(this->length + value);
 		}
-		__LL_NODISCARD__ constexpr Countable operator-(cinput value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr Countable operator-(cinput value) const noexcept {
 			return Countable(this->length - value);
 		}
-		__LL_NODISCARD__ constexpr Countable operator+(const Countable& other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr Countable operator+(const Countable& other) const noexcept {
 			return Countable(this->length + other.length);
 		}
-		__LL_NODISCARD__ constexpr Countable operator-(const Countable& other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr Countable operator-(const Countable& other) const noexcept {
 			return Countable(this->length - other.length);
 		}
 
 		#pragma endregion
 		#pragma region CountableComparations
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const Countable& other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const Countable& other) const noexcept {
 			return this->operator T() > other.operator T();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const Countable& other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const Countable& other) const noexcept {
 			return this->operator T() >= other.operator T();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const Countable& other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const Countable& other) const noexcept {
 			return this->operator T() < other.operator T();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const Countable& other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const Countable& other) const noexcept {
 			return this->operator T() <= other.operator T();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const Countable& other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const Countable& other) const noexcept {
 			return this->operator T() == other.operator T();
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const Countable& other) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const Countable& other) const noexcept {
 			return this->operator T() != other.operator T();
 		}
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(cinput value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(cinput value) const noexcept {
 			return this->operator T() > value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(cinput value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(cinput value) const noexcept {
 			return this->operator T() >= value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(cinput value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(cinput value) const noexcept {
 			return this->operator T() < value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(cinput value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(cinput value) const noexcept {
 			return this->operator T() <= value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(cinput value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(cinput value) const noexcept {
 			return this->operator T() == value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(cinput value) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(cinput value) const noexcept {
 			return this->operator T() != value;
 		}
 
 		#pragma endregion
-		constexpr void swap(Countable& other) __LL_EXCEPT__ {
+		constexpr void swap(Countable& other) noexcept {
 			T tmp = this->length;
 			this->length = other.length;
 			other.length = tmp;

@@ -33,23 +33,23 @@ class Typeid {
 	public:
 		static_assert(traits::is_char_type_v<T>, "Type must be a char type");
 		using NameType = meta::ArrayPair<T>;
-		using HashFunction = hash::OptionalHash64(*)(const NameType&) __LL_EXCEPT__;
+		using HashFunction = hash::OptionalHash64(*)(const NameType&) noexcept;
 	private:
 		hash::Hash64 name_hash;
 		NameType name;
 	private:
-		constexpr void simpleClear() __LL_EXCEPT__ { this->name_hash.clear(); }
+		constexpr void simpleClear() noexcept { this->name_hash.clear(); }
 	public:
 		#pragma region Contructors
-		constexpr Typeid() __LL_EXCEPT__ = delete;
-		constexpr ~Typeid() __LL_EXCEPT__ {}
+		constexpr Typeid() noexcept = delete;
+		constexpr ~Typeid() noexcept {}
 
-		constexpr Typeid(const NameType& name, HashFunction hashFunction) __LL_EXCEPT__
+		constexpr Typeid(const NameType& name, HashFunction hashFunction) noexcept
 			: name_hash(), name(name) {
 			auto h = hashFunction(this->name);
 			if (h.has_value()) this->name_hash = *h;
 		}
-		constexpr Typeid(NameType&& name, HashFunction hashFunction) __LL_EXCEPT__
+		constexpr Typeid(NameType&& name, HashFunction hashFunction) noexcept
 			: name_hash(), name(std::move(name)) {
 			auto h = hashFunction(this->name);
 			if (h.has_value()) this->name_hash = *h;
@@ -57,18 +57,18 @@ class Typeid {
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr Typeid(const Typeid& other) __LL_EXCEPT__
+		constexpr Typeid(const Typeid& other) noexcept
 			: name_hash(other.name_hash), name(other.name) {}
-		constexpr Typeid& operator=(const Typeid& other) __LL_EXCEPT__ {
+		constexpr Typeid& operator=(const Typeid& other) noexcept {
 			this->name_hash = other.name_hash;
 			this->name = other.name;
 			return *this;
 		}
-		constexpr Typeid(Typeid&& other) __LL_EXCEPT__
+		constexpr Typeid(Typeid&& other) noexcept
 			: name_hash(std::move(other.name_hash))
 			, name(std::move(other.name))
 		{ other.simpleClear(); }
-		constexpr Typeid& operator=(Typeid&& other) __LL_EXCEPT__ {
+		constexpr Typeid& operator=(Typeid&& other) noexcept {
 			this->name_hash = other.name_hash;
 			this->name = std::move(other.name);
 			other.simpleClear();
@@ -77,15 +77,15 @@ class Typeid {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator const Typeid*() const __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ constexpr operator Typeid*() __LL_EXCEPT__ = delete;
+		__LL_NODISCARD__ constexpr operator const Typeid*() const noexcept = delete;
+		__LL_NODISCARD__ constexpr operator Typeid*() noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr const hash::Hash64& hash() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const hash::Hash64& hash() const noexcept {
 			return this->name_hash;
 		}
-		__LL_NODISCARD__ constexpr const NameType& getName() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const NameType& getName() const noexcept {
 			return this->name;
 		}
 

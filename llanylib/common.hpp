@@ -28,7 +28,7 @@ namespace meta {
 namespace common {
 
 template<class T>
-constexpr void simple_swap(T& v1, T& v2) __LL_EXCEPT__ {
+constexpr void simple_swap(T& v1, T& v2) noexcept {
 	if constexpr (traits::is_basic_type_v<T> || std::is_pointer_v<T>) {
 		T tmp = v1;
 		v1 = v2;
@@ -42,7 +42,7 @@ constexpr void simple_swap(T& v1, T& v2) __LL_EXCEPT__ {
 }
 
 template<class T, class U = T>
-constexpr cmp_t compare_with_operators(T v1, U v2) __LL_EXCEPT__ {
+constexpr cmp_t compare_with_operators(T v1, U v2) noexcept {
 	//static_assert(traits::has_no_equal_operator_v<T>, "Error, <T> object has no operator!=()");
 	//static_assert(traits::has_greater_operator_v<T>, "Error, <T> object has no operator>()");
 
@@ -52,7 +52,7 @@ constexpr cmp_t compare_with_operators(T v1, U v2) __LL_EXCEPT__ {
 }
 
 template<class T, class U = T>
-constexpr cmp_t compare_with_operators_void(const void* _a, const void* _b) __LL_EXCEPT__ {
+constexpr cmp_t compare_with_operators_void(const void* _a, const void* _b) noexcept {
 	__LL_ASSERT_VAR_NULL__(_a, "_a");
 	__LL_ASSERT_VAR_NULL__(_b, "_b");
 
@@ -68,12 +68,12 @@ constexpr cmp_t compare_with_operators_void(const void* _a, const void* _b) __LL
 }
 
 template<class T, class U>
-constexpr ll_bool_t simple_equals(T v1, U v2) __LL_EXCEPT__ {
+constexpr ll_bool_t simple_equals(T v1, U v2) noexcept {
 	//static_assert(traits::has_equal_operator_v<T>, "Error, <T> object has no operator==()");
 	return v1 == v2;
 }
 template<class T, class U = T&>
-constexpr void simple_set(T& v1, U v2) __LL_EXCEPT__ { v1 = v2; }
+constexpr void simple_set(T& v1, U v2) noexcept { v1 = v2; }
 
 } // namespace common
 } // namespace meta

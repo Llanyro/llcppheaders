@@ -69,30 +69,30 @@ class DllHandle {
 	protected:
 		ll_lib_t handle;
 	protected:
-		void simpleClear() __LL_EXCEPT__ {
+		void simpleClear() noexcept {
 			this->handle = LL_NULLPTR;
 		}
 	public:
 		ll_lib_t getHandle() { return this->handle; }
 
-		DllHandle() __LL_EXCEPT__ = delete;
+		DllHandle() noexcept = delete;
 
-		DllHandle(ll_lib_t handle) __LL_EXCEPT__
+		DllHandle(ll_lib_t handle) noexcept
 			: handle(handle) {}
-		DllHandle(ll_string_t libraryName) __LL_EXCEPT__
+		DllHandle(ll_string_t libraryName) noexcept
 			: handle(loadLibrary(libraryName)) {}
-		DllHandle(const std::string& libraryName) __LL_EXCEPT__
+		DllHandle(const std::string& libraryName) noexcept
 			: DllHandle(libraryName.c_str()) {}
-		DllHandle(const std::string_view& libraryName) __LL_EXCEPT__
+		DllHandle(const std::string_view& libraryName) noexcept
 			: DllHandle(libraryName.data()) {}
-		~DllHandle() __LL_EXCEPT__ { this->clear(); }
+		~DllHandle() noexcept { this->clear(); }
 
-		DllHandle(const DllHandle&) __LL_EXCEPT__ = delete;
-		DllHandle& operator=(const DllHandle&) __LL_EXCEPT__ = delete;
+		DllHandle(const DllHandle&) noexcept = delete;
+		DllHandle& operator=(const DllHandle&) noexcept = delete;
 
-		DllHandle(DllHandle&& other) __LL_EXCEPT__
+		DllHandle(DllHandle&& other) noexcept
 			: handle(other.handle) { other.DllHandle::simpleClear(); }
-		DllHandle& operator=(DllHandle&& other) __LL_EXCEPT__ {
+		DllHandle& operator=(DllHandle&& other) noexcept {
 			this->clear();
 			this->handle = other.handle;
 			other.DllHandle::simpleClear();
@@ -100,21 +100,21 @@ class DllHandle {
 		}
 
 		template<ll_bool_t SAFE_MODE = LL_FALSE>
-		__LL_NODISCARD__ void* getFunction(ll_string_t libraryFunctionName) __LL_EXCEPT__ {
+		__LL_NODISCARD__ void* getFunction(ll_string_t libraryFunctionName) noexcept {
 			if constexpr (SAFE_MODE)
 				return (this->isValid()) ? getLibraryFunction(this->handle, libraryFunctionName) : LL_NULLPTR;
 			else return getLibraryFunction(this->handle, libraryFunctionName);
 		}
 		template<ll_bool_t SAFE_MODE = LL_FALSE>
-		__LL_NODISCARD__ void* getFunction(const std::string& libraryFunctionName) __LL_EXCEPT__ {
+		__LL_NODISCARD__ void* getFunction(const std::string& libraryFunctionName) noexcept {
 			return this->getFunction<SAFE_MODE>(libraryFunctionName.c_str());
 		}
 		template<ll_bool_t SAFE_MODE = LL_FALSE>
-		__LL_NODISCARD__ void* getFunction(const std::string_view& libraryFunctionName) __LL_EXCEPT__ {
+		__LL_NODISCARD__ void* getFunction(const std::string_view& libraryFunctionName) noexcept {
 			return this->getFunction<SAFE_MODE>(libraryFunctionName.data());
 		}
 		template<ll_bool_t SAFE_MODE = LL_FALSE>
-		__LL_NODISCARD__ void* getFunction(const len_t mem_position) __LL_EXCEPT__ {
+		__LL_NODISCARD__ void* getFunction(const len_t mem_position) noexcept {
 			if constexpr (SAFE_MODE)
 				return (this->isValid()) ? (reinterpret_cast<ll_char_t*>(this->handle) + mem_position) : LL_NULLPTR;
 			else return reinterpret_cast<ll_char_t*>(this->handle) + mem_position;
@@ -122,32 +122,32 @@ class DllHandle {
 
 
 		template<class T, ll_bool_t SAFE_MODE = LL_FALSE>
-		__LL_NODISCARD__ T getFunction(ll_string_t libraryFunctionName) __LL_EXCEPT__ {
+		__LL_NODISCARD__ T getFunction(ll_string_t libraryFunctionName) noexcept {
 			//static_assert(std::is_function_v<T>, "Template type can only be a function");
 			return reinterpret_cast<T>(this->getFunction<SAFE_MODE>(libraryFunctionName));
 		}
 		template<class T, ll_bool_t SAFE_MODE = LL_FALSE>
-		__LL_NODISCARD__ T getFunction(const std::string& libraryFunctionName) __LL_EXCEPT__ {
+		__LL_NODISCARD__ T getFunction(const std::string& libraryFunctionName) noexcept {
 			return this->getFunction<T, SAFE_MODE>(libraryFunctionName.c_str());
 		}
 		template<class T, ll_bool_t SAFE_MODE = LL_FALSE>
-		__LL_NODISCARD__ T getFunction(const std::string_view& libraryFunctionName) __LL_EXCEPT__ {
+		__LL_NODISCARD__ T getFunction(const std::string_view& libraryFunctionName) noexcept {
 			return this->getFunction<T, SAFE_MODE>(libraryFunctionName.data());
 		}
 		template<class T, ll_bool_t SAFE_MODE = LL_FALSE>
-		__LL_NODISCARD__ T getFunction(const len_t mem_position) __LL_EXCEPT__ {
+		__LL_NODISCARD__ T getFunction(const len_t mem_position) noexcept {
 			return reinterpret_cast<T>(this->getFunction<SAFE_MODE>(mem_position));
 		}
 
 
-		void clear() __LL_EXCEPT__ {
+		void clear() noexcept {
 			if(this->handle) {
 				closeLibrary(this->handle);
 				this->handle = LL_NULLPTR;
 			}
 		}
 
-		__LL_NODISCARD__ ll_bool_t isValid() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ ll_bool_t isValid() const noexcept {
 			return this->handle != LL_NULLPTR;
 		}
 };

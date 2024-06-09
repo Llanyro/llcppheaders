@@ -38,27 +38,27 @@ namespace meta {
 		~CLASS() noexcept(false);
 
 	public:
-		CLASS(__CLASS::cref) __LL_EXCEPT__ = delete;
-		__CLASS::ref operator=(__CLASS::cref) __LL_EXCEPT__ = delete;
-		CLASS(__CLASS::move) __LL_EXCEPT__ = delete;
-		__CLASS::ref operator=(__CLASS::move) __LL_EXCEPT__ = delete;
+		CLASS(__CLASS::cref) noexcept = delete;
+		__CLASS::ref operator=(__CLASS::cref) noexcept = delete;
+		CLASS(__CLASS::move) noexcept = delete;
+		__CLASS::ref operator=(__CLASS::move) noexcept = delete;
 		#pragma endregion
 */
 
 template <class T>
 class  Singleton {
 	protected:
-		constexpr Singleton() __LL_EXCEPT__ {}
+		constexpr Singleton() noexcept {}
 	public:
-		constexpr ~Singleton() __LL_EXCEPT__ {}
+		constexpr ~Singleton() noexcept {}
 
-		Singleton(const Singleton&) __LL_EXCEPT__ = delete;
-		Singleton& operator=(const Singleton&) __LL_EXCEPT__ = delete;
-		Singleton(Singleton&&) __LL_EXCEPT__ = delete;
-		Singleton& operator=(Singleton&&) __LL_EXCEPT__ = delete;
+		Singleton(const Singleton&) noexcept = delete;
+		Singleton& operator=(const Singleton&) noexcept = delete;
+		Singleton(Singleton&&) noexcept = delete;
+		Singleton& operator=(Singleton&&) noexcept = delete;
 
-		constexpr operator const Singleton*() const __LL_EXCEPT__ = delete;
-		constexpr operator Singleton* () __LL_EXCEPT__ = delete;
+		constexpr operator const Singleton*() const noexcept = delete;
+		constexpr operator Singleton* () noexcept = delete;
 
 		// [TOCHECK]
 		template <class... Args>
@@ -83,20 +83,20 @@ class  Singleton {
 //	private:
 //		static T* instance;
 //	protected:
-//		constexpr Singleton() __LL_EXCEPT__ {}
+//		constexpr Singleton() noexcept {}
 //	public:
-//		constexpr ~Singleton() __LL_EXCEPT__ {}
+//		constexpr ~Singleton() noexcept {}
 //
-//		Singleton(__Singleton::cref) __LL_EXCEPT__ = delete;
-//		__Singleton::ref operator=(__Singleton::cref) __LL_EXCEPT__ = delete;
-//		Singleton(__Singleton::move) __LL_EXCEPT__ = delete;
-//		__Singleton::ref operator=(__Singleton::move) __LL_EXCEPT__ = delete;
+//		Singleton(__Singleton::cref) noexcept = delete;
+//		__Singleton::ref operator=(__Singleton::cref) noexcept = delete;
+//		Singleton(__Singleton::move) noexcept = delete;
+//		__Singleton::ref operator=(__Singleton::move) noexcept = delete;
 //
-//		constexpr operator typename __Singleton::cref() const __LL_EXCEPT__ = delete;
-//		constexpr operator typename __Singleton::ref() __LL_EXCEPT__ = delete;
+//		constexpr operator typename __Singleton::cref() const noexcept = delete;
+//		constexpr operator typename __Singleton::ref() noexcept = delete;
 //
 //		template <class... Args>
-//		static type::ref getInstance(Args&&... args) noexcept(LL_FALSE) {
+//		static T& getInstance(Args&&... args) noexcept(LL_FALSE) {
 //			if (!Singleton<T>::instance) {
 //				if constexpr (traits::pack_has_args<Args...>)
 //					Singleton<T>::instance = new T(std::forward<Args>(args)...));

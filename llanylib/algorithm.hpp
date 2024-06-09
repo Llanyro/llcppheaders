@@ -57,32 +57,32 @@ class CompareData {
 		const U* value2;	// Value 2 of the result given
 		result_t result;	// Result of comparation
 	protected:
-		constexpr void simpleClear() __LL_EXCEPT__ {
+		constexpr void simpleClear() noexcept {
 			this->result = NULL_RESULT;
 			this->value1 = LL_NULLPTR;
 			this->value2 = LL_NULLPTR;
 		}
 	public:
-		constexpr CompareData() __LL_EXCEPT__ : CompareData(NULL_RESULT) {}
-		constexpr CompareData(const result_t result) __LL_EXCEPT__
+		constexpr CompareData() noexcept : CompareData(NULL_RESULT) {}
+		constexpr CompareData(const result_t result) noexcept
 			: CompareData(LL_NULLPTR, LL_NULLPTR, result) {}
-		constexpr CompareData(const T* value1, const U* value2, const result_t result) __LL_EXCEPT__
+		constexpr CompareData(const T* value1, const U* value2, const result_t result) noexcept
 			: value1(value1), value2(value2), result(result) {}
-		constexpr ~CompareData() __LL_EXCEPT__ {}
+		constexpr ~CompareData() noexcept {}
 
-		constexpr CompareData(const CompareData_t& other) __LL_EXCEPT__
+		constexpr CompareData(const CompareData_t& other) noexcept
 			: value1(other.value1), value2(other.value2), result(other.result) {}
-		constexpr CompareData_t& operator=(const CompareData_t& other) __LL_EXCEPT__ {
+		constexpr CompareData_t& operator=(const CompareData_t& other) noexcept {
 			this->value1 = other.value1;
 			this->value2 = other.value2;
 			this->result = other.result;
 			return *this;
 		}
 
-		constexpr CompareData(CompareData_t&& other) __LL_EXCEPT__
+		constexpr CompareData(CompareData_t&& other) noexcept
 			: value1(other.value1), value2(other.value2), result(other.result)
 		{ other.simpleClear(); }
-		constexpr CompareData_t& operator=(CompareData_t&& other) __LL_EXCEPT__ {
+		constexpr CompareData_t& operator=(CompareData_t&& other) noexcept {
 			this->value1 = other.value1;
 			this->value2 = other.value2;
 			this->result = other.result;
@@ -90,12 +90,12 @@ class CompareData {
 			return *this;
 		}
 
-		__LL_NODISCARD__ operator const CompareData_t*() const __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ operator CompareData_t*() __LL_EXCEPT__ = delete;
+		__LL_NODISCARD__ operator const CompareData_t*() const noexcept = delete;
+		__LL_NODISCARD__ operator CompareData_t*() noexcept = delete;
 
-		__LL_NODISCARD__ constexpr const T* getValue1() __LL_EXCEPT__ { return this->value1; }
-		__LL_NODISCARD__ constexpr const U* getValue2() __LL_EXCEPT__ { return this->value2; }
-		__LL_NODISCARD__ constexpr result_t getResult() const __LL_EXCEPT__ { return this->result; }
+		__LL_NODISCARD__ constexpr const T* getValue1() noexcept { return this->value1; }
+		__LL_NODISCARD__ constexpr const U* getValue2() noexcept { return this->value2; }
+		__LL_NODISCARD__ constexpr result_t getResult() const noexcept { return this->result; }
 };
 
 template<class T, class U, class result_t, result_t NULL_RESULT, ll_bool_t GET_DATA>
@@ -108,18 +108,18 @@ using CompareConditionalBool = CompareConditional<T, U, ll_bool_t, LL_FALSE, GET
 #pragma endregion
 
 struct Cmp {
-	__LL_NODISCARD__ static constexpr ll_bool_t compareBool(const int, const char) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t compareBool(const int, const char) noexcept {
 		return LL_FALSE;
 	}
-	__LL_NODISCARD__ static constexpr cmp_t compare(const int, const char) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr cmp_t compare(const int, const char) noexcept {
 		return LL_FALSE;
 	}
-	__LL_NODISCARD__ static constexpr void set(int&, const char) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr void set(int&, const char) noexcept {
 
 	}
-	__LL_NODISCARD__ static constexpr void swap(int&, int&) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr void swap(int&, int&) noexcept {
 	}
-	//__LL_NODISCARD__ static constexpr void swap(int&, char&) __LL_EXCEPT__ {
+	//__LL_NODISCARD__ static constexpr void swap(int&, char&) noexcept {
 	//}
 };
 
@@ -151,7 +151,7 @@ struct compare_cluster {
 	using __Array_u = meta::Array<U>;
 
 	#pragma region Compare
-	__LL_NODISCARD__ static constexpr CompareResult compare(const T* str1, const U* str2, len_t size) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResult compare(const T* str1, const U* str2, len_t size) noexcept {
 		if (static_cast<const void*>(str1) == static_cast<const void*>(str2)) {
 			if constexpr (GET_DATA) return CompareResult(ZERO_I32);
 			else return ZERO_I32;
@@ -179,7 +179,7 @@ struct compare_cluster {
 
 	#pragma region Equals
 	#pragma region Ptr
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T* str1, const len_t size1, const U* str2, const len_t size2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T* str1, const len_t size1, const U* str2, const len_t size2) noexcept {
 		if (size1 != size2) {
 			if constexpr (GET_DATA)
 				return CompareResultBool(LL_FALSE);
@@ -190,61 +190,61 @@ struct compare_cluster {
 			return CompareResultBool(res.getValue1(), res.getValue2(), res.getResult() == ZERO_I32);
 		else return res == ZERO_I32;
 	}
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T* str1, const len_t size1, const __ArrayPair_u& str2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T* str1, const len_t size1, const __ArrayPair_u& str2) noexcept {
 		return __cmp::equals(str1, size1, str2.begin(), str2.size());
 	}
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T* str1, const len_t size1, const __Array_u& str2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T* str1, const len_t size1, const __Array_u& str2) noexcept {
 		return __cmp::equals(str1, size1, str2.begin(), str2.size());
 	}
 
 	#pragma endregion
 	#pragma region DefaultArray
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T(&str1)[N], const U* str2, const len_t size2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T(&str1)[N], const U* str2, const len_t size2) noexcept {
 		return __cmp::equals(str1, N, str2, size2);
 	}
 	template<len_t N, len_t N2>
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T(&str1)[N], const U(&str2)[N2]) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T(&str1)[N], const U(&str2)[N2]) noexcept {
 		return __cmp::equals(str1, N, str2, N2);
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T(&str1)[N], const __ArrayPair_u& str2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T(&str1)[N], const __ArrayPair_u& str2) noexcept {
 		return __cmp::equals(str1, N, str2.begin(), str2.size());
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T(&str1)[N], const __Array_u& str2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const T(&str1)[N], const __Array_u& str2) noexcept {
 		return __cmp::equals(str1, N, str2.begin(), str2.size());
 	}
 
 	#pragma endregion
 	#pragma region ArrayPair
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& str1, const U* str2, const len_t size2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& str1, const U* str2, const len_t size2) noexcept {
 		return __cmp::equals(str1.begin(), str1.size(), str2, size2);
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& str1, const U(&str2)[N]) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& str1, const U(&str2)[N]) noexcept {
 		return __cmp::equals(str1.begin(), str1.size(), str2, N);
 	}
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& str1, const __ArrayPair_u& str2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& str1, const __ArrayPair_u& str2) noexcept {
 		return __cmp::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
 	}
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& str1, const __Array_u& str2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __ArrayPair_t& str1, const __Array_u& str2) noexcept {
 		return __cmp::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
 	}
 
 	#pragma endregion
 	#pragma region Array
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __Array_t& str1, const U* str2, const len_t size2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __Array_t& str1, const U* str2, const len_t size2) noexcept {
 		return __cmp::equals(str1.begin(), str1.size(), str2, size2);
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __Array_t& str1, const U(&str2)[N]) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __Array_t& str1, const U(&str2)[N]) noexcept {
 		return __cmp::equals(str1.begin(), str1.size(), str2, N);
 	}
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __Array_t& str1, const __ArrayPair_u& str2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __Array_t& str1, const __ArrayPair_u& str2) noexcept {
 		return __cmp::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
 	}
-	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __Array_t& str1, const __Array_u& str2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr CompareResultBool equals(const __Array_t& str1, const __Array_u& str2) noexcept {
 		return __cmp::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
 	}
 
@@ -453,7 +453,7 @@ struct finders_cluster {
 	using __Array_u = meta::Array<U>;
 
 	#pragma region Find
-	__LL_NODISCARD__ static constexpr FindResult find(const T* begin, const T* end, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr FindResult find(const T* begin, const T* end, cinput_u object) noexcept {
 		if (!begin || !end || end <= begin) {
 			if constexpr (POSITION) return npos;
 			else return end;
@@ -469,19 +469,19 @@ struct finders_cluster {
 		else return end;
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr FindResult find(const T (&data)[N], cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr FindResult find(const T (&data)[N], cinput_u object) noexcept {
 		return __find::find(data, data + N, object);
 	}
-	__LL_NODISCARD__ static constexpr FindResult find(const __ArrayPair_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr FindResult find(const __ArrayPair_t& arr, cinput_u object) noexcept {
 		return __find::find(arr.begin(), arr.end(), object);
 	}
-	__LL_NODISCARD__ static constexpr FindResult find(const __Array_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr FindResult find(const __Array_t& arr, cinput_u object) noexcept {
 		return __find::find(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region rFind
-	__LL_NODISCARD__ static constexpr FindResult rfind(const T* begin, const T* end, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr FindResult rfind(const T* begin, const T* end, cinput_u object) noexcept {
 		if (!begin || !end || end <= begin) {
 			if constexpr (POSITION) return npos;
 			else return end;
@@ -497,37 +497,37 @@ struct finders_cluster {
 		else return Comparator::compareBool(*begin, object) ? begin : end;
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr FindResult rfind(const T (&data)[N], cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr FindResult rfind(const T (&data)[N], cinput_u object) noexcept {
 		return __find::rfind(data, data + N, object);
 	}
-	__LL_NODISCARD__ static constexpr FindResult rfind(const __ArrayPair_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr FindResult rfind(const __ArrayPair_t& arr, cinput_u object) noexcept {
 		return __find::rfind(arr.begin(), arr.end(), object);
 	}
-	__LL_NODISCARD__ static constexpr FindResult rfind(const __Array_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr FindResult rfind(const __Array_t& arr, cinput_u object) noexcept {
 		return __find::rfind(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region Contains
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(const T* begin, const T* end, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(const T* begin, const T* end, cinput_u object) noexcept {
 		if constexpr (POSITION) return __find::find(begin, end, object) != npos;
 		else return __find::find(begin, end, object) != end;
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(const T(&data)[N], cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(const T(&data)[N], cinput_u object) noexcept {
 		return __find::contains(data, data + N, object);
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(const __ArrayPair_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(const __ArrayPair_t& arr, cinput_u object) noexcept {
 		return __find::contains(arr.begin(), arr.end(), object);
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t contains(const __Array_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t contains(const __Array_t& arr, cinput_u object) noexcept {
 		return __find::contains(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region Other
 	#pragma region All
-	__LL_NODISCARD__ static constexpr ll_bool_t all(const T* begin, const T* end, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t all(const T* begin, const T* end, cinput_u object) noexcept {
 		if (!begin || !end || end <= begin) return LL_FALSE;
 
 		for (; begin < end; ++begin)
@@ -536,45 +536,45 @@ struct finders_cluster {
 		return LL_TRUE;
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t all(const T (&data)[N], cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t all(const T (&data)[N], cinput_u object) noexcept {
 		return __find::all(data, data + N, object);
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t all(const __ArrayPair_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t all(const __ArrayPair_t& arr, cinput_u object) noexcept {
 		return __find::all(arr.begin(), arr.end(), object);
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t all(const __Array_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t all(const __Array_t& arr, cinput_u object) noexcept {
 		return __find::all(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region Any
-	__LL_NODISCARD__ static constexpr ll_bool_t any(const T* begin, const T* end, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t any(const T* begin, const T* end, cinput_u object) noexcept {
 		return static_cast<ll_bool_t>(__find::find(begin, end, object));
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t any(const T (&data)[N], cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t any(const T (&data)[N], cinput_u object) noexcept {
 		return __find::any(data, data + N, object);
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t any(const __ArrayPair_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t any(const __ArrayPair_t& arr, cinput_u object) noexcept {
 		return __find::any(arr.begin(), arr.end(), object);
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t any(const __Array_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t any(const __Array_t& arr, cinput_u object) noexcept {
 		return __find::any(arr.begin(), arr.end(), object);
 	}
 
 	#pragma endregion
 	#pragma region None
-	__LL_NODISCARD__ static constexpr ll_bool_t none(const T* begin, const T* end, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t none(const T* begin, const T* end, cinput_u object) noexcept {
 		return !static_cast<ll_bool_t>(__find::find(begin, end, object));
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr ll_bool_t none(const T (&data)[N], cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t none(const T (&data)[N], cinput_u object) noexcept {
 		return __find::none(data, data + N, object);
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t none(const __ArrayPair_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t none(const __ArrayPair_t& arr, cinput_u object) noexcept {
 		return __find::none(arr.begin(), arr.end(), object);
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t none(const __Array_t& arr, cinput_u object) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ll_bool_t none(const __Array_t& arr, cinput_u object) noexcept {
 		return __find::none(arr.begin(), arr.end(), object);
 	}
 
@@ -619,24 +619,24 @@ struct finders_cluster {
 	//}
 
 	#pragma region Proxy
-	//__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const T* begin, const T* end, cinput_u object) __LL_EXCEPT__ {
+	//__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const T* begin, const T* end, cinput_u object) noexcept {
 	//	const T* pos = __find::binarysearch(begin, end, object);
 	//	return (pos != end) ? pos - begin : npos;
 	//}
 	//template<len_t N>
-	//__LL_NODISCARD__ static constexpr const T* binarysearch(const T (&data)[N], cinput_u object) __LL_EXCEPT__ {
+	//__LL_NODISCARD__ static constexpr const T* binarysearch(const T (&data)[N], cinput_u object) noexcept {
 	//	if (!data || N == ZERO_UI64) return data + N;
 	//	return __find::binarysearch(data, data + N, object);
 	//}
 	//template<len_t N>
-	//__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const T (&data)[N], cinput_u object) __LL_EXCEPT__ {
+	//__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const T (&data)[N], cinput_u object) noexcept {
 	//	if (!data || N == ZERO_UI64) return data + N;
 	//	return __find::binarysearch_pos(data, data + N, object);
 	//}
-	//__LL_NODISCARD__ static constexpr const T* binarysearch(const __ArrayPair_t& arr, cinput_u object) __LL_EXCEPT__ {
+	//__LL_NODISCARD__ static constexpr const T* binarysearch(const __ArrayPair_t& arr, cinput_u object) noexcept {
 	//	return __find::binarysearch(arr.begin(), arr.end(), object);
 	//}
-	//__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const __ArrayPair_t& arr, cinput_u object) __LL_EXCEPT__ {
+	//__LL_NODISCARD__ static constexpr len_t binarysearch_pos(const __ArrayPair_t& arr, cinput_u object) noexcept {
 	//	return __find::binarysearch_pos(arr.begin(), arr.end(), object);
 	//}
 
@@ -664,16 +664,16 @@ struct data_manipulation_cluster {
 	using __Array_t = meta::Array<T>;
 
 	#pragma region Reverse
-	static constexpr void reverse(T* arr, T* end) __LL_EXCEPT__ {
+	static constexpr void reverse(T* arr, T* end) noexcept {
 		if (!arr || !end || end <= arr) return;
 		for (; arr < end; ++arr, --end)
 			Comparator::swap(*arr, *end);
 	}
 	template<len_t N>
-	static constexpr void reverse(T(&arr)[N]) __LL_EXCEPT__ {
+	static constexpr void reverse(T(&arr)[N]) noexcept {
 		__data::reverse(arr, arr + N - 1);
 	}
-	static constexpr void reverse(__Array_t& arr) __LL_EXCEPT__ {
+	static constexpr void reverse(__Array_t& arr) noexcept {
 		__data::reverse(arr.begin(), arr.end());
 	}
 
@@ -688,11 +688,11 @@ struct data_manipulation_cluster {
 		for (; dst <= end; ++dst) Comparator::set(*dst, object);
 	}
 	template<class U, class W = traits::cinput<U>, len_t N>
-	static constexpr void fill(T(&dst)[N], W object) __LL_EXCEPT__ {
+	static constexpr void fill(T(&dst)[N], W object) noexcept {
 		__data::fill(dst, dst + N - 1, object);
 	}
 	template<class U, class W = traits::cinput<U>>
-	static constexpr void fill(__Array_t& dst, W object) __LL_EXCEPT__ {
+	static constexpr void fill(__Array_t& dst, W object) noexcept {
 		__data::fill(dst.begin(), dst.end(), object);
 	}
 
@@ -762,7 +762,7 @@ struct data_manipulation_cluster {
 	#pragma endregion
 	#pragma region ShiftLeft
 	template<class U, class W = traits::cinput<U>>
-	static constexpr void shiftLeft(T* arr, const len_t size, const len_t first, len_t num, W null) __LL_EXCEPT__ {
+	static constexpr void shiftLeft(T* arr, const len_t size, const len_t first, len_t num, W null) noexcept {
 		if (!arr) return;
 		if (size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return;
 		if (first + num >= size) num = size - first - 1ull;
@@ -775,18 +775,18 @@ struct data_manipulation_cluster {
 		__data::fill(arr, last, null);
 	}
 	template<class U, len_t N, class W = traits::cinput<U>>
-	static constexpr void shiftLeft(T(&arr)[N], const len_t first, const len_t num, W null) __LL_EXCEPT__ {
+	static constexpr void shiftLeft(T(&arr)[N], const len_t first, const len_t num, W null) noexcept {
 		__data::shiftLeft(arr, N, first, num, null);
 	}
 	template<class U, class W = traits::cinput<U>>
-	static constexpr void shiftLeft(__Array_t& arr, const len_t first, const len_t num, W null) __LL_EXCEPT__ {
+	static constexpr void shiftLeft(__Array_t& arr, const len_t first, const len_t num, W null) noexcept {
 		__data::shiftLeft(arr.begin(), arr.len(), first, num, null);
 	}
 
 	#pragma endregion
 	#pragma region ShiftRight
 	template<class U, class W = traits::cinput<U>>
-	static constexpr void shifRight(T* arr, const len_t size, const len_t first, len_t num, W null) __LL_EXCEPT__ {
+	static constexpr void shifRight(T* arr, const len_t size, const len_t first, len_t num, W null) noexcept {
 		if (!arr) return;
 		if (size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return;
 
@@ -800,11 +800,11 @@ struct data_manipulation_cluster {
 		__data::fill(arr + first, --last, null);
 	}
 	template<class U, len_t N, class W = traits::cinput<U>>
-	static constexpr void shifRight(T(&arr)[N], const len_t first, const len_t num, W null) __LL_EXCEPT__ {
+	static constexpr void shifRight(T(&arr)[N], const len_t first, const len_t num, W null) noexcept {
 		__data::shifRight(arr, N, first, num, null);
 	}
 	template<class U, class W = traits::cinput<U>>
-	static constexpr void shifRight(__Array_t& arr, const len_t first, const len_t num, W null) __LL_EXCEPT__ {
+	static constexpr void shifRight(__Array_t& arr, const len_t first, const len_t num, W null) noexcept {
 		__data::shifRight(arr.begin(), arr.len(), first, num, null);
 	}
 
@@ -817,7 +817,7 @@ struct data_manipulation_cluster {
 	//	T* end,
 	//	fnc_clss::SwapFunction<U::type> swap,
 	//	fnc_clss::Compare<U::cinput> cmp
-	//) __LL_EXCEPT__ {
+	//) noexcept {
 	//	__LL_ASSERT_VAR_NULL__(arr, "arr");
 	//	__LL_ASSERT_VAR_NULL__(begin, "begin");
 	//	__LL_ASSERT_VAR_NULL__(end, "end");

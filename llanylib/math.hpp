@@ -27,45 +27,45 @@ namespace meta {
 namespace math {
 
 template<class U, class W = traits::cinput<U>>
-__LL_NODISCARD__ constexpr ll_bool_t is_odd(W value) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ll_bool_t is_odd(W value) noexcept {
 	return static_cast<ll_bool_t>(value & 1);
 }
 template<class U, class W = traits::cinput<U>>
-__LL_NODISCARD__ constexpr ll_bool_t is_even(W value) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ll_bool_t is_even(W value) noexcept {
 	return !is_odd<U, W>(value);
 }
 template<class U, class W = traits::cinput<U>>
-__LL_NODISCARD__ constexpr U min(W value1, W value2) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr U min(W value1, W value2) noexcept {
 	return (value1 > value2) ? value2 : value1;
 }
 template<class U, class W = traits::cinput<U>>
-__LL_NODISCARD__ constexpr U max(W value1, W value2) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr U max(W value1, W value2) noexcept {
 	return (value1 > value2) ? value1 : value2;
 }
 template<class U, class W = traits::cinput<U>>
-__LL_NODISCARD__ constexpr U minMax(W minVal, W value, W maxVal) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr U minMax(W minVal, W value, W maxVal) noexcept {
 	 return min(max(minVal, value), maxVal);
 }
 template<class U, class W = traits::cinput<U>>
-__LL_NODISCARD__ constexpr ll_bool_t isBetween(W minVal, W value, W maxVal) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ll_bool_t isBetween(W minVal, W value, W maxVal) noexcept {
 	return (minVal <= value && value <= maxVal);
 }
 template<class U, U minVal, U maxVal, class W = traits::cinput<U>>
-__LL_NODISCARD__ constexpr ll_bool_t isBetween(U val) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ll_bool_t isBetween(U val) noexcept {
 	 return (minVal <= val && val <= maxVal);
 }
 
 template<class T>
-__LL_NODISCARD__ constexpr i32 comparei32(const void* a, const void* b) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr i32 comparei32(const void* a, const void* b) noexcept {
 	 return *reinterpret_cast<const T*>(a) - *reinterpret_cast<const T*>(b);
 }
 template<class T>
-__LL_NODISCARD__ constexpr ll_bool_t compareBool(const void* a, const void* b) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ll_bool_t compareBool(const void* a, const void* b) noexcept {
 	 return *reinterpret_cast<const T*>(a) == *reinterpret_cast<const T*>(b);
 }
 
 //template<class T>
-//__LL_CONSTEVAL__ T abs(const T& v1, const T& v2) __LL_EXCEPT__ {
+//__LL_CONSTEVAL__ T abs(const T& v1, const T& v2) noexcept {
 //	 return (v1 > v2) ? v1 - v2 : v2 - v1;
 //}
 //template<>
@@ -73,7 +73,7 @@ __LL_NODISCARD__ constexpr ll_bool_t compareBool(const void* a, const void* b) _
 //	 return (v1 > v2) ? v1 - v2 : v2 - v1;
 //}
 //template<>
-//__LL_CONSTEVAL__ ui128 abs(const ui128& v1, const ui128& v2) __LL_EXCEPT__ {
+//__LL_CONSTEVAL__ ui128 abs(const ui128& v1, const ui128& v2) noexcept {
 //	 return { abs(v1.first, v2.first), abs(v1.second, v2.second) };
 //}
 

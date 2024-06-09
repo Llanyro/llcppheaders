@@ -53,7 +53,7 @@ static_assert(transform_to_base_64_res_4 == 64, "Error changed value");
 // [TODO]
 /*
 template<class _TypeDivision, class U, class W = traits::template_types<U>::cinput>
-__LL_NODISCARD__ constexpr ll_bool_t check(W value) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ll_bool_t check(W value) noexcept {
 	auto val = _TypeDivision::div(value);
 	return (val.h << _TypeDivision::__HALF_BITS) + val.l;
 }

@@ -31,8 +31,8 @@ namespace hash {
 
 struct LlanyHash {
 	public:
-		using Combine64 = ui64(*)(ui64, ui64) __LL_EXCEPT__;
-		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64Combine_impl(ll_string_t s, const len_t len, Combine64 combine) __LL_EXCEPT__ {
+		using Combine64 = ui64(*)(ui64, ui64) noexcept;
+		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64Combine_impl(ll_string_t s, const len_t len, Combine64 combine) noexcept {
 			if (!s || !combine) return hash::INVALID_HASH64;
 
 			// Number of groups of b64
@@ -60,12 +60,12 @@ struct LlanyHash {
 
 			return result;
 		}
-		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64Combine(ll_string_t s, const len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64Combine(ll_string_t s, const len_t len) noexcept {
 			return hash::LlanyHash::llanyHash64Combine_impl(s, len, hash::combine::murmur64Combine);
 			//return hash::LlanyHash::llanyHash64Combine_impl(s, len, hash::combine::simple64Combine_noshift);
 		}
 	public:
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64_v1(ll_string_t s, len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64_v1(ll_string_t s, len_t len) noexcept {
 			if (!s) return hash::INVALID_HASH64;
 
 			ui64 result = hash::combine::kMul64;
@@ -80,7 +80,7 @@ struct LlanyHash {
 
 			return result;
 		}
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64_v2(ll_string_t s, len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64_v2(ll_string_t s, len_t len) noexcept {
 			if (!s) return hash::INVALID_HASH64;
 
 			ui64 result = hash::combine::kMul64;
@@ -95,7 +95,7 @@ struct LlanyHash {
 
 			return result;
 		}
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64_v3(ll_string_t s, len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64_v3(ll_string_t s, len_t len) noexcept {
 			if (!s) return hash::INVALID_HASH64;
 
 			ui64 result = hash::combine::kMul64;
@@ -108,29 +108,29 @@ struct LlanyHash {
 			return result;
 		}
 	public:
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(ll_string_t s, len_t len) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(ll_string_t s, len_t len) noexcept {
 			return hash::LlanyHash::llanyHash64_v2(s, len);
 		}
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const meta::StrPair& s) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const meta::StrPair& s) noexcept {
 			if (s.empty()) return hash::INVALID_HASH64;
 			else return hash::LlanyHash::llanyHash64(s.begin(), s.len());
 		}
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const meta::Str& s) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const meta::Str& s) noexcept {
 			if (s.empty()) return hash::INVALID_HASH64;
 			else return hash::LlanyHash::llanyHash64(s.begin(), s.len());
 		}
 		template<len_t N>
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const ll_char_t(&s)[N]) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const ll_char_t(&s)[N]) noexcept {
 			if (!s) return hash::INVALID_HASH64;
 			else return hash::LlanyHash::llanyHash64(s, N - 1);
 		}
 		// Only admits hash::basic_type_hash::is_convertible_v<>
 		// Returns hash::INVALID_HASH64 if invalid type or hash error
 		template<class U, class W = traits::cinput<U>>
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(W value) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(W value) noexcept {
 			return hash::basic_type_hash::hashValue<U, W>(value, hash::LlanyHash::llanyHash64);
 		}
-		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const hash::Hash64& hash) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const hash::Hash64& hash) noexcept {
 			return hash::basic_type_hash::hashValue<ui64>(hash.get(), hash::LlanyHash::llanyHash64);
 		}
 };

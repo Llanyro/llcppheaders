@@ -33,19 +33,19 @@ namespace traits {
 namespace __internal__ {
 
 template<class T>
-__LL_NODISCARD__ constexpr const T* getNamePart1(const std::basic_string_view<T, std::char_traits<T>>& funcName) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr const T* getNamePart1(const std::basic_string_view<T, std::char_traits<T>>& funcName) noexcept {
 	constexpr len_t NUM_TEMPLATES_BEFORE_TYPE = 1ull;
 
 	// Ignore the first template argument
 	// Then when we found other template we continue processing the string to get the end of the type
 	struct TempStruct {
 		T ch; int num; using cinput = TempStruct&;
-		__LL_NODISCARD__ static constexpr ll_bool_t compareBool(const T c, TempStruct& t) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ll_bool_t compareBool(const T c, TempStruct& t) noexcept {
 			if (t.num == NUM_TEMPLATES_BEFORE_TYPE) return t.ch == c;
 			else if (t.ch == c) ++t.num;
 			return LL_FALSE;
 		}
-		__LL_NODISCARD__ static constexpr cmp_t compare(const T c, TempStruct& t) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr cmp_t compare(const T c, TempStruct& t) noexcept {
 			return c == t.ch;
 		}
 	};
@@ -55,7 +55,7 @@ __LL_NODISCARD__ constexpr const T* getNamePart1(const std::basic_string_view<T,
 		funcName.data(), funcName._Unchecked_end(), t1) + 1;
 }
 template<class T>
-__LL_NODISCARD__ constexpr const T* getNamePart2(const T* res, const T* end) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr const T* getNamePart2(const T* res, const T* end) noexcept {
 	// We try to figure out the end of the type we have
 	// This checks the type start '<' and the end '>' and takes all types and templates types
 	len_t found{};
@@ -70,9 +70,9 @@ __LL_NODISCARD__ constexpr const T* getNamePart2(const T* res, const T* end) __L
 	return LL_NULLPTR;
 }
 template<class T>
-__LL_NODISCARD__ constexpr const T* getNamePart3(const std::basic_string_view<T, std::char_traits<T>>& class_string, const T* res, const T* res2) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr const T* getNamePart3(const std::basic_string_view<T, std::char_traits<T>>& class_string, const T* res, const T* res2) noexcept {
 	struct TempStruct {
-		__LL_NODISCARD__ static constexpr ll_bool_t compareBool(const T c, const T d) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ll_bool_t compareBool(const T c, const T d) noexcept {
 			return c == d;
 		}
 	};
@@ -89,7 +89,7 @@ __LL_NODISCARD__ constexpr const T* getNamePart3(const std::basic_string_view<T,
 } // namespace __internal__
 
 template<class T>
-__LL_NODISCARD__ constexpr meta::StrPair getName(ll_bool_t REMOVE_CLASS_STR = LL_TRUE) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::StrPair getName(ll_bool_t REMOVE_CLASS_STR = LL_TRUE) noexcept {
 	//__FUNCSIG__;
 	//__PRETTY_FUNCTION__;
 	//__FUNCDNAME__;
@@ -103,7 +103,7 @@ __LL_NODISCARD__ constexpr meta::StrPair getName(ll_bool_t REMOVE_CLASS_STR = LL
 	return meta::StrPair(res, res2);
 }
 template<class T>
-__LL_NODISCARD__ constexpr meta::wStrPair getwName(ll_bool_t REMOVE_CLASS_STR = LL_TRUE) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::wStrPair getwName(ll_bool_t REMOVE_CLASS_STR = LL_TRUE) noexcept {
 	std::wstring_view funcName = L"" __FUNCSIG__;
 	ll_wstring_t res = __internal__::getNamePart1<ll_wchar_t>(funcName);
 	ll_wstring_t res2 = __internal__::getNamePart2<ll_wchar_t>(res, funcName._Unchecked_end());
@@ -115,11 +115,11 @@ __LL_NODISCARD__ constexpr meta::wStrPair getwName(ll_bool_t REMOVE_CLASS_STR = 
 }
 
 template<class T>
-__LL_NODISCARD__ constexpr meta::StrTypeid getStrTypeId(hash::StrPairHash64Function hashFunction) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::StrTypeid getStrTypeId(hash::StrPairHash64Function hashFunction) noexcept {
 	return meta::StrTypeid(traits::getName<T>(), hashFunction);
 }
 template<class T>
-__LL_NODISCARD__ constexpr meta::wStrTypeid getwStrTypeid(hash::wStrPairHash64Function hashFunction) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::wStrTypeid getwStrTypeid(hash::wStrPairHash64Function hashFunction) noexcept {
 	return meta::wStrTypeid(traits::getwName<T>(), hashFunction);
 }
 

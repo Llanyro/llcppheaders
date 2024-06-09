@@ -62,38 +62,38 @@ constexpr ui16 MASK_512 = (1 << SHIFT_512)	- 1;
 
 #pragma region BitOperations
 template<class T>
-constexpr void set(T& value, const bit_pos pos) __LL_EXCEPT__ {
+constexpr void set(T& value, const bit_pos pos) noexcept {
 	value |= static_cast<T>(1 << pos);
 }
 template<class T>
-__LL_NODISCARD__ constexpr ui8 get(T value, const bit_pos pos) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ui8 get(T value, const bit_pos pos) noexcept {
 	return (value >> pos) & 1;
 }
 template<class T>
-constexpr void clear(T& value, const bit_pos pos) __LL_EXCEPT__ {
+constexpr void clear(T& value, const bit_pos pos) noexcept {
 	value &= ~(1 << pos);
 }
 
 #pragma region Proxy
 template<class T>
-constexpr void set(T& value) __LL_EXCEPT__ { set<T, 0>(value); }
+constexpr void set(T& value) noexcept { set<T, 0>(value); }
 template<class T>
-__LL_NODISCARD__ constexpr ui8 get(T value) __LL_EXCEPT__ { return get<T, 0>(value); }
+__LL_NODISCARD__ constexpr ui8 get(T value) noexcept { return get<T, 0>(value); }
 template<class T>
-constexpr void clear(T& value) __LL_EXCEPT__ { return clear<T, 0>(value); }
+constexpr void clear(T& value) noexcept { return clear<T, 0>(value); }
 
 #pragma endregion
 
 #pragma endregion
 #pragma region BytesOperations
-__LL_NODISCARD__ constexpr ui32 bytes_swap_32(const ui32 value) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ui32 bytes_swap_32(const ui32 value) noexcept {
 	return
 		((value & 0xff) << 24)
 		| ((value & 0xff00) << 8)
 		| ((value & 0xff0000) >> 8)
 		| ((value & 0xff000000) >> 24);
 }
-__LL_NODISCARD__ constexpr ui64 bytes_swap_64(const ui64 value) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr ui64 bytes_swap_64(const ui64 value) noexcept {
 	return
 		((value & 0x00000000000000ffull) << 56)
 		| ((value & 0x000000000000ff00ull) << 40)
@@ -108,21 +108,21 @@ __LL_NODISCARD__ constexpr ui64 bytes_swap_64(const ui64 value) __LL_EXCEPT__ {
 #pragma endregion
 #pragma region BaseTransformation
 template<class T>
-__LL_NODISCARD__ constexpr T transformToBaseV3(const T value, const ui8 base) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr T transformToBaseV3(const T value, const ui8 base) noexcept {
 	static_assert(std::is_unsigned_v<T>, "<T> needs to be a unsigned value!");
 	T v1 = (value & (base - 1));
 	return v1 ? (value - v1 + base) : value;
 }
 template<class T>
-__LL_NODISCARD__ constexpr T transformTo64(const T value) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr T transformTo64(const T value) noexcept {
 	return transformToBaseV3<T>(value, 64);
 }
 template<class T>
-__LL_NODISCARD__ constexpr T transformTo32(const T value) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr T transformTo32(const T value) noexcept {
 	return transformToBaseV3<T>(value, 32);
 }
 template<class T>
-__LL_NODISCARD__ constexpr T transformTo8(const T value) __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr T transformTo8(const T value) noexcept {
 	return transformToBaseV3<T>(value, 8);
 }
 
@@ -156,7 +156,7 @@ struct type_division_cluster {
 	protected:
 		#pragma region GenericSignedOrUnsigned
 		template<class In, class Out>
-		__LL_NODISCARD__ static constexpr Out generic64to8(const In value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr Out generic64to8(const In value, const ll_bool_t* pattern) noexcept {
 			using _64 = type_division<In>;
 			using _32 = type_division<typename _64::__u>;
 			using _16 = type_division<typename _32::__u>;
@@ -166,7 +166,7 @@ struct type_division_cluster {
 			return (pattern[2] ? s16.h : s16.l);
 		}
 		template<class In, class Out>
-		__LL_NODISCARD__ static constexpr Out generic64to16(const In value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr Out generic64to16(const In value, const ll_bool_t* pattern) noexcept {
 			using _64 = type_division<In>;
 			using _32 = type_division<typename _64::__u>;
 			typename _64::Data s64 = _64::div(value);
@@ -174,14 +174,14 @@ struct type_division_cluster {
 			return (pattern[1] ? s32.h : s32.l);
 		}
 		template<class In, class Out>
-		__LL_NODISCARD__ static constexpr Out generic64to32(const In value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr Out generic64to32(const In value, const ll_bool_t* pattern) noexcept {
 			using _64 = type_division<In>;
 			typename _64::Data s64 = _64::div(value);
 			return (pattern[0] ? s64.h : s64.l);
 		}
 
 		template<class In, class Out>
-		__LL_NODISCARD__ static constexpr Out generic32to8(const In value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr Out generic32to8(const In value, const ll_bool_t* pattern) noexcept {
 			using _32 = type_division<In>;
 			using _16 = type_division<typename _32::__u>;
 			typename _32::Data s32 = _32::div(value);
@@ -189,14 +189,14 @@ struct type_division_cluster {
 			return (pattern[1] ? s16.h : s16.l);
 		}
 		template<class In, class Out>
-		__LL_NODISCARD__ static constexpr Out generic32to16(const In value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr Out generic32to16(const In value, const ll_bool_t* pattern) noexcept {
 			using _32 = type_division<In>;
 			typename _32::Data s32 = _32::div(value);
 			return (pattern[0] ? s32.h : s32.l);
 		}
 
 		template<class In, class Out>
-		__LL_NODISCARD__ static constexpr Out generic16to8(const In value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr Out generic16to8(const In value, const ll_bool_t* pattern) noexcept {
 			using _16 = type_division<In>;
 			typename _16::Data s16 = _16::div(value);
 			return (pattern[0] ? s16.h : s16.l);
@@ -206,61 +206,61 @@ struct type_division_cluster {
 	public:
 		#pragma region Convert
 		template<class In, class Out = In>
-		__LL_NODISCARD__ static constexpr Out convert(const In value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr Out convert(const In value, const ll_bool_t* pattern) noexcept {
 			return value;
 		}
 
 		template<>
-		__LL_NODISCARD__ static constexpr ui8 convert(const ui64 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui8 convert(const ui64 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic64to8<ui64, ui8>(value, pattern);
 		}
 		template<>
-		__LL_NODISCARD__ static constexpr i8 convert(const i64 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr i8 convert(const i64 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic64to8<i64, i8>(value, pattern);
 		}
 
 		template<>
-		__LL_NODISCARD__ static constexpr ui16 convert(const ui64 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui16 convert(const ui64 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic64to16<ui64, ui16>(value, pattern);
 		}
 		template<>
-		__LL_NODISCARD__ static constexpr i16 convert(const i64 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr i16 convert(const i64 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic64to16<i64, i16>(value, pattern);
 		}
 
 		template<>
-		__LL_NODISCARD__ static constexpr ui32 convert(const ui64 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui32 convert(const ui64 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic64to32<ui64, ui32>(value, pattern);
 		}
 		template<>
-		__LL_NODISCARD__ static constexpr i32 convert(const i64 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr i32 convert(const i64 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic64to32<i64, i32>(value, pattern);
 		}
 
 		template<>
-		__LL_NODISCARD__ static constexpr ui8 convert(const ui32 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui8 convert(const ui32 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic32to8<ui32, ui8>(value, pattern);
 		}
 		template<>
-		__LL_NODISCARD__ static constexpr i8 convert(const i32 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr i8 convert(const i32 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic32to8<i32, i8>(value, pattern);
 		}
 
 		template<>
-		__LL_NODISCARD__ static constexpr ui16 convert<>(const ui32 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui16 convert<>(const ui32 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic32to16<ui32, ui16>(value, pattern);
 		}
 		template<>
-		__LL_NODISCARD__ static constexpr i16 convert(const i32 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr i16 convert(const i32 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic32to16<i32, i16>(value, pattern);
 		}
 
 		template<>
-		__LL_NODISCARD__ static constexpr ui8 convert(const ui16 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr ui8 convert(const ui16 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic16to8<ui16, ui8>(value, pattern);
 		}
 		template<>
-		__LL_NODISCARD__ static constexpr i8 convert(const i16 value, const ll_bool_t* pattern) __LL_EXCEPT__ {
+		__LL_NODISCARD__ static constexpr i8 convert(const i16 value, const ll_bool_t* pattern) noexcept {
 			return type_division_cluster::generic16to8<i16, i8>(value, pattern);
 		}
 

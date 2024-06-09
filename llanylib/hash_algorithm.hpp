@@ -53,7 +53,7 @@ struct combine {
 	// Murmur-inspired hashing.
 	#pragma region Murmur
 	#pragma region 8
-	__LL_NODISCARD__ static constexpr ui8 murmur8Combine(const ui8 value1, const ui8 value2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui8 murmur8Combine(const ui8 value1, const ui8 value2) noexcept {
 		ui8 a = static_cast<ui8>((value1 ^ value2) * combine::kMul8);
 		a ^= (a >> combine::llshift8);
 		ui8 b = static_cast<ui8>((value2 ^ a) * combine::kMul8);
@@ -62,17 +62,17 @@ struct combine {
 		return b;
 	}
 	// Value in in left position
-	__LL_NODISCARD__ static constexpr ui8 murmur8Combine_l(const ui8 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui8 murmur8Combine_l(const ui8 value) noexcept {
 		return combine::murmur8Combine(value, combine::combine8);
 	}
 	// Value in in right position
-	__LL_NODISCARD__ static constexpr ui8 murmur8Combine_r(const ui8 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui8 murmur8Combine_r(const ui8 value) noexcept {
 		return combine::murmur8Combine(combine::combine8, value);
 	}
 
 	#pragma endregion
 	#pragma region 32
-	__LL_NODISCARD__ static constexpr ui32 murmur32Combine(const ui32 value1, const ui32 value2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui32 murmur32Combine(const ui32 value1, const ui32 value2) noexcept {
 		ui32 a = (value1 ^ value2) * combine::kMul32;
 		a ^= (a >> combine::llshift32);
 		ui32 b = (value2 ^ a) * combine::kMul32;
@@ -81,17 +81,17 @@ struct combine {
 		return b;
 	}
 	// Value in in left position
-	__LL_NODISCARD__ static constexpr ui32 murmur32Combine_l(const ui32 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui32 murmur32Combine_l(const ui32 value) noexcept {
 		return combine::murmur32Combine(value, combine::combine32);
 	}
 	// Value in in right position
-	__LL_NODISCARD__ static constexpr ui32 murmur32Combine_r(const ui32 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui32 murmur32Combine_r(const ui32 value) noexcept {
 		return combine::murmur32Combine(combine::combine32, value);
 	}
 
 	#pragma endregion
 	#pragma region 64
-	__LL_NODISCARD__ static constexpr ui64 murmur64Combine(const ui64 value1, const ui64 value2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui64 murmur64Combine(const ui64 value1, const ui64 value2) noexcept {
 		ui64 a = (value1 ^ value2) * combine::kMul64;
 		a ^= (a >> combine::llshift64);
 		ui64 b = (value2 ^ a) * combine::kMul64;
@@ -100,11 +100,11 @@ struct combine {
 		return b;
 	}
 	// Value in in left position
-	__LL_NODISCARD__ static constexpr ui64 murmur64Combine_l(const ui64 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui64 murmur64Combine_l(const ui64 value) noexcept {
 		return combine::murmur64Combine(value, combine::combine64);
 	}
 	// Value in in right position
-	__LL_NODISCARD__ static constexpr ui64 murmur64Combine_r(const ui64 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui64 murmur64Combine_r(const ui64 value) noexcept {
 		return combine::murmur64Combine(combine::combine64, value);
 	}
 
@@ -114,7 +114,7 @@ struct combine {
 	#pragma region Combine
 	#pragma region Template
 	template<class T, ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr T simpleCombine(const T value1, const T value2, const ui8 shift) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr T simpleCombine(const T value1, const T value2, const ui8 shift) noexcept {
 		if constexpr (IS_REVERSE) return static_cast<T>(value1 ^ (value2 << shift));
 		else return static_cast<T>(value1 ^ (value2 >> shift));
 	}
@@ -123,27 +123,27 @@ struct combine {
 	#pragma region 8
 	// Value in in left position + user shift
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui8 simple8Combine_l(const ui8 value, const ui8 shift) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui8 simple8Combine_l(const ui8 value, const ui8 shift) noexcept {
 		return combine::simpleCombine<ui8, IS_REVERSE>(value, combine::combine8, shift);
 	}
 	// Value in in right position + user shift
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui8 simple8Combine_r(const ui8 value, const ui8 shift) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui8 simple8Combine_r(const ui8 value, const ui8 shift) noexcept {
 		return combine::simpleCombine<ui8, IS_REVERSE>(combine::combine8, value, shift);
 	}
 	// Values + no shift
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui8 simple8Combine_noshift(const ui8 value1, const ui8 value2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui8 simple8Combine_noshift(const ui8 value1, const ui8 value2) noexcept {
 		return combine::simpleCombine<ui8, IS_REVERSE>(value1, value2, combine::llshift8);
 	}
 	// Value in in left position
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui8 simple8Combine_l(const ui8 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui8 simple8Combine_l(const ui8 value) noexcept {
 		return combine::simple8Combine_l<IS_REVERSE>(value, combine::llshift8);
 	}
 	// Value in in right position
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui8 simple8Combine_r(const ui8 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui8 simple8Combine_r(const ui8 value) noexcept {
 		return combine::simple8Combine_r<IS_REVERSE>(value, combine::llshift8);
 	}
 
@@ -151,27 +151,27 @@ struct combine {
 	#pragma region 32
 	// Value in in left position + user shift
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui32 simple32Combine_l(const ui32 value, const ui32 shift) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui32 simple32Combine_l(const ui32 value, const ui32 shift) noexcept {
 		return combine::simpleCombine<ui32, IS_REVERSE>(value, combine::combine32, shift);
 	}
 	// Value in in right position + user shift
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui32 simple32Combine_r(const ui32 value, const ui32 shift) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui32 simple32Combine_r(const ui32 value, const ui32 shift) noexcept {
 		return combine::simpleCombine<ui32, IS_REVERSE>(combine::combine32, value, shift);
 	}
 	// Values + no shift
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui32 simple32Combine_noshift(const ui32 value1, const ui32 value2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui32 simple32Combine_noshift(const ui32 value1, const ui32 value2) noexcept {
 		return combine::simpleCombine<ui32, IS_REVERSE>(value1, value2, combine::llshift32);
 	}
 	// Value in in left position
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui32 simple32Combine_l(const ui32 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui32 simple32Combine_l(const ui32 value) noexcept {
 		return combine::simple32Combine_l<IS_REVERSE>(value, combine::llshift32);
 	}
 	// Value in in right position
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui32 simple32Combine_r(const ui32 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui32 simple32Combine_r(const ui32 value) noexcept {
 		return combine::simple32Combine_r<IS_REVERSE>(value, combine::llshift32);
 	}
 
@@ -179,27 +179,27 @@ struct combine {
 	#pragma region 64
 	// Value in in left position + user shift
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui64 simple64Combine_l(const ui64 value, const ui64 shift) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui64 simple64Combine_l(const ui64 value, const ui64 shift) noexcept {
 		return combine::simpleCombine<ui64, IS_REVERSE>(value, combine::combine64, shift);
 	}
 	// Value in in right position + user shift
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui64 simple64Combine_r(const ui64 value, const ui64 shift) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui64 simple64Combine_r(const ui64 value, const ui64 shift) noexcept {
 		return combine::simpleCombine<ui64, IS_REVERSE>(combine::combine64, value, shift);
 	}
 	// Values + no shift
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui64 simple64Combine_noshift(const ui64 value1, const ui64 value2) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui64 simple64Combine_noshift(const ui64 value1, const ui64 value2) noexcept {
 		return combine::simpleCombine<ui64, IS_REVERSE>(value1, value2, combine::llshift64);
 	}
 	// Value in in left position
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui64 simple64Combine_l(const ui64 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui64 simple64Combine_l(const ui64 value) noexcept {
 		return combine::simple64Combine_l<IS_REVERSE>(value, combine::llshift64);
 	}
 	// Value in in right position
 	template<ll_bool_t IS_REVERSE = LL_FALSE>
-	__LL_NODISCARD__ static constexpr ui64 simple64Combine_r(const ui64 value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr ui64 simple64Combine_r(const ui64 value) noexcept {
 		return combine::simple64Combine_r<IS_REVERSE>(value, combine::llshift64);
 	}
 
@@ -214,7 +214,7 @@ struct basic_type_hash {
 
 	#pragma region UsedInTools
 	template<len_t N, class T>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) noexcept {
 		static_assert(basic_type_hash::is_convertible_v<T>, "Invalid type to hash");
 		static_assert(N != ZERO_UI64, "Cannot hash 0 elements");
 		if constexpr (N == 1) return basic_type_hash::hashValue<T>(*values, hashFunction);
@@ -229,7 +229,7 @@ struct basic_type_hash {
 		}
 	}
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N], hash::Hash64Function hashFunction) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N], hash::Hash64Function hashFunction) noexcept {
 		constexpr len_t BUFFERLEN = sizeof(ui64) * N;
 		ll_char_t buffer[BUFFERLEN]{};
 
@@ -245,7 +245,7 @@ struct basic_type_hash {
 
 	// Uses bitwise operators: [ ">>", "&" ]
 	template<class U, class W = traits::cinput<U>>
-	__LL_NODISCARD__ static constexpr void conversor(ll_char_t*& buffer, W value) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr void conversor(ll_char_t*& buffer, W value) noexcept {
 		static_assert(basic_type_hash::is_convertible_v<U>, "Invalid type to hash");
 		constexpr len_t N = sizeof(U);
 		constexpr len_t BYTES = (N << 3) - 8;
@@ -254,7 +254,7 @@ struct basic_type_hash {
 			*buffer = static_cast<ui8>(value >> byte) & 0xff;
 	}
 	template<class U, class W = traits::cinput<U>>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValue(W value, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValue(W value, hash::Hash64Function hashFunction) noexcept {
 		static_assert(basic_type_hash::is_convertible_v<U>, "Invalid type to hash");
 		constexpr len_t BUFFERLEN = sizeof(U);
 		ll_char_t buffer[BUFFERLEN]{};
@@ -267,12 +267,12 @@ struct basic_type_hash {
 // Struct for use in HashTool in an more optimized way (for not constexpr data)
 struct basic_type_hash_no_constexpr {
 	template<len_t N>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N], hash::Hash64Function hashFunction) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N], hash::Hash64Function hashFunction) noexcept {
 		static_assert(N != ZERO_UI64, "Cannot hash 0 elements");
 		return hashFunction(reinterpret_cast<ll_string_t>(hashes), sizeof(hash::Hash64) * N);
 	}
 	template<len_t N, class T>
-	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) __LL_EXCEPT__ {
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) noexcept {
 		static_assert(!basic_type_hash::is_convertible_v<T>, "Invalid type to hash");
 		static_assert(N != ZERO_UI64, "Cannot hash 0 elements");
 		return hashFunction(reinterpret_cast<ll_string_t>(values), sizeof(T) * N);

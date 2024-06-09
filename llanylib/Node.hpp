@@ -42,42 +42,42 @@ class NodeNext {
 	#pragma region Functions
 	public:
 		#pragma region Contructors
-		constexpr NodeNext() __LL_EXCEPT__ : NodeNext(LL_NULLPTR) {}
-		constexpr NodeNext(NodeType* next) __LL_EXCEPT__ : next(next) {}
-		constexpr ~NodeNext() __LL_EXCEPT__ {}
+		constexpr NodeNext() noexcept : NodeNext(LL_NULLPTR) {}
+		constexpr NodeNext(NodeType* next) noexcept : next(next) {}
+		constexpr ~NodeNext() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		NodeNext(const NodeNext&) __LL_EXCEPT__ = delete;
-		NodeNext& operator=(const NodeNext&) __LL_EXCEPT__ = delete;
-		NodeNext(NodeNext&&) __LL_EXCEPT__ = delete;
-		NodeNext& operator=(NodeNext&&) __LL_EXCEPT__ = delete;
+		NodeNext(const NodeNext&) noexcept = delete;
+		NodeNext& operator=(const NodeNext&) noexcept = delete;
+		NodeNext(NodeNext&&) noexcept = delete;
+		NodeNext& operator=(NodeNext&&) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ operator const NodeNext*() const __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ operator NodeNext*() __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ operator const NodeNext*() const noexcept { return this; }
+		__LL_NODISCARD__ operator NodeNext*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr const NodeType* getNext() const __LL_EXCEPT__ { return this->next; }
-		__LL_NODISCARD__ constexpr NodeType* getNext() __LL_EXCEPT__ { return this->next; }
-		constexpr void setNext(NodeType* next) __LL_EXCEPT__ { this->next = next; }
-		//constexpr void clear() __LL_EXCEPT__ {}
+		__LL_NODISCARD__ constexpr const NodeType* getNext() const noexcept { return this->next; }
+		__LL_NODISCARD__ constexpr NodeType* getNext() noexcept { return this->next; }
+		constexpr void setNext(NodeType* next) noexcept { this->next = next; }
+		//constexpr void clear() noexcept {}
 
-		__LL_NODISCARD__ constexpr NodeType* getNextNoThis() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr NodeType* getNextNoThis() noexcept {
 			return (this->getNext() != this) ? this->getNext() : LL_NULLPTR;
 		}
-		__LL_NODISCARD__ constexpr const NodeType* getNextNoThis() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const NodeType* getNextNoThis() const noexcept {
 			return (this->getNext() != this) ? this->getNext() : LL_NULLPTR;
 		}
-		__LL_NODISCARD__ constexpr NodeType* getNext(len_t moves) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr NodeType* getNext(len_t moves) noexcept {
 			NodeType* result = this;
 			for (; moves > 0; --moves)
 				result = result->getNext();
 			return result;
 		}
-		__LL_NODISCARD__ constexpr const NodeType* getNext(len_t moves) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const NodeType* getNext(len_t moves) const noexcept {
 			const NodeType* result = this;
 			for (; moves > 0; --moves)
 				result = result->getNext();
@@ -102,42 +102,42 @@ class NodePrev {
 	#pragma region Functions
 	public:
 		#pragma region Contructors
-		constexpr NodePrev() __LL_EXCEPT__ : NodePrev(LL_NULLPTR) {}
-		constexpr NodePrev(NodeType* prev) __LL_EXCEPT__ : prev(prev) {}
-		constexpr ~NodePrev() __LL_EXCEPT__ {}
+		constexpr NodePrev() noexcept : NodePrev(LL_NULLPTR) {}
+		constexpr NodePrev(NodeType* prev) noexcept : prev(prev) {}
+		constexpr ~NodePrev() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		NodePrev(const NodePrev&) __LL_EXCEPT__ = delete;
-		NodePrev& operator=(const NodePrev&) __LL_EXCEPT__ = delete;
-		NodePrev(NodePrev&&) __LL_EXCEPT__ = delete;
-		NodePrev& operator=(NodePrev&&) __LL_EXCEPT__ = delete;
+		NodePrev(const NodePrev&) noexcept = delete;
+		NodePrev& operator=(const NodePrev&) noexcept = delete;
+		NodePrev(NodePrev&&) noexcept = delete;
+		NodePrev& operator=(NodePrev&&) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ operator const NodePrev*() const __LL_EXCEPT__ { return this; }
-		__LL_NODISCARD__ operator NodePrev*() __LL_EXCEPT__ { return this; }
+		__LL_NODISCARD__ operator const NodePrev*() const noexcept { return this; }
+		__LL_NODISCARD__ operator NodePrev*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr const NodeType* getPrev() const __LL_EXCEPT__ { return this->prev; }
-		__LL_NODISCARD__ constexpr NodeType* getPrev() __LL_EXCEPT__ { return this->prev; }
-		constexpr void setPrev(NodeType* prev) __LL_EXCEPT__ { this->prev = prev; }
-		//constexpr void clear() __LL_EXCEPT__ {}
+		__LL_NODISCARD__ constexpr const NodeType* getPrev() const noexcept { return this->prev; }
+		__LL_NODISCARD__ constexpr NodeType* getPrev() noexcept { return this->prev; }
+		constexpr void setPrev(NodeType* prev) noexcept { this->prev = prev; }
+		//constexpr void clear() noexcept {}
 
-		__LL_NODISCARD__ constexpr NodeType* getPrevNoThis() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr NodeType* getPrevNoThis() noexcept {
 			return (this->getPrev() != this) ? this->getPrev() : LL_NULLPTR;
 		}
-		__LL_NODISCARD__ constexpr const NodeType* getPrevNoThis() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const NodeType* getPrevNoThis() const noexcept {
 			return (this->getPrev() != this) ? this->getPrev() : LL_NULLPTR;
 		}
-		__LL_NODISCARD__ constexpr NodeType* getPrev(len_t moves) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr NodeType* getPrev(len_t moves) noexcept {
 			NodeType* result = this;
 			for (; moves > 0; --moves)
 				result = result->getPrev();
 			return result;
 		}
-		__LL_NODISCARD__ constexpr const NodeType* getPrev(len_t moves) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const NodeType* getPrev(len_t moves) const noexcept {
 			const NodeType* result = this;
 			for (; moves > 0; --moves)
 				result = result->getPrev();

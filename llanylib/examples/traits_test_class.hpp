@@ -29,7 +29,7 @@ namespace traits {
 #endif // WINDOWS_SYSTEM
 
 struct TestClassBase {
-	operator bool() const __LL_EXCEPT__ { return false; }
+	operator bool() const noexcept { return false; }
 	void swap(TestClassBase& other) {}
 	ll_bool_t swap_s(TestClassBase& other) {}
 	ll_bool_t move(TestClassBase&& other) {}
@@ -48,14 +48,14 @@ struct TestClassBase {
 	//virtual void test6(const TestClassBase&) = 0;
 	//virtual void test7(TestClassBase&&) = 0;
 	//
-	//virtual int test8() const __LL_EXCEPT__ = 0;
-	//virtual int test9(TestClassBase&) const __LL_EXCEPT__ = 0;
-	//virtual int test10(const TestClassBase&) const __LL_EXCEPT__ = 0;
-	//virtual int test11(TestClassBase&&) const __LL_EXCEPT__ = 0;
-	//virtual int test12() __LL_EXCEPT__ = 0;
-	//virtual int test13(TestClassBase&) __LL_EXCEPT__ = 0;
-	//virtual int test14(const TestClassBase&) __LL_EXCEPT__ = 0;
-	//virtual int test15(TestClassBase&&) __LL_EXCEPT__ = 0;
+	//virtual int test8() const noexcept = 0;
+	//virtual int test9(TestClassBase&) const noexcept = 0;
+	//virtual int test10(const TestClassBase&) const noexcept = 0;
+	//virtual int test11(TestClassBase&&) const noexcept = 0;
+	//virtual int test12() noexcept = 0;
+	//virtual int test13(TestClassBase&) noexcept = 0;
+	//virtual int test14(const TestClassBase&) noexcept = 0;
+	//virtual int test15(TestClassBase&&) noexcept = 0;
 	//
 	//
 	//static int test16() noexcept(false);

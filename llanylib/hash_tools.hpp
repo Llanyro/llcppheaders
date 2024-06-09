@@ -42,46 +42,46 @@ class HashTool {
 		Hash64FunctionPack hashFunctionPack;
 	public:
 		#pragma region Constructors
-		constexpr HashTool() __LL_EXCEPT__ = delete;
-		constexpr HashTool(const Hash64FunctionPack& hashFunctionPack) __LL_EXCEPT__
+		constexpr HashTool() noexcept = delete;
+		constexpr HashTool(const Hash64FunctionPack& hashFunctionPack) noexcept
 			: hashFunctionPack(hashFunctionPack) {}
-		constexpr HashTool(Hash64FunctionPack&& hashFunctionPack) __LL_EXCEPT__
+		constexpr HashTool(Hash64FunctionPack&& hashFunctionPack) noexcept
 			: hashFunctionPack(std::move(hashFunctionPack)) {}
-		constexpr ~HashTool() __LL_EXCEPT__ {}
+		constexpr ~HashTool() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr HashTool(const HashTool& other) __LL_EXCEPT__
+		constexpr HashTool(const HashTool& other) noexcept
 			: hashFunctionPack(other.hashFunctionPack) {}
-		constexpr HashTool& operator=(const HashTool& other) __LL_EXCEPT__ {
+		constexpr HashTool& operator=(const HashTool& other) noexcept {
 			this->hashFunctionPack = other.hashFunctionPack;
 			return *this;
 		}
 
-		constexpr HashTool(HashTool&& other) __LL_EXCEPT__
+		constexpr HashTool(HashTool&& other) noexcept
 			: hashFunctionPack(std::move(other.hashFunctionPack)) {}
-		constexpr HashTool& operator=(HashTool&& other) __LL_EXCEPT__ {
+		constexpr HashTool& operator=(HashTool&& other) noexcept {
 			this->hashFunctionPack = std::move(other.hashFunctionPack);
 			return *this;
 		}
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename const HashTool*() const __LL_EXCEPT__ = delete;
-		__LL_NODISCARD__ constexpr operator typename HashTool*() __LL_EXCEPT__ = delete;
+		__LL_NODISCARD__ constexpr operator typename const HashTool*() const noexcept = delete;
+		__LL_NODISCARD__ constexpr operator typename HashTool*() noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		__LL_NODISCARD__ constexpr const Hash64FunctionPack& getHash64FunctionPack() const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr const Hash64FunctionPack& getHash64FunctionPack() const noexcept {
 			return this->hashFunctionPack;
 		}
-		__LL_NODISCARD__ constexpr Hash64FunctionPack& getHash64FunctionPack() __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr Hash64FunctionPack& getHash64FunctionPack() noexcept {
 			return this->hashFunctionPack;
 		}
-		__LL_NODISCARD__ constexpr void setHash64FunctionPack(const Hash64FunctionPack& hashFunctionPack) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr void setHash64FunctionPack(const Hash64FunctionPack& hashFunctionPack) noexcept {
 			this->hashFunctionPack = hashFunctionPack;
 		}
-		__LL_NODISCARD__ constexpr void setHash64FunctionPack(Hash64FunctionPack&& hashFunctionPack) __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr void setHash64FunctionPack(Hash64FunctionPack&& hashFunctionPack) noexcept {
 			this->hashFunctionPack = std::move(hashFunctionPack);
 		}
 
@@ -89,7 +89,7 @@ class HashTool {
 	public:
 		#pragma region HashArray
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const T* arr) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const T* arr) const noexcept {
 			if constexpr (N == ZERO_UI64) return hash::INVALID_HASH64;
 			if constexpr (std::is_pointer_v<T>) return hash::INVALID_HASH64;
 			// Calls defined function to hash arrays
@@ -160,68 +160,68 @@ class HashTool {
 			}
 		}
 		template<class T, len_t N>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const T(&arr)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const T(&arr)[N]) const noexcept {
 			return this->hashArray<N, T>(arr);
 		}
 		// Predefined hasheables
 		template<len_t N>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N]) const noexcept {
 			return basic_type_hash_class::hashArray<N>(hashes, this->hashFunctionPack.getHash64Function());
 		}
 		template<len_t N>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const ll_char_t(&str)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const ll_char_t(&str)[N]) const noexcept {
 			return this->hashFunctionPack.call(str, N);
 		}
 		template<len_t N>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const ll_wchar_t(&str)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const ll_wchar_t(&str)[N]) const noexcept {
 			return this->hashFunctionPack.call(str, N);
 		}
 
 		#pragma endregion
 		#pragma region HashObject
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const std::string& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const std::string& str) const noexcept {
 			return this->hashFunctionPack.call(str);
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const std::wstring& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const std::wstring& str) const noexcept {
 			return this->hashFunctionPack.call(str);
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::StrPair& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::StrPair& str) const noexcept {
 			return this->hashFunctionPack.call(str);
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::wStrPair& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::wStrPair& str) const noexcept {
 			return this->hashFunctionPack.call(str);
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::Str& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::Str& str) const noexcept {
 			return this->hashFunctionPack.call(str);
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::wStr& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::wStr& str) const noexcept {
 			return this->hashFunctionPack.call(str);
 		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const hash::Hash64& h) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const hash::Hash64& h) const noexcept {
 			return this->hashFunctionPack.call(h);
 		}
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::ArrayPair<T>& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::ArrayPair<T>& str) const noexcept {
 			return this->hashArray<N, T>(str.begin());
 		}
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::Array<T>& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::Array<T>& str) const noexcept {
 			return this->hashArray<N, T>(str.begin());
 		}
 		template<class T, len_t N>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::ArrayPair<T>& str, hash::Hash64* hashesh) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashObject(const meta::ArrayPair<T>& str, hash::Hash64* hashesh) const noexcept {
 			return this->hashFunctionPack.call(str);
 		}
 
 		#pragma endregion
 		#pragma region HashHashArray
 		template<class T, len_t N>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T(&arr)[N]) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T(&arr)[N]) const noexcept {
 			return this->hash_hashArray<N, T>(arr);
 		}
 		// Hashes objects individually and then hash all as one
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T* arr) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T* arr) const noexcept {
 			if constexpr (N == ZERO_UI64) return hash::INVALID_HASH64;
 
 			auto h = this->hashArray<1, T>(arr++);
@@ -240,11 +240,11 @@ class HashTool {
 		#pragma endregion
 		#pragma region HashHashObject
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::Hash64 hash_hashObject(const meta::ArrayPair<T>& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::Hash64 hash_hashObject(const meta::ArrayPair<T>& str) const noexcept {
 			return this->hash_hashArray<N, T>(str.begin());
 		}
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::Hash64 hash_hashObject(const meta::Array<T>& str) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::Hash64 hash_hashObject(const meta::Array<T>& str) const noexcept {
 			return this->hash_hashArray<N, T>(str.begin());
 		}
 
@@ -263,7 +263,7 @@ class HashTool {
 		};
 	protected:
 		template<class T>
-		constexpr void hashArgumentsV1Priv(HashStatus*& status, hash::Hash64*& hashes, const T& object) const __LL_EXCEPT__ {
+		constexpr void hashArgumentsV1Priv(HashStatus*& status, hash::Hash64*& hashes, const T& object) const noexcept {
 			if constexpr (std::is_pointer_v<T>) {
 				*status++ = HashStatus::ErrorPointer;
 				*hashes++ = hash::Hash64();
@@ -286,13 +286,13 @@ class HashTool {
 			}
 		}
 		template<class T, class... Args>
-		constexpr void hashArgumentsV1Priv(HashStatus*& status, hash::Hash64*& hashes, const T& object, const Args&... args) const __LL_EXCEPT__ {
+		constexpr void hashArgumentsV1Priv(HashStatus*& status, hash::Hash64*& hashes, const T& object, const Args&... args) const noexcept {
 			this->hashArgumentsV1Priv(status, hashes, object);
 			this->hashArgumentsV1Priv(status, hashes, args...);
 		}
 	public:
 		template<class... Args, len_t NUM_ARGS = (sizeof...(Args) + 1)>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArgumentsV1(HashStatus(&_status)[NUM_ARGS], const Args&... args) const __LL_EXCEPT__ {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArgumentsV1(HashStatus(&_status)[NUM_ARGS], const Args&... args) const noexcept {
 			using pack = traits::parameter_pack_operations<Args...>;
 			HashStatus* status = _status;
 

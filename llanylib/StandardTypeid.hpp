@@ -28,11 +28,11 @@ namespace llcpp {
 namespace meta {
 
 template<class T>
-__LL_NODISCARD__ constexpr meta::StrTypeid STANDARD_TYPEID() __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::StrTypeid STANDARD_TYPEID() noexcept {
 	return meta::StrTypeid(traits::getName<T>(), hash::STANDARD_StrPairHash64Function);
 }
 template<class T>
-__LL_NODISCARD__ constexpr meta::wStrTypeid STANDARD_wTYPEID() __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::wStrTypeid STANDARD_wTYPEID() noexcept {
 	return meta::wStrTypeid(traits::getwName<T>(), hash::STANDARD_wStrPairHash64Function);
 }
 
@@ -54,11 +54,11 @@ __LL_VAR_INLINE__ constexpr meta::StrTypeid STANDARD_TYPEID_STRTYPEID = meta::ST
 __LL_VAR_INLINE__ constexpr meta::StrTypeid STANDARD_TYPEID_WSTRTYPEID = meta::STANDARD_TYPEID<wStrTypeid>();
 
 template<class T>
-__LL_NODISCARD__ constexpr meta::StrTypeid FAST_TYPEID() __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::StrTypeid FAST_TYPEID() noexcept {
 	return meta::StrTypeid(traits::getName<T>(), hash::FAST_StrPairHash64Function);
 }
 template<class T>
-__LL_NODISCARD__ constexpr meta::wStrTypeid FAST_wTYPEID() __LL_EXCEPT__ {
+__LL_NODISCARD__ constexpr meta::wStrTypeid FAST_wTYPEID() noexcept {
 	return meta::wStrTypeid(traits::getwName<T>(), hash::FAST_wStrPairHash64Function);
 }
 

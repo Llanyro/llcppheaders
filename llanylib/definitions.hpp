@@ -53,7 +53,7 @@ namespace llcpp { enum class OSEnum { Windows, Posix, Unix, Other }; } // namesp
 #endif
 
 // Definitions
-#define __LL_EXCEPT__ noexcept(true)
+//#define __LL_EXCEPT___ noexcept(true)
 #define LL_NULLPTR nullptr
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 

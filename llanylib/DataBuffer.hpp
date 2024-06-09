@@ -192,6 +192,11 @@ class DataBuffer : public Allocator {
 			this->mem_filled = LL_NULLPTR;
 			this->mem_end = LL_NULLPTR;
 		}
+		ll_bool_t reserve(const len_t bytes) noexcept {
+			if (!this->reallocate(this->mem, this->len() + bytes)) return LL_FALSE;
+			else this->advanceEnd(bytes);
+			return LL_TRUE;
+		}
 
 		#pragma endregion
 };

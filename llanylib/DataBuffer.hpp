@@ -26,7 +26,7 @@
 namespace llcpp {
 namespace meta {
 
-struct Alloc {
+struct AllocatorDummy {
 	__LL_NODISCARD__ void* allocate(const len_t bytes) noexcept {
 		return LL_NULLPTR;
 	}
@@ -43,6 +43,7 @@ struct Alloc {
 
 template<class Allocator, len_t INCREMENT = 1024ull>
 class DataBuffer : public Allocator {
+	#pragma region Assert
 	public:
 		static_assert(!std::is_reference_v<Allocator>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<Allocator>, "Const type is forbidden!");
@@ -70,7 +71,7 @@ class DataBuffer : public Allocator {
 		static_assert(
 			std::is_same_v<MemMoveFunc, decltype(&Allocator::memmove)>,
 			"Allocator::memmove needs to be the same type as MemMoveFunc!");
-
+	#pragma endregion
 	protected:
 		void* mem;
 		void* mem_filled;

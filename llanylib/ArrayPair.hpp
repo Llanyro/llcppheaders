@@ -327,12 +327,20 @@ __LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(Array<T>&& other) 
 #pragma endregion
 #pragma region Builders
 template<class T, len_t N>
-__LL_NODISCARD__ constexpr Array<T> make_Array(T(&arr)[N]) {
+__LL_NODISCARD__ constexpr Array<T> make_Array(T(&arr)[N]) noexcept {
 	return Array<T>(arr, arr + N);
 }
 template<class T, len_t N>
-__LL_NODISCARD__ constexpr ArrayPair<T> make_ArrayPair(const T(&arr)[N]) {
+__LL_NODISCARD__ constexpr ArrayPair<T> make_ArrayPair(const T(&arr)[N]) noexcept {
 	return ArrayPair<T>(arr, arr + N);
+}
+template<len_t N>
+__LL_NODISCARD__ constexpr ArrayPair<ll_char_t> make_ArrayPair(const ll_char_t(&arr)[N]) noexcept {
+	return ArrayPair<ll_char_t>(arr, arr + N - 1);
+}
+template<len_t N>
+__LL_NODISCARD__ constexpr ArrayPair<ll_wchar_t> make_ArrayPair(const ll_wchar_t(&arr)[N]) noexcept {
+	return ArrayPair<ll_wchar_t>(arr, arr + N - 1);
 }
 
 #pragma endregion

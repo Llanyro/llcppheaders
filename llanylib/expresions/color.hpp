@@ -22,7 +22,15 @@
 #define LLANYLIB_EXPRESIONS_COLOR_MINOR_ 0
 
 #include "../types.hpp"
-#include <string_view>
+
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(push)
+	#pragma warning(disable:4365) // ignore xmemory/atomic libs warnings
+	#include <string_view>
+	#pragma warning(pop)
+#else
+	#include <string_view>
+#endif // WINDOWS_SYSTEM
 
 namespace llcpp {
 namespace meta {

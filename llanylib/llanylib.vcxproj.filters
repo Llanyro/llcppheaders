@@ -162,5 +162,8 @@
     <ClInclude Include="Countable.hpp">
       <Filter>Source Files\utils\lists</Filter>
     </ClInclude>
+    <ClInclude Include="DataBuffer.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,6 +27,7 @@
     <ClInclude Include="cityhash.hpp" />
     <ClInclude Include="common.hpp" />
     <ClInclude Include="Countable.hpp" />
+    <ClInclude Include="DataBuffer.hpp" />
     <ClInclude Include="definitions.hpp" />
     <ClInclude Include="dynamiclibrarylinking.hpp" />
     <ClInclude Include="examples\bitsExample.hpp" />

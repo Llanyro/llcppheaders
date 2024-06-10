@@ -164,14 +164,14 @@ class DataBuffer : public Allocator {
 		template<class T = ConversorType> T* get(const len_t byte_position) noexcept {
 			return this->begin<T>() + byte_position;
 		}
-		template<class T = ConversorType> T* begin() noexcept { return this->get<T>(ZERO_UI64); }
+		template<class T = ConversorType> T* begin() noexcept { return reinterpret_cast<T>(this->mem); }
 		template<class T = ConversorType> T* filled() noexcept { return this->get<T>(this->len_filled); }
 		template<class T = ConversorType> T* end() noexcept { return this->get<T>(this->length); }
 
 		template<class T = ConversorType> const T* get(const len_t byte_position) const noexcept {
 			return this->begin<T>() + byte_position;
 		}
-		template<class T = ConversorType> const T* begin() const noexcept { return this->get<T>(ZERO_UI64); }
+		template<class T = ConversorType> const T* begin() const noexcept { return reinterpret_cast<T>(this->mem); }
 		template<class T = ConversorType> const T* filled() const noexcept { return this->get<T>(this->len_filled); }
 		template<class T = ConversorType> const T* end() const noexcept { return this->get<T>(this->length); }
 

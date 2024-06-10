@@ -24,6 +24,7 @@
 #include "ArrayPair.hpp"
 #include "Countable.hpp"
 #include "expresions/string.hpp"
+#include "StandardTypeid.hpp"
 
 // WIP
 #include "Printable.hpp"

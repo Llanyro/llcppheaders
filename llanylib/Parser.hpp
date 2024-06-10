@@ -298,8 +298,10 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 
 				if constexpr (std::is_same_v<__noptr, std::nullptr_t>)
 					this->writeNull();
-				else if constexpr (meta::traits::is_char_type_v<__noptr>)
+				else if constexpr (std::is_same_v<__noptr, ll_char_t>)
 					this->writeString(data);
+				else if constexpr (std::is_same_v<__noptr, ll_wchar_t>)
+					this->writewString(data);
 				else {
 					this->write('<', t.getName(), Parser::PTR_INIT_STR);
 					this->writePointer(data);
@@ -416,8 +418,8 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 		template<> void write(const ll_bool_t& value) noexcept {
 			this->write(value ? meta::string::TRUE_STR : meta::string::FALSE_STR);
 		}
-		template<> void write(const ll_wchar_t& value) noexcept { this->writeChar(value); }
-		template<> void write(const ll_char_t& value) noexcept { this->writewChar(value); }
+		template<> void write(const ll_char_t& value) noexcept { this->writeChar(value); }
+		template<> void write(const ll_wchar_t& value) noexcept { this->writewChar(value); }
 
 		template<> void write(const i16& value) noexcept { this->write_i64(value); }
 		template<> void write(const i32& value) noexcept { this->write_i64(value); }

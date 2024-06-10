@@ -131,8 +131,8 @@ struct compare_cluster {
 
 	using cinput_t = traits::cinput<T>;
 	using cinput_u = traits::cinput<U>;
-	using CompareFunc = fnc_clss::Compare<cinput_t, cinput_u> noexcept;
-	using CompareFuncBool = fnc_clss::CompareBool<cinput_t, cinput_u> noexcept;
+	using CompareFunc = fnc_clss::Compare<cinput_t, cinput_u>;
+	using CompareFuncBool = fnc_clss::CompareBool<cinput_t, cinput_u>;
 
 	static_assert(!std::is_reference_v<Comparator>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<Comparator>, "Const type is forbidden!");
@@ -434,8 +434,8 @@ struct finders_cluster {
 
 	using cinput_t = traits::cinput<T>;
 	using cinput_u = traits::cinput<U>;
-	using CompareFunc = fnc_clss::Compare<cinput_t, cinput_u> noexcept;
-	using CompareFuncBool = fnc_clss::CompareBool<cinput_t, cinput_u> noexcept;
+	using CompareFunc = fnc_clss::Compare<cinput_t, cinput_u>;
+	using CompareFuncBool = fnc_clss::CompareBool<cinput_t, cinput_u>;
 
 	static_assert(!std::is_reference_v<Comparator>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<Comparator>, "Const type is forbidden!");
@@ -649,7 +649,7 @@ struct data_manipulation_cluster {
 	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
 	using cinput_t = traits::cinput<T>;
-	using SwapFunc = fnc_clss::SwapFunction<T> noexcept;
+	using SwapFunc = fnc_clss::SwapFunction<T>;
 
 	static_assert(!std::is_reference_v<Comparator>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<Comparator>, "Const type is forbidden!");

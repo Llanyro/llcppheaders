@@ -73,7 +73,7 @@ struct ParserFunction {
 	void writeStr(const meta::Str&) noexcept {}
 	void writewStr(const meta::wStr&) noexcept {}
 
-	void writePointer(const void* pointer) noexcept {}
+	void writePointer(const void*) noexcept {}
 	__LL_NODISCARD__ ll_bool_t parserExtra(const meta::StrTypeid&, const void*) noexcept {
 		return LL_FALSE;
 	}

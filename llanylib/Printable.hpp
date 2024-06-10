@@ -29,6 +29,7 @@ class Parser;
 class StringBuffer;
 } // namespace string
 namespace meta {
+namespace parser {
 
 class LL_SHARED_LIB Printable {
 	public:
@@ -66,6 +67,7 @@ class LL_SHARED_LIB Printable {
 		virtual void useParser(void* parser) const noexcept = 0;
 };
 
+} // namespace parser
 } // namespace meta
 } // namespace llcpp
 

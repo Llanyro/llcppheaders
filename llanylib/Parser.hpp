@@ -42,20 +42,24 @@
 
 namespace llcpp {
 namespace meta {
+namespace parser {
 
 // tm* time, StrPair string format (strftime)
 using ParseTime = std::pair<void*, meta::StrPair>;
 // tm* time, wStrPair wstring format (wcsftime)
 using wParseTime = std::pair<void*, meta::wStrPair>;
 
-struct ParserFunction {
-	ParserFunction() noexcept {}
-	~ParserFunction() noexcept {}
+struct ParserFunctionDummy {
+	ParserFunctionDummy() noexcept {}
+	~ParserFunctionDummy() noexcept {}
 
-	ParserFunction(const ParserFunction&) noexcept {}
-	ParserFunction& operator=(const ParserFunction&) noexcept {}
-	ParserFunction(ParserFunction&&) noexcept {}
-	ParserFunction& operator=(ParserFunction&&) noexcept {}
+	ParserFunctionDummy(const ParserFunctionDummy&) noexcept {}
+	ParserFunctionDummy& operator=(const ParserFunctionDummy&) noexcept {}
+	ParserFunctionDummy(ParserFunctionDummy&&) noexcept {}
+	ParserFunctionDummy& operator=(ParserFunctionDummy&&) noexcept {}
+
+	__LL_NODISCARD__ operator const ParserFunctionDummy*() const noexcept { return this; }
+	__LL_NODISCARD__ operator ParserFunctionDummy*() noexcept { return this; }
 
 	void writeChar(const ll_char_t) noexcept {}
 	void writewChar(const ll_wchar_t) noexcept {}
@@ -95,7 +99,7 @@ struct ParserFunction {
 	void writewTm(const wParseTime&) noexcept {}
 };
 
-template<class ParserFunctions>
+template<class ParserFunctions = ParserFunctionDummy>
 class LL_SHARED_LIB Parser : public ParserFunctions {
 	#pragma region ClassTypes
 	public:
@@ -482,6 +486,7 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 	#pragma endregion
 };
 
+} // namespace parser
 } // namespace meta
 } // namespace llcpp
 

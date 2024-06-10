@@ -480,7 +480,7 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 		#pragma endregion
 	public:
 		void writeTimes(const ll_char_t value, const len_t times) noexcept { this->writeCharTimes(value, times); }
-		void writeTimes(const ll_wchar_t value, const len_t times) noexcept { this->writeCharTimes(value, times); }
+		void writeTimes(const ll_wchar_t value, const len_t times) noexcept { this->writewCharTimes(value, times); }
 
 		#pragma endregion
 	#pragma endregion

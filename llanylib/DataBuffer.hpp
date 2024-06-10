@@ -107,14 +107,12 @@ class DataBuffer : public Allocator {
 	#pragma endregion
 	protected:
 		void* mem;
-		void* mem_filled;
-		void* mem_end;
+		len_t len_filled;
+		len_t length;
 	protected:
-		void updateFilled(const len_t bytes) noexcept { this->mem_filled = this->get(bytes); }
-		void updateEnd(const len_t bytes) noexcept { this->mem_end = this->get(bytes); }
-		void advanceEnd(const len_t bytes) noexcept {
-			this->mem_end = this->end<>() + bytes;
-		}
+		void updateFilled(const len_t bytes) noexcept { this->len_filled = bytes; }
+		void updateEnd(const len_t bytes) noexcept { this->length = bytes; }
+		void advanceEnd(const len_t bytes) noexcept { this->length += bytes; }
 		// This requires this class is invalid to copy it
 		void copyOther(const DataBuffer& other) noexcept {
 			len_t size = other.len();
@@ -125,13 +123,13 @@ class DataBuffer : public Allocator {
 		}
 		void simpleClear() noexcept {
 			this->mem = LL_NULLPTR;
-			this->mem_filled = LL_NULLPTR;
-			this->mem_end = LL_NULLPTR;
+			this->len_filled = ZERO_UI64;
+			this->length = ZERO_UI64;
 		}
 	public:
 		#pragma region Constructors
 		DataBuffer() noexcept
-			: Allocator(), mem(LL_NULLPTR), mem_filled(LL_NULLPTR), mem_end(LL_NULLPTR) {
+			: Allocator(), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64) {
 			this->mem = this->allocate(INCREMENT);
 			this->updateFilled(0ull);
 			this->updateEnd(INCREMENT);
@@ -139,7 +137,7 @@ class DataBuffer : public Allocator {
 		~DataBuffer() noexcept { this->invalidate(); }
 
 		DataBuffer(const DataBuffer& other) noexcept
-			: Allocator(other), mem(LL_NULLPTR), mem_filled(LL_NULLPTR), mem_end(LL_NULLPTR)
+			: Allocator(other), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64)
 		{ this->copyOther(other); }
 		DataBuffer& operator=(const DataBuffer& other) noexcept {
 			Allocator::operator=(other);
@@ -148,14 +146,14 @@ class DataBuffer : public Allocator {
 			return *this;
 		}
 		DataBuffer(DataBuffer&& other) noexcept
-			: Allocator(std::move(other)), mem(other.mem), mem_filled(other.mem_filled), mem_end(other.mem_end)
+			: Allocator(std::move(other)), mem(other.mem), len_filled(other.len_filled), length(other.length)
 		{ other.simpleClear(); }
 		DataBuffer& operator=(DataBuffer&& other) noexcept {
 			Allocator::operator=(std::move(other));
 			this->invalidate();
 			this->mem = other.mem;
-			this->mem_filled = other.mem_filled;
-			this->mem_end = other.mem_end;
+			this->len_filled = other.len_filled;
+			this->length = other.length;
 			other.simpleClear();
 			return *this;
 		}
@@ -163,47 +161,33 @@ class DataBuffer : public Allocator {
 		#pragma endregion
 		#pragma region Getters
 		#pragma region Data
-		void* begin() noexcept { return this->mem; }
-		void* end() noexcept { return this->mem_end; }
-		void* filled() noexcept { return this->mem_filled; }
-		void* get(const len_t byte_position) noexcept {
-			return static_cast<ConversorType*>(this->mem) + byte_position;
-		}
-
-		template<class T = ConversorType> T* begin() noexcept { return reinterpret_cast<T*>(this->mem); }
-		template<class T = ConversorType> T* end() noexcept { return reinterpret_cast<T*>(this->mem); }
-		template<class T = ConversorType> T* filled() noexcept { return reinterpret_cast<T*>(this->mem_filled); }
 		template<class T = ConversorType> T* get(const len_t byte_position) noexcept {
 			return this->begin<T>() + byte_position;
 		}
+		template<class T = ConversorType> T* begin() noexcept { return this->get(ZERO_UI64)); }
+		template<class T = ConversorType> T* filled() noexcept { return this->get(this->len_filled)); }
+		template<class T = ConversorType> T* end() noexcept { return this->get(this->length)); }
 
-		const void* begin() const noexcept { return this->mem; }
-		const void* end() const noexcept { return this->mem_end; }
-		const void* filled() const noexcept { return this->mem_filled; }
-		const void* get(const len_t byte_position) const noexcept {
-			return static_cast<ConversorType*>(this->mem) + byte_position;
-		}
-
-		template<class T = ConversorType> const T* begin() const noexcept { return reinterpret_cast<T*>(this->mem); }
-		template<class T = ConversorType> const T* end() const noexcept { return reinterpret_cast<T*>(this->mem); }
-		template<class T = ConversorType> const T* filled() const noexcept { return reinterpret_cast<T*>(this->mem_filled); }
 		template<class T = ConversorType> const T* get(const len_t byte_position) const noexcept {
 			return this->begin<T>() + byte_position;
 		}
+		template<class T = ConversorType> const T* begin() const noexcept { return this->get(ZERO_UI64)); }
+		template<class T = ConversorType> const T* filled() const noexcept { return this->get(this->len_filled)); }
+		template<class T = ConversorType> const T* end() const noexcept { return this->get(this->length)); }
 
 		#pragma endregion
 		#pragma region Size
-		__LL_NODISCARD__ len_t len() const noexcept { return this->end<>() - this->begin<>(); }
+		__LL_NODISCARD__ len_t len() const noexcept { return this->length; }
 		__LL_NODISCARD__ len_t size() const noexcept { return this->len(); }
 		__LL_NODISCARD__ len_t count() const noexcept { return this->len(); }
 
-		__LL_NODISCARD__ len_t filled_len() const noexcept { return this->filled<>() - this->begin<>(); }
+		__LL_NODISCARD__ len_t filled_len() const noexcept { return this->len_filled; }
 		__LL_NODISCARD__ len_t filled_size() const noexcept { return this->filled_len(); }
 		__LL_NODISCARD__ len_t filled_count() const noexcept { return this->filled_len(); }
 
 		#pragma endregion
 		#pragma region SizeAvaible
-		__LL_NODISCARD__ len_t avaible() const noexcept { return this->end<>() - this->filled<>(); }
+		__LL_NODISCARD__ len_t avaible() const noexcept { return this->len() - this->filled_len(); }
 		__LL_NODISCARD__ ll_bool_t avaible(const len_t bytes) const noexcept { return bytes < this->avaible(); }
 
 		#pragma endregion
@@ -240,13 +224,13 @@ class DataBuffer : public Allocator {
 
 		void remove_data(const len_t bytes_to_remove) noexcept {
 			if (this->filled_len() > bytes_to_remove)
-				this->mem_filled = this->filled<>() - bytes_to_remove;
-			else this->mem_filled = this->begin();
+				this->len_filled -= bytes_to_remove;
+			else this->len_filled = ZERO_UI64;
 		}
 		void invalidate() noexcept {
 			this->deallocate(this->mem);
-			this->mem_filled = LL_NULLPTR;
-			this->mem_end = LL_NULLPTR;
+			this->len_filled = ZERO_UI64;
+			this->length = ZERO_UI64;
 		}
 		ll_bool_t reserve(const len_t bytes) noexcept {
 			if (!this->reallocate(this->mem, this->len() + bytes)) return LL_FALSE;
@@ -260,12 +244,13 @@ class DataBuffer : public Allocator {
 		}
 		// CAREFULL, THIS FUNCTION IS NOT SECURE!!!
 		// USE AT YOUR OWN RISK
-		void advanceFilled(const len_t bytes) noexcept { this->mem_filled = this->filled<>() + bytes; }
+		void advanceFilled(const len_t bytes) noexcept { this->len_filled += bytes; }
 		__LL_NODISCARD__ ll_bool_t advanceFilled_s(const len_t bytes) noexcept {
-			ConversorType* new_pos = this->filled<>() + bytes;
-			if (new_pos > this->end<>()) return LL_FALSE;
-			this->mem_filled = new_pos;
-			return LL_TRUE;
+			this->advanceFilled(bytes);
+			if (this->filled_len() <= this->len())
+				return LL_TRUE;
+			this->len_filled -= bytes;
+			return LL_FALSE;
 		}
 
 

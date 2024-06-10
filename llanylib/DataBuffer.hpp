@@ -26,6 +26,11 @@
 namespace llcpp {
 namespace meta {
 
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(push)
+	#pragma warning(disable:4100) // Unreferenced formal parameter
+#endif // WINDOWS_SYSTEM
+
 struct AllocatorDummy {
 	__LL_NODISCARD__ void* allocate(const len_t bytes) noexcept {
 		return LL_NULLPTR;
@@ -41,7 +46,12 @@ struct AllocatorDummy {
 	__LL_NODISCARD__ void memmove(void* src, void* dst, const len_t bytes) noexcept {}
 };
 
-template<class Allocator, len_t INCREMENT = 1024ull>
+#if defined(WINDOWS_SYSTEM)
+	#pragma warning(pop)
+#endif // WINDOWS_SYSTEM
+
+
+template<class Allocator, len_t INCREMENT = 1024ull, class ConversorType = ll_char_t>
 class DataBuffer : public Allocator {
 	#pragma region Assert
 	public:
@@ -79,8 +89,10 @@ class DataBuffer : public Allocator {
 	protected:
 		void updateFilled(const len_t bytes) noexcept { this->mem_filled = this->get(bytes); }
 		void updateEnd(const len_t bytes) noexcept { this->mem_end = this->get(bytes); }
-		void advanceFilled(const len_t bytes) noexcept { this->mem_filled = this->filled<ll_char_t>() + bytes; }
-		void advanceEnd(const len_t bytes) noexcept { this->mem_end = this->end<ll_char_t>() + bytes; }
+		void advanceFilled(const len_t bytes) noexcept { this->mem_filled = this->filled<>() + bytes; }
+		void advanceEnd(const len_t bytes) noexcept {
+			this->mem_end = this->end<>() + bytes;
+		}
 		// This requires this class is invalid to copy it
 		void copyOther(const DataBuffer& other) noexcept {
 			len_t size = other.len();
@@ -96,7 +108,8 @@ class DataBuffer : public Allocator {
 		}
 	public:
 		#pragma region Constructors
-		DataBuffer() noexcept : Allocator(), mem(LL_NULLPTR), mem_filled(LL_NULLPTR), mem_end(LL_NULLPTR) {
+		DataBuffer() noexcept
+			: Allocator(), mem(LL_NULLPTR), mem_filled(LL_NULLPTR), mem_end(LL_NULLPTR) {
 			this->mem = this->allocate(INCREMENT);
 			this->updateFilled(0ull);
 			this->updateEnd(INCREMENT);
@@ -129,36 +142,44 @@ class DataBuffer : public Allocator {
 		void* begin() noexcept { return this->mem; }
 		void* end() noexcept { return this->mem_end; }
 		void* filled() noexcept { return this->mem_filled; }
-		void* get(const len_t byte_position) noexcept { return static_cast<ll_char_t*>(this->mem) + byte_position; }
+		void* get(const len_t byte_position) noexcept {
+			return static_cast<ConversorType*>(this->mem) + byte_position;
+		}
 
-		template<class T> T* begin() noexcept { return reinterpret_cast<T*>(this->mem); }
-		template<class T> T* end() noexcept { return reinterpret_cast<T*>(this->mem); }
-		template<class T> T* filled() noexcept { return reinterpret_cast<T*>(this->mem_filled); }
-		template<class T> T* get(const len_t byte_position) noexcept { return this->begin<T>() + byte_position; }
+		template<class T = ConversorType> T* begin() noexcept { return reinterpret_cast<T*>(this->mem); }
+		template<class T = ConversorType> T* end() noexcept { return reinterpret_cast<T*>(this->mem); }
+		template<class T = ConversorType> T* filled() noexcept { return reinterpret_cast<T*>(this->mem_filled); }
+		template<class T = ConversorType> T* get(const len_t byte_position) noexcept {
+			return this->begin<T>() + byte_position;
+		}
 
 		const void* begin() const noexcept { return this->mem; }
 		const void* end() const noexcept { return this->mem_end; }
 		const void* filled() const noexcept { return this->mem_filled; }
-		const void* get(const len_t byte_position) const noexcept { return static_cast<ll_char_t*>(this->mem) + byte_position; }
+		const void* get(const len_t byte_position) const noexcept {
+			return static_cast<ConversorType*>(this->mem) + byte_position;
+		}
 
-		template<class T> const T* begin() const noexcept { return reinterpret_cast<T*>(this->mem); }
-		template<class T> const T* end() const noexcept { return reinterpret_cast<T*>(this->mem); }
-		template<class T> const T* filled() const noexcept { return reinterpret_cast<T*>(this->mem_filled); }
-		template<class T> const T* get(const len_t byte_position) const noexcept { return this->begin<T>() + byte_position; }
+		template<class T = ConversorType> const T* begin() const noexcept { return reinterpret_cast<T*>(this->mem); }
+		template<class T = ConversorType> const T* end() const noexcept { return reinterpret_cast<T*>(this->mem); }
+		template<class T = ConversorType> const T* filled() const noexcept { return reinterpret_cast<T*>(this->mem_filled); }
+		template<class T = ConversorType> const T* get(const len_t byte_position) const noexcept {
+			return this->begin<T>() + byte_position;
+		}
 
 		#pragma endregion
 		#pragma region Size
-		__LL_NODISCARD__ len_t len() const noexcept { return this->end<ll_char_t>() - this->begin(); }
+		__LL_NODISCARD__ len_t len() const noexcept { return this->end<>() - this->begin<>(); }
 		__LL_NODISCARD__ len_t size() const noexcept { return this->len(); }
 		__LL_NODISCARD__ len_t count() const noexcept { return this->len(); }
 
-		__LL_NODISCARD__ len_t filled_len() const noexcept { return this->filled<ll_char_t>() - this->begin(); }
+		__LL_NODISCARD__ len_t filled_len() const noexcept { return this->filled<>() - this->begin<>(); }
 		__LL_NODISCARD__ len_t filled_size() const noexcept { return this->filled_len(); }
 		__LL_NODISCARD__ len_t filled_count() const noexcept { return this->filled_len(); }
 
 		#pragma endregion
 		#pragma region SizeAvaible
-		__LL_NODISCARD__ len_t avaible() const noexcept { return this->end<ll_char_t>() - this->filled(); }
+		__LL_NODISCARD__ len_t avaible() const noexcept { return this->end<>() - this->filled<>(); }
 		__LL_NODISCARD__ ll_bool_t avaible(const len_t bytes) const noexcept { return bytes < this->avaible(); }
 
 		#pragma endregion
@@ -185,7 +206,7 @@ class DataBuffer : public Allocator {
 		}
 		void remove_data(const len_t bytes_to_remove) noexcept {
 			if (this->filled_len() > bytes_to_remove)
-				this->mem_filled = this->filled<ll_char_t>() - bytes_to_remove;
+				this->mem_filled = this->filled<>() - bytes_to_remove;
 			else this->mem_filled = this->begin();
 		}
 		void invalidate() noexcept {

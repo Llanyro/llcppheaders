@@ -112,7 +112,6 @@ class DataBuffer : public Allocator {
 	protected:
 		void updateFilled(const len_t bytes) noexcept { this->mem_filled = this->get(bytes); }
 		void updateEnd(const len_t bytes) noexcept { this->mem_end = this->get(bytes); }
-		void advanceFilled(const len_t bytes) noexcept { this->mem_filled = this->filled<>() + bytes; }
 		void advanceEnd(const len_t bytes) noexcept {
 			this->mem_end = this->end<>() + bytes;
 		}
@@ -211,7 +210,7 @@ class DataBuffer : public Allocator {
 
 		#pragma endregion
 		#pragma region DataManagement
-		__LL_NODISCARD__ ll_bool_t push_back_copy(const void* mem, const len_t bytes) noexcept {
+		__LL_NODISCARD__ ll_bool_t _push_back_copy(const void* mem, const len_t bytes) noexcept {
 			if (!this->avaible(bytes)) {
 				if (!this->reallocate(this->mem, this->len() + INCREMENT)) return LL_FALSE;
 				else this->advanceEnd(INCREMENT);
@@ -220,7 +219,7 @@ class DataBuffer : public Allocator {
 			this->advanceFilled(bytes);
 			return LL_TRUE;
 		}
-		__LL_NODISCARD__ ll_bool_t push_back_move(void* mem, const len_t bytes) noexcept {
+		__LL_NODISCARD__ ll_bool_t _push_back_move(void* mem, const len_t bytes) noexcept {
 			if (!this->avaible(bytes)) {
 				if (!this->reallocate(this->mem, this->len() + INCREMENT)) return LL_FALSE;
 				else this->advanceEnd(INCREMENT);
@@ -229,6 +228,16 @@ class DataBuffer : public Allocator {
 			this->advanceFilled(bytes);
 			return LL_TRUE;
 		}
+
+		template<class T>
+		__LL_NODISCARD__ ll_bool_t push_back_copy(const T* mem, const len_t len) noexcept {
+			return this->_push_back_copy(mem, sizeof(T) * len);
+		}
+		template<class T>
+		__LL_NODISCARD__ ll_bool_t push_back_move(T* mem, const len_t bytes) noexcept {
+			return this->_push_back_move(mem, sizeof(T) * len);
+		}
+
 		void remove_data(const len_t bytes_to_remove) noexcept {
 			if (this->filled_len() > bytes_to_remove)
 				this->mem_filled = this->filled<>() - bytes_to_remove;
@@ -244,6 +253,21 @@ class DataBuffer : public Allocator {
 			else this->advanceEnd(bytes);
 			return LL_TRUE;
 		}
+		ll_bool_t reserve() noexcept {
+			if (!this->reallocate(this->mem, this->len() + INCREMENT)) return LL_FALSE;
+			else this->advanceEnd(bytes);
+			return LL_TRUE;
+		}
+		// CAREFULL, THIS FUNCTION IS NOT SECURE!!!
+		// USE AT YOUR OWN RISK
+		void advanceFilled(const len_t bytes) noexcept { this->mem_filled = this->filled<>() + bytes; }
+		__LL_NODISCARD__ ll_bool_t advanceFilled_s(const len_t bytes) noexcept {
+			ConversorType* new_pos = this->filled<>() + bytes;
+			if (new_pos > this->end<>()) return LL_FALSE;
+			this->mem_filled = new_pos;
+			return LL_TRUE;
+		}
+
 
 		#pragma endregion
 };

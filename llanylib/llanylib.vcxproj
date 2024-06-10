@@ -48,6 +48,8 @@
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="os.hpp" />
     <ClInclude Include="ostypes.hpp" />
+    <ClInclude Include="Parser.hpp" />
+    <ClInclude Include="Printable.hpp" />
     <ClInclude Include="Random.hpp" />
     <ClInclude Include="reflection.hpp" />
     <ClInclude Include="Singleton.hpp" />

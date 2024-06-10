@@ -484,8 +484,4 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 } // namespace meta
 } // namespace llcpp
 
-#if defined(WINDOWS_SYSTEM)
-	#pragma warning(pop)
-#endif // WINDOWS_SYSTEM
-
 #endif // LLANYLIB_PARSER_HPP_

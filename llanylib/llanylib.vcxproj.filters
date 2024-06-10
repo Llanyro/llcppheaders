@@ -46,6 +46,9 @@
     <Filter Include="Source Files\types">
       <UniqueIdentifier>{127ec860-0183-4786-98b2-0b7355c8ec60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\utils\parser">
+      <UniqueIdentifier>{145643bb-e34c-48f5-8cd1-0741536b838b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\llanylib.hpp">
@@ -164,6 +167,12 @@
     </ClInclude>
     <ClInclude Include="DataBuffer.hpp">
       <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.hpp">
+      <Filter>Source Files\utils\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="Printable.hpp">
+      <Filter>Source Files\utils\parser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

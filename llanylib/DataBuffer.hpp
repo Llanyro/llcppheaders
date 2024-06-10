@@ -32,6 +32,17 @@ namespace meta {
 #endif // WINDOWS_SYSTEM
 
 struct AllocatorDummy {
+	AllocatorDummy() noexcept {}
+	~AllocatorDummy() noexcept {}
+
+	AllocatorDummy(const AllocatorDummy&) noexcept {}
+	AllocatorDummy& operator=(const AllocatorDummy&) noexcept { return *this; }
+	AllocatorDummy(AllocatorDummy&&) noexcept {}
+	AllocatorDummy& operator=(AllocatorDummy&&) noexcept { return *this; }
+
+	__LL_NODISCARD__ operator const AllocatorDummy*() const noexcept { return this; }
+	__LL_NODISCARD__ operator AllocatorDummy*() noexcept { return this; }
+
 	__LL_NODISCARD__ void* allocate(const len_t bytes) noexcept {
 		return LL_NULLPTR;
 	}
@@ -50,6 +61,8 @@ struct AllocatorDummy {
 	#pragma warning(pop)
 #endif // WINDOWS_SYSTEM
 
+constexpr auto asdafa1 = traits::is_nothrow_copyable_v<AllocatorDummy>;
+constexpr auto asdafa2 = traits::is_nothrow_swappeable_v<AllocatorDummy>;
 
 template<class Allocator, len_t INCREMENT = 1024ull, class ConversorType = ll_char_t>
 class DataBuffer : public Allocator {
@@ -61,11 +74,19 @@ class DataBuffer : public Allocator {
 		static_assert(!std::is_array_v<Allocator>, "Array type is forbidden!");
 		static_assert(std::is_class_v<Allocator>, "Allocator needs to be a class!");
 
-		using AllocateFunc = void*(Allocator::*)(const len_t bytes) noexcept;
-		using DeallocateFunc = void(Allocator::*)(void*& mem) noexcept;
-		using ReallocateFunc = ll_bool_t(Allocator::*)(void*& mem, const len_t bytes) noexcept;
-		using MemCopyFunc = void(Allocator::*)(const void* src, void* dst, const len_t bytes) noexcept;
-		using MemMoveFunc = void(Allocator::*)(void* src, void* dst, const len_t bytes) noexcept;
+		static_assert(std::is_nothrow_constructible_v<Allocator>, "Allocator needs a noexcept constructor!");
+		static_assert(std::is_nothrow_destructible_v<Allocator>, "Allocator needs a noexcept destructor!");
+		static_assert(std::is_copy_constructible_v<Allocator>, "Allocator needs a noexcept copy constructor!");
+		static_assert(std::is_copy_assignable_v<Allocator>, "Allocator needs a noexcept copy asignable!");
+		static_assert(std::is_move_constructible_v<Allocator>, "Allocator needs a noexcept move constructor!");
+		static_assert(std::is_move_assignable_v<Allocator>, "Allocator needs a noexcept move asignable!");
+
+		#pragma region AllocationFunctions
+		using AllocateFunc = void*(Allocator::*)(const len_t) noexcept;
+		using DeallocateFunc = void(Allocator::*)(void*&) noexcept;
+		using ReallocateFunc = ll_bool_t(Allocator::*)(void*&, const len_t) noexcept;
+		using MemCopyFunc = void(Allocator::*)(const void*, void*, const len_t) noexcept;
+		using MemMoveFunc = void(Allocator::*)(void*, void*, const len_t) noexcept;
 
 		static_assert(std::is_same_v<AllocateFunc, decltype(&Allocator::allocate)>,
 			"Allocator::allocate needs to be the same type as AllocateFunc!");
@@ -81,6 +102,8 @@ class DataBuffer : public Allocator {
 		static_assert(
 			std::is_same_v<MemMoveFunc, decltype(&Allocator::memmove)>,
 			"Allocator::memmove needs to be the same type as MemMoveFunc!");
+
+		#pragma endregion
 	#pragma endregion
 	protected:
 		void* mem;
@@ -117,17 +140,19 @@ class DataBuffer : public Allocator {
 		~DataBuffer() noexcept { this->invalidate(); }
 
 		DataBuffer(const DataBuffer& other) noexcept
-			: Allocator(), mem(LL_NULLPTR), mem_filled(LL_NULLPTR), mem_end(LL_NULLPTR)
+			: Allocator(other), mem(LL_NULLPTR), mem_filled(LL_NULLPTR), mem_end(LL_NULLPTR)
 		{ this->copyOther(other); }
 		DataBuffer& operator=(const DataBuffer& other) noexcept {
+			Allocator::operator=(other);
 			this->invalidate();
 			this->copyOther(other);
 			return *this;
 		}
 		DataBuffer(DataBuffer&& other) noexcept
-			: Allocator(), mem(other.mem), mem_filled(other.mem_filled), mem_end(other.mem_end)
+			: Allocator(std::move(other)), mem(other.mem), mem_filled(other.mem_filled), mem_end(other.mem_end)
 		{ other.simpleClear(); }
 		DataBuffer& operator=(DataBuffer&& other) noexcept {
+			Allocator::operator=(std::move(other));
 			this->invalidate();
 			this->mem = other.mem;
 			this->mem_filled = other.mem_filled;

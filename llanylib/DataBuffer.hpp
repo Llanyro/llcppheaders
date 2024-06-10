@@ -255,7 +255,7 @@ class DataBuffer : public Allocator {
 		}
 		ll_bool_t reserve() noexcept {
 			if (!this->reallocate(this->mem, this->len() + INCREMENT)) return LL_FALSE;
-			else this->advanceEnd(bytes);
+			else this->advanceEnd(INCREMENT);
 			return LL_TRUE;
 		}
 		// CAREFULL, THIS FUNCTION IS NOT SECURE!!!

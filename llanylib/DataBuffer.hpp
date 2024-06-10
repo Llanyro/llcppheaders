@@ -64,7 +64,7 @@ struct AllocatorDummy {
 constexpr auto asdafa1 = traits::is_nothrow_copyable_v<AllocatorDummy>;
 constexpr auto asdafa2 = traits::is_nothrow_swappeable_v<AllocatorDummy>;
 
-template<class Allocator, len_t INCREMENT = 1024ull, class ConversorType = ll_char_t>
+template<class Allocator = AllocatorDummy, len_t INCREMENT = 1024ull, class ConversorType = ll_char_t>
 class DataBuffer : public Allocator {
 	#pragma region Assert
 	public:

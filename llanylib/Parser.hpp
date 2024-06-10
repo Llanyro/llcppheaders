@@ -309,7 +309,7 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 					this->write('<', t.getName(), Parser::PRINTABLE_BAD_INITED_STR);
 			}
 			else {
-				if (!this->parserExtra(t, this, &data)) {
+				if (!this->parserExtra(t, &data)) {
 					this->write('<', t.getName(), Parser::PTR_INIT_STR);
 					this->writePointer(&data);
 					this->writeChar('>');

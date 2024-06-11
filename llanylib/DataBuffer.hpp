@@ -222,6 +222,48 @@ class DataBuffer : public Allocator {
 			return this->_push_back_move(mem, sizeof(T) * len);
 		}
 
+		template<class T, len_t N>
+		__LL_NODISCARD__ ll_bool_t push_back_copy(const T(&mem)[N]) noexcept {
+			return this->_push_back_copy(mem, sizeof(T) * N);
+		}
+		template<class T, len_t N>
+		__LL_NODISCARD__ ll_bool_t push_back_move(T (&mem)[N]) noexcept {
+			return this->_push_back_move(mem, sizeof(T) * N);
+		}
+
+
+		template<class U, class W  = traits::cinput<U>>
+		__LL_NODISCARD__ ll_bool_t push_back_copy(W object) noexcept {
+			// Copy pointers would lead in future bad behabiours
+			// Ex, copy the pointer, then delete the data in other point
+			// Memory will be invalidated, but this pointer not...
+			if constexpr (std::is_pointer_v<U> || std::is_array_v<U>) return LL_FALSE;
+			else {
+				static_assert(std::is_copy_constructible_v<Allocator>, "Class provided needs a noexcept copy constructor!");
+				if (!this->avaible(sizeof(U))) {
+					if (!this->reallocate(this->mem, this->len() + INCREMENT)) return LL_FALSE;
+					else this->advanceEnd(INCREMENT);
+				}
+				new (this->filled()) U(object);
+				this->advanceFilled(sizeof(U));
+				return LL_TRUE;
+			}
+		}
+		template<class U>
+		__LL_NODISCARD__ ll_bool_t push_back_move(U&& object) noexcept {
+			if constexpr (std::is_array_v<U>) return LL_FALSE;
+			else {
+				static_assert(std::is_move_constructible_v<U>, "Class provided needs a noexcept move constructor!");
+				if (!this->avaible(sizeof(U))) {
+					if (!this->reallocate(this->mem, this->len() + INCREMENT)) return LL_FALSE;
+					else this->advanceEnd(INCREMENT);
+				}
+				new (this->filled()) U(std::move(object));
+				this->advanceFilled(sizeof(U));
+				return LL_TRUE;
+			}
+		}
+
 		void remove_data(const len_t bytes_to_remove) noexcept {
 			if (this->filled_len() > bytes_to_remove)
 				this->len_filled -= bytes_to_remove;

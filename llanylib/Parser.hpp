@@ -292,7 +292,7 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 		}
 		template<class T>
 		__LL_INLINE__ constexpr void write(const T& data) noexcept {
-			constexpr meta::StrTypeid t = meta::STANDARD_TYPEID<T>();
+			constexpr meta::StrTypeid __type__ = meta::STANDARD_TYPEID<T>();
 			if constexpr (std::is_pointer_v<T>) {
 				using __noptr = std::remove_pointer_t<T>;
 
@@ -303,7 +303,7 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 				else if constexpr (std::is_same_v<__noptr, ll_wchar_t>)
 					this->writewString(data);
 				else {
-					this->write('<', t.getName(), Parser::PTR_INIT_STR);
+					this->write('<', __type__.getName(), Parser::PTR_INIT_STR);
 					this->writePointer(data);
 					this->writeChar('>');
 				}
@@ -312,11 +312,11 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 				this->writeNull();
 			else if constexpr (std::is_base_of_v<Printable, T>) {
 				if (!this->writePrintable(data))
-					this->write('<', t.getName(), Parser::PRINTABLE_BAD_INITED_STR);
+					this->write('<', __type__.getName(), Parser::PRINTABLE_BAD_INITED_STR);
 			}
 			else {
-				if (!this->parserExtra(t, &data)) {
-					this->write('<', t.getName(), Parser::PTR_INIT_STR);
+				if (!this->parserExtra(__type__, &data)) {
+					this->write('<', __type__.getName(), Parser::PTR_INIT_STR);
 					this->writePointer(&data);
 					this->writeChar('>');
 				}
@@ -332,6 +332,11 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 			this->write(std::forward<const Args>(args)...);
 			this->ln();
 		}
+		template<class... Args>
+		__LL_INLINE__ constexpr void writewln(const Args&... args) noexcept {
+			this->write(std::forward<const Args>(args)...);
+			this->wln();
+		}
 
 		#pragma endregion
 		#pragma region LlObjects
@@ -344,10 +349,6 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 		__LL_INLINE__ constexpr void write(const meta::Array<T>& value) noexcept {
 			this->writeTemplateArray(value.begin(), value.end());
 		}
-		template<class T, ll_bool_t STRING_VIEW>
-		__LL_INLINE__ constexpr void write(const meta::ArrayView<T, STRING_VIEW>& value) noexcept {
-			this->writeTemplateArray(value.begin(), value.end());
-		}
 		template<class T, T ZERO_VAL>
 		__LL_INLINE__ constexpr void write(const meta::Countable<T, ZERO_VAL>& value) noexcept {
 			//if constexpr (traits::is_basic_type_v<T>)
@@ -358,7 +359,9 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 		}
 		template<class T>
 		__LL_INLINE__ constexpr void write(const meta::Typeid<T>& value) noexcept {
-			this->write("[ \"", value.getName(), "\": ", value.hash(), " ]");
+			if constexpr (std::is_same_v<T, ll_wchar_t>)
+				this->write(L"[ \"", value.getName(), L"\": ", value.hash(), L" ]");
+			else this->write("[ \"", value.getName(), "\": ", value.hash(), " ]");
 		}
 
 		#pragma endregion
@@ -384,8 +387,8 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 		__LL_INLINE__ constexpr void write(const std::optional<T>& value) noexcept {
 			if (value.has_value()) this->write(*value);
 			else {
-				constexpr meta::StrTypeid t = meta::STANDARD_TYPEID<T>();
-				this->write("INVALID OBJECT: <", t.getName(), '>');
+				constexpr meta::StrTypeid __type__ = meta::STANDARD_TYPEID<T>();
+				this->write("INVALID OBJECT: <", __type__.getName(), '>');
 			}
 		}
 

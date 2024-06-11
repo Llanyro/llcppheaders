@@ -63,7 +63,8 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_bigger_type_v = std::_Is_any_of_v<std::remove_cv_t<T>, f128>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<std::remove_cv_t<T>, ll_char_t, ll_wchar_t>;
-
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_hash_type_v = std::_Is_any_of_v<std::remove_cv_t<T>, hash::Hash32, hash::Hash64, hash::Hash128>;
 template<class>
 __LL_VAR_INLINE__ constexpr len_t array_size = ZERO_UI64;
 template<class T, len_t N>

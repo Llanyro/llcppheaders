@@ -55,7 +55,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 	public:
 		#pragma region Constructors
 		DataBuffer() noexcept
-			: Allocator(), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64) {
+			: AllocatorChecker(), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64) {
 			this->mem = this->allocate(INCREMENT);
 			this->updateFilled(0ull);
 			this->updateEnd(INCREMENT);
@@ -63,19 +63,19 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 		~DataBuffer() noexcept { this->invalidate(); }
 
 		DataBuffer(const DataBuffer& other) noexcept
-			: Allocator(other), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64)
+			: AllocatorChecker(other), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64)
 		{ this->copyOther(other); }
 		DataBuffer& operator=(const DataBuffer& other) noexcept {
-			Allocator::operator=(other);
+			AllocatorChecker::operator=(other);
 			this->invalidate();
 			this->copyOther(other);
 			return *this;
 		}
 		DataBuffer(DataBuffer&& other) noexcept
-			: Allocator(std::move(other)), mem(other.mem), len_filled(other.len_filled), length(other.length)
+			: AllocatorChecker(std::move(other)), mem(other.mem), len_filled(other.len_filled), length(other.length)
 		{ other.simpleClear(); }
 		DataBuffer& operator=(DataBuffer&& other) noexcept {
-			Allocator::operator=(std::move(other));
+			AllocatorChecker::operator=(std::move(other));
 			this->invalidate();
 			this->mem = other.mem;
 			this->len_filled = other.len_filled;

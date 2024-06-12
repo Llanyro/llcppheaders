@@ -34,7 +34,6 @@ class ArrayPair {
 	public:
 		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
-		using ArrayPair_t = ArrayPair;
 	protected:
 		const T* mem;
 		const T* mem_end;
@@ -150,7 +149,6 @@ class Array {
 	public:
 		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
-		using Array_t = Array;
 	protected:
 		T* mem;
 		T* mem_end;

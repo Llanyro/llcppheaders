@@ -197,7 +197,6 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 
 		__LL_NODISCARD__ operator const AllocatorCheckerTyped*() const noexcept { return *this; }
 		__LL_NODISCARD__ operator AllocatorCheckerTyped*() noexcept { return *this; }
-
 	public:
 		// Does not constructs any object!
 		__LL_NODISCARD__ T* allocate(const len_t lenght) noexcept {
@@ -222,7 +221,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 		}
 
 		// Constructs all objects!
-		__LL_NODISCARD__ T* allocate(const len_t lenght) noexcept {
+		__LL_NODISCARD__ T* allocateConstruct(const len_t lenght) noexcept {
 			void* mem = Allocator::allocate(lenght * sizeof(T));
 			if (mem) return new (mem) T[lenght];
 			else return LL_NULLPTR;
@@ -288,7 +287,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			else {
 				const T* end = src + lenght;
 				for (; src < end; ++src, ++dst)
-					new (dst) T(stD::move(*src));
+					new (dst) T(std::move(*src));
 			}
 		}
 		// Moves objects with move operator

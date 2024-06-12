@@ -174,5 +174,8 @@
     <ClInclude Include="Printable.hpp">
       <Filter>Source Files\utils\parser</Filter>
     </ClInclude>
+    <ClInclude Include="AllocatorChecker.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

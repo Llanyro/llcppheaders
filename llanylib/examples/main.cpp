@@ -169,7 +169,7 @@ int main() {
 
 	std::printf("Get3 point: %p\n", (handle_char + 0x000112C6));
 
-	using Get = std::optional<int>(*)() __LL_EXCEPT__;
+	using Get = std::optional<int>(*)() noexcept;
 	Get get_function = lib.getFunction<Get>(0x000110F5);
 	std::printf("Get point: %p\n", get_function);
 	auto get_value = get_function();
@@ -181,9 +181,6 @@ int main() {
 	//auto get_value = get_function2();
 	//if(get_value.has_value()) std::cout << "Get value: " << *get_value << "\n";
 	//else std::cout << "Get value: no value\n";
-
-	
-
 
 	return 0;
 }

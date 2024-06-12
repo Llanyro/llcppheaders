@@ -22,6 +22,7 @@
     <ClInclude Include="..\llanylib.hpp" />
     <ClInclude Include="..\llanylibsimple.hpp" />
     <ClInclude Include="algorithm.hpp" />
+    <ClInclude Include="AllocatorChecker.hpp" />
     <ClInclude Include="ArrayPair.hpp" />
     <ClInclude Include="bits.hpp" />
     <ClInclude Include="cityhash.hpp" />

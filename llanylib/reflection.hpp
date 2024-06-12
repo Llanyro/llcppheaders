@@ -51,7 +51,7 @@ __LL_NODISCARD__ constexpr const T* getNamePart1(const std::basic_string_view<T,
 	};
 
 	TempStruct t1 = { '<', 0 };
-	return algorithm::finders_cluster<T, TempStruct, TempStruct&, LL_FALSE>::find(
+	return algorithm::finders_cluster<T, TempStruct&, TempStruct, LL_FALSE>::find(
 		funcName.data(), funcName._Unchecked_end(), t1) + 1;
 }
 template<class T>

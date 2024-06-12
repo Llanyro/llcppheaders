@@ -644,21 +644,21 @@ struct finders_cluster {
 	#pragma endregion
 };
 
-template<class T, class Comparator>
+template<class T, class Manipulator>
 struct data_manipulation_cluster {
 	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
 	using cinput_t = traits::cinput<T>;
 	using SwapFunc = fnc_clss::SwapFunction<T>;
 
-	static_assert(!std::is_reference_v<Comparator>, "Reference type is forbidden!");
-	static_assert(!std::is_const_v<Comparator>, "Const type is forbidden!");
-	static_assert(!std::is_pointer_v<Comparator>, "Pointer type is forbidden!");
-	static_assert(!std::is_array_v<Comparator>, "Array type is forbidden!");
-	static_assert(std::is_class_v<Comparator>, "Comparator needs to be a class!");
-	static_assert(std::is_same_v<SwapFunc, decltype(&Comparator::swap)>, "Comparator::set needs to be the same type as SetFunction!");
+	static_assert(!std::is_reference_v<Manipulator>, "Reference type is forbidden!");
+	static_assert(!std::is_const_v<Manipulator>, "Const type is forbidden!");
+	static_assert(!std::is_pointer_v<Manipulator>, "Pointer type is forbidden!");
+	static_assert(!std::is_array_v<Manipulator>, "Array type is forbidden!");
+	static_assert(std::is_class_v<Manipulator>, "Manipulator needs to be a class!");
+	static_assert(std::is_same_v<SwapFunc, decltype(&Manipulator::swap)>, "Manipulator::set needs to be the same type as SetFunction!");
 
-	using __data = data_manipulation_cluster<T, Comparator>;
+	using __data = data_manipulation_cluster<T, Manipulator>;
 	template<class W>
 	using FillFunc = fnc_clss::SetFunction<T, W>;
 	using __Array_t = meta::Array<T>;
@@ -667,7 +667,7 @@ struct data_manipulation_cluster {
 	static constexpr void reverse(T* arr, T* end) noexcept {
 		if (!arr || !end || end <= arr) return;
 		for (; arr < end; ++arr, --end)
-			Comparator::swap(*arr, *end);
+			Manipulator::swap(*arr, *end);
 	}
 	template<len_t N>
 	static constexpr void reverse(T(&arr)[N]) noexcept {
@@ -682,10 +682,10 @@ struct data_manipulation_cluster {
 	template<class U, class W = traits::cinput<U>>
 	static constexpr void fill(T* dst, T* end, W object) {
 		using SetFunction = fnc_clss::SetFunction<T, W>;
-		static_assert(std::is_same_v<SetFunction, decltype(&Comparator::set)>, "Comparator::set needs to be the same type as SetFunction!");
+		static_assert(std::is_same_v<SetFunction, decltype(&Manipulator::set)>, "Manipulator::set needs to be the same type as SetFunction!");
 
 		if (!dst || !end || end <= dst) return;
-		for (; dst <= end; ++dst) Comparator::set(*dst, object);
+		for (; dst <= end; ++dst) Manipulator::set(*dst, object);
 	}
 	template<class U, class W = traits::cinput<U>, len_t N>
 	static constexpr void fill(T(&dst)[N], W object) noexcept {
@@ -701,10 +701,10 @@ struct data_manipulation_cluster {
 	template<class U, class W = traits::cinput<U>>
 	static constexpr void copy(const U* src, T* dst, len_t size) {
 		using SetFunction = fnc_clss::SetFunction<T, W>;
-		static_assert(std::is_same_v<SetFunction, decltype(&Comparator::set)>, "Comparator::set needs to be the same type as SetFunction!");
+		static_assert(std::is_same_v<SetFunction, decltype(&Manipulator::set)>, "Manipulator::set needs to be the same type as SetFunction!");
 
 		if (!src || !dst || size == ZERO_UI64) return;
-		for (; size > ZERO_UI64; ++src, ++dst, --size) Comparator::set(*dst, *src);
+		for (; size > ZERO_UI64; ++src, ++dst, --size) Manipulator::set(*dst, *src);
 	}
 	template<class U, class W = traits::cinput<U>>
 	static constexpr void copy(const meta::ArrayPair<U>& src, T* dst, const len_t size) {
@@ -732,11 +732,11 @@ struct data_manipulation_cluster {
 	template<class U>
 	static constexpr void move(U* src, T* dst, len_t size) {
 		using SwapFunc = fnc_clss::SwapFunction<T, U>;
-		constexpr SwapFunc swp = &Comparator::swap;
-		//static_assert(std::is_same_v<SwapFunc, decltype(&Comparator::swap)>, "Comparator::set needs to be the same type as SetFunction!");
+		constexpr SwapFunc swp = &Manipulator::swap;
+		//static_assert(std::is_same_v<SwapFunc, decltype(&Manipulator::swap)>, "Manipulator::set needs to be the same type as SetFunction!");
 
 		if (!src || !dst || size == ZERO_UI64) return;
-		for (; size > ZERO_UI64; ++src, ++dst, --size) Comparator::set(*dst, *src);
+		for (; size > ZERO_UI64; ++src, ++dst, --size) Manipulator::set(*dst, *src);
 	}
 	template<class U>
 	static constexpr void move(const meta::ArrayPair<U>& src, T* dst, const len_t size) {
@@ -770,7 +770,7 @@ struct data_manipulation_cluster {
 		len_t size_loop = size - num;
 		T* last = arr + size_loop;
 		for (T* src = arr + num; arr < last; ++arr, ++src)
-			Comparator::set(*arr, *src);
+			Manipulator::set(*arr, *src);
 		last += num - 1ull;
 		__data::fill(arr, last, null);
 	}
@@ -796,7 +796,7 @@ struct data_manipulation_cluster {
 		T* dst = arr + size - 1ull;
 		T* last = arr + size_loop;
 		for (T* src = dst - num; dst >= last ; --dst, --src)
-			Comparator::set(*dst, *src);
+			Manipulator::set(*dst, *src);
 		__data::fill(arr + first, --last, null);
 	}
 	template<class U, len_t N, class W = traits::cinput<U>>

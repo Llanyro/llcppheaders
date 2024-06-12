@@ -125,7 +125,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 		template<class T, MoveOrAllocator<T> FUNC>
 		__LL_NODISCARD__ ll_bool_t push_back_body(T* mem, const len_t bytes) noexcept {
 			if (!this->avaible(bytes)) {
-				if (!this->reallocate(this->mem, this->len() + bytes)) return LL_FALSE;
+				if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + bytes)) return LL_FALSE;
 				else this->advanceEnd(bytes);
 			}
 			(this->*FUNC)(mem, this->filled(), bytes);
@@ -134,10 +134,10 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 		}
 	public:
 		__LL_NODISCARD__ ll_bool_t _push_back_copy(const void* mem, const len_t bytes) noexcept {
-			return this->push_back_body<const void, &Allocator::memcopy>(mem, bytes);
+			return this->push_back_body<const void, &AllocatorCheckerBase::memcopy>(mem, bytes);
 		}
 		__LL_NODISCARD__ ll_bool_t _push_back_move(void* mem, const len_t bytes) noexcept {
-			return this->push_back_body<void, &Allocator::memmove>(mem, bytes);
+			return this->push_back_body<void, &AllocatorCheckerBase::memmove>(mem, bytes);
 		}
 
 		template<class T, len_t N>
@@ -164,7 +164,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 				// Reserve size for all elemets
 				len_t size_of = sizeof(T) * len;
 				if (!this->avaible(size_of)) {
-					if (!this->reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
+					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
 					else this->advanceEnd(size_of);
 				}
 
@@ -197,7 +197,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 
 				len_t size_of = sizeof(T) * len;
 				if (!this->avaible(size_of)) {
-					if (!this->reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
+					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
 					else this->advanceEnd(size_of);
 				}
 
@@ -233,7 +233,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 				static_assert(std::is_copy_constructible_v<Allocator>, "Class provided needs a noexcept copy constructor!");
 				constexpr len_t size_of = sizeof(U);
 				if (!this->avaible(size_of)) {
-					if (!this->reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
+					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
 					else this->advanceEnd(size_of);
 				}
 				new (this->filled<ll_char_t>()) U(object);
@@ -249,7 +249,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 				static_assert(std::is_move_constructible_v<U>, "Class provided needs a noexcept move constructor!");
 				constexpr len_t size_of = sizeof(U);
 				if (!this->avaible(size_of)) {
-					if (!this->reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
+					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
 					else this->advanceEnd(size_of);
 				}
 
@@ -277,12 +277,12 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 			this->length = ZERO_UI64;
 		}
 		ll_bool_t reserve(const len_t bytes) noexcept {
-			if (!this->reallocate(this->mem, this->len() + bytes)) return LL_FALSE;
+			if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + bytes)) return LL_FALSE;
 			else this->advanceEnd(bytes);
 			return LL_TRUE;
 		}
 		ll_bool_t reserve() noexcept {
-			if (!this->reallocate(this->mem, this->len() + INCREMENT)) return LL_FALSE;
+			if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + INCREMENT)) return LL_FALSE;
 			else this->advanceEnd(INCREMENT);
 			return LL_TRUE;
 		}

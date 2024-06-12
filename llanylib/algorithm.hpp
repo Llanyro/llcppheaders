@@ -107,24 +107,33 @@ using CompareConditionalBool = CompareConditional<T, U, ll_bool_t, LL_FALSE, GET
 
 #pragma endregion
 
-struct Cmp {
-	__LL_NODISCARD__ static constexpr ll_bool_t compareBool(const int, const char) noexcept {
-		return LL_FALSE;
+template<class T, class U>
+struct CompareDefault {
+	__LL_NODISCARD__ static constexpr cmp_t compare(traits::cinput<T> a, traits::cinput<U> b) noexcept {
+		return a - b;
 	}
-	__LL_NODISCARD__ static constexpr cmp_t compare(const int, const char) noexcept {
-		return LL_FALSE;
+	__LL_NODISCARD__ static constexpr ll_bool_t compareBool(traits::cinput<T> a, traits::cinput<U> b) noexcept {
+		return a == b;
 	}
-	__LL_NODISCARD__ static constexpr void set(int&, const char) noexcept {
-
-	}
-	__LL_NODISCARD__ static constexpr void swap(int&, int&) noexcept {
-	}
-	//__LL_NODISCARD__ static constexpr void swap(int&, char&) noexcept {
-	//}
 };
 
-//template<class T, class U = T, ll_bool_t GET_DATA = LL_FALSE>
-template<class T, class Comparator, class U = T, ll_bool_t GET_DATA = LL_FALSE>
+template<class T, class U>
+struct ManipulatorDefault {
+	__LL_NODISCARD__ static constexpr void swap(T& a, U& b) noexcept {
+		T tmp = a;
+		a = b;
+		b = tmp;
+	}
+	__LL_NODISCARD__ static constexpr void copy(T& a, traits::cinput<U> b) noexcept {
+		a = b;
+	}
+	__LL_NODISCARD__ static constexpr void move(T& a, U& b) noexcept {
+		a = std::move(b);
+	}
+
+};
+
+template<class T, class U = T, class Comparator = CompareDefault<T, U>, ll_bool_t GET_DATA = LL_FALSE>
 struct compare_cluster {
 	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
@@ -142,7 +151,7 @@ struct compare_cluster {
 	static_assert(std::is_same_v<CompareFunc, decltype(&Comparator::compare)>, "Comparator::compareBool needs to be the same type as CompareFunc!");
 	static_assert(std::is_same_v<CompareFuncBool, decltype(&Comparator::compareBool)>, "Comparator::compareBool needs to be the same type as CompareFuncBool!");
 
-	using __cmp = compare_cluster<T, Comparator, U, GET_DATA>;
+	using __cmp = compare_cluster<T, U, Comparator, GET_DATA>;
 	using CompareResult = CompareConditionalCmpT<T, U, GET_DATA>;
 	using CompareResultBool = CompareConditionalBool<T, U, GET_DATA>;
 	using __ArrayPair_t = meta::ArrayPair<T>;
@@ -427,7 +436,7 @@ struct compare_cluster {
 	#pragma endregion
 };
 
-template<class T, class Comparator, class U = T, ll_bool_t POSITION = LL_TRUE>
+template<class T, class U = T, class Comparator = CompareDefault<T, U>, ll_bool_t POSITION = LL_TRUE>
 struct finders_cluster {
 	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
@@ -445,7 +454,7 @@ struct finders_cluster {
 	static_assert(std::is_same_v<CompareFunc, decltype(&Comparator::compare)>, "Comparator::compareBool needs to be the same type as CompareFunc!");
 	static_assert(std::is_same_v<CompareFuncBool, decltype(&Comparator::compareBool)>, "Comparator::compareBool needs to be the same type as CompareFuncBool!");
 
-	using __find = finders_cluster<T, Comparator, U, POSITION>;
+	using __find = finders_cluster<T, U, Comparator, POSITION>;
 	using FindResult = std::conditional_t<POSITION, len_t, const T*>;
 	using __ArrayPair_t = meta::ArrayPair<T>;
 	using __ArrayPair_u = meta::ArrayPair<U>;
@@ -644,7 +653,7 @@ struct finders_cluster {
 	#pragma endregion
 };
 
-template<class T, class Manipulator>
+template<class T, class Manipulator = ManipulatorDefault<T, T>>
 struct data_manipulation_cluster {
 	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
@@ -669,126 +678,137 @@ struct data_manipulation_cluster {
 		for (; arr < end; ++arr, --end)
 			Manipulator::swap(*arr, *end);
 	}
+	static constexpr void reverse(__Array_t& arr) noexcept {
+		__data::reverse(arr.begin(), arr.end());
+	}
 	template<len_t N>
 	static constexpr void reverse(T(&arr)[N]) noexcept {
 		__data::reverse(arr, arr + N - 1);
 	}
-	static constexpr void reverse(__Array_t& arr) noexcept {
-		__data::reverse(arr.begin(), arr.end());
-	}
 
 	#pragma endregion
 	#pragma region Fillers
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void fill(T* dst, T* end, W object) {
-		using SetFunction = fnc_clss::SetFunction<T, W>;
-		static_assert(std::is_same_v<SetFunction, decltype(&Manipulator::set)>, "Manipulator::set needs to be the same type as SetFunction!");
+		using CopyFunction = fnc_clss::SetFunction<T, W>;
+		static_assert(std::is_same_v<CopyFunction, decltype(&FunctionManipulator::copy)>,
+			"FunctionManipulator::copy needs to be the same type as CopyFunction!");
 
 		if (!dst || !end || end <= dst) return;
-		for (; dst <= end; ++dst) Manipulator::set(*dst, object);
+		for (; dst <= end; ++dst)
+			FunctionManipulator::copy(*dst, object);
 	}
-	template<class U, class W = traits::cinput<U>, len_t N>
-	static constexpr void fill(T(&dst)[N], W object) noexcept {
-		__data::fill(dst, dst + N - 1, object);
-	}
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void fill(__Array_t& dst, W object) noexcept {
-		__data::fill(dst.begin(), dst.end(), object);
+		__data::fill<U, W, FunctionManipulator>(dst.begin(), dst.end(), object);
+	}
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>, len_t N>
+	static constexpr void fill(T(&dst)[N], W object) noexcept {
+		__data::fill<U, W, FunctionManipulator>(dst, dst + N - 1, object);
 	}
 
 	#pragma endregion
 	#pragma region Copy
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void copy(const U* src, T* dst, len_t size) {
-		using SetFunction = fnc_clss::SetFunction<T, W>;
-		static_assert(std::is_same_v<SetFunction, decltype(&Manipulator::set)>, "Manipulator::set needs to be the same type as SetFunction!");
+		using CopyFunction = fnc_clss::SetFunction<T, W>;
+		static_assert(std::is_same_v<CopyFunction, decltype(&FunctionManipulator::copy)>,
+			"FunctionManipulator::copy needs to be the same type as CopyFunction!");
 
 		if (!src || !dst || size == ZERO_UI64) return;
-		for (; size > ZERO_UI64; ++src, ++dst, --size) Manipulator::set(*dst, *src);
+		for (; size > ZERO_UI64; ++src, ++dst, --size)
+			FunctionManipulator::copy(*dst, *src);
 	}
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void copy(const meta::ArrayPair<U>& src, T* dst, const len_t size) {
-		__data::copy(src.begin(), dst, math::min<len_t>(src.len(), size));
+		__data::copy<U, W, FunctionManipulator>(src.begin(), dst, math::min<len_t>(src.len(), size));
 	}
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void copy(const meta::ArrayPair<U>& src, __Array_t& dst) {
-		__data::copy(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()));
+		__data::copy<U, W, FunctionManipulator>(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()));
 	}
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void copy(const meta::Array<U>& src, __Array_t& dst) {
-		__data::copy(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()));
+		__data::copy<U, W, FunctionManipulator>(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()));
 	}
-	template<class U, class W = traits::cinput<U>, len_t N>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>, len_t N>
 	static constexpr void copy(const U(&src)[N], T* dst, const len_t size) {
-		__data::copy(src, dst, math::min<len_t>(N, size));
+		__data::copy<U, W, FunctionManipulator>(src, dst, math::min<len_t>(N, size));
 	}
-	template<class U, class W = traits::cinput<U>, len_t N>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>, len_t N>
 	static constexpr void copy(const U(&src)[N], __Array_t& dst) {
-		__data::copy(src, dst.begin(), math::min<len_t>(N, dst.len()));
+		__data::copy<U, W, FunctionManipulator>(src, dst.begin(), math::min<len_t>(N, dst.len()));
 	}
 
 	#pragma endregion
 	#pragma region Move
-	template<class U>
+	template<class U = T, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void move(U* src, T* dst, len_t size) {
-		using SwapFunc = fnc_clss::SwapFunction<T, U>;
-		constexpr SwapFunc swp = &Manipulator::swap;
-		//static_assert(std::is_same_v<SwapFunc, decltype(&Manipulator::swap)>, "Manipulator::set needs to be the same type as SetFunction!");
+		using MoveFunction = fnc_clss::SwapFunction<T, U>;
+		static_assert(std::is_same_v<MoveFunction, decltype(&FunctionManipulator::move)>,
+			"FunctionManipulator::move needs to be the same type as MoveFunction!");
 
 		if (!src || !dst || size == ZERO_UI64) return;
-		for (; size > ZERO_UI64; ++src, ++dst, --size) Manipulator::set(*dst, *src);
+		for (; size > ZERO_UI64; ++src, ++dst, --size)
+			FunctionManipulator::move(*dst, *src);
 	}
-	template<class U>
+	template<class U = T, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void move(const meta::ArrayPair<U>& src, T* dst, const len_t size) {
-		__data::move(src.begin(), dst, math::min<len_t>(src.len(), size));
+		__data::move<U, FunctionManipulator>(src.begin(), dst, math::min<len_t>(src.len(), size));
 	}
-	template<class U>
+	template<class U = T, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void move(const meta::ArrayPair<U>& src, __Array_t& dst) {
-		__data::move(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()));
+		__data::move<U, FunctionManipulator>(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()));
 	}
-	template<class U>
+	template<class U = T, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void move(const meta::Array<U>& src, __Array_t& dst) {
-		__data::move(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()));
+		__data::move<U, FunctionManipulator>(src.begin(), dst.begin(), math::min<len_t>(src.len(), dst.len()));
 	}
-	template<class U, len_t N>
+	template<class U = T, class FunctionManipulator = CompareDefault<T, U>, len_t N>
 	static constexpr void move(const U(&src)[N], T* dst, const len_t size) {
-		__data::move(src, dst, math::min<len_t>(N, size));
+		__data::move<U, FunctionManipulator>(src, dst, math::min<len_t>(N, size));
 	}
-	template<class U, len_t N>
+	template<class U = T, class FunctionManipulator = CompareDefault<T, U>, len_t N>
 	static constexpr void move(const U(&src)[N], __Array_t& dst) {
-		__data::move(src, dst.begin(), math::min<len_t>(N, dst.len()));
+		__data::move<U, FunctionManipulator>(src, dst.begin(), math::min<len_t>(N, dst.len()));
 	}
 
 	#pragma endregion
 	#pragma region ShiftLeft
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void shiftLeft(T* arr, const len_t size, const len_t first, len_t num, W null) noexcept {
-		if (!arr) return;
-		if (size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return;
+		using CopyFunction = fnc_clss::SetFunction<T, W>;
+		static_assert(std::is_same_v<CopyFunction, decltype(&FunctionManipulator::copy)>,
+			"FunctionManipulator::copy needs to be the same type as CopyFunction!");
+
+		if (!arr || size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return;
 		if (first + num >= size) num = size - first - 1ull;
 
 		len_t size_loop = size - num;
 		T* last = arr + size_loop;
 		for (T* src = arr + num; arr < last; ++arr, ++src)
-			Manipulator::set(*arr, *src);
+			FunctionManipulator::copy(*arr, *src);
 		last += num - 1ull;
-		__data::fill(arr, last, null);
+		__data::fill<U, W, FunctionManipulator>(arr, last, null);
 	}
-	template<class U, len_t N, class W = traits::cinput<U>>
-	static constexpr void shiftLeft(T(&arr)[N], const len_t first, const len_t num, W null) noexcept {
-		__data::shiftLeft(arr, N, first, num, null);
-	}
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void shiftLeft(__Array_t& arr, const len_t first, const len_t num, W null) noexcept {
-		__data::shiftLeft(arr.begin(), arr.len(), first, num, null);
+		__data::shiftLeft<U, W, FunctionManipulator>(arr.begin(), arr.len(), first, num, null);
+	}
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>, len_t N>
+	static constexpr void shiftLeft(T(&arr)[N], const len_t first, const len_t num, W null) noexcept {
+		__data::shiftLeft<U, W, FunctionManipulator>(arr, N, first, num, null);
 	}
 
 	#pragma endregion
 	#pragma region ShiftRight
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void shifRight(T* arr, const len_t size, const len_t first, len_t num, W null) noexcept {
-		if (!arr) return;
-		if (size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return;
+		using CopyFunction = fnc_clss::SetFunction<T, W>;
+		static_assert(std::is_same_v<CopyFunction, decltype(&FunctionManipulator::copy)>,
+			"FunctionManipulator::copy needs to be the same type as CopyFunction!");
+
+		if (!arr || size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return;
 
 		len_t size_loop = first + num;
 		if (size_loop >= size) num = size - first - 1ull;
@@ -796,16 +816,16 @@ struct data_manipulation_cluster {
 		T* dst = arr + size - 1ull;
 		T* last = arr + size_loop;
 		for (T* src = dst - num; dst >= last ; --dst, --src)
-			Manipulator::set(*dst, *src);
-		__data::fill(arr + first, --last, null);
+			FunctionManipulator::copy(*dst, *src);
+		__data::fill<U, W, FunctionManipulator>(arr + first, --last, null);
 	}
-	template<class U, len_t N, class W = traits::cinput<U>>
-	static constexpr void shifRight(T(&arr)[N], const len_t first, const len_t num, W null) noexcept {
-		__data::shifRight(arr, N, first, num, null);
-	}
-	template<class U, class W = traits::cinput<U>>
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
 	static constexpr void shifRight(__Array_t& arr, const len_t first, const len_t num, W null) noexcept {
-		__data::shifRight(arr.begin(), arr.len(), first, num, null);
+		__data::shifRight<U, W, FunctionManipulator>(arr.begin(), arr.len(), first, num, null);
+	}
+	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>, len_t N>
+	static constexpr void shifRight(T(&arr)[N], const len_t first, const len_t num, W null) noexcept {
+		__data::shifRight<U, W, FunctionManipulator>(arr, N, first, num, null);
 	}
 
 	#pragma endregion

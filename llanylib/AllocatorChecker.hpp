@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	AllocatorDummy.hpp						//
+//	AllocatorChecker.hpp					//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -7,19 +7,19 @@
 //	Version: 8.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_ALLOCATORDUMMY_HPP_) // Guard && version protector
-	#if LLANYLIB_ALLOCATORDUMMY_MAYOR_ != 8 || LLANYLIB_ALLOCATORDUMMY_MINOR_ < 0
+#if defined(LLANYLIB_ALLOCATORCHECKER_HPP_) // Guard && version protector
+	#if LLANYLIB_ALLOCATORCHECKER_MAYOR_ != 8 || LLANYLIB_ALLOCATORCHECKER_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
-			#warning "AllocatorDummy.hpp version error!"
+			#warning "AllocatorChecker.hpp version error!"
 		#else
-			#error "AllocatorDummy.hpp version error!"
+			#error "AllocatorChecker.hpp version error!"
 		#endif // LL_REAL_CXX23
-	#endif // LLANYLIB_ALLOCATORDUMMY_MAYOR_ || LLANYLIB_ALLOCATORDUMMY_MINOR_
+	#endif // LLANYLIB_ALLOCATORCHECKER_MAYOR_ || LLANYLIB_ALLOCATORCHECKER_MINOR_
 
-#else !defined(LLANYLIB_ALLOCATORDUMMY_HPP_)
-#define LLANYLIB_ALLOCATORDUMMY_HPP_
-#define LLANYLIB_ALLOCATORDUMMY_MAYOR_ 8
-#define LLANYLIB_ALLOCATORDUMMY_MINOR_ 0
+#else !defined(LLANYLIB_ALLOCATORCHECKER_HPP_)
+#define LLANYLIB_ALLOCATORCHECKER_HPP_
+#define LLANYLIB_ALLOCATORCHECKER_MAYOR_ 8
+#define LLANYLIB_ALLOCATORCHECKER_MINOR_ 0
 
 #include "traits.hpp"
 
@@ -96,9 +96,27 @@ class AllocatorChecker : public Allocator {
 			"Allocator::memmove needs to be the same type as MemMoveFunc!");
 
 	#pragma endregion
+
+	public:
+		AllocatorChecker() noexcept : Allocator() {}
+		~AllocatorChecker() noexcept {}
+
+		AllocatorChecker(const AllocatorChecker& other) noexcept : Allocator(other) {}
+		AllocatorChecker& operator=(const AllocatorChecker&) noexcept {
+			Allocator::operator=(other);
+			return *this;
+		}
+		AllocatorChecker(AllocatorChecker&& other) noexcept : Allocator(std::move(other)) {}
+		AllocatorChecker& operator=(AllocatorChecker&& other) noexcept {
+			Allocator::operator=(std::move(other));
+			return *this;
+		}
+
+		__LL_NODISCARD__ operator const AllocatorChecker*() const noexcept { return *this; }
+		__LL_NODISCARD__ operator AllocatorChecker*() noexcept { return *this; }
 };
 
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_ALLOCATORDUMMY_HPP_
+#endif // LLANYLIB_ALLOCATORCHECKER_HPP_

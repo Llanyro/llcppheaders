@@ -21,7 +21,7 @@
 #define LLANYLIB_DATABUFFER_MAYOR_ 8
 #define LLANYLIB_DATABUFFER_MINOR_ 0
 
-#include "AllocatorDummy.hpp"
+#include "AllocatorChecker.hpp"
 
 namespace llcpp {
 namespace meta {

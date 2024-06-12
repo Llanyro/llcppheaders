@@ -29,6 +29,7 @@ namespace meta {
 template<class Allocator = AllocatorDummy, len_t INCREMENT = 1024ull, class ConversorType = ll_char_t>
 class DataBuffer : public AllocatorChecker<Allocator> {
 	public:
+		using AllocatorCheckerBase = AllocatorChecker<Allocator>;
 		template<class T>
 		using MoveOrAllocator = void(Allocator::*)(T*, void*, const len_t) noexcept;
 	protected:
@@ -55,7 +56,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 	public:
 		#pragma region Constructors
 		DataBuffer() noexcept
-			: AllocatorChecker(), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64) {
+			: AllocatorCheckerBase(), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64) {
 			this->mem = this->allocate(INCREMENT);
 			this->updateFilled(0ull);
 			this->updateEnd(INCREMENT);
@@ -63,19 +64,19 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 		~DataBuffer() noexcept { this->invalidate(); }
 
 		DataBuffer(const DataBuffer& other) noexcept
-			: AllocatorChecker(other), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64)
+			: AllocatorCheckerBase(other), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64)
 		{ this->copyOther(other); }
 		DataBuffer& operator=(const DataBuffer& other) noexcept {
-			AllocatorChecker::operator=(other);
+			AllocatorCheckerBase::operator=(other);
 			this->invalidate();
 			this->copyOther(other);
 			return *this;
 		}
 		DataBuffer(DataBuffer&& other) noexcept
-			: AllocatorChecker(std::move(other)), mem(other.mem), len_filled(other.len_filled), length(other.length)
+			: AllocatorCheckerBase(std::move(other)), mem(other.mem), len_filled(other.len_filled), length(other.length)
 		{ other.simpleClear(); }
 		DataBuffer& operator=(DataBuffer&& other) noexcept {
-			AllocatorChecker::operator=(std::move(other));
+			AllocatorCheckerBase::operator=(std::move(other));
 			this->invalidate();
 			this->mem = other.mem;
 			this->len_filled = other.len_filled;

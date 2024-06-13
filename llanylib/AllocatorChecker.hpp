@@ -102,6 +102,7 @@ struct AllocatorDummy {
 	}
 	__LL_NODISCARD__ void memcopy(const void* src, void* dst, const len_t bytes) noexcept {}
 	__LL_NODISCARD__ void memmove(void* src, void* dst, const len_t bytes) noexcept {}
+	__LL_NODISCARD__ void clear_data(void* mem, const len_t bytes) noexcept {}
 };
 
 #if defined(WINDOWS_SYSTEM)
@@ -130,6 +131,7 @@ class AllocatorChecker : public Allocator {
 		using ReallocateFunc = ll_bool_t(Allocator::*)(void*&, const len_t) noexcept;
 		using MemCopyFunc = void(Allocator::*)(const void*, void*, const len_t) noexcept;
 		using MemMoveFunc = void(Allocator::*)(void*, void*, const len_t) noexcept;
+		using ClearFunc = void(Allocator::*)(void*, const len_t) noexcept;
 
 		static_assert(std::is_same_v<AllocateFunc, decltype(&Allocator::allocate)>,
 			"Allocator::allocate needs to be the same type as AllocateFunc!");
@@ -145,6 +147,9 @@ class AllocatorChecker : public Allocator {
 		static_assert(
 			std::is_same_v<MemMoveFunc, decltype(&Allocator::memmove)>,
 			"Allocator::memmove needs to be the same type as MemMoveFunc!");
+		static_assert(
+			std::is_same_v<ClearFunc, decltype(&Allocator::clear_data)>,
+			"Allocator::clear_data needs to be the same type as ClearFunc!");
 
 	#pragma endregion
 
@@ -219,6 +224,11 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 		__LL_NODISCARD__ void memmove(T* src, T* dst, const len_t bytes) noexcept {
 			Allocator::memmove(src, dst, bytes);
 		}
+		// Sets all bytes to 0
+		__LL_NODISCARD__ void clear_data(T* mem, const len_t bytes) noexcept {
+			Allocator::clear_data(mem, bytes);
+		}
+
 
 		// Constructs all objects!
 		__LL_NODISCARD__ T* allocateConstruct(const len_t lenght) noexcept {
@@ -300,6 +310,14 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 				for (; src < end; ++src, ++dst)
 					*dst = std::move(*src);
 			}
+		}
+		// Clear all objects with its destructor
+		__LL_NODISCARD__ void clear_data_destruct(T* mem, const len_t lenght) noexcept {
+			__internal__::destruct_vector(mem, lenght);
+		}
+		// Clear all objects with its destructor
+		__LL_NODISCARD__ ll_bool_t clear_data_destruct_s(T* mem, const len_t lenght) noexcept {
+			return __internal__::destruct_vector_s(mem, lenght);
 		}
 };
 

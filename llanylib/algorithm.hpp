@@ -658,18 +658,17 @@ struct data_manipulation_cluster {
 	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
 	using cinput_t = traits::cinput<T>;
-	using SwapFunc = fnc_clss::SwapFunction<T>;
+	using SwapFunc = fnc_clss::SwapFunction<T, T>;
 
 	static_assert(!std::is_reference_v<Manipulator>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<Manipulator>, "Const type is forbidden!");
 	static_assert(!std::is_pointer_v<Manipulator>, "Pointer type is forbidden!");
 	static_assert(!std::is_array_v<Manipulator>, "Array type is forbidden!");
 	static_assert(std::is_class_v<Manipulator>, "Manipulator needs to be a class!");
-	static_assert(std::is_same_v<SwapFunc, decltype(&Manipulator::swap)>, "Manipulator::set needs to be the same type as SetFunction!");
+	static_assert(std::is_same_v<SwapFunc, decltype(&Manipulator::swap)>,
+		"Manipulator::swap needs to be the same type as SwapFunc!");
 
 	using __data = data_manipulation_cluster<T, Manipulator>;
-	template<class W>
-	using FillFunc = fnc_clss::SetFunction<T, W>;
 	using __Array_t = meta::Array<T>;
 
 	#pragma region Reverse

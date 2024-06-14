@@ -167,14 +167,13 @@ class Array {
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr Array(const Array& other) noexcept
-			: Array(other.mem, other.mem_end) {}
+		constexpr Array(const Array& other) noexcept : Array(other.mem, other.mem_end) {}
 		constexpr Array& operator=(const Array& other) noexcept {
 			this->mem = other.mem;
 			this->mem_end = other.mem_end;
 			return *this;
 		}
-		constexpr Array(Array&& other) noexcept : Array(other) {}
+		constexpr Array(Array&& other) noexcept : Array(other) { other.simpleClear(); }
 		constexpr Array& operator=(Array&& other) noexcept {
 			Array::operator=(other);
 			other.simpleClear();

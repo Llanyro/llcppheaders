@@ -237,10 +237,9 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			else return LL_NULLPTR;
 		}
 		// Destructs all objects and frees the vector
-		__LL_NODISCARD__ void deallocate(T*& mem, T*& end) noexcept {
+		__LL_NODISCARD__ void deallocate(T*& mem, const T* end) noexcept {
 			__internal__::destruct_vector<T>(mem, end);
 			Allocator::deallocate(reinterpret_cast<void*&>(mem));
-			end = LL_NULLPTR;
 		}
 		// Destructs all objects and frees the vector
 		__LL_NODISCARD__ ll_bool_t deallocate_s(T*& mem, const T* end) noexcept {

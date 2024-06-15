@@ -205,7 +205,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 	public:
 		// Does not constructs any object!
 		__LL_NODISCARD__ T* allocate(const len_t lenght) noexcept {
-			return reinterpret_cast<T*>(Allocator::allocate(lenght * sizeof(T)));
+			return reinterpret_cast<T*>(Allocator::allocate(sizeof(T) * lenght));
 		}
 		// Does not destructs any object!
 		__LL_NODISCARD__ void deallocate(T*& mem) noexcept {
@@ -218,21 +218,21 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 		}
 		// Only copy vector bytes
 		__LL_NODISCARD__ void memcopy(const T* src, T* dst, const len_t lenght) noexcept {
-			Allocator::memcopy(src, dst, lenght * sizeof(T));
+			Allocator::memcopy(src, dst, sizeof(T) * lenght);
 		}
 		// Only move vector bytes
-		__LL_NODISCARD__ void memmove(T* src, T* dst, const len_t bytes) noexcept {
-			Allocator::memmove(src, dst, bytes);
+		__LL_NODISCARD__ void memmove(T* src, T* dst, const len_t lenght) noexcept {
+			Allocator::memmove(src, dst, sizeof(T) * lenght);
 		}
 		// Sets all bytes to 0
-		__LL_NODISCARD__ void clear_data(T* mem, const len_t bytes) noexcept {
-			Allocator::clear_data(mem, bytes);
+		__LL_NODISCARD__ void clear_data(T* mem, const len_t lenght) noexcept {
+			Allocator::clear_data(mem, sizeof(T) * lenght);
 		}
 
 
 		// Constructs all objects!
 		__LL_NODISCARD__ T* allocateConstruct(const len_t lenght) noexcept {
-			void* mem = Allocator::allocate(lenght * sizeof(T));
+			void* mem = Allocator::allocate(sizeof(T) * lenght);
 			if (mem) return new (mem) T[lenght];
 			else return LL_NULLPTR;
 		}

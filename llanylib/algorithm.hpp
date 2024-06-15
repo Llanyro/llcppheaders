@@ -673,7 +673,6 @@ struct data_manipulation_cluster {
 
 	#pragma region Reverse
 	static constexpr void reverse(T* arr, T* end) noexcept {
-		if (!arr || !end || end <= arr) return;
 		for (; arr < end; ++arr, --end)
 			Manipulator::swap(*arr, *end);
 	}
@@ -683,6 +682,19 @@ struct data_manipulation_cluster {
 	template<len_t N>
 	static constexpr void reverse(T(&arr)[N]) noexcept {
 		__data::reverse(arr, arr + N - 1);
+	}
+
+	static constexpr ll_bool_t reverse_s(T* arr, T* end) noexcept {
+		if (!arr || !end || end <= arr) return LL_FALSE;
+		__data::reverse(arr, end);
+		return LL_TRUE;
+	}
+	static constexpr ll_bool_t reverse_s(__Array_t& arr) noexcept {
+		return __data::reverse_s(arr.begin(), arr.end());
+	}
+	template<len_t N>
+	static constexpr ll_bool_t reverse_s(T(&arr)[N]) noexcept {
+		return __data::reverse(arr, arr + N - 1);
 	}
 
 	#pragma endregion

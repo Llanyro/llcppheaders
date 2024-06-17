@@ -229,6 +229,25 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			Allocator::clear_data(mem, sizeof(T) * lenght);
 		}
 
+		// Constructs Object with arguments
+		template<class... Args>
+		__LL_NODISCARD__ T* allocateObject(Args&&... args) noexcept {
+			void* mem = Allocator::allocate(sizeof(T));
+			if (mem) return new (mem) T(std::forward<Args>(args)...);
+			else return LL_NULLPTR;
+		}
+		// Destructs object
+		__LL_NODISCARD__ void deallocateObject(T*& mem) noexcept {
+			mem->~T();
+			Allocator::deallocate(reinterpret_cast<void*&>(mem));
+		}
+		// Destructs object if pointer is not nullptr
+		__LL_NODISCARD__ void deallocateObject_s(T*& mem) noexcept {
+			if (mem) {
+				mem->~T();
+				Allocator::deallocate(reinterpret_cast<void*&>(mem));
+			}
+		}
 
 		// Constructs all objects!
 		__LL_NODISCARD__ T* allocateConstruct(const len_t lenght) noexcept {

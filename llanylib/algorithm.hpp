@@ -558,7 +558,7 @@ struct finders_cluster {
 	#pragma endregion
 	#pragma region Any
 	__LL_NODISCARD__ static constexpr ll_bool_t any(const T* begin, const T* end, cinput_u object) noexcept {
-		return static_cast<ll_bool_t>(__find::find(begin, end, object));
+		return __find::contains(begin, end, object);
 	}
 	template<len_t N>
 	__LL_NODISCARD__ static constexpr ll_bool_t any(const T (&data)[N], cinput_u object) noexcept {
@@ -574,7 +574,7 @@ struct finders_cluster {
 	#pragma endregion
 	#pragma region None
 	__LL_NODISCARD__ static constexpr ll_bool_t none(const T* begin, const T* end, cinput_u object) noexcept {
-		return !static_cast<ll_bool_t>(__find::find(begin, end, object));
+		return !__find::contains(begin, end, object);
 	}
 	template<len_t N>
 	__LL_NODISCARD__ static constexpr ll_bool_t none(const T (&data)[N], cinput_u object) noexcept {

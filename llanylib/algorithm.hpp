@@ -109,10 +109,16 @@ using CompareConditionalBool = CompareConditional<T, U, ll_bool_t, LL_FALSE, GET
 
 template<class T, class U>
 struct CompareDefault {
-	__LL_NODISCARD__ static constexpr cmp_t __compare(traits::cinput<T> a, traits::cinput<U> b) noexcept {
+	__LL_NODISCARD__ constexpr cmp_t __compare(traits::cinput<T> a, traits::cinput<U> b) const noexcept {
 		return a - b;
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t __compareBool(traits::cinput<T> a, traits::cinput<U> b) noexcept {
+	__LL_NODISCARD__ constexpr ll_bool_t __compareBool(traits::cinput<T> a, traits::cinput<U> b) const noexcept {
+		return a == b;
+	}
+	__LL_NODISCARD__ static constexpr cmp_t __compareStatic(traits::cinput<T> a, traits::cinput<U> b) noexcept {
+		return a - b;
+	}
+	__LL_NODISCARD__ static constexpr ll_bool_t __compareBoolStatic(traits::cinput<T> a, traits::cinput<U> b) noexcept {
 		return a == b;
 	}
 };
@@ -158,17 +164,15 @@ struct compare_cluster : public Comparator {
 	static constexpr ll_bool_t COMPARE_FUNCTION_AVAIBLE =
 		std::is_same_v<CompareFunc, decltype(&Comparator::__compare)> ||
 		std::is_same_v<CompareFuncConst, decltype(&Comparator::__compare)> ||
-		std::is_same_v<CompareFuncStatic, decltype(&Comparator::__compare)>;
+		std::is_same_v<CompareFuncStatic, decltype(&Comparator::__compareStatic)>;
 
 	static constexpr ll_bool_t COMPAREBOOL_FUNCTION_AVAIBLE =
-		std::is_same_v<CompareFuncStatic, decltype(&Comparator::compare)> ||
-		std::is_same_v<CompareFunc, decltype(&Comparator::compare)> ||
-		std::is_same_v<CompareFuncConst, decltype(&Comparator::compare)>;
+		std::is_same_v<CompareFuncBool, decltype(&Comparator::__compareBool)> ||
+		std::is_same_v<CompareFuncBoolConst, decltype(&Comparator::__compareBool)> ||
+		std::is_same_v<CompareFuncBoolStatic, decltype(&Comparator::__compareBoolStatic)>;
 
 	static_assert(COMPARE_FUNCTION_AVAIBLE, "Comparator::__compare is not avaible!");
 	static_assert(COMPARE_FUNCTION_AVAIBLE, "Comparator::__compareBool is not avaible!");
-
-	static_assert(std::is_same_v<CompareFuncBool, decltype(&C-omparator::compareBool)>, "Comparator::compareBool needs to be the same type as CompareFuncBool!");
 
 	using __cmp = compare_cluster<T, U, Comparator, GET_DATA>;
 	using CompareResult = CompareConditionalCmpT<T, U, GET_DATA>;
@@ -194,7 +198,7 @@ struct compare_cluster : public Comparator {
 		}
 
 		for (; size > ZERO_UI64; --size, ++str1, ++str2) {
-			cmp_t result = Comparator::__compare(*str1, *str2);
+			cmp_t result = Comparator::__compareStatic(*str1, *str2);
 			if (result != ZERO_I32) {
 				if constexpr (GET_DATA)
 					return CompareResult(str1, str2, result);

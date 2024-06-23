@@ -82,7 +82,7 @@ __LL_NODISCARD__ constexpr ll_bool_t construct_vector_s(T* begin, const len_t si
 	#pragma warning(disable:4100) // Unreferenced formal parameter
 #endif // WINDOWS_SYSTEM
 
-struct AllocatorDummy {
+struct LL_SHARED_LIB AllocatorDummy {
 	AllocatorDummy() noexcept {}
 	~AllocatorDummy() noexcept {}
 
@@ -95,14 +95,14 @@ struct AllocatorDummy {
 	__LL_NODISCARD__ operator AllocatorDummy*() noexcept { return this; }
 
 	__LL_NODISCARD__ void* allocate(const len_t bytes) noexcept { return LL_NULLPTR; }
-	__LL_NODISCARD__ void deallocate(void*& mem) noexcept { mem = LL_NULLPTR; }
+	void deallocate(void*& mem) noexcept { mem = LL_NULLPTR; }
 	__LL_NODISCARD__ ll_bool_t reallocate(void*& mem, const len_t bytes) noexcept {
 		mem = LL_NULLPTR;
 		return LL_FALSE;
 	}
-	__LL_NODISCARD__ void memcopy(const void* src, void* dst, const len_t bytes) noexcept {}
-	__LL_NODISCARD__ void memmove(void* src, void* dst, const len_t bytes) noexcept {}
-	__LL_NODISCARD__ void clear_data(void* mem, const len_t bytes) noexcept {}
+	void memcopy(const void* src, void* dst, const len_t bytes) noexcept {}
+	void memmove(void* src, void* dst, const len_t bytes) noexcept {}
+	void clear_data(void* mem, const len_t bytes) noexcept {}
 };
 
 #if defined(WINDOWS_SYSTEM)
@@ -110,7 +110,7 @@ struct AllocatorDummy {
 #endif // WINDOWS_SYSTEM
 
 template<class Allocator = AllocatorDummy>
-class AllocatorChecker : public Allocator {
+class LL_SHARED_LIB AllocatorChecker : public Allocator {
 	public:
 		static_assert(!std::is_reference_v<Allocator>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<Allocator>, "Const type is forbidden!");
@@ -155,6 +155,8 @@ class AllocatorChecker : public Allocator {
 
 	public:
 		AllocatorChecker() noexcept : Allocator() {}
+		template<class... Args>
+		AllocatorChecker(Args&&... args) noexcept : Allocator(std::forward<Args>(args)...) {}
 		~AllocatorChecker() noexcept {}
 
 		AllocatorChecker(const AllocatorChecker& other) noexcept : Allocator(other) {}
@@ -173,7 +175,7 @@ class AllocatorChecker : public Allocator {
 };
 
 template<class T, class Allocator = AllocatorDummy>
-class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
+class LL_SHARED_LIB AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 	public:
 		static_assert(!std::is_array_v<T>, "This class does not support array type");
 
@@ -187,6 +189,8 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 		using AllocatorCheckerBase = meta::AllocatorChecker<Allocator>;
 	public:
 		AllocatorCheckerTyped() noexcept : AllocatorCheckerBase() {}
+		template<class... Args>
+		AllocatorCheckerTyped(Args&&... args) noexcept : AllocatorCheckerBase(std::forward<Args>(args)...) {}
 		~AllocatorCheckerTyped() noexcept {}
 
 		AllocatorCheckerTyped(const AllocatorCheckerTyped& other) noexcept : AllocatorCheckerBase(other) {}
@@ -208,7 +212,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			return reinterpret_cast<T*>(Allocator::allocate(sizeof(T) * lenght));
 		}
 		// Does not destructs any object!
-		__LL_NODISCARD__ void deallocate(T*& mem) noexcept {
+		void deallocate(T*& mem) noexcept {
 			Allocator::deallocate(reinterpret_cast<void*&>(mem));
 		}
 		// Does not constructs any object!
@@ -217,15 +221,15 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			return Allocator::reallocate(reinterpret_cast<void*&>(mem), sizeof(T) * lenght);
 		}
 		// Only copy vector bytes
-		__LL_NODISCARD__ void memcopy(const T* src, T* dst, const len_t lenght) noexcept {
+		void memcopy(const T* src, T* dst, const len_t lenght) noexcept {
 			Allocator::memcopy(src, dst, sizeof(T) * lenght);
 		}
 		// Only move vector bytes
-		__LL_NODISCARD__ void memmove(T* src, T* dst, const len_t lenght) noexcept {
+		void memmove(T* src, T* dst, const len_t lenght) noexcept {
 			Allocator::memmove(src, dst, sizeof(T) * lenght);
 		}
 		// Sets all bytes to 0
-		__LL_NODISCARD__ void clear_data(T* mem, const len_t lenght) noexcept {
+		void clear_data(T* mem, const len_t lenght) noexcept {
 			Allocator::clear_data(mem, sizeof(T) * lenght);
 		}
 
@@ -237,12 +241,12 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			else return LL_NULLPTR;
 		}
 		// Destructs object
-		__LL_NODISCARD__ void deallocateObject(T*& mem) noexcept {
+		void deallocateObject(T*& mem) noexcept {
 			mem->~T();
 			Allocator::deallocate(reinterpret_cast<void*&>(mem));
 		}
 		// Destructs object if pointer is not nullptr
-		__LL_NODISCARD__ void deallocateObject_s(T*& mem) noexcept {
+		void deallocateObject_s(T*& mem) noexcept {
 			if (mem) {
 				mem->~T();
 				Allocator::deallocate(reinterpret_cast<void*&>(mem));
@@ -256,7 +260,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			else return LL_NULLPTR;
 		}
 		// Destructs all objects and frees the vector
-		__LL_NODISCARD__ void deallocate(T*& mem, const T* end) noexcept {
+		void deallocate(T*& mem, const T* end) noexcept {
 			__internal__::destruct_vector<T>(mem, end);
 			Allocator::deallocate(reinterpret_cast<void*&>(mem));
 		}
@@ -290,7 +294,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			return Allocator::reallocate(reinterpret_cast<void*&>(mem), sizeof(T) * new_size);
 		}
 		// Copies objects with copy constructor
-		__LL_NODISCARD__ void memcopy_contructor(const T* src, T* dst, const len_t lenght) noexcept {
+		void memcopy_contructor(const T* src, T* dst, const len_t lenght) noexcept {
 			if constexpr (traits::is_basic_type_v<T> || std::is_pointer_v<T>)
 				AllocatorCheckerTyped::memcopy(src, dst, lenght);
 			else {
@@ -300,7 +304,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			}
 		}
 		// Copies objects with copy operator
-		__LL_NODISCARD__ void memcopy_operator(const T* src, T* dst, const len_t lenght) noexcept {
+		void memcopy_operator(const T* src, T* dst, const len_t lenght) noexcept {
 			if constexpr (traits::is_basic_type_v<T> || std::is_pointer_v<T>)
 				AllocatorCheckerTyped::memcopy(src, dst, lenght);
 			else {
@@ -310,7 +314,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			}
 		}
 		// Moves objects with move constructor
-		__LL_NODISCARD__ void memmove_contructor(T* src, T* dst, const len_t lenght) noexcept {
+		void memmove_contructor(T* src, T* dst, const len_t lenght) noexcept {
 			if constexpr (traits::is_basic_type_v<T> || std::is_pointer_v<T>)
 				AllocatorCheckerTyped::memmove(src, dst, lenght);
 			else {
@@ -320,7 +324,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			}
 		}
 		// Moves objects with move operator
-		__LL_NODISCARD__ void memmove_operator(T* src, T* dst, const len_t lenght) noexcept {
+		void memmove_operator(T* src, T* dst, const len_t lenght) noexcept {
 			if constexpr (traits::is_basic_type_v<T> || std::is_pointer_v<T>)
 				AllocatorCheckerTyped::memcopy(src, dst, lenght);
 			else {
@@ -330,7 +334,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			}
 		}
 		// Clear all objects with its destructor
-		__LL_NODISCARD__ void clear_data_destruct(T* mem, const len_t lenght) noexcept {
+		void clear_data_destruct(T* mem, const len_t lenght) noexcept {
 			__internal__::destruct_vector(mem, lenght);
 		}
 		// Clear all objects with its destructor

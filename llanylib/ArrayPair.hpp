@@ -30,7 +30,7 @@ template<class T>
 class Array;
 
 template<class T>
-class ArrayPair {
+class LL_SHARED_LIB ArrayPair {
 	public:
 		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
@@ -145,7 +145,7 @@ class ArrayPair {
 };
 
 template<class T>
-class Array {
+class LL_SHARED_LIB Array {
 	public:
 		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
@@ -294,7 +294,10 @@ class Array {
 			return !this->empty() && (this->begin() < this->end());
 		}
 		constexpr void clear() noexcept { this->simpleClear(); }
-
+		constexpr void makeInvalid() noexcept {
+			this->mem = LL_NULLPTR;
+			this->mem_end = LL_NULLPTR;
+		}
 		#pragma endregion
 		#pragma endregion
 	#pragma endregion

@@ -109,10 +109,10 @@ using CompareConditionalBool = CompareConditional<T, U, ll_bool_t, LL_FALSE, GET
 
 template<class T, class U>
 struct CompareDefault {
-	__LL_NODISCARD__ static constexpr cmp_t compare(traits::cinput<T> a, traits::cinput<U> b) noexcept {
+	__LL_NODISCARD__ static constexpr cmp_t __compare(traits::cinput<T> a, traits::cinput<U> b) noexcept {
 		return a - b;
 	}
-	__LL_NODISCARD__ static constexpr ll_bool_t compareBool(traits::cinput<T> a, traits::cinput<U> b) noexcept {
+	__LL_NODISCARD__ static constexpr ll_bool_t __compareBool(traits::cinput<T> a, traits::cinput<U> b) noexcept {
 		return a == b;
 	}
 };
@@ -134,22 +134,41 @@ struct ManipulatorDefault {
 };
 
 template<class T, class U = T, class Comparator = CompareDefault<T, U>, ll_bool_t GET_DATA = LL_FALSE>
-struct compare_cluster {
+struct compare_cluster : public Comparator {
 	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
-
-	using cinput_t = traits::cinput<T>;
-	using cinput_u = traits::cinput<U>;
-	using CompareFunc = fnc_clss::Compare<cinput_t, cinput_u>;
-	using CompareFuncBool = fnc_clss::CompareBool<cinput_t, cinput_u>;
-
 	static_assert(!std::is_reference_v<Comparator>, "Reference type is forbidden!");
 	static_assert(!std::is_const_v<Comparator>, "Const type is forbidden!");
 	static_assert(!std::is_pointer_v<Comparator>, "Pointer type is forbidden!");
 	static_assert(!std::is_array_v<Comparator>, "Array type is forbidden!");
 	static_assert(std::is_class_v<Comparator>, "Comparator needs to be a class!");
-	static_assert(std::is_same_v<CompareFunc, decltype(&Comparator::compare)>, "Comparator::compareBool needs to be the same type as CompareFunc!");
-	static_assert(std::is_same_v<CompareFuncBool, decltype(&Comparator::compareBool)>, "Comparator::compareBool needs to be the same type as CompareFuncBool!");
+
+
+	using cinput_t = traits::cinput<T>;
+	using cinput_u = traits::cinput<U>;
+
+	using CompareFunc = cmp_t(Comparator::*)(cinput_t, cinput_u) noexcept;
+	using CompareFuncConst = cmp_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
+	using CompareFuncStatic = cmp_t(*)(cinput_t, cinput_u) noexcept;
+
+	using CompareFuncBool = ll_bool_t(Comparator::*)(cinput_t, cinput_u) noexcept;
+	using CompareFuncBoolConst = ll_bool_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
+	using CompareFuncBoolStatic = ll_bool_t(*)(cinput_t, cinput_u) noexcept;
+
+	static constexpr ll_bool_t COMPARE_FUNCTION_AVAIBLE =
+		std::is_same_v<CompareFunc, decltype(&Comparator::__compare)> ||
+		std::is_same_v<CompareFuncConst, decltype(&Comparator::__compare)> ||
+		std::is_same_v<CompareFuncStatic, decltype(&Comparator::__compare)>;
+
+	static constexpr ll_bool_t COMPAREBOOL_FUNCTION_AVAIBLE =
+		std::is_same_v<CompareFuncStatic, decltype(&Comparator::compare)> ||
+		std::is_same_v<CompareFunc, decltype(&Comparator::compare)> ||
+		std::is_same_v<CompareFuncConst, decltype(&Comparator::compare)>;
+
+	static_assert(COMPARE_FUNCTION_AVAIBLE, "Comparator::__compare is not avaible!");
+	static_assert(COMPARE_FUNCTION_AVAIBLE, "Comparator::__compareBool is not avaible!");
+
+	static_assert(std::is_same_v<CompareFuncBool, decltype(&C-omparator::compareBool)>, "Comparator::compareBool needs to be the same type as CompareFuncBool!");
 
 	using __cmp = compare_cluster<T, U, Comparator, GET_DATA>;
 	using CompareResult = CompareConditionalCmpT<T, U, GET_DATA>;
@@ -175,7 +194,7 @@ struct compare_cluster {
 		}
 
 		for (; size > ZERO_UI64; --size, ++str1, ++str2) {
-			cmp_t result = Comparator::compare(*str1, *str2);
+			cmp_t result = Comparator::__compare(*str1, *str2);
 			if (result != ZERO_I32) {
 				if constexpr (GET_DATA)
 					return CompareResult(str1, str2, result);

@@ -193,6 +193,9 @@ constexpr i64 ZERO_I64 = 0ll;
 constexpr f32 ZERO_F32 = 0.0f;
 constexpr f64 ZERO_F64 = 0.0;
 constexpr f128 ZERO_F128 = 0.0l;
+
+constexpr cmp_t ZERO_CMP = ZERO_I32;
+
 #pragma endregion
 #pragma region Types
 namespace meta {

@@ -23,592 +23,275 @@
 
 #include "hash_types.hpp"
 
-
 namespace llcpp {
 namespace meta {
 namespace hash {
 
-class Hash32FunctionPack {
-	private:
-		hash::Hash32Function hash32Function;
-		hash::wHash32Function whash32Function;
-		hash::StringPairHash32Function stringPairHash32Function;
-		hash::wStringPairHash32Function wstringPairHash32Function;
-		hash::StrPairHash32Function strPairHash32Function;
-		hash::wStrPairHash32Function wstrPairHash32Function;
-		hash::StrHash32Function strHash32Function;
-		hash::wStrHash32Function wstrHash32Function;
-		hash::RecursiveHash32Function recursiveHash32Function;
-		hash::StrTypeidHash32Function strTypeidHash32Function;
-		hash::wStrTypeidHash32Function wstrTypeidHash32Function;
+template<class HashType>
+class LL_SHARED_LIB HashGeneratorDummy {
+	#pragma region Types
 	public:
+		using OptionalHash = std::optional<HashType>;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(!std::is_reference_v<HashType>, "Reference type is forbidden!");
+		static_assert(!std::is_array_v<HashType>, "Array type is forbidden!");
+
+	#pragma endregion
 	#pragma region Functions
-		#pragma region Constructors
-		constexpr Hash32FunctionPack() noexcept = delete;
-		constexpr Hash32FunctionPack(
-			hash::Hash32Function hash32Function,
-			hash::wHash32Function whash32Function,
-			hash::StringPairHash32Function stringPairHash32Function,
-			hash::wStringPairHash32Function wstringPairHash32Function,
-			hash::StrPairHash32Function strPairHash32Function,
-			hash::wStrPairHash32Function wstrPairHash32Function,
-			hash::StrHash32Function strHash32Function,
-			hash::wStrHash32Function wstrHash32Function,
-			hash::RecursiveHash32Function recursiveHash32Function,
-			hash::StrTypeidHash32Function strTypeidHash32Function,
-			hash::wStrTypeidHash32Function wstrTypeidHash32Function
-		) noexcept
-			: hash32Function(hash32Function)
-			, whash32Function(whash32Function)
-			, stringPairHash32Function(stringPairHash32Function)
-			, wstringPairHash32Function(wstringPairHash32Function)
-			, strPairHash32Function(strPairHash32Function)
-			, wstrPairHash32Function(wstrPairHash32Function)
-			, strHash32Function(strHash32Function)
-			, wstrHash32Function(wstrHash32Function)
-			, recursiveHash32Function(recursiveHash32Function)
-			, strTypeidHash32Function(strTypeidHash32Function)
-			, wstrTypeidHash32Function(wstrTypeidHash32Function)
-		{}
-		constexpr ~Hash32FunctionPack() noexcept {}
+		#pragma region Constructor
+	public:
+		HashGeneratorDummy() noexcept {}
+		~HashGeneratorDummy() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
-		constexpr Hash32FunctionPack(const Hash32FunctionPack& other) noexcept
-			: Hash32FunctionPack(
-				other.hash32Function,
-				other.whash32Function,
-				other.stringPairHash32Function,
-				other.wstringPairHash32Function,
-				other.strPairHash32Function,
-				other.wstrPairHash32Function,
-				other.strHash32Function,
-				other.wstrHash32Function,
-				other.recursiveHash32Function,
-				other.strTypeidHash32Function,
-				other.wstrTypeidHash32Function
-			) {}
-		constexpr Hash32FunctionPack& operator=(const Hash32FunctionPack& other) noexcept {
-			this->hash32Function = other.hash32Function;
-			this->whash32Function = other.whash32Function;
-			this->stringPairHash32Function = other.stringPairHash32Function;
-			this->wstringPairHash32Function = other.wstringPairHash32Function;
-			this->strPairHash32Function = other.strPairHash32Function;
-			this->wstrPairHash32Function = other.wstrPairHash32Function;
-			this->strHash32Function = other.strHash32Function;
-			this->wstrHash32Function = other.wstrHash32Function;
-			this->recursiveHash32Function = other.recursiveHash32Function;
-			this->strTypeidHash32Function = other.strTypeidHash32Function;
-			this->wstrTypeidHash32Function = other.wstrTypeidHash32Function;
+	public:
+		HashGeneratorDummy(const HashGeneratorDummy&) noexcept {}
+		HashGeneratorDummy& operator=(const HashGeneratorDummy&) noexcept { return *this; }
+		HashGeneratorDummy(HashGeneratorDummy&&) noexcept {}
+		HashGeneratorDummy& operator=(HashGeneratorDummy&&) noexcept { return *this; }
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ operator const HashGeneratorDummy* () const noexcept { return this; }
+		__LL_NODISCARD__ operator HashGeneratorDummy* () noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ constexpr OptionalHash hash(ll_string_t s, const len_t n) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(ll_wstring_t s, const len_t n) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const std::string& s) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const std::wstring& s) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const meta::StrPair& s) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const meta::wStrPair& s) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const meta::Str& s) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const meta::wStr& s) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const HashType& h) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const void* o, const meta::StrTypeid& id) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const void* o, const meta::wStrTypeid& id) const noexcept {
+			return std::nullopt;
+		}
+
+		#pragma endregion
+	#pragma endregion
+};
+
+template<class HashType, class HashGenerator>
+class LL_SHARED_LIB HashFunctionPack : public HashGenerator {
+	#pragma region Types
+	public:
+		template<class T>
+		struct get_hash_function {
+			__LL_NODISCARD__ static constexpr T getHashFunction() noexcept {
+				return &HashGenerator::hash;
+			}
+			__LL_NODISCARD__ static constexpr T getHashFunction() noexcept {
+				return LL_NULLPTR;
+			}
+			using value = decltype(getHashFunction());
+		};
+		using OptionalHash = std::optional<HashType>;
+		using HashConstFunction = OptionalHash(HashGenerator::*)(ll_string_t, len_t) const noexcept;
+		using wHashConstFunction = OptionalHash(HashGenerator::*)(ll_wstring_t, len_t) const noexcept;
+		using StringPairHashConstFunction = OptionalHash(HashGenerator::*)(const std::string&) const noexcept;
+		using wStringPairHashConstFunction = OptionalHash(HashGenerator::*)(const std::wstring&) const noexcept;
+		using StrPairHashConstFunction = OptionalHash(HashGenerator::*)(const meta::StrPair&) const noexcept;
+		using wStrPairHashConstFunction = OptionalHash(HashGenerator::*)(const meta::wStrPair&) const noexcept;
+		using StrHashConstFunction = OptionalHash(HashGenerator::*)(const meta::Str&) const noexcept;
+		using wStrHashConstFunction = OptionalHash(HashGenerator::*)(const meta::wStr&) const noexcept;
+		using RecursiveHashConstFunction = OptionalHash(HashGenerator::*)(const HashType&) const noexcept;
+		using StrTypeidHashConstFunction = OptionalHash(HashGenerator::*)(const void*, const StrTypeid&) const noexcept;
+		using wStrTypeidHashConstFunction = OptionalHash(HashGenerator::*)(const void*, const wStrTypeid&) const noexcept;
+
+	#pragma endregion
+	#pragma region Expresions
+	public:
+		// Checks if exist hash function in HashGenerator
+		template<class T>
+		static constexpr ll_bool_t has_hash_function = std::is_same_v<T, get_hash_function<T>::value>;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(!std::is_reference_v<HashType>, "Reference type is forbidden!");
+		static_assert(!std::is_const_v<HashType>, "Const type is forbidden!");
+
+		static_assert(std::_Is_any_of_v<HashType, Hash32, Hash64, Hash128>, "Needs to be a valid hash type! If you want to use your own hash objects comment this assert");
+
+		static_assert(std::is_nothrow_constructible_v<HashGenerator>, "HashGenerator needs a noexcept constructor!");
+		static_assert(std::is_nothrow_destructible_v<HashGenerator>, "HashGenerator needs a noexcept destructor!");
+		static_assert(std::is_copy_constructible_v<HashGenerator>, "HashGenerator needs a noexcept copy constructor!");
+		static_assert(std::is_copy_assignable_v<HashGenerator>, "HashGenerator needs a noexcept copy asignable!");
+		static_assert(std::is_move_constructible_v<HashGenerator>, "HashGenerator needs a noexcept move constructor!");
+		static_assert(std::is_move_assignable_v<HashGenerator>, "HashGenerator needs a noexcept move asignable!");
+
+		static_assert(has_hash_function<HashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<wHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<StringPairHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<wStringPairHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<StrPairHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<wStrPairHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<StrHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<wStrHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<RecursiveHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<StrTypeidHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(has_hash_function<wStrTypeidHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		constexpr HashFunctionPack() noexcept {}
+		template<class... Args>
+		constexpr HashFunctionPack(Args&&... args) noexcept : HashGenerator(std::forward<Args>(args)...) {}
+		constexpr ~HashFunctionPack() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr HashFunctionPack(const HashFunctionPack& other) noexcept : HashGenerator(other) {}
+		constexpr HashFunctionPack& operator=(const HashFunctionPack& other) noexcept {
+			HashGenerator::operator=(other);
+			return *this;
+		}
+		constexpr HashFunctionPack(HashFunctionPack&& other) noexcept : HashGenerator(std::move(other)) {}
+		constexpr HashFunctionPack& operator=(HashFunctionPack&& other) noexcept {
+			HashGenerator::operator=(std::move(other));
 			return *this;
 		}
 
-		constexpr Hash32FunctionPack(Hash32FunctionPack&& other) noexcept
-			: Hash32FunctionPack(other) { other.clear(); }
-		constexpr Hash32FunctionPack& operator=(Hash32FunctionPack&& other) noexcept {
-			Hash32FunctionPack::operator=(other);
-			other.clear();
+		constexpr HashFunctionPack(const HashGenerator& other) noexcept : HashGenerator(other) {}
+		constexpr HashFunctionPack& operator=(const HashGenerator& other) noexcept {
+			HashGenerator::operator=(other);
+			return *this;
+		}
+		constexpr HashFunctionPack(HashGenerator&& other) noexcept : HashGenerator(std::move(other)) {}
+		constexpr HashFunctionPack& operator=(HashGenerator&& other) noexcept {
+			HashGenerator::operator=(std::move(other));
 			return *this;
 		}
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename const Hash32FunctionPack*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator typename Hash32FunctionPack*() noexcept = delete;
-
-		#pragma endregion
-		#pragma region ClassFunctions
-		constexpr void clear() noexcept {
-			this->hash32Function = LL_NULLPTR;
-			this->whash32Function = LL_NULLPTR;
-			this->stringPairHash32Function = LL_NULLPTR;
-			this->wstringPairHash32Function = LL_NULLPTR;
-			this->strPairHash32Function = LL_NULLPTR;
-			this->wstrPairHash32Function = LL_NULLPTR;
-			this->strHash32Function = LL_NULLPTR;
-			this->wstrHash32Function = LL_NULLPTR;
-			this->recursiveHash32Function = LL_NULLPTR;
-			this->strTypeidHash32Function = LL_NULLPTR;
-			this->wstrTypeidHash32Function = LL_NULLPTR;
-		}
-
-		#pragma region Getters
-		__LL_NODISCARD__ constexpr hash::Hash32Function getHash32Function() const noexcept { return this->hash32Function; }
-		__LL_NODISCARD__ constexpr hash::wHash32Function getwHash32Function() const noexcept { return this->whash32Function; }
-		__LL_NODISCARD__ constexpr hash::StringPairHash32Function getStringPairHash32Function() const noexcept { return this->stringPairHash32Function; }
-		__LL_NODISCARD__ constexpr hash::wStringPairHash32Function getwStringPairHash32Function() const noexcept { return this->wstringPairHash32Function; }
-		__LL_NODISCARD__ constexpr hash::StrPairHash32Function getStrPairHash32Function() const noexcept { return this->strPairHash32Function; }
-		__LL_NODISCARD__ constexpr hash::wStrPairHash32Function getwStrPairHash32Function() const noexcept { return this->wstrPairHash32Function; }
-		__LL_NODISCARD__ constexpr hash::StrHash32Function getStrHash32Function() const noexcept { return this->strHash32Function; }
-		__LL_NODISCARD__ constexpr hash::wStrHash32Function getwStrHash32Function() const noexcept { return this->wstrHash32Function; }
-		__LL_NODISCARD__ constexpr hash::RecursiveHash32Function getRecursiveHash32Function() const noexcept { return this->recursiveHash32Function; }
-		__LL_NODISCARD__ constexpr hash::StrTypeidHash32Function getStrTypeidHash32Function() const noexcept { return this->strTypeidHash32Function; }
-		__LL_NODISCARD__ constexpr hash::wStrTypeidHash32Function getwStrTypeidHash32Function() const noexcept { return this->wstrTypeidHash32Function; }
-
-		#pragma endregion
-		#pragma region Calls
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(ll_string_t s, const len_t n) const noexcept {
-			return this->hash32Function(s, n);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(ll_wstring_t s, const len_t n) const noexcept {
-			return this->whash32Function(s, n);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const std::string& s) const noexcept {
-			return this->stringPairHash32Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const std::wstring& s) const noexcept {
-			return this->wstringPairHash32Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const meta::StrPair& s) const noexcept {
-			return this->strPairHash32Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const meta::wStrPair& s) const noexcept {
-			return this->wstrPairHash32Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const meta::Str& s) const noexcept {
-			return this->strHash32Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const meta::wStr& s) const noexcept {
-			return this->wstrHash32Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const hash::Hash32& h) const noexcept {
-			return this->recursiveHash32Function(h);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const void* o, const meta::StrTypeid& id) const noexcept {
-			return this->strTypeidHash32Function(o, id);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call(const void* o, const meta::wStrTypeid& id) const noexcept {
-			return this->wstrTypeidHash32Function(o, id);
-		}
-
-		#pragma endregion
-		#pragma region SecureCalls
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(ll_string_t s, const len_t n) const noexcept {
-			return (this->hash32Function) ? this->hash32Function(s, n) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(ll_wstring_t s, const len_t n) const noexcept {
-			return (this->whash32Function) ? this->whash32Function(s, n) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const std::string& s) const noexcept {
-			return (this->stringPairHash32Function) ? this->stringPairHash32Function(s) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const std::wstring& s) const noexcept {
-			return (this->wstringPairHash32Function) ? this->wstringPairHash32Function(s) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const meta::StrPair& s) const noexcept {
-			return (this->strPairHash32Function) ? this->strPairHash32Function(s) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const meta::wStrPair& s) const noexcept {
-			return (this->wstrPairHash32Function) ? this->wstrPairHash32Function(s) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const meta::Str& s) const noexcept {
-			return (this->strHash32Function) ? this->strHash32Function(s) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const meta::wStr& s) const noexcept {
-			return (this->wstrHash32Function) ? this->wstrHash32Function(s) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const hash::Hash32& h) const noexcept {
-			return (this->recursiveHash32Function) ? this->recursiveHash32Function(h) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const void* o, const meta::StrTypeid& id) const noexcept {
-			return (this->strTypeidHash32Function) ? this->strTypeidHash32Function(o, id) : hash::INVALID_HASH32;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash32 call_s(const void* o, const meta::wStrTypeid& id) const noexcept {
-			return (this->wstrTypeidHash32Function) ? this->wstrTypeidHash32Function(o, id) : hash::INVALID_HASH32;
-		}
-
-		#pragma endregion
-		#pragma endregion
-	#pragma endregion
-};
-
-class Hash64FunctionPack {
-	private:
-		hash::Hash64Function hash64Function;
-		hash::wHash64Function whash64Function;
-		hash::StringPairHash64Function stringPairHash64Function;
-		hash::wStringPairHash64Function wstringPairHash64Function;
-		hash::StrPairHash64Function strPairHash64Function;
-		hash::wStrPairHash64Function wstrPairHash64Function;
-		hash::StrHash64Function strHash64Function;
-		hash::wStrHash64Function wstrHash64Function;
-		hash::RecursiveHash64Function recursiveHash64Function;
-		hash::StrTypeidHash64Function strTypeidHash64Function;
-		hash::wStrTypeidHash64Function wstrTypeidHash64Function;
 	public:
-	#pragma region Functions
-		#pragma region Constructors
-		constexpr Hash64FunctionPack() noexcept = delete;
-		constexpr Hash64FunctionPack(
-			hash::Hash64Function hash64Function,
-			hash::wHash64Function whash64Function,
-			hash::StringPairHash64Function stringPairHash64Function,
-			hash::wStringPairHash64Function wstringPairHash64Function,
-			hash::StrPairHash64Function strPairHash64Function,
-			hash::wStrPairHash64Function wstrPairHash64Function,
-			hash::StrHash64Function strHash64Function,
-			hash::wStrHash64Function wstrHash64Function,
-			hash::RecursiveHash64Function recursiveHash64Function,
-			hash::StrTypeidHash64Function strTypeidHash64Function,
-			hash::wStrTypeidHash64Function wstrTypeidHash64Function
-		) noexcept
-			: hash64Function(hash64Function)
-			, whash64Function(whash64Function)
-			, stringPairHash64Function(stringPairHash64Function)
-			, wstringPairHash64Function(wstringPairHash64Function)
-			, strPairHash64Function(strPairHash64Function)
-			, wstrPairHash64Function(wstrPairHash64Function)
-			, strHash64Function(strHash64Function)
-			, wstrHash64Function(wstrHash64Function)
-			, recursiveHash64Function(recursiveHash64Function)
-			, strTypeidHash64Function(strTypeidHash64Function)
-			, wstrTypeidHash64Function(wstrTypeidHash64Function)
-		{}
-		constexpr ~Hash64FunctionPack() noexcept {}
-
-		#pragma endregion
-		#pragma region CopyMove
-		constexpr Hash64FunctionPack(const Hash64FunctionPack& other) noexcept
-			: Hash64FunctionPack(
-				other.hash64Function,
-				other.whash64Function,
-				other.stringPairHash64Function,
-				other.wstringPairHash64Function,
-				other.strPairHash64Function,
-				other.wstrPairHash64Function,
-				other.strHash64Function,
-				other.wstrHash64Function,
-				other.recursiveHash64Function,
-				other.strTypeidHash64Function,
-				other.wstrTypeidHash64Function
-			) {}
-		constexpr Hash64FunctionPack& operator=(const Hash64FunctionPack& other) noexcept {
-			this->hash64Function = other.hash64Function;
-			this->whash64Function = other.whash64Function;
-			this->stringPairHash64Function = other.stringPairHash64Function;
-			this->wstringPairHash64Function = other.wstringPairHash64Function;
-			this->strPairHash64Function = other.strPairHash64Function;
-			this->wstrPairHash64Function = other.wstrPairHash64Function;
-			this->strHash64Function = other.strHash64Function;
-			this->wstrHash64Function = other.wstrHash64Function;
-			this->recursiveHash64Function = other.recursiveHash64Function;
-			this->strTypeidHash64Function = other.strTypeidHash64Function;
-			this->wstrTypeidHash64Function = other.wstrTypeidHash64Function;
-			return *this;
-		}
-
-		constexpr Hash64FunctionPack(Hash64FunctionPack&& other) noexcept
-			: Hash64FunctionPack(other) { other.clear(); }
-		constexpr Hash64FunctionPack& operator=(Hash64FunctionPack&& other) noexcept {
-			Hash64FunctionPack::operator=(other);
-			other.clear();
-			return *this;
-		}
-
-		#pragma endregion
-		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename const Hash64FunctionPack*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator typename Hash64FunctionPack*() noexcept = delete;
+		__LL_NODISCARD__ operator const HashFunctionPack* () const noexcept { return this; }
+		__LL_NODISCARD__ operator HashFunctionPack* () noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		constexpr void clear() noexcept {
-			this->hash64Function = LL_NULLPTR;
-			this->whash64Function = LL_NULLPTR;
-			this->stringPairHash64Function = LL_NULLPTR;
-			this->wstringPairHash64Function = LL_NULLPTR;
-			this->strPairHash64Function = LL_NULLPTR;
-			this->wstrPairHash64Function = LL_NULLPTR;
-			this->strHash64Function = LL_NULLPTR;
-			this->wstrHash64Function = LL_NULLPTR;
-			this->recursiveHash64Function = LL_NULLPTR;
-			this->strTypeidHash64Function = LL_NULLPTR;
-			this->wstrTypeidHash64Function = LL_NULLPTR;
-		}
-
-		#pragma region Getters
-		__LL_NODISCARD__ constexpr hash::Hash64Function getHash64Function() const noexcept { return this->hash64Function; }
-		__LL_NODISCARD__ constexpr hash::wHash64Function getwHash64Function() const noexcept { return this->whash64Function; }
-		__LL_NODISCARD__ constexpr hash::StringPairHash64Function getStringPairHash64Function() const noexcept { return this->stringPairHash64Function; }
-		__LL_NODISCARD__ constexpr hash::wStringPairHash64Function getwStringPairHash64Function() const noexcept { return this->wstringPairHash64Function; }
-		__LL_NODISCARD__ constexpr hash::StrPairHash64Function getStrPairHash64Function() const noexcept { return this->strPairHash64Function; }
-		__LL_NODISCARD__ constexpr hash::wStrPairHash64Function getwStrPairHash64Function() const noexcept { return this->wstrPairHash64Function; }
-		__LL_NODISCARD__ constexpr hash::StrHash64Function getStrHash64Function() const noexcept { return this->strHash64Function; }
-		__LL_NODISCARD__ constexpr hash::wStrHash64Function getwStrHash64Function() const noexcept { return this->wstrHash64Function; }
-		__LL_NODISCARD__ constexpr hash::RecursiveHash64Function getRecursiveHash64Function() const noexcept { return this->recursiveHash64Function; }
-		__LL_NODISCARD__ constexpr hash::StrTypeidHash64Function getStrTypeidHash64Function() const noexcept { return this->strTypeidHash64Function; }
-		__LL_NODISCARD__ constexpr hash::wStrTypeidHash64Function getwStrTypeidHash64Function() const noexcept { return this->wstrTypeidHash64Function; }
-
-		#pragma endregion
-		#pragma region Calls
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(ll_string_t s, const len_t n) const noexcept {
-			return this->hash64Function(s, n);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(ll_wstring_t s, const len_t n) const noexcept {
-			return this->whash64Function(s, n);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const std::string& s) const noexcept {
-			return this->stringPairHash64Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const std::wstring& s) const noexcept {
-			return this->wstringPairHash64Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const meta::StrPair& s) const noexcept {
-			return this->strPairHash64Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const meta::wStrPair& s) const noexcept {
-			return this->wstrPairHash64Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const meta::Str& s) const noexcept {
-			return this->strHash64Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const meta::wStr& s) const noexcept {
-			return this->wstrHash64Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const hash::Hash64& h) const noexcept {
-			return this->recursiveHash64Function(h);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const void* o, const meta::StrTypeid& id) const noexcept {
-			return this->strTypeidHash64Function(o, id);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call(const void* o, const meta::wStrTypeid& id) const noexcept {
-			return this->wstrTypeidHash64Function(o, id);
-		}
-
-		#pragma endregion
-		#pragma region SecureCalls
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(ll_string_t s, const len_t n) const noexcept {
-			return (this->hash64Function) ? this->hash64Function(s, n) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(ll_wstring_t s, const len_t n) const noexcept {
-			return (this->whash64Function) ? this->whash64Function(s, n) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const std::string& s) const noexcept {
-			return (this->stringPairHash64Function) ? this->stringPairHash64Function(s) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const std::wstring& s) const noexcept {
-			return (this->wstringPairHash64Function) ? this->wstringPairHash64Function(s) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::StrPair& s) const noexcept {
-			return (this->strPairHash64Function) ? this->strPairHash64Function(s) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::wStrPair& s) const noexcept {
-			return (this->wstrPairHash64Function) ? this->wstrPairHash64Function(s) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::Str& s) const noexcept {
-			return (this->strHash64Function) ? this->strHash64Function(s) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const meta::wStr& s) const noexcept {
-			return (this->wstrHash64Function) ? this->wstrHash64Function(s) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const hash::Hash64& h) const noexcept {
-			return (this->recursiveHash64Function) ? this->recursiveHash64Function(h) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const void* o, const meta::StrTypeid& id) const noexcept {
-			return (this->strTypeidHash64Function) ? this->strTypeidHash64Function(o, id) : hash::INVALID_HASH64;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 call_s(const void* o, const meta::wStrTypeid& id) const noexcept {
-			return (this->wstrTypeidHash64Function) ? this->wstrTypeidHash64Function(o, id) : hash::INVALID_HASH64;
-		}
-
-		#pragma endregion
-		#pragma endregion
-	#pragma endregion
-};
-
-class Hash128FunctionPack {
-	private:
-		hash::Hash128Function hash128Function;
-		hash::wHash128Function whash128Function;
-		hash::StringPairHash128Function stringPairHash128Function;
-		hash::wStringPairHash128Function wstringPairHash128Function;
-		hash::StrPairHash128Function strPairHash128Function;
-		hash::wStrPairHash128Function wstrPairHash128Function;
-		hash::StrHash128Function strHash128Function;
-		hash::wStrHash128Function wstrHash128Function;
-		hash::RecursiveHash128Function recursiveHash128Function;
-		hash::StrTypeidHash128Function strTypeidHash128Function;
-		hash::wStrTypeidHash128Function wstrTypeidHash128Function;
 	public:
-	#pragma region Functions
-		#pragma region Constructors
-		constexpr Hash128FunctionPack() noexcept = delete;
-		constexpr Hash128FunctionPack(
-			hash::Hash128Function hash128Function,
-			hash::wHash128Function whash128Function,
-			hash::StringPairHash128Function stringPairHash128Function,
-			hash::wStringPairHash128Function wstringPairHash128Function,
-			hash::StrPairHash128Function strPairHash128Function,
-			hash::wStrPairHash128Function wstrPairHash128Function,
-			hash::StrHash128Function strHash128Function,
-			hash::wStrHash128Function wstrHash128Function,
-			hash::RecursiveHash128Function recursiveHash128Function,
-			hash::StrTypeidHash128Function strTypeidHash128Function,
-			hash::wStrTypeidHash128Function wstrTypeidHash128Function
-		) noexcept
-			: hash128Function(hash128Function)
-			, whash128Function(whash128Function)
-			, stringPairHash128Function(stringPairHash128Function)
-			, wstringPairHash128Function(wstringPairHash128Function)
-			, strPairHash128Function(strPairHash128Function)
-			, wstrPairHash128Function(wstrPairHash128Function)
-			, strHash128Function(strHash128Function)
-			, wstrHash128Function(wstrHash128Function)
-			, recursiveHash128Function(recursiveHash128Function)
-			, strTypeidHash128Function(strTypeidHash128Function)
-			, wstrTypeidHash128Function(wstrTypeidHash128Function)
-		{}
-		constexpr ~Hash128FunctionPack() noexcept {}
+		
 
-		#pragma endregion
-		#pragma region CopyMove
-		constexpr Hash128FunctionPack(const Hash128FunctionPack& other) noexcept
-			: Hash128FunctionPack(
-				other.hash128Function,
-				other.whash128Function,
-				other.stringPairHash128Function,
-				other.wstringPairHash128Function,
-				other.strPairHash128Function,
-				other.wstrPairHash128Function,
-				other.strHash128Function,
-				other.wstrHash128Function,
-				other.recursiveHash128Function,
-				other.strTypeidHash128Function,
-				other.wstrTypeidHash128Function
-			) {}
-		constexpr Hash128FunctionPack& operator=(const Hash128FunctionPack& other) noexcept {
-			this->hash128Function = other.hash128Function;
-			this->whash128Function = other.whash128Function;
-			this->stringPairHash128Function = other.stringPairHash128Function;
-			this->wstringPairHash128Function = other.wstringPairHash128Function;
-			this->strPairHash128Function = other.strPairHash128Function;
-			this->wstrPairHash128Function = other.wstrPairHash128Function;
-			this->strHash128Function = other.strHash128Function;
-			this->wstrHash128Function = other.wstrHash128Function;
-			this->recursiveHash128Function = other.recursiveHash128Function;
-			this->strTypeidHash128Function = other.strTypeidHash128Function;
-			this->wstrTypeidHash128Function = other.wstrTypeidHash128Function;
-			return *this;
-		}
-
-		constexpr Hash128FunctionPack(Hash128FunctionPack&& other) noexcept
-			: Hash128FunctionPack(other) { other.clear(); }
-		constexpr Hash128FunctionPack& operator=(Hash128FunctionPack&& other) noexcept {
-			Hash128FunctionPack::operator=(other);
-			other.clear();
-			return *this;
-		}
-
-		#pragma endregion
-		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename const Hash128FunctionPack*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator typename Hash128FunctionPack*() noexcept = delete;
-
-		#pragma endregion
-		#pragma region ClassFunctions
-		constexpr void clear() noexcept {
-			this->hash128Function = LL_NULLPTR;
-			this->whash128Function = LL_NULLPTR;
-			this->stringPairHash128Function = LL_NULLPTR;
-			this->wstringPairHash128Function = LL_NULLPTR;
-			this->strPairHash128Function = LL_NULLPTR;
-			this->wstrPairHash128Function = LL_NULLPTR;
-			this->strHash128Function = LL_NULLPTR;
-			this->wstrHash128Function = LL_NULLPTR;
-			this->recursiveHash128Function = LL_NULLPTR;
-			this->strTypeidHash128Function = LL_NULLPTR;
-			this->wstrTypeidHash128Function = LL_NULLPTR;
-		}
-
-		#pragma region Getters
-		__LL_NODISCARD__ constexpr hash::Hash128Function getHash128Function() const noexcept { return this->hash128Function; }
-		__LL_NODISCARD__ constexpr hash::wHash128Function getwHash128Function() const noexcept { return this->whash128Function; }
-		__LL_NODISCARD__ constexpr hash::StringPairHash128Function getStringPairHash128Function() const noexcept { return this->stringPairHash128Function; }
-		__LL_NODISCARD__ constexpr hash::wStringPairHash128Function getwStringPairHash128Function() const noexcept { return this->wstringPairHash128Function; }
-		__LL_NODISCARD__ constexpr hash::StrPairHash128Function getStrPairHash128Function() const noexcept { return this->strPairHash128Function; }
-		__LL_NODISCARD__ constexpr hash::wStrPairHash128Function getwStrPairHash128Function() const noexcept { return this->wstrPairHash128Function; }
-		__LL_NODISCARD__ constexpr hash::StrHash128Function getStrHash128Function() const noexcept { return this->strHash128Function; }
-		__LL_NODISCARD__ constexpr hash::wStrHash128Function getwStrHash128Function() const noexcept { return this->wstrHash128Function; }
-		__LL_NODISCARD__ constexpr hash::RecursiveHash128Function getRecursiveHash128Function() const noexcept { return this->recursiveHash128Function; }
-		__LL_NODISCARD__ constexpr hash::StrTypeidHash128Function getStrTypeidHash128Function() const noexcept { return this->strTypeidHash128Function; }
-		__LL_NODISCARD__ constexpr hash::wStrTypeidHash128Function getwStrTypeidHash128Function() const noexcept { return this->wstrTypeidHash128Function; }
-
-		#pragma endregion
-		#pragma region Calls
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(ll_string_t s, const len_t n) const noexcept {
-			return this->hash128Function(s, n);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(ll_wstring_t s, const len_t n) const noexcept {
-			return this->whash128Function(s, n);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const std::string& s) const noexcept {
-			return this->stringPairHash128Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const std::wstring& s) const noexcept {
-			return this->wstringPairHash128Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const meta::StrPair& s) const noexcept {
-			return this->strPairHash128Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const meta::wStrPair& s) const noexcept {
-			return this->wstrPairHash128Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const meta::Str& s) const noexcept {
-			return this->strHash128Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const meta::wStr& s) const noexcept {
-			return this->wstrHash128Function(s);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const hash::Hash128& h) const noexcept {
-			return this->recursiveHash128Function(h);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const void* o, const meta::StrTypeid& id) const noexcept {
-			return this->strTypeidHash128Function(o, id);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call(const void* o, const meta::wStrTypeid& id) const noexcept {
-			return this->wstrTypeidHash128Function(o, id);
-		}
-
-		#pragma endregion
-		#pragma region SecureCalls
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(ll_string_t s, const len_t n) const noexcept {
-			return (this->hash128Function) ? this->hash128Function(s, n) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(ll_wstring_t s, const len_t n) const noexcept {
-			return (this->whash128Function) ? this->whash128Function(s, n) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const std::string& s) const noexcept {
-			return (this->stringPairHash128Function) ? this->stringPairHash128Function(s) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const std::wstring& s) const noexcept {
-			return (this->wstringPairHash128Function) ? this->wstringPairHash128Function(s) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const meta::StrPair& s) const noexcept {
-			return (this->strPairHash128Function) ? this->strPairHash128Function(s) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const meta::wStrPair& s) const noexcept {
-			return (this->wstrPairHash128Function) ? this->wstrPairHash128Function(s) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const meta::Str& s) const noexcept {
-			return (this->strHash128Function) ? this->strHash128Function(s) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const meta::wStr& s) const noexcept {
-			return (this->wstrHash128Function) ? this->wstrHash128Function(s) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const hash::Hash128& h) const noexcept {
-			return (this->recursiveHash128Function) ? this->recursiveHash128Function(h) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const void* o, const meta::StrTypeid& id) const noexcept {
-			return (this->strTypeidHash128Function) ? this->strTypeidHash128Function(o, id) : hash::INVALID_HASH128;
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash128 call_s(const void* o, const meta::wStrTypeid& id) const noexcept {
-			return (this->wstrTypeidHash128Function) ? this->wstrTypeidHash128Function(o, id) : hash::INVALID_HASH128;
-		}
-
-		#pragma endregion
 		#pragma endregion
 	#pragma endregion
 };
+
+/*
+namespace basic_type_hash {
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_convertible_v = std::_Is_any_of_v<T, i8, ui8, i16, ui16, i32, ui32, i64, ui64, ll_wchar_t>;
+
+#pragma region UsedInTools
+template<len_t N, class T>
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) noexcept {
+	static_assert(basic_type_hash::is_convertible_v<T>, "Invalid type to hash");
+	static_assert(N != ZERO_UI64, "Cannot hash 0 elements");
+	if constexpr (N == 1) return basic_type_hash::hashValue<T>(*values, hashFunction);
+	else {
+		constexpr len_t BUFFERLEN = sizeof(T) * N;
+		ll_char_t buffer[BUFFERLEN]{};
+
+		ll_char_t* i = buffer;
+		for (const T* data_end = values + N; values < data_end; ++values)
+			basic_type_hash::conversor<T>(i, *values);
+		return hashFunction(buffer, BUFFERLEN);
+	}
+}
+template<len_t N>
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N], hash::Hash64Function hashFunction) noexcept {
+	constexpr len_t BUFFERLEN = sizeof(ui64) * N;
+	ll_char_t buffer[BUFFERLEN]{};
+
+	ll_char_t* i = buffer;
+	const hash::Hash64* arr = hashes;
+	for (const hash::Hash64* data_end = arr + N; arr < data_end; ++arr)
+		basic_type_hash::conversor<ui64>(i, arr->get());
+
+	return hashFunction(buffer, BUFFERLEN);
+}
+
+#pragma endregion
+
+// Uses bitwise operators: [ ">>", "&" ]
+template<class U, class W = traits::cinput<U>>
+__LL_NODISCARD__ constexpr void conversor(ll_char_t*& buffer, W value) noexcept {
+	static_assert(basic_type_hash::is_convertible_v<U>, "Invalid type to hash");
+	constexpr len_t N = sizeof(U);
+	constexpr len_t BYTES = (N << 3) - 8;
+	len_t byte = BYTES;
+	for (len_t i{}; i < N; ++i, ++buffer, byte -= 8)
+		*buffer = static_cast<ui8>(value >> byte) & 0xff;
+}
+template<class U, class W = traits::cinput<U>, hash::Hash64Function HASH_FUNCTION>
+__LL_NODISCARD__ constexpr hash::OptionalHash64 hashValue(W value) noexcept {
+	static_assert(basic_type_hash::is_convertible_v<U>, "Invalid type to hash");
+	constexpr len_t BUFFERLEN = sizeof(U);
+	ll_char_t buffer[BUFFERLEN]{};
+	ll_char_t* _ = buffer;
+	basic_type_hash::conversor<U, W>(_, value);
+	return HASH_FUNCTION(buffer, BUFFERLEN);
+}
+
+} // namespace basic_type_hash
+
+// Struct for use in HashTool in an more optimized way (for not constexpr data)
+struct basic_type_hash_no_constexpr {
+	template<len_t N>
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N], hash::Hash64Function hashFunction) noexcept {
+		static_assert(N != ZERO_UI64, "Cannot hash 0 elements");
+		return hashFunction(reinterpret_cast<ll_string_t>(hashes), sizeof(hash::Hash64) * N);
+	}
+	template<len_t N, class T>
+	__LL_NODISCARD__ static constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) noexcept {
+		static_assert(!basic_type_hash::is_convertible_v<T>, "Invalid type to hash");
+		static_assert(N != ZERO_UI64, "Cannot hash 0 elements");
+		return hashFunction(reinterpret_cast<ll_string_t>(values), sizeof(T) * N);
+	}
+};
+*/
+
+template<class HashGenerator>
+using Hash32FunctionPack = HashFunctionPack<hash::Hash32, HashGenerator>;
+template<class HashGenerator>
+using Hash64FunctionPack = HashFunctionPack<hash::Hash64, HashGenerator>;
+template<class HashGenerator>
+using Hash128FunctionPack = HashFunctionPack<hash::Hash128, HashGenerator>;
 
 } // namespace hash
 } // namespace meta

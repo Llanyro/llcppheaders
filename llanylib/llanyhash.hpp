@@ -28,11 +28,64 @@
 namespace llcpp {
 namespace meta {
 namespace hash {
+namespace llanyhash {
+namespace v1 {
 
-struct LlanyHash {
+class LlanyHash {
+	public:
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 llanyHash64_v1(ll_string_t s, len_t len) const noexcept {
+			if (!s) return hash::INVALID_HASH64;
+
+			ui64 result = hash::combine::kMul64;
+			ui8 pos{};
+			for (ll_string_t end = s + len; s < end; ++s, ++pos) {
+				if (pos >= 8) pos = ZERO_UI8;
+				ui8 bit_position = static_cast<ui8>(pos << 3);
+				ui8 result_8b_part = (result >> bit_position) && 0xff;
+				ui8 result_new = hash::combine::simple8Combine_noshift<LL_FALSE>(result_8b_part, static_cast<ui8>(*s));
+				result |= (static_cast<ui64>(result_new) << bit_position);
+			}
+
+			return result;
+		}
+	public:
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(ll_string_t s, len_t len) noexcept {
+			return hash::LlanyHash::llanyHash64_v2(s, len);
+		}
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const meta::StrPair& s) noexcept {
+			if (s.empty()) return hash::INVALID_HASH64;
+			else return hash::LlanyHash::llanyHash64(s.begin(), s.len());
+		}
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const meta::Str& s) noexcept {
+			if (s.empty()) return hash::INVALID_HASH64;
+			else return hash::LlanyHash::llanyHash64(s.begin(), s.len());
+		}
+		template<len_t N>
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const ll_char_t(&s)[N]) noexcept {
+			if (!s) return hash::INVALID_HASH64;
+			else return hash::LlanyHash::llanyHash64(s, N - 1);
+		}
+		// Only admits hash::basic_type_hash::is_convertible_v<>
+		// Returns hash::INVALID_HASH64 if invalid type or hash error
+		template<class U, class W = traits::cinput<U>>
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(W value) noexcept {
+			return hash::basic_type_hash::hashValue<U, W>(value, hash::LlanyHash::llanyHash64);
+		}
+		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64(const hash::Hash64& hash) noexcept {
+			return hash::basic_type_hash::hashValue<ui64>(hash.get(), hash::LlanyHash::llanyHash64);
+		}
+};
+
+} // namespace v1
+
+
+} // namespace llanyhash
+
+
+class LlanyHash {
 	public:
 		using Combine64 = ui64(*)(ui64, ui64) noexcept;
-		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64Combine_impl(ll_string_t s, const len_t len, Combine64 combine) noexcept {
+		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64CombineImplementation(ll_string_t s, const len_t len, Combine64 combine) noexcept {
 			if (!s || !combine) return hash::INVALID_HASH64;
 
 			// Number of groups of b64
@@ -61,8 +114,8 @@ struct LlanyHash {
 			return result;
 		}
 		__LL_NODISCARD__ static hash::OptionalHash64 llanyHash64Combine(ll_string_t s, const len_t len) noexcept {
-			return hash::LlanyHash::llanyHash64Combine_impl(s, len, hash::combine::murmur64Combine);
-			//return hash::LlanyHash::llanyHash64Combine_impl(s, len, hash::combine::simple64Combine_noshift);
+			return hash::LlanyHash::llanyHash64CombineImplementation(s, len, hash::combine::murmur64Combine);
+			//return hash::LlanyHash::llanyHash64CombineImplementation(s, len, hash::combine::simple64Combine_noshift);
 		}
 	public:
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 llanyHash64_v1(ll_string_t s, len_t len) noexcept {

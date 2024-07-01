@@ -28,35 +28,47 @@ namespace llcpp {
 namespace meta {
 
 // Requires a char type to fit software chars: char, wchar...
-template<class T>
+template<class CharType, class HashType>
 class Typeid {
+	#pragma region Types
 	public:
-		static_assert(traits::is_char_type_v<T>, "Type must be a char type");
-		using NameType = meta::ArrayPair<T>;
+		using NameType = meta::ArrayPair<CharType>;
 		using HashFunction = hash::OptionalHash64(*)(const NameType&) noexcept;
-	private:
-		hash::Hash64 name_hash;
-		NameType name;
-	private:
-		constexpr void simpleClear() noexcept { this->name_hash.clear(); }
-	public:
-		#pragma region Contructors
-		constexpr Typeid() noexcept = delete;
-		constexpr ~Typeid() noexcept {}
 
-		constexpr Typeid(const NameType& name, HashFunction hashFunction) noexcept
-			: name_hash(), name(name) {
-			auto h = hashFunction(this->name);
-			if (h.has_value()) this->name_hash = *h;
-		}
-		constexpr Typeid(NameType&& name, HashFunction hashFunction) noexcept
-			: name_hash(), name(std::move(name)) {
-			auto h = hashFunction(this->name);
-			if (h.has_value()) this->name_hash = *h;
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(traits::is_char_type_v<CharType>, "Type must be a char type");
+
+		static_assert(!std::is_reference_v<CharType>, "Reference type is forbidden!");
+		static_assert(!std::is_const_v<CharType>, "Const type is forbidden!");
+
+		static_assert(!std::is_reference_v<HashType>, "Reference type is forbidden!");
+		static_assert(!std::is_const_v<HashType>, "Const type is forbidden!");
+
+	#pragma endregion
+	#pragma region Attributes
+	private:
+		HashType name_hash;
+		NameType name;
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Protected
+	protected:
+		constexpr void simpleClear() noexcept {
+			this->name_hash.clear();
 		}
 
 		#pragma endregion
+		#pragma region Constructor
+	public:
+		Typeid() noexcept = delete;
+		~Typeid() noexcept {}
+
+		#pragma endregion
 		#pragma region CopyMove
+	public:
 		constexpr Typeid(const Typeid& other) noexcept
 			: name_hash(other.name_hash), name(other.name) {}
 		constexpr Typeid& operator=(const Typeid& other) noexcept {
@@ -77,8 +89,44 @@ class Typeid {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator const Typeid*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator Typeid*() noexcept = delete;
+	public:
+		__LL_NODISCARD__ operator const Typeid* () const noexcept { return this; }
+		__LL_NODISCARD__ operator Typeid* () noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		
+
+		#pragma endregion
+
+
+	#pragma endregion
+
+	public:
+		#pragma region Contructors
+		constexpr Typeid() noexcept = delete;
+		constexpr ~Typeid() noexcept {}
+
+		constexpr Typeid(const NameType& name, HashFunction hashFunction) noexcept
+			: name_hash(), name(name) {
+			auto h = hashFunction(this->name);
+			if (h.has_value()) this->name_hash = *h;
+		}
+		constexpr Typeid(NameType&& name, HashFunction hashFunction) noexcept
+			: name_hash(), name(std::move(name)) {
+			auto h = hashFunction(this->name);
+			if (h.has_value()) this->name_hash = *h;
+		}
+
+		#pragma endregion
+		#pragma region CopyMove
+
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+		__LL_NODISCARD__ constexpr operator const Typeid* () const noexcept = delete;
+		__LL_NODISCARD__ constexpr operator Typeid* () noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions

@@ -82,27 +82,42 @@ __LL_NODISCARD__ constexpr ll_bool_t construct_vector_s(T* begin, const len_t si
 	#pragma warning(disable:4100) // Unreferenced formal parameter
 #endif // WINDOWS_SYSTEM
 
-struct LL_SHARED_LIB AllocatorDummy {
-	AllocatorDummy() noexcept {}
-	~AllocatorDummy() noexcept {}
+class LL_SHARED_LIB AllocatorDummy {
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		AllocatorDummy() noexcept {}
+		~AllocatorDummy() noexcept {}
 
-	AllocatorDummy(const AllocatorDummy&) noexcept {}
-	AllocatorDummy& operator=(const AllocatorDummy&) noexcept { return *this; }
-	AllocatorDummy(AllocatorDummy&&) noexcept {}
-	AllocatorDummy& operator=(AllocatorDummy&&) noexcept { return *this; }
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		AllocatorDummy(const AllocatorDummy&) noexcept {}
+		AllocatorDummy& operator=(const AllocatorDummy&) noexcept { return *this; }
+		AllocatorDummy(AllocatorDummy&&) noexcept {}
+		AllocatorDummy& operator=(AllocatorDummy&&) noexcept { return *this; }
 
-	__LL_NODISCARD__ operator const AllocatorDummy*() const noexcept { return this; }
-	__LL_NODISCARD__ operator AllocatorDummy*() noexcept { return this; }
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ operator const AllocatorDummy*() const noexcept { return this; }
+		__LL_NODISCARD__ operator AllocatorDummy*() noexcept { return this; }
 
-	__LL_NODISCARD__ void* allocate(const len_t bytes) noexcept { return LL_NULLPTR; }
-	void deallocate(void*& mem) noexcept { mem = LL_NULLPTR; }
-	__LL_NODISCARD__ ll_bool_t reallocate(void*& mem, const len_t bytes) noexcept {
-		mem = LL_NULLPTR;
-		return LL_FALSE;
-	}
-	void memcopy(const void* src, void* dst, const len_t bytes) noexcept {}
-	void memmove(void* src, void* dst, const len_t bytes) noexcept {}
-	void clear_data(void* mem, const len_t bytes) noexcept {}
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ void* allocate(const len_t bytes) noexcept { return LL_NULLPTR; }
+		void deallocate(void*& mem) noexcept { mem = LL_NULLPTR; }
+		__LL_NODISCARD__ ll_bool_t reallocate(void*& mem, const len_t bytes) noexcept {
+			mem = LL_NULLPTR;
+			return LL_FALSE;
+		}
+		void memcopy(const void* src, void* dst, const len_t bytes) noexcept {}
+		void memmove(void* src, void* dst, const len_t bytes) noexcept {}
+		void clear_data(void* mem, const len_t bytes) noexcept {}
+
+		#pragma endregion
+	#pragma endregion
 };
 
 #if defined(WINDOWS_SYSTEM)
@@ -111,6 +126,17 @@ struct LL_SHARED_LIB AllocatorDummy {
 
 template<class Allocator = AllocatorDummy>
 class LL_SHARED_LIB AllocatorChecker : public Allocator {
+	#pragma region Types
+	public:
+		using AllocateFunc = void* (Allocator::*)(const len_t) noexcept;
+		using DeallocateFunc = void(Allocator::*)(void*&) noexcept;
+		using ReallocateFunc = ll_bool_t(Allocator::*)(void*&, const len_t) noexcept;
+		using MemCopyFunc = void(Allocator::*)(const void*, void*, const len_t) noexcept;
+		using MemMoveFunc = void(Allocator::*)(void*, void*, const len_t) noexcept;
+		using ClearFunc = void(Allocator::*)(void*, const len_t) noexcept;
+
+	#pragma endregion
+	#pragma region Assets
 	public:
 		static_assert(!std::is_reference_v<Allocator>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<Allocator>, "Const type is forbidden!");
@@ -125,14 +151,8 @@ class LL_SHARED_LIB AllocatorChecker : public Allocator {
 		static_assert(std::is_move_constructible_v<Allocator>, "Allocator needs a noexcept move constructor!");
 		static_assert(std::is_move_assignable_v<Allocator>, "Allocator needs a noexcept move asignable!");
 
-	#pragma region AllocationFunctions
-		using AllocateFunc = void* (Allocator::*)(const len_t) noexcept;
-		using DeallocateFunc = void(Allocator::*)(void*&) noexcept;
-		using ReallocateFunc = ll_bool_t(Allocator::*)(void*&, const len_t) noexcept;
-		using MemCopyFunc = void(Allocator::*)(const void*, void*, const len_t) noexcept;
-		using MemMoveFunc = void(Allocator::*)(void*, void*, const len_t) noexcept;
-		using ClearFunc = void(Allocator::*)(void*, const len_t) noexcept;
-
+	#pragma region AllocationAssets
+	public:
 		static_assert(std::is_same_v<AllocateFunc, decltype(&Allocator::allocate)>,
 			"Allocator::allocate needs to be the same type as AllocateFunc!");
 		static_assert(
@@ -153,12 +173,18 @@ class LL_SHARED_LIB AllocatorChecker : public Allocator {
 
 	#pragma endregion
 
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
 	public:
 		AllocatorChecker() noexcept : Allocator() {}
 		template<class... Args>
 		AllocatorChecker(Args&&... args) noexcept : Allocator(std::forward<Args>(args)...) {}
 		~AllocatorChecker() noexcept {}
 
+		#pragma endregion
+		#pragma region CopyMove
+	public:
 		AllocatorChecker(const AllocatorChecker& other) noexcept : Allocator(other) {}
 		AllocatorChecker& operator=(const AllocatorChecker& other) noexcept {
 			Allocator::operator=(other);
@@ -170,12 +196,36 @@ class LL_SHARED_LIB AllocatorChecker : public Allocator {
 			return *this;
 		}
 
+		AllocatorChecker(const Allocator& other) noexcept : Allocator(other) {}
+		AllocatorChecker& operator=(const Allocator& other) noexcept {
+			Allocator::operator=(other);
+			return *this;
+		}
+		AllocatorChecker(Allocator&& other) noexcept : Allocator(std::move(other)) {}
+		AllocatorChecker& operator=(Allocator&& other) noexcept {
+			Allocator::operator=(std::move(other));
+			return *this;
+		}
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
 		__LL_NODISCARD__ operator const AllocatorChecker*() const noexcept { return *this; }
 		__LL_NODISCARD__ operator AllocatorChecker*() noexcept { return *this; }
+
+		#pragma endregion
+
+	#pragma endregion
 };
 
 template<class T, class Allocator = AllocatorDummy>
 class LL_SHARED_LIB AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
+	#pragma region Types
+	public:
+		using AllocatorCheckerBase = meta::AllocatorChecker<Allocator>;
+
+	#pragma endregion
+	#pragma region Asserts
 	public:
 		static_assert(!std::is_array_v<T>, "This class does not support array type");
 
@@ -186,13 +236,18 @@ class LL_SHARED_LIB AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 		static_assert(std::is_move_constructible_v<T>, "Type needs a noexcept move constructor!");
 		static_assert(std::is_move_assignable_v<T>, "Type needs a noexcept move asignable!");
 
-		using AllocatorCheckerBase = meta::AllocatorChecker<Allocator>;
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
 	public:
 		AllocatorCheckerTyped() noexcept : AllocatorCheckerBase() {}
 		template<class... Args>
 		AllocatorCheckerTyped(Args&&... args) noexcept : AllocatorCheckerBase(std::forward<Args>(args)...) {}
 		~AllocatorCheckerTyped() noexcept {}
 
+		#pragma endregion
+		#pragma region CopyMove
+	public:
 		AllocatorCheckerTyped(const AllocatorCheckerTyped& other) noexcept : AllocatorCheckerBase(other) {}
 		AllocatorCheckerTyped& operator=(const AllocatorCheckerTyped& other) noexcept {
 			AllocatorCheckerBase::operator=(other);
@@ -204,8 +259,26 @@ class LL_SHARED_LIB AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			return *this;
 		}
 
+		AllocatorCheckerTyped(const AllocatorCheckerBase& other) noexcept : AllocatorCheckerBase(other) {}
+		AllocatorCheckerTyped& operator=(const AllocatorCheckerBase& other) noexcept {
+			AllocatorCheckerBase::operator=(other);
+			return *this;
+		}
+		AllocatorCheckerTyped(AllocatorCheckerBase&& other) noexcept : AllocatorCheckerBase(std::move(other)) {}
+		AllocatorCheckerTyped& operator=(AllocatorCheckerBase&& other) noexcept {
+			AllocatorCheckerBase::operator=(std::move(other));
+			return *this;
+		}
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
 		__LL_NODISCARD__ operator const AllocatorCheckerTyped*() const noexcept { return *this; }
 		__LL_NODISCARD__ operator AllocatorCheckerTyped*() noexcept { return *this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+		#pragma region AllocatorTyped
 	public:
 		// Does not constructs any object!
 		__LL_NODISCARD__ T* allocate(const len_t lenght) noexcept {
@@ -233,6 +306,9 @@ class LL_SHARED_LIB AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			Allocator::clear_data(mem, sizeof(T) * lenght);
 		}
 
+		#pragma endregion
+		#pragma region AllocatorExtra
+	public:
 		// Constructs Object with arguments
 		template<class... Args>
 		__LL_NODISCARD__ T* allocateObject(Args&&... args) noexcept {
@@ -341,6 +417,11 @@ class LL_SHARED_LIB AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 		__LL_NODISCARD__ ll_bool_t clear_data_destruct_s(T* mem, const len_t lenght) noexcept {
 			return __internal__::destruct_vector_s(mem, lenght);
 		}
+
+		#pragma endregion
+
+		#pragma endregion
+	#pragma endregion
 };
 
 } // namespace meta

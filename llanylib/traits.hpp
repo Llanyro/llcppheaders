@@ -476,7 +476,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_v = has_type_opera
 template <class T, class OperatorType>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_type_operator<T, OperatorType>::check_const_except();
 
-
+#pragma region DefineFunctionBase
 #define __LL_TEMPLATE_HAS_FUNCTION_BASE__(name, function, basic_value) \
 	template <class T, class ReturnType, class... SignarureArgs> \
 	struct has_##name## { \
@@ -661,6 +661,17 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_const_except_v = has_typ
 
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(swap, swap, LL_FALSE);
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(clear, clear, LL_FALSE);
+
+#pragma endregion
+
+//template<class ClassType, class FuncType>
+//struct get_class_function {
+//	static constexpr auto test(const ClassType* p) noexcept -> void;
+//	static constexpr auto test(...) noexcept -> void;
+//
+//
+//	using value = 
+//};
 
 #pragma endregion
 #pragma region SwapChecker

@@ -213,67 +213,21 @@ using wStrPair = ArrayPair<ll_wchar_t>;
 using Str = Array<ll_char_t>;
 using wStr = Array<ll_wchar_t>;
 
-template<class T>
-class Typeid;
-using StrTypeid = Typeid<ll_char_t>;
-using wStrTypeid = Typeid<ll_wchar_t>;
-
 namespace hash {
 class Hash32;
 class Hash64;
 class Hash128;
-class Hash32FunctionPack;
-class Hash64FunctionPack;
-class Hash128FunctionPack;
 
 using OptionalHash32 = std::optional<hash::Hash32>;
 using OptionalHash64 = std::optional<hash::Hash64>;
 using OptionalHash128 = std::optional<hash::Hash128>;
 
-#pragma region 32
-using Hash32Function = hash::OptionalHash32(*)(ll_string_t, len_t) noexcept;
-using wHash32Function = hash::OptionalHash32(*)(ll_wstring_t, len_t) noexcept;
-using StringPairHash32Function = hash::OptionalHash32(*)(const std::string&) noexcept;
-using wStringPairHash32Function = hash::OptionalHash32(*)(const std::wstring&) noexcept;
-using StrPairHash32Function = hash::OptionalHash32(*)(const meta::StrPair&) noexcept;
-using wStrPairHash32Function = hash::OptionalHash32(*)(const meta::wStrPair&) noexcept;
-using StrHash32Function = hash::OptionalHash32(*)(const meta::Str&) noexcept;
-using wStrHash32Function = hash::OptionalHash32(*)(const meta::wStr&) noexcept;
-using RecursiveHash32Function = hash::OptionalHash32(*)(const hash::Hash32&) noexcept;
-using StrTypeidHash32Function = hash::OptionalHash32(*)(const void*, const StrTypeid&) noexcept;
-using wStrTypeidHash32Function = hash::OptionalHash32(*)(const void*, const wStrTypeid&) noexcept;
-
-#pragma endregion
-#pragma region 64
-using Hash64Function = hash::OptionalHash64(*)(ll_string_t, len_t) noexcept;
-using wHash64Function = hash::OptionalHash64(*)(ll_wstring_t, len_t) noexcept;
-using StringPairHash64Function = hash::OptionalHash64(*)(const std::string&) noexcept;
-using wStringPairHash64Function = hash::OptionalHash64(*)(const std::wstring&) noexcept;
-using StrPairHash64Function = hash::OptionalHash64(*)(const meta::StrPair&) noexcept;
-using wStrPairHash64Function = hash::OptionalHash64(*)(const meta::wStrPair&) noexcept;
-using StrHash64Function = hash::OptionalHash64(*)(const meta::Str&) noexcept;
-using wStrHash64Function = hash::OptionalHash64(*)(const meta::wStr&) noexcept;
-using RecursiveHash64Function = hash::OptionalHash64(*)(const hash::Hash64&) noexcept;
-using StrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const StrTypeid&) noexcept;
-using wStrTypeidHash64Function = hash::OptionalHash64(*)(const void*, const wStrTypeid&) noexcept;
-
-#pragma endregion
-#pragma region 128
-using Hash128Function = hash::OptionalHash128(*)(ll_string_t, len_t) noexcept;
-using wHash128Function = hash::OptionalHash128(*)(ll_wstring_t, len_t) noexcept;
-using StringPairHash128Function = hash::OptionalHash128(*)(const std::string&) noexcept;
-using wStringPairHash128Function = hash::OptionalHash128(*)(const std::wstring&) noexcept;
-using StrPairHash128Function = hash::OptionalHash128(*)(const meta::StrPair&) noexcept;
-using wStrPairHash128Function = hash::OptionalHash128(*)(const meta::wStrPair&) noexcept;
-using StrHash128Function = hash::OptionalHash128(*)(const meta::Str&) noexcept;
-using wStrHash128Function = hash::OptionalHash128(*)(const meta::wStr&) noexcept;
-using RecursiveHash128Function = hash::OptionalHash128(*)(const hash::Hash128&) noexcept;
-using StrTypeidHash128Function = hash::OptionalHash128(*)(const void*, const StrTypeid&) noexcept;
-using wStrTypeidHash128Function = hash::OptionalHash128(*)(const void*, const wStrTypeid&) noexcept;
-
-#pragma endregion
-
 } // namespace hash
+
+template<class CharType, class HashType>
+class Typeid;
+using StrTypeid = Typeid<ll_char_t, hash::Hash64>;
+using wStrTypeid = Typeid<ll_wchar_t, hash::Hash64>;
 
 #pragma endregion
 

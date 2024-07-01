@@ -33,6 +33,11 @@ namespace llcpp {
 namespace meta {
 namespace hash {
 
+class HashTool {
+
+};
+
+/*
 template<class basic_type_hash_class = basic_type_hash>
 class HashTool {
 	public:
@@ -312,6 +317,7 @@ class HashTool {
 		}
 		#pragma endregion
 };
+*/
 
 } // namespace hash
 } // namespace meta

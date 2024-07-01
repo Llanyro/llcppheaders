@@ -151,49 +151,98 @@ __LL_NODISCARD__ constexpr CompareConditionalBool<T, U, GET_DATA> compareConvers
 #pragma endregion
 
 template<class T, class U>
-struct CompareDefault {
-	__LL_NODISCARD__ constexpr cmp_t compare(traits::cinput<T> a, traits::cinput<U> b) const noexcept {
-		return a - b;
-	}
-	__LL_NODISCARD__ constexpr ll_bool_t compareBool(traits::cinput<T> a, traits::cinput<U> b) const noexcept {
-		return a == b;
-	}
+class CompareDefault {
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		CompareDefault() noexcept {}
+		~CompareDefault() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		CompareDefault(const CompareDefault&) noexcept {}
+		CompareDefault& operator=(const CompareDefault&) noexcept { return *this; }
+		CompareDefault(CompareDefault&&) noexcept {}
+		CompareDefault& operator=(CompareDefault&&) noexcept { return *this; }
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ operator const CompareDefault*() const noexcept { return this; }
+		__LL_NODISCARD__ operator CompareDefault*() noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ constexpr cmp_t compare(traits::cinput<T> a, traits::cinput<U> b) const noexcept {
+			return a - b;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t compareBool(traits::cinput<T> a, traits::cinput<U> b) const noexcept {
+			return a == b;
+		}
+
+		#pragma endregion
+	#pragma endregion
 };
 
 template<class T, class U>
-struct ManipulatorDefault {
-	__LL_NODISCARD__ constexpr void swap(T& a, U& b) noexcept {
-		T tmp = a;
-		a = b;
-		b = tmp;
-	}
-	__LL_NODISCARD__ constexpr void copy(T& a, traits::cinput<U> b) noexcept {
-		a = b;
-	}
-	__LL_NODISCARD__ constexpr void move(T& a, U& b) noexcept {
-		a = std::move(b);
-	}
+class ManipulatorDefault {
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		ManipulatorDefault() noexcept {}
+		~ManipulatorDefault() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		ManipulatorDefault(const ManipulatorDefault&) noexcept {}
+		ManipulatorDefault& operator=(const ManipulatorDefault&) noexcept { return *this; }
+		ManipulatorDefault(ManipulatorDefault&&) noexcept {}
+		ManipulatorDefault& operator=(ManipulatorDefault&&) noexcept { return *this; }
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ operator const ManipulatorDefault*() const noexcept { return this; }
+		__LL_NODISCARD__ operator ManipulatorDefault*() noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ constexpr void swap(T& a, U& b) noexcept {
+			T tmp = a;
+			a = b;
+			b = tmp;
+		}
+		__LL_NODISCARD__ constexpr void copy(T& a, traits::cinput<U> b) noexcept {
+			a = b;
+		}
+		__LL_NODISCARD__ constexpr void move(T& a, U& b) noexcept {
+			a = std::move(b);
+		}
+
+		#pragma endregion
+	#pragma endregion
 };
 
 template<class T, class U = T, class Comparator = CompareDefault<T, U>, ll_bool_t GET_DATA = LL_FALSE>
-struct compare_cluster : public Comparator {
+class CompareCluster : public Comparator {
 	#pragma region Types
 	public:
-		using func = traits::member_function_traits<decltype(&Comparator::compare)>;
-
 		using cinput_t = traits::cinput<T>;
 		using cinput_u = traits::cinput<U>;
 
 		using CompareFunc = cmp_t(Comparator::*)(cinput_t, cinput_u) noexcept;
-		using CompareFuncConst = cmp_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
-		using CompareFuncStatic = cmp_t(*)(cinput_t, cinput_u) noexcept;
-
 		using CompareFuncBool = ll_bool_t(Comparator::*)(cinput_t, cinput_u) noexcept;
+
+		using CompareFuncConst = cmp_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
 		using CompareFuncBoolConst = ll_bool_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
-		using CompareFuncBoolStatic = ll_bool_t(*)(cinput_t, cinput_u) noexcept;
 
 		using CompareResult = CompareConditionalCmpT<T, U, GET_DATA>;
 		using CompareResultBool = CompareConditionalBool<T, U, GET_DATA>;
+
 		using ArrayPair_t = meta::ArrayPair<T>;
 		using ArrayPair_u = meta::ArrayPair<U>;
 		using Array_t = meta::Array<T>;
@@ -215,6 +264,7 @@ struct compare_cluster : public Comparator {
 	public:
 		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+
 		static_assert(!std::is_reference_v<Comparator>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<Comparator>, "Const type is forbidden!");
 		static_assert(!std::is_pointer_v<Comparator>, "Pointer type is forbidden!");
@@ -225,572 +275,664 @@ struct compare_cluster : public Comparator {
 		static_assert(COMPAREBOOL_FUNCTION_AVAIBLE, "Comparator::compareBool is not avaible!");
 
 	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		CompareCluster() noexcept {}
+		template<class... Args>
+		CompareCluster(Args&&... args) noexcept : Comparator(std::forward<Args>(args)...) {}
+		~CompareCluster() noexcept {}
 
-	#pragma region Compare
-	#pragma region CompareBase
-	// Returns false if check not pass
-	__LL_NODISCARD__ constexpr ll_bool_t compareCheck(const T* str1, const U* str2, CompareResult& res) const noexcept {
-		if (static_cast<const void*>(str1) == static_cast<const void*>(str2)) {
-			res = ZERO_CMP;
-			return LL_FALSE;
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		CompareCluster(const CompareCluster& other) noexcept : Comparator(other) {}
+		CompareCluster& operator=(const CompareCluster& other) noexcept {
+			Comparator::operator=(other);
+			return *this;
 		}
-		else if (!str1 || !str2) {
-			res = ((!str1) ? -1 : 1);
-			return LL_FALSE;
+		CompareCluster(CompareCluster&& other) noexcept : Comparator(std::move(other)) {}
+		CompareCluster& operator=(CompareCluster&& other) noexcept {
+			Comparator::operator=(std::move(other));
+			return *this;
 		}
 
-		return LL_TRUE;
-	}
-	__LL_NODISCARD__ constexpr CompareResult compare(const T* str1, const U* str2, len_t size) noexcept {
-		CompareResult res(ZERO_CMP);
-		if (!this->compareCheck(str1, str2, res)) return res;
+		CompareCluster(const Comparator& other) noexcept : Comparator(other) {}
+		CompareCluster& operator=(const Comparator& other) noexcept {
+			Comparator::operator=(other);
+			return *this;
+		}
+		CompareCluster(Comparator&& other) noexcept : Comparator(std::move(other)) {}
+		CompareCluster& operator=(Comparator&& other) noexcept {
+			Comparator::operator=(std::move(other));
+			return *this;
+		}
 
-		for (; size > ZERO_UI64; --size, ++str1, ++str2) {
-			cmp_t result = Comparator::compare(*str1, *str2);
-			if (result != ZERO_CMP) {
-				if constexpr (GET_DATA)
-					res = CompareResult(str1, str2, result);
-				else res = result;
-				break;
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ operator const CompareCluster*() const noexcept { return this; }
+		__LL_NODISCARD__ operator CompareCluster*() noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+		#pragma region Compare
+		#pragma region CompareBase
+	public:
+		// Returns false if check not pass
+		__LL_NODISCARD__ constexpr ll_bool_t compareCheck(const T* str1, const U* str2, CompareResult& res) const noexcept {
+			if (static_cast<const void*>(str1) == static_cast<const void*>(str2)) {
+				res = ZERO_CMP;
+				return LL_FALSE;
 			}
-		}
-
-		return res;
-	}
-	__LL_NODISCARD__ constexpr CompareResult compare(const T* str1, const U* str2, len_t size) const noexcept {
-		CompareResult res(ZERO_CMP);
-		if (!this->compareCheck(str1, str2, res)) return res;
-
-		for (; size > ZERO_UI64; --size, ++str1, ++str2) {
-			cmp_t result = Comparator::compare(*str1, *str2);
-			if (result != ZERO_CMP) {
-				if constexpr (GET_DATA)
-					res = CompareResult(str1, str2, result);
-				else res = result;
-				break;
+			else if (!str1 || !str2) {
+				res = ((!str1) ? -1 : 1);
+				return LL_FALSE;
 			}
+
+			return LL_TRUE;
 		}
+		__LL_NODISCARD__ constexpr CompareResult compare(const T* str1, const U* str2, len_t size) noexcept {
+			CompareResult res(ZERO_CMP);
+			if (!this->compareCheck(str1, str2, res)) return res;
 
-		return res;
-	}
-
-	#pragma endregion
-	#pragma region Equals
-	#pragma region Ptr
-	#pragma region NoConst
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const U* str2, const len_t size2) noexcept {
-		if (size1 != size2) return CompareResultBool(LL_FALSE);
-		else return compareConversor<T, U, GET_DATA>(compare_cluster::compare(str1, str2, size1));
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const ArrayPair_u& str2) noexcept {
-		return compare_cluster::equals(str1, size1, str2.begin(), str2.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const Array_u& str2) noexcept {
-		return compare_cluster::equals(str1, size1, str2.begin(), str2.size());
-	}
-
-	#pragma endregion
-	#pragma region Const
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const U* str2, const len_t size2) const noexcept {
-		if (size1 != size2) return CompareResultBool(LL_FALSE);
-		else return compareConversor<T, U, GET_DATA>(compare_cluster::compare(str1, str2, size1));
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const ArrayPair_u& str2) const noexcept {
-		return compare_cluster::equals(str1, size1, str2.begin(), str2.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const Array_u& str2) const noexcept {
-		return compare_cluster::equals(str1, size1, str2.begin(), str2.size());
-	}
-
-	#pragma endregion
-
-	#pragma endregion
-	#pragma region DefaultArray
-	#pragma region NonConst
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const U* str2, const len_t size2) noexcept {
-		return compare_cluster::equals(str1, N, str2, size2);
-	}
-	template<len_t N, len_t N2>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const U(&str2)[N2]) noexcept {
-		return compare_cluster::equals(str1, N, str2, N2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const ArrayPair_u& str2) noexcept {
-		return compare_cluster::equals(str1, N, str2.begin(), str2.size());
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const Array_u& str2) noexcept {
-		return compare_cluster::equals(str1, N, str2.begin(), str2.size());
-	}
-
-	#pragma endregion
-	#pragma region Const
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const U* str2, const len_t size2) const noexcept {
-		return compare_cluster::equals(str1, N, str2, size2);
-	}
-	template<len_t N, len_t N2>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const U(&str2)[N2]) const noexcept {
-		return compare_cluster::equals(str1, N, str2, N2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const ArrayPair_u& str2) const noexcept {
-		return compare_cluster::equals(str1, N, str2.begin(), str2.size());
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const Array_u& str2) const noexcept {
-		return compare_cluster::equals(str1, N, str2.begin(), str2.size());
-	}
-
-	#pragma endregion
-
-	#pragma endregion
-	#pragma region ArrayPair
-	#pragma region NoConst
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const U* str2, const len_t size2) noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const U(&str2)[N]) noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const ArrayPair_u& str2) noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const Array_u& str2) noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
-	}
-
-	#pragma endregion
-	#pragma region Const
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const U* str2, const len_t size2) const noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const U(&str2)[N]) const noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const ArrayPair_u& str2) const noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const Array_u& str2) const noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
-	}
-
-	#pragma endregion
-
-	#pragma endregion
-	#pragma region Array
-	#pragma region NoConst
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const U* str2, const len_t size2) noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const U(&str2)[N]) noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const ArrayPair_u& str2) noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const Array_u& str2) noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
-	}
-
-	#pragma endregion
-	#pragma region Const
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const U* str2, const len_t size2) const noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const U(&str2)[N]) const noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const ArrayPair_u& str2) const noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const Array_u& str2) const noexcept {
-		return compare_cluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
-	}
-
-	#pragma endregion
-
-	#pragma endregion
-
-	#pragma endregion
-	#pragma endregion
-	#pragma region StartsWith
-	// Returns false if check not pass
-	__LL_NODISCARD__ constexpr ll_bool_t startsWithImmpementationCheck(const T* str, const U* needle, CompareResultBool& res) const noexcept {
-		if (static_cast<const void*>(str) == static_cast<const void*>(needle)) {
-			res = LL_TRUE;
-			return LL_FALSE;
-		}
-		else if (!str || !needle) {
-			res = LL_FALSE;
-			return LL_FALSE;
-		}
-		return LL_TRUE;
-	}
-	// str size needs to be bigger or equal to needle
-	__LL_NODISCARD__ constexpr CompareResultBool startsWithImmpementation(const T* str, const U* needle, len_t size) noexcept {
-		CompareResultBool res(LL_TRUE);
-		if (!this->startsWithImmpementationCheck(str, needle, res)) return res;
-
-		for (; 0 < size; --size, ++str, ++needle) {
-			ll_bool_t result = Comparator::compareBool(*str, *needle);
-			if (!result) {
-				if constexpr (GET_DATA)
-					res = CompareResultBool(str, needle, result);
-				else res = result;
-				break;
+			for (; size > ZERO_UI64; --size, ++str1, ++str2) {
+				cmp_t result = Comparator::compare(*str1, *str2);
+				if (result != ZERO_CMP) {
+					if constexpr (GET_DATA)
+						res = CompareResult(str1, str2, result);
+					else res = result;
+					break;
+				}
 			}
-		}
-		return res;
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWithImmpementation(const T* str, const U* needle, len_t size) const noexcept {
-		CompareResultBool res(LL_TRUE);
-		if (!this->startsWithImmpementationCheck(str, needle, res)) return res;
 
-		for (; 0 < size; --size, ++str, ++needle) {
-			ll_bool_t result = Comparator::compareBool(*str, *needle);
-			if (!result) {
-				if constexpr (GET_DATA)
-					res = CompareResultBool(str, needle, result);
-				else res = result;
-				break;
+			return res;
+		}
+		__LL_NODISCARD__ constexpr CompareResult compare(const T* str1, const U* str2, len_t size) const noexcept {
+			CompareResult res(ZERO_CMP);
+			if (!this->compareCheck(str1, str2, res)) return res;
+
+			for (; size > ZERO_UI64; --size, ++str1, ++str2) {
+				cmp_t result = Comparator::compare(*str1, *str2);
+				if (result != ZERO_CMP) {
+					if constexpr (GET_DATA)
+						res = CompareResult(str1, str2, result);
+					else res = result;
+					break;
+				}
 			}
+
+			return res;
 		}
-		return res;
-	}
 
-	#pragma region Ptr
-	#pragma region NoConst
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const U* needle, const len_t size2) noexcept {
-		if (size1 < size2 || (size1 != size2 && size2 == ZERO_UI64)) return CompareResultBool(LL_FALSE);
-		else return compare_cluster::startsWithImmpementation(str, needle, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const U(&needle)[N]) noexcept {
-		return compare_cluster::startsWith(str, size1, needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const ArrayPair_u& needle) noexcept {
-		return compare_cluster::startsWith(str, size1, needle.begin(), needle.len());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const Array_u& needle) noexcept {
-		return compare_cluster::startsWith(str, size1, needle.begin(), needle.len());
-	}
+		#pragma endregion
+		#pragma region Equals
+		#pragma region Ptr
+		#pragma region NoConst
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const U* str2, const len_t size2) noexcept {
+			if (size1 != size2) return CompareResultBool(LL_FALSE);
+			else return compareConversor<T, U, GET_DATA>(CompareCluster::compare(str1, str2, size1));
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const ArrayPair_u& str2) noexcept {
+			return CompareCluster::equals(str1, size1, str2.begin(), str2.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const Array_u& str2) noexcept {
+			return CompareCluster::equals(str1, size1, str2.begin(), str2.size());
+		}
 
-	#pragma endregion
-	#pragma region Const
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const U* needle, const len_t size2) const noexcept {
-		if (size1 < size2 || (size1 != size2 && size2 == ZERO_UI64)) return CompareResultBool(LL_FALSE);
-		else return compare_cluster::startsWithImmpementation(str, needle, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const U(&needle)[N]) const noexcept {
-		return compare_cluster::startsWith(str, size1, needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const ArrayPair_u& needle) const noexcept {
-		return compare_cluster::startsWith(str, size1, needle.begin(), needle.len());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const Array_u& needle) const noexcept {
-		return compare_cluster::startsWith(str, size1, needle.begin(), needle.len());
-	}
+		#pragma endregion
+		#pragma region Const
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const U* str2, const len_t size2) const noexcept {
+			if (size1 != size2) return CompareResultBool(LL_FALSE);
+			else return compareConversor<T, U, GET_DATA>(CompareCluster::compare(str1, str2, size1));
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const ArrayPair_u& str2) const noexcept {
+			return CompareCluster::equals(str1, size1, str2.begin(), str2.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T* str1, const len_t size1, const Array_u& str2) const noexcept {
+			return CompareCluster::equals(str1, size1, str2.begin(), str2.size());
+		}
 
-	#pragma endregion
+		#pragma endregion
 
-	#pragma endregion
-	#pragma region DefaultArray
-	#pragma region NoConst
-	template<len_t N, len_t N2>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const U(&needle)[N2]) noexcept {
-		return compare_cluster::startsWith(str, N, needle, N2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const U* needle, const len_t size2) noexcept {
-		return compare_cluster::startsWith(str, N, needle, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const ArrayPair_u& needle) noexcept {
-		return compare_cluster::startsWith(str, N, needle.begin(), needle.len());
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const Array_u& needle) noexcept {
-		return compare_cluster::startsWith(str, N, needle.begin(), needle.len());
-	}
+		#pragma endregion
+		#pragma region DefaultArray
+		#pragma region NonConst
+	public:
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const U* str2, const len_t size2) noexcept {
+			return CompareCluster::equals(str1, N, str2, size2);
+		}
+		template<len_t N, len_t N2>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const U(&str2)[N2]) noexcept {
+			return CompareCluster::equals(str1, N, str2, N2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const ArrayPair_u& str2) noexcept {
+			return CompareCluster::equals(str1, N, str2.begin(), str2.size());
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const Array_u& str2) noexcept {
+			return CompareCluster::equals(str1, N, str2.begin(), str2.size());
+		}
 
-	#pragma endregion
-	#pragma region Const
-	template<len_t N, len_t N2>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const U(&needle)[N2]) const noexcept {
-		return compare_cluster::startsWith(str, N, needle, N2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const U* needle, const len_t size2) const noexcept {
-		return compare_cluster::startsWith(str, N, needle, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const ArrayPair_u& needle) const noexcept {
-		return compare_cluster::startsWith(str, N, needle.begin(), needle.len());
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const Array_u& needle) const noexcept {
-		return compare_cluster::startsWith(str, N, needle.begin(), needle.len());
-	}
+		#pragma endregion
+		#pragma region Const
+	public:
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const U* str2, const len_t size2) const noexcept {
+			return CompareCluster::equals(str1, N, str2, size2);
+		}
+		template<len_t N, len_t N2>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const U(&str2)[N2]) const noexcept {
+			return CompareCluster::equals(str1, N, str2, N2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const ArrayPair_u& str2) const noexcept {
+			return CompareCluster::equals(str1, N, str2.begin(), str2.size());
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const T(&str1)[N], const Array_u& str2) const noexcept {
+			return CompareCluster::equals(str1, N, str2.begin(), str2.size());
+		}
 
-	#pragma endregion
+		#pragma endregion
 
-	#pragma endregion
-	#pragma region ArrayPair
-	#pragma region NoConst
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const U* needle, len_t size) noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle, size);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const U(&needle)[N]) noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const ArrayPair_u& needle) noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const Array_u& needle) noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
+		#pragma endregion
+		#pragma region ArrayPair
+		#pragma region NoConst
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const U* str2, const len_t size2) noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const U(&str2)[N]) noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const ArrayPair_u& str2) noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const Array_u& str2) noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
+		}
 
-	#pragma endregion
-	#pragma region Const
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const U* needle, len_t size) const noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle, size);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const U(&needle)[N]) const noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const ArrayPair_u& needle) const noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const Array_u& needle) const noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
+		#pragma endregion
+		#pragma region Const
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const U* str2, const len_t size2) const noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const U(&str2)[N]) const noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const ArrayPair_u& str2) const noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const ArrayPair_t& str1, const Array_u& str2) const noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
+		}
 
-	#pragma endregion
+		#pragma endregion
 
-	#pragma endregion
-	#pragma region Array
-	#pragma region NoConst
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const U* needle, len_t size) noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle, size);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const U(&needle)[N]) noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const ArrayPair_u& needle) noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const Array_u& needle) noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
+		#pragma endregion
+		#pragma region Array
+		#pragma region NoConst
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const U* str2, const len_t size2) noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const U(&str2)[N]) noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const ArrayPair_u& str2) noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const Array_u& str2) noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
+		}
 
-	#pragma endregion
-	#pragma region Const
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const U* needle, len_t size) const noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle, size);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const U(&needle)[N]) const noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const ArrayPair_u& needle) const noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const Array_u& needle) const noexcept {
-		return compare_cluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
+		#pragma endregion
+		#pragma region Const
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const U* str2, const len_t size2) const noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const U(&str2)[N]) const noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const ArrayPair_u& str2) const noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool equals(const Array_t& str1, const Array_u& str2) const noexcept {
+			return CompareCluster::equals(str1.begin(), str1.size(), str2.begin(), str2.size());
+		}
 
-	#pragma endregion
+		#pragma endregion
 
-	#pragma endregion
+		#pragma endregion
 
-	#pragma endregion
-	#pragma region EndsWith
-	#pragma region Ptr
-	#pragma region NoConst
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const U* needle, const len_t size2) noexcept {
-		if (size1 < size2 || (size1 != size2 && size2 == ZERO_UI64)) return CompareResultBool(LL_FALSE);
-		else return compare_cluster::startsWithImmpementation((str + size1) - size2, needle, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const U(&needle)[N]) noexcept {
-		return compare_cluster::endsWith(str, size1, needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const ArrayPair_u& needle) noexcept {
-		return compare_cluster::endsWith(str, size1, needle.begin(), needle.len());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const Array_u& needle) noexcept {
-		return compare_cluster::endsWith(str, size1, needle.begin(), needle.len());
-	}
+		#pragma endregion
+		#pragma endregion
+		#pragma region StartsWith
+	public:
+		// Returns false if check not pass
+		__LL_NODISCARD__ constexpr ll_bool_t startsWithImmpementationCheck(const T* str, const U* needle, CompareResultBool& res) const noexcept {
+			if (static_cast<const void*>(str) == static_cast<const void*>(needle)) {
+				res = LL_TRUE;
+				return LL_FALSE;
+			}
+			else if (!str || !needle) {
+				res = LL_FALSE;
+				return LL_FALSE;
+			}
+			return LL_TRUE;
+		}
+		// str size needs to be bigger or equal to needle
+		__LL_NODISCARD__ constexpr CompareResultBool startsWithImmpementation(const T* str, const U* needle, len_t size) noexcept {
+			CompareResultBool res(LL_TRUE);
+			if (!this->startsWithImmpementationCheck(str, needle, res)) return res;
 
-	#pragma endregion
-	#pragma region Const
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const U* needle, const len_t size2) const noexcept {
-		if (size1 < size2 || (size1 != size2 && size2 == ZERO_UI64)) return CompareResultBool(LL_FALSE);
-		else return compare_cluster::startsWithImmpementation((str + size1) - size2, needle, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const U(&needle)[N]) const noexcept {
-		return compare_cluster::endsWith(str, size1, needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const ArrayPair_u& needle) const noexcept {
-		return compare_cluster::endsWith(str, size1, needle.begin(), needle.len());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const Array_u& needle) const noexcept {
-		return compare_cluster::endsWith(str, size1, needle.begin(), needle.len());
-	}
+			for (; 0 < size; --size, ++str, ++needle) {
+				ll_bool_t result = Comparator::compareBool(*str, *needle);
+				if (!result) {
+					if constexpr (GET_DATA)
+						res = CompareResultBool(str, needle, result);
+					else res = result;
+					break;
+				}
+			}
+			return res;
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWithImmpementation(const T* str, const U* needle, len_t size) const noexcept {
+			CompareResultBool res(LL_TRUE);
+			if (!this->startsWithImmpementationCheck(str, needle, res)) return res;
 
-	#pragma endregion
+			for (; 0 < size; --size, ++str, ++needle) {
+				ll_bool_t result = Comparator::compareBool(*str, *needle);
+				if (!result) {
+					if constexpr (GET_DATA)
+						res = CompareResultBool(str, needle, result);
+					else res = result;
+					break;
+				}
+			}
+			return res;
+		}
 
-	#pragma endregion
-	#pragma region DefaultArray
-	#pragma region NoConst
-	template<len_t N, len_t N2>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const U(&needle)[N2]) noexcept {
-		return compare_cluster::endsWith(str, N, needle, N2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const U* needle, const len_t size2) noexcept {
-		return compare_cluster::endsWith(str, N, needle, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const ArrayPair_u& needle) noexcept {
-		return compare_cluster::endsWith(str, N, needle.begin(), needle.len());
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const Array_u& needle) noexcept {
-		return compare_cluster::endsWith(str, N, needle.begin(), needle.len());
-	}
+		#pragma region Ptr
+		#pragma region NoConst
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const U* needle, const len_t size2) noexcept {
+			if (size1 < size2 || (size1 != size2 && size2 == ZERO_UI64)) return CompareResultBool(LL_FALSE);
+			else return CompareCluster::startsWithImmpementation(str, needle, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const U(&needle)[N]) noexcept {
+			return CompareCluster::startsWith(str, size1, needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const ArrayPair_u& needle) noexcept {
+			return CompareCluster::startsWith(str, size1, needle.begin(), needle.len());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const Array_u& needle) noexcept {
+			return CompareCluster::startsWith(str, size1, needle.begin(), needle.len());
+		}
 
-	#pragma endregion
-	#pragma region Const
-	template<len_t N, len_t N2>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const U(&needle)[N2]) const noexcept {
-		return compare_cluster::endsWith(str, N, needle, N2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const U* needle, const len_t size2) const noexcept {
-		return compare_cluster::endsWith(str, N, needle, size2);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const ArrayPair_u& needle) const noexcept {
-		return compare_cluster::endsWith(str, N, needle.begin(), needle.len());
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const Array_u& needle) const noexcept {
-		return compare_cluster::endsWith(str, N, needle.begin(), needle.len());
-	}
+		#pragma endregion
+		#pragma region Const
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const U* needle, const len_t size2) const noexcept {
+			if (size1 < size2 || (size1 != size2 && size2 == ZERO_UI64)) return CompareResultBool(LL_FALSE);
+			else return CompareCluster::startsWithImmpementation(str, needle, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const U(&needle)[N]) const noexcept {
+			return CompareCluster::startsWith(str, size1, needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const ArrayPair_u& needle) const noexcept {
+			return CompareCluster::startsWith(str, size1, needle.begin(), needle.len());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T* str, const len_t size1, const Array_u& needle) const noexcept {
+			return CompareCluster::startsWith(str, size1, needle.begin(), needle.len());
+		}
 
-	#pragma endregion
+		#pragma endregion
 
-	#pragma endregion
-	#pragma region ArrayPair
-	#pragma region NoConst
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const U* needle, len_t size) noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle, size);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const U(&needle)[N]) noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const ArrayPair_u& needle) noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const Array_u& needle) noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
+		#pragma endregion
+		#pragma region DefaultArray
+		#pragma region NoConst
+	public:
+		template<len_t N, len_t N2>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const U(&needle)[N2]) noexcept {
+			return CompareCluster::startsWith(str, N, needle, N2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const U* needle, const len_t size2) noexcept {
+			return CompareCluster::startsWith(str, N, needle, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const ArrayPair_u& needle) noexcept {
+			return CompareCluster::startsWith(str, N, needle.begin(), needle.len());
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const Array_u& needle) noexcept {
+			return CompareCluster::startsWith(str, N, needle.begin(), needle.len());
+		}
 
-	#pragma endregion
-	#pragma region Const
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const U* needle, len_t size) const noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle, size);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const U(&needle)[N]) const noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const ArrayPair_u& needle) const noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const Array_u& needle) const noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
+		#pragma endregion
+		#pragma region Const
+	public:
+		template<len_t N, len_t N2>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const U(&needle)[N2]) const noexcept {
+			return CompareCluster::startsWith(str, N, needle, N2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const U* needle, const len_t size2) const noexcept {
+			return CompareCluster::startsWith(str, N, needle, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const ArrayPair_u& needle) const noexcept {
+			return CompareCluster::startsWith(str, N, needle.begin(), needle.len());
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const T(&str)[N], const Array_u& needle) const noexcept {
+			return CompareCluster::startsWith(str, N, needle.begin(), needle.len());
+		}
 
-	#pragma endregion
+		#pragma endregion
 
-	#pragma endregion
-	#pragma region Array
-	#pragma region NoConst
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const U* needle, len_t size) noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle, size);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const U(&needle)[N]) noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const ArrayPair_u& needle) noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const Array_u& needle) noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
+		#pragma endregion
+		#pragma region ArrayPair
+		#pragma region NoConst
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const U* needle, len_t size) noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle, size);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const U(&needle)[N]) noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const ArrayPair_u& needle) noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const Array_u& needle) noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
 
-	#pragma endregion
-	#pragma region Const
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const U* needle, len_t size) const noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle, size);
-	}
-	template<len_t N>
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const U(&needle)[N]) const noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle, N);
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const ArrayPair_u& needle) const noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
-	__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const Array_u& needle) const noexcept {
-		return compare_cluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
-	}
+		#pragma endregion
+		#pragma region Const
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const U* needle, len_t size) const noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle, size);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const U(&needle)[N]) const noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const ArrayPair_u& needle) const noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const ArrayPair_t& str, const Array_u& needle) const noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
 
-	#pragma endregion
+		#pragma endregion
 
-	#pragma endregion
+		#pragma endregion
+		#pragma region Array
+		#pragma region NoConst
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const U* needle, len_t size) noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle, size);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const U(&needle)[N]) noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const ArrayPair_u& needle) noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const Array_u& needle) noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
 
+		#pragma endregion
+		#pragma region Const
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const U* needle, len_t size) const noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle, size);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const U(&needle)[N]) const noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const ArrayPair_u& needle) const noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool startsWith(const Array_t& str, const Array_u& needle) const noexcept {
+			return CompareCluster::startsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+
+		#pragma endregion
+
+		#pragma endregion
+
+		#pragma endregion
+		#pragma region EndsWith
+		#pragma region Ptr
+		#pragma region NoConst
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const U* needle, const len_t size2) noexcept {
+			if (size1 < size2 || (size1 != size2 && size2 == ZERO_UI64)) return CompareResultBool(LL_FALSE);
+			else return CompareCluster::startsWithImmpementation((str + size1) - size2, needle, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const U(&needle)[N]) noexcept {
+			return CompareCluster::endsWith(str, size1, needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const ArrayPair_u& needle) noexcept {
+			return CompareCluster::endsWith(str, size1, needle.begin(), needle.len());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const Array_u& needle) noexcept {
+			return CompareCluster::endsWith(str, size1, needle.begin(), needle.len());
+		}
+
+		#pragma endregion
+		#pragma region Const
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const U* needle, const len_t size2) const noexcept {
+			if (size1 < size2 || (size1 != size2 && size2 == ZERO_UI64)) return CompareResultBool(LL_FALSE);
+			else return CompareCluster::startsWithImmpementation((str + size1) - size2, needle, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const U(&needle)[N]) const noexcept {
+			return CompareCluster::endsWith(str, size1, needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const ArrayPair_u& needle) const noexcept {
+			return CompareCluster::endsWith(str, size1, needle.begin(), needle.len());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T* str, const len_t size1, const Array_u& needle) const noexcept {
+			return CompareCluster::endsWith(str, size1, needle.begin(), needle.len());
+		}
+
+		#pragma endregion
+
+		#pragma endregion
+		#pragma region DefaultArray
+		#pragma region NoConst
+	public:
+		template<len_t N, len_t N2>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const U(&needle)[N2]) noexcept {
+			return CompareCluster::endsWith(str, N, needle, N2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const U* needle, const len_t size2) noexcept {
+			return CompareCluster::endsWith(str, N, needle, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const ArrayPair_u& needle) noexcept {
+			return CompareCluster::endsWith(str, N, needle.begin(), needle.len());
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const Array_u& needle) noexcept {
+			return CompareCluster::endsWith(str, N, needle.begin(), needle.len());
+		}
+
+		#pragma endregion
+		#pragma region Const
+	public:
+		template<len_t N, len_t N2>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const U(&needle)[N2]) const noexcept {
+			return CompareCluster::endsWith(str, N, needle, N2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const U* needle, const len_t size2) const noexcept {
+			return CompareCluster::endsWith(str, N, needle, size2);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const ArrayPair_u& needle) const noexcept {
+			return CompareCluster::endsWith(str, N, needle.begin(), needle.len());
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const T(&str)[N], const Array_u& needle) const noexcept {
+			return CompareCluster::endsWith(str, N, needle.begin(), needle.len());
+		}
+
+		#pragma endregion
+
+		#pragma endregion
+		#pragma region ArrayPair
+		#pragma region NoConst
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const U* needle, len_t size) noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle, size);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const U(&needle)[N]) noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const ArrayPair_u& needle) noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const Array_u& needle) noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+
+		#pragma endregion
+		#pragma region Const
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const U* needle, len_t size) const noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle, size);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const U(&needle)[N]) const noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const ArrayPair_u& needle) const noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const ArrayPair_t& str, const Array_u& needle) const noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+
+		#pragma endregion
+
+		#pragma endregion
+		#pragma region Array
+		#pragma region NoConst
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const U* needle, len_t size) noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle, size);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const U(&needle)[N]) noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const ArrayPair_u& needle) noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const Array_u& needle) noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+
+		#pragma endregion
+		#pragma region Const
+	public:
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const U* needle, len_t size) const noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle, size);
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const U(&needle)[N]) const noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle, N);
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const ArrayPair_u& needle) const noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool endsWith(const Array_t& str, const Array_u& needle) const noexcept {
+			return CompareCluster::endsWith(str.begin(), str.size(), needle.begin(), needle.size());
+		}
+
+		#pragma endregion
+
+		#pragma endregion
+
+		#pragma endregion
+
+		#pragma endregion
 	#pragma endregion
 };
 
 template<class T, class U = T, class Comparator = CompareDefault<T, U>, ll_bool_t POSITION = LL_TRUE>
-struct finders_cluster {
-	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
-	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+struct FindersCluster {
+	#pragma region Types
+	public:
+		using cinput_t = traits::cinput<T>;
+		using cinput_u = traits::cinput<U>;
 
-	using cinput_t = traits::cinput<T>;
-	using cinput_u = traits::cinput<U>;
-	using CompareFunc = fnc_clss::Compare<cinput_t, cinput_u>;
-	using CompareFuncBool = fnc_clss::CompareBool<cinput_t, cinput_u>;
+		using CompareFunc = cmp_t(Comparator::*)(cinput_t, cinput_u) noexcept;
+		using CompareFuncBool = ll_bool_t(Comparator::*)(cinput_t, cinput_u) noexcept;
 
-	static_assert(!std::is_reference_v<Comparator>, "Reference type is forbidden!");
-	static_assert(!std::is_const_v<Comparator>, "Const type is forbidden!");
-	static_assert(!std::is_pointer_v<Comparator>, "Pointer type is forbidden!");
-	static_assert(!std::is_array_v<Comparator>, "Array type is forbidden!");
-	static_assert(std::is_class_v<Comparator>, "Comparator needs to be a class!");
-	static_assert(std::is_same_v<CompareFunc, decltype(&Comparator::compare)>, "Comparator::compareBool needs to be the same type as CompareFunc!");
-	static_assert(std::is_same_v<CompareFuncBool, decltype(&Comparator::compareBool)>, "Comparator::compareBool needs to be the same type as CompareFuncBool!");
+		using CompareFuncConst = cmp_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
+		using CompareFuncBoolConst = ll_bool_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
 
-	using __find = finders_cluster<T, U, Comparator, POSITION>;
-	using FindResult = std::conditional_t<POSITION, len_t, const T*>;
-	using ArrayPair_t = meta::ArrayPair<T>;
-	using ArrayPair_u = meta::ArrayPair<U>;
-	using Array_t = meta::Array<T>;
-	using Array_u = meta::Array<U>;
+		using FindResult = std::conditional_t<POSITION, len_t, const T*>;
+
+		using ArrayPair_t = meta::ArrayPair<T>;
+		using ArrayPair_u = meta::ArrayPair<U>;
+		using Array_t = meta::Array<T>;
+		using Array_u = meta::Array<U>;
+
+	#pragma endregion
+	#pragma region Expresions
+	public:
+		static constexpr ll_bool_t COMPARE_CLASS_FUNCTION_AVAIBLE = std::is_same_v<CompareFunc, decltype(&Comparator::compare)>;
+		static constexpr ll_bool_t COMPARE_CLASS_CONST_FUNCTION_AVAIBLE = std::is_same_v<CompareFuncConst, decltype(&Comparator::compare)>;
+		static constexpr ll_bool_t COMPARE_FUNCTION_AVAIBLE = COMPARE_CLASS_FUNCTION_AVAIBLE || COMPARE_CLASS_CONST_FUNCTION_AVAIBLE;
+
+		static constexpr ll_bool_t COMPAREBOOL_CLASS_FUNCTION_AVAIBLE = std::is_same_v<CompareFuncBool, decltype(&Comparator::compareBool)>;
+		static constexpr ll_bool_t COMPAREBOOL_CLASS_CONST_FUNCTION_AVAIBLE = std::is_same_v<CompareFuncBoolConst, decltype(&Comparator::compareBool)>;
+		static constexpr ll_bool_t COMPAREBOOL_FUNCTION_AVAIBLE = COMPAREBOOL_CLASS_FUNCTION_AVAIBLE || COMPAREBOOL_CLASS_CONST_FUNCTION_AVAIBLE;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
+		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+
+		static_assert(!std::is_reference_v<Comparator>, "Reference type is forbidden!");
+		static_assert(!std::is_const_v<Comparator>, "Const type is forbidden!");
+		static_assert(!std::is_pointer_v<Comparator>, "Pointer type is forbidden!");
+		static_assert(!std::is_array_v<Comparator>, "Array type is forbidden!");
+		static_assert(std::is_class_v<Comparator>, "Comparator needs to be a class!");
+
+		static_assert(COMPARE_FUNCTION_AVAIBLE, "Comparator::compare is not avaible!");
+		static_assert(COMPAREBOOL_FUNCTION_AVAIBLE, "Comparator::compareBool is not avaible!");
+
+	#pragma endregion
 
 	#pragma region Find
 	__LL_NODISCARD__ constexpr FindResult find(const T* begin, const T* end, cinput_u object) noexcept {

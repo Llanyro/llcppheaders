@@ -31,20 +31,29 @@ class Array;
 
 template<class T>
 class LL_SHARED_LIB ArrayPair {
+	#pragma region Asserts
 	public:
 		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+
+	#pragma endregion
+	#pragma region Attributes
 	protected:
 		const T* mem;
 		const T* mem_end;
+
+	#pragma endregion
 	#pragma region Functions
+		#pragma region Protected
 	protected:
 		constexpr void simpleClear() noexcept {
 			this->mem = LL_NULLPTR;
 			this->mem_end = LL_NULLPTR;
 		}
-	public:
+
+		#pragma endregion
 		#pragma region Constructors
+	public:
 		constexpr ArrayPair() noexcept = delete;
 		constexpr ArrayPair(const T* mem, const T* mem_end) noexcept : mem(mem), mem_end(mem_end) {}
 		constexpr ArrayPair(const T* mem, const len_t len) noexcept : ArrayPair(mem, mem + len) {}
@@ -52,6 +61,7 @@ class LL_SHARED_LIB ArrayPair {
 
 		#pragma endregion
 		#pragma region CopyMove
+	public:
 		constexpr ArrayPair(const ArrayPair& other) noexcept
 			: mem(other.mem), mem_end(other.mem_end) {}
 		constexpr ArrayPair& operator=(const ArrayPair& other) noexcept {
@@ -75,12 +85,14 @@ class LL_SHARED_LIB ArrayPair {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator const ArrayPair*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator ArrayPair*() noexcept { return this; }
+	public:
+		__LL_NODISCARD__ constexpr operator const ArrayPair* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator ArrayPair* () noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
 		#pragma region Getters
+	public:
 		__LL_NODISCARD__ constexpr const T* get(const len_t pos) const noexcept {
 			return this->mem + pos;
 		}
@@ -111,6 +123,7 @@ class LL_SHARED_LIB ArrayPair {
 
 		#pragma endregion
 		#pragma region Countable
+	public:
 		__LL_NODISCARD__ constexpr len_t len() const noexcept {
 			return static_cast<len_t>(this->end() - this->begin());
 		}
@@ -119,6 +132,7 @@ class LL_SHARED_LIB ArrayPair {
 
 		#pragma endregion
 		#pragma region std
+	public:
 		__LL_NODISCARD__ constexpr const T* data() const noexcept {
 			return this->begin();
 		}
@@ -134,6 +148,7 @@ class LL_SHARED_LIB ArrayPair {
 
 		#pragma endregion
 		#pragma region Other
+	public:
 		__LL_NODISCARD__ constexpr ll_bool_t isValid() const noexcept {
 			return !this->empty() && (this->begin() < this->end());
 		}
@@ -146,20 +161,27 @@ class LL_SHARED_LIB ArrayPair {
 
 template<class T>
 class LL_SHARED_LIB Array {
+	#pragma region Asserts
 	public:
 		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+
+	#pragma endregion
+	#pragma region Attributes
 	protected:
 		T* mem;
 		T* mem_end;
+
+	#pragma endregion
 	#pragma region Functions
 	protected:
 		constexpr void simpleClear() noexcept {
 			this->mem = LL_NULLPTR;
 			this->mem_end = LL_NULLPTR;
 		}
-	public:
+
 		#pragma region Constructors
+	public:
 		constexpr Array() noexcept = delete;
 		constexpr Array(T* mem, T* mem_end) noexcept : mem(mem), mem_end(mem_end) {}
 		constexpr Array(T* mem, const len_t len) noexcept : Array(mem, mem + len) {}
@@ -167,6 +189,7 @@ class LL_SHARED_LIB Array {
 
 		#pragma endregion
 		#pragma region CopyMove
+	public:
 		constexpr Array(const Array& other) noexcept : Array(other.mem, other.mem_end) {}
 		constexpr Array& operator=(const Array& other) noexcept {
 			this->mem = other.mem;
@@ -182,8 +205,9 @@ class LL_SHARED_LIB Array {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator const Array*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator Array*() noexcept { return this; }
+	public:
+		__LL_NODISCARD__ constexpr operator const Array* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator Array* () noexcept { return this; }
 		__LL_NODISCARD__ constexpr operator ArrayPair<T>() const noexcept {
 			return ArrayPair<T>(*this);
 		}
@@ -194,6 +218,7 @@ class LL_SHARED_LIB Array {
 		#pragma endregion
 		#pragma region ClassFunctions
 		#pragma region Getters
+	public:
 		__LL_NODISCARD__ constexpr T* get(const len_t pos) noexcept {
 			return this->mem + pos;
 		}
@@ -252,6 +277,7 @@ class LL_SHARED_LIB Array {
 
 		#pragma endregion
 		#pragma region Countable
+	public:
 		__LL_NODISCARD__ constexpr len_t len() const noexcept {
 			return static_cast<len_t>(this->end() - this->begin());
 		}
@@ -260,6 +286,7 @@ class LL_SHARED_LIB Array {
 
 		#pragma endregion
 		#pragma region std
+	public:
 		__LL_NODISCARD__ constexpr T* data() noexcept {
 			return this->begin();
 		}
@@ -290,6 +317,7 @@ class LL_SHARED_LIB Array {
 
 		#pragma endregion
 		#pragma region Other
+	public:
 		__LL_NODISCARD__ constexpr ll_bool_t isValid() const noexcept {
 			return !this->empty() && (this->begin() < this->end());
 		}

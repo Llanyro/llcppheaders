@@ -99,8 +99,8 @@ class Typeid {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ operator const Typeid* () const noexcept { return this; }
-		__LL_NODISCARD__ operator Typeid* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const Typeid* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator Typeid* () noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

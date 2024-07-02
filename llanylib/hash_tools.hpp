@@ -33,7 +33,9 @@ namespace llcpp {
 namespace meta {
 namespace hash {
 
-class HashTool {
+
+template<class HashType = hash::Hash64, class HashGenerator = hash::HashGeneratorDummy<HashType>>
+class HashTool : public hash::HashFunctionPack<HashType, HashGenerator> {
 
 };
 

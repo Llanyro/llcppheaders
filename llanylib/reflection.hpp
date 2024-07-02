@@ -114,6 +114,12 @@ __LL_NODISCARD__ constexpr meta::wStrPair getwName(ll_bool_t REMOVE_CLASS_STR = 
 	return meta::wStrPair(res, res2);
 }
 
+// 
+template<class HashGenerator>
+class Reflector {
+
+};
+
 template<class T, class HashGenerator>
 __LL_NODISCARD__ constexpr meta::StrTypeid getStrTypeId(HashGenerator& gen) noexcept {
 	meta::StrTypeid result;

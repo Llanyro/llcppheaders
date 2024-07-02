@@ -48,15 +48,15 @@ class NodeNext {
 
 		#pragma endregion
 		#pragma region CopyMove
-		NodeNext(const NodeNext&) noexcept = delete;
-		NodeNext& operator=(const NodeNext&) noexcept = delete;
-		NodeNext(NodeNext&&) noexcept = delete;
-		NodeNext& operator=(NodeNext&&) noexcept = delete;
+		constexpr NodeNext(const NodeNext&) noexcept = delete;
+		constexpr NodeNext& operator=(const NodeNext&) noexcept = delete;
+		constexpr NodeNext(NodeNext&&) noexcept = delete;
+		constexpr NodeNext& operator=(NodeNext&&) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ operator const NodeNext*() const noexcept { return this; }
-		__LL_NODISCARD__ operator NodeNext*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const NodeNext*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator NodeNext*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -108,15 +108,15 @@ class NodePrev {
 
 		#pragma endregion
 		#pragma region CopyMove
-		NodePrev(const NodePrev&) noexcept = delete;
-		NodePrev& operator=(const NodePrev&) noexcept = delete;
-		NodePrev(NodePrev&&) noexcept = delete;
-		NodePrev& operator=(NodePrev&&) noexcept = delete;
+		constexpr NodePrev(const NodePrev&) noexcept = delete;
+		constexpr NodePrev& operator=(const NodePrev&) noexcept = delete;
+		constexpr NodePrev(NodePrev&&) noexcept = delete;
+		constexpr NodePrev& operator=(NodePrev&&) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ operator const NodePrev*() const noexcept { return this; }
-		__LL_NODISCARD__ operator NodePrev*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const NodePrev*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator NodePrev*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

@@ -27,38 +27,33 @@ namespace llcpp {
 namespace meta {
 namespace hash {
 
-template<class HashType>
+template<class HashType = hash::Hash64>
 class LL_SHARED_LIB HashGeneratorDummy {
 	#pragma region Types
 	public:
 		using OptionalHash = std::optional<HashType>;
-
-	#pragma endregion
-	#pragma region Asserts
-	public:
-		static_assert(!std::is_reference_v<HashType>, "Reference type is forbidden!");
-		static_assert(!std::is_array_v<HashType>, "Array type is forbidden!");
+		using Hash = HashType;
 
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructor
 	public:
-		HashGeneratorDummy() noexcept {}
-		~HashGeneratorDummy() noexcept {}
+		constexpr HashGeneratorDummy() noexcept {}
+		constexpr ~HashGeneratorDummy() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		HashGeneratorDummy(const HashGeneratorDummy&) noexcept {}
-		HashGeneratorDummy& operator=(const HashGeneratorDummy&) noexcept { return *this; }
-		HashGeneratorDummy(HashGeneratorDummy&&) noexcept {}
-		HashGeneratorDummy& operator=(HashGeneratorDummy&&) noexcept { return *this; }
+		constexpr HashGeneratorDummy(const HashGeneratorDummy&) noexcept {}
+		constexpr HashGeneratorDummy& operator=(const HashGeneratorDummy&) noexcept { return *this; }
+		constexpr HashGeneratorDummy(HashGeneratorDummy&&) noexcept {}
+		constexpr HashGeneratorDummy& operator=(HashGeneratorDummy&&) noexcept { return *this; }
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ operator const HashGeneratorDummy* () const noexcept { return this; }
-		__LL_NODISCARD__ operator HashGeneratorDummy* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const HashGeneratorDummy* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator HashGeneratorDummy* () noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -98,14 +93,18 @@ class LL_SHARED_LIB HashGeneratorDummy {
 		}
 
 		#pragma endregion
+
 	#pragma endregion
 };
 
-template<class HashType, class HashGenerator>
-class LL_SHARED_LIB HashFunctionPack : public HashGenerator {
+template<class HashType = hash::Hash64, class HashGenerator = hash::HashGeneratorDummy<HashType>>
+class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGenerator {
 	#pragma region Types
 	public:
-		using OptionalHash = std::optional<HashType>;
+		using HashChecker = hash::HashChecker<HashType>;
+		using OptionalHash = HashChecker::OptionalHash;
+		using Hash = HashChecker::Hash;
+
 		using HashConstFunction = OptionalHash(HashGenerator::*)(ll_string_t, len_t) const noexcept;
 		using wHashConstFunction = OptionalHash(HashGenerator::*)(ll_wstring_t, len_t) const noexcept;
 		using StringPairHashConstFunction = OptionalHash(HashGenerator::*)(const std::string&) const noexcept;
@@ -121,11 +120,6 @@ class LL_SHARED_LIB HashFunctionPack : public HashGenerator {
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(!std::is_reference_v<HashType>, "Reference type is forbidden!");
-		static_assert(!std::is_const_v<HashType>, "Const type is forbidden!");
-
-		static_assert(std::_Is_any_of_v<HashType, Hash32, Hash64, Hash128>, "Needs to be a valid hash type! If you want to use your own hash objects comment this assert");
-
 		static_assert(std::is_nothrow_constructible_v<HashGenerator>, "HashGenerator needs a noexcept constructor!");
 		static_assert(std::is_nothrow_destructible_v<HashGenerator>, "HashGenerator needs a noexcept destructor!");
 		static_assert(std::is_copy_constructible_v<HashGenerator>, "HashGenerator needs a noexcept copy constructor!");
@@ -133,68 +127,145 @@ class LL_SHARED_LIB HashFunctionPack : public HashGenerator {
 		static_assert(std::is_move_constructible_v<HashGenerator>, "HashGenerator needs a noexcept move constructor!");
 		static_assert(std::is_move_assignable_v<HashGenerator>, "HashGenerator needs a noexcept move asignable!");
 
-		static_assert(has_hash_function<HashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<wHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<StringPairHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<wStringPairHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<StrPairHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<wStrPairHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<StrHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<wStrHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<RecursiveHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<StrTypeidHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(has_hash_function<wStrTypeidHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<HashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<wHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<StringPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<wStringPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<StrPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<wStrPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<StrHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<wStrHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<RecursiveHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<StrTypeidHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<wStrTypeidHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructor
 	public:
-		constexpr HashFunctionPack() noexcept {}
+		constexpr HashGeneratorChecker() noexcept : HashChecker(), HashGenerator() {}
 		template<class... Args>
-		constexpr HashFunctionPack(Args&&... args) noexcept : HashGenerator(std::forward<Args>(args)...) {}
+		constexpr HashGeneratorChecker(Args&&... args) noexcept
+			: HashChecker(), HashGenerator(std::forward<Args>(args)...) {}
+		constexpr ~HashGeneratorChecker() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr HashGeneratorChecker(const HashGeneratorChecker& other) noexcept
+			: HashChecker(other), HashGenerator(other) {}
+		constexpr HashGeneratorChecker& operator=(const HashGeneratorChecker& other) noexcept {
+			HashChecker::operator=(other);
+			HashGenerator::operator=(other);
+			return *this;
+		}
+		constexpr HashGeneratorChecker(HashGeneratorChecker&& other) noexcept
+			: HashChecker(std::move(other)), HashGenerator(std::move(other)) {}
+		constexpr HashGeneratorChecker& operator=(HashGeneratorChecker&& other) noexcept {
+			HashChecker::operator=(std::move(other));
+			HashGenerator::operator=(std::move(other));
+			return *this;
+		}
+
+		constexpr HashGeneratorChecker(const HashChecker& other) noexcept
+			: HashChecker(other), HashGenerator() {}
+		constexpr HashGeneratorChecker& operator=(const HashChecker& other) noexcept {
+			HashChecker::operator=(other);
+			return *this;
+		}
+		constexpr HashGeneratorChecker(HashChecker&& other) noexcept
+			: HashChecker(std::move(other)), HashGenerator() {}
+		constexpr HashGeneratorChecker& operator=(HashChecker&& other) noexcept {
+			HashChecker::operator=(std::move(other));
+			return *this;
+		}
+
+		constexpr HashGeneratorChecker(const HashGenerator& other) noexcept
+			: HashChecker(), HashGenerator(other) {}
+		constexpr HashGeneratorChecker& operator=(const HashGenerator& other) noexcept {
+			HashGenerator::operator=(other);
+			return *this;
+		}
+		constexpr HashGeneratorChecker(HashGenerator&& other) noexcept
+			: HashChecker(), HashGenerator(std::move(other)) {}
+		constexpr HashGeneratorChecker& operator=(HashGenerator&& other) noexcept {
+			HashGenerator::operator=(std::move(other));
+			return *this;
+		}
+
+		constexpr HashGeneratorChecker(const HashChecker& check, const HashGenerator& gen) noexcept
+			: HashChecker(check), HashGenerator(gen) {}
+		constexpr HashGeneratorChecker(const HashChecker& check, HashGenerator&& gen) noexcept
+			: HashChecker(check), HashGenerator(std::move(gen)) {}
+		constexpr HashGeneratorChecker(HashChecker&& check, const HashGenerator& gen) noexcept
+			: HashChecker(std::move(check)), HashGenerator(gen) {}
+		constexpr HashGeneratorChecker(HashChecker&& check, HashGenerator&& gen) noexcept
+			: HashChecker(std::move(check)), HashGenerator(std::move(gen)) {}
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr operator const HashGeneratorChecker* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator HashGeneratorChecker* () noexcept { return this; }
+
+		#pragma endregion
+
+	#pragma endregion
+};
+
+template<class HashType = hash::Hash64, class HashGenerator = hash::HashGeneratorDummy<HashType>>
+class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashType, HashGenerator> {
+	#pragma region Types
+	public:
+		using HashGeneratorChecker = hash::HashGeneratorChecker<HashType, HashGenerator>;
+		using OptionalHash = HashGeneratorChecker::OptionalHash;
+		using Hash = HashGeneratorChecker::Hash;
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		constexpr HashFunctionPack() noexcept : HashGeneratorChecker() {}
+		template<class... Args>
+		constexpr HashFunctionPack(Args&&... args) noexcept : HashGeneratorChecker(std::forward<Args>(args)...) {}
 		constexpr ~HashFunctionPack() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr HashFunctionPack(const HashFunctionPack& other) noexcept : HashGenerator(other) {}
+		constexpr HashFunctionPack(const HashFunctionPack& other) noexcept : HashGeneratorChecker(other) {}
 		constexpr HashFunctionPack& operator=(const HashFunctionPack& other) noexcept {
-			HashGenerator::operator=(other);
+			HashGeneratorChecker::operator=(other);
 			return *this;
 		}
-		constexpr HashFunctionPack(HashFunctionPack&& other) noexcept : HashGenerator(std::move(other)) {}
+		constexpr HashFunctionPack(HashFunctionPack&& other) noexcept : HashGeneratorChecker(std::move(other)) {}
 		constexpr HashFunctionPack& operator=(HashFunctionPack&& other) noexcept {
-			HashGenerator::operator=(std::move(other));
+			HashGeneratorChecker::operator=(std::move(other));
 			return *this;
 		}
 
-		constexpr HashFunctionPack(const HashGenerator& other) noexcept : HashGenerator(other) {}
-		constexpr HashFunctionPack& operator=(const HashGenerator& other) noexcept {
-			HashGenerator::operator=(other);
+		constexpr HashFunctionPack(const HashGeneratorChecker& other) noexcept : HashGeneratorChecker(other) {}
+		constexpr HashFunctionPack& operator=(const HashGeneratorChecker& other) noexcept {
+			HashGeneratorChecker::operator=(other);
 			return *this;
 		}
-		constexpr HashFunctionPack(HashGenerator&& other) noexcept : HashGenerator(std::move(other)) {}
-		constexpr HashFunctionPack& operator=(HashGenerator&& other) noexcept {
-			HashGenerator::operator=(std::move(other));
+		constexpr HashFunctionPack(HashGeneratorChecker&& other) noexcept : HashGeneratorChecker(std::move(other)) {}
+		constexpr HashFunctionPack& operator=(HashGeneratorChecker&& other) noexcept {
+			HashGeneratorChecker::operator=(std::move(other));
 			return *this;
 		}
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ operator const HashFunctionPack* () const noexcept { return this; }
-		__LL_NODISCARD__ operator HashFunctionPack* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const HashFunctionPack* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator HashFunctionPack* () noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		
-
-		#pragma endregion
-	#pragma endregion
-};
-
-/*
+		// [TODO]
+		/*
 namespace basic_type_hash {
 
 template<class T>
@@ -268,12 +339,16 @@ struct basic_type_hash_no_constexpr {
 	}
 };
 */
+		#pragma endregion
+	#pragma endregion
+};
 
-template<class HashGenerator>
+
+template<class HashGenerator = hash::HashGeneratorDummy<hash::Hash32>>
 using Hash32FunctionPack = HashFunctionPack<hash::Hash32, HashGenerator>;
-template<class HashGenerator>
+template<class HashGenerator = hash::HashGeneratorDummy<hash::Hash64>>
 using Hash64FunctionPack = HashFunctionPack<hash::Hash64, HashGenerator>;
-template<class HashGenerator>
+template<class HashGenerator = hash::HashGeneratorDummy<hash::Hash128>>
 using Hash128FunctionPack = HashFunctionPack<hash::Hash128, HashGenerator>;
 
 } // namespace hash

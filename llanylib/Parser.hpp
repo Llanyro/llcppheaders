@@ -50,53 +50,53 @@ using ParseTime = std::pair<void*, meta::StrPair>;
 using wParseTime = std::pair<void*, meta::wStrPair>;
 
 struct ParserFunctionDummy {
-	ParserFunctionDummy() noexcept {}
-	~ParserFunctionDummy() noexcept {}
+	constexpr ParserFunctionDummy() noexcept {}
+	constexpr ~ParserFunctionDummy() noexcept {}
 
-	ParserFunctionDummy(const ParserFunctionDummy&) noexcept {}
-	ParserFunctionDummy& operator=(const ParserFunctionDummy&) noexcept {}
-	ParserFunctionDummy(ParserFunctionDummy&&) noexcept {}
-	ParserFunctionDummy& operator=(ParserFunctionDummy&&) noexcept {}
+	constexpr ParserFunctionDummy(const ParserFunctionDummy&) noexcept {}
+	constexpr ParserFunctionDummy& operator=(const ParserFunctionDummy&) noexcept {}
+	constexpr ParserFunctionDummy(ParserFunctionDummy&&) noexcept {}
+	constexpr ParserFunctionDummy& operator=(ParserFunctionDummy&&) noexcept {}
 
-	__LL_NODISCARD__ operator const ParserFunctionDummy*() const noexcept { return this; }
-	__LL_NODISCARD__ operator ParserFunctionDummy*() noexcept { return this; }
+	__LL_NODISCARD__ constexpr operator const ParserFunctionDummy*() const noexcept { return this; }
+	__LL_NODISCARD__ constexpr operator ParserFunctionDummy*() noexcept { return this; }
 
-	void writeChar(const ll_char_t) noexcept {}
-	void writewChar(const ll_wchar_t) noexcept {}
-	void writeCharTimes(const ll_char_t, const len_t) noexcept {}
-	void writewCharTimes(const ll_wchar_t, const len_t) noexcept {}
-	void ln() noexcept {}
-	void wln() noexcept {}
+	constexpr void writeChar(const ll_char_t) noexcept {}
+	constexpr void writewChar(const ll_wchar_t) noexcept {}
+	constexpr void writeCharTimes(const ll_char_t, const len_t) noexcept {}
+	constexpr void writewCharTimes(const ll_wchar_t, const len_t) noexcept {}
+	constexpr void ln() noexcept {}
+	constexpr void wln() noexcept {}
 
-	void writeString(ll_string_t) noexcept {}
-	void writewString(ll_wstring_t) noexcept {}
-	void writeSizedString(ll_string_t, const len_t) noexcept {}
-	void writeSizedwString(ll_wstring_t, const len_t) noexcept {}
-	void writeStrPair(const meta::StrPair&) noexcept {}
-	void writewStrPair(const meta::wStrPair&) noexcept {}
-	void writeStr(const meta::Str&) noexcept {}
-	void writewStr(const meta::wStr&) noexcept {}
+	constexpr void writeString(ll_string_t) noexcept {}
+	constexpr void writewString(ll_wstring_t) noexcept {}
+	constexpr void writeSizedString(ll_string_t, const len_t) noexcept {}
+	constexpr void writeSizedwString(ll_wstring_t, const len_t) noexcept {}
+	constexpr void writeStrPair(const meta::StrPair&) noexcept {}
+	constexpr void writewStrPair(const meta::wStrPair&) noexcept {}
+	constexpr void writeStr(const meta::Str&) noexcept {}
+	constexpr void writewStr(const meta::wStr&) noexcept {}
 
-	void writePointer(const void*) noexcept {}
-	__LL_NODISCARD__ ll_bool_t parserExtra(const meta::StrTypeid&, const void*) noexcept {
+	constexpr void writePointer(const void*) noexcept {}
+	__LL_NODISCARD__ constexpr ll_bool_t parserExtra(const meta::StrTypeid&, const void*) noexcept {
 		return LL_FALSE;
 	}
 
-	void write_i64(const i64) noexcept {}
-	void write_ui64(const ui64) noexcept {}
+	constexpr void write_i64(const i64) noexcept {}
+	constexpr void write_ui64(const ui64) noexcept {}
 
-	void write_i128(const i128&) noexcept {}
-	void write_ui128(const ui128&) noexcept {}
+	constexpr void write_i128(const i128&) noexcept {}
+	constexpr void write_ui128(const ui128&) noexcept {}
 
-	void write_i256(const i256&) noexcept {}
-	void write_ui256(const ui256&) noexcept {}
+	constexpr void write_i256(const i256&) noexcept {}
+	constexpr void write_ui256(const ui256&) noexcept {}
 
-	void write_f32(const f32) noexcept {}
-	void write_f64(const f64) noexcept {}
-	void write_f128(const f128&) noexcept {}
+	constexpr void write_f32(const f32) noexcept {}
+	constexpr void write_f64(const f64) noexcept {}
+	constexpr void write_f128(const f128&) noexcept {}
 
-	void writeTm(const ParseTime&) noexcept {}
-	void writewTm(const wParseTime&) noexcept {}
+	constexpr void writeTm(const ParseTime&) noexcept {}
+	constexpr void writewTm(const wParseTime&) noexcept {}
 };
 
 template<class ParserFunctions = ParserFunctionDummy>
@@ -252,7 +252,7 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 		#pragma region Contructors
 	public:
 		Parser() noexcept : ParserFunctions() {}
-		virtual ~Parser() noexcept {}
+		~Parser() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
@@ -271,8 +271,8 @@ class LL_SHARED_LIB Parser : public ParserFunctions {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ operator const Parser*() const noexcept { return this; }
-		__LL_NODISCARD__ operator Parser*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const Parser*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator Parser*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

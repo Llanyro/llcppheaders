@@ -372,6 +372,54 @@ __LL_VAR_INLINE__ constexpr hash::OptionalHash32 INVALID_HASH32 = std::nullopt;
 __LL_VAR_INLINE__ constexpr hash::OptionalHash64 INVALID_HASH64 = std::nullopt;
 __LL_VAR_INLINE__ constexpr hash::OptionalHash128 INVALID_HASH128 = std::nullopt;
 
+template<class HashType>
+class HashChecker {
+	#pragma region Types
+	public:
+		using OptionalHash = std::optional<HashType>;
+		using Hash = HashType;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(std::_Is_any_of_v<HashType, Hash32, Hash64, Hash128>, "Needs to be a valid hash type! If you want to use your own hash objects comment this assert");
+
+		static_assert(!std::is_reference_v<HashType>, "Reference type is forbidden!");
+		static_assert(!std::is_const_v<HashType>, "Const type is forbidden!");
+
+		static_assert(std::is_nothrow_constructible_v<HashType>, "HashType needs a noexcept constructor!");
+		static_assert(std::is_nothrow_destructible_v<HashType>, "HashType needs a noexcept destructor!");
+		static_assert(std::is_copy_constructible_v<HashType>, "HashType needs a noexcept copy constructor!");
+		static_assert(std::is_copy_assignable_v<HashType>, "HashType needs a noexcept copy asignable!");
+		static_assert(std::is_move_constructible_v<HashType>, "HashType needs a noexcept move constructor!");
+		static_assert(std::is_move_assignable_v<HashType>, "HashType needs a noexcept move asignable!");
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		constexpr HashChecker() noexcept {}
+		constexpr ~HashChecker() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr HashChecker(const HashChecker&) noexcept {}
+		constexpr HashChecker& operator=(const HashChecker&) noexcept { return *this; }
+		constexpr HashChecker(HashChecker&&) noexcept {}
+		constexpr HashChecker& operator=(HashChecker&&) noexcept { return *this; }
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr operator const HashChecker* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator HashChecker* () noexcept { return this; }
+
+		#pragma endregion
+
+	#pragma endregion
+};
+
 } // namespace hash
 } // namespace meta
 } // namespace llcpp

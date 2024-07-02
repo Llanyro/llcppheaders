@@ -105,16 +105,6 @@ template<class HashType, class HashGenerator>
 class LL_SHARED_LIB HashFunctionPack : public HashGenerator {
 	#pragma region Types
 	public:
-		template<class T>
-		struct get_hash_function {
-			__LL_NODISCARD__ static constexpr T getHashFunction() noexcept {
-				return &HashGenerator::hash;
-			}
-			__LL_NODISCARD__ static constexpr T getHashFunction() noexcept {
-				return LL_NULLPTR;
-			}
-			using value = decltype(getHashFunction());
-		};
 		using OptionalHash = std::optional<HashType>;
 		using HashConstFunction = OptionalHash(HashGenerator::*)(ll_string_t, len_t) const noexcept;
 		using wHashConstFunction = OptionalHash(HashGenerator::*)(ll_wstring_t, len_t) const noexcept;
@@ -127,13 +117,6 @@ class LL_SHARED_LIB HashFunctionPack : public HashGenerator {
 		using RecursiveHashConstFunction = OptionalHash(HashGenerator::*)(const HashType&) const noexcept;
 		using StrTypeidHashConstFunction = OptionalHash(HashGenerator::*)(const void*, const StrTypeid&) const noexcept;
 		using wStrTypeidHashConstFunction = OptionalHash(HashGenerator::*)(const void*, const wStrTypeid&) const noexcept;
-
-	#pragma endregion
-	#pragma region Expresions
-	public:
-		// Checks if exist hash function in HashGenerator
-		template<class T>
-		static constexpr ll_bool_t has_hash_function = std::is_same_v<T, get_hash_function<T>::value>;
 
 	#pragma endregion
 	#pragma region Asserts

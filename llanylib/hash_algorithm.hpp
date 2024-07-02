@@ -207,6 +207,28 @@ __LL_NODISCARD__ constexpr ui64 simple64Combine_r(const ui64 value) noexcept {
 #pragma endregion
 
 } // namespace combine
+namespace traits {
+
+template<class T, class HashGenerator>
+struct get_hash_function {
+	__LL_NODISCARD__ static constexpr T getHashFunction() noexcept {
+		return &HashGenerator::hash;
+	}
+	__LL_NODISCARD__ static constexpr T getHashFunction() noexcept {
+		return LL_NULLPTR;
+	}
+	using value = decltype(getHashFunction());
+};
+
+// Checks if exist hash function in HashGenerator
+template<class T, class HashGenerator>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function = std::is_same_v<T, get_hash_function<T, HashGenerator>::value>;
+
+template<class HashGenerator, class... Args>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_any_hash_function =
+	std::is_same_v<T, get_hash_function<Args, HashGenerator>::value> || ...;
+
+} // namespace traits
 } // namespace hash
 } // namespace meta
 } // namespace llcpp

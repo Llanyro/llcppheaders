@@ -114,13 +114,17 @@ __LL_NODISCARD__ constexpr meta::wStrPair getwName(ll_bool_t REMOVE_CLASS_STR = 
 	return meta::wStrPair(res, res2);
 }
 
-template<class T>
-__LL_NODISCARD__ constexpr meta::StrTypeid getStrTypeId(hash::StrPairHash64Function hashFunction) noexcept {
-	return meta::StrTypeid(traits::getName<T>(), hashFunction);
+template<class T, class HashGenerator>
+__LL_NODISCARD__ constexpr meta::StrTypeid getStrTypeId(HashGenerator& gen) noexcept {
+	meta::StrTypeid result;
+	result.reset<HashGenerator>(traits::getName<T>(), gen);
+	return result;
 }
-template<class T>
-__LL_NODISCARD__ constexpr meta::wStrTypeid getwStrTypeid(hash::wStrPairHash64Function hashFunction) noexcept {
-	return meta::wStrTypeid(traits::getwName<T>(), hashFunction);
+template<class T, class HashGenerator>
+__LL_NODISCARD__ constexpr meta::wStrTypeid getwStrTypeid(HashGenerator& gen) noexcept {
+	meta::wStrTypeid result;
+	result.reset<HashGenerator>(traits::getwName<T>(), gen);
+	return result;
 }
 
 } // namespace traits

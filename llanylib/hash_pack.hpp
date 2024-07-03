@@ -113,7 +113,17 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 		using wStrPairHashConstFunction = OptionalHash(HashGenerator::*)(const meta::wStrPair&) const noexcept;
 		using StrHashConstFunction = OptionalHash(HashGenerator::*)(const meta::Str&) const noexcept;
 		using wStrHashConstFunction = OptionalHash(HashGenerator::*)(const meta::wStr&) const noexcept;
-		using RecursiveHashConstFunction = OptionalHash(HashGenerator::*)(const HashType&) const noexcept;
+		
+		
+		using RecursiveHash128ConstFunction = OptionalHash(HashGenerator::*)(const hash::Hash128&) const noexcept;
+		using RecursiveHash64ConstFunction = OptionalHash(HashGenerator::*)(const hash::Hash64&) const noexcept;
+		using RecursiveHash32ConstFunction = OptionalHash(HashGenerator::*)(const hash::Hash32&) const noexcept;
+		
+		using RecursiveHashConstFunction = std::conditional_t<!std::_Is_any_of_v<HashType, Hash32, Hash64, Hash128>,
+			OptionalHash(HashGenerator::*)(const HashType&) const noexcept,
+			void
+		>;
+
 		using StrTypeidHashConstFunction = OptionalHash(HashGenerator::*)(const void*, const StrTypeid&) const noexcept;
 		using wStrTypeidHashConstFunction = OptionalHash(HashGenerator::*)(const void*, const wStrTypeid&) const noexcept;
 
@@ -127,6 +137,9 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 		static_assert(std::is_move_constructible_v<HashGenerator>, "HashGenerator needs a noexcept move constructor!");
 		static_assert(std::is_move_assignable_v<HashGenerator>, "HashGenerator needs a noexcept move asignable!");
 
+		using f = hash::traits::get_hash_function<HashConstFunction, HashGenerator>::value;
+		//static constexpr f a = nullptr;
+
 		static_assert(hash::traits::has_hash_function<HashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		static_assert(hash::traits::has_hash_function<wHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		static_assert(hash::traits::has_hash_function<StringPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
@@ -135,7 +148,13 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 		static_assert(hash::traits::has_hash_function<wStrPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		static_assert(hash::traits::has_hash_function<StrHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		static_assert(hash::traits::has_hash_function<wStrHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<RecursiveHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		
+		static_assert(hash::traits::has_hash_function<RecursiveHash128ConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<RecursiveHash64ConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function<RecursiveHash32ConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		
+		static_assert(hash::traits::has_hash_function<RecursiveHash32ConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		
 		static_assert(hash::traits::has_hash_function<StrTypeidHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		static_assert(hash::traits::has_hash_function<wStrTypeidHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 
@@ -222,6 +241,12 @@ class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashTyp
 		using Hash = HashGeneratorChecker::Hash;
 
 	#pragma endregion
+	#pragma region Expresions
+	public:
+		template<class T>
+		static constexpr ll_bool_t is_convertible_v = std::_Is_any_of_v<T, i8, ui8, i16, ui16, i32, ui32, i64, ui64, ll_wchar_t>;
+
+	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructor
 	public:
@@ -264,43 +289,39 @@ class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashTyp
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
+		template<len_t N, class T>
+		__LL_NODISCARD__ constexpr OptionalHash hashValues(const T* values) noexcept {
+			static_assert(HashFunctionPack::is_convertible_v<T>, "Invalid type to hash");
+			static_assert(N != ZERO_UI64, "Cannot hash 0 elements");
+			if constexpr (N == 1) return basic_type_hash::hashValue<T>(*values, hashFunction);
+			else {
+				constexpr len_t BUFFERLEN = sizeof(T) * N;
+				ll_char_t buffer[BUFFERLEN]{};
+
+				ll_char_t* i = buffer;
+				for (const T* data_end = values + N; values < data_end; ++values)
+					this->conversor<T>(i, *values);
+				return this->hash(buffer, BUFFERLEN);
+			}
+		}
+		template<len_t N>
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N]) noexcept {
+			constexpr len_t BUFFERLEN = sizeof(ui64) * N;
+			ll_char_t buffer[BUFFERLEN]{};
+
+			ll_char_t* i = buffer;
+			const hash::Hash64* arr = hashes;
+			for (const hash::Hash64* data_end = arr + N; arr < data_end; ++arr)
+				basic_type_hash::conversor<ui64>(i, arr->get());
+
+			return this->hash(buffer, BUFFERLEN);
+		}
+
 		// [TODO]
 		/*
 namespace basic_type_hash {
 
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_convertible_v = std::_Is_any_of_v<T, i8, ui8, i16, ui16, i32, ui32, i64, ui64, ll_wchar_t>;
 
-#pragma region UsedInTools
-template<len_t N, class T>
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hashValues(const T* values, hash::Hash64Function hashFunction) noexcept {
-	static_assert(basic_type_hash::is_convertible_v<T>, "Invalid type to hash");
-	static_assert(N != ZERO_UI64, "Cannot hash 0 elements");
-	if constexpr (N == 1) return basic_type_hash::hashValue<T>(*values, hashFunction);
-	else {
-		constexpr len_t BUFFERLEN = sizeof(T) * N;
-		ll_char_t buffer[BUFFERLEN]{};
-
-		ll_char_t* i = buffer;
-		for (const T* data_end = values + N; values < data_end; ++values)
-			basic_type_hash::conversor<T>(i, *values);
-		return hashFunction(buffer, BUFFERLEN);
-	}
-}
-template<len_t N>
-__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const hash::Hash64(&hashes)[N], hash::Hash64Function hashFunction) noexcept {
-	constexpr len_t BUFFERLEN = sizeof(ui64) * N;
-	ll_char_t buffer[BUFFERLEN]{};
-
-	ll_char_t* i = buffer;
-	const hash::Hash64* arr = hashes;
-	for (const hash::Hash64* data_end = arr + N; arr < data_end; ++arr)
-		basic_type_hash::conversor<ui64>(i, arr->get());
-
-	return hashFunction(buffer, BUFFERLEN);
-}
-
-#pragma endregion
 
 // Uses bitwise operators: [ ">>", "&" ]
 template<class U, class W = traits::cinput<U>>

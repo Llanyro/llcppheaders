@@ -209,16 +209,24 @@ __LL_NODISCARD__ constexpr ui64 simple64Combine_r(const ui64 value) noexcept {
 } // namespace combine
 namespace traits {
 
+struct Test {
+	void asdf() noexcept;
+};
+using Signature = void(Test::*)() noexcept;
+using Signature2 = void(Test::*)(int) noexcept;
+
 template<class T, class HashGenerator>
 struct get_hash_function {
-	__LL_NODISCARD__ static constexpr T getHashFunction() noexcept {
-		return &HashGenerator::hash;
+	__LL_NODISCARD__ static constexpr T getHashFunction(HashGenerator* p) noexcept {
+		T a = &HashGenerator::hash;
+		p->*a();
+		return a;
 	}
-	__LL_NODISCARD__ static constexpr T getHashFunction() noexcept {
-		return LL_NULLPTR;
-	}
-	using value = decltype(getHashFunction());
+	__LL_NODISCARD__ static constexpr auto getHashFunction(...) noexcept -> void {}
+	using value = decltype(getHashFunction(nullptr));
 };
+
+//using result = get_hash_function<Signature, Test>::value;
 
 // Checks if exist hash function in HashGenerator
 template<class T, class HashGenerator>

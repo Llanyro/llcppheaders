@@ -209,80 +209,11 @@ __LL_NODISCARD__ constexpr ui64 simple64Combine_r(const ui64 value) noexcept {
 } // namespace combine
 namespace traits {
 
-struct Test {
-	void asdf(void) noexcept;
-};
-using Signature = void(Test::*)() noexcept;
-using Signature2 = void(Test::*)(int) noexcept;
+__LL_TEMPLATE_HAS_FUNCTION_BASE__(hash, hash);
 
-#pragma region Testing more SFINAE
-template<class HashGenerator, class Signature>
-struct has_const_reference_op {
-	template<class U>
-	static constexpr auto test(U*, Signature) noexcept -> std::true_type;
-
-	template <class U> 
-	static constexpr auto test(decltype(&U::hash), void*) noexcept -> decltype(test(&U::hash));
-
-	template<class U>
-	static constexpr std::false_type test(...);
-
-	using type = decltype(test<HashGenerator>(nullptr, nullptr));
-
-	static constexpr bool value = type::value; /* Which is it? */
-};
-
-enum class HasFunctionTypes {
-	Basic,
-	BasicNoexcept,
-	Const,
-	ConstNoexcept,
-	Undefined
-};
-
-template<class HashGenerator, class Return, class... Args>
-struct has_hash_function {
-	template<class U>
-	static constexpr auto test(Return (U::*)(Args...) noexcept) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(Return (U::*)(Args...) const noexcept) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
-	using type = decltype(test<HashGenerator>(&HashGenerator::asdf));
-};
-
-
-template<typename Sig, class HashGenerator>
-struct HasUsedMemoryMethod {
-	template<typename U, class W, size_t(U::*)() const> struct SFINAE {};
-	template<typename U, class W> static char Test(SFINAE<U, W, &U::hash>*);
-	template<typename U, class W> static int Test(...);
-	static constexpr ll_bool_t has = sizeof(Test<Sig, HashGenerator>(0)) == sizeof(char);
-};
-#pragma endregion
-
-template<class T, class HashGenerator>
-struct get_hash_function {
-	__LL_NODISCARD__ static constexpr T getHashFunction(HashGenerator* p) noexcept {
-		T a = &HashGenerator::hash;
-		p->*a();
-		return a;
-	}
-	__LL_NODISCARD__ static constexpr auto getHashFunction(...) noexcept -> void {}
-	using value = decltype(getHashFunction(nullptr));
-};
-
-using result = has_hash_function<Test, void, int>::type;
-//using result = get_hash_function<Signature, Test>::value;
-//__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function = HasUsedMemoryMethod<Test>::has;
-
-// Checks if exist hash function in HashGenerator
-//template<class T, class HashGenerator>
-//__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function = std::is_same_v<T, get_hash_function<T, HashGenerator>::value>;
-
-//template<class HashGenerator, class... Args>
-//__LL_VAR_INLINE__ constexpr ll_bool_t has_any_hash_function =
-//	std::is_same_v<T, get_hash_function<Args, HashGenerator>::value> || ...;
+template<class HashGenerator, class... Args>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_any_hash_function_v =
+	has_hash_function_v<HashGenerator, Args> || ...;
 
 } // namespace traits
 } // namespace hash

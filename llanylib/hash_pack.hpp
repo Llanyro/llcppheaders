@@ -82,7 +82,13 @@ class LL_SHARED_LIB HashGeneratorDummy {
 		__LL_NODISCARD__ constexpr OptionalHash hash(const meta::wStr& s) const noexcept {
 			return std::nullopt;
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const HashType& h) const noexcept {
+		__LL_NODISCARD__ constexpr OptionalHash hash(const hash::Hash32& h) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const hash::Hash64& h) const noexcept {
+			return std::nullopt;
+		}
+		__LL_NODISCARD__ constexpr OptionalHash hash(const hash::Hash128& h) const noexcept {
 			return std::nullopt;
 		}
 		__LL_NODISCARD__ constexpr OptionalHash hash(const void* o, const meta::StrTypeid& id) const noexcept {
@@ -114,7 +120,6 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 		using StrHashConstFunction = OptionalHash(HashGenerator::*)(const meta::Str&) const noexcept;
 		using wStrHashConstFunction = OptionalHash(HashGenerator::*)(const meta::wStr&) const noexcept;
 		
-		
 		using RecursiveHash128ConstFunction = OptionalHash(HashGenerator::*)(const hash::Hash128&) const noexcept;
 		using RecursiveHash64ConstFunction = OptionalHash(HashGenerator::*)(const hash::Hash64&) const noexcept;
 		using RecursiveHash32ConstFunction = OptionalHash(HashGenerator::*)(const hash::Hash32&) const noexcept;
@@ -137,26 +142,35 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 		static_assert(std::is_move_constructible_v<HashGenerator>, "HashGenerator needs a noexcept move constructor!");
 		static_assert(std::is_move_assignable_v<HashGenerator>, "HashGenerator needs a noexcept move asignable!");
 
-		using f = hash::traits::get_hash_function<HashConstFunction, HashGenerator>::value;
-		//static constexpr f a = nullptr;
-
-		static_assert(hash::traits::has_hash_function<HashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<wHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<StringPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<wStringPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<StrPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<wStrPairHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<StrHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<wStrHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, HashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, wHashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, StringPairHashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, wStringPairHashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, StrPairHashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, wStrPairHashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, StrHashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, wStrHashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		
-		static_assert(hash::traits::has_hash_function<RecursiveHash128ConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<RecursiveHash64ConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<RecursiveHash32ConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, RecursiveHash128ConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, RecursiveHash64ConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, RecursiveHash32ConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		
-		static_assert(hash::traits::has_hash_function<RecursiveHash32ConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(std::is_same_v<RecursiveHashConstFunction, void> || hash::traits::has_hash_function_v<HashGenerator, RecursiveHashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		
-		static_assert(hash::traits::has_hash_function<StrTypeidHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::traits::has_hash_function<wStrTypeidHashConstFunction, HashGenerator>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, StrTypeidHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(hash::traits::has_hash_function_v<HashGenerator, wStrTypeidHashConstFunction>, "HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 
 	#pragma endregion
 	#pragma region Functions

@@ -25,9 +25,9 @@
 
 #if defined(WINDOWS_SYSTEM)
 	#pragma warning(push)
-    #if defined(__LL_SPECTRE_FUNCTIONS__)
+	#if defined(__LL_SPECTRE_FUNCTIONS__)
 		#pragma warning(disable:5045) // Security Spectre mitigation [SECURITY]
-    #endif // __LL_UNSECURE_FUNCTIONS__
+	#endif // __LL_UNSECURE_FUNCTIONS__
 #endif
 
 namespace llcpp {
@@ -210,41 +210,47 @@ __LL_NODISCARD__ constexpr ui64 simple64Combine_r(const ui64 value) noexcept {
 namespace traits {
 
 struct Test {
-	void asdf() noexcept;
+	void asdf(void) noexcept;
 };
 using Signature = void(Test::*)() noexcept;
 using Signature2 = void(Test::*)(int) noexcept;
 
-#pragma region 
-template< typename T, typename E>
-struct has_const_reference_op
-{
-    /* SFINAE operator-has-correct-sig :) */
-    template<typename A>
-    static std::true_type test(E (A::*)() const) {
-        return std::true_type();
-    }
+#pragma region Testing more SFINAE
+template<class HashGenerator, class Signature>
+struct has_const_reference_op {
+	template<class U>
+	static constexpr auto test(U*, Signature) noexcept -> std::true_type;
 
-    /* SFINAE operator-exists :) */
-    template <typename A> 
-    static decltype(test(&A::operator*)) 
-    test(decltype(&A::operator*),void *) {
-        /* Operator exists. What about sig? */
-        typedef decltype(test(&A::operator*)) return_type; 
-        return return_type();
-    }
+	template <class U> 
+	static constexpr auto test(decltype(&U::hash), void*) noexcept -> decltype(test(&U::hash));
 
-    /* SFINAE game over :( */
-    template<typename A>
-    static std::false_type test(...) {
-        return std::false_type(); 
-    }
+	template<class U>
+	static constexpr std::false_type test(...);
 
-    /* This will be either `std::true_type` or `std::false_type` */
-    typedef decltype(test<T>(0,0)) type;
+	using type = decltype(test<HashGenerator>(nullptr, nullptr));
 
-    static const bool value = type::value; /* Which is it? */
+	static constexpr bool value = type::value; /* Which is it? */
 };
+
+enum class HasFunctionTypes {
+	Basic,
+	BasicNoexcept,
+	Const,
+	ConstNoexcept,
+	Undefined
+};
+
+template<class HashGenerator, class Return, class... Args>
+struct has_hash_function {
+	template<class U>
+	static constexpr auto test(Return (U::*)(Args...) noexcept) noexcept -> std::true_type;
+	template<class U>
+	static constexpr auto test(Return (U::*)(Args...) const noexcept) noexcept -> std::true_type;
+	template<class U>
+	static constexpr auto test(...) noexcept -> std::false_type;
+	using type = decltype(test<HashGenerator>(&HashGenerator::asdf));
+};
+
 
 template<typename Sig, class HashGenerator>
 struct HasUsedMemoryMethod {
@@ -266,16 +272,17 @@ struct get_hash_function {
 	using value = decltype(getHashFunction(nullptr));
 };
 
+using result = has_hash_function<Test, void, int>::type;
 //using result = get_hash_function<Signature, Test>::value;
-__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function = HasUsedMemoryMethod<Test>::has;
+//__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function = HasUsedMemoryMethod<Test>::has;
 
 // Checks if exist hash function in HashGenerator
-template<class T, class HashGenerator>
+//template<class T, class HashGenerator>
 //__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function = std::is_same_v<T, get_hash_function<T, HashGenerator>::value>;
 
-template<class HashGenerator, class... Args>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_any_hash_function =
-	std::is_same_v<T, get_hash_function<Args, HashGenerator>::value> || ...;
+//template<class HashGenerator, class... Args>
+//__LL_VAR_INLINE__ constexpr ll_bool_t has_any_hash_function =
+//	std::is_same_v<T, get_hash_function<Args, HashGenerator>::value> || ...;
 
 } // namespace traits
 } // namespace hash

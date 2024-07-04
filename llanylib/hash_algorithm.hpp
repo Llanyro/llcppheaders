@@ -215,6 +215,46 @@ struct Test {
 using Signature = void(Test::*)() noexcept;
 using Signature2 = void(Test::*)(int) noexcept;
 
+#pragma region 
+template< typename T, typename E>
+struct has_const_reference_op
+{
+    /* SFINAE operator-has-correct-sig :) */
+    template<typename A>
+    static std::true_type test(E (A::*)() const) {
+        return std::true_type();
+    }
+
+    /* SFINAE operator-exists :) */
+    template <typename A> 
+    static decltype(test(&A::operator*)) 
+    test(decltype(&A::operator*),void *) {
+        /* Operator exists. What about sig? */
+        typedef decltype(test(&A::operator*)) return_type; 
+        return return_type();
+    }
+
+    /* SFINAE game over :( */
+    template<typename A>
+    static std::false_type test(...) {
+        return std::false_type(); 
+    }
+
+    /* This will be either `std::true_type` or `std::false_type` */
+    typedef decltype(test<T>(0,0)) type;
+
+    static const bool value = type::value; /* Which is it? */
+};
+
+template<typename Sig, class HashGenerator>
+struct HasUsedMemoryMethod {
+	template<typename U, class W, size_t(U::*)() const> struct SFINAE {};
+	template<typename U, class W> static char Test(SFINAE<U, W, &U::hash>*);
+	template<typename U, class W> static int Test(...);
+	static constexpr ll_bool_t has = sizeof(Test<Sig, HashGenerator>(0)) == sizeof(char);
+};
+#pragma endregion
+
 template<class T, class HashGenerator>
 struct get_hash_function {
 	__LL_NODISCARD__ static constexpr T getHashFunction(HashGenerator* p) noexcept {
@@ -227,10 +267,11 @@ struct get_hash_function {
 };
 
 //using result = get_hash_function<Signature, Test>::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function = HasUsedMemoryMethod<Test>::has;
 
 // Checks if exist hash function in HashGenerator
 template<class T, class HashGenerator>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function = std::is_same_v<T, get_hash_function<T, HashGenerator>::value>;
+//__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function = std::is_same_v<T, get_hash_function<T, HashGenerator>::value>;
 
 template<class HashGenerator, class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_any_hash_function =

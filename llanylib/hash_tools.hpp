@@ -101,7 +101,8 @@ class HashTool {
 			if constexpr (std::is_pointer_v<T>) return hash::INVALID_HASH64;
 			// Calls defined function to hash arrays
 			else if constexpr (std::is_array_v<T>) {
-				using array_type_t = traits::type_conversor<T>::array_to_type_t;
+				using array_type_t = decltype(**arr);
+				//using array_type_t = traits::type_conversor<T>::array_to_type_t;
 				auto h = this->hashArray<traits::array_size<T>, array_type_t>(*arr++);
 				// If first element hashed is invalid, other elements will be invalid too
 				if (!h.has_value()) return hash::INVALID_HASH64;

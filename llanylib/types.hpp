@@ -204,8 +204,6 @@ template<class T>
 class ArrayPair;
 template<class T>
 class Array;
-template<class T, ll_bool_t IS_STRINGVIEW>
-class ArrayView;
 
 using StrPair = ArrayPair<ll_char_t>;
 using wStrPair = ArrayPair<ll_wchar_t>;

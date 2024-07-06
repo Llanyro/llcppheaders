@@ -207,13 +207,13 @@ __LL_NODISCARD__ constexpr ui64 simple64Combine_r(const ui64 value) noexcept {
 #pragma endregion
 
 } // namespace combine
-namespace traits {
+namespace hash_traits {
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_hash_type_v =
+	std::_Is_any_of_v<std::remove_cv_t<T>, hash::Hash32, hash::Hash64, hash::Hash128>;
 
 __LL_TEMPLATE_HAS_FUNCTION_BASE__(hash, hash);
-
-template<class HashGenerator, class... Args>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_any_hash_function_v =
-	has_hash_function_v<HashGenerator, Args> || ...;
 
 } // namespace traits
 } // namespace hash

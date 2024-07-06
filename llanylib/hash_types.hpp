@@ -382,7 +382,8 @@ class HashChecker {
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(std::_Is_any_of_v<HashType, Hash32, Hash64, Hash128>, "Needs to be a valid hash type! If you want to use your own hash objects comment this assert");
+		static_assert(hash_traits::is_hash_type_v<HashType>,
+			"Needs to be a valid hash type! If you want to use your own hash objects comment this assert");
 
 		static_assert(!std::is_reference_v<HashType>, "Reference type is forbidden!");
 		static_assert(!std::is_const_v<HashType>, "Const type is forbidden!");

@@ -81,6 +81,48 @@ using input = std::conditional_t<traits::is_basic_type_v<T> || std::is_pointer_v
 template<class T>
 using cinput = std::conditional_t<traits::is_basic_type_v<T> || std::is_pointer_v<T>, const T, const T&>;
 
+template<class T, ll_bool_t promote>
+struct type_promotion {
+	template<ll_bool_t promote>
+	struct __type_promotion { using value = T; };
+
+	template<> struct __type_promotion<LL_TRUE> {
+		template<class U> struct promote_type { using value = U; };
+		template<> struct promote_type<i8> { using value = i16; };
+		template<> struct promote_type<i16> { using value = i32; };
+		template<> struct promote_type<i32> { using value = i64; };
+		template<> struct promote_type<i64> { using value = i128; };
+		template<> struct promote_type<i128> { using value = i256; };
+		template<> struct promote_type<ui8> { using value = ui16; };
+		template<> struct promote_type<ui16> { using value = ui32; };
+		template<> struct promote_type<ui32> { using value = ui64; };
+		template<> struct promote_type<ui64> { using value = ui128; };
+		template<> struct promote_type<ui128> { using value = ui256; };
+		template<> struct promote_type<f32> { using value = f64; };
+		template<> struct promote_type<f64> { using value = f128; };
+		using value = promote_type<T>::value;
+	};
+	template<> struct __type_promotion<LL_FALSE> {
+		template<class U> struct promote_type { using value = U; };
+		template<> struct promote_type<i16> { using value = i8; };
+		template<> struct promote_type<i32> { using value = i16; };
+		template<> struct promote_type<i64> { using value = i32; };
+		template<> struct promote_type<i128> { using value = i64; };
+		template<> struct promote_type<i256> { using value = i128; };
+		template<> struct promote_type<ui16> { using value = ui8; };
+		template<> struct promote_type<ui32> { using value = ui16; };
+		template<> struct promote_type<ui64> { using value = ui32; };
+		template<> struct promote_type<ui128> { using value = ui64; };
+		template<> struct promote_type<ui256> { using value = ui128; };
+		template<> struct promote_type<f64> { using value = f32; };
+		template<> struct promote_type<f128> { using value = f64; };
+		using value = promote_type<T>::value;
+	};
+
+	static constexpr ll_bool_t isPromoted = promote;
+	using value = __type_promotion<promote>::value;
+};
+
 #pragma endregion
 #pragma region MyRegion
 template<class Checker, class VoidType = void>

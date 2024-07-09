@@ -104,6 +104,8 @@ class LL_SHARED_LIB HashGeneratorDummy {
 };
 
 class Object {
+	private:
+		hash::Hash128 h;
 	public:
 		__LL_NODISCARD__ constexpr operator OptionalHash32() const noexcept {
 			return std::nullopt;
@@ -362,30 +364,30 @@ class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashTyp
 				*buffer = static_cast<ui8>(value >> byte) & 0xff;
 		}
 
+	private:
+		// This function is the const part of "hashValue() noexcept" && "hashValue() const noexcept"
+		// Both functions call this function if 
+		template<class U, class W = meta::traits::cinput<U>>
+		__LL_NODISCARD__ constexpr OptionalHash hashValuePriv(W value) const noexcept {
+			using ObjectOptionalHash = HashTypeChecker<U>::U;
+			if constexpr (!std::is_same_v<ObjectOptionalHash, void>) {
+				ObjectOptionalHash h = value.operator ObjectOptionalHash();
+				if constexpr (!std::is_same_v<ObjectOptionalHash, OptionalHash>)
+					return h.has_value() ? this->hashValue<ui32>(h->operator ui32()) : std::nullopt;
+				else return h;
+			}
+			else return std::nullopt;
+		}
+	public:
+		// Generates hashes by basic types
+		// Prior 32-64-128
+		// Uses "operator type() const noexcept" to hash the object
+		// As a last option it prior custom user hash: "operator std::optional<UserHashType>() const noexcept"
 		template<class U, class W = meta::traits::cinput<U>>
 		__LL_NODISCARD__ constexpr OptionalHash hashValue(W value) noexcept {
-			// We can use custom hash hash32
-			if constexpr (traits::has_simple_type_operator_v<U, OptionalHash32>) {
-				OptionalHash32 h = value.operator OptionalHash32();
-				if constexpr (std::is_same_v<HashType, hash::Hash32>) return h;
-				else return h.has_value() ? this->hashValue<ui32>(h->operator ui32()) : std::nullopt;
-			}
-			// We can use custom hash hash64
-			else if constexpr (traits::has_simple_type_operator_v<U, OptionalHash64>) {
-				OptionalHash64 h = value.operator OptionalHash64();
-				if constexpr (std::is_same_v<HashType, hash::Hash64>) return h;
-				else return h.has_value() ? this->hashValue<ui64>(h->operator ui64()) : std::nullopt;
-			}
-			// We can use custom hash hash128
-			else if constexpr (traits::has_simple_type_operator_v<U, OptionalHash128>) {
-				OptionalHash128 h = value.operator OptionalHash128();
-				if constexpr (std::is_same_v<HashType, hash::Hash128>) return h;
-				else return h.has_value() ? this->hashValue<ui64>(h->operator ui64()) : std::nullopt;
-			}
-			// We can use custom hash user defined type
-			// But, it requires that is not a lib hash type
-			else if constexpr (traits::has_simple_type_operator_v<U, OptionalHash>)
-				return value.operator OptionalHash();
+			using ObjectOptionalHash = HashTypeChecker<U>::U;
+			if constexpr (!std::is_same_v<ObjectOptionalHash, void>)
+				return this->hashValuePriv<U, W>(value);
 			else {
 				__LL_HASHFUNCTIONPACK_B2A_ASSERT__(U);
 				constexpr len_t BUFFERLEN = sizeof(U);
@@ -395,30 +397,15 @@ class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashTyp
 				return this->hash(buffer, BUFFERLEN);
 			}
 		}
+		// Generates hashes by basic types
+		// Prior 32-64-128
+		// Uses "operator type() const noexcept" to hash the object
+		// As a last option it prior custom user hash: "operator std::optional<UserHashType>() const noexcept"
 		template<class U, class W = meta::traits::cinput<U>>
 		__LL_NODISCARD__ constexpr OptionalHash hashValue(W value) const noexcept {
-			// We can use custom hash hash32
-			if constexpr (traits::has_simple_type_operator_v<U, OptionalHash32>) {
-				OptionalHash32 h = value.operator OptionalHash32();
-				if constexpr (std::is_same_v<HashType, hash::Hash32>) return h;
-				else return h.has_value() ? this->hashValue<ui32>(h->operator ui32()) : std::nullopt;
-			}
-			// We can use custom hash hash64
-			else if constexpr (traits::has_simple_type_operator_v<U, OptionalHash64>) {
-				OptionalHash64 h = value.operator OptionalHash64();
-				if constexpr (std::is_same_v<HashType, hash::Hash64>) return h;
-				else return h.has_value() ? this->hashValue<ui64>(h->operator ui64()) : std::nullopt;
-			}
-			// We can use custom hash hash128
-			else if constexpr (traits::has_simple_type_operator_v<U, OptionalHash128>) {
-				OptionalHash128 h = value.operator OptionalHash128();
-				if constexpr (std::is_same_v<HashType, hash::Hash128>) return h;
-				else return h.has_value() ? this->hashValue<ui64>(h->operator ui64()) : std::nullopt;
-			}
-			// We can use custom hash user defined type
-			// But, it requires that is not a lib hash type
-			else if constexpr (traits::has_simple_type_operator_v<U, OptionalHash>)
-				return value.operator OptionalHash();
+			using ObjectOptionalHash = HashTypeChecker<U>::U;
+			if constexpr (!std::is_same_v<ObjectOptionalHash, void>)
+				return this->hashValuePriv<U, W>(value);
 			else {
 				__LL_HASHFUNCTIONPACK_B2A_ASSERT__(U);
 				constexpr len_t BUFFERLEN = sizeof(U);
@@ -429,31 +416,51 @@ class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashTyp
 			}
 		}
 
+
+
 		template<len_t N, class T>
 		__LL_NODISCARD__ constexpr OptionalHash hashArray(const T* values) noexcept {
 			__LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__(N);
-			using own_hash_type = HashTypeChecker<T>::U;
-			if constexpr (!std::is_same_v<own_hash_type, void>) {
-				using ObjectHashType = own_hash_type::value_type;
-				ObjectHashType hashes[N]{};
-				ObjectHashType* data = hashes;
-				for (ObjectHashType* end = hashes + N; data < end; ++data, ++values) {
-					own_hash_type h = values->operator own_hash_type();
-					if (h.has_value()) *data = *h;
-					// If is invalid hash, we cant hash the array
-					else return std::nullopt;
+
+			if constexpr (std::is_pointer_v<T>)
+				return std::nullopt;
+			else if constexpr (std::is_array_v<T>) {
+				using ArrayType = std::remove_all_extents_t<T>;
+				if constexpr (traits::is_basic_type_v<ArrayType>) {
+					constexpr len_t arr_size = sizeof(T) * N;
+
 				}
-				return this->hashArrayHash<N, ObjectHashType>(hashes);
+
+
+
 			}
-			else {
-				__LL_HASHFUNCTIONPACK_B2A_ASSERT__(T);
-				constexpr len_t BUFFERLEN = sizeof(T) * N;
-				ll_char_t buffer[BUFFERLEN]{};
-				ll_char_t* i = buffer;
-				for (const T* data_end = values + N; values < data_end; ++values)
-					this->b2a<T>(i, *values);
-				return this->hash(buffer, BUFFERLEN);
+			else if constexpr (traits::is_basic_type_v<T>) {
+
 			}
+
+
+			//using own_hash_type = HashTypeChecker<T>::U;
+			//if constexpr (!std::is_same_v<own_hash_type, void>) {
+			//	using ObjectHashType = own_hash_type::value_type;
+			//	ObjectHashType hashes[N]{};
+			//	ObjectHashType* data = hashes;
+			//	for (ObjectHashType* end = hashes + N; data < end; ++data, ++values) {
+			//		own_hash_type h = values->operator own_hash_type();
+			//		if (h.has_value()) *data = *h;
+			//		// If is invalid hash, we cant hash the array
+			//		else return std::nullopt;
+			//	}
+			//	return this->hashArrayHash<N, ObjectHashType>(hashes);
+			//}
+			//else {
+			//	__LL_HASHFUNCTIONPACK_B2A_ASSERT__(T);
+			//	constexpr len_t BUFFERLEN = sizeof(T) * N;
+			//	ll_char_t buffer[BUFFERLEN]{};
+			//	ll_char_t* i = buffer;
+			//	for (const T* data_end = values + N; values < data_end; ++values)
+			//		this->b2a<T>(i, *values);
+			//	return this->hash(buffer, BUFFERLEN);
+			//}
 		}
 		template<len_t N, class T>
 		__LL_NODISCARD__ constexpr OptionalHash hashArray(const T* values) const noexcept {

@@ -49,22 +49,54 @@ class Holder : public linked::NodeNext<Holder<T>> {
 
 };
 
-struct MemoryStack {
-	len_t size;
-	len_t filled;
-	linked::NodeNext* first
+template<class T>
+class MemoryStack {
+	public:
+	protected:
+		len_t size;
+		len_t filled;
+		linked::NodeNext<T>* first;
+	public:
+		constexpr MemoryStack(const len_t size) noexcept
+			: size(size), filled(ZERO_UI64), first(LL_NULLPTR) {}
+		constexpr ~MemoryStack() noexcept {}
+
+
+		constexpr void setSize(const len_t size) noexcept { this->size = size; }
+		constexpr void incrementSize(const len_t size) noexcept { this->size += size; }
+
+		constexpr void setSize(const len_t size) noexcept { this->size = size; }
+		constexpr void incrementSize(const len_t size) noexcept { this->size += size; }
+
+
+
+
 };
 
-template<class T>
-constexpr void generate_stack_memory(MemoryStack& stack) noexcept {
-	
+template<class T, class U>
+using UserDefinedFunction = std::conditional_t<
+	std::is_same_v<U, void>,
+	void(*)(MemoryStack<T>&) noexcept,
+	void(*)(MemoryStack<T>& , U&) noexcept
+>;
 
+
+template<class T>
+constexpr void generate_stack_memory(MemoryStack<T>& stack) noexcept {
+	
+}
+template<class T, class U>
+constexpr void generate_stack_memory(const len_t size, UserDefinedFunction<T, U> user_function, U& extra_data) noexcept {
+	MemoryStack<T> stack(size);
+	generate_stack_memory<T>(stack);
+}
+template<class T>
+constexpr void generate_stack_memory<T, void>(const len_t size, UserDefinedFunction<T, void> user_function) noexcept {
+	MemoryStack<T> stack(size);
+	generate_stack_memory<T>(stack);
 }
 
-template<class T>
-constexpr void generate_stack_memory(const len_t size) noexcept {
-	
-}
+
 
 } // namespace meta
 } // namespace llcpp

@@ -177,5 +177,8 @@
     <ClInclude Include="AllocatorChecker.hpp">
       <Filter>Source Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="mem.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

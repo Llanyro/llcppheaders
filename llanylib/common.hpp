@@ -75,6 +75,9 @@ constexpr ll_bool_t simple_equals(T v1, U v2) noexcept {
 template<class T, class U = T&>
 constexpr void simple_set(T& v1, U v2) noexcept { v1 = v2; }
 
+template<class T, class U = T>
+constexpr void simple_move(T& v1, U& v2) noexcept { v1 = std::move(v2); }
+
 } // namespace common
 } // namespace meta
 } // namespace llcpp

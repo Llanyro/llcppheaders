@@ -112,7 +112,7 @@ class LL_SHARED_LIB ArrayPair {
 			return *this->get(pos);
 		}
 		__LL_NODISCARD__ constexpr const T& operator^(const len_t pos) const noexcept {
-			return this->rget(pos);
+			return *this->rget(pos);
 		}
 #if defined(LL_REAL_CXX23)
 		__LL_NODISCARD__ constexpr ArrayPair operator[](const len_t first, const len_t last) const noexcept {

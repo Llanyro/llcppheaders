@@ -1547,6 +1547,7 @@ class DataManipulatorCluster : public Manipulator {
 			for (; _array < end; ++_array, --end)
 				this->swap(*_array, *end);
 		}
+
 		constexpr ll_bool_t reverse_s(T* _array, T* end) noexcept {
 			if (!_array || !end || end <= _array) return LL_FALSE;
 			this->reverse(_array, end);
@@ -1569,7 +1570,7 @@ class DataManipulatorCluster : public Manipulator {
 		}
 		template<len_t N>
 		constexpr ll_bool_t reverse_s(T(&_array)[N]) noexcept {
-			return this->reverse(_array, _array + N - 1);
+			return this->reverse_s(_array, _array + N - 1);
 		}
 		constexpr ll_bool_t reverse_s(Array_t& _array) noexcept {
 			return this->reverse_s(_array.begin(), _array.end());
@@ -1586,7 +1587,7 @@ class DataManipulatorCluster : public Manipulator {
 		}
 		template<len_t N>
 		constexpr ll_bool_t reverse_s(T(&_array)[N]) const noexcept {
-			return this->reverse(_array, _array + N - 1);
+			return this->reverse_s(_array, _array + N - 1);
 		}
 		constexpr ll_bool_t reverse_s(Array_t& _array) const noexcept {
 			return this->reverse_s(_array.begin(), _array.end());
@@ -1626,13 +1627,13 @@ class DataManipulatorCluster : public Manipulator {
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t fill_s(T* dst, T* end, W object, FunctionManipulator&& man) const noexcept {
 			if (!dst || !end || end <= dst) return LL_FALSE;
-			this->fill<U, W, FunctionManipulator>(dst, end, object, man);
+			this->fill<U, W, FunctionManipulator>(dst, end, object, std::forward<FunctionManipulator>(man));
 			return LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t fill_s(T* dst, T* end, W object) const noexcept {
 			if (!dst || !end || end <= dst) return LL_FALSE;
-			this->fill<U, W, FunctionManipulator>(dst, end, object, FunctionManipulator());
+			this->fill<U, W, FunctionManipulator>(dst, end, object);
 			return LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
@@ -1646,20 +1647,20 @@ class DataManipulatorCluster : public Manipulator {
 		#pragma region FunctionManipulatorAsParameter
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void fill(Array_t& dst, W object, FunctionManipulator&& man) const noexcept {
-			this->fill<U, W, FunctionManipulator>(dst.begin(), dst.end(), object, man);
+			this->fill<U, W, FunctionManipulator>(dst.begin(), dst.end(), object, std::forward<FunctionManipulator>(man));
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
 		constexpr void fill(T(&dst)[N], W object, FunctionManipulator&& man) const noexcept {
-			this->fill<U, W, FunctionManipulator>(dst, dst + N - 1, object, man);
+			this->fill<U, W, FunctionManipulator>(dst, dst + N - 1, object, std::forward<FunctionManipulator>(man));
 		}
 
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t fill_s(Array_t& dst, W object, FunctionManipulator&& man) const noexcept {
-			return this->fill_s<U, W, FunctionManipulator>(dst.begin(), dst.end(), object, man);
+			return this->fill_s<U, W, FunctionManipulator>(dst.begin(), dst.end(), object, std::forward<FunctionManipulator>(man));
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
 		constexpr ll_bool_t fill_s(T(&dst)[N], W object, FunctionManipulator&& man) const noexcept {
-			return this->fill_s<U, W, FunctionManipulator>(dst, dst + N - 1, object, man);
+			return this->fill_s<U, W, FunctionManipulator>(dst, dst + N - 1, object, std::forward<FunctionManipulator>(man));
 		}
 
 		#pragma endregion
@@ -1738,7 +1739,7 @@ class DataManipulatorCluster : public Manipulator {
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t copy_s(const U* src, T* dst, len_t size, FunctionManipulator&& man) const noexcept {
 			if (!src || !dst || size == ZERO_UI64) return LL_FALSE;
-			this->copy<U, W, FunctionManipulator>(src, dst, size, man);
+			this->copy<U, W, FunctionManipulator>(src, dst, size, std::forward<FunctionManipulator>(man));
 			return LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
@@ -1758,7 +1759,7 @@ class DataManipulatorCluster : public Manipulator {
 		#pragma region FunctionManipulatorAsParameter
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void copy(const meta::ArrayPair<U>& src, T* dst, const len_t size, FunctionManipulator&& man) const noexcept {
-			this->copy<U, W, FunctionManipulator>(src.begin(), dst, math::min<len_t>(src.len(), size), man);
+			this->copy<U, W, FunctionManipulator>(src.begin(), dst, math::min<len_t>(src.len(), size), std::forward<FunctionManipulator>(man));
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void copy(const meta::ArrayPair<U>& src, Array_t& dst, FunctionManipulator&& man) noexcept {
@@ -1779,7 +1780,7 @@ class DataManipulatorCluster : public Manipulator {
 
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t copy_s(const meta::ArrayPair<U>& src, T* dst, const len_t size, FunctionManipulator&& man) const noexcept {
-			return this->copy_s<U, W, FunctionManipulator>(src.begin(), dst, math::min<len_t>(src.len(), size), man);
+			return this->copy_s<U, W, FunctionManipulator>(src.begin(), dst, math::min<len_t>(src.len(), size), std::forward<FunctionManipulator>(man));
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t copy_s(const meta::ArrayPair<U>& src, Array_t& dst, FunctionManipulator&& man) noexcept {
@@ -1922,18 +1923,14 @@ class DataManipulatorCluster : public Manipulator {
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move_s(U* src, T* dst, len_t size, FunctionManipulator&& man) const noexcept {
 			if (!src || !dst || size == ZERO_UI64) return LL_FALSE;
-			this->move<U, FunctionManipulator>(src, dst, size, man);
+			this->move<U, FunctionManipulator>(src, dst, size, std::forward<FunctionManipulator>(man));
 			return LL_TRUE;
 		}
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move_s(U* src, T* dst, len_t size) const noexcept {
-			static_assert(std::is_nothrow_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept constructor!");
-			static_assert(std::is_nothrow_destructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept destructor!");
-			static_assert(std::is_copy_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept copy constructor!");
-			static_assert(std::is_copy_assignable_v<FunctionManipulator>, "FunctionManipulator needs a noexcept copy asignable!");
-			static_assert(std::is_move_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept move constructor!");
-			static_assert(std::is_move_assignable_v<FunctionManipulator>, "FunctionManipulator needs a noexcept move asignable!");
-			this->move<U, FunctionManipulator>(src.begin(), dst, math::min<len_t>(src.len(), size), FunctionManipulator());
+			if (!src || !dst || size == ZERO_UI64) return LL_FALSE;
+			this->move<U, FunctionManipulator>(src, dst, size);
+			return LL_TRUE;
 		}
 		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move>
 		constexpr void move_s(U* src, T* dst, len_t size) const noexcept {
@@ -1947,38 +1944,38 @@ class DataManipulatorCluster : public Manipulator {
 		#pragma region FunctionManipulatorAsParameter
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move(U* src, const len_t src_size, Array_t& dst, FunctionManipulator&& man) const noexcept {
-			this->move<U, FunctionManipulator>(src, dst.begin(), math::min<len_t>(src_size, dst.size()), man);
+			this->move<U, FunctionManipulator>(src, dst.begin(), math::min<len_t>(src_size, dst.size()), std::forward<FunctionManipulator>(man));
 		}
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
 		constexpr void move(U* src, const len_t src_size, T(&dst)[N], FunctionManipulator&& man) const noexcept {
-			this->move<U, FunctionManipulator>(src, dst, math::min<len_t>(src_size, N), man);
+			this->move<U, FunctionManipulator>(src, dst, math::min<len_t>(src_size, N), std::forward<FunctionManipulator>(man));
 		}
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move(meta::ArrayPair<U>& src, T* dst, const len_t dst_size, FunctionManipulator&& man) const noexcept {
-			this->move<U, FunctionManipulator>(src, dst.begin(), math::min<len_t>(src.size(), dst_size), man);
+			this->move<U, FunctionManipulator>(src, dst.begin(), math::min<len_t>(src.size(), dst_size), std::forward<FunctionManipulator>(man));
 		}
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
 		constexpr void move(U(&src)[N], T* dst, const len_t dst_size, FunctionManipulator&& man) const noexcept {
-			this->move<U, FunctionManipulator>(src, dst, math::min<len_t>(N, dst_size), man);
+			this->move<U, FunctionManipulator>(src, dst, math::min<len_t>(N, dst_size), std::forward<FunctionManipulator>(man));
 		}
 
 		#pragma endregion
 		#pragma region FunctionManipulatorCreate
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move(U* src, const len_t src_size, Array_t& dst) const noexcept {
-			this->move<U, FunctionManipulator>(src, dst.begin(), math::min<len_t>(src_size, dst.size()), FunctionManipulator());
+			this->move<U, FunctionManipulator>(src, dst.begin(), math::min<len_t>(src_size, dst.size()));
 		}
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
 		constexpr void move(U* src, const len_t src_size, T(&dst)[N]) const noexcept {
-			this->move<U, FunctionManipulator>(src, dst, math::min<len_t>(src_size, N), FunctionManipulator());
+			this->move<U, FunctionManipulator>(src, dst, math::min<len_t>(src_size, N));
 		}
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move(meta::ArrayPair<U>& src, T* dst, const len_t dst_size) const noexcept {
-			this->move<U, FunctionManipulator>(src, dst.begin(), math::min<len_t>(src.size(), dst_size), FunctionManipulator());
+			this->move<U, FunctionManipulator>(src, dst.begin(), math::min<len_t>(src.size(), dst_size));
 		}
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
 		constexpr void move(U(&src)[N], T* dst, const len_t dst_size) const noexcept {
-			this->move<U, FunctionManipulator>(src, dst, math::min<len_t>(N, dst_size), FunctionManipulator());
+			this->move<U, FunctionManipulator>(src, dst, math::min<len_t>(N, dst_size));
 		}
 
 		#pragma endregion

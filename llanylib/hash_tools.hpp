@@ -96,14 +96,14 @@ class HashTool : public hash::HashFunctionPack<HashType, HashGenerator> {
 	public:
 		#pragma region HashArray
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr OptionalHash hashArray(const T* arr) const noexcept {
+		__LL_NODISCARD__ constexpr OptionalHash hashArray(const T* _array) const noexcept {
 			__LL_HASHTOOL_HASHARRAY_ASSERT__(N);
 			if constexpr (N == ZERO_UI64) return std::nullopt;
 			if constexpr (std::is_pointer_v<T>) return std::nullopt;
 			// Calls defined function to hash arrays
 			else if constexpr (std::is_array_v<T>) {
 				using array_type_t = std::remove_extent_t<T>;
-				auto h = this->hashArray<traits::array_size<T>, array_type_t>(*arr++);
+				auto h = this->hashArray<traits::array_size<T>, array_type_t>(*_array++);
 				// If first element hashed is invalid, other elements will be invalid too
 				if (!h.has_value()) return std::nullopt;
 				
@@ -113,41 +113,41 @@ class HashTool : public hash::HashFunctionPack<HashType, HashGenerator> {
 				
 				// Now, we will hash other elements
 				HashType* i = hashes + 1;
-				for (HashType* end = hashes + N; i < end; ++i, ++arr)
-					*i = *this->hashArray<traits::array_size<T>, array_type_t>(*arr);
+				for (HashType* end = hashes + N; i < end; ++i, ++_array)
+					*i = *this->hashArray<traits::array_size<T>, array_type_t>(*_array);
 				
 				// An then hash the hash array
 				return this->hashArray<N>(hashes);
 			}
 			// Hashses values using a converting to chars algorithm, and hashing the string
 			else if constexpr (HashTool::is_convertible_v<T>)
-				return this->hashArray<N, T>(arr);
+				return this->hashArray<N, T>(_array);
 			else if constexpr (hash::__::is_hash_type_v<T> || std::is_same_v<T, HashType>)
-				return this->hashArrayHash<N, T>(arr);
+				return this->hashArrayHash<N, T>(_array);
 			else if constexpr (HashTool::is_convertible_object_v<T>) {
-				auto h = this->hash(*arr++);
+				auto h = this->hash(*_array++);
 				if (!h.has_value()) return hash::INVALID_HASH64;
 				
 				HashType hashes[N]{};
 				hashes[0] = *h;
 				
 				HashType* i = hashes + 1;
-				for (HashType* end = hashes + N; i < end; ++i, ++arr)
-					*i = *this->hashObject(*arr);
+				for (HashType* end = hashes + N; i < end; ++i, ++_array)
+					*i = *this->hashObject(*_array);
 				
 				return this->hashArray<N>(hashes);
 			}
 			//else if constexpr (traits::has_type_operator_v<T, hash::OptionalHash64>) {
 			else if constexpr (traits::has_type_operator_const_v<T, hash::OptionalHash64> || traits::has_type_operator_const_except_v<T, hash::OptionalHash64>) {
-				auto h = (arr++)->operator hash::OptionalHash64();
+				auto h = (_array++)->operator hash::OptionalHash64();
 				if (!h.has_value()) return hash::INVALID_HASH64;
 
 				hash::Hash64 hashes[N]{};
 				hashes[0] = *h;
 
 				hash::Hash64* i = hashes + 1;
-				for (hash::Hash64* end = hashes + N; i < end; ++i, ++arr)
-					*i = *arr->operator hash::OptionalHash64();
+				for (hash::Hash64* end = hashes + N; i < end; ++i, ++_array)
+					*i = *_array->operator hash::OptionalHash64();
 
 				return this->hashArray<N>(hashes);
 			}
@@ -155,22 +155,22 @@ class HashTool : public hash::HashFunctionPack<HashType, HashGenerator> {
 			else {
 				meta::StrTypeid id = traits::getStrTypeId<T>(this->hashFunctionPack.getStrPairHash64Function());
 
-				auto h = this->hashFunctionPack.call(arr++, id);
+				auto h = this->hashFunctionPack.call(_array++, id);
 				if (!h.has_value()) return hash::INVALID_HASH64;
 
 				hash::Hash64 hashes[N]{};
 				hashes[0] = *h;
 
 				hash::Hash64* i = hashes + 1;
-				for (hash::Hash64* end = hashes + N; i < end; ++i, ++arr)
-					*i = *this->hashFunctionPack.call(arr, id);
+				for (hash::Hash64* end = hashes + N; i < end; ++i, ++_array)
+					*i = *this->hashFunctionPack.call(_array, id);
 
 				return this->hashArray<N>(hashes);
 			}
 		}
 		template<class T, len_t N>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const T(&arr)[N]) const noexcept {
-			return this->hashArray<N, T>(arr);
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hashArray(const T(&_array)[N]) const noexcept {
+			return this->hashArray<N, T>(_array);
 		}
 		// Predefined hasheables
 		template<len_t N>
@@ -287,23 +287,23 @@ class HashTool {
 		#pragma endregion
 		#pragma region HashHashArray
 		template<class T, len_t N>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T(&arr)[N]) const noexcept {
-			return this->hash_hashArray<N, T>(arr);
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T(&_array)[N]) const noexcept {
+			return this->hash_hashArray<N, T>(_array);
 		}
 		// Hashes objects individually and then hash all as one
 		template<len_t N, class T>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T* arr) const noexcept {
+		__LL_NODISCARD__ constexpr hash::OptionalHash64 hash_hashArray(const T* _array) const noexcept {
 			if constexpr (N == ZERO_UI64) return hash::INVALID_HASH64;
 
-			auto h = this->hashArray<1, T>(arr++);
+			auto h = this->hashArray<1, T>(_array++);
 			if (!h.has_value()) return hash::INVALID_HASH64;
 
 			hash::Hash64 hashes[N]{};
 			hashes[0] = *h;
 
 			hash::Hash64* i = hashes + 1;
-			for (hash::Hash64* end = hashes + N; i < end; ++i, ++arr)
-				*i = *this->hashArray<1, T>(arr);
+			for (hash::Hash64* end = hashes + N; i < end; ++i, ++_array)
+				*i = *this->hashArray<1, T>(_array);
 
 			return this->hashArray<N>(hashes);
 		}

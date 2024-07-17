@@ -1468,6 +1468,8 @@ class DataManipulatorCluster : public Manipulator {
 		using Array_t = meta::Array<T>;
 
 		using SwapFunc = void(Manipulator::*)(T&, T&) const noexcept;
+		using MoveFunc = void(Manipulator::*)(T&, T&) const noexcept;
+
 		template<class W>
 		using CopySignature = void(*)(T&, W) noexcept;
 		template<class U>
@@ -1488,6 +1490,8 @@ class DataManipulatorCluster : public Manipulator {
 
 		static_assert(algorithm::__::has_swap_function_v<Manipulator, SwapFunc>,
 			"Manipulator::swap() const noexcept is required by default! Non const function is optional");
+		static_assert(algorithm::__::has_swap_function_v<Manipulator, MoveFunc>,
+			"Manipulator::move() const noexcept is required by default! Non const function is optional");
 
 	#pragma endregion
 	#pragma region Functions
@@ -1600,7 +1604,7 @@ class DataManipulatorCluster : public Manipulator {
 			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, CopyFunction>,
 				"FunctionManipulator::copy() const noexcept is required!");
 
-			for (; dst <= end; ++dst)
+			for (; dst < end; ++dst)
 				man.copy(*dst, object);
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
@@ -1615,7 +1619,7 @@ class DataManipulatorCluster : public Manipulator {
 		}
 		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
 		constexpr void fill(T* dst, T* end, W object) const noexcept {
-			for (; dst <= end; ++dst)
+			for (; dst < end; ++dst)
 				COPY(*dst, object);
 		}
 
@@ -1666,7 +1670,7 @@ class DataManipulatorCluster : public Manipulator {
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
 		constexpr void fill(T(&dst)[N], W object) const noexcept {
-			this->fill<U, W, FunctionManipulator>(dst, dst + N - 1, object);
+			this->fill<U, W, FunctionManipulator>(dst, dst + N, object);
 		}
 
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
@@ -1675,7 +1679,7 @@ class DataManipulatorCluster : public Manipulator {
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
 		constexpr ll_bool_t fill_s(T(&dst)[N], W object) const noexcept {
-			return this->fill_s<U, W, FunctionManipulator>(dst, dst + N - 1, object);
+			return this->fill_s<U, W, FunctionManipulator>(dst, dst + N, object);
 		}
 
 		#pragma endregion
@@ -1686,7 +1690,7 @@ class DataManipulatorCluster : public Manipulator {
 		}
 		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>, len_t N>
 		constexpr void fill(T(&dst)[N], W object) const noexcept {
-			this->fill<U, W, COPY>(dst, dst + N - 1, object);
+			this->fill<U, W, COPY>(dst, dst + N, object);
 		}
 
 		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
@@ -1695,7 +1699,7 @@ class DataManipulatorCluster : public Manipulator {
 		}
 		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>, len_t N>
 		constexpr void fill_s(T(&dst)[N], W object) const noexcept {
-			return this->fill_s<U, W, COPY>(dst, dst + N - 1, object);
+			return this->fill_s<U, W, COPY>(dst, dst + N, object);
 		}
 
 		#pragma endregion
@@ -1888,9 +1892,9 @@ class DataManipulatorCluster : public Manipulator {
 		#pragma region Baase
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move(U* src, T* dst, len_t size, FunctionManipulator&& man) const noexcept {
-			using MoveFunction = void(FunctionManipulator::*)(T&, T&) const noexcept;
-			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, CopyFunction>,
-				"MoveFunction::move() const noexcept is required!");
+			using MoveFunction = void(FunctionManipulator::*)(T&, U&) const noexcept;
+			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, MoveFunction>,
+				"FunctionManipulator::move() const noexcept is required!");
 
 			for (; size > ZERO_UI64; ++src, ++dst, --size)
 				man.move(*dst, *src);
@@ -1905,7 +1909,7 @@ class DataManipulatorCluster : public Manipulator {
 			static_assert(std::is_move_assignable_v<FunctionManipulator>, "FunctionManipulator needs a noexcept move asignable!");
 			this->move<U, FunctionManipulator>(src.begin(), dst, math::min<len_t>(src.len(), size), FunctionManipulator());
 		}
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr void move(U* src, T* dst, len_t size) const noexcept {
 			for (; size > ZERO_UI64; ++src, ++dst, --size)
 				COPY(*dst, *src);
@@ -1923,7 +1927,7 @@ class DataManipulatorCluster : public Manipulator {
 			this->move<U, FunctionManipulator>(src, dst, size);
 			return LL_TRUE;
 		}
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr void move_s(U* src, T* dst, len_t size) const noexcept {
 			if (!src || !dst || size == ZERO_UI64) return;
 			for (; size > ZERO_UI64; ++src, ++dst, --size)
@@ -2004,36 +2008,36 @@ class DataManipulatorCluster : public Manipulator {
 
 		#pragma endregion
 		#pragma region StaticFunction
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr void move(U* src, const len_t src_size, Array_t& dst) const noexcept {
 			this->move<U, MOVE>(src, dst.begin(), math::min<len_t>(src_size, dst.size()), FunctionManipulator());
 		}
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move, len_t N>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>, len_t N>
 		constexpr void move(U* src, const len_t src_size, T(&dst)[N]) const noexcept {
 			this->move<U, MOVE>(src, dst, math::min<len_t>(src_size, N), FunctionManipulator());
 		}
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr void move(meta::ArrayPair<U>& src, T* dst, const len_t dst_size) const noexcept {
 			this->move<U, MOVE>(src, dst.begin(), math::min<len_t>(src.size(), dst_size), FunctionManipulator());
 		}
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move, len_t N>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>, len_t N>
 		constexpr void move(U(&src)[N], T* dst, const len_t dst_size) const noexcept {
 			this->move<U, MOVE>(src, dst, math::min<len_t>(N, dst_size), FunctionManipulator());
 		}
 
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr ll_bool_t move_s(U* src, const len_t src_size, Array_t& dst) const noexcept {
 			return this->move_s<U, MOVE>(src, dst.begin(), math::min<len_t>(src_size, dst.size()), FunctionManipulator());
 		}
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move, len_t N>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>, len_t N>
 		constexpr ll_bool_t move_s(U* src, const len_t src_size, T(&dst)[N]) const noexcept {
 			return this->move_s<U, MOVE>(src, dst, math::min<len_t>(src_size, N), FunctionManipulator());
 		}
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr ll_bool_t move_s(meta::ArrayPair<U>& src, T* dst, const len_t dst_size) const noexcept {
 			return this->move_s<U, MOVE>(src, dst.begin(), math::min<len_t>(src.size(), dst_size), FunctionManipulator());
 		}
-		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move, len_t N>
+		template<class U = T, MoveSignature<U> MOVE = meta::common::simple_move<T, U>, len_t N>
 		constexpr ll_bool_t move_s(U(&src)[N], T* dst, const len_t dst_size) const noexcept {
 			return this->move_s<U, MOVE>(src, dst, math::min<len_t>(N, dst_size), FunctionManipulator());
 		}
@@ -2043,63 +2047,332 @@ class DataManipulatorCluster : public Manipulator {
 		#pragma endregion
 		#pragma region ShiftLeft
 	public:
+		#pragma region Base
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
-		constexpr void shiftLeft(T* _array, const len_t size, const len_t first, len_t num, W null, FunctionManipulator&& man) noexcept {
+		constexpr void shiftLeft(T* _array, T* last, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
 			using CopyFunction = void(FunctionManipulator::*)(T&, W) const noexcept;
 			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, CopyFunction>,
 				"FunctionManipulator::copy() const noexcept is required!");
 
-			if (first + num >= size) num = size - first - 1ull;
+			// First: 3
+			// Num: 2
+			// size: 10
+			// [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+			// [0, 3, 4, 5, 6, 7, 8, 9, n, n]
+			// 
+			// 
+			// [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+			//	   ^	 ^
+			//	 begin  end
+			// First element of the array to move
+			T* begin = _array + first - num;
+			// Last element of the array to move (some of the end of the list)
+			T* end = _array + first;
 
-			len_t size_loop = size - num;
-			T* last = _array + size_loop;
-			for (T* src = _array + num; _array < last; ++_array, ++src)
-				man.copy(*_array, *src);
+			// Error -> move to shiftLeft_s
+			//if (begin < _array) return;
 
-			last += num - 1ull;
-			this->fill<U, W, FunctionManipulator>(_array, last, null, man);
+			// Here we will use move (usually is faster than copy, and its more accurate)
+			for (; end < last; ++begin, ++end)
+				this->move(*begin, *end);
+
+			// Here we will use copy
+			this->fill<U, W, FunctionManipulator>(last - num, last, null, std::forward<FunctionManipulator>(man));
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
-		constexpr void shiftLeft(Array_t& _array, const len_t first, const len_t num, W null) noexcept {
+		constexpr void shiftLeft(T* _array, T* last, const len_t first, const len_t num, W null) const noexcept {
 			static_assert(std::is_nothrow_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept constructor!");
 			static_assert(std::is_nothrow_destructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept destructor!");
 			static_assert(std::is_copy_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept copy constructor!");
 			static_assert(std::is_copy_assignable_v<FunctionManipulator>, "FunctionManipulator needs a noexcept copy asignable!");
 			static_assert(std::is_move_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept move constructor!");
 			static_assert(std::is_move_assignable_v<FunctionManipulator>, "FunctionManipulator needs a noexcept move asignable!");
-			this->shiftLeft<U, W, FunctionManipulator>(_array.begin(), _array.len(), first, num, null, FunctionManipulator());
+			this->shiftLeft<U, W, FunctionManipulator>(_array, last, first, num, null, FunctionManipulator());
 		}
 		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
-		constexpr void shiftLeft(T(&_array)[N], const len_t first, const len_t num, W null) noexcept {
-			if (first + num >= size) num = size - first - 1ull;
+		constexpr void shiftLeft(T* _array, const len_t size, const len_t first, const len_t num, W null) const noexcept {
+			T* begin = _array + first - num;
+			// Last element of the array to move (some of the end of the list)
+			T* end = _array + first;
 
-			len_t size_loop = size - num;
+			// Error -> move to shiftLeft_s
+			//if (begin < _array) return;
+
+			// Here we will use move (usually is faster than copy, and its more accurate)
+			for (; end < last; ++begin, ++end)
+				this->move(*begin, *end);
+
+			// Here we will use copy
+			this->fill<U, W, COPY>(last - num, last, null);
+		}
+
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr ll_bool_t shiftLeft_s(T* _array, T* last, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			// First element in array must be first
+			// And last, must be last
+			if (_array > last) return LL_FALSE;
+			// Also, num cannot be 0
+			if (num != ZERO_UI64) return LL_FALSE;
+			/// First: 1
+			/// Num: 3
+			/// size: 10
+			/// [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]				->
+			/// [x, x, x, x, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]	->
+			/// [x, x, 1, 2, 3, 4, 5, 6, 7, 8, 9, n, n, n]	->
+			/// [3, 4, 5, 6, 7, 8, 9, n, n, n]				->
+			/// 
+			/// 
+			/// [x, x, x, x, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+			///		   ^		^
+			///		begin		end
+			/// First element of the array to move
+			// Number of items to move to left could not be greater than the position of the first element
+			// If so, we update the values
+			if (num > first) first = num;
+			this->shiftLeft<U, W, FunctionManipulator>(_array, last, first, num, null, std::forward<FunctionManipulator>(man));
+			return LL_TRUE;
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr ll_bool_t shiftLeft_s(T* _array, T* last, const len_t first, const len_t num, W null) const noexcept {
+			if (_array > last) return LL_FALSE;
+			if (num != ZERO_UI64) return LL_FALSE;
+			if (num > first) first = num;
+			this->shiftLeft<U, W, FunctionManipulator>(_array, last, first, num, null);
+			return LL_TRUE;
+		}
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
+		constexpr ll_bool_t shiftLeft_s(T* _array, const len_t size, const len_t first, const len_t num, W null) const noexcept {
+			if (_array > last) return LL_FALSE;
+			if (num != ZERO_UI64) return LL_FALSE;
+			if (num > first) first = num;
+			this->shiftLeft<U, W, COPY>(_array, last, first, num, null);
+			return LL_TRUE;
+		}
+
+		#pragma endregion
+		#pragma region FunctionManipulatorAsParameter
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr void shiftLeft(Array_t& _array, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			this->shiftLeft<U, W, FunctionManipulator>(_array.begin(), _array.end(), first, num, null, std::forward<FunctionManipulator>(man));
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
+		constexpr void shiftLeft(T(&_array), const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			this->shiftLeft<U, W, FunctionManipulator>(_array, _array + N, first, num, null, std::forward<FunctionManipulator>(man));
+		}
+
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr ll_bool_t shiftLeft_s(Array_t& _array, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			return this->shiftLeft_s<U, W, FunctionManipulator>(_array.begin(), _array.end(), first, num, null, std::forward<FunctionManipulator>(man));
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
+		constexpr ll_bool_t shiftLeft_s(T(&_array), const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			return this->shiftLeft_s<U, W, FunctionManipulator>(_array, _array + N, first, num, null, std::forward<FunctionManipulator>(man));
+		}
+
+		#pragma endregion
+		#pragma region FunctionManipulatorCreate
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr void shiftLeft(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
+			this->shiftLeft<U, W, FunctionManipulator>(_array.begin(), _array.end(), first, num, null);
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
+		constexpr void shiftLeft(T(&_array), const len_t first, const len_t num, W null) const noexcept {
+			this->shiftLeft<U, W, FunctionManipulator>(_array, _array + N, first, num, null);
+		}
+
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr ll_bool_t shiftLeft_s(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
+			return this->shiftLeft_s<U, W, FunctionManipulator>(_array.begin(), _array.end(), first, num, null);
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
+		constexpr ll_bool_t shiftLeft_s(T(&_array), const len_t first, const len_t num, W null) const noexcept {
+			return this->shiftLeft_s<U, W, FunctionManipulator>(_array, _array + N - 1, first, num, null);
+		}
+
+		#pragma endregion
+		#pragma region StaticFunction
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
+		constexpr void shiftLeft(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
+			this->shiftLeft<U, W, COPY>(_array.begin(), _array.end(), first, num, null);
+		}
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>, len_t N>
+		constexpr void shiftLeft(T(&_array), const len_t first, const len_t num, W null) const noexcept {
+			this->shiftLeft<U, W, COPY>(_array, _array + N, first, num, null);
+		}
+
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
+		constexpr ll_bool_t shiftLeft_s(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
+			return this->shiftLeft_s<U, W, COPY>(_array.begin(), _array.end(), first, num, null);
+		}
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>, len_t N>
+		constexpr ll_bool_t shiftLeft_s(T(&_array), const len_t first, const len_t num, W null) const noexcept {
+			return this->shiftLeft_s<U, W, COPY>(_array, _array + N, first, num, null);
+		}
+
+		#pragma endregion
+		#pragma endregion
+
+		#pragma region ShiftRight
+	public:
+		#pragma region Base
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr void shiftRight(T* _array, T* last, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			using CopyFunction = void(FunctionManipulator::*)(T&, W) const noexcept;
+			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, CopyFunction>,
+				"FunctionManipulator::copy() const noexcept is required!");
+
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr void shiftRight(T* _array, T* last, const len_t first, const len_t num, W null) const noexcept {
+			static_assert(std::is_nothrow_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept constructor!");
+			static_assert(std::is_nothrow_destructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept destructor!");
+			static_assert(std::is_copy_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept copy constructor!");
+			static_assert(std::is_copy_assignable_v<FunctionManipulator>, "FunctionManipulator needs a noexcept copy asignable!");
+			static_assert(std::is_move_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept move constructor!");
+			static_assert(std::is_move_assignable_v<FunctionManipulator>, "FunctionManipulator needs a noexcept move asignable!");
+			this->shiftRight<U, W, FunctionManipulator>(_array, last, first, num, null, FunctionManipulator());
+		}
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
+		constexpr void shiftRight(T* _array, const len_t size, const len_t first, const len_t num, W null) const noexcept {
+			
+		}
+
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr ll_bool_t shiftRight_s(T* _array, T* last, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			//this->shiftRight<U, W, FunctionManipulator>(_array, last, first, num, null, std::forward<FunctionManipulator>(man));
+			return LL_TRUE;
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr ll_bool_t shiftRight_s(T* _array, T* last, const len_t first, const len_t num, W null) const noexcept {
+			//this->shiftRight<U, W, FunctionManipulator>(_array, last, first, num, null);
+			return LL_TRUE;
+		}
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
+		constexpr ll_bool_t shiftRight_s(T* _array, const len_t size, const len_t first, const len_t num, W null) const noexcept {
+			//this->shiftRight<U, W, COPY>(_array, last, first, num, null);
+			return LL_TRUE;
+		}
+
+		#pragma endregion
+		#pragma region FunctionManipulatorAsParameter
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr void shiftRight(Array_t& _array, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			this->shiftRight<U, W, FunctionManipulator>(_array.begin(), _array.end(), first, num, null, std::forward<FunctionManipulator>(man));
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
+		constexpr void shiftRight(T(&_array), const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			this->shiftRight<U, W, FunctionManipulator>(_array, _array + N, first, num, null, std::forward<FunctionManipulator>(man));
+		}
+
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr ll_bool_t shiftRight_s(Array_t& _array, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			return this->shiftRight_s<U, W, FunctionManipulator>(_array.begin(), _array.end(), first, num, null, std::forward<FunctionManipulator>(man));
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
+		constexpr ll_bool_t shiftRight_s(T(&_array), const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			return this->shiftRight_s<U, W, FunctionManipulator>(_array, _array + N, first, num, null, std::forward<FunctionManipulator>(man));
+		}
+
+		#pragma endregion
+		#pragma region FunctionManipulatorCreate
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr void shiftRight(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
+			this->shiftRight<U, W, FunctionManipulator>(_array.begin(), _array.end(), first, num, null);
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
+		constexpr void shiftRight(T(&_array), const len_t first, const len_t num, W null) const noexcept {
+			this->shiftRight<U, W, FunctionManipulator>(_array, _array + N, first, num, null);
+		}
+
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr ll_bool_t shiftRight_s(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
+			return this->shiftRight_s<U, W, FunctionManipulator>(_array.begin(), _array.end(), first, num, null);
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>, len_t N>
+		constexpr ll_bool_t shiftRight_s(T(&_array), const len_t first, const len_t num, W null) const noexcept {
+			return this->shiftRight_s<U, W, FunctionManipulator>(_array, _array + N - 1, first, num, null);
+		}
+
+		#pragma endregion
+		#pragma region StaticFunction
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
+		constexpr void shiftRight(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
+			this->shiftRight<U, W, COPY>(_array.begin(), _array.end(), first, num, null);
+		}
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>, len_t N>
+		constexpr void shiftRight(T(&_array), const len_t first, const len_t num, W null) const noexcept {
+			this->shiftRight<U, W, COPY>(_array, _array + N, first, num, null);
+		}
+
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
+		constexpr ll_bool_t shiftRight_s(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
+			return this->shiftRight_s<U, W, COPY>(_array.begin(), _array.end(), first, num, null);
+		}
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>, len_t N>
+		constexpr ll_bool_t shiftRight_s(T(&_array), const len_t first, const len_t num, W null) const noexcept {
+			return this->shiftRight_s<U, W, COPY>(_array, _array + N, first, num, null);
+		}
+
+		#pragma endregion
+		#pragma endregion
+
+
+		#pragma region ShiftRight
+		/*template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr void shifRight(T* _array, const len_t size, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
+			using CopyFunction = void(FunctionManipulator::*)(T&, W) const noexcept;
+			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, CopyFunction>,
+				"FunctionManipulator::copy() const noexcept is required!");
+
+			if (size_loop >= size) num = size - first - 1ull;
+			len_t size_loop = first + num;
+
+			T* dst = _array + size - 1ull;
 			T* last = _array + size_loop;
-			for (T* src = _array + num; _array < last; ++_array, ++src)
-				COPY(*_array, *src);
+			for (T* src = dst - num; dst >= last; --dst, --src)
+				man.copy(*dst, *src);
+			this->fill<U, W, FunctionManipulator>(_array + first, --last, null, std::forward<FunctionManipulator>(man));
+		}
+		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
+		constexpr void shifRight(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
+			static_assert(std::is_nothrow_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept constructor!");
+			static_assert(std::is_nothrow_destructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept destructor!");
+			static_assert(std::is_copy_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept copy constructor!");
+			static_assert(std::is_copy_assignable_v<FunctionManipulator>, "FunctionManipulator needs a noexcept copy asignable!");
+			static_assert(std::is_move_constructible_v<FunctionManipulator>, "FunctionManipulator needs a noexcept move constructor!");
+			static_assert(std::is_move_assignable_v<FunctionManipulator>, "FunctionManipulator needs a noexcept move asignable!");
+			this->shifRight<U, W, FunctionManipulator>(_array.begin(), _array.len(), first, num, null, FunctionManipulator());
+		}
+		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
+		constexpr void shifRight(T(&_array)[N], const len_t first, const len_t num, W null) const noexcept {
+			if (size_loop >= size) num = size - first - 1ull;
+			len_t size_loop = first + num;
 
-			last += num - 1ull;
-			this->fill<U, W, COPY>(_array, last, null, man);
+			T* dst = _array + size - 1ull;
+			T* last = _array + size_loop;
+			for (T* src = dst - num; dst >= last; --dst, --src)
+				COPY(*dst, *src);
+			this->fill<U, W, COPY>(_array + first, --last, null);
 		}
 
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
-		constexpr ll_bool_t shiftLeft_s(T* _array, const len_t size, const len_t first, len_t num, W null, FunctionManipulator&& man) noexcept {
+		constexpr ll_bool_t shiftRight_s(T* _array, const len_t size, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
 			if (!_array || size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return LL_FALSE;
-			this->shiftLeft<U, W, FunctionManipulator>(_array, size, first, num, null, std::forward<FunctionManipulator>(man));
+			this->shifRight<U, W, FunctionManipulator>(_array, size, first, num, null, std::forward<FunctionManipulator>(man));
 			return LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
-		constexpr void shiftLeft_s(Array_t& _array, const len_t first, const len_t num, W null) noexcept {
+		constexpr void shiftRight_s(Array_t& _array, const len_t first, const len_t num, W null) const noexcept {
 			if (!_array || size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return LL_FALSE;
-			this->shiftLeft<U, W, FunctionManipulator>(_array.begin(), _array.len(), first, num, null);
+			this->shifRight<U, W, FunctionManipulator>(_array.begin(), _array.len(), first, num, null);
 			return LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, CopySignature<W> COPY = meta::common::simple_set<T, W>>
-		constexpr void shiftLeft_s(T(&_array)[N], const len_t first, const len_t num, W null) noexcept {
+		constexpr void shiftRight_s(T(&_array)[N], const len_t first, const len_t num, W null) const noexcept {
 			if (!_array || size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return LL_FALSE;
-			this->shiftLeft<U, W, COPY>(_array, size, first, num, null);
+			this->shifRight<U, W, COPY>(_array, size, first, num, null);
 			return LL_TRUE;
-		}
+		}*/
 
 		#pragma endregion
 
@@ -2108,37 +2381,6 @@ class DataManipulatorCluster : public Manipulator {
 	
 	#pragma endregion
 
-
-
-
-	#pragma region ShiftRight
-	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
-	constexpr void shifRight(T* _array, const len_t size, const len_t first, len_t num, W null) noexcept {
-		using CopyFunction = fnc_clss::SetFunction<T, W>;
-		static_assert(std::is_same_v<CopyFunction, decltype(&FunctionManipulator::copy)>,
-			"FunctionManipulator::copy needs to be the same type as CopyFunction!");
-
-		if (!_array || size <= 1ull || num == ZERO_UI64 || first < ZERO_UI64 || first >= size) return;
-
-		len_t size_loop = first + num;
-		if (size_loop >= size) num = size - first - 1ull;
-
-		T* dst = _array + size - 1ull;
-		T* last = _array + size_loop;
-		for (T* src = dst - num; dst >= last ; --dst, --src)
-			FunctionManipulator::copy(*dst, *src);
-		this->fill<U, W, FunctionManipulator>(_array + first, --last, null);
-	}
-	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>>
-	constexpr void shifRight(Array_t& _array, const len_t first, const len_t num, W null) noexcept {
-		this->shifRight<U, W, FunctionManipulator>(_array.begin(), _array.len(), first, num, null);
-	}
-	template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = CompareDefault<T, U>, len_t N>
-	constexpr void shifRight(T(&_array)[N], const len_t first, const len_t num, W null) noexcept {
-		this->shifRight<U, W, FunctionManipulator>(_array, N, first, num, null);
-	}
-
-	#pragma endregion
 	#pragma region Qsort
 	//template<class T, class U = traits::template_types<T>>
 	//constexpr T* qsort_div(

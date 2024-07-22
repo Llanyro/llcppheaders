@@ -78,6 +78,13 @@ constexpr void simple_set(T& v1, U v2) noexcept { v1 = v2; }
 template<class T, class U = T>
 constexpr void simple_move(T& v1, U& v2) noexcept { v1 = std::move(v2); }
 
+// Src will point to nullptr
+template<class T>
+constexpr void copy_n_set(T*& dst, T*& src, T* set_val = LL_NULLPTR) noexcept {
+	dst = src;
+	src = LL_NULLPTR;
+}
+
 } // namespace common
 } // namespace meta
 } // namespace llcpp

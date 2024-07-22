@@ -49,6 +49,9 @@
     <Filter Include="Source Files\utils\parser">
       <UniqueIdentifier>{145643bb-e34c-48f5-8cd1-0741536b838b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\utils\lists\node">
+      <UniqueIdentifier>{d3599bd6-91d0-4998-a4b3-ca69ecac673b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\llanylib.hpp">
@@ -120,9 +123,6 @@
     <ClInclude Include="examples\mathExample.hpp">
       <Filter>Source Files\examples</Filter>
     </ClInclude>
-    <ClInclude Include="Node.hpp">
-      <Filter>Source Files\utils\lists\linked</Filter>
-    </ClInclude>
     <ClInclude Include="ArrayPair.hpp">
       <Filter>Source Files\utils\lists</Filter>
     </ClInclude>
@@ -179,6 +179,18 @@
     </ClInclude>
     <ClInclude Include="mem.hpp">
       <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.hpp">
+      <Filter>Source Files\utils\lists\node</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeNext.hpp">
+      <Filter>Source Files\utils\lists\node</Filter>
+    </ClInclude>
+    <ClInclude Include="NodePrev.hpp">
+      <Filter>Source Files\utils\lists\node</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeDouble.hpp">
+      <Filter>Source Files\utils\lists\node</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

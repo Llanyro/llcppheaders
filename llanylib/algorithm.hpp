@@ -103,9 +103,6 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_move_function_v = has_move_function<Cl
 
 } // namespace __
 
-constexpr len_t MAX_LIST_SIZE = static_cast<len_t>(-1);
-constexpr len_t npos = MAX_LIST_SIZE;
-
 #pragma region Comparators
 template<class T, class U, class result_t, result_t _NULL_RESULT_>
 class CompareData {

@@ -196,6 +196,15 @@ constexpr f128 ZERO_F128 = 0.0l;
 
 constexpr cmp_t ZERO_CMP = ZERO_I32;
 
+namespace meta {
+namespace algorithm {
+
+constexpr len_t MAX_LIST_SIZE = static_cast<len_t>(-1);
+constexpr len_t npos = MAX_LIST_SIZE;
+
+} // namespace algorithm
+} // namespace meta
+
 #pragma endregion
 #pragma region Types
 namespace meta {

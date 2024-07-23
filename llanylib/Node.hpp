@@ -23,6 +23,8 @@
 
 #include "traits.hpp"
 
+#include <utility>
+
 #if !defined(__debug_error_nullptr_str)
 #define __debug_error_nullptr_str(ptr, str)
 #endif
@@ -118,11 +120,41 @@ class BaseNode {
 	#pragma endregion
 };
 
+class Test : public BaseNode<Test> {
+
+};
+
+class Func {
+	public:
+		__LL_NODISCARD__ constexpr ll_bool_t nodeChecker(const Test* a) const noexcept {
+			return LL_FALSE;
+		}
+};
+
+//	Extra functions for nodes with only one link (ex: single linked list)
+// 
+//	Any function that reqires an argument like "end" is processed too if is not nullptr
+//	If is nullptr, all elements in list will be processed until nullptr is found!
+//	Careful with circular lists
+// 
+//	All funtions that has a counterpart that is "functionname_s" works this way
+//		If is a secure function, checks if "this" pointer is null or not (if so, returns a default value)
+//		If is not, if macro "_DEBUG" is defined and if "this" pointer is null, will call __debug_error_nullptr_str
+//			to notify user by logger or similar (defined by user) that is nullptr, but will continue the function
+//			behabiour without exiting function (it may crash at that moment)
+//
 template <class NodeType, class NodeFunctions>
-class NodeTools : public NodeFunctions {
+class NodeTools : public BaseNode<NodeType>, public NodeFunctions {
 	#pragma region Types
 	public:
-		using NodeCheckerSignature = ll_bool_t(NodeFunctions::*)(NodeType*) const noexcept;
+		using type = NodeType;
+		using BaseNode = BaseNode<NodeType>;
+
+		using NodeTypeUsed = NodeType;
+		//using NodeTypeUsed = NodeTools;
+		using NodePack = std::pair<NodeTypeUsed*, NodeTypeUsed*>;
+		using NodePackConst = std::pair<const NodeTypeUsed*, const NodeTypeUsed*>;
+		using NodeCheckerSignature = ll_bool_t(NodeFunctions::*)(const NodeTypeUsed*) const noexcept;
 
 	#pragma endregion
 	#pragma region Assersts
@@ -147,31 +179,32 @@ class NodeTools : public NodeFunctions {
 	#pragma region Functions
 		#pragma region Contructors
 	public:
-		constexpr NodeTools() noexcept : NodeFunctions() {}
+		constexpr NodeTools() noexcept : BaseNode(), NodeFunctions() {}
 		template<class... Args>
-		constexpr NodeTools(Args&&... args) noexcept : NodeFunctions(std::forward<Args>(args)...) {}
+		constexpr NodeTools(NodeType* _node, Args&&... args) noexcept
+			: BaseNode(_node), NodeFunctions(std::forward<Args>(args)...) {}
 		constexpr ~NodeTools() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr NodeTools(const NodeTools& other) noexcept : NodeFunctions(other) {}
+		constexpr NodeTools(const NodeTools& other) noexcept : BaseNode(), NodeFunctions(other) {}
 		constexpr NodeTools& operator=(const NodeTools& other) noexcept {
 			NodeFunctions::operator=(other);
 			return *this;
 		}
-		constexpr NodeTools(NodeTools&& other) noexcept : NodeFunctions(std::move(other)) {}
+		constexpr NodeTools(NodeTools&& other) noexcept : BaseNode(), NodeFunctions(std::move(other)) {}
 		constexpr NodeTools& operator=(NodeTools&& other) noexcept {
 			NodeFunctions::operator=(std::move(other));
 			return *this;
 		}
 
-		constexpr NodeTools(const NodeFunctions& other) noexcept : NodeFunctions(other) {}
+		constexpr NodeTools(const NodeFunctions& other) noexcept : BaseNode(), NodeFunctions(other) {}
 		constexpr NodeTools& operator=(const NodeFunctions& other) noexcept {
 			NodeFunctions::operator=(other);
 			return *this;
 		}
-		constexpr NodeTools(NodeFunctions&& other) noexcept : NodeFunctions(std::move(other)) {}
+		constexpr NodeTools(NodeFunctions&& other) noexcept : BaseNode(), NodeFunctions(std::move(other)) {}
 		constexpr NodeFunctions& operator=(NodeFunctions&& other) noexcept {
 			NodeFunctions::operator=(std::move(other));
 			return *this;
@@ -185,99 +218,375 @@ class NodeTools : public NodeFunctions {
 
 		#pragma endregion
 		#pragma region ClassFunctions
-	protected:
-		constexpr void link_impl(NodeType* left, NodeType* right) const noexcept {
-			left->setNext(right);
+		#pragma region Link
+	public:
+		constexpr void linkLeft(NodeTypeUsed* right) noexcept { this->set(right); }
+		static constexpr void link(NodeTypeUsed* left, NodeTypeUsed* right) noexcept {
+			left->set(right);
 		}
-		__LL_NODISCARD__ constexpr NodeType* find_impl(NodeType* begin, NodeType* end) const noexcept {
+
+		#pragma endregion
+		#pragma region Find
+	private:
+		__LL_NODISCARD__ constexpr NodeTypeUsed* find_impl(const NodeTypeUsed* end) noexcept {
+			NodeTypeUsed* begin = this;
 			while (begin != end) {
 				if (this->nodeChecker(begin)) return begin;
-				else begin = begin->getNext();
+				else begin = begin->get();
 			}
-			return begin;
+			// Also check end
+			return (begin && this->nodeChecker(begin)) ? begin : LL_NULLPTR;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t all_impl(NodeType* begin, NodeType* end) const noexcept {
+		__LL_NODISCARD__ constexpr const NodeTypeUsed* find_impl(const NodeTypeUsed* end) const noexcept {
+			const NodeTypeUsed* begin = this;
 			while (begin != end) {
-				if (!this->nodeChecker(begin)) return LL_FALSE;
-				else begin = begin->getNext();
+				if (this->nodeChecker(begin)) return begin;
+				else begin = begin->get();
 			}
-			return LL_TRUE;
+			// Also check end
+			return (begin && this->nodeChecker(begin)) ? begin : LL_NULLPTR;
 		}
 
 	public:
-		constexpr void link(NodeType* left, NodeType* right) const noexcept {
+		__LL_NODISCARD__ constexpr NodeTypeUsed* find(const NodeTypeUsed* end) noexcept {
 #if defined(_DEBUG)
-			if (!left) __debug_error_nullptr_str(left, "left");
-			if (!right) __debug_error_nullptr_str(right, "right");
+			if (!this) __debug_error_nullptr_str(this, "this");
 #endif // _DEBUG
 
-			this->link_impl(left, right);
+			return this->find_impl(end);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t link_s(NodeType* left, NodeType* right) const noexcept {
-			if (!left || !right) return LL_FALSE;
-			this->link_impl(left, right);
-			return LL_TRUE;
-		}
-
-		__LL_NODISCARD__ constexpr NodeType* find(NodeType* begin, NodeType* end) const noexcept {
+		__LL_NODISCARD__ constexpr const NodeTypeUsed* find(const NodeTypeUsed* end) const noexcept {
 #if defined(_DEBUG)
-			if (!begin) __debug_error_nullptr_str(begin, "begin");
-			if (!end) __debug_error_nullptr_str(end, "end");
+			if (!this) __debug_error_nullptr_str(this, "this");
 #endif // _DEBUG
 
-			return this->find_impl(begin, end);
+			return this->find_impl(end);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t contains(NodeType* begin, NodeType* end) const noexcept {
+		__LL_NODISCARD__ constexpr NodeTypeUsed* find_s(const NodeTypeUsed* end) noexcept {
+			if (!this) return LL_NULLPTR;
+			return this->find_impl(end);
+		}
+		__LL_NODISCARD__ constexpr const NodeTypeUsed* find_s(const NodeTypeUsed* end) const noexcept {
+			if (!this) return LL_NULLPTR;
+			return this->find_impl(end);
+		}
+
+		#pragma endregion
+		#pragma region Contains
+	private:
+		__LL_NODISCARD__ constexpr ll_bool_t contains_impl(const NodeTypeUsed* end) noexcept {
+			return static_cast<ll_bool_t>(this->find_impl(end));
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t contains_impl(const NodeTypeUsed* end) const noexcept {
+			return static_cast<ll_bool_t>(this->find_impl(end));
+		}
+
+	public:
+		__LL_NODISCARD__ constexpr ll_bool_t contains(const NodeTypeUsed* end) noexcept {
 #if defined(_DEBUG)
-			if (!begin) __debug_error_nullptr_str(begin, "begin");
-			if (!end) __debug_error_nullptr_str(end, "end");
+			if (!this) __debug_error_nullptr_str(this, "this");
 #endif // _DEBUG
 
-			return static_cast<ll_bool_t>(this->find_impl(begin, end));
+			return this->contains_impl(end);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t all(NodeType* begin, NodeType* end) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t contains(const NodeTypeUsed* end) const noexcept {
 #if defined(_DEBUG)
-			if (!begin) __debug_error_nullptr_str(begin, "begin");
-			if (!end) __debug_error_nullptr_str(end, "end");
+			if (!this) __debug_error_nullptr_str(this, "this");
 #endif // _DEBUG
 
-			return this->all_impl(begin, end);
+			return this->contains_impl(end);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t any(NodeType* begin, NodeType* end) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t contains_s(const NodeTypeUsed* end) noexcept {
+			if (!this) return LL_FALSE;
+			return this->contains_impl(end);
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t contains_s(const NodeTypeUsed* end) const noexcept {
+			if (!this) return LL_FALSE;
+			return this->contains_impl(end);
+		}
+
+		#pragma endregion
+		#pragma region All
+	private:
+		__LL_NODISCARD__ constexpr ll_bool_t all_impl(const NodeTypeUsed* end) noexcept {
+			NodeTypeUsed* begin = this;
+			while (begin != end) {
+				if (!this->nodeChecker(begin)) return LL_FALSE;
+				else begin = begin->get();
+			}
+			// Also check end
+			return begin ? this->nodeChecker(begin) : LL_TRUE;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t all_impl(const NodeTypeUsed* end) const noexcept {
+			NodeTypeUsed* begin = this;
+			while (begin != end) {
+				if (!this->nodeChecker(begin)) return LL_FALSE;
+				else begin = begin->get();
+			}
+			// Also check end
+			return begin ? this->nodeChecker(begin) : LL_TRUE;
+		}
+
+	public:
+		__LL_NODISCARD__ constexpr ll_bool_t all(const NodeTypeUsed* end) noexcept {
 #if defined(_DEBUG)
-			if (!begin) __debug_error_nullptr_str(begin, "begin");
-			if (!end) __debug_error_nullptr_str(end, "end");
+			if (!this) __debug_error_nullptr_str(this, "this");
 #endif // _DEBUG
 
-			return static_cast<ll_bool_t>(this->find_impl(begin, end));
+			return this->all_impl(end);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t none(NodeType* begin, NodeType* end) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t all(const NodeTypeUsed* end) const noexcept {
 #if defined(_DEBUG)
-			if (!begin) __debug_error_nullptr_str(begin, "begin");
-			if (!end) __debug_error_nullptr_str(end, "end");
+			if (!this) __debug_error_nullptr_str(this, "this");
 #endif // _DEBUG
 
-			return !static_cast<ll_bool_t>(this->find_impl(begin, end));
+			return this->all_impl(end);
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t all_s(const NodeTypeUsed* end) noexcept {
+			if (!this) return LL_FALSE;
+			return this->all_impl(end);
+		}
+		__LL_NODISCARD__ constexpr const ll_bool_t all_s(const NodeTypeUsed* end) const noexcept {
+			if (!this) return LL_FALSE;
+			return this->all_impl(end);
 		}
 
-		__LL_NODISCARD__ constexpr ll_bool_t find_s(NodeType* begin, NodeType* end) noexcept {
-			if (!left || !right) return LL_FALSE;
-			this->find_impl(begin, end);
-			return LL_TRUE;
+		#pragma endregion
+		#pragma region Any
+	private:
+		__LL_NODISCARD__ constexpr ll_bool_t any_impl(const NodeTypeUsed* end) noexcept {
+			return this->contains_impl(end);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t contains_s(INode* begin, INode* end) const noexcept {
-			return static_cast<ll_bool_t>(this->find_s(begin, end));
+		__LL_NODISCARD__ constexpr ll_bool_t any_impl(const NodeTypeUsed* end) const noexcept {
+			return this->contains_impl(end);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t all_s(NodeType* begin, NodeType* end) noexcept {
-			if (!begin || !end) return LL_FALSE;
-			return this->all_impl(begin, end);
+
+	public:
+		__LL_NODISCARD__ constexpr ll_bool_t any(const NodeTypeUsed* end) noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->any_impl(end);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t any_s(NodeType* begin, NodeType* end) noexcept {
-			return this->contains_s(begin, end));
+		__LL_NODISCARD__ constexpr ll_bool_t any(const NodeTypeUsed* end) const noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->any_impl(end);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t none_s(NodeType* begin, NodeType* end) noexcept {
-			return !this->contains_s(begin, end));
+		__LL_NODISCARD__ constexpr ll_bool_t any_s(const NodeTypeUsed* end) noexcept {
+			if (!this) return LL_FALSE;
+			return this->any_impl(end);
 		}
+		__LL_NODISCARD__ constexpr ll_bool_t any_s(const NodeTypeUsed* end) const noexcept {
+			if (!this) return LL_FALSE;
+			return this->any_impl(end);
+		}
+
+		#pragma endregion
+		#pragma region None
+	private:
+		__LL_NODISCARD__ constexpr ll_bool_t none_impl(const NodeTypeUsed* end) noexcept {
+			return !this->contains_impl(end);
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t none_impl(const NodeTypeUsed* end) const noexcept {
+			return !this->contains_impl(end);
+		}
+
+	public:
+		__LL_NODISCARD__ constexpr ll_bool_t none(const NodeTypeUsed* end) noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->none_impl(end);
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t none(const NodeTypeUsed* end) const noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->none_impl(end);
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t none_s(const NodeTypeUsed* end) noexcept {
+			if (!this) return LL_FALSE;
+			return this->none_impl(end);
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t none_s(const NodeTypeUsed* end) const noexcept {
+			if (!this) return LL_FALSE;
+			return this->none_impl(end);
+		}
+
+		#pragma endregion
+		#pragma region GetLastAndMiddle
+	private:
+		NodePack getLastAndMiddle_impl(const NodeTypeUsed* end) noexcept {
+			NodePack pack(this, this);
+			while (pack.second != end) {
+				pack.second = pack.second->get();
+				if (pack.second != end) {
+					pack.first = pack.first->get();
+					pack.second = pack.second->get();
+				}
+				else break;
+			}
+			return pack;
+		}
+		NodePackConst getLastAndMiddle_impl(const NodeTypeUsed* end) const noexcept {
+			NodePackConst pack(this, this);
+			while (pack.second != end) {
+				pack.second = pack.second->get();
+				if (pack.second != end) {
+					pack.first = pack.first->get();
+					pack.second = pack.second->get();
+				}
+				else break;
+			}
+			return pack;
+		}
+
+	public:
+		NodePack getLastAndMiddle(const NodeTypeUsed* end) noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->getLastAndMiddle_impl(end);
+		}
+		NodePackConst getLastAndMiddle(const NodeTypeUsed* end) const noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->getLastAndMiddle_impl(end);
+		}
+		NodePack getLastAndMiddle_s(const NodeTypeUsed* end) noexcept {
+			if (!this) return { LL_NULLPTR, LL_NULLPTR };
+			return this->getLastAndMiddle_impl(end);
+		}
+		NodePackConst getLastAndMiddle_s(const NodeTypeUsed* end) const noexcept {
+			if (!this) return { LL_NULLPTR, LL_NULLPTR };
+			return this->getLastAndMiddle_impl(end);
+		}
+
+		#pragma endregion
+		#pragma region GetMiddle
+	private:
+		NodeTypeUsed* getMiddle_impl(const NodeTypeUsed* end) noexcept {
+			NodePack pack(this, this);
+			while (pack.second != end) {
+				pack.second = pack.second->get();
+				if (pack.second != end) {
+					pack.first = pack.first->get();
+					pack.second = pack.second->get();
+				}
+				else break;
+			}
+			return pack.first;
+		}
+		const NodeTypeUsed* getMiddle_impl(const NodeTypeUsed* end) const noexcept {
+			NodePackConst pack(this, this);
+			while (pack.second != end) {
+				pack.second = pack.second->get();
+				if (pack.second != end) {
+					pack.first = pack.first->get();
+					pack.second = pack.second->get();
+				}
+				else break;
+			}
+			return pack.first;
+		}
+
+	public:
+		NodeTypeUsed* getMiddle(const NodeTypeUsed* end) noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->getMiddle_impl(end);
+		}
+		const NodeTypeUsed* getMiddle(const NodeTypeUsed* end) const noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->getMiddle_impl(end);
+		}
+		NodeTypeUsed* getMiddle(const NodeTypeUsed* end) noexcept {
+			if (!this) return LL_NULLPTR;
+			return this->getMiddle_impl(end);
+		}
+		const NodeTypeUsed* getMiddle(const NodeTypeUsed* end) const noexcept {
+			if (!this) return LL_NULLPTR;
+			return this->getMiddle_impl(end);
+		}
+
+		#pragma endregion
+		#pragma region GetLast
+	private:
+		NodeTypeUsed* getLast_impl(const NodeTypeUsed* end) noexcept {
+			NodeTypeUsed* result = this;
+			for (NodeTypeUsed* tmp = LL_NULLPTR; (tmp = result->get()) != end; result = tmp);
+			return result;
+		}
+		const NodeTypeUsed* getLast_impl(const NodeTypeUsed* end) const noexcept {
+			const NodeTypeUsed* result = this;
+			for (const NodeTypeUsed* tmp = LL_NULLPTR; (tmp = result->get()) != end; result = tmp);
+			return result;
+		}
+
+	public:
+		NodeTypeUsed* getLast(const NodeTypeUsed* end) noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->getLast_impl(end);
+		}
+		const NodeTypeUsed* getLast(const NodeTypeUsed* end) const noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->getLast_impl(end);
+		}
+		NodeTypeUsed* getLast_s(const NodeTypeUsed* end) noexcept {
+			if (!this) return LL_NULLPTR;
+			return this->getLast_impl(end);
+		}
+		const NodeTypeUsed* getLast_s(const NodeTypeUsed* end) const noexcept {
+			if (!this) return LL_NULLPTR;
+			return this->getLast_impl(end);
+		}
+
+		#pragma endregion
+		#pragma region Distance
+	private:
+		__LL_NODISCARD__ constexpr len_t distance_impl(const NodeTypeUsed* end) const noexcept {
+			len_t distance{};
+			for (const NodeTypeUsed* begin = this; begin != end; begin = begin->get(), ++distance);
+			return distance;
+		}
+
+	public:
+		__LL_NODISCARD__ constexpr len_t distance(const NodeTypeUsed* end) const noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return this->distance_impl(end);
+		}
+		__LL_NODISCARD__ constexpr len_t distance_s(const NodeTypeUsed* end) const noexcept {
+			if (!this) return meta::algorithm::npos;
+			return this->distance_impl(end);
+		}
+
+		#pragma endregion
+		#pragma region MergeSort
+
+		#pragma endregion
 
 		#pragma endregion
 
@@ -285,45 +594,14 @@ class NodeTools : public NodeFunctions {
 };
 
 template <class NodeType, class NodeFunctions>
-class Node : public BaseNode<NodeType>, public NodeTools<NodeType, NodeFunctions> {
+using BaseNode_t = std::conditional_t< std::is_same_v<NodeFunctions, void>, BaseNode<NodeType>, NodeTools<NodeType, NodeFunctions>>;
+
+template <class NodeType, class NodeFunctions = void>
+class Node : public BaseNode_t<NodeType, NodeFunctions> {
 	#pragma region Types
 	public:
 		using type = NodeType;
-		using BaseNode = BaseNode<NodeType>;
-
-	#pragma endregion
-	#pragma region Functions
-		#pragma region Contructors
-	public:
-		constexpr Node() noexcept : BaseNode() {}
-		constexpr Node(NodeType* _node) noexcept : BaseNode(_node) {}
-		constexpr ~Node() noexcept {}
-
-		#pragma endregion
-		#pragma region CopyMove
-	public:
-		constexpr Node(const Node&) noexcept = delete;
-		constexpr Node& operator=(const Node&) noexcept = delete;
-		constexpr Node(Node&&) noexcept = delete;
-		constexpr Node& operator=(Node&&) noexcept = delete;
-
-		#pragma endregion
-		#pragma region ClassReferenceOperators
-	public:
-		__LL_NODISCARD__ constexpr operator const Node*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator Node*() noexcept { return this; }
-
-		#pragma endregion
-
-	#pragma endregion
-};
-
-template <class NodeType>
-class Node<NodeType, void> : public BaseNode<NodeType> {
-	#pragma region Types
-	public:
-		using type = NodeType;
-		using BaseNode = BaseNode<NodeType>;
+		using BaseNode = BaseNode_t<NodeType, NodeFunctions>;
 
 	#pragma endregion
 	#pragma region Functions
@@ -410,7 +688,7 @@ class Node<NodeType, LL_TRUE> : public BaseNode<NodeType> {
 
 			while (begin != end) {
 				if (find(begin)) return begin;
-				else begin = begin->getNext();
+				else begin = begin->get();
 			}
 			return begin;
 		}

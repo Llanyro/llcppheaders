@@ -46,6 +46,17 @@ struct has_nodeChecker_function {
 template<class ClassToCheck, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_nodeChecker_function_v = has_nodeChecker_function<ClassToCheck, Signature>::type::value;
 
+template<class ClassToCheck, class Signature>
+struct has_compareNode_function {
+	template<class U>
+	static constexpr auto test(Signature) noexcept -> std::true_type;
+	template<class U>
+	static constexpr auto test(...) noexcept -> std::false_type;
+	using type = decltype(has_compareNode_function::test<ClassToCheck>(&ClassToCheck::compareNode));
+};
+template<class ClassToCheck, class Signature>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_compareNode_function_v = has_compareNode_function<ClassToCheck, Signature>::type::value;
+
 } // namespace __
 
 template <class NodeType>
@@ -70,7 +81,7 @@ class BaseNode {
 	#pragma region Functions
 		#pragma region Contructors
 	public:
-		constexpr BaseNode() noexcept : BaseNode(this) {}
+		constexpr BaseNode() noexcept : BaseNode(LL_NULLPTR) {}
 		constexpr BaseNode(NodeType* _node) noexcept : _node(_node) {}
 		constexpr ~BaseNode() noexcept {}
 
@@ -120,17 +131,6 @@ class BaseNode {
 	#pragma endregion
 };
 
-class Test : public BaseNode<Test> {
-
-};
-
-class Func {
-	public:
-		__LL_NODISCARD__ constexpr ll_bool_t nodeChecker(const Test* a) const noexcept {
-			return LL_FALSE;
-		}
-};
-
 //	Extra functions for nodes with only one link (ex: single linked list)
 // 
 //	Any function that reqires an argument like "end" is processed too if is not nullptr
@@ -144,17 +144,18 @@ class Func {
 //			behabiour without exiting function (it may crash at that moment)
 //
 template <class NodeType, class NodeFunctions>
-class NodeTools : public BaseNode<NodeType>, public NodeFunctions {
+class Node : public BaseNode<NodeType>, public NodeFunctions {
 	#pragma region Types
 	public:
 		using type = NodeType;
 		using BaseNode = BaseNode<NodeType>;
 
-		using NodeTypeUsed = NodeType;
-		//using NodeTypeUsed = NodeTools;
+		//using NodeTypeUsed = NodeType;
+		using NodeTypeUsed = Node;
 		using NodePack = std::pair<NodeTypeUsed*, NodeTypeUsed*>;
 		using NodePackConst = std::pair<const NodeTypeUsed*, const NodeTypeUsed*>;
 		using NodeCheckerSignature = ll_bool_t(NodeFunctions::*)(const NodeTypeUsed*) const noexcept;
+		using NodeCompareSignature = cmp_t(NodeFunctions::*)(const NodeTypeUsed*, const NodeTypeUsed*) const noexcept;
 
 	#pragma endregion
 	#pragma region Assersts
@@ -173,38 +174,40 @@ class NodeTools : public BaseNode<NodeType>, public NodeFunctions {
 		static_assert(std::is_move_assignable_v<NodeFunctions>, "NodeFunctions needs a noexcept move asignable!");
 
 		static_assert(linked::__::has_nodeChecker_function_v<NodeFunctions, NodeCheckerSignature>,
-			"Manipulator::nodeChecker() const noexcept is required by default! Non const function is optional");
+			"NodeFunctions::nodeChecker() const noexcept is required by default! Non const function is optional");
+		static_assert(linked::__::has_compareNode_function_v<NodeFunctions, NodeCompareSignature>,
+			"NodeFunctions::compareNode() const noexcept is required by default! Non const function is optional");
 
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Contructors
 	public:
-		constexpr NodeTools() noexcept : BaseNode(), NodeFunctions() {}
+		constexpr Node() noexcept : BaseNode(), NodeFunctions() {}
 		template<class... Args>
-		constexpr NodeTools(NodeType* _node, Args&&... args) noexcept
+		constexpr Node(NodeType* _node, Args&&... args) noexcept
 			: BaseNode(_node), NodeFunctions(std::forward<Args>(args)...) {}
-		constexpr ~NodeTools() noexcept {}
+		constexpr ~Node() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr NodeTools(const NodeTools& other) noexcept : BaseNode(), NodeFunctions(other) {}
-		constexpr NodeTools& operator=(const NodeTools& other) noexcept {
+		constexpr Node(const Node& other) noexcept : BaseNode(), NodeFunctions(other) {}
+		constexpr Node& operator=(const Node& other) noexcept {
 			NodeFunctions::operator=(other);
 			return *this;
 		}
-		constexpr NodeTools(NodeTools&& other) noexcept : BaseNode(), NodeFunctions(std::move(other)) {}
-		constexpr NodeTools& operator=(NodeTools&& other) noexcept {
+		constexpr Node(Node&& other) noexcept : BaseNode(), NodeFunctions(std::move(other)) {}
+		constexpr Node& operator=(Node&& other) noexcept {
 			NodeFunctions::operator=(std::move(other));
 			return *this;
 		}
 
-		constexpr NodeTools(const NodeFunctions& other) noexcept : BaseNode(), NodeFunctions(other) {}
-		constexpr NodeTools& operator=(const NodeFunctions& other) noexcept {
+		constexpr Node(const NodeFunctions& other) noexcept : BaseNode(), NodeFunctions(other) {}
+		constexpr Node& operator=(const NodeFunctions& other) noexcept {
 			NodeFunctions::operator=(other);
 			return *this;
 		}
-		constexpr NodeTools(NodeFunctions&& other) noexcept : BaseNode(), NodeFunctions(std::move(other)) {}
+		constexpr Node(NodeFunctions&& other) noexcept : BaseNode(), NodeFunctions(std::move(other)) {}
 		constexpr NodeFunctions& operator=(NodeFunctions&& other) noexcept {
 			NodeFunctions::operator=(std::move(other));
 			return *this;
@@ -230,21 +233,24 @@ class NodeTools : public BaseNode<NodeType>, public NodeFunctions {
 	private:
 		__LL_NODISCARD__ constexpr NodeTypeUsed* find_impl(const NodeTypeUsed* end) noexcept {
 			NodeTypeUsed* begin = this;
-			while (begin != end) {
-				if (this->nodeChecker(begin)) return begin;
-				else begin = begin->get();
-			}
+			//while (begin != end) {
+			//	if (this->nodeChecker(begin)) return begin;
+			//	else begin = begin->get();
+			//}
 			// Also check end
-			return (begin && this->nodeChecker(begin)) ? begin : LL_NULLPTR;
+			//return (begin && this->nodeChecker(begin)) ? begin : LL_NULLPTR;
+			//return this;
+			return nullptr;
 		}
 		__LL_NODISCARD__ constexpr const NodeTypeUsed* find_impl(const NodeTypeUsed* end) const noexcept {
-			const NodeTypeUsed* begin = this;
-			while (begin != end) {
-				if (this->nodeChecker(begin)) return begin;
-				else begin = begin->get();
-			}
-			// Also check end
-			return (begin && this->nodeChecker(begin)) ? begin : LL_NULLPTR;
+			//const NodeTypeUsed* begin = this;
+			//while (begin != end) {
+			//	if (this->nodeChecker(begin)) return begin;
+			//	else begin = begin->get();
+			//}
+			//// Also check end
+			//return (begin && this->nodeChecker(begin)) ? begin : LL_NULLPTR;
+			return nullptr;
 		}
 
 	public:
@@ -272,7 +278,7 @@ class NodeTools : public BaseNode<NodeType>, public NodeFunctions {
 		}
 
 		#pragma endregion
-		#pragma region Contains
+		/*#pragma region Contains
 	private:
 		__LL_NODISCARD__ constexpr ll_bool_t contains_impl(const NodeTypeUsed* end) noexcept {
 			return static_cast<ll_bool_t>(this->find_impl(end));
@@ -423,28 +429,28 @@ class NodeTools : public BaseNode<NodeType>, public NodeFunctions {
 		#pragma region GetLastAndMiddle
 	private:
 		NodePack getLastAndMiddle_impl(const NodeTypeUsed* end) noexcept {
-			NodePack pack(this, this);
-			while (pack.second != end) {
-				pack.second = pack.second->get();
-				if (pack.second != end) {
-					pack.first = pack.first->get();
-					pack.second = pack.second->get();
+			NodeTypeUsed* slow = this;
+			NodeTypeUsed* fast = this;
+			do {
+				if ((fast = fast->get()) != end) {
+					slow = slow->get();
+					fast = fast->get();
 				}
 				else break;
-			}
-			return pack;
+			} while (fast != end);
+			return { slow, fast };
 		}
 		NodePackConst getLastAndMiddle_impl(const NodeTypeUsed* end) const noexcept {
-			NodePackConst pack(this, this);
-			while (pack.second != end) {
-				pack.second = pack.second->get();
-				if (pack.second != end) {
-					pack.first = pack.first->get();
-					pack.second = pack.second->get();
+			const NodeTypeUsed* slow = this;
+			const NodeTypeUsed* fast = this;
+			do {
+				if ((fast = fast->get()) != end) {
+					slow = slow->get();
+					fast = fast->get();
 				}
 				else break;
-			}
-			return pack;
+			} while (fast != end);
+			return { slow, fast };
 		}
 
 	public:
@@ -585,19 +591,81 @@ class NodeTools : public BaseNode<NodeType>, public NodeFunctions {
 
 		#pragma endregion
 		#pragma region MergeSort
+	private:
+		// Finds middle node of list and splits the list
+		__LL_NODISCARD__ static constexpr NodeTypeUsed* split_list(NodeTypeUsed* begin) noexcept {
+			NodeTypeUsed* fast = begin;
+			NodeTypeUsed* slow = begin;
+			NodeTypeUsed* prev = LL_NULLPTR;
 
-		#pragma endregion
+			while (fast) {
+				if ((fast = fast->get())) {
+					fast = fast->get();
+					prev = slow;
+					slow = slow->get();
+				}
+				else break;
+			}
+
+			if (prev) prev->set(LL_NULLPTR);
+
+			return slow;
+		}
+		__LL_NODISCARD__ constexpr NodeTypeUsed* merge_lists(NodeTypeUsed* left, NodeTypeUsed* right) noexcept {
+			if (!left) return right;
+			if (!right) return left;
+
+			if (this->compareNode(left, right) <= ZERO_I32) {
+				left->set(this->merge_lists(left->get(), right));
+				return left;
+			}
+			else {
+				right->set(this->merge_lists(left, right->get()));
+				return right;
+			}
+		}
+		__LL_NODISCARD__ constexpr NodeTypeUsed* merge_impl(NodeTypeUsed* begin) noexcept {
+			if (!begin || !begin->get()) return begin;
+
+			NodeTypeUsed* mid = this->split_list(begin);
+			NodeTypeUsed* left = this->merge_impl(begin);
+			NodeTypeUsed* right = this->merge_impl(mid);
+
+			return this->merge_lists(left, right);
+		}
+		__LL_NODISCARD__ constexpr NodeTypeUsed* merge_impl() noexcept {
+
+		}
+
+
+	public:
+		void mergeSort(NodeTypeUsed*& begin, NodeTypeUsed*& end) noexcept {
+#if defined(_DEBUG)
+			if (!begin) __debug_error_nullptr_str(begin, "begin");
+			if (!end) __debug_error_nullptr_str(end, "end");
+#endif // _DEBUG
+
+			end->set(LL_NULLPTR);
+			begin = this->merge_internal(begin);
+			end = this->getLast(begin);
+		}
+		ll_bool_t mergeSort_s(INode*& begin, INode*& end, CompareNode compare) noexcept {
+			if (!begin || !end || !compare) return LL_FALSE;
+			end->setNext(LL_NULLPTR);
+			begin = this->merge_internal(begin);
+			end = this->getLast(begin);
+			return LL_TRUE;
+		}
+
+		#pragma endregion*/
 
 		#pragma endregion
 
 	#pragma endregion
 };
 
-template <class NodeType, class NodeFunctions>
-using BaseNode_t = std::conditional_t< std::is_same_v<NodeFunctions, void>, BaseNode<NodeType>, NodeTools<NodeType, NodeFunctions>>;
-
-template <class NodeType, class NodeFunctions = void>
-class Node : public BaseNode_t<NodeType, NodeFunctions> {
+template <class NodeType>
+class Node<NodeType, void> : public BaseNode<NodeType> {
 	#pragma region Types
 	public:
 		using type = NodeType;
@@ -662,7 +730,7 @@ class Node<NodeType, LL_TRUE> : public BaseNode<NodeType> {
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		constexpr void unlink(NodeType* prev) noexcept { Node::link(prev, this->get()); }
+		constexpr void unlink(NodeType* prev) noexcept { this->link(prev, this->get()); }
 		__LL_NODISCARD__ constexpr ll_bool_t unlink_s(NodeType* prev) noexcept {
 			if (!prev) return LL_FALSE;
 			this->unlink(prev);
@@ -705,6 +773,130 @@ class Node<NodeType, LL_TRUE> : public BaseNode<NodeType> {
 
 	#pragma endregion
 };*/
+
+template <class T, class NodeFunctions>
+class NodeT : public Node<NodeT<T, NodeFunctions>, NodeFunctions> {
+	#pragma region Types
+	public:
+		using type = T;
+		using Node = Node<NodeT, NodeFunctions>;
+
+	#pragma endregion
+	#pragma region Attributes
+	public:
+		T object;
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Contructors
+	public:
+		constexpr NodeT() noexcept : Node(), object() {}
+		constexpr NodeT(NodeT* _node) noexcept : Node(_node), object() {}
+		constexpr NodeT(NodeT* _node, const T& object) noexcept : Node(_node), object(object) {}
+		constexpr NodeT(NodeT* _node, T&& object) noexcept : Node(_node), object(std::move(object)) {}
+		constexpr NodeT(const T& object) noexcept : Node(), object(object) {}
+		constexpr NodeT(T&& object) noexcept : Node(), object(std::move(object)) {}
+		constexpr ~NodeT() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr NodeT(const NodeT&) noexcept = delete;
+		constexpr NodeT& operator=(const NodeT&) noexcept = delete;
+		constexpr NodeT(NodeT&&) noexcept = delete;
+		constexpr NodeT& operator=(const NodeT&) noexcept = delete;
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr operator const NodeT*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator NodeT*() noexcept { return this; }
+
+		#pragma endregion
+
+	#pragma endregion
+};
+
+template <class T>
+class NodeTools {
+	#pragma region Types
+	public:
+		using type = T;
+		using Node = NodeT<T, NodeTools<T>>;
+
+	#pragma endregion
+	#pragma region Attributes
+	public:
+		T* search;
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Contructors
+	public:
+		constexpr NodeTools() noexcept : search(LL_NULLPTR) {}
+		constexpr ~NodeTools() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr NodeTools(const NodeTools&) noexcept = delete;
+		constexpr NodeTools& operator=(const NodeTools&) noexcept = delete;
+		constexpr NodeTools(NodeTools&&) noexcept = delete;
+		constexpr NodeTools& operator=(const NodeTools&) noexcept = delete;
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr operator const NodeTools*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator NodeTools*() noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ constexpr ll_bool_t nodeChecker(const Node* a) const noexcept {
+			return a->object == *this->search;
+		}
+		__LL_NODISCARD__ constexpr cmp_t compareNode(const Node* a, const Node* b) const noexcept {
+			return
+				(a->object == b->object)
+				? 0
+				: ((a->object > b->object) ? 1 : -1);
+		}
+
+		#pragma endregion
+	#pragma endregion
+};
+
+
+constexpr int asdf() {
+	using Types = NodeTools<int>;
+	using Node = Types::Node;
+
+	Node a[5]{};
+	a[0].set(&a[1]);
+	a[1].set(&a[2]);
+	a[2].set(&a[3]);
+	a[3].set(&a[4]);
+	a[4].set(LL_NULLPTR);
+
+	int search = 3;
+	for (len_t i{}; i < traits::array_size<decltype(a)>; ++i) {
+		a[i].object = i;
+		a[i].search = &search;
+	}
+
+	//NodeT<>* result = LL_NULLPTR;
+	auto result = a->find_s(LL_NULLPTR);
+	if (result) {
+		for (len_t i{}; i < traits::array_size<decltype(a)>; ++i) {
+			if (a + i == result) return a[i].object;
+		}
+	}
+	return -1;
+	//return a[4].object;
+}
+
+constexpr int value = asdf();
 
 } // namespace linked
 } // namespace meta

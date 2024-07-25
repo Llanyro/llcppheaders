@@ -1,3 +1,5 @@
+
+#include "../llanylib/Node.hpp"
 #include <iostream>
 
 class Base {
@@ -32,6 +34,8 @@ class D1 : public H1, public H2 {
 
 int main() {
 	D1 a(80, 70);
+
+	std::cout << "ASDF: " << llcpp::meta::linked::asdf() << "\n";
 
 	std::cout << "Base: " << sizeof(Base) << "\n";
 	std::cout << "H1: " << sizeof(H1) << "\n";

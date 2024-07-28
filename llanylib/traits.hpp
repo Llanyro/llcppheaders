@@ -35,14 +35,17 @@ namespace llcpp {
 namespace meta {
 namespace traits {
 
-#pragma region TraitsTypes
+#pragma region TraitsTypesAndCheckers
 template<class _T>
 struct type_container { using T = _T; };
 
 // Standard checker for types in this lib
-template<class _T>
+template<class _T, ll_bool_t _IGNORE_POINTER = llcpp::LL_FALSE, ll_bool_t _IGNORE_VOLATILE = llcpp::LL_FALSE>
 struct type_checker {
 	using T = _T;
+
+	static constexpr ll_bool_t IGNORE_POINTER = _IGNORE_POINTER;
+	static constexpr ll_bool_t IGNORE_VOLATILE = _IGNORE_VOLATILE;
 
 	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
 	static_assert(!std::is_array_v<T>, "Array type is forbidden!");
@@ -52,13 +55,22 @@ struct type_checker {
 	static constexpr ll_bool_t is_valid_v = 
 		   !std::is_reference_v<T>
 		&& !std::is_array_v<T>
-		&& !std::is_volatile_v<T>
-		&& !std::is_pointer_v<T>;
+		&& (IGNORE_VOLATILE || !std::is_volatile_v<T>)
+		&& (IGNORE_POINTER || !std::is_pointer_v<T>);
 };
 
-// Standard checker for classes in this lib
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_v = 
+	traits::type_checker<T>::is_valid_v;
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_pointer_v = 
+	traits::type_checker<T, llcpp::LL_TRUE>::is_valid_v;
+
+// Standard checker for classes and objects
+// Checks contruction / destruction and other operations needed
 template<class _T>
-struct class_checker {
+struct constructor_checker {
 	using T = _T;
 
 	static_assert(std::is_nothrow_constructible_v<T>, "T needs a noexcept constructor!");
@@ -68,14 +80,32 @@ struct class_checker {
 	static_assert(std::is_move_constructible_v<T>, "T needs a noexcept move constructor!");
 	static_assert(std::is_move_assignable_v<T>, "T needs a noexcept move asignable!");
 
-	static constexpr ll_bool_t is_valid_v = 
-		   std::is_nothrow_constructible_v<T>
+	static constexpr ll_bool_t is_valid_v =
+		std::is_nothrow_constructible_v<T>
 		&& std::is_nothrow_destructible_v<T>
 		&& std::is_copy_constructible_v<T>
 		&& std::is_copy_assignable_v<T>
 		&& std::is_move_constructible_v<T>
 		&& std::is_move_assignable_v<T>;
 };
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_v = 
+	traits::constructor_checker<T>::is_valid_v;
+
+// Standard checker for classes in this lib
+template<class _T>
+struct class_checker : public traits::constructor_checker<_T> {
+	using T = _T;
+	using constructor_checker = traits::constructor_checker<T>;
+
+	static_assert(std::is_class_v<T>, "T needs to be a class!");
+
+	static constexpr ll_bool_t is_valid_v =  constructor_checker::is_valid_v && std::is_class_v<T>;
+};
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_class_checker_v = traits::class_checker<T>::is_valid_v;
 
 #pragma endregion
 #pragma region BasicExpresions
@@ -127,7 +157,7 @@ struct type_promotion {
 	using T = _T;
 	static constexpr ll_bool_t promote = _promote;
 
-	static_assert(type_checker<T>::is_valid_v, "type_checker<T> detected an invalid type!");
+	static_assert(traits::is_valid_type_checker_v<T>, "type_checker<T> detected an invalid type!");
 
 	template<ll_bool_t promote>
 	struct __type_promotion { using value = T; };
@@ -175,8 +205,10 @@ struct check_valid_types {
 	using Checker	= _Checker;
 	using VoidType	= _VoidType;
 
-	static_assert(type_checker<Checker>::is_valid_v, "type_checker<Checker> detected an invalid type!");
-	static_assert(class_checker<Checker>::is_valid_v, "class_checker<Checker> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<Checker>,
+		"type_checker<Checker> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<Checker>,
+		"class_checker<Checker> detected an invalid class type!");
 
 	template<class T>
 	static constexpr auto get_first() noexcept -> std::conditional_t<Checker::is_valid_v<T>, T, VoidType>;
@@ -201,7 +233,7 @@ struct get_by_char_type {
 	using TypeWChar = _TypeWChar;
 	using ExtraType = _ExtraType;
 
-	static_assert(type_checker<T>::is_valid_v, "type_checker<T> detected an invalid type!");
+	static_assert(traits::is_valid_type_checker_v<T>, "type_checker<T> detected an invalid type!");
 
 	template <class U>
 	struct __struct__ { using _val = ExtraType; };
@@ -221,8 +253,10 @@ struct has_type_operator {
 	using OperatorType	= _OperatorType;
 	using Signature		= _Signature;
 
-	static_assert(type_checker<ClassToCheck>::is_valid_v, "type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(class_checker<ClassToCheck>::is_valid_v, "class_checker<ClassToCheck> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
 
 	using type_default_result =
 		std::conditional_t<
@@ -249,8 +283,10 @@ template<class _T>
 struct is_nothrow_swappeable {
 	using T = _T;
 
-	static_assert(type_checker<T>::is_valid_v, "type_checker<T> detected an invalid type!");
-	static_assert(class_checker<T>::is_valid_v, "class_checker<T> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<T>,
+		"type_checker<T> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<T>,
+		"class_checker<T> detected an invalid class type!");
 
 	static constexpr auto test() noexcept {
 		if constexpr (std::is_pointer_v<T> || traits::is_basic_type_v<T>)
@@ -278,8 +314,10 @@ template<class _T>
 struct is_nothrow_copyable {
 	using T = _T;
 
-	static_assert(type_checker<T>::is_valid_v, "type_checker<T> detected an invalid type!");
-	static_assert(class_checker<T>::is_valid_v, "class_checker<T> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<T>,
+		"type_checker<T> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<T>,
+		"class_checker<T> detected an invalid class type!");
 
 	static constexpr auto test() noexcept {
 		if constexpr (std::is_pointer_v<T>) {
@@ -356,8 +394,10 @@ struct has_hash_function{
 	using ClassToCheck	= _ClassToCheck;
 	using Signature		= _Signature;
 
-	static_assert(type_checker<ClassToCheck>::is_valid_v, "type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(class_checker<ClassToCheck>::is_valid_v, "class_checker<ClassToCheck> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
 
 	template<class U>
 	static constexpr auto test(Signature) noexcept -> std::true_type;
@@ -366,15 +406,18 @@ struct has_hash_function{
 	using type = decltype(has_hash_function::test<ClassToCheck>(&ClassToCheck::hash));
 };
 template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function_v = has_hash_function<ClassToCheck, Signature>::type::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function_v = 
+	has_hash_function<ClassToCheck, Signature>::type::value;
 
 template<class _ClassToCheck, class _Signature>
 struct LL_SHARED_LIB has_clear_function {
 	using ClassToCheck	= _ClassToCheck;
 	using Signature		= _Signature;
 
-	static_assert(type_checker<ClassToCheck>::is_valid_v, "type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(class_checker<ClassToCheck>::is_valid_v, "class_checker<ClassToCheck> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
 
 	template<class U>
 	static constexpr auto test(Signature) noexcept -> std::true_type;
@@ -383,15 +426,18 @@ struct LL_SHARED_LIB has_clear_function {
 	using type = decltype(has_clear_function::test<ClassToCheck>(&ClassToCheck::clear));
 };
 template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_clear_function_v = has_clear_function<ClassToCheck, Signature>::type::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_clear_function_v = 
+	has_clear_function<ClassToCheck, Signature>::type::value;
 
 template<class _ClassToCheck, class _Signature>
 struct has_swap_function {
 	using ClassToCheck	= _ClassToCheck;
 	using Signature		= _Signature;
 
-	static_assert(type_checker<ClassToCheck>::is_valid_v, "type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(class_checker<ClassToCheck>::is_valid_v, "class_checker<ClassToCheck> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
 
 	template<class U>
 	static constexpr auto test(Signature) noexcept -> std::true_type;
@@ -400,15 +446,18 @@ struct has_swap_function {
 	using type = decltype(has_swap_function::test<ClassToCheck>(&ClassToCheck::swap));
 };
 template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_swap_function_v = has_swap_function<ClassToCheck, Signature>::type::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_swap_function_v = 
+	has_swap_function<ClassToCheck, Signature>::type::value;
 
 template<class _ClassToCheck, class _Signature>
 struct has_copy_function {
 	using ClassToCheck	= _ClassToCheck;
 	using Signature		= _Signature;
 
-	static_assert(type_checker<ClassToCheck>::is_valid_v, "type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(class_checker<ClassToCheck>::is_valid_v, "class_checker<ClassToCheck> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
 
 	template<class U>
 	static constexpr auto test(Signature) noexcept -> std::true_type;
@@ -417,15 +466,16 @@ struct has_copy_function {
 	using type = decltype(has_copy_function::test<ClassToCheck>(&ClassToCheck::copy));
 };
 template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_copy_function_v = has_copy_function<ClassToCheck, Signature>::type::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_copy_function_v =
+	has_copy_function<ClassToCheck, Signature>::type::value;
 
 template<class _ClassToCheck, class _Signature>
 struct has_move_function {
 	using ClassToCheck	= _ClassToCheck;
 	using Signature		= _Signature;
 
-	static_assert(type_checker<ClassToCheck>::is_valid_v, "type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(class_checker<ClassToCheck>::is_valid_v, "class_checker<ClassToCheck> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>, "type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>, "class_checker<ClassToCheck> detected an invalid class type!");
 
 	template<class U>
 	static constexpr auto test(Signature) noexcept -> std::true_type;
@@ -434,15 +484,18 @@ struct has_move_function {
 	using type = decltype(has_move_function::test<ClassToCheck>(&ClassToCheck::move));
 };
 template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_move_function_v = has_move_function<ClassToCheck, Signature>::type::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_move_function_v =
+	has_move_function<ClassToCheck, Signature>::type::value;
 
 template<class _ClassToCheck, class _Signature>
 struct has_compare_function {
 	using ClassToCheck	= _ClassToCheck;
 	using Signature		= _Signature;
 
-	static_assert(type_checker<ClassToCheck>::is_valid_v, "type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(class_checker<ClassToCheck>::is_valid_v, "class_checker<ClassToCheck> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
 
 	template<class U>
 	static constexpr auto test(Signature) noexcept -> std::true_type;
@@ -451,15 +504,18 @@ struct has_compare_function {
 	using type = decltype(has_compare_function::test<ClassToCheck>(&ClassToCheck::compareBool));
 };
 template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_compare_function_v = has_compare_function<ClassToCheck, Signature>::type::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_compare_function_v =
+	has_compare_function<ClassToCheck, Signature>::type::value;
 
 template<class _ClassToCheck, class _Signature>
 struct has_compareBool_function {
 	using ClassToCheck	= _ClassToCheck;
 	using Signature		= _Signature;
 
-	static_assert(type_checker<ClassToCheck>::is_valid_v, "type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(class_checker<ClassToCheck>::is_valid_v, "class_checker<ClassToCheck> detected an invalid class type!");
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
 
 	template<class U>
 	static constexpr auto test(Signature) noexcept -> std::true_type;
@@ -468,7 +524,8 @@ struct has_compareBool_function {
 	using type = decltype(has_compareBool_function::test<ClassToCheck>(&ClassToCheck::compareBool));
 };
 template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_compareBool_function_v = has_compareBool_function<ClassToCheck, Signature>::type::value;
+__LL_VAR_INLINE__ constexpr ll_bool_t has_compareBool_function_v =
+	has_compareBool_function<ClassToCheck, Signature>::type::value;
 
 
 } // namespace common

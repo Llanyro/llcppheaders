@@ -27,7 +27,7 @@ namespace llcpp {
 namespace meta {
 
 template<class Allocator = AllocatorDummy, len_t INCREMENT = 1024ull, class ConversorType = ll_char_t>
-class LL_SHARED_LIB DataBuffer : public AllocatorChecker<Allocator> {
+class DataBuffer : public AllocatorChecker<Allocator> {
 	public:
 		using AllocatorCheckerBase = AllocatorChecker<Allocator>;
 		template<class T>

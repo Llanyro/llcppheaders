@@ -31,7 +31,7 @@ class StringBuffer;
 namespace meta {
 namespace parser {
 
-class LL_SHARED_LIB Printable {
+class Printable {
 	public:
 		enum class PrintType {
 			BadInited,

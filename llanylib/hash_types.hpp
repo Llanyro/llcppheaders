@@ -29,7 +29,7 @@ namespace llcpp {
 namespace meta {
 namespace hash {
 
-class LL_SHARED_LIB Hash32 {
+class Hash32 {
 	private:
 		ui32 value;
 	public:
@@ -139,7 +139,7 @@ class LL_SHARED_LIB Hash32 {
 		#pragma endregion
 };
 
-class LL_SHARED_LIB Hash64 {
+class Hash64 {
 	private:
 		ui64 value;
 	public:
@@ -249,7 +249,7 @@ class LL_SHARED_LIB Hash64 {
 		#pragma endregion
 };
 
-class LL_SHARED_LIB Hash128 {
+class Hash128 {
 	protected:
 		ui64 low;
 		ui64 high;

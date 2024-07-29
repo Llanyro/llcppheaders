@@ -32,6 +32,7 @@ struct ByteExtender {
 };
 
 struct EmptyStruct {};
+class Emptyclass {};
 
 } // namespace llcpp
 

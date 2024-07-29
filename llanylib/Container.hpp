@@ -21,11 +21,7 @@
 #define LLANYLIB_CONTAINER_MAYOR_ 9
 #define LLANYLIB_CONTAINER_MINOR_ 0
 
-#include "traits.hpp"
-
-#include <optional>
-
-#include <list>
+#include "hash_types.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -33,7 +29,7 @@ namespace meta {
 namespace traits {
 namespace common {
 template<class _ClassToCheck, class _Signature>
-struct LL_SHARED_LIB has_predestruction_function {
+struct has_predestruction_function {
 	using ClassToCheck	= _ClassToCheck;
 	using Signature		= _Signature;
 
@@ -46,9 +42,11 @@ struct LL_SHARED_LIB has_predestruction_function {
 	template<class> static constexpr auto test(...) noexcept		-> std::false_type;
 	using type = decltype(has_predestruction_function::test<ClassToCheck>(&ClassToCheck::preDestruction));
 };
+
 template<class ClassToCheck, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_predestruction_function_v =
-	has_predestruction_function<ClassToCheck, Signature>::type::value;
+	false;
+	//has_predestruction_function<ClassToCheck, Signature>::type::value;
 
 } // namespace common
 } // namespace traits
@@ -119,32 +117,26 @@ class BasicContainer {
 		#pragma region ClassFunctions
 	public:
 		__LL_NODISCARD__ constexpr pointer operator->() noexcept {
-			return std::pointer_traits<pointer>::pointer_to(**this);
+			return std::pointer_traits<pointer>::pointer_to(&this->data);
 		}
 		__LL_NODISCARD__ constexpr const pointer operator->() const noexcept {
-			return std::pointer_traits<pointer>::pointer_to(**this);
+			return std::pointer_traits<pointer>::pointer_to(&this->data);
 		}
-		__LL_NODISCARD__ constexpr T& operator*() noexcept {
-			return this->data;
-		}
-		__LL_NODISCARD__ constexpr const T& operator*() const noexcept {
-			return this->data;
-		}
+		__LL_NODISCARD__ constexpr T& operator*() noexcept { return this->data; }
+		__LL_NODISCARD__ constexpr const T& operator*() const noexcept { return this->data; }
 
 		#pragma endregion
 
 	#pragma endregion
 };
 
-template<class T>
-class __Functions__ {
+class IntFunctions {
 	public:
-		constexpr void clear(T& asdf) noexcept {
-
-		}
+		constexpr void clear(int*& asdf) noexcept { *asdf = 0; }
 		__LL_NODISCARD__ constexpr int hash() const noexcept { return 0; }
-		__LL_NODISCARD__ constexpr int hash(T&) noexcept { return 0; }
-		__LL_NODISCARD__ constexpr int hash(const T&) const noexcept { return 0; }
+		__LL_NODISCARD__ constexpr int hash(int*& v) noexcept { return *v; }
+		__LL_NODISCARD__ constexpr int hash(const int*& v) const noexcept { return *v; }
+		__LL_NODISCARD__ constexpr void preDestruction(int*& v) noexcept { delete v; }
 };
 
 // This class has a problem by traits::hash::get_hash_function_type_t<>
@@ -183,6 +175,7 @@ class ContainerExtra : public _Functions, public BasicContainer<_T> {
 	#pragma region Types
 	public:
 		using T							= _T;
+		using T_class					= std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
 		using Functions					= _Functions;
 		using BasicContainer			= BasicContainer<T>;
 		using pointer					= typename BasicContainer::pointer;
@@ -191,15 +184,15 @@ class ContainerExtra : public _Functions, public BasicContainer<_T> {
 
 		using T_HashType				= traits::hash::get_hash_function_type_t<T>;
 		using F_HashType				= traits::hash::get_hash_function_type_t<Functions>;
-		using T_HashSignature			= T_HashType(T::*)() noexcept;
+
+		using T_HashSignature			= T_HashType(T_class::*)() noexcept;
+		using T_HashConstSignature		= T_HashType(T_class::*)() const noexcept;
+		using T_ClearSignature			= void(T_class::*)() noexcept;
+		using T_PreDestructSignature	= void(T_class::*)() noexcept;
+
 		using F_HashSignature			= F_HashType(Functions::*)(reference) noexcept;
-		using T_HashConstSignature		= T_HashType(T::*)() const noexcept;
 		using F_HashConstSignature		= F_HashType(Functions::*)(creference) const noexcept;
-
-		using T_ClearSignature			= void(T::*)() noexcept;
 		using F_ClearSignature			= void(Functions::*)(reference) noexcept;
-
-		using T_PreDestructSignature	= void(T::*)() noexcept;
 		using F_PreDestructSignature	= void(Functions::*)(reference) noexcept;
 
 	#pragma endregion
@@ -217,7 +210,7 @@ class ContainerExtra : public _Functions, public BasicContainer<_T> {
 		constexpr ContainerExtra(Args&&... args) noexcept
 			: Functions(), BasicContainer(std::forward<Args>(args)...) {}
 		constexpr ~ContainerExtra() noexcept {
-			if constexpr (std::is_class_v<T> && traits::common::has_predestruction_function_v<T, T_PreDestructSignature>)
+			if constexpr (traits::common::has_predestruction_function_v<T_class, T_PreDestructSignature>)
 				this->operator*()->preDestruction();
 			if constexpr (traits::common::has_predestruction_function_v<Functions, F_PreDestructSignature>)
 				Functions::preDestruction(this->operator*());
@@ -270,14 +263,14 @@ class ContainerExtra : public _Functions, public BasicContainer<_T> {
 		__LL_NODISCARD__ constexpr const T& operator*() const noexcept { return BasicContainer::operator*(); }
 	public:
 		__LL_NODISCARD__ constexpr auto hash() noexcept {
-			if constexpr (std::is_class_v<T> && traits::common::has_hash_function_v<T, T_HashSignature>)
+			if constexpr (traits::common::has_hash_function_v<T_class, T_HashSignature>)
 				return this->operator*()->hash();
 			else if constexpr (traits::common::has_hash_function_v<Functions, F_HashSignature>)
 				return Functions::hash(this->operator*());
 			else return meta::hash::StandardOptionalHash(std::nullopt);
 		}
 		__LL_NODISCARD__ constexpr auto hash() const noexcept {
-			if constexpr (std::is_class_v<T> && traits::common::has_hash_function_v<T, T_HashConstSignature>)
+			if constexpr (traits::common::has_hash_function_v<T_class, T_HashConstSignature>)
 				return this->operator*()->hash();
 			else if constexpr (traits::common::has_hash_function_v<Functions, F_HashConstSignature>)
 				return Functions::hash(this->operator*());
@@ -285,7 +278,7 @@ class ContainerExtra : public _Functions, public BasicContainer<_T> {
 		}
 
 		__LL_NODISCARD__ constexpr void clear() noexcept {
-			if constexpr (std::is_class_v<T> && traits::common::has_clear_function_v<T, T_ClearSignature>)
+			if constexpr (traits::common::has_clear_function_v<T_class, T_ClearSignature>)
 				this->operator*()->clear();
 			else if constexpr (traits::common::has_clear_function_v<Functions, F_ClearSignature>)
 				Functions::clear(this->operator*());
@@ -301,35 +294,6 @@ using Container = std::conditional_t<
 	std::is_same_v<ContainerExtraFunctions, void>,
 	BasicContainer<T>,
 	ContainerExtra<T, ContainerExtraFunctions>>;
-
-class IntFunctions {
-	public:
-		constexpr void clear(int& asdf) noexcept { asdf = 0; }
-		__LL_NODISCARD__ constexpr int hash() const noexcept { return 0; }
-		__LL_NODISCARD__ constexpr int hash(int v) noexcept { return v; }
-		__LL_NODISCARD__ constexpr int hash(const int v) const noexcept { return v; }
-};
-
-constexpr int asdf() {
-	Container<int, IntFunctions> a(99);
-	a = 88;
-	a.clear();
-	return *a;
-}
-
-void asdf2() {
-	using pair = std::pair<int, int>;
-	std::list<pair> _;
-	auto a = _.begin();
-	a->first;
-
-	const BasicContainer<pair> p = pair{ 1, -2 };
-	p->first = 9;
-
-
-}
-
-constexpr int aaaa = asdf();
 
 } // namespace meta
 } // namespace llcpp

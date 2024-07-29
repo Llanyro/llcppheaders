@@ -82,7 +82,7 @@ __LL_NODISCARD__ constexpr ll_bool_t construct_vector_s(T* begin, const len_t si
 	#pragma warning(disable:4100) // Unreferenced formal parameter
 #endif // WINDOWS_SYSTEM
 
-class LL_SHARED_LIB AllocatorDummy {
+class AllocatorDummy {
 	#pragma region Functions
 		#pragma region Constructor
 	public:
@@ -125,7 +125,7 @@ class LL_SHARED_LIB AllocatorDummy {
 #endif // WINDOWS_SYSTEM
 
 template<class Allocator = AllocatorDummy>
-class LL_SHARED_LIB AllocatorChecker : public Allocator {
+class AllocatorChecker : public Allocator {
 	#pragma region Types
 	public:
 		using AllocateFunc = void* (Allocator::*)(const len_t) noexcept;
@@ -219,7 +219,7 @@ class LL_SHARED_LIB AllocatorChecker : public Allocator {
 };
 
 template<class T, class Allocator = AllocatorDummy>
-class LL_SHARED_LIB AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
+class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 	#pragma region Types
 	public:
 		using AllocatorCheckerBase = meta::AllocatorChecker<Allocator>;

@@ -28,7 +28,7 @@ namespace meta {
 namespace hash {
 
 template<class HashType = hash::Hash64>
-class LL_SHARED_LIB HashGeneratorDummy {
+class HashGeneratorDummy {
 	#pragma region Types
 	public:
 		using OptionalHash = std::optional<HashType>;
@@ -280,7 +280,7 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 	static_assert(num != ZERO_UI64, "Cannot hash 0 elements");
 
 template<class HashType = hash::Hash64, class HashGenerator = hash::HashGeneratorDummy<HashType>>
-class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashType, HashGenerator> {
+class HashFunctionPack : public hash::HashGeneratorChecker<HashType, HashGenerator> {
 	#pragma region Types
 	public:
 		using HashGeneratorChecker = hash::HashGeneratorChecker<HashType, HashGenerator>;
@@ -544,7 +544,7 @@ class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashTyp
 #undef __LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__
 
 template<class HashType = hash::Hash64, class HashGenerator = hash::HashGeneratorDummy<HashType>>
-class LL_SHARED_LIB HashFunctionPackNoConstexpr : public hash::HashGeneratorChecker<HashType, HashGenerator> {
+class HashFunctionPackNoConstexpr : public hash::HashGeneratorChecker<HashType, HashGenerator> {
 	#pragma region Types
 	public:
 		using HashGeneratorChecker = hash::HashGeneratorChecker<HashType, HashGenerator>;

@@ -18,6 +18,5 @@
 //#include "llanylib/string.hpp"
 #include "llanylib/bits.hpp"
 #include "llanylib/math.hpp"
-#include "llanylib/ArrayView.hpp"
 
 #endif // LLANYLIB_HPP_

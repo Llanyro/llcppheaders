@@ -30,7 +30,7 @@ template<class T>
 class Array;
 
 template<class T>
-class LL_SHARED_LIB ArrayPair {
+class ArrayPair {
 	#pragma region Asserts
 	public:
 		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
@@ -160,7 +160,7 @@ class LL_SHARED_LIB ArrayPair {
 };
 
 template<class T>
-class LL_SHARED_LIB Array {
+class Array {
 	#pragma region Asserts
 	public:
 		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");

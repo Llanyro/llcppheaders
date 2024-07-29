@@ -100,7 +100,7 @@ struct ParserFunctionDummy {
 };
 
 template<class ParserFunctions = ParserFunctionDummy>
-class LL_SHARED_LIB Parser : public ParserFunctions {
+class Parser : public ParserFunctions {
 	#pragma region ClassTypes
 	public:
 		static_assert(!std::is_reference_v<ParserFunctions>, "Reference type is forbidden!");

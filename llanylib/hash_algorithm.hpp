@@ -214,20 +214,6 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_hash_type_v =
 	std::_Is_any_of_v<std::remove_cv_t<T>, hash::Hash32, hash::Hash64, hash::Hash128>;
 
-// [TOCHECK] Unknown error with dedines
-// The define is just the same as the next struct
-//__LL_TEMPLATE_HAS_FUNCTION_BASE__(hash, hash);
-template<class ClassToCheck, class Signature>
-struct has_hash_function{
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
-	using type = decltype(has_hash_function::test<ClassToCheck>(&ClassToCheck::hash));
-};
-template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function_v = has_hash_function<ClassToCheck, Signature>::type::value;
-
 } // namespace __
 
 } // namespace hash

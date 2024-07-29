@@ -192,5 +192,8 @@
     <ClInclude Include="NodeDouble.hpp">
       <Filter>Source Files\utils\lists\node</Filter>
     </ClInclude>
+    <ClInclude Include="Container.hpp">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

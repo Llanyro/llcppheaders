@@ -36,73 +36,6 @@ namespace llcpp {
 namespace meta {
 namespace algorithm {
 
-// Internal algorithm namespace
-namespace __ {
-
-// [TOCHECK] Unknown error with dedines
-// The define is just the same as the next struct
-//__LL_TEMPLATE_HAS_FUNCTION_BASE__(compare, compare);
-//__LL_TEMPLATE_HAS_FUNCTION_BASE__(compareBool, compareBool);
-//__LL_TEMPLATE_HAS_FUNCTION_BASE__(swap, swap);
-//__LL_TEMPLATE_HAS_FUNCTION_BASE__(copy, copy);
-
-template<class ClassToCheck, class Signature>
-struct has_compare_function {
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
-	using type = decltype(has_compare_function::test<ClassToCheck>(&ClassToCheck::compareBool));
-};
-template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_compare_function_v = has_compare_function<ClassToCheck, Signature>::type::value;
-
-template<class ClassToCheck, class Signature>
-struct has_compareBool_function {
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
-	using type = decltype(has_compareBool_function::test<ClassToCheck>(&ClassToCheck::compareBool));
-};
-template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_compareBool_function_v = has_compareBool_function<ClassToCheck, Signature>::type::value;
-
-template<class ClassToCheck, class Signature>
-struct has_swap_function {
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
-	using type = decltype(has_swap_function::test<ClassToCheck>(&ClassToCheck::swap));
-};
-template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_swap_function_v = has_swap_function<ClassToCheck, Signature>::type::value;
-
-template<class ClassToCheck, class Signature>
-struct has_copy_function {
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
-	using type = decltype(has_copy_function::test<ClassToCheck>(&ClassToCheck::copy));
-};
-template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_copy_function_v = has_copy_function<ClassToCheck, Signature>::type::value;
-
-template<class ClassToCheck, class Signature>
-struct has_move_function {
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
-	using type = decltype(has_move_function::test<ClassToCheck>(&ClassToCheck::move));
-};
-template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_move_function_v = has_move_function<ClassToCheck, Signature>::type::value;
-
-} // namespace __
-
 #pragma region Comparators
 template<class T, class U, class result_t, result_t _NULL_RESULT_>
 class CompareData {
@@ -345,9 +278,9 @@ class ComparatorChecker {
 		static_assert(std::is_move_constructible_v<Comparator>, "Comparator needs a noexcept move constructor!");
 		static_assert(std::is_move_assignable_v<Comparator>, "Comparator needs a noexcept move asignable!");
 
-		static_assert(algorithm::__::has_compare_function_v<Comparator, CompareSignature>,
+		static_assert(traits::common::has_compare_function_v<Comparator, CompareSignature>,
 			"Comparator::compare() const noexcept is required by default! Non const function is optional");
-		static_assert(algorithm::__::has_compareBool_function_v<Comparator, CompareSignatureBool>,
+		static_assert(traits::common::has_compareBool_function_v<Comparator, CompareSignatureBool>,
 			"Comparator::compare() const noexcept is required by default! Non const function is optional");
 
 	#pragma endregion
@@ -1486,9 +1419,9 @@ class DataManipulatorCluster : public Manipulator {
 		static_assert(std::is_move_constructible_v<Manipulator>, "Manipulator needs a noexcept move constructor!");
 		static_assert(std::is_move_assignable_v<Manipulator>, "Manipulator needs a noexcept move asignable!");
 
-		static_assert(algorithm::__::has_swap_function_v<Manipulator, SwapSignature>,
+		static_assert(traits::common::has_swap_function_v<Manipulator, SwapSignature>,
 			"Manipulator::swap() const noexcept is required by default! Non const function is optional");
-		static_assert(algorithm::__::has_swap_function_v<Manipulator, MoveSignature>,
+		static_assert(traits::common::has_swap_function_v<Manipulator, MoveSignature>,
 			"Manipulator::move() const noexcept is required by default! Non const function is optional");
 
 	#pragma endregion
@@ -1599,7 +1532,7 @@ class DataManipulatorCluster : public Manipulator {
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void fill(T* dst, T* end, W object, FunctionManipulator&& man) const noexcept {
 			using CopyFunction = void(FunctionManipulator::*)(T&, W) const noexcept;
-			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, CopyFunction>,
+			static_assert(traits::common::has_copy_function_v<FunctionManipulator, CopyFunction>,
 				"FunctionManipulator::copy() const noexcept is required!");
 
 			for (; dst < end; ++dst)
@@ -1709,7 +1642,7 @@ class DataManipulatorCluster : public Manipulator {
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void copy(const U* src, T* dst, len_t size, FunctionManipulator&& man) const noexcept {
 			using CopyFunction = void(FunctionManipulator::*)(T&, W) const noexcept;
-			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, CopyFunction>,
+			static_assert(traits::common::has_copy_function_v<FunctionManipulator, CopyFunction>,
 				"FunctionManipulator::copy() const noexcept is required!");
 
 			for (; size > ZERO_UI64; ++src, ++dst, --size)
@@ -1891,7 +1824,7 @@ class DataManipulatorCluster : public Manipulator {
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move(U* src, T* dst, len_t size, FunctionManipulator&& man) const noexcept {
 			using MoveSignaturetion = void(FunctionManipulator::*)(T&, U&) const noexcept;
-			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, MoveSignaturetion>,
+			static_assert(traits::common::has_copy_function_v<FunctionManipulator, MoveSignaturetion>,
 				"FunctionManipulator::move() const noexcept is required!");
 
 			for (; size > ZERO_UI64; ++src, ++dst, --size)
@@ -2049,7 +1982,7 @@ class DataManipulatorCluster : public Manipulator {
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void shiftLeft(T* _array, T* last, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
 			using CopyFunction = void(FunctionManipulator::*)(T&, W) const noexcept;
-			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, CopyFunction>,
+			static_assert(traits::common::has_copy_function_v<FunctionManipulator, CopyFunction>,
 				"FunctionManipulator::copy() const noexcept is required!");
 
 			// First: 3
@@ -2215,7 +2148,7 @@ class DataManipulatorCluster : public Manipulator {
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void shiftRight(T* _array, T* last, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
 			using CopyFunction = void(FunctionManipulator::*)(T&, W) const noexcept;
-			static_assert(algorithm::__::has_copy_function_v<FunctionManipulator, CopyFunction>,
+			static_assert(traits::common::has_copy_function_v<FunctionManipulator, CopyFunction>,
 				"FunctionManipulator::copy() const noexcept is required!");
 
 			// First: 3

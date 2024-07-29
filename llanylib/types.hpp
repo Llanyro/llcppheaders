@@ -225,35 +225,39 @@ class Hash32;
 class Hash64;
 class Hash128;
 
-using OptionalHash32 = std::optional<hash::Hash32>;
-using OptionalHash64 = std::optional<hash::Hash64>;
-using OptionalHash128 = std::optional<hash::Hash128>;
+using OptionalHash32	= std::optional<hash::Hash32>;
+using OptionalHash64	= std::optional<hash::Hash64>;
+using OptionalHash128	= std::optional<hash::Hash128>;
+
+using StandardHash			= Hash64;
+using StandardOptionalHash	= OptionalHash64;
+
 
 } // namespace hash
 
 template<class CharType, class HashType>
 class Typeid;
-using StrTypeid = Typeid<ll_char_t, hash::Hash64>;
-using wStrTypeid = Typeid<ll_wchar_t, hash::Hash64>;
+using StrTypeid		= Typeid<ll_char_t, hash::Hash64>;
+using wStrTypeid	= Typeid<ll_wchar_t, hash::Hash64>;
 
 #pragma endregion
 
 namespace functional {
 
-using Compare = cmp_t(*)(const void* __t1, const void* __t2) noexcept;
-using CompareBool = ll_bool_t(*)(const void* __t1, const void* __t2) noexcept;
-using CompareExtra = cmp_t(*)(const void* __t1, const void* __t2, void* __extra__) noexcept;
-using CompareBoolExtra = ll_bool_t(*)(const void* __t1, const void* __t2, void* __extra__) noexcept;
+using Compare			= cmp_t(*)(const void* __t1, const void* __t2) noexcept;
+using CompareBool		= ll_bool_t(*)(const void* __t1, const void* __t2) noexcept;
+using CompareExtra		= cmp_t(*)(const void* __t1, const void* __t2, void* __extra__) noexcept;
+using CompareBoolExtra	= ll_bool_t(*)(const void* __t1, const void* __t2, void* __extra__) noexcept;
 
 namespace classic {
 template<class T, class U = T>
-using Compare = cmp_t(*)(T __t1, U __t2) noexcept;
+using Compare		= cmp_t(*)(T __t1, U __t2) noexcept;
 template<class T, class U = T>
-using CompareBool = ll_bool_t(*)(T __t1, U __t2) noexcept;
+using CompareBool	= ll_bool_t(*)(T __t1, U __t2) noexcept;
 template<class T, class U = T>
-using SwapFunction = void(*)(T& __t1, U& __t2) noexcept;
+using SwapFunction	= void(*)(T& __t1, U& __t2) noexcept;
 template<class T, class U = T&>
-using SetFunction = void(*)(T& __t1, U __t2) noexcept;
+using SetFunction	= void(*)(T& __t1, U __t2) noexcept;
 
 } // namespace classic
 namespace lambda {

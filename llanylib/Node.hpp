@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_NODE_HPP_)
 #define LLANYLIB_NODE_HPP_
-#define LLANYLIB_NODE_MAYOR_ 8
+#define LLANYLIB_NODE_MAYOR_ 9
 #define LLANYLIB_NODE_MINOR_ 0
 
 #include "traits.hpp"
@@ -150,8 +150,8 @@ class Node : public BaseNode<NodeType>, public NodeFunctions {
 		using type = NodeType;
 		using BaseNode = BaseNode<NodeType>;
 
-		//using NodeTypeUsed = NodeType;
-		using NodeTypeUsed = Node;
+		using NodeTypeUsed = NodeType;
+		//using NodeTypeUsed = Node;
 		using NodePack = std::pair<NodeTypeUsed*, NodeTypeUsed*>;
 		using NodePackConst = std::pair<const NodeTypeUsed*, const NodeTypeUsed*>;
 		using NodeCheckerSignature = ll_bool_t(NodeFunctions::*)(const NodeTypeUsed*) const noexcept;
@@ -208,7 +208,7 @@ class Node : public BaseNode<NodeType>, public NodeFunctions {
 			return *this;
 		}
 		constexpr Node(NodeFunctions&& other) noexcept : BaseNode(), NodeFunctions(std::move(other)) {}
-		constexpr NodeFunctions& operator=(NodeFunctions&& other) noexcept {
+		constexpr Node& operator=(NodeFunctions&& other) noexcept {
 			NodeFunctions::operator=(std::move(other));
 			return *this;
 		}
@@ -216,8 +216,8 @@ class Node : public BaseNode<NodeType>, public NodeFunctions {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const NodeFunctions*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator NodeFunctions*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const Node*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator Node*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -232,26 +232,25 @@ class Node : public BaseNode<NodeType>, public NodeFunctions {
 		#pragma region Find
 	private:
 		__LL_NODISCARD__ constexpr NodeTypeUsed* find_impl(const NodeTypeUsed* end) noexcept {
-			NodeTypeUsed* begin = this;
+			NodeTypeUsed* begin = this->getNode();
 			//while (begin != end) {
 			//	if (this->nodeChecker(begin)) return begin;
 			//	else begin = begin->get();
 			//}
 			// Also check end
 			//return (begin && this->nodeChecker(begin)) ? begin : LL_NULLPTR;
-			//return this;
-			return nullptr;
+			return begin;
+			//return nullptr;
 		}
-		__LL_NODISCARD__ constexpr const NodeTypeUsed* find_impl(const NodeTypeUsed* end) const noexcept {
-			//const NodeTypeUsed* begin = this;
-			//while (begin != end) {
-			//	if (this->nodeChecker(begin)) return begin;
-			//	else begin = begin->get();
-			//}
-			//// Also check end
-			//return (begin && this->nodeChecker(begin)) ? begin : LL_NULLPTR;
-			return nullptr;
-		}
+		//__LL_NODISCARD__ constexpr const NodeTypeUsed* find_impl(const NodeTypeUsed* end) const noexcept {
+		//	const NodeTypeUsed* begin = this;
+		//	while (begin != end) {
+		//		if (this->nodeChecker(begin)) return begin;
+		//		else begin = begin->get();
+		//	}
+		//	// Also check end
+		//	return (begin && this->nodeChecker(begin)) ? begin : LL_NULLPTR;
+		//}
 
 	public:
 		__LL_NODISCARD__ constexpr NodeTypeUsed* find(const NodeTypeUsed* end) noexcept {
@@ -774,28 +773,29 @@ class Node<NodeType, LL_TRUE> : public BaseNode<NodeType> {
 	#pragma endregion
 };*/
 
-template <class T, class NodeFunctions>
-class NodeT : public Node<NodeT<T, NodeFunctions>, NodeFunctions> {
+template <class T>
+class NodeT : public Node<NodeT<T>, NodeT<T>> {
 	#pragma region Types
 	public:
 		using type = T;
-		using Node = Node<NodeT, NodeFunctions>;
+		using Node = Node<NodeT, NodeT>;
 
 	#pragma endregion
 	#pragma region Attributes
 	public:
 		T object;
+		T* search;
 
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Contructors
 	public:
-		constexpr NodeT() noexcept : Node(), object() {}
-		constexpr NodeT(NodeT* _node) noexcept : Node(_node), object() {}
-		constexpr NodeT(NodeT* _node, const T& object) noexcept : Node(_node), object(object) {}
-		constexpr NodeT(NodeT* _node, T&& object) noexcept : Node(_node), object(std::move(object)) {}
-		constexpr NodeT(const T& object) noexcept : Node(), object(object) {}
-		constexpr NodeT(T&& object) noexcept : Node(), object(std::move(object)) {}
+		constexpr NodeT() noexcept : Node(), object(), search(LL_NULLPTR) {}
+		constexpr NodeT(NodeT* _node) noexcept : Node(_node), object(), search(LL_NULLPTR) {}
+		constexpr NodeT(NodeT* _node, const T& object) noexcept : Node(_node), object(object), search(LL_NULLPTR) {}
+		constexpr NodeT(NodeT* _node, T&& object) noexcept : Node(_node), object(std::move(object)), search(LL_NULLPTR) {}
+		constexpr NodeT(const T& object) noexcept : Node(), object(object), search(LL_NULLPTR) {}
+		constexpr NodeT(T&& object) noexcept : Node(), object(std::move(object)), search(LL_NULLPTR) {}
 		constexpr ~NodeT() noexcept {}
 
 		#pragma endregion
@@ -813,50 +813,15 @@ class NodeT : public Node<NodeT<T, NodeFunctions>, NodeFunctions> {
 		__LL_NODISCARD__ constexpr operator NodeT*() noexcept { return this; }
 
 		#pragma endregion
-
-	#pragma endregion
-};
-
-template <class T>
-class NodeTools {
-	#pragma region Types
-	public:
-		using type = T;
-		using Node = NodeT<T, NodeTools<T>>;
-
-	#pragma endregion
-	#pragma region Attributes
-	public:
-		T* search;
-
-	#pragma endregion
-	#pragma region Functions
-		#pragma region Contructors
-	public:
-		constexpr NodeTools() noexcept : search(LL_NULLPTR) {}
-		constexpr ~NodeTools() noexcept {}
-
-		#pragma endregion
-		#pragma region CopyMove
-	public:
-		constexpr NodeTools(const NodeTools&) noexcept = delete;
-		constexpr NodeTools& operator=(const NodeTools&) noexcept = delete;
-		constexpr NodeTools(NodeTools&&) noexcept = delete;
-		constexpr NodeTools& operator=(const NodeTools&) noexcept = delete;
-
-		#pragma endregion
-		#pragma region ClassReferenceOperators
-	public:
-		__LL_NODISCARD__ constexpr operator const NodeTools*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator NodeTools*() noexcept { return this; }
-
-		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr ll_bool_t nodeChecker(const Node* a) const noexcept {
+		__LL_NODISCARD__ constexpr NodeT* getNode() noexcept { return this; }
+		__LL_NODISCARD__ constexpr const NodeT* getNode() const noexcept { return this; }
+	public:
+		__LL_NODISCARD__ constexpr ll_bool_t nodeChecker(const NodeT* a) const noexcept {
 			return a->object == *this->search;
 		}
-		__LL_NODISCARD__ constexpr cmp_t compareNode(const Node* a, const Node* b) const noexcept {
+		__LL_NODISCARD__ constexpr cmp_t compareNode(const NodeT* a, const NodeT* b) const noexcept {
 			return
 				(a->object == b->object)
 				? 0
@@ -864,15 +829,12 @@ class NodeTools {
 		}
 
 		#pragma endregion
+
 	#pragma endregion
 };
 
-
-constexpr int asdf() {
-	using Types = NodeTools<int>;
-	using Node = Types::Node;
-
-	Node a[5]{};
+constexpr int asdf() noexcept {
+	NodeT<int> a[5]{};
 	a[0].set(&a[1]);
 	a[1].set(&a[2]);
 	a[2].set(&a[3]);
@@ -885,18 +847,27 @@ constexpr int asdf() {
 		a[i].search = &search;
 	}
 
-	//NodeT<>* result = LL_NULLPTR;
+	//NodeT<int>* result = LL_NULLPTR;
 	auto result = a->find_s(LL_NULLPTR);
 	if (result) {
-		for (len_t i{}; i < traits::array_size<decltype(a)>; ++i) {
-			if (a + i == result) return a[i].object;
-		}
+		//for (len_t i{}; i < traits::array_size<decltype(a)>; ++i) {
+		//	if (a + i == result) return a[i].object;
+		//}
+		return result->object;
 	}
 	return -1;
 	//return a[4].object;
 }
 
-constexpr int value = asdf();
+constexpr int asdf2() noexcept {
+	NodeT<int> a(LL_NULLPTR, 99);
+	auto result = a.operator llcpp::meta::linked::Node<llcpp::meta::linked::NodeT<int>, llcpp::meta::linked::NodeT<int>> *();
+	char* b = result;
+	return a->object;
+}
+
+//constexpr int value = asdf();
+constexpr int value2 = asdf2();
 
 } // namespace linked
 } // namespace meta

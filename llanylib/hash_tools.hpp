@@ -122,7 +122,7 @@ class HashTool : public hash::HashFunctionPack<HashType, HashGenerator> {
 			// Hashses values using a converting to chars algorithm, and hashing the string
 			else if constexpr (HashTool::is_convertible_v<T>)
 				return this->hashArray<N, T>(_array);
-			else if constexpr (hash::__::is_hash_type_v<T> || std::is_same_v<T, HashType>)
+			else if constexpr (traits::common::is_hash_type_v<T> || std::is_same_v<T, HashType>)
 				return this->hashArrayHash<N, T>(_array);
 			else if constexpr (HashTool::is_convertible_object_v<T>) {
 				auto h = this->hash(*_array++);

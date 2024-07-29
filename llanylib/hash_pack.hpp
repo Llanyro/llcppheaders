@@ -167,36 +167,36 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 		static_assert(std::is_move_constructible_v<HashGenerator>, "HashGenerator needs a noexcept move constructor!");
 		static_assert(std::is_move_assignable_v<HashGenerator>, "HashGenerator needs a noexcept move asignable!");
 
-		static_assert(hash::__::has_hash_function_v<HashGenerator, HashConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, HashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, wHashConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, wHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, StringPairHashConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, StringPairHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, wStringPairHashConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, wStringPairHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, StrPairHashConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, StrPairHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, wStrPairHashConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, wStrPairHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, StrHashConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, StrHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, wStrHashConstFunction>,
-			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		
-		static_assert(hash::__::has_hash_function_v<HashGenerator, RecursiveHash128ConstFunction>,
-			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, RecursiveHash64ConstFunction>,
-			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, RecursiveHash32ConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, wStrHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		
-		static_assert(std::is_same_v<RecursiveHashConstFunction, void> || hash::__::has_hash_function_v<HashGenerator, RecursiveHashConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, RecursiveHash128ConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(traits::common::has_hash_function_v<HashGenerator, RecursiveHash64ConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(traits::common::has_hash_function_v<HashGenerator, RecursiveHash32ConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		
-		static_assert(hash::__::has_hash_function_v<HashGenerator, StrTypeidHashConstFunction>,
+		static_assert(std::is_same_v<RecursiveHashConstFunction, void> || traits::common::has_hash_function_v<HashGenerator, RecursiveHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
-		static_assert(hash::__::has_hash_function_v<HashGenerator, wStrTypeidHashConstFunction>,
+		
+		static_assert(traits::common::has_hash_function_v<HashGenerator, StrTypeidHashConstFunction>,
+			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
+		static_assert(traits::common::has_hash_function_v<HashGenerator, wStrTypeidHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 
 	#pragma endregion
@@ -495,7 +495,7 @@ class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashTyp
 			__LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__(N);
 		
 			// Check is hash type
-			static_assert(hash::__::is_hash_type_v<T> || std::is_same_v<T, HashType>,
+			static_assert(traits::common::is_hash_type_v<T> || std::is_same_v<T, HashType>,
 				"T should be a library hash or a custom provided hash!");
 		
 			// Get operator basic_type to hash
@@ -517,7 +517,7 @@ class LL_SHARED_LIB HashFunctionPack : public hash::HashGeneratorChecker<HashTyp
 			__LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__(N);
 
 			// Check is hash type
-			static_assert(hash::__::is_hash_type_v<T> || std::is_same_v<T, HashType>,
+			static_assert(traits::common::is_hash_type_v<T> || std::is_same_v<T, HashType>,
 				"T should be a library hash or a custom provided hash!");
 
 			// Get operator basic_type to hash

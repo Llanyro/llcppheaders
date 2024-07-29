@@ -38,6 +38,11 @@ namespace traits {
 #pragma region TraitsTypesAndCheckers
 template<class _T>
 struct type_container { using T = _T; };
+template<class _T, class _U>
+struct double_type_container {
+	using T = _T;
+	using U = _U;
+};
 
 // Standard checker for types in this lib
 template<class _T, ll_bool_t _IGNORE_POINTER = llcpp::LL_FALSE, ll_bool_t _IGNORE_VOLATILE = llcpp::LL_FALSE>
@@ -211,9 +216,11 @@ struct check_valid_types {
 		"class_checker<Checker> detected an invalid class type!");
 
 	template<class T>
-	static constexpr auto get_first() noexcept -> std::conditional_t<Checker::is_valid_v<T>, T, VoidType>;
+	static constexpr auto get_first() noexcept ->
+		std::conditional_t<Checker::is_valid_v<T>, T, VoidType>;
 	template<class T, class... Args>
-	static constexpr auto get_first() noexcept -> std::conditional_t<Checker::is_valid_v<T>, T, decltype(get_first<Args...>())>;
+	static constexpr auto get_first() noexcept ->
+		std::conditional_t<Checker::is_valid_v<T>, T, decltype(get_first<Args...>())>;
 	template<class... Args>
 	using type = decltype(get_first<Args...>());
 };
@@ -264,10 +271,8 @@ struct has_type_operator {
 			std::true_type,
 			std::false_type
 		>;
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> type_default_result;
+	template<class> static constexpr auto test(Signature) noexcept	-> std::true_type;
+	template<class> static constexpr auto test(...) noexcept		-> type_default_result;
 	using type = decltype(has_type_operator::test<ClassToCheck>(&ClassToCheck::operator OperatorType));
 };
 
@@ -389,6 +394,7 @@ struct parameter_pack_operations<> {
 
 namespace common {
 
+#pragma region Hash
 template<class _ClassToCheck, class _Signature>
 struct has_hash_function{
 	using ClassToCheck	= _ClassToCheck;
@@ -399,16 +405,16 @@ struct has_hash_function{
 	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
 		"class_checker<ClassToCheck> detected an invalid class type!");
 
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
+	template<class> static constexpr auto test(Signature) noexcept	-> std::true_type;
+	template<class> static constexpr auto test(...) noexcept		-> std::false_type;
 	using type = decltype(has_hash_function::test<ClassToCheck>(&ClassToCheck::hash));
 };
 template<class ClassToCheck, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_hash_function_v = 
 	has_hash_function<ClassToCheck, Signature>::type::value;
 
+#pragma endregion
+#pragma region Clear
 template<class _ClassToCheck, class _Signature>
 struct LL_SHARED_LIB has_clear_function {
 	using ClassToCheck	= _ClassToCheck;
@@ -419,16 +425,16 @@ struct LL_SHARED_LIB has_clear_function {
 	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
 		"class_checker<ClassToCheck> detected an invalid class type!");
 
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
+	template<class> static constexpr auto test(Signature) noexcept	-> std::true_type;
+	template<class> static constexpr auto test(...) noexcept		-> std::false_type;
 	using type = decltype(has_clear_function::test<ClassToCheck>(&ClassToCheck::clear));
 };
 template<class ClassToCheck, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_clear_function_v = 
 	has_clear_function<ClassToCheck, Signature>::type::value;
 
+#pragma endregion
+#pragma region Swap
 template<class _ClassToCheck, class _Signature>
 struct has_swap_function {
 	using ClassToCheck	= _ClassToCheck;
@@ -439,16 +445,16 @@ struct has_swap_function {
 	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
 		"class_checker<ClassToCheck> detected an invalid class type!");
 
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
+	template<class> static constexpr auto test(Signature) noexcept	-> std::true_type;
+	template<class> static constexpr auto test(...) noexcept		-> std::false_type;
 	using type = decltype(has_swap_function::test<ClassToCheck>(&ClassToCheck::swap));
 };
 template<class ClassToCheck, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_swap_function_v = 
 	has_swap_function<ClassToCheck, Signature>::type::value;
 
+#pragma endregion
+#pragma region Copy
 template<class _ClassToCheck, class _Signature>
 struct has_copy_function {
 	using ClassToCheck	= _ClassToCheck;
@@ -459,16 +465,16 @@ struct has_copy_function {
 	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
 		"class_checker<ClassToCheck> detected an invalid class type!");
 
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
+	template<class> static constexpr auto test(Signature) noexcept	-> std::true_type;
+	template<class> static constexpr auto test(...) noexcept		-> std::false_type;
 	using type = decltype(has_copy_function::test<ClassToCheck>(&ClassToCheck::copy));
 };
 template<class ClassToCheck, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_copy_function_v =
 	has_copy_function<ClassToCheck, Signature>::type::value;
 
+#pragma endregion
+#pragma region Move
 template<class _ClassToCheck, class _Signature>
 struct has_move_function {
 	using ClassToCheck	= _ClassToCheck;
@@ -477,16 +483,16 @@ struct has_move_function {
 	static_assert(traits::is_valid_type_checker_v<ClassToCheck>, "type_checker<ClassToCheck> detected an invalid type!");
 	static_assert(traits::is_valid_class_checker_v<ClassToCheck>, "class_checker<ClassToCheck> detected an invalid class type!");
 
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
+	template<class> static constexpr auto test(Signature) noexcept	-> std::true_type;
+	template<class> static constexpr auto test(...) noexcept		-> std::false_type;
 	using type = decltype(has_move_function::test<ClassToCheck>(&ClassToCheck::move));
 };
 template<class ClassToCheck, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_move_function_v =
 	has_move_function<ClassToCheck, Signature>::type::value;
 
+#pragma endregion
+#pragma region Compare
 template<class _ClassToCheck, class _Signature>
 struct has_compare_function {
 	using ClassToCheck	= _ClassToCheck;
@@ -497,16 +503,16 @@ struct has_compare_function {
 	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
 		"class_checker<ClassToCheck> detected an invalid class type!");
 
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
+	template<class> static constexpr auto test(Signature) noexcept	-> std::true_type;
+	template<class> static constexpr auto test(...) noexcept		-> std::false_type;
 	using type = decltype(has_compare_function::test<ClassToCheck>(&ClassToCheck::compareBool));
 };
 template<class ClassToCheck, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_compare_function_v =
 	has_compare_function<ClassToCheck, Signature>::type::value;
 
+#pragma endregion
+#pragma region CompareBool
 template<class _ClassToCheck, class _Signature>
 struct has_compareBool_function {
 	using ClassToCheck	= _ClassToCheck;
@@ -517,18 +523,48 @@ struct has_compareBool_function {
 	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
 		"class_checker<ClassToCheck> detected an invalid class type!");
 
-	template<class U>
-	static constexpr auto test(Signature) noexcept -> std::true_type;
-	template<class U>
-	static constexpr auto test(...) noexcept -> std::false_type;
+	template<class> static constexpr auto test(Signature) noexcept	-> std::true_type;
+	template<class> static constexpr auto test(...) noexcept		-> std::false_type;
 	using type = decltype(has_compareBool_function::test<ClassToCheck>(&ClassToCheck::compareBool));
 };
 template<class ClassToCheck, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_compareBool_function_v =
 	has_compareBool_function<ClassToCheck, Signature>::type::value;
 
+#pragma endregion
 
 } // namespace common
+
+namespace hash {
+
+template<class _ClassToCheck>
+struct get_hash_function_type {
+	using ClassToCheck	= _ClassToCheck;
+
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
+
+	template<class>
+	static constexpr auto test(auto(ClassToCheck::* asdf)() noexcept) noexcept ->
+		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(asdf), ClassToCheck>>;
+	template<class>
+	static constexpr auto test(auto(ClassToCheck::* asdf)() const noexcept) noexcept ->
+		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(asdf), ClassToCheck>>;
+	template<class>
+	static constexpr auto test(...) noexcept ->
+		traits::double_type_container<std::false_type, meta::hash::StandardOptionalHash>;
+
+	using container = decltype(get_hash_function_type::test<ClassToCheck>(&ClassToCheck::hash));
+	using type = container::U;
+	static_assert(!std::is_same_v<type, void>, "T::hash() cannot return void!");
+};
+
+template<class ClassToCheck>
+using get_hash_function_type_t = get_hash_function_type<ClassToCheck>::type;
+
+} // namespace hash
 
 } // namespace traits
 } // namespace meta

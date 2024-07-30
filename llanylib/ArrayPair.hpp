@@ -29,12 +29,18 @@ namespace meta {
 template<class T>
 class Array;
 
-template<class T>
+template<class _T>
 class ArrayPair {
+	#pragma region Types
+	public:
+		using _MyType	= ArrayPair;
+		using T			= _T;
+
+	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
-		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+		static_assert(traits::is_valid_type_checker_ignore_pa_v<T>,
+			"type_checker<T> detected an invalid type!");
 
 	#pragma endregion
 	#pragma region Attributes
@@ -159,12 +165,18 @@ class ArrayPair {
 	#pragma endregion
 };
 
-template<class T>
+template<class _T>
 class Array {
+	#pragma region Types
+	public:
+		using _MyType	= Array;
+		using T			= _T;
+
+	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
-		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+		static_assert(traits::is_valid_type_checker_ignore_pa_v<T>,
+			"type_checker<T> detected an invalid type!");
 
 	#pragma endregion
 	#pragma region Attributes

@@ -30,8 +30,9 @@ template<class _T>
 class BasicContainer {
 	#pragma region Types
 	public:
-		using T				= _T;
-		using pointer		= std::conditional_t<std::is_pointer_v<T>, T, T*>;
+		using _MyType	= BasicContainer;
+		using T			= _T;
+		using pointer	= std::conditional_t<std::is_pointer_v<T>, T, T*>;
 		//using const_pointer	= std::conditional_t<std::is_pointer_v<T>, std::remove_pointer_t<T>* const, T* const>;
 
 	#pragma endregion
@@ -140,6 +141,7 @@ template<class _T, class _Functions>
 class ContainerExtra : public _Functions, public BasicContainer<_T> {
 	#pragma region Types
 	public:
+		using _MyType					= ContainerExtra;
 		using T							= _T;
 		using T_class					= std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
 		using Functions					= _Functions;

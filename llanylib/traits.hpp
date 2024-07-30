@@ -52,24 +52,32 @@ struct double_type_container {
 template<class _U, class _Signature, _Signature> struct SignatureChecker {};
 
 // Standard checker for types in this lib
-template<class _T, ll_bool_t _IGNORE_POINTER = llcpp::LL_FALSE, ll_bool_t _IGNORE_VOLATILE = llcpp::LL_FALSE>
+template<class _T, ll_bool_t _IGNORE_POINTER = llcpp::LL_FALSE, ll_bool_t _IGNORE_ARRAY = llcpp::LL_FALSE, ll_bool_t _IGNORE_VOLATILE = llcpp::LL_FALSE>
 struct type_checker {
 	using _MyType	= type_checker;
 	using T			= _T;
 
-	static constexpr ll_bool_t IGNORE_POINTER = _IGNORE_POINTER;
-	static constexpr ll_bool_t IGNORE_VOLATILE = _IGNORE_VOLATILE;
+	static constexpr ll_bool_t IGNORE_POINTER	= _IGNORE_POINTER;
+	static constexpr ll_bool_t IGNORE_ARRAY		= _IGNORE_ARRAY;
+	static constexpr ll_bool_t IGNORE_VOLATILE	= _IGNORE_VOLATILE;
 
 	static constexpr ll_bool_t POINTER = (IGNORE_POINTER || !std::is_pointer_v<T>);
+	static constexpr ll_bool_t ARRAY = (IGNORE_ARRAY || !std::is_array_v<T>);
 	static constexpr ll_bool_t VOLATILE = (IGNORE_VOLATILE || !std::is_volatile_v<T>);
 
 	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
-	static_assert(!std::is_array_v<T>, "Array type is forbidden!");
-	static_assert(VOLATILE, "Volatile type is forbidden!");
+	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+
 	static_assert(POINTER, "Pointer type is forbidden!");
+	static_assert(ARRAY, "Array type is forbidden!");
+	static_assert(VOLATILE, "Volatile type is forbidden!");
 
 	static constexpr ll_bool_t is_valid_v = 
-		   !std::is_reference_v<T> && !std::is_array_v<T> && VOLATILE && POINTER;
+		!std::is_const_v<T> &&
+		!std::is_reference_v<T> &&
+		ARRAY &&
+		VOLATILE &&
+		POINTER;
 };
 
 template<class T>
@@ -78,7 +86,15 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_v =
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_pointer_v = 
-	traits::type_checker<T, llcpp::LL_TRUE, llcpp::LL_FALSE>::is_valid_v;
+	traits::type_checker<T, llcpp::LL_TRUE, llcpp::LL_FALSE, llcpp::LL_FALSE>::is_valid_v;
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_array_v = 
+	traits::type_checker<T, llcpp::LL_FALSE, llcpp::LL_TRUE, llcpp::LL_FALSE>::is_valid_v;
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_pa_v = 
+	traits::type_checker<T, llcpp::LL_TRUE, llcpp::LL_TRUE, llcpp::LL_FALSE>::is_valid_v;
 
 // Standard checker for classes and objects
 // Checks contruction / destruction and other operations needed

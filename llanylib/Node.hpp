@@ -8,7 +8,7 @@
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_NODE_HPP_) // Guard && version protector
-	#if LLANYLIB_NODE_MAYOR_ != 8 || LLANYLIB_NODE_MINOR_ < 0
+	#if LLANYLIB_NODE_MAYOR_ != 9 || LLANYLIB_NODE_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "Node.hpp version error!"
 		#else

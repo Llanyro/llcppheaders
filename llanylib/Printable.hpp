@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 8.0							//
+//	Version: 9.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_PRINTABLE_HPP_) // Guard && version protector
-	#if LLANYLIB_PRINTABLE_MAYOR_ != 8 || LLANYLIB_PRINTABLE_MINOR_ < 0
+	#if LLANYLIB_PRINTABLE_MAYOR_ != 9 || LLANYLIB_PRINTABLE_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "Printable.hpp version error!"
 		#else

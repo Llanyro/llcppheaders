@@ -8,7 +8,7 @@
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_NODEDOUBLE_HPP_) // Guard && version protector
-	#if LLANYLIB_NODEDOUBLE_MAYOR_ != 8 || LLANYLIB_NODEDOUBLE_MINOR_ < 0
+	#if LLANYLIB_NODEDOUBLE_MAYOR_ != 9 || LLANYLIB_NODEDOUBLE_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "NodeDouble.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_NODEDOUBLE_HPP_)
 #define LLANYLIB_NODEDOUBLE_HPP_
-#define LLANYLIB_NODEDOUBLE_MAYOR_ 8
+#define LLANYLIB_NODEDOUBLE_MAYOR_ 9
 #define LLANYLIB_NODEDOUBLE_MINOR_ 0
 
 #include "NodePrev.hpp"

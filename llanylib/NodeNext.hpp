@@ -8,7 +8,7 @@
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_NODENEXT_HPP_) // Guard && version protector
-	#if LLANYLIB_NODENEXT_MAYOR_ != 8 || LLANYLIB_NODENEXT_MINOR_ < 0
+	#if LLANYLIB_NODENEXT_MAYOR_ != 9 || LLANYLIB_NODENEXT_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "NodeNext.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_NODENEXT_HPP_)
 #define LLANYLIB_NODENEXT_HPP_
-#define LLANYLIB_NODENEXT_MAYOR_ 8
+#define LLANYLIB_NODENEXT_MAYOR_ 9
 #define LLANYLIB_NODENEXT_MINOR_ 0
 
 #include "Node.hpp"

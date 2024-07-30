@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 8.0							//
+//	Version: 9.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_TRAITS_HPP_) // Guard && version protector
-	#if LLANYLIB_TRAITS_MAYOR_ != 8 || LLANYLIB_TRAITS_MINOR_ < 0
+	#if LLANYLIB_TRAITS_MAYOR_ != 9 || LLANYLIB_TRAITS_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "traits.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_TRAITS_HPP_)
 #define LLANYLIB_TRAITS_HPP_
-#define LLANYLIB_TRAITS_MAYOR_ 8
+#define LLANYLIB_TRAITS_MAYOR_ 9
 #define LLANYLIB_TRAITS_MINOR_ 0
 
 #define LL_TRAITS_TEST
@@ -50,22 +50,6 @@ struct double_type_container {
 
 // SFINAE checker for signatures
 template<class _U, class _Signature, _Signature> struct SignatureChecker {};
-
-// SFINAE to check if object has a function
-// Follow any class that this inherites to check how to do a new checker 
-template<class _Base>
-struct _has_common : public _Base {
-	using _MyType		= _has_common;
-	using Base			= _Base;
-	using ClassToCheck	= typename Base::ClassToCheck;
-
-	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
-		"type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
-		"class_checker<ClassToCheck> detected an invalid class type!");
-
-	using type = decltype(Base::template test<ClassToCheck>(LL_NULLPTR));
-};
 
 // Standard checker for types in this lib
 template<class _T, ll_bool_t _IGNORE_POINTER = llcpp::LL_FALSE, ll_bool_t _IGNORE_VOLATILE = llcpp::LL_FALSE>
@@ -137,6 +121,22 @@ struct class_checker : public traits::constructor_checker<_T> {
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_class_checker_v = traits::class_checker<T>::is_valid_v;
+
+// SFINAE to check if object has a function
+// Follow any class that this inherites to check how to do a new checker 
+template<class _Base>
+struct _has_common : public _Base {
+	using _MyType		= _has_common;
+	using Base			= _Base;
+	using ClassToCheck	= typename Base::ClassToCheck;
+
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
+
+	using type = decltype(Base::template test<ClassToCheck>(LL_NULLPTR));
+};
 
 #pragma endregion
 #pragma region BasicExpresions
@@ -294,19 +294,22 @@ struct has_type_operator {
 
 	using type_default_result =
 		typename SFINAE<traits::is_basic_type_v<ClassToCheck>, std::is_same_v<ClassToCheck, OperatorType>>::type;
+
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+
 	template<class _U>
 	static constexpr auto test(checker<&_U::operator OperatorType>*) noexcept	-> std::true_type;
 	template<class _U> static constexpr auto test(...) noexcept					-> type_default_result;
+
+	using type = decltype(_MyType::test<ClassToCheck>(LL_NULLPTR));
 };
 template<class ClassToCheck, class OperatorType, class Signature>
-using has_type_operator_t = 
-	traits::_has_common<has_type_operator<ClassToCheck, OperatorType, Signature>>;
-template<class ClassToCheck, class OperatorType, class Signature>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v =
-	traits::has_type_operator_t<ClassToCheck, OperatorType, Signature>::type::value;
-template<class ClassToCheck, class OperatorType>
+	traits::has_type_operator<ClassToCheck, OperatorType, Signature>::type::value;
+template<class ClassToCheck, class OperatorType, class __ = std::conditional_t<std::is_class_v<ClassToCheck>, ClassToCheck, llcpp::Emptyclass>>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_type_operator_v =
-	traits::has_type_operator_t<ClassToCheck, OperatorType, OperatorType(ClassToCheck::*)() const noexcept>::type::value;
+	traits::has_type_operator<ClassToCheck, OperatorType, OperatorType(__::*)() const noexcept>::type::value;
 
 #pragma endregion
 #pragma region SwapChecker
@@ -432,19 +435,27 @@ namespace common {
 		using checker		= traits::SignatureChecker<ClassToCheck, Signature, SIG>; \
 		template<class _U> \
 		static constexpr auto test(checker<&_U::##name##>*) noexcept	-> std::true_type; \
-		template<class _U> static constexpr auto test(...) noexcept				-> std::false_type; \
+		template<class _U> static constexpr auto test(...) noexcept		-> std::false_type; \
 	}; \
 	template<class ClassToCheck, class Signature> \
 	using has_##name##_function_t = \
 		traits::_has_common<traits::common::has_##name##_function<ClassToCheck, Signature>>; \
 	template<class ClassToCheck, class Signature> \
 	__LL_VAR_INLINE__ constexpr ll_bool_t has_##name##_function_v = \
-		traits::common::has_##name##_function_t<ClassToCheck, Signature>::type::value
+		traits::common::has_##name##_function_t<ClassToCheck, Signature>::type::value;
 
 //////////////////////////////////////////////////////////////////////
 // Do not change - Autogenerated with __LL_HAS_CUSTOM_FUNCTION__	//
 // 	macros and visual studio										//
 //////////////////////////////////////////////////////////////////////
+//__LL_HAS_CUSTOM_FUNCTION__(hash);
+//__LL_HAS_CUSTOM_FUNCTION__(clear);
+//__LL_HAS_CUSTOM_FUNCTION__(swap);
+//__LL_HAS_CUSTOM_FUNCTION__(copy);
+//__LL_HAS_CUSTOM_FUNCTION__(move);
+//__LL_HAS_CUSTOM_FUNCTION__(compare);
+//__LL_HAS_CUSTOM_FUNCTION__(compareBool);
+//__LL_HAS_CUSTOM_FUNCTION__(predestruction);
 
 template<class _ClassToCheck, class _Signature> struct has_hash_function {
     using _MyType = has_hash_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::hash>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
@@ -467,6 +478,9 @@ template<class _ClassToCheck, class _Signature> struct has_compare_function {
 template<class _ClassToCheck, class _Signature> struct has_compareBool_function {
 	using _MyType = has_compareBool_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::compareBool>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
 }; template<class ClassToCheck, class Signature> using has_compareBool_function_t = traits::_has_common<traits::common::has_compareBool_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_compareBool_function_v = traits::common::has_compareBool_function_t<ClassToCheck, Signature>::type::value;
+template<class _ClassToCheck, class _Signature> struct has_predestruction_function {
+	using _MyType = has_predestruction_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::predestruction>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
+}; template<class ClassToCheck, class Signature> using has_predestruction_function_t = traits::_has_common<traits::common::has_predestruction_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_predestruction_function_v = traits::common::has_predestruction_function_t<ClassToCheck, Signature>::type::value;;
 
 } // namespace common
 

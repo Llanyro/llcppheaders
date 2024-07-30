@@ -4,17 +4,17 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 8.0							//
+//	Version: 9.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_DYNAMICLIBRARYLINKING_HPP_) // Guard && version protector
-	#if LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ != 8 || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ < 0
+	#if LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ != 9 || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ < 0
 		#error "dynamiclibrarylinking.hpp version error!"
 	#endif // LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ || LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_
 
 #else !defined(LLANYLIB_DYNAMICLIBRARYLINKING_HPP_)
 #define LLANYLIB_DYNAMICLIBRARYLINKING_HPP_
-#define LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ 8
+#define LLANYLIB_DYNAMICLIBRARYLINKING_MAYOR_ 9
 #define LLANYLIB_DYNAMICLIBRARYLINKING_MINOR_ 0
 
 #include "types.hpp"

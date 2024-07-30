@@ -8,7 +8,7 @@
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_CONTAINER_HPP_) // Guard && version protector
-	#if LLANYLIB_CONTAINER_MAYOR_ != 8 || LLANYLIB_CONTAINER_MINOR_ < 0
+	#if LLANYLIB_CONTAINER_MAYOR_ != 9 || LLANYLIB_CONTAINER_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "Container.hpp version error!"
 		#else
@@ -25,31 +25,6 @@
 
 namespace llcpp {
 namespace meta {
-
-namespace traits {
-namespace common {
-template<class _ClassToCheck, class _Signature>
-struct has_predestruction_function {
-	using ClassToCheck	= _ClassToCheck;
-	using Signature		= _Signature;
-
-	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
-		"type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
-		"class_checker<ClassToCheck> detected an invalid class type!");
-
-	template<class> static constexpr auto test(Signature) noexcept	-> std::true_type;
-	template<class> static constexpr auto test(...) noexcept		-> std::false_type;
-	using type = decltype(has_predestruction_function::test<ClassToCheck>(&ClassToCheck::preDestruction));
-};
-
-template<class ClassToCheck, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_predestruction_function_v =
-	false;
-	//has_predestruction_function<ClassToCheck, Signature>::type::value;
-
-} // namespace common
-} // namespace traits
 
 template<class _T>
 class BasicContainer {
@@ -130,15 +105,6 @@ class BasicContainer {
 	#pragma endregion
 };
 
-class IntFunctions {
-	public:
-		constexpr void clear(int*& asdf) noexcept { *asdf = 0; }
-		__LL_NODISCARD__ constexpr int hash() const noexcept { return 0; }
-		__LL_NODISCARD__ constexpr int hash(int*& v) noexcept { return *v; }
-		__LL_NODISCARD__ constexpr int hash(const int*& v) const noexcept { return *v; }
-		__LL_NODISCARD__ constexpr void preDestruction(int*& v) noexcept { delete v; }
-};
-
 // This class has a problem by traits::hash::get_hash_function_type_t<>
 // Let me explain it with an example
 //	- We have an object _T as int
@@ -211,27 +177,28 @@ class ContainerExtra : public _Functions, public BasicContainer<_T> {
 			: Functions(), BasicContainer(std::forward<Args>(args)...) {}
 		constexpr ~ContainerExtra() noexcept {
 			if constexpr (traits::common::has_predestruction_function_v<T_class, T_PreDestructSignature>)
-				this->operator*()->preDestruction();
+				this->operator*()->predestruction();
 			if constexpr (traits::common::has_predestruction_function_v<Functions, F_PreDestructSignature>)
-				Functions::preDestruction(this->operator*());
+				Functions::predestruction(this->operator*());
 		}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
 		constexpr ContainerExtra(const ContainerExtra& other) noexcept
-			: Functions(other), BasicContainer(std::forward<const BasicContainer&>(other)) {}
+			: Functions(std::forward<const Functions&>(other))
+			, BasicContainer(std::forward<const BasicContainer&>(other)) {}
 		constexpr ContainerExtra& operator=(const ContainerExtra& other) noexcept {
-			Functions::operator=(other);
-			BasicContainer::operator=(other);
+			Functions::operator=(std::forward<const Functions&>(other));
+			BasicContainer::operator=(std::forward<const BasicContainer&>(other));
 			return *this;
 		}
 		constexpr ContainerExtra(ContainerExtra&& other) noexcept
 			: Functions(std::forward<Functions&&>(other))
 			, BasicContainer(std::forward<BasicContainer&&>(other)) {}
 		constexpr ContainerExtra& operator=(ContainerExtra&& other) noexcept {
-			Functions::operator=(std::move(other));
-			BasicContainer::operator=(std::move(other));
+			Functions::operator=(std::forward<Functions&&>(other));
+			BasicContainer::operator=(std::forward<BasicContainer&&>(other));
 			return *this;
 		}
 

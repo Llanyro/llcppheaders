@@ -8,7 +8,7 @@
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_ALGORITHM_HPP_) // Guard && version protector
-	#if LLANYLIB_ALGORITHM_MAYOR_ != 8 || LLANYLIB_ALGORITHM_MINOR_ < 0
+	#if LLANYLIB_ALGORITHM_MAYOR_ != 9 || LLANYLIB_ALGORITHM_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "algorithm.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_ALGORITHM_HPP_)
 #define LLANYLIB_ALGORITHM_HPP_
-#define LLANYLIB_ALGORITHM_MAYOR_ 8
+#define LLANYLIB_ALGORITHM_MAYOR_ 9
 #define LLANYLIB_ALGORITHM_MINOR_ 0
 
 #include "ArrayPair.hpp"
@@ -37,13 +37,14 @@ namespace meta {
 namespace algorithm {
 
 #pragma region Comparators
-template<class T, class U, class result_t, result_t _NULL_RESULT_>
+template<class _T, class _U, class _result_t, _result_t _NULL_RESULT_>
 class CompareData {
 	#pragma region Types
 	public:
-		using type = T;
-		using utype = U;
-		using return_type = result_t;
+		using _MyType		= CompareData;
+		using T				= _T;
+		using U				= _U;
+		using result_t		= _result_t;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -53,9 +54,12 @@ class CompareData {
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(traits::is_basic_type_v<result_t>, "Result type must be a basic type! Comment this error if you want to use other custom type.");
-		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
-		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+		static_assert(traits::is_valid_type_checker_ignore_pointer_v<T>,
+			"type_checker<T> detected an invalid type!");
+		static_assert(traits::is_valid_type_checker_ignore_pointer_v<U>,
+			"type_checker<U> detected an invalid type!");
+		static_assert(traits::is_basic_type_v<result_t>,
+			"Result type must be a basic type! Comment this error if you want to use other custom type.");
 
 	#pragma endregion
 	#pragma region Attributes
@@ -247,36 +251,29 @@ class ManipulatorDefault {
 	#pragma endregion
 };
 
-template<class T, class U = T, class Comparator = algorithm::CompareDefault<T, U>>
-class ComparatorChecker {
+template<class _T, class _U = _T, class Comparator = algorithm::CompareDefault<_T, _U>>
+class ComparatorChecker : public Comparator {
 	#pragma region Types
 	public:
-		using type = T;
-		using utype = U;
-
-		using cinput_t = traits::cinput<T>;
-		using cinput_u = traits::cinput<U>;
-
-		using CompareSignature = cmp_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
-		using CompareSignatureBool = ll_bool_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
+		using _MyType				= ComparatorChecker;
+		using T						= _T;
+		using U						= _U;
+		using cinput_t				= traits::cinput<T>;
+		using cinput_u				= traits::cinput<U>;
+		using CompareSignature		= cmp_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
+		using CompareSignatureBool	= ll_bool_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
 
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
-		static_assert(!std::is_const_v<T>, "Const type is forbidden!");
-		static_assert(!std::is_reference_v<U>, "Reference type is forbidden!");
-		static_assert(!std::is_const_v<U>, "Const type is forbidden!");
-
-		static_assert(!std::is_reference_v<Comparator>, "Comparator reference type is forbidden!");
-		static_assert(!std::is_const_v<Comparator>, "Comparator const type is forbidden!");
-		static_assert(std::is_class_v<Comparator>, "Comparator needs to be a class!");
-		static_assert(std::is_nothrow_constructible_v<Comparator>, "Comparator needs a noexcept constructor!");
-		static_assert(std::is_nothrow_destructible_v<Comparator>, "Comparator needs a noexcept destructor!");
-		static_assert(std::is_copy_constructible_v<Comparator>, "Comparator needs a noexcept copy constructor!");
-		static_assert(std::is_copy_assignable_v<Comparator>, "Comparator needs a noexcept copy asignable!");
-		static_assert(std::is_move_constructible_v<Comparator>, "Comparator needs a noexcept move constructor!");
-		static_assert(std::is_move_assignable_v<Comparator>, "Comparator needs a noexcept move asignable!");
+		static_assert(traits::is_valid_type_checker_ignore_pointer_v<T>,
+			"type_checker<T> detected an invalid type!");
+		static_assert(traits::is_valid_type_checker_ignore_pointer_v<U>,
+			"type_checker<U> detected an invalid type!");
+		static_assert(traits::is_valid_type_checker_v<Comparator>,
+			"type_checker<Comparator> detected an invalid type!");
+		static_assert(traits::is_valid_class_checker_v<Comparator>,
+			"class_checker<Comparator> detected an invalid class type!");
 
 		static_assert(traits::common::has_compare_function_v<Comparator, CompareSignature>,
 			"Comparator::compare() const noexcept is required by default! Non const function is optional");
@@ -289,31 +286,36 @@ class ComparatorChecker {
 	public:
 		constexpr ComparatorChecker() noexcept : Comparator() {}
 		template<class... Args>
-		constexpr ComparatorChecker(Args&&... args) noexcept : Comparator(std::forward<Args>(args)...) {}
+		constexpr ComparatorChecker(Args&&... args) noexcept
+			: Comparator(std::forward<Args>(args)...) {}
 		constexpr ~ComparatorChecker() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr ComparatorChecker(const ComparatorChecker& other) noexcept : Comparator(other) {}
+		constexpr ComparatorChecker(const ComparatorChecker& other) noexcept
+			: Comparator(std::forward<const Comparator&>(other)) {}
 		constexpr ComparatorChecker& operator=(const ComparatorChecker& other) noexcept {
-			Comparator::operator=(other);
+			Comparator::operator=(std::forward<const Comparator&>(other));
 			return *this;
 		}
-		constexpr ComparatorChecker(ComparatorChecker&& other) noexcept : Comparator(std::move(other)) {}
+		constexpr ComparatorChecker(ComparatorChecker&& other) noexcept
+			: Comparator(std::forward<Comparator&&>(other)) {}
 		constexpr ComparatorChecker& operator=(ComparatorChecker&& other) noexcept {
-			Comparator::operator=(std::move(other));
+			Comparator::operator=(std::forward<Comparator&&>(other));
 			return *this;
 		}
 
-		constexpr ComparatorChecker(const Comparator& other) noexcept : Comparator(other) {}
+		constexpr ComparatorChecker(const Comparator& other) noexcept
+			: Comparator(std::forward<const Comparator&>(other)) {}
 		constexpr ComparatorChecker& operator=(const Comparator& other) noexcept {
-			Comparator::operator=(other);
+			Comparator::operator=(std::forward<const Comparator&>(other));
 			return *this;
 		}
-		constexpr ComparatorChecker(Comparator&& other) noexcept : Comparator(std::move(other)) {}
+		constexpr ComparatorChecker(Comparator&& other) noexcept
+			: Comparator(std::forward<Comparator&&>(other)) {}
 		constexpr ComparatorChecker& operator=(Comparator&& other) noexcept {
-			Comparator::operator=(std::move(other));
+			Comparator::operator=(std::forward<Comparator&&>(other));
 			return *this;
 		}
 

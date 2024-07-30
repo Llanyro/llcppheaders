@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 8.0							//
+//	Version: 9.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_STANDARDTYPEID_HPP_) // Guard && version protector
-	#if LLANYLIB_STANDARDTYPEID_MAYOR_ != 8 || LLANYLIB_STANDARDTYPEID_MINOR_ < 0
+	#if LLANYLIB_STANDARDTYPEID_MAYOR_ != 9 || LLANYLIB_STANDARDTYPEID_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
 			#warning "StandardTypeid.hpp version error!"
 		#else
@@ -18,7 +18,7 @@
 
 #else !defined(LLANYLIB_STANDARDTYPEID_HPP_)
 #define LLANYLIB_STANDARDTYPEID_HPP_
-#define LLANYLIB_STANDARDTYPEID_MAYOR_ 8
+#define LLANYLIB_STANDARDTYPEID_MAYOR_ 9
 #define LLANYLIB_STANDARDTYPEID_MINOR_ 0
 
 #include "reflection.hpp"

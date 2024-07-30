@@ -174,8 +174,15 @@ __LL_NODISCARD__ constexpr CompareConditionalBool<T, U, GET_DATA> compareConvers
 
 #pragma endregion
 
-template<class T, class U>
+template<class _T, class _U = _T>
 class CompareDefault {
+	#pragma region Types
+	public:
+		using _MyType	= CompareDefault;
+		using T			= _T;
+		using U			= _U;
+
+	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructor
 	public:
@@ -210,8 +217,15 @@ class CompareDefault {
 	#pragma endregion
 };
 
-template<class T, class U = T>
+template<class _T, class _U = _T>
 class ManipulatorDefault {
+	#pragma region Types
+	public:
+		using _MyType	= ManipulatorDefault;
+		using T			= _T;
+		using U			= _U;
+
+	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructor
 	public:
@@ -330,22 +344,22 @@ class ComparatorChecker : public Comparator {
 	#pragma endregion
 };
 
-template<class T, class U = T, class Comparator = algorithm::CompareDefault<T, U>, ll_bool_t GET_DATA = LL_FALSE>
+template<class _T, class _U = _T, class Comparator = algorithm::CompareDefault<_T, _U>, ll_bool_t GET_DATA = LL_FALSE>
 class CompareCluster : public algorithm::ComparatorChecker<Comparator> {
 	#pragma region Types
 	public:
-		using ComparatorChecker = algorithm::ComparatorChecker<Comparator>;
-
-		using cinput_t = ComparatorChecker::cinput_t;
-		using cinput_u = ComparatorChecker::cinput_u;
-
-		using CompareResult = CompareConditionalCmpT<T, U, GET_DATA>;
-		using CompareResultBool = CompareConditionalBool<T, U, GET_DATA>;
-
-		using ArrayPair_t = meta::ArrayPair<T>;
-		using ArrayPair_u = meta::ArrayPair<U>;
-		using Array_t = meta::Array<T>;
-		using Array_u = meta::Array<U>;
+		using _MyType			= CompareCluster;
+		using T					= _T;
+		using U					= _U;
+		using ComparatorChecker	= algorithm::ComparatorChecker<Comparator>;
+		using cinput_t			= ComparatorChecker::cinput_t;
+		using cinput_u			= ComparatorChecker::cinput_u;
+		using CompareResult		= CompareConditionalCmpT<T, U, GET_DATA>;
+		using CompareResultBool	= CompareConditionalBool<T, U, GET_DATA>;
+		using ArrayPair_t		= meta::ArrayPair<T>;
+		using ArrayPair_u		= meta::ArrayPair<U>;
+		using Array_t			= meta::Array<T>;
+		using Array_u			= meta::Array<U>;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -357,42 +371,49 @@ class CompareCluster : public algorithm::ComparatorChecker<Comparator> {
 	public:
 		constexpr CompareCluster() noexcept : ComparatorChecker() {}
 		template<class... Args>
-		constexpr CompareCluster(Args&&... args) noexcept : ComparatorChecker(std::forward<Args>(args)...) {}
+		constexpr CompareCluster(Args&&... args) noexcept
+			: ComparatorChecker(std::forward<Args>(args)...) {}
 		constexpr ~CompareCluster() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr CompareCluster(const CompareCluster& other) noexcept : ComparatorChecker(other) {}
+		constexpr CompareCluster(const CompareCluster& other) noexcept
+			: ComparatorChecker(std::forward<const ComparatorChecker&>(other)) {}
 		constexpr CompareCluster& operator=(const CompareCluster& other) noexcept {
-			ComparatorChecker::operator=(other);
+			ComparatorChecker::operator=(std::forward<const ComparatorChecker&>(other));
 			return *this;
 		}
-		constexpr CompareCluster(CompareCluster&& other) noexcept : ComparatorChecker(std::move(other)) {}
+		constexpr CompareCluster(CompareCluster&& other) noexcept
+			: ComparatorChecker(std::forward<ComparatorChecker&&>(other)) {}
 		constexpr CompareCluster& operator=(CompareCluster&& other) noexcept {
-			ComparatorChecker::operator=(std::move(other));
+			ComparatorChecker::operator=(std::forward<ComparatorChecker&&>(other));
 			return *this;
 		}
 
-		constexpr CompareCluster(const ComparatorChecker& other) noexcept : ComparatorChecker(other) {}
+		constexpr CompareCluster(const ComparatorChecker& other) noexcept
+			: ComparatorChecker(std::forward<const ComparatorChecker&>(other)) {}
 		constexpr CompareCluster& operator=(const ComparatorChecker& other) noexcept {
-			ComparatorChecker::operator=(other);
+			ComparatorChecker::operator=(std::forward<const ComparatorChecker&>(other));
 			return *this;
 		}
-		constexpr CompareCluster(ComparatorChecker&& other) noexcept : ComparatorChecker(std::move(other)) {}
+		constexpr CompareCluster(ComparatorChecker&& other) noexcept
+			: ComparatorChecker(std::forward<ComparatorChecker&&>(other)) {}
 		constexpr CompareCluster& operator=(ComparatorChecker&& other) noexcept {
-			ComparatorChecker::operator=(std::move(other));
+			ComparatorChecker::operator=(std::forward<ComparatorChecker&&>(other));
 			return *this;
 		}
 
-		constexpr CompareCluster(const Comparator& other) noexcept : ComparatorChecker(other) {}
+		constexpr CompareCluster(const Comparator& other) noexcept
+			: ComparatorChecker(std::forward<const Comparator&>(other)) {}
 		constexpr CompareCluster& operator=(const Comparator& other) noexcept {
-			ComparatorChecker::operator=(other);
+			ComparatorChecker::operator=(std::forward<const Comparator&>(other));
 			return *this;
 		}
-		constexpr CompareCluster(Comparator&& other) noexcept : ComparatorChecker(std::move(other)) {}
+		constexpr CompareCluster(Comparator&& other) noexcept
+			: ComparatorChecker(std::forward<Comparator&&>(other)) {}
 		constexpr CompareCluster& operator=(Comparator&& other) noexcept {
-			ComparatorChecker::operator=(std::move(other));
+			ComparatorChecker::operator=(std::forward<Comparator&&>(other));
 			return *this;
 		}
 
@@ -974,21 +995,21 @@ class CompareCluster : public algorithm::ComparatorChecker<Comparator> {
 	#pragma endregion
 };
 
-template<class T, class U = T, class Comparator = algorithm::CompareDefault<T, U>, ll_bool_t POSITION = LL_TRUE>
+template<class _T, class _U = _T, class Comparator = algorithm::CompareDefault<_T, _U>, ll_bool_t POSITION = LL_TRUE>
 struct FindersCluster : public algorithm::ComparatorChecker<Comparator> {
 	#pragma region Types
 	public:
-		using ComparatorChecker = algorithm::ComparatorChecker<Comparator>;
-
-		using cinput_t = traits::cinput<T>;
-		using cinput_u = traits::cinput<U>;
-
-		using FindResult = std::conditional_t<POSITION, len_t, const T*>;
-
-		using ArrayPair_t = meta::ArrayPair<T>;
-		using ArrayPair_u = meta::ArrayPair<U>;
-		using Array_t = meta::Array<T>;
-		using Array_u = meta::Array<U>;
+		using _MyType			= FindersCluster;
+		using T					= _T;
+		using U					= _U;
+		using ComparatorChecker	= algorithm::ComparatorChecker<Comparator>;
+		using cinput_t			= ComparatorChecker::cinput_t;
+		using cinput_u			= ComparatorChecker::cinput_u;
+		using FindResult		= std::conditional_t<POSITION, len_t, const T*>;
+		using ArrayPair_t		= meta::ArrayPair<T>;
+		using ArrayPair_u		= meta::ArrayPair<U>;
+		using Array_t			= meta::Array<T>;
+		using Array_u			= meta::Array<U>;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -1000,42 +1021,49 @@ struct FindersCluster : public algorithm::ComparatorChecker<Comparator> {
 	public:
 		constexpr FindersCluster() noexcept : ComparatorChecker() {}
 		template<class... Args>
-		constexpr FindersCluster(Args&&... args) noexcept : ComparatorChecker(std::forward<Args>(args)...) {}
+		constexpr FindersCluster(Args&&... args) noexcept
+			: ComparatorChecker(std::forward<Args>(args)...) {}
 		constexpr ~FindersCluster() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr FindersCluster(const FindersCluster& other) noexcept : ComparatorChecker(other) {}
+		constexpr FindersCluster(const FindersCluster& other) noexcept
+			: ComparatorChecker(std::forward<const ComparatorChecker&>(other)) {}
 		constexpr FindersCluster& operator=(const FindersCluster& other) noexcept {
-			ComparatorChecker::operator=(other);
+			ComparatorChecker::operator=(std::forward<const ComparatorChecker&>(other));
 			return *this;
 		}
-		constexpr FindersCluster(FindersCluster&& other) noexcept : ComparatorChecker(std::move(other)) {}
+		constexpr FindersCluster(FindersCluster&& other) noexcept
+			: ComparatorChecker(std::forward<ComparatorChecker&&>(other)) {}
 		constexpr FindersCluster& operator=(FindersCluster&& other) noexcept {
-			ComparatorChecker::operator=(std::move(other));
+			ComparatorChecker::operator=(std::forward<ComparatorChecker&&>(other));
 			return *this;
 		}
 
-		constexpr FindersCluster(const ComparatorChecker& other) noexcept : ComparatorChecker(other) {}
+		constexpr FindersCluster(const ComparatorChecker& other) noexcept
+			: ComparatorChecker(std::forward<const ComparatorChecker&>(other)) {}
 		constexpr FindersCluster& operator=(const ComparatorChecker& other) noexcept {
-			ComparatorChecker::operator=(other);
+			ComparatorChecker::operator=(std::forward<const ComparatorChecker&>(other));
 			return *this;
 		}
-		constexpr FindersCluster(ComparatorChecker&& other) noexcept : ComparatorChecker(std::move(other)) {}
+		constexpr FindersCluster(ComparatorChecker&& other) noexcept
+			: ComparatorChecker(std::forward<ComparatorChecker&&>(other)) {}
 		constexpr FindersCluster& operator=(ComparatorChecker&& other) noexcept {
-			ComparatorChecker::operator=(std::move(other));
+			ComparatorChecker::operator=(std::forward<ComparatorChecker&&>(other));
 			return *this;
 		}
 
-		constexpr FindersCluster(const Comparator& other) noexcept : ComparatorChecker(other) {}
+		constexpr FindersCluster(const Comparator& other) noexcept
+			: ComparatorChecker(std::forward<const Comparator&>(other)) {}
 		constexpr FindersCluster& operator=(const Comparator& other) noexcept {
-			ComparatorChecker::operator=(other);
+			ComparatorChecker::operator=(std::forward<const Comparator&>(other));
 			return *this;
 		}
-		constexpr FindersCluster(Comparator&& other) noexcept : ComparatorChecker(std::move(other)) {}
+		constexpr FindersCluster(Comparator&& other) noexcept
+			: ComparatorChecker(std::forward<Comparator&&>(other)) {}
 		constexpr FindersCluster& operator=(Comparator&& other) noexcept {
-			ComparatorChecker::operator=(std::move(other));
+			ComparatorChecker::operator=(std::forward<Comparator&&>(other));
 			return *this;
 		}
 
@@ -1390,20 +1418,20 @@ struct FindersCluster : public algorithm::ComparatorChecker<Comparator> {
 	#pragma endregion
 };
 
-template<class T, class Manipulator = algorithm::ManipulatorDefault<T>>
+template<class _T, class Manipulator = algorithm::ManipulatorDefault<T>>
 class DataManipulatorCluster : public Manipulator {
 	#pragma region Types
 	public:
-		using cinput_t = traits::cinput<T>;
-		using Array_t = meta::Array<T>;
-
-		using SwapSignature = void(Manipulator::*)(T&, T&) const noexcept;
-		using MoveSignature = void(Manipulator::*)(T&, T&) const noexcept;
-
+		using _MyType				= FindersCluster;
+		using T						= _T;
+		using cinput_t				= traits::cinput<T>;
+		using Array_t				= meta::Array<T>;
+		using SwapSignature			= void(Manipulator::*)(T&, T&) const noexcept;
+		using MoveSignature			= void(Manipulator::*)(T&, T&) const noexcept;
 		template<class W>
-		using CopyExtraSignature = void(*)(T&, W) noexcept;
+		using CopyExtraSignature	= void(*)(T&, W) noexcept;
 		template<class U>
-		using MoveExtraSignature = void(*)(T&, U&) noexcept;
+		using MoveExtraSignature	= void(*)(T&, U&) noexcept;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -1432,31 +1460,36 @@ class DataManipulatorCluster : public Manipulator {
 	public:
 		constexpr DataManipulatorCluster() noexcept : Manipulator() {}
 		template<class... Args>
-		constexpr DataManipulatorCluster(Args&&... args) noexcept : Manipulator(std::forward<Args>(args)...) {}
+		constexpr DataManipulatorCluster(Args&&... args) noexcept
+			: Manipulator(std::forward<Args>(args)...) {}
 		constexpr ~DataManipulatorCluster() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		DataManipulatorCluster(const DataManipulatorCluster& other) noexcept : Manipulator(other) {}
+		DataManipulatorCluster(const DataManipulatorCluster& other) noexcept
+			: Manipulator(std::forward<const Manipulator&>(other)) {}
 		DataManipulatorCluster& operator=(const DataManipulatorCluster& other) noexcept {
-			Manipulator::operator=(other);
+			Manipulator::operator=(std::forward<const Manipulator&>(other));
 			return *this;
 		}
-		DataManipulatorCluster(DataManipulatorCluster&& other) noexcept : Manipulator(std::move(other)) {}
+		DataManipulatorCluster(DataManipulatorCluster&& other) noexcept
+			: Manipulator(std::forward<Manipulator&&>(other)) {}
 		DataManipulatorCluster& operator=(DataManipulatorCluster&& other) noexcept {
-			Manipulator::operator=(std::move(other));
+			Manipulator::operator=(std::forward<Manipulator&&>(other));
 			return *this;
 		}
 
-		DataManipulatorCluster(const Manipulator& other) noexcept : Manipulator(other) {}
+		DataManipulatorCluster(const Manipulator& other) noexcept
+			: Manipulator(std::forward<const Manipulator&>(other)) {}
 		DataManipulatorCluster& operator=(const Manipulator& other) noexcept {
-			Manipulator::operator=(other);
+			Manipulator::operator=(std::forward<const Manipulator&>(other));
 			return *this;
 		}
-		DataManipulatorCluster(Manipulator&& other) noexcept : Manipulator(std::move(other)) {}
+		DataManipulatorCluster(Manipulator&& other) noexcept
+			: Manipulator(std::forward<Manipulator&&>(other)) {}
 		DataManipulatorCluster& operator=(Manipulator&& other) noexcept {
-			Manipulator::operator=(std::move(other));
+			Manipulator::operator=(std::forward<Manipulator&&>(other));
 			return *this;
 		}
 

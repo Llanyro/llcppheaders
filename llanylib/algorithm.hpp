@@ -265,11 +265,12 @@ class ManipulatorDefault {
 	#pragma endregion
 };
 
-template<class _T, class _U = _T, class Comparator = algorithm::CompareDefault<_T, _U>>
-class ComparatorChecker : public Comparator {
+template<class _T, class _U = _T, class _Comparator = algorithm::CompareDefault<_T, _U>>
+class ComparatorChecker : public _Comparator {
 	#pragma region Types
 	public:
 		using _MyType				= ComparatorChecker;
+		using Comparator			= _Comparator;
 		using T						= _T;
 		using U						= _U;
 		using cinput_t				= traits::cinput<T>;
@@ -344,13 +345,14 @@ class ComparatorChecker : public Comparator {
 	#pragma endregion
 };
 
-template<class _T, class _U = _T, class Comparator = algorithm::CompareDefault<_T, _U>, ll_bool_t GET_DATA = LL_FALSE>
-class CompareCluster : public algorithm::ComparatorChecker<Comparator> {
+template<class _T, class _U = _T, class _Comparator = algorithm::CompareDefault<_T, _U>, ll_bool_t GET_DATA = LL_FALSE>
+class CompareCluster : public algorithm::ComparatorChecker<_Comparator> {
 	#pragma region Types
 	public:
 		using _MyType			= CompareCluster;
 		using T					= _T;
 		using U					= _U;
+		using Comparator		= _Comparator;
 		using ComparatorChecker	= algorithm::ComparatorChecker<Comparator>;
 		using cinput_t			= ComparatorChecker::cinput_t;
 		using cinput_u			= ComparatorChecker::cinput_u;
@@ -995,13 +997,14 @@ class CompareCluster : public algorithm::ComparatorChecker<Comparator> {
 	#pragma endregion
 };
 
-template<class _T, class _U = _T, class Comparator = algorithm::CompareDefault<_T, _U>, ll_bool_t POSITION = LL_TRUE>
-struct FindersCluster : public algorithm::ComparatorChecker<Comparator> {
+template<class _T, class _U = _T, class _Comparator = algorithm::CompareDefault<_T, _U>, ll_bool_t POSITION = LL_TRUE>
+struct FindersCluster : public algorithm::ComparatorChecker<_Comparator> {
 	#pragma region Types
 	public:
 		using _MyType			= FindersCluster;
 		using T					= _T;
 		using U					= _U;
+		using Comparator		= _Comparator;
 		using ComparatorChecker	= algorithm::ComparatorChecker<Comparator>;
 		using cinput_t			= ComparatorChecker::cinput_t;
 		using cinput_u			= ComparatorChecker::cinput_u;
@@ -1418,12 +1421,13 @@ struct FindersCluster : public algorithm::ComparatorChecker<Comparator> {
 	#pragma endregion
 };
 
-template<class _T, class Manipulator = algorithm::ManipulatorDefault<T>>
-class DataManipulatorCluster : public Manipulator {
+template<class _T, class _Manipulator = algorithm::ManipulatorDefault<T>>
+class DataManipulatorCluster : public _Manipulator {
 	#pragma region Types
 	public:
 		using _MyType				= FindersCluster;
 		using T						= _T;
+		using Comparator			= _Manipulator;
 		using cinput_t				= traits::cinput<T>;
 		using Array_t				= meta::Array<T>;
 		using SwapSignature			= void(Manipulator::*)(T&, T&) const noexcept;

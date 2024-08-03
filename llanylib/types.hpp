@@ -221,6 +221,8 @@ using wStrPair = ArrayPair<ll_wchar_t>;
 using Str = Array<ll_char_t>;
 using wStr = Array<ll_wchar_t>;
 
+using OptionalBool = std::optional<ll_bool_t>;
+
 namespace hash {
 class Hash32;
 class Hash64;

@@ -22,6 +22,7 @@
 #define LLANYLIB_CONTAINER_MINOR_ 0
 
 #include "hash_types.hpp"
+#include "common.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -61,25 +62,31 @@ class BasicContainer {
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr BasicContainer(const BasicContainer& other) noexcept : data(other.data) {}
+		constexpr BasicContainer(const BasicContainer& other) noexcept
+			: data(other.data) {}
 		constexpr BasicContainer& operator=(const BasicContainer& other) noexcept {
 			this->data = other.data;
 			return *this;
 		}
-		constexpr BasicContainer(BasicContainer&& other) noexcept : data(std::move(other.data)) {}
+		constexpr BasicContainer(BasicContainer&& other) noexcept
+			: data(std::move(other.data)) { meta::common::clear_if_pointer<T>(other.data); }
 		constexpr BasicContainer& operator=(BasicContainer&& other) noexcept {
 			this->data = std::move(other.data);
+			meta::common::clear_if_pointer<T>(other.data);
 			return *this;
 		}
 
-		constexpr BasicContainer(const T& data) noexcept : data(data) {}
+		constexpr BasicContainer(const T& data) noexcept
+			: data(data) {}
 		constexpr BasicContainer& operator=(const T& data) noexcept {
 			this->data = data;
 			return *this;
 		}
-		constexpr BasicContainer(T&& data) noexcept : data(std::move(data)) {}
+		constexpr BasicContainer(T&& data) noexcept
+			: data(std::move(data)) { meta::common::clear_if_pointer<T>(data); }
 		constexpr BasicContainer& operator=(T&& data) noexcept {
 			this->data = std::move(data);
+			meta::common::clear_if_pointer<T>(other.data);
 			return *this;
 		}
 
@@ -100,6 +107,44 @@ class BasicContainer {
 		}
 		__LL_NODISCARD__ constexpr T& operator*() noexcept { return this->data; }
 		__LL_NODISCARD__ constexpr const T& operator*() const noexcept { return this->data; }
+
+		template<class U>
+		__LL_NODISCARD__ constexpr meta::OptionalBool compare_eq(const BasicContainer<U>& other) const noexcept {
+			return meta::common::is_same_value<T, U>(this->data, other.data);
+		}
+		template<class U>
+		__LL_NODISCARD__ constexpr meta::OptionalBool compare_no_eq(const BasicContainer<U>& other) const noexcept {
+			return meta::common::is_not_same_value<T, U>(this->data, other.data);
+		}
+		template<class U>
+		__LL_NODISCARD__ constexpr meta::OptionalBool compare_eq(const U& data) const noexcept {
+			return meta::common::is_same_value<T, U>(this->data, data);
+		}
+		template<class U>
+		__LL_NODISCARD__ constexpr meta::OptionalBool compare_no_eq(const U& data) const noexcept {
+			return meta::common::is_not_same_value<T, U>(this->data, data);
+		}
+
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const BasicContainer& other) const noexcept {
+			auto b = this->compare_eq<T>(std::forward<const BasicContainer&>(other));
+			if (b.has_value()) return b.value();
+			else LL_FALSE;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const BasicContainer& other) const noexcept {
+			auto b = this->compare_no_eq<T>(std::forward<const BasicContainer&>(other));
+			if (b.has_value()) return b.value();
+			else LL_FALSE;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const T& data) const noexcept {
+			auto b = this->compare_eq<T>(std::forward<const T&>(data));
+			if (b.has_value()) return b.value();
+			else LL_FALSE;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const T& data) const noexcept {
+			auto b = this->compare_no_eq<T>(std::forward<const T&>(data));
+			if (b.has_value()) return b.value();
+			else LL_FALSE;
+		}
 
 		#pragma endregion
 

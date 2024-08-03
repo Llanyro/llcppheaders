@@ -372,12 +372,13 @@ __LL_VAR_INLINE__ constexpr hash::OptionalHash32 INVALID_HASH32 = std::nullopt;
 __LL_VAR_INLINE__ constexpr hash::OptionalHash64 INVALID_HASH64 = std::nullopt;
 __LL_VAR_INLINE__ constexpr hash::OptionalHash128 INVALID_HASH128 = std::nullopt;
 
-template<class HashType>
+template<class _HashType>
 class HashChecker {
 	#pragma region Types
 	public:
-		using OptionalHash = std::optional<HashType>;
-		using Hash = HashType;
+		using _MyType		= HashChecker;
+		using HashType		= _HashType;
+		using OptionalHash	= std::optional<HashType>;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -385,15 +386,10 @@ class HashChecker {
 		static_assert(hash::__::is_hash_type_v<HashType>,
 			"Needs to be a valid hash type! If you want to use your own hash objects comment this assert");
 
-		static_assert(!std::is_reference_v<HashType>, "Reference type is forbidden!");
-		static_assert(!std::is_const_v<HashType>, "Const type is forbidden!");
-
-		static_assert(std::is_nothrow_constructible_v<HashType>, "HashType needs a noexcept constructor!");
-		static_assert(std::is_nothrow_destructible_v<HashType>, "HashType needs a noexcept destructor!");
-		static_assert(std::is_copy_constructible_v<HashType>, "HashType needs a noexcept copy constructor!");
-		static_assert(std::is_copy_assignable_v<HashType>, "HashType needs a noexcept copy asignable!");
-		static_assert(std::is_move_constructible_v<HashType>, "HashType needs a noexcept move constructor!");
-		static_assert(std::is_move_assignable_v<HashType>, "HashType needs a noexcept move asignable!");
+		static_assert(traits::is_valid_type_checker_v<HashType>,
+			"type_checker<HashType> detected an invalid type!");
+		static_assert(traits::is_valid_class_checker_v<HashType>,
+			"class_checker<HashType> detected an invalid class type!");
 
 	#pragma endregion
 	#pragma region Functions
@@ -413,8 +409,8 @@ class HashChecker {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashChecker* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashChecker* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const HashChecker*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator HashChecker*() noexcept { return this; }
 
 		#pragma endregion
 

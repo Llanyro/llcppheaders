@@ -32,8 +32,10 @@
     <ClInclude Include="DataBuffer.hpp" />
     <ClInclude Include="definitions.hpp" />
     <ClInclude Include="dynamiclibrarylinking.hpp" />
+    <ClInclude Include="examples\algorithmExample.hpp" />
     <ClInclude Include="examples\bitsExample.hpp" />
     <ClInclude Include="examples\mathExample.hpp" />
+    <ClInclude Include="examples\NodeExample.hpp" />
     <ClInclude Include="examples\RandomExample.hpp" />
     <ClInclude Include="examples\traitsExample.hpp" />
     <ClInclude Include="examples\traits_test_class.hpp" />

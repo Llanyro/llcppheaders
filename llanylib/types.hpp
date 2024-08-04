@@ -177,6 +177,8 @@ class directory_entry;
 
 namespace llcpp {
 
+void IGNORE(...) {}
+
 #pragma region Expresions
 constexpr ll_bool_t LL_TRUE = true;
 constexpr ll_bool_t LL_FALSE = false;

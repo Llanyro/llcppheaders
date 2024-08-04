@@ -325,7 +325,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v =
 	traits::has_type_operator<ClassToCheck, OperatorType, Signature>::type::value;
 template<class ClassToCheck, class OperatorType, class __ = std::conditional_t<std::is_class_v<ClassToCheck>, ClassToCheck, llcpp::Emptyclass>>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_type_operator_v =
-	traits::has_type_operator<ClassToCheck, OperatorType, OperatorType(__::*)() const noexcept>::type::value;
+	traits::has_type_operator_v<ClassToCheck, OperatorType, OperatorType(__::*)() const noexcept>;
 
 #pragma endregion
 #pragma region SwapChecker
@@ -524,6 +524,14 @@ template<class _ClassToCheck, class _Signature> struct has_compare_eq_function {
 template<class _ClassToCheck, class _Signature> struct has_compare_no_eq_function {
 	using _MyType = has_compare_no_eq_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::compare_no_eq>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
 }; template<class ClassToCheck, class Signature> using has_compare_no_eq_function_t = traits::_has_common<traits::common::has_compare_no_eq_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_compare_no_eq_function_v = traits::common::has_compare_no_eq_function_t<ClassToCheck, Signature>::type::value;;
+
+
+
+
+template<class ClassToCheck>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_simple_clear_function_v =
+	traits::common::has_clear_function_v<ClassToCheck, void(ClassToCheck::*)() noexcept>::type::value;
+
 
 } // namespace common
 

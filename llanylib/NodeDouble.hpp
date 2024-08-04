@@ -26,10 +26,10 @@
 #include "common.hpp"
 
 #if !defined(__debug_error_nullptr_str)
-#define __debug_error_nullptr_str(ptr, str)
+#define __debug_error_nullptr_str(ptr, str) IGNORE()
 #endif
 #if !defined(__debug_error_nullptr)
-#define __debug_error_nullptr(ptr)
+#define __debug_error_nullptr(ptr) IGNORE()
 #endif
 
 

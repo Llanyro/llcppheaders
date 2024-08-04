@@ -86,7 +86,7 @@ class BasicContainer {
 			: data(std::move(data)) { meta::common::clear_if_pointer<T>(data); }
 		constexpr BasicContainer& operator=(T&& data) noexcept {
 			this->data = std::move(data);
-			meta::common::clear_if_pointer<T>(other.data);
+			meta::common::clear_if_pointer<T>(data);
 			return *this;
 		}
 

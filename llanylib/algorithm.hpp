@@ -346,14 +346,14 @@ class ComparatorChecker : public _Comparator {
 };
 
 template<class _T, class _U = _T, class _Comparator = algorithm::CompareDefault<_T, _U>, ll_bool_t GET_DATA = LL_FALSE>
-class CompareCluster : public algorithm::ComparatorChecker<_Comparator> {
+class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> {
 	#pragma region Types
 	public:
 		using _MyType			= CompareCluster;
 		using T					= _T;
 		using U					= _U;
 		using Comparator		= _Comparator;
-		using ComparatorChecker	= algorithm::ComparatorChecker<Comparator>;
+		using ComparatorChecker	= algorithm::ComparatorChecker<T, U, Comparator>;
 		using cinput_t			= ComparatorChecker::cinput_t;
 		using cinput_u			= ComparatorChecker::cinput_u;
 		using CompareResult		= CompareConditionalCmpT<T, U, GET_DATA>;
@@ -362,10 +362,6 @@ class CompareCluster : public algorithm::ComparatorChecker<_Comparator> {
 		using ArrayPair_u		= meta::ArrayPair<U>;
 		using Array_t			= meta::Array<T>;
 		using Array_u			= meta::Array<U>;
-
-	#pragma endregion
-	#pragma region Asserts
-	public:
 
 	#pragma endregion
 	#pragma region Functions
@@ -427,6 +423,22 @@ class CompareCluster : public algorithm::ComparatorChecker<_Comparator> {
 
 		#pragma endregion
 		#pragma region ClassFunctions
+		#pragma region ComparatorOverrride
+		__LL_NODISCARD__ constexpr cmp_t compare(cinput_t a, cinput_u b) const noexcept {
+			return Comparator::compare(std::forward<cinput_t>(a), std::forward<cinput_u>(b));
+		}
+		__LL_NODISCARD__ constexpr cmp_t compare(cinput_t a, cinput_u b) noexcept {
+			return Comparator::compare(std::forward<cinput_t>(a), std::forward<cinput_u>(b));
+		}
+
+		__LL_NODISCARD__ constexpr ll_bool_t compareBool(cinput_t a, cinput_u b) const noexcept {
+			return Comparator::compareBool(std::forward<cinput_t>(a), std::forward<cinput_u>(b));
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t compareBool(cinput_t a, cinput_u b) noexcept {
+			return Comparator::compareBool(std::forward<cinput_t>(a), std::forward<cinput_u>(b));
+		}
+
+		#pragma endregion
 		#pragma region Compare
 		#pragma region CompareBase
 	public:
@@ -998,14 +1010,14 @@ class CompareCluster : public algorithm::ComparatorChecker<_Comparator> {
 };
 
 template<class _T, class _U = _T, class _Comparator = algorithm::CompareDefault<_T, _U>, ll_bool_t POSITION = LL_TRUE>
-struct FindersCluster : public algorithm::ComparatorChecker<_Comparator> {
+struct FindersCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> {
 	#pragma region Types
 	public:
 		using _MyType			= FindersCluster;
 		using T					= _T;
 		using U					= _U;
 		using Comparator		= _Comparator;
-		using ComparatorChecker	= algorithm::ComparatorChecker<Comparator>;
+		using ComparatorChecker	= algorithm::ComparatorChecker<T, U, Comparator>;
 		using cinput_t			= ComparatorChecker::cinput_t;
 		using cinput_u			= ComparatorChecker::cinput_u;
 		using FindResult		= std::conditional_t<POSITION, len_t, const T*>;
@@ -1078,6 +1090,22 @@ struct FindersCluster : public algorithm::ComparatorChecker<_Comparator> {
 
 		#pragma endregion
 		#pragma region ClassFunctions
+		#pragma region ComparatorOverrride
+		__LL_NODISCARD__ constexpr cmp_t compare(cinput_t a, cinput_u b) const noexcept {
+			return Comparator::compare(std::forward<cinput_t>(a), std::forward<cinput_u>(b));
+		}
+		__LL_NODISCARD__ constexpr cmp_t compare(cinput_t a, cinput_u b) noexcept {
+			return Comparator::compare(std::forward<cinput_t>(a), std::forward<cinput_u>(b));
+		}
+
+		__LL_NODISCARD__ constexpr ll_bool_t compareBool(cinput_t a, cinput_u b) const noexcept {
+			return Comparator::compareBool(std::forward<cinput_t>(a), std::forward<cinput_u>(b));
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t compareBool(cinput_t a, cinput_u b) noexcept {
+			return Comparator::compareBool(std::forward<cinput_t>(a), std::forward<cinput_u>(b));
+		}
+
+		#pragma endregion
 		#pragma region Find
 		#pragma region Base
 	public:
@@ -1418,16 +1446,17 @@ struct FindersCluster : public algorithm::ComparatorChecker<_Comparator> {
 		#pragma endregion
 
 		#pragma endregion
+
 	#pragma endregion
 };
 
-template<class _T, class _Manipulator = algorithm::ManipulatorDefault<T>>
+template<class _T, class _Manipulator = algorithm::ManipulatorDefault<_T>>
 class DataManipulatorCluster : public _Manipulator {
 	#pragma region Types
 	public:
 		using _MyType				= FindersCluster;
 		using T						= _T;
-		using Comparator			= _Manipulator;
+		using Manipulator			= _Manipulator;
 		using cinput_t				= traits::cinput<T>;
 		using Array_t				= meta::Array<T>;
 		using SwapSignature			= void(Manipulator::*)(T&, T&) const noexcept;

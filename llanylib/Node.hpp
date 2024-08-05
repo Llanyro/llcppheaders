@@ -646,23 +646,30 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 		}
 
 	public:
-		__LL_NODISCARD__ constexpr NodeType* mergeSort(NodeType*& end) noexcept {
+		__LL_NODISCARD__ constexpr NodeType* mergeSort(NodeType* end) noexcept {
 #if defined(_DEBUG)
 			if (!this) __debug_error_nullptr_str(this, "this");
-			if (!end) __debug_error_nullptr_str(end, "end");
 #endif // _DEBUG
 
-			end->set(LL_NULLPTR);
-			NodeType* begin = FunctionalNode::merge_impl(this);
-			end = begin->getLast(LL_NULLPTR);
-			return begin;
+			if(!end) end->set(LL_NULLPTR);
+			return FunctionalNode::merge_impl(this);
 		}
-		__LL_NODISCARD__ constexpr NodeType* mergeSort_s(NodeType*& end) noexcept {
-			if (!this || !end) return LL_NULLPTR;
-			end->set(LL_NULLPTR);
-			NodeType* begin = FunctionalNode::merge_impl(this);
-			end = begin->getLast(LL_NULLPTR);
-			return begin;
+		__LL_NODISCARD__ constexpr NodeType* mergeSort() noexcept {
+#if defined(_DEBUG)
+			if (!this) __debug_error_nullptr_str(this, "this");
+#endif // _DEBUG
+
+			return FunctionalNode::merge_impl(this);
+		}
+		__LL_NODISCARD__ constexpr NodeType* mergeSort_s(NodeType* end) noexcept {
+			if (!this) return LL_NULLPTR;
+			if (!end) end->set(LL_NULLPTR);
+			return FunctionalNode::merge_impl(this);
+		}
+		__LL_NODISCARD__ constexpr NodeType* mergeSort_s() noexcept {
+			if (!this) return LL_NULLPTR;
+			if (!end) end->set(LL_NULLPTR);
+			return FunctionalNode::merge_impl(this);
 		}
 
 		#pragma endregion
@@ -713,6 +720,51 @@ using Node = std::conditional_t<
 	FunctionalNode<Node_Type_Or_Functions>,
 	ClassicNode<Node_Type_Or_Functions>
 >;
+
+#define __LL_NAMED_NODE__(name) \
+	template <class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = LL_FALSE> \
+	class Node##name## : private Node<Node_Type_Or_Functions, IS_SPECIAL> { \
+		public: \
+			using _MyType		= Node##name##; \
+			using ExtraClass	= Node_Type_Or_Functions; \
+			using Node			= Node<Node_Type_Or_Functions, IS_SPECIAL>; \
+			using NodeType		= std::conditional_t<IS_SPECIAL, Node##name##, ExtraClass>; \
+	\
+		public: \
+			static constexpr ll_bool_t IS_SPECIAL_NODE = IS_SPECIAL; \
+	\
+		public: \
+			constexpr Node##name##() noexcept : Node(LL_NULLPTR) {} \
+			constexpr Node##name##(NodeType* next) noexcept : Node(next) {} \
+			constexpr ~Node##name##() noexcept {} \
+	\
+		public: \
+			constexpr Node##name##(const Node##name##&) noexcept = delete; \
+			constexpr Node##name##& operator=(const Node##name##&) noexcept = delete; \
+			constexpr Node##name##(Node##name##&&) noexcept = delete; \
+			constexpr Node##name##& operator=(Node##name##&&) noexcept = delete; \
+	\
+		public: \
+			__LL_NODISCARD__ constexpr operator const Node##name##*() const noexcept { return this; } \
+			__LL_NODISCARD__ constexpr operator Node##name##*() noexcept { return this; } \
+	\
+		public: \
+			__LL_NODISCARD__ constexpr const NodeType* get##name##() const noexcept { return Node::get(); } \
+			__LL_NODISCARD__ constexpr NodeType* get##name##() noexcept { return Node::get(); } \
+			constexpr void set##name##(NodeType* next) noexcept { Node::set(next); } \
+	\
+			__LL_NODISCARD__ constexpr NodeType* get##name##NoThis() noexcept { return Node::getNoThis(); } \
+			__LL_NODISCARD__ constexpr const NodeType* get##name##NoThis() const noexcept { return Node::getNoThis(); } \
+			__LL_NODISCARD__ constexpr NodeType* get##name##(len_t moves) noexcept { return Node::get(moves); } \
+			__LL_NODISCARD__ constexpr const NodeType* get##name##(len_t moves) const noexcept { return Node::get(moves); } \
+	}; \
+	\
+	template<class NodeType> \
+	using Simple##name## = Node##name##<NodeType, LL_FALSE>; \
+	\
+	template<class NodeFunctions> \
+	using Functional##name## = Node##name##<NodeFunctions, LL_FALSE>
+
 
 } // namespace linked
 } // namespace meta

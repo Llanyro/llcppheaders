@@ -149,7 +149,7 @@ class ArrayPair {
 			return this->mem_end;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const noexcept {
-			return this->len() == ZERO_UI64;
+			return this->lenght() == ZERO_UI64;
 		}
 
 		#pragma endregion
@@ -326,7 +326,7 @@ class Array {
 			return this->mem_end;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const noexcept {
-			return this->len() == ZERO_UI64;
+			return this->lenght() == ZERO_UI64;
 		}
 
 		#pragma endregion

@@ -42,9 +42,9 @@ constexpr void destruct_vector(T* begin, const len_t size) noexcept(std::is_noth
 }
 template<class T>
 __LL_NODISCARD__ constexpr ll_bool_t destruct_vector_s(T* begin, const T* end) noexcept(std::is_nothrow_destructible_v<T>) {
-	if (!begin || !end || end <= begin) return llcpp::LL_FALSE;
+	if (!begin || !end || end <= begin) return llcpp::FALSE;
 	for (; begin < end; ++begin) begin->~T();
-	return llcpp::LL_TRUE;
+	return llcpp::TRUE;
 }
 template<class T>
 __LL_NODISCARD__ constexpr ll_bool_t destruct_vector_s(T* begin, const len_t size) noexcept(std::is_nothrow_destructible_v<T>) {
@@ -65,9 +65,9 @@ constexpr void construct_vector(T* begin, const len_t size, const Args&... args)
 }
 template<class T, class... Args>
 __LL_NODISCARD__ constexpr ll_bool_t construct_vector_s(T* begin, const T* end, const Args&... args) noexcept(std::is_nothrow_destructible_v<T>) {
-	if (!begin || !end || end <= begin) return llcpp::LL_FALSE;
+	if (!begin || !end || end <= begin) return llcpp::FALSE;
 	for (; begin < end; ++begin) new (begin) T(std::forward<const Args>(args)...);
-	return llcpp::LL_TRUE;
+	return llcpp::TRUE;
 }
 template<class T, class... Args>
 __LL_NODISCARD__ constexpr ll_bool_t construct_vector_s(T* begin, const len_t size, const Args&... args) noexcept(std::is_nothrow_destructible_v<T>) {
@@ -110,7 +110,7 @@ class AllocatorDummy {
 		constexpr void deallocate(void*& mem) noexcept { mem = LL_NULLPTR; }
 		constexpr __LL_NODISCARD__ ll_bool_t reallocate(void*& mem, const len_t bytes) noexcept {
 			mem = LL_NULLPTR;
-			return llcpp::LL_FALSE;
+			return llcpp::FALSE;
 		}
 		constexpr void memcopy(const void* src, void* dst, const len_t bytes) noexcept {}
 		constexpr void memmove(void* src, void* dst, const len_t bytes) noexcept {}
@@ -342,29 +342,29 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 		}
 		// Destructs all objects and frees the vector
 		__LL_NODISCARD__ constexpr ll_bool_t deallocate_s(T*& mem, const T* end) noexcept {
-			if (!__internal__::destruct_vector_s<T>(mem, end)) return llcpp::LL_FALSE;
+			if (!__internal__::destruct_vector_s<T>(mem, end)) return llcpp::FALSE;
 			Allocator::deallocate(reinterpret_cast<void*&>(mem));
-			return llcpp::LL_TRUE;
+			return llcpp::TRUE;
 		}
 		// Constructs all new objects
 		// Destructs all exceed objects
 		__LL_NODISCARD__ constexpr ll_bool_t reallocate(T*& mem, const len_t old_size, const len_t new_size) noexcept {
-			if (old_size == new_size) return llcpp::LL_TRUE;
+			if (old_size == new_size) return llcpp::TRUE;
 			else if (old_size > new_size) {
 				__internal__::destruct_vector<T>(mem + new_size, mem + old_size);
 				return Allocator::reallocate(reinterpret_cast<void*&>(mem), sizeof(T) * new_size);
 			}
 			else {
 				if (!Allocator::reallocate(reinterpret_cast<void*&>(mem), sizeof(T) * new_size))
-					return llcpp::LL_FALSE;
+					return llcpp::FALSE;
 				new (mem + old_size) T[new_size - old_size];
-				return llcpp::LL_TRUE;
+				return llcpp::TRUE;
 			}
 		}
 		// Does not constructs all new objects
 		// Destructs all exceed objects
 		__LL_NODISCARD__ constexpr ll_bool_t reallocate_destruct(T*& mem, const len_t old_size, const len_t new_size) noexcept {
-			if (old_size == new_size) return llcpp::LL_TRUE;
+			if (old_size == new_size) return llcpp::TRUE;
 			else if (old_size > new_size)
 				__internal__::destruct_vector<T>(mem + new_size, mem + old_size);
 			return Allocator::reallocate(reinterpret_cast<void*&>(mem), sizeof(T) * new_size);

@@ -29,7 +29,7 @@ namespace meta {
 namespace linked {
 
 
-template<class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::LL_FALSE>
+template<class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE>
 class BaseNodeList : public meta::CountableL {
 	#pragma region Types
 	public:
@@ -150,9 +150,9 @@ class BaseNodeList : public meta::CountableL {
 			this->push_back_impl(node);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t push_back_s(NodeType* node) noexcept {
-			if (!node) return llcpp::LL_FALSE;
+			if (!node) return llcpp::FALSE;
 			this->push_back_impl(node);
-			return llcpp::LL_TRUE;
+			return llcpp::TRUE;
 		}
 
 		#pragma endregion
@@ -178,9 +178,9 @@ class BaseNodeList : public meta::CountableL {
 			this->push_front_impl(node);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t push_front_s(NodeType* node) noexcept {
-			if (!node) return llcpp::LL_FALSE;
+			if (!node) return llcpp::FALSE;
 			this->push_front_impl(node);
-			return llcpp::LL_TRUE;
+			return llcpp::TRUE;
 		}
 
 		#pragma endregion

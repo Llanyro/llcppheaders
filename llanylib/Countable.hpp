@@ -206,14 +206,14 @@ class Countable {
 		template<class Function, class... Args>
 		__LL_NODISCARD__ constexpr ll_bool_t doIfValid(cinput position, Function func, Args&&... args) {
 			ll_bool_t result{};
-			if ((result = this->inRange(position)) == llcpp::LL_TRUE) {}
+			if ((result = this->inRange(position)) == llcpp::TRUE) {}
 				func(std::forward<Args>(args)...);
 			return result;
 		}
 		template<class Function, class... Args>
 		__LL_NODISCARD__ constexpr ll_bool_t doIfValid(cinput position, Function func, Args&&... args) const {
 			ll_bool_t result{};
-			if ((result = this->inRange(position)) == llcpp::LL_TRUE) {}
+			if ((result = this->inRange(position)) == llcpp::TRUE) {}
 				func(std::forward<Args>(args)...);
 			return result;
 		}
@@ -221,14 +221,14 @@ class Countable {
 		template<class Function, class... Args>
 		__LL_NODISCARD__ constexpr ll_bool_t doIfValid(cinput pos1, cinput pos2, Function func, Args&&... args) {
 			ll_bool_t result{};
-			if ((result = (this->inRange(pos1) && this->inRange(pos2))) == llcpp::LL_TRUE) {}
+			if ((result = (this->inRange(pos1) && this->inRange(pos2))) == llcpp::TRUE) {}
 				func(std::forward<Args>(args)...);
 			return result;
 		}
 		template<class Function, class... Args>
 		__LL_NODISCARD__ constexpr ll_bool_t doIfValid(cinput pos1, cinput pos2, Function func, Args&&... args) const {
 			ll_bool_t result{};
-			if ((result = (this->inRange(pos1) && this->inRange(pos2))) == llcpp::LL_TRUE) {}
+			if ((result = (this->inRange(pos1) && this->inRange(pos2))) == llcpp::TRUE) {}
 				func(std::forward<Args>(args)...);
 			return result;
 		}
@@ -236,14 +236,14 @@ class Countable {
 		template<class U, class Function, class... Args>
 		__LL_NODISCARD__ static constexpr ll_bool_t doIfValidStatic(cinput position, U& context, Function func, Args&&... args) {
 			ll_bool_t result{};
-			if ((result = context.inRange(position)) == llcpp::LL_TRUE)
+			if ((result = context.inRange(position)) == llcpp::TRUE)
 				(context.*func)(std::forward<Args>(args)...);
 			return result;
 		}
 		template<class U, class Function, class... Args>
 		__LL_NODISCARD__ static constexpr ll_bool_t doIfValidStatic(cinput pos1, cinput pos2, U& context, Function func, Args&&... args) {
 			ll_bool_t result{};
-			if ((result = (context.inRange(pos1) && context.inRange(pos2))) == llcpp::LL_TRUE)
+			if ((result = (context.inRange(pos1) && context.inRange(pos2))) == llcpp::TRUE)
 				(context.*func)(std::forward<Args>(args)...);
 			return result;
 		}

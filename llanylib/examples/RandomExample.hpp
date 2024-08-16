@@ -21,7 +21,7 @@ constexpr f32 rf32_2 = STANDARD_RANDOM(2).rand<f32>();
 constexpr f32 rf32_3 = rf32_2 + 50000;
 constexpr f32 generateOtherPattern() {
 	Random rd = STANDARD_RANDOM(2);
-	ll_bool_t res = llcpp::LL_FALSE;
+	ll_bool_t res = llcpp::FALSE;
 	return rd.rand<f32>(&res);
 }
 constexpr f32 rf32_4 = generateOtherPattern();

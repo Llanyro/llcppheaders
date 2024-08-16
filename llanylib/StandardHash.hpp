@@ -54,10 +54,10 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const std::wstring& st
 	return hash::INVALID_HASH64;
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStrPair& str) noexcept {
-	return city::hash_wstr(str.begin(), str.len());
+	return city::hash_wstr(str.begin(), str.lenght());
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStr& str) noexcept {
-	return city::hash_wstr(str.begin(), str.len());
+	return city::hash_wstr(str.begin(), str.lenght());
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 hash(const hash::Hash64& h) noexcept {
 	return hash::basic_type_hash::hashValue<ui64>(h.get(), hash::city::CityHash::cityHash64);
@@ -89,10 +89,10 @@ __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const std::wstring& st
 	return hash::INVALID_HASH64;
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStrPair& str) noexcept {
-	return llany::hash_wstr(str.begin(), str.len());
+	return llany::hash_wstr(str.begin(), str.lenght());
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 hash_wstr(const meta::wStr& str) noexcept {
-	return llany::hash_wstr(str.begin(), str.len());
+	return llany::hash_wstr(str.begin(), str.lenght());
 }
 __LL_NODISCARD__ constexpr hash::OptionalHash64 hash(const hash::Hash64& h) noexcept {
 	return hash::basic_type_hash::hashValue<ui64>(h.get(), hash::LlanyHash::llanyHash64);

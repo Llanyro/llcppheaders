@@ -142,7 +142,7 @@ class Typeid {
 				result = gen.hash(name);
 			else if constexpr (hash::traits::has_any_hash_function<HashGenerator, HashChar, HashCharConst>)
 				result = gen.hash(name);
-			else return llcpp::LL_FALSE;
+			else return llcpp::FALSE;
 
 			if (result.has_value()) this->hash_name = *result;
 			else this->hash_name = HashType();
@@ -161,7 +161,7 @@ class Typeid {
 				result = gen.hash(name);
 			else if constexpr (hash::traits::has_any_hash_function<HashGenerator, HashChar, HashCharConst>)
 				result = gen.hash(name);
-			else return llcpp::LL_FALSE;
+			else return llcpp::FALSE;
 
 			if (result.has_value()) this->hash_name = *result;
 			else this->hash_name = HashType();

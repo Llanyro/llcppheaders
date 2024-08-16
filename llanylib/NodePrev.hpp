@@ -32,7 +32,7 @@ namespace linked {
 // 	macros and visual studio										//
 //////////////////////////////////////////////////////////////////////
 //__LL_NAMED_NODE__(Prev);
-template <class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::LL_FALSE> class NodePrev : private Node<Node_Type_Or_Functions, IS_SPECIAL> {
+template <class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE> class NodePrev : private Node<Node_Type_Or_Functions, IS_SPECIAL> {
 public: using _MyType = NodePrev; using ExtraClass = Node_Type_Or_Functions; using Node = Node<Node_Type_Or_Functions, IS_SPECIAL>; using NodeType = std::conditional_t<IS_SPECIAL, NodePrev, ExtraClass>; public: static constexpr ll_bool_t IS_SPECIAL_NODE = IS_SPECIAL; public: constexpr NodePrev() noexcept : Node(nullptr) {} constexpr NodePrev(NodeType* next) noexcept : Node(next) {} constexpr ~NodePrev() noexcept {} public: constexpr NodePrev(const NodePrev&) noexcept = delete; constexpr NodePrev& operator=(const NodePrev&) noexcept = delete; constexpr NodePrev(NodePrev&&) noexcept = delete; constexpr NodePrev& operator=(NodePrev&&) noexcept = delete; public: [[nodiscard]] constexpr operator const NodePrev* () const noexcept {
     return this;
 } [[nodiscard]] constexpr operator NodePrev* () noexcept {
@@ -52,7 +52,7 @@ public: using _MyType = NodePrev; using ExtraClass = Node_Type_Or_Functions; usi
 } [[nodiscard]] constexpr const NodeType* getPrev(len_t moves) const noexcept {
     return Node::get(moves);
 }
-}; template<class NodeType> using SimplePrev = NodePrev<NodeType, llcpp::LL_FALSE>; template<class NodeFunctions> using FunctionalPrev = NodePrev<NodeFunctions, llcpp::LL_FALSE>;
+}; template<class NodeType> using SimplePrev = NodePrev<NodeType, llcpp::FALSE>; template<class NodeFunctions> using FunctionalPrev = NodePrev<NodeFunctions, llcpp::FALSE>;
 
 } // namespace linked
 } // namespace meta

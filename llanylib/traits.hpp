@@ -551,43 +551,45 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_clear_function_v =
 	traits::common::has_clear_function_v<ClassToCheck, void(ClassToCheck::*)() noexcept>;
 
 } // namespace common
+
+  // Returns hash type by calling hash function
 #pragma region HashTypeChecker
-//namespace hash {
-//
-//template<class _ClassToCheck>
-//struct get_hash_function_type {
-//	using ClassToCheck	= _ClassToCheck;
-//
-//	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
-//		"type_checker<ClassToCheck> detected an invalid type!");
-//	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
-//		"class_checker<ClassToCheck> detected an invalid class type!");
-//
-//	template<class>
-//	static constexpr auto test(auto(ClassToCheck::* asdf)() noexcept) noexcept ->
-//		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(asdf), ClassToCheck>>;
-//	template<class>
-//	static constexpr auto test(auto(ClassToCheck::* asdf)() const noexcept) noexcept ->
-//		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(asdf), ClassToCheck>>;
-//	template<class>
-//	static constexpr auto test(...) noexcept ->
-//		traits::double_type_container<std::false_type, meta::hash::StandardOptionalHash>;
-//
-//	using container = decltype(get_hash_function_type::test<ClassToCheck>(&ClassToCheck::hash));
-//	using type = container::U;
-//	static_assert(!std::is_same_v<type, void>, "T::hash() cannot return void!");
-//};
-//
+namespace hash {
+
+template<class _ClassToCheck>
+struct get_hash_function_type {
+	using ClassToCheck	= _ClassToCheck;
+
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
+
+	template<class>
+	static constexpr auto test(auto(ClassToCheck::* _)() noexcept) noexcept ->
+		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), ClassToCheck>>;
+	template<class>
+	static constexpr auto test(auto(ClassToCheck::* _)() const noexcept) noexcept ->
+		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), ClassToCheck>>;
+	template<class>
+	static constexpr auto test(...) noexcept ->
+		traits::double_type_container<std::false_type, void>;
+
+	using container = decltype(get_hash_function_type::test<ClassToCheck>(&ClassToCheck::hash));
+	using type = container::U;
+	static_assert(!std::is_same_v<type, void>, "T::hash() cannot return void!");
+};
+
 //template<class _ClassToCheck>
 //struct get_hash_function_type<_ClassToCheck*> {
 //	using ClassToCheck	= _ClassToCheck*;
-//	using container		= traits::double_type_container<std::false_type, meta::hash::StandardOptionalHash>;
+//	using container		= traits::double_type_container<std::false_type, void>;
 //	using type			= container::U;
 //};
-//
-//template<class ClassToCheck>
-//using get_hash_function_type_t = get_hash_function_type<ClassToCheck>::type;
-//
+
+template<class ClassToCheck>
+using get_hash_function_type_t = get_hash_function_type<ClassToCheck>::type;
+
 //template<class _ClassToCheck, class HashType>
 //struct get_hash_function {
 //	using ClassToCheck = _ClassToCheck;
@@ -601,8 +603,8 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_clear_function_v =
 //	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
 //		"class_checker<ClassToCheck> detected an invalid class type!");
 //};
-//
-//} // namespace hash
+
+} // namespace hash
 #pragma endregion
 #pragma region ThreeWayChecker
 template<class _T, class _U>
@@ -681,8 +683,6 @@ struct is_comparable {
 		using U						= _U;
 		using Boolean				= _Boolean;
 		using T_class				= std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
-
-		// 
 		using t_cinput				= traits::cinput<T>;
 		using u_cinput				= traits::cinput<U>;
 		
@@ -721,8 +721,8 @@ struct is_comparable {
 		static_assert(traits::is_valid_type_checker_v<U>,
 			"type_checker<U> detected an invalid type!");
 
-		static_assert(IS_COMPARABLE_EQ, "Types are not comparables!");
-		static_assert(IS_COMPARABLE_NEQ, "Types are not comparables!");
+		//static_assert(IS_COMPARABLE_EQ, "Types are not comparables!");
+		//static_assert(IS_COMPARABLE_NEQ, "Types are not comparables!");
 
 	#pragma endregion
 	#pragma region Functions
@@ -810,18 +810,17 @@ struct is_diff {
 	#pragma endregion
 };
 
-constexpr auto asdfadsd1 = is_diff<double>::diff_C(90.0, 99);
-constexpr auto asdfadsd2 = is_diff<double>::diff_CPP(90.0, 99);
+//constexpr auto asdfadsd1 = is_diff<double>::diff_C(90.0, 99);
+//constexpr auto asdfadsd2 = is_diff<double>::diff_CPP(90.0, 99);
+//
+//constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I8;
+//constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I16;
+//constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I32;
+//constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I64;
+//
+//constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_F32;
 
-
-constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I8;
-constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I16;
-constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I32;
-constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I64;
-
-constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_F32;
 #pragma endregion
-// Returns hash type by calling hash function
 
 } // namespace traits
 } // namespace meta

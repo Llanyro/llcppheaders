@@ -632,19 +632,19 @@ class HashFunctionPackNoConstexpr : public hash::HashGeneratorChecker<HashType, 
 		}
 		template<class T>
 		__LL_NODISCARD__ constexpr OptionalHash hashValues(const ArrayPair<T>& _array) noexcept {
-			return this->hash(reinterpret_cast<ll_string_t>(_array.begin()), sizeof(T) * _array.len());
+			return this->hash(reinterpret_cast<ll_string_t>(_array.begin()), sizeof(T) * _array.lenght());
 		}
 		template<class T>
 		__LL_NODISCARD__ constexpr OptionalHash hashValues(const ArrayPair<T>& _array) const noexcept {
-			return this->hash(reinterpret_cast<ll_string_t>(_array.begin()), sizeof(T) * _array.len());
+			return this->hash(reinterpret_cast<ll_string_t>(_array.begin()), sizeof(T) * _array.lenght());
 		}
 		template<class T>
 		__LL_NODISCARD__ constexpr OptionalHash hashValues(const Array<T>& _array) noexcept {
-			return this->hash(reinterpret_cast<ll_string_t>(_array.begin()), sizeof(T) * _array.len());
+			return this->hash(reinterpret_cast<ll_string_t>(_array.begin()), sizeof(T) * _array.lenght());
 		}
 		template<class T>
 		__LL_NODISCARD__ constexpr OptionalHash hashValues(const Array<T>& _array) const noexcept {
-			return this->hash(reinterpret_cast<ll_string_t>(_array.begin()), sizeof(T) * _array.len());
+			return this->hash(reinterpret_cast<ll_string_t>(_array.begin()), sizeof(T) * _array.lenght());
 		}
 
 		#pragma endregion

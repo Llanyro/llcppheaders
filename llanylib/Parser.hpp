@@ -79,7 +79,7 @@ struct ParserFunctionDummy {
 
 	constexpr void writePointer(const void*) noexcept {}
 	__LL_NODISCARD__ constexpr ll_bool_t parserExtra(const meta::StrTypeid&, const void*) noexcept {
-		return llcpp::LL_FALSE;
+		return llcpp::FALSE;
 	}
 
 	constexpr void write_i64(const i64) noexcept {}
@@ -224,26 +224,26 @@ class Parser : public ParserFunctions {
 			switch (value.getType()) {
 				default:
 				case Printable::PrintType::BadInited:
-					return llcpp::LL_FALSE;
+					return llcpp::FALSE;
 				case Printable::PrintType::StrPair:
 					this->writeStrPair(value.getStrPair());
-					return llcpp::LL_TRUE;
+					return llcpp::TRUE;
 				case Printable::PrintType::wStrPair:
 					this->writewStrPair(value.getwStrPair());
-					return llcpp::LL_TRUE;
+					return llcpp::TRUE;
 				case Printable::PrintType::String:
-					return llcpp::LL_FALSE;
+					return llcpp::FALSE;
 				case Printable::PrintType::StringBuffer: {
 					// [TOFIX]
 					///StringBuffer buffer;
 					///value.useStringBuffer(buffer);
 					///this->write(buffer);
-					///return llcpp::LL_TRUE;
-					return llcpp::LL_FALSE;
+					///return llcpp::TRUE;
+					return llcpp::FALSE;
 				}
 				case Printable::PrintType::Parser:
 					value.useParser(this);
-					return llcpp::LL_TRUE;
+					return llcpp::TRUE;
 			}
 		}
 		void writeNull() noexcept { this->write(meta::string::NULLPTR); }
@@ -355,7 +355,7 @@ class Parser : public ParserFunctions {
 			//	this->write(value.lenRef());
 			//else this->write(value.lenRef());
 			// [TOFIX] Containers should always print a number!
-			this->write(value.len());
+			this->write(value.lenght());
 		}
 		template<class T>
 		__LL_INLINE__ constexpr void write(const meta::Typeid<T>& value) noexcept {

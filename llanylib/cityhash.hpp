@@ -215,11 +215,11 @@ struct CityHash {
 		}
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const meta::StrPair& s) noexcept {
 			if (s.empty()) return hash::INVALID_HASH64;
-			else return city::CityHash::cityHash64(s.begin(), s.len());
+			else return city::CityHash::cityHash64(s.begin(), s.lenght());
 		}
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const meta::Str& s) noexcept {
 			if (s.empty()) return hash::INVALID_HASH64;
-			else return city::CityHash::cityHash64(s.begin(), s.len());
+			else return city::CityHash::cityHash64(s.begin(), s.lenght());
 		}
 		template<len_t N>
 		__LL_NODISCARD__ static constexpr hash::OptionalHash64 cityHash64(const ll_char_t(&s)[N]) noexcept {

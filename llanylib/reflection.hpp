@@ -43,7 +43,7 @@ __LL_NODISCARD__ constexpr const T* getNamePart1(const std::basic_string_view<T,
 		__LL_NODISCARD__ static constexpr ll_bool_t compareBool(const T c, TempStruct& t) noexcept {
 			if (t.num == NUM_TEMPLATES_BEFORE_TYPE) return t.ch == c;
 			else if (t.ch == c) ++t.num;
-			return llcpp::LL_FALSE;
+			return llcpp::FALSE;
 		}
 		__LL_NODISCARD__ static constexpr cmp_t compare(const T c, TempStruct& t) noexcept {
 			return c == t.ch;
@@ -51,7 +51,7 @@ __LL_NODISCARD__ constexpr const T* getNamePart1(const std::basic_string_view<T,
 	};
 
 	TempStruct t1 = { '<', 0 };
-	return algorithm::finders_cluster<T, TempStruct&, TempStruct, llcpp::LL_FALSE>().find(
+	return algorithm::finders_cluster<T, TempStruct&, TempStruct, llcpp::FALSE>().find(
 		funcName.data(), funcName._Unchecked_end(), t1) + 1;
 }
 template<class T>
@@ -77,7 +77,7 @@ __LL_NODISCARD__ constexpr const T* getNamePart3(const std::basic_string_view<T,
 		}
 	};
 
-	ll_bool_t isClass = algorithm::compare_cluster<T, TempStruct, T, llcpp::LL_FALSE>().startsWith(
+	ll_bool_t isClass = algorithm::compare_cluster<T, TempStruct, T, llcpp::FALSE>().startsWith(
 		res,
 		static_cast<len_t>(res2 - res),
 		class_string.data(),
@@ -89,7 +89,7 @@ __LL_NODISCARD__ constexpr const T* getNamePart3(const std::basic_string_view<T,
 } // namespace __internal__
 
 template<class T>
-__LL_NODISCARD__ constexpr meta::StrPair getName(ll_bool_t REMOVE_CLASS_STR = llcpp::LL_TRUE) noexcept {
+__LL_NODISCARD__ constexpr meta::StrPair getName(ll_bool_t REMOVE_CLASS_STR = llcpp::TRUE) noexcept {
 	//__FUNCSIG__;
 	//__PRETTY_FUNCTION__;
 	//__FUNCDNAME__;
@@ -103,7 +103,7 @@ __LL_NODISCARD__ constexpr meta::StrPair getName(ll_bool_t REMOVE_CLASS_STR = ll
 	return meta::StrPair(res, res2);
 }
 template<class T>
-__LL_NODISCARD__ constexpr meta::wStrPair getwName(ll_bool_t REMOVE_CLASS_STR = llcpp::LL_TRUE) noexcept {
+__LL_NODISCARD__ constexpr meta::wStrPair getwName(ll_bool_t REMOVE_CLASS_STR = llcpp::TRUE) noexcept {
 	std::wstring_view funcName = L"" __FUNCSIG__;
 	ll_wstring_t res = __internal__::getNamePart1<ll_wchar_t>(funcName);
 	ll_wstring_t res2 = __internal__::getNamePart2<ll_wchar_t>(res, funcName._Unchecked_end());

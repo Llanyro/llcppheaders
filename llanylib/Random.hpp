@@ -54,18 +54,18 @@ class Random {
 	public:
 		#pragma region Constructors
 		#pragma region Base
-		constexpr Random(const hash::Hash64FunctionPack& generator) noexcept : seed(), generator(generator), pattern() { pattern.fill(LL_TRUE); }
-		constexpr Random(hash::Hash64FunctionPack&& generator) noexcept : seed(), generator(std::move(generator)), pattern() { pattern.fill(LL_TRUE); }
+		constexpr Random(const hash::Hash64FunctionPack& generator) noexcept : seed(), generator(generator), pattern() { pattern.fill(llcpp::TRUE); }
+		constexpr Random(hash::Hash64FunctionPack&& generator) noexcept : seed(), generator(std::move(generator)), pattern() { pattern.fill(llcpp::TRUE); }
 		constexpr ~Random() noexcept {}
 
 		constexpr Random(const hash::Hash64& seed, const hash::Hash64FunctionPack& generator) noexcept
-			: seed(seed), generator(generator), pattern() { pattern.fill(LL_TRUE); }
+			: seed(seed), generator(generator), pattern() { pattern.fill(llcpp::TRUE); }
 		constexpr Random(hash::Hash64&& seed, hash::Hash64FunctionPack&& generator) noexcept
-			: seed(std::move(seed)), generator(std::move(generator)), pattern() { pattern.fill(LL_TRUE); }
+			: seed(std::move(seed)), generator(std::move(generator)), pattern() { pattern.fill(llcpp::TRUE); }
 		constexpr Random(hash::Hash64&& seed, const hash::Hash64FunctionPack& generator) noexcept
-			: seed(std::move(seed)), generator(generator), pattern() { pattern.fill(LL_TRUE); }
+			: seed(std::move(seed)), generator(generator), pattern() { pattern.fill(llcpp::TRUE); }
 		constexpr Random(const hash::Hash64& seed, hash::Hash64FunctionPack&& generator) noexcept
-			: seed(seed), generator(std::move(generator)), pattern() { pattern.fill(LL_TRUE); }
+			: seed(seed), generator(std::move(generator)), pattern() { pattern.fill(llcpp::TRUE); }
 
 		#pragma endregion
 		#pragma region StrPair

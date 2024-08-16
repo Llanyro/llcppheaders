@@ -62,7 +62,7 @@ class  Singleton {
 
 		// [TOCHECK]
 		template <class... Args>
-		__LL_NODISCARD__ static T& getInstance(Args&&... args) noexcept(LL_FALSE) {
+		__LL_NODISCARD__ static T& getInstance(Args&&... args) noexcept(llcpp::FALSE) {
 			if constexpr (traits::parameter_pack_operations<Args...>::empty) {
 				static T instance;
 				return instance;
@@ -96,7 +96,7 @@ class  Singleton {
 //		constexpr operator typename __Singleton::ref() noexcept = delete;
 //
 //		template <class... Args>
-//		static T& getInstance(Args&&... args) noexcept(LL_FALSE) {
+//		static T& getInstance(Args&&... args) noexcept(llcpp::FALSE) {
 //			if (!Singleton<T>::instance) {
 //				if constexpr (traits::pack_has_args<Args...>)
 //					Singleton<T>::instance = new T(std::forward<Args>(args)...));

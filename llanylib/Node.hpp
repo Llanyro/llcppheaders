@@ -102,7 +102,7 @@ class BaseNode {
 	#pragma endregion
 };
 
-template<class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::LL_FALSE>
+template<class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE>
 class BaseNodeList;
 
 // If any function requires a parameter that its called "end"
@@ -145,7 +145,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 	#pragma endregion
 	#pragma region Friends
 	protected:
-		friend class BaseNodeList<_NodeFunctions, llcpp::LL_TRUE>;
+		friend class BaseNodeList<_NodeFunctions, llcpp::TRUE>;
 
 	#pragma endregion
 	#pragma region Functions
@@ -245,9 +245,9 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			this->insert_impl(node);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t insert_s(NodeType* node) noexcept {
-			if (!this || !node) return llcpp::LL_FALSE;
+			if (!this || !node) return llcpp::FALSE;
 			this->insert_impl(node);
-			return llcpp::LL_TRUE;
+			return llcpp::TRUE;
 		}
 
 		#pragma endregion
@@ -270,9 +270,9 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 		}
 		// @param[in] node Node that point to this node, this nodes does not has acces to that node
 		__LL_NODISCARD__ constexpr ll_bool_t extract_s(NodeType* node) noexcept {
-			if (!this || !node) return llcpp::LL_FALSE;
+			if (!this || !node) return llcpp::FALSE;
 			this->extract_impl(node);
-			return llcpp::LL_TRUE;
+			return llcpp::TRUE;
 		}
 
 		#pragma endregion
@@ -295,9 +295,9 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 		}
 		// @param[in] node Node that point to this node, this nodes does not has acces to that node
 		__LL_NODISCARD__ constexpr ll_bool_t remove_s(NodeType* node) noexcept {
-			if (!this || !node) return llcpp::LL_FALSE;
+			if (!this || !node) return llcpp::FALSE;
 			this->remove_impl(node);
-			return llcpp::LL_TRUE;
+			return llcpp::TRUE;
 		}
 
 		#pragma endregion
@@ -412,11 +412,11 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			return this->contains_impl(end);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t contains_s(const NodeType* end) noexcept {
-			if (!this) return llcpp::LL_FALSE;
+			if (!this) return llcpp::FALSE;
 			return this->contains_impl(end);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t contains_s(const NodeType* end) const noexcept {
-			if (!this) return llcpp::LL_FALSE;
+			if (!this) return llcpp::FALSE;
 			return this->contains_impl(end);
 		}
 
@@ -426,18 +426,18 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 		__LL_NODISCARD__ constexpr ll_bool_t all_impl(const NodeType* end) noexcept {
 			NodeType* begin = this;
 			do {
-				if (!NodeFunctions::nodeChecker(begin)) return llcpp::LL_FALSE;
+				if (!NodeFunctions::nodeChecker(begin)) return llcpp::FALSE;
 			} while ((begin = begin->get()) != end);
 			// Also check end
-			return llcpp::LL_TRUE;
+			return llcpp::TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t all_impl(const NodeType* end) const noexcept {
 			const NodeType* begin = this;
 			do {
-				if (!NodeFunctions::nodeChecker(begin)) return llcpp::LL_FALSE;
+				if (!NodeFunctions::nodeChecker(begin)) return llcpp::FALSE;
 			} while ((begin = begin->get()) != end);
 			// Also check end
-			return llcpp::LL_TRUE;
+			return llcpp::TRUE;
 		}
 
 	public:
@@ -456,11 +456,11 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			return this->all_impl(end);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t all_s(const NodeType* end) noexcept {
-			if (!this) return llcpp::LL_FALSE;
+			if (!this) return llcpp::FALSE;
 			return this->all_impl(end);
 		}
 		__LL_NODISCARD__ constexpr const ll_bool_t all_s(const NodeType* end) const noexcept {
-			if (!this) return llcpp::LL_FALSE;
+			if (!this) return llcpp::FALSE;
 			return this->all_impl(end);
 		}
 
@@ -490,11 +490,11 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			return this->any_impl(end);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t any_s(const NodeType* end) noexcept {
-			if (!this) return llcpp::LL_FALSE;
+			if (!this) return llcpp::FALSE;
 			return this->any_impl(end);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t any_s(const NodeType* end) const noexcept {
-			if (!this) return llcpp::LL_FALSE;
+			if (!this) return llcpp::FALSE;
 			return this->any_impl(end);
 		}
 
@@ -524,11 +524,11 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			return this->none_impl(end);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t none_s(const NodeType* end) noexcept {
-			if (!this) return llcpp::LL_FALSE;
+			if (!this) return llcpp::FALSE;
 			return this->none_impl(end);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t none_s(const NodeType* end) const noexcept {
-			if (!this) return llcpp::LL_FALSE;
+			if (!this) return llcpp::FALSE;
 			return this->none_impl(end);
 		}
 
@@ -833,7 +833,7 @@ class ClassicNode : public BaseNode<_NodeType> {
 	#pragma endregion
 };
 
-template <class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::LL_FALSE>
+template <class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE>
 using Node = std::conditional_t<
 	IS_SPECIAL,
 	FunctionalNode<Node_Type_Or_Functions>,
@@ -841,7 +841,7 @@ using Node = std::conditional_t<
 >;
 
 #define __LL_NAMED_NODE__(name) \
-	template <class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::LL_FALSE> \
+	template <class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE> \
 	class Node##name## : private Node<Node_Type_Or_Functions, IS_SPECIAL> { \
 		public: \
 			using _MyType		= Node##name##; \
@@ -879,10 +879,10 @@ using Node = std::conditional_t<
 	}; \
 	\
 	template<class NodeType> \
-	using Simple##name## = Node##name##<NodeType, llcpp::LL_FALSE>; \
+	using Simple##name## = Node##name##<NodeType, llcpp::FALSE>; \
 	\
 	template<class NodeFunctions> \
-	using Functional##name## = Node##name##<NodeFunctions, llcpp::LL_FALSE>
+	using Functional##name## = Node##name##<NodeFunctions, llcpp::FALSE>
 
 
 } // namespace linked

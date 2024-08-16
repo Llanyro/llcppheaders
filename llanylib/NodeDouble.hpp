@@ -25,20 +25,12 @@
 #include "NodeNext.hpp"
 #include "common.hpp"
 
-#if !defined(__debug_error_nullptr_str)
-#define __debug_error_nullptr_str(ptr, str) IGNORE()
-#endif
-#if !defined(__debug_error_nullptr)
-#define __debug_error_nullptr(ptr) IGNORE()
-#endif
-
-
 namespace llcpp {
 namespace meta {
 namespace linked {
 
 template <class NodeType>
-class NodeDouble : public linked::NodePrev<NodeType>, public linked::NodeNext<NodeType> {
+class NodeDouble : public linked::SimplePrev<NodeType>, public linked::SimpleNext<NodeType> {
 	#pragma region Types
 	public:
 		using type = NodeType;
@@ -174,34 +166,34 @@ class NodeDouble : public linked::NodePrev<NodeType>, public linked::NodeNext<No
 		}
 
 		__LL_NODISCARD__ constexpr ll_bool_t linkLeft_s(NodeType* left) noexcept {
-			if (!left) return LL_FALSE;
+			if (!left) return llcpp::LL_FALSE;
 			this->linkLeft(left);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t linkRight_s(NodeType* right) noexcept {
-			if (!right) return LL_FALSE;
+			if (!right) return llcpp::LL_FALSE;
 			this->linkRight(right);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t linkLeft4_s(NodeType* left) noexcept {
-			if (!left) return LL_FALSE;
+			if (!left) return llcpp::LL_FALSE;
 			this->linkLeft4(left);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t linkRight4_s(NodeType* right) noexcept {
-			if (!right) return LL_FALSE;
+			if (!right) return llcpp::LL_FALSE;
 			this->linkRight4(right);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t swap_s(NodeType* other) noexcept {
-			if (!right) return LL_FALSE;
+			if (!right) return llcpp::LL_FALSE;
 			this->swap(right);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t swapSimple_s(NodeType* other) noexcept {
-			if (!other) return LL_FALSE;
+			if (!other) return llcpp::LL_FALSE;
 			this->swapSimple(other);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 
 		#pragma endregion
@@ -227,28 +219,20 @@ class NodeDouble : public linked::NodePrev<NodeType>, public linked::NodeNext<No
 		}
 
 		__LL_NODISCARD__ static constexpr ll_bool_t link_s(NodeType* left, NodeType* right) noexcept {
-			if (!left || !right) return LL_FALSE;
+			if (!left || !right) return llcpp::LL_FALSE;
 			NodeDouble::link(left, right);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ static constexpr ll_bool_t link_s(NodeType* left, NodeType* middle, NodeType* right) noexcept {
-			if (!left || !right) return LL_FALSE;
+			if (!left || !right) return llcpp::LL_FALSE;
 			NodeDouble::link(left, right);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 
 		#pragma endregion
 
 	#pragma endregion
 };
-
-class N : public NodeDouble<N> {
-
-};
-
-void a() {
-	N b;
-}
 
 } // namespace linked
 } // namespace meta

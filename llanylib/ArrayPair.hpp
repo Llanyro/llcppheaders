@@ -44,14 +44,14 @@ class ArrayPair {
 
 	#pragma endregion
 	#pragma region Attributes
-	protected:
+	private:
 		const T* mem;
 		const T* mem_end;
 
 	#pragma endregion
 	#pragma region Functions
-		#pragma region Protected
-	protected:
+		#pragma region Private
+	private:
 		constexpr void simpleClear() noexcept {
 			this->mem = LL_NULLPTR;
 			this->mem_end = LL_NULLPTR;
@@ -130,11 +130,11 @@ class ArrayPair {
 		#pragma endregion
 		#pragma region Countable
 	public:
-		__LL_NODISCARD__ constexpr len_t len() const noexcept {
+		__LL_NODISCARD__ constexpr len_t lenght() const noexcept {
 			return static_cast<len_t>(this->end() - this->begin());
 		}
-		__LL_NODISCARD__ constexpr len_t size() const noexcept { return this->len(); }
-		__LL_NODISCARD__ constexpr len_t count() const noexcept { return this->len(); }
+		__LL_NODISCARD__ constexpr len_t size() const noexcept { return this->lenght(); }
+		__LL_NODISCARD__ constexpr len_t count() const noexcept { return this->lenght(); }
 
 		#pragma endregion
 		#pragma region std
@@ -180,18 +180,20 @@ class Array {
 
 	#pragma endregion
 	#pragma region Attributes
-	protected:
+	private:
 		T* mem;
 		T* mem_end;
 
 	#pragma endregion
 	#pragma region Functions
-	protected:
+		#pragma region Functions
+	private:
 		constexpr void simpleClear() noexcept {
 			this->mem = LL_NULLPTR;
 			this->mem_end = LL_NULLPTR;
 		}
 
+		#pragma endregion
 		#pragma region Constructors
 	public:
 		constexpr Array() noexcept = delete;
@@ -290,11 +292,11 @@ class Array {
 		#pragma endregion
 		#pragma region Countable
 	public:
-		__LL_NODISCARD__ constexpr len_t len() const noexcept {
+		__LL_NODISCARD__ constexpr len_t lenght() const noexcept {
 			return static_cast<len_t>(this->end() - this->begin());
 		}
-		__LL_NODISCARD__ constexpr len_t size() const noexcept { return this->len(); }
-		__LL_NODISCARD__ constexpr len_t count() const noexcept { return this->len(); }
+		__LL_NODISCARD__ constexpr len_t size() const noexcept { return this->lenght(); }
+		__LL_NODISCARD__ constexpr len_t count() const noexcept { return this->lenght(); }
 
 		#pragma endregion
 		#pragma region std

@@ -1,6 +1,8 @@
 
-#include "../llanylib/Container.hpp"
-#include "../llanylib/Node.hpp"
+#include "../llanylib/types.hpp"
+
+//#include "../llanylib/Container.hpp"
+//#include "../llanylib/Node.hpp"
 #include <iostream>
 
 class Base {
@@ -44,7 +46,7 @@ class IntFunctions {
 };
 
 #pragma region Nodes
-template <class _T, class _U = _T>
+/*template <class _T, class _U = _T>
 class NodeFunctions : public llcpp::meta::Container<_T> {
 	#pragma region Types
 	public:
@@ -111,7 +113,7 @@ class NodeFunctions : public llcpp::meta::Container<_T> {
 	public:
 		__LL_NODISCARD__ constexpr ll_bool_t nodeChecker(const Node* a) const noexcept {
 			return a->operator*() == this->search.operator*();
-			//return LL_FALSE;
+			//return llcpp::LL_FALSE;
 		}
 		__LL_NODISCARD__ constexpr cmp_t compareNode(const Node* a, const Node* b) const noexcept {
 			return (**a == **b) ? 0 : ((**a > **b) ? 1 : -1);
@@ -152,25 +154,21 @@ int merge_sort() noexcept {
 	end->set(n);
 	return (n) ? n->get(POS)->operator*() : 0;
 }
-
-#pragma endregion
-
-
-int main() {
+void main_nodes() {
 	D1 a(80, 70);
 	llcpp::meta::Container<int*, IntFunctions> cont(new int(10));
 	using t = decltype(cont)::reference;
 	//cont.clear();
-
+	
 	//std::cout << "ASDF: " << llcpp::meta::linked::asdf() << "\n";
-
+	
 	std::cout << "Base1: " << llcpp::meta::traits::common::has_hash_function_v<D1, int(D1::*)() noexcept> << "\n";
 	std::cout << "Base2: " << llcpp::meta::traits::common::has_hash_function_v<H2, int(H2::*)() noexcept> << "\n";
-
+	
 	std::cout << "Base1: " << llcpp::meta::traits::has_simple_type_operator_v<D1, int> << "\n";
 	std::cout << "Base2: " << llcpp::meta::traits::has_simple_type_operator_v<H2, int> << "\n";
 	std::cout << "Base3: " << llcpp::meta::traits::has_simple_type_operator_v<int, int> << "\n";
-
+	
 	std::cout << "Base: " << sizeof(Base) << "\n";
 	std::cout << "H1: " << sizeof(H1) << "\n";
 	std::cout << "H2: " << sizeof(H2) << "\n";
@@ -178,5 +176,27 @@ int main() {
 	std::cout << "A: " << sizeof(a) << "\n";
 	std::cout << "Value1: " << a.H1::value << "\tValue2: " << a.H2::value << "\n";
 	merge_sort<10, 0>();
+}
+
+*/
+#pragma endregion
+
+template<class T, T val>
+ll_bool_t get_val() noexcept {
+	return val;
+}
+
+int main() {
+	auto asdf = 1 <=> 9;
+
+	llcpp::ll_bool_t boolean1 = true;
+	llcpp::ll_bool_t boolean2 = false;
+	llcpp::ll_bool_t boolean3 = llcpp::ll_bool_t::enum_bool::FALSE;
+
+	std::cout << "boolean1: " << boolean1.operator bool() << "\n";
+	std::cout << "boolean2: " << boolean2.operator bool() << "\n";
+	std::cout << "boolean3: " << boolean3.operator bool() << "\n";
+	//std::cout << "boolean0: " << get_val<decltype(llcpp::LL_FALSE), llcpp::LL_FALSE>() << "\n";
+
 	return 0;
 }

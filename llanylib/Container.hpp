@@ -22,7 +22,7 @@
 #define LLANYLIB_CONTAINER_MINOR_ 0
 
 #include "hash_types.hpp"
-#include "common.hpp"
+#include "algorithm.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -32,14 +32,15 @@ class BasicContainer {
 	#pragma region Types
 	public:
 		using _MyType	= BasicContainer;
-		using T			= _T;
+
+		using T = _T;
 		using pointer	= std::conditional_t<std::is_pointer_v<T>, T, T*>;
 		//using const_pointer	= std::conditional_t<std::is_pointer_v<T>, std::remove_pointer_t<T>* const, T* const>;
 
 	#pragma endregion
 	#pragma region Assersts
 	public:
-		static_assert(traits::is_valid_type_checker_ignore_pointer_v<T>,
+		static_assert(traits::is_valid_type_checker_ignore_pa_v<T>,
 			"type_checker<T> detected an invalid type!");
 		static_assert(traits::is_valid_constructor_checker_v<T>,
 			"constructor_checker<T> detected an invalid type!");
@@ -110,7 +111,12 @@ class BasicContainer {
 
 		template<class U>
 		__LL_NODISCARD__ constexpr meta::OptionalBool compare_eq(const BasicContainer<U>& other) const noexcept {
-			return meta::common::is_same_value<T, U>(this->data, other.data);
+			if constexpr (std::is_array_v<T> && std::is_array_v<U> && traits::array_size<T> == traits::array_size<U>) {
+				if constexpr (traits::array_size<T> == traits::array_size<U>)
+					return LL_FALSE;
+				else return algorithm::CompareCluster<T, U>().compareBool(this->data, other.data, traits::array_size<U>);
+			}
+			else return meta::common::is_same_value<T, U>(this->data, other.data);
 		}
 		template<class U>
 		__LL_NODISCARD__ constexpr meta::OptionalBool compare_no_eq(const BasicContainer<U>& other) const noexcept {
@@ -128,22 +134,22 @@ class BasicContainer {
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const BasicContainer& other) const noexcept {
 			auto b = this->compare_eq<T>(std::forward<const BasicContainer&>(other));
 			if (b.has_value()) return b.value();
-			else LL_FALSE;
+			else llcpp::LL_FALSE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const BasicContainer& other) const noexcept {
 			auto b = this->compare_no_eq<T>(std::forward<const BasicContainer&>(other));
 			if (b.has_value()) return b.value();
-			else LL_FALSE;
+			else llcpp::LL_FALSE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const T& data) const noexcept {
 			auto b = this->compare_eq<T>(std::forward<const T&>(data));
 			if (b.has_value()) return b.value();
-			else LL_FALSE;
+			else llcpp::LL_FALSE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const T& data) const noexcept {
 			auto b = this->compare_no_eq<T>(std::forward<const T&>(data));
 			if (b.has_value()) return b.value();
-			else LL_FALSE;
+			else llcpp::LL_FALSE;
 		}
 
 		#pragma endregion
@@ -187,10 +193,11 @@ class ContainerExtra : public _Functions, public BasicContainer<_T> {
 	#pragma region Types
 	public:
 		using _MyType					= ContainerExtra;
+		using Functions					= _Functions;
+		using BasicContainer			= BasicContainer<_T>;
+
 		using T							= _T;
 		using T_class					= std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
-		using Functions					= _Functions;
-		using BasicContainer			= BasicContainer<T>;
 		using pointer					= typename BasicContainer::pointer;
 		using reference					= T&;
 		using creference				= const T&;

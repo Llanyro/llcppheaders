@@ -42,7 +42,7 @@ class LlanyHash {
 				if (pos >= 8) pos = ZERO_UI8;
 				ui8 bit_position = static_cast<ui8>(pos << 3);
 				ui8 result_8b_part = (result >> bit_position) && 0xff;
-				ui8 result_new = hash::combine::simple8Combine_noshift<LL_FALSE>(result_8b_part, static_cast<ui8>(*s));
+				ui8 result_new = hash::combine::simple8Combine_noshift<llcpp::LL_FALSE>(result_8b_part, static_cast<ui8>(*s));
 				result |= (static_cast<ui64>(result_new) << bit_position);
 			}
 
@@ -127,7 +127,7 @@ class LlanyHash {
 				if (pos >= 8) pos = ZERO_UI8;
 				ui8 bit_position = static_cast<ui8>(pos << 3);
 				ui8 result_8b_part = (result >> bit_position) && 0xff;
-				ui8 result_new = hash::combine::simple8Combine_noshift<LL_FALSE>(result_8b_part, static_cast<ui8>(*s));
+				ui8 result_new = hash::combine::simple8Combine_noshift<llcpp::LL_FALSE>(result_8b_part, static_cast<ui8>(*s));
 				result |= (static_cast<ui64>(result_new) << bit_position);
 			}
 
@@ -142,7 +142,7 @@ class LlanyHash {
 				if (pos >= 8) pos = ZERO_UI8;
 				ui8 pos_b = static_cast<ui8>(pos << 3);
 				ui8 result_8b_part = (result >> pos_b) && 0xff;
-				ui8 result_new = hash::combine::simple8Combine_noshift<LL_FALSE>(result_8b_part, static_cast<ui8>(*s));
+				ui8 result_new = hash::combine::simple8Combine_noshift<llcpp::LL_FALSE>(result_8b_part, static_cast<ui8>(*s));
 				result = (result << 8) | result_new;
 			}
 
@@ -154,7 +154,7 @@ class LlanyHash {
 			ui64 result = hash::combine::kMul64;
 			for (ll_string_t end = s + len; s < end; ++s) {
 				ui8 buffer = (result >> 56);
-				ui8 result_new = hash::combine::simple8Combine_noshift<LL_FALSE>(buffer, static_cast<ui8>(*s));
+				ui8 result_new = hash::combine::simple8Combine_noshift<llcpp::LL_FALSE>(buffer, static_cast<ui8>(*s));
 				result = (result << 8) | result_new;
 			}
 

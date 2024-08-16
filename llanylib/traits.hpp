@@ -52,7 +52,7 @@ struct double_type_container {
 template<class _U, class _Signature, _Signature> struct SignatureChecker {};
 
 // Standard checker for types in this lib
-template<class _T, ll_bool_t _IGNORE_POINTER = llcpp::LL_FALSE, ll_bool_t _IGNORE_ARRAY = llcpp::LL_FALSE, ll_bool_t _IGNORE_VOLATILE = llcpp::LL_FALSE>
+template<class _T, ll_bool_t _IGNORE_POINTER = llcpp::FALSE, ll_bool_t _IGNORE_ARRAY = llcpp::FALSE, ll_bool_t _IGNORE_VOLATILE = llcpp::FALSE>
 struct type_checker {
 	using _MyType	= type_checker;
 	using T			= _T;
@@ -72,7 +72,7 @@ struct type_checker {
 	static_assert(ARRAY, "Array type is forbidden!");
 	static_assert(VOLATILE, "Volatile type is forbidden!");
 
-	static constexpr ll_bool_t is_valid_v = 
+	static constexpr ll_bool_t is_valid_v =
 		!std::is_const_v<T> &&
 		!std::is_reference_v<T> &&
 		ARRAY &&
@@ -86,15 +86,15 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_v =
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_pointer_v = 
-	traits::type_checker<T, llcpp::LL_TRUE, llcpp::LL_FALSE, llcpp::LL_FALSE>::is_valid_v;
+	traits::type_checker<T, llcpp::TRUE, llcpp::FALSE, llcpp::FALSE>::is_valid_v;
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_array_v = 
-	traits::type_checker<T, llcpp::LL_FALSE, llcpp::LL_TRUE, llcpp::LL_FALSE>::is_valid_v;
+	traits::type_checker<T, llcpp::FALSE, llcpp::TRUE, llcpp::FALSE>::is_valid_v;
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_pa_v = 
-	traits::type_checker<T, llcpp::LL_TRUE, llcpp::LL_TRUE, llcpp::LL_FALSE>::is_valid_v;
+	traits::type_checker<T, llcpp::TRUE, llcpp::TRUE, llcpp::FALSE>::is_valid_v;
 
 // Standard checker for classes and objects
 // Checks contruction / destruction and other operations needed
@@ -157,6 +157,8 @@ struct _has_common : public _Base {
 #pragma endregion
 #pragma region BasicExpresions
 template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_empty_object_v = std::_Is_any_of_v<std::remove_cv_t<T>, llcpp::Emptyclass, llcpp::EmptyStruct>;
+template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = std::is_arithmetic_v<T>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_basic_bigger_type_v = std::_Is_any_of_v<std::remove_cv_t<T>, i128, i256, ui128, ui256>;
@@ -171,6 +173,16 @@ template<class>
 __LL_VAR_INLINE__ constexpr len_t array_size = ZERO_UI64;
 template<class T, len_t N>
 __LL_VAR_INLINE__ constexpr len_t array_size<T[N]> = N;
+
+template<class... Args>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_a_basic_type_v = (traits::is_basic_type_v<Args> || ...);
+template<class... Args>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_all_of_a_basic_type_v = (traits::is_basic_type_v<Args> && ...);
+
+template<class... Args>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_a_floating_type_v = (traits::is_floating_type_v<Args> || ...);
+template<class... Args>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_all_of_a_floating_type_v = (traits::is_floating_type_v<Args> && ...);
 
 #pragma endregion
 #pragma region IntegralConstant
@@ -187,9 +199,9 @@ template<ll_bool_t VALUE, class U>
 using bool_constant_container = traits::integral_constant_container<ll_bool_t, U, VALUE>;
 
 template<class U>
-using true_type  = traits::bool_constant_container<llcpp::LL_TRUE, U>;
+using true_type  = traits::bool_constant_container<llcpp::TRUE, U>;
 template<class U>
-using false_type = traits::bool_constant_container<llcpp::LL_FALSE, U>;
+using false_type = traits::bool_constant_container<llcpp::FALSE, U>;
 
 #pragma endregion
 #pragma region Types
@@ -207,41 +219,41 @@ struct type_promotion {
 
 	static_assert(traits::is_valid_type_checker_v<T>, "type_checker<T> detected an invalid type!");
 
-	template<ll_bool_t promote> struct __type_promotion { using value = T; };
-	template<> struct __type_promotion<LL_TRUE> {
-		template<class U> struct promote_type { using value = U; };
-		template<> struct promote_type<i8> { using value = i16; };
-		template<> struct promote_type<i16> { using value = i32; };
-		template<> struct promote_type<i32> { using value = i64; };
-		template<> struct promote_type<i64> { using value = i128; };
-		template<> struct promote_type<i128> { using value = i256; };
-		template<> struct promote_type<ui8> { using value = ui16; };
-		template<> struct promote_type<ui16> { using value = ui32; };
-		template<> struct promote_type<ui32> { using value = ui64; };
-		template<> struct promote_type<ui64> { using value = ui128; };
-		template<> struct promote_type<ui128> { using value = ui256; };
-		template<> struct promote_type<f32> { using value = f64; };
-		template<> struct promote_type<f64> { using value = f128; };
-		using value = promote_type<T>::value;
+	template<ll_bool_t promote> struct __type_promotion { using type = T; };
+	template<> struct __type_promotion<llcpp::TRUE> {
+		template<class U> struct promote_type { using type = U; };
+		template<> struct promote_type<i8> { using type = i16; };
+		template<> struct promote_type<i16> { using type = i32; };
+		template<> struct promote_type<i32> { using type = i64; };
+		template<> struct promote_type<i64> { using type = i128; };
+		template<> struct promote_type<i128> { using type = i256; };
+		template<> struct promote_type<ui8> { using type = ui16; };
+		template<> struct promote_type<ui16> { using type = ui32; };
+		template<> struct promote_type<ui32> { using type = ui64; };
+		template<> struct promote_type<ui64> { using type = ui128; };
+		template<> struct promote_type<ui128> { using type = ui256; };
+		template<> struct promote_type<f32> { using type = f64; };
+		template<> struct promote_type<f64> { using type = f128; };
+		using type = promote_type<T>::type;
 	};
-	template<> struct __type_promotion<LL_FALSE> {
-		template<class U> struct promote_type { using value = U; };
-		template<> struct promote_type<i16> { using value = i8; };
-		template<> struct promote_type<i32> { using value = i16; };
-		template<> struct promote_type<i64> { using value = i32; };
-		template<> struct promote_type<i128> { using value = i64; };
-		template<> struct promote_type<i256> { using value = i128; };
-		template<> struct promote_type<ui16> { using value = ui8; };
-		template<> struct promote_type<ui32> { using value = ui16; };
-		template<> struct promote_type<ui64> { using value = ui32; };
-		template<> struct promote_type<ui128> { using value = ui64; };
-		template<> struct promote_type<ui256> { using value = ui128; };
-		template<> struct promote_type<f64> { using value = f32; };
-		template<> struct promote_type<f128> { using value = f64; };
-		using value = promote_type<T>::value;
+	template<> struct __type_promotion<llcpp::FALSE> {
+		template<class U> struct promote_type { using type = U; };
+		template<> struct promote_type<i16> { using type = i8; };
+		template<> struct promote_type<i32> { using type = i16; };
+		template<> struct promote_type<i64> { using type = i32; };
+		template<> struct promote_type<i128> { using type = i64; };
+		template<> struct promote_type<i256> { using type = i128; };
+		template<> struct promote_type<ui16> { using type = ui8; };
+		template<> struct promote_type<ui32> { using type = ui16; };
+		template<> struct promote_type<ui64> { using type = ui32; };
+		template<> struct promote_type<ui128> { using type = ui64; };
+		template<> struct promote_type<ui256> { using type = ui128; };
+		template<> struct promote_type<f64> { using type = f32; };
+		template<> struct promote_type<f128> { using type = f64; };
+		using type = promote_type<T>::type;
 	};
 
-	using value = __type_promotion<promote>::value;
+	using type = __type_promotion<promote>::type;
 };
 
 #pragma endregion
@@ -282,17 +294,18 @@ struct get_by_char_type {
 	using TypeWChar = _TypeWChar;
 	using ExtraType = _ExtraType;
 
-	static_assert(traits::is_valid_type_checker_v<T>, "type_checker<T> detected an invalid type!");
+	static_assert(traits::is_valid_type_checker_v<T>,
+		"type_checker<U> detected an invalid type!");
 
 	template <class U> struct __struct__ { using _val = ExtraType; };
 	template<> struct __struct__<ll_char_t> { using _val = TypeChar; };
 	template<> struct __struct__<ll_wchar_t> { using _val = TypeWChar; };
 
-	using value = __struct__<T>::_val;
+	using type = __struct__<T>::_val;
 };
 
 template<class T, class TypeChar, class TypeWChar, class ExtraType = void>
-using get_by_char_type_t = traits::get_by_char_type<T, TypeChar, TypeWChar, ExtraType>::value;
+using get_by_char_type_t = traits::get_by_char_type<T, TypeChar, TypeWChar, ExtraType>::type;
 
 #pragma endregion
 #pragma region FunctionalReflector
@@ -306,7 +319,7 @@ struct has_type_operator {
 	using checker		= traits::SignatureChecker<ClassToCheck, Signature, SIG>;
 
 	template<ll_bool_t, ll_bool_t> struct SFINAE { using type = std::false_type; };
-	template<> struct SFINAE<LL_TRUE, LL_TRUE> { using type = std::true_type; };
+	template<> struct SFINAE<llcpp::TRUE, llcpp::TRUE> { using type = std::true_type; };
 
 	using type_default_result =
 		typename SFINAE<traits::is_basic_type_v<ClassToCheck>, std::is_same_v<ClassToCheck, OperatorType>>::type;
@@ -352,10 +365,10 @@ struct is_nothrow_swappeable {
 		}
 		else return std::false_type{};
 	}
-	using val = decltype(test());
+	using type = decltype(test());
 };
 template<class T>
-using is_nothrow_swappeable_t = is_nothrow_swappeable<T>::val;
+using is_nothrow_swappeable_t = is_nothrow_swappeable<T>::type;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_swappeable_v = is_nothrow_swappeable_t<T>::value;
 
@@ -385,10 +398,10 @@ struct is_nothrow_copyable {
 			return std::true_type{};
 		else return std::false_type{};
 	}
-	using val = decltype(test());
+	using type = decltype(test());
 };
 template<class T>
-using is_nothrow_copyable_t = is_nothrow_copyable<T>::val;
+using is_nothrow_copyable_t = is_nothrow_copyable<T>::type;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyable_t<T>::value;
 
@@ -421,7 +434,7 @@ struct parameter_pack_operations<T> {
 	using pack_first = typename FirstType;
 	using get_first_type = typename pack_first::type;
 	static constexpr len_t size = 1ull;
-	static constexpr ll_bool_t empty = LL_FALSE;
+	static constexpr ll_bool_t empty = llcpp::FALSE;
 	static constexpr ll_bool_t has_a_pointer = std::is_pointer_v<T>;
 	static constexpr ll_bool_t has_a_array = std::is_array_v<T>;
 };
@@ -432,9 +445,9 @@ struct parameter_pack_operations<> {
 	using pack_first = FirstType;
 	using get_first_type = pack_first::type;
 	static constexpr len_t size = ZERO_UI64;
-	static constexpr ll_bool_t empty = LL_TRUE;
-	static constexpr ll_bool_t has_a_pointer = LL_FALSE;
-	static constexpr ll_bool_t has_a_array = LL_FALSE;
+	static constexpr ll_bool_t empty = llcpp::TRUE;
+	static constexpr ll_bool_t has_a_pointer = llcpp::FALSE;
+	static constexpr ll_bool_t has_a_array = llcpp::FALSE;
 };
 
 #pragma endregion
@@ -478,8 +491,11 @@ namespace common {
 //__LL_HAS_CUSTOM_FUNCTION__(compareNode);
 //__LL_HAS_CUSTOM_FUNCTION_NAMED__(operator_eq, operator==);
 //__LL_HAS_CUSTOM_FUNCTION_NAMED__(operator_no_eq, operator!=);
+//__LL_HAS_CUSTOM_FUNCTION_NAMED__(sgtrong_ordening, operator<=>);
 //__LL_HAS_CUSTOM_FUNCTION__(compare_eq);
 //__LL_HAS_CUSTOM_FUNCTION__(compare_no_eq);
+//__LL_HAS_CUSTOM_FUNCTION__(die);
+
 
 template<class _ClassToCheck, class _Signature> struct has_hash_function {
     using _MyType = has_hash_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::hash>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
@@ -523,68 +539,289 @@ template<class _ClassToCheck, class _Signature> struct has_compare_eq_function {
 template<class _ClassToCheck, class _Signature> struct has_compare_no_eq_function {
 	using _MyType = has_compare_no_eq_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::compare_no_eq>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
 }; template<class ClassToCheck, class Signature> using has_compare_no_eq_function_t = traits::_has_common<traits::common::has_compare_no_eq_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_compare_no_eq_function_v = traits::common::has_compare_no_eq_function_t<ClassToCheck, Signature>::type::value;;
-
+template<class _ClassToCheck, class _Signature> struct has_die_function {
+	using _MyType = has_die_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::die>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
+}; template<class ClassToCheck, class Signature> using has_die_function_t = traits::_has_common<traits::common::has_die_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_die_function_v = traits::common::has_die_function_t<ClassToCheck, Signature>::type::value;;
+template<class _ClassToCheck, class _Signature> struct has_sgtrong_ordening_function {
+	using _MyType = has_sgtrong_ordening_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::operator<=>>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
+}; template<class ClassToCheck, class Signature> using has_sgtrong_ordening_function_t = traits::_has_common<traits::common::has_sgtrong_ordening_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_sgtrong_ordening_function_v = traits::common::has_sgtrong_ordening_function_t<ClassToCheck, Signature>::type::value;;
 
 template<class ClassToCheck>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_clear_function_v =
-	traits::common::has_clear_function_v<ClassToCheck, void(ClassToCheck::*)() noexcept>::type::value;
+	traits::common::has_clear_function_v<ClassToCheck, void(ClassToCheck::*)() noexcept>;
 
 } // namespace common
-
-// Returns hash type by calling hash function
 #pragma region HashTypeChecker
-namespace hash {
-
-template<class _ClassToCheck>
-struct get_hash_function_type {
-	using ClassToCheck	= _ClassToCheck;
-
-	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
-		"type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
-		"class_checker<ClassToCheck> detected an invalid class type!");
-
-	template<class>
-	static constexpr auto test(auto(ClassToCheck::* asdf)() noexcept) noexcept ->
-		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(asdf), ClassToCheck>>;
-	template<class>
-	static constexpr auto test(auto(ClassToCheck::* asdf)() const noexcept) noexcept ->
-		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(asdf), ClassToCheck>>;
-	template<class>
-	static constexpr auto test(...) noexcept ->
-		traits::double_type_container<std::false_type, meta::hash::StandardOptionalHash>;
-
-	using container = decltype(get_hash_function_type::test<ClassToCheck>(&ClassToCheck::hash));
-	using type = container::U;
-	static_assert(!std::is_same_v<type, void>, "T::hash() cannot return void!");
-};
-
-template<class _ClassToCheck>
-struct get_hash_function_type<_ClassToCheck*> {
-	using ClassToCheck	= _ClassToCheck*;
-	using container		= traits::double_type_container<std::false_type, meta::hash::StandardOptionalHash>;
-	using type			= container::U;
-};
-
-template<class ClassToCheck>
-using get_hash_function_type_t = get_hash_function_type<ClassToCheck>::type;
-
-template<class _ClassToCheck, class HashType>
-struct get_hash_function {
-	using ClassToCheck = _ClassToCheck;
-	using container		= traits::double_type_container<std::true_type, void(ClassToCheck::*)() noexcept>;
-	using c_container	= traits::double_type_container<std::true_type, void(ClassToCheck::*)() const noexcept>;
-	using type			= container::U;
-	using ctype			= c_container::U;
-
-	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
-		"type_checker<ClassToCheck> detected an invalid type!");
-	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
-		"class_checker<ClassToCheck> detected an invalid class type!");
-};
-
-} // namespace hash
+//namespace hash {
+//
+//template<class _ClassToCheck>
+//struct get_hash_function_type {
+//	using ClassToCheck	= _ClassToCheck;
+//
+//	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+//		"type_checker<ClassToCheck> detected an invalid type!");
+//	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+//		"class_checker<ClassToCheck> detected an invalid class type!");
+//
+//	template<class>
+//	static constexpr auto test(auto(ClassToCheck::* asdf)() noexcept) noexcept ->
+//		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(asdf), ClassToCheck>>;
+//	template<class>
+//	static constexpr auto test(auto(ClassToCheck::* asdf)() const noexcept) noexcept ->
+//		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(asdf), ClassToCheck>>;
+//	template<class>
+//	static constexpr auto test(...) noexcept ->
+//		traits::double_type_container<std::false_type, meta::hash::StandardOptionalHash>;
+//
+//	using container = decltype(get_hash_function_type::test<ClassToCheck>(&ClassToCheck::hash));
+//	using type = container::U;
+//	static_assert(!std::is_same_v<type, void>, "T::hash() cannot return void!");
+//};
+//
+//template<class _ClassToCheck>
+//struct get_hash_function_type<_ClassToCheck*> {
+//	using ClassToCheck	= _ClassToCheck*;
+//	using container		= traits::double_type_container<std::false_type, meta::hash::StandardOptionalHash>;
+//	using type			= container::U;
+//};
+//
+//template<class ClassToCheck>
+//using get_hash_function_type_t = get_hash_function_type<ClassToCheck>::type;
+//
+//template<class _ClassToCheck, class HashType>
+//struct get_hash_function {
+//	using ClassToCheck = _ClassToCheck;
+//	using container		= traits::double_type_container<std::true_type, void(ClassToCheck::*)() noexcept>;
+//	using c_container	= traits::double_type_container<std::true_type, void(ClassToCheck::*)() const noexcept>;
+//	using type			= container::U;
+//	using ctype			= c_container::U;
+//
+//	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+//		"type_checker<ClassToCheck> detected an invalid type!");
+//	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+//		"class_checker<ClassToCheck> detected an invalid class type!");
+//};
+//
+//} // namespace hash
 #pragma endregion
+#pragma region ThreeWayChecker
+template<class _T, class _U>
+struct get_three_way_comparasion_function_type {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType = get_three_way_comparasion_function_type;
+
+		// Types
+		using T = _T;
+		using U = _U;
+
+		// 
+		using t_cinput = traits::cinput<T>;
+		using u_cinput = traits::cinput<U>;
+
+		// Type if basic type
+		using no_function_type = std::conditional_t<
+			!traits::is_all_of_a_basic_type_v<T, U>,
+			llcpp::Emptyclass,
+			std::conditional_t<
+				traits::is_any_of_a_floating_type_v<T, U>,
+				std::partial_ordering,
+				std::strong_ordering
+			>
+		>;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(traits::is_valid_type_checker_v<T>,
+			"type_checker<T> detected an invalid type!");
+		static_assert(traits::is_valid_type_checker_v<U>,
+			"type_checker<U> detected an invalid type!");
+
+	#pragma endregion
+	#pragma region Functions
+	public:
+		template<class>
+		static constexpr auto test(auto(T::* _)(u_cinput) noexcept) noexcept ->
+			traits::double_type_container<
+				std::true_type,
+				std::invoke_result_t<decltype(_), T>
+			>;
+		template<class>
+		static constexpr auto test(auto(T::* _)(u_cinput) noexcept) const noexcept ->
+			traits::double_type_container<
+				std::true_type,
+				std::invoke_result_t<decltype(_), T>
+			>;
+		template<class>
+		static constexpr auto test(...) noexcept ->
+			traits::double_type_container<std::false_type, no_function_type>;
+
+		using container = decltype(_MyType::test<T>(&T::operator<=>));
+		using type = container::U;
+
+	#pragma endregion
+};
+
+template<class T, class U>
+using get_three_way_comparasion_function_type_t = get_three_way_comparasion_function_type<T, U>::type;
+
+#pragma endregion
+#pragma region Comparations
+template<class _T, class _U = _T, class _Boolean = llcpp::Boolean>
+struct is_comparable {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType				= is_comparable;
+
+		// Types
+		using T						= _T;
+		using U						= _U;
+		using Boolean				= _Boolean;
+		using T_class				= std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
+
+		// 
+		using t_cinput				= traits::cinput<T>;
+		using u_cinput				= traits::cinput<U>;
+		
+		// Signarures
+		using T_Signature_bool		= ll_bool_t(T_class::*)(u_cinput) const noexcept;
+		using T_Signature_ll_bool_t	= Boolean(T_class::*)(u_cinput) const noexcept;
+
+	#pragma endregion
+	#pragma region Expresions
+	public:
+		static constexpr ll_bool_t T_HAS_EQ_SIGNATURE_BOOL =
+			traits::common::has_operator_eq_function_v<T, T_Signature_bool>;
+		static constexpr ll_bool_t T_HAS_EQ_SIGNATURE_LL_BOOL_T =
+			traits::common::has_operator_eq_function_v<T, T_Signature_ll_bool_t>;
+
+		static constexpr ll_bool_t T_HAS_NEQ_SIGNATURE_BOOL =
+			traits::common::has_operator_no_eq_function_v<T, T_Signature_bool>;
+		static constexpr ll_bool_t T_HAS_NEQ_SIGNATURE_LL_BOOL_T =
+			traits::common::has_operator_no_eq_function_v<T, T_Signature_ll_bool_t>;
+
+		static constexpr ll_bool_t T_U_BASIC_TYPE =
+			traits::is_basic_type_v<T> && traits::is_basic_type_v<U>;
+
+		static constexpr ll_bool_t IS_COMPARABLE_EQ =
+			T_HAS_EQ_SIGNATURE_BOOL || T_U_BASIC_TYPE
+			|| T_HAS_EQ_SIGNATURE_LL_BOOL_T;
+		static constexpr ll_bool_t IS_COMPARABLE_NEQ =
+			T_HAS_NEQ_SIGNATURE_BOOL || T_U_BASIC_TYPE
+			|| T_HAS_NEQ_SIGNATURE_LL_BOOL_T;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(traits::is_valid_type_checker_v<T>,
+			"type_checker<T> detected an invalid type!");
+		static_assert(traits::is_valid_type_checker_v<U>,
+			"type_checker<U> detected an invalid type!");
+
+		static_assert(IS_COMPARABLE_EQ, "Types are not comparables!");
+		static_assert(IS_COMPARABLE_NEQ, "Types are not comparables!");
+
+	#pragma endregion
+	#pragma region Functions
+	public:
+		using compare_eq_type =
+			std::conditional_t<T_HAS_EQ_SIGNATURE_BOOL || T_U_BASIC_TYPE, ll_bool_t, Boolean>;
+		using compare_neq_type =
+			std::conditional_t<T_HAS_NEQ_SIGNATURE_BOOL || T_U_BASIC_TYPE, ll_bool_t, Boolean>;
+
+		__LL_NODISCARD__ static constexpr compare_eq_type is_same_value(t_cinput t, u_cinput u) noexcept {
+			return (t == u);
+		}
+		__LL_NODISCARD__ static constexpr compare_eq_type is_not_same_value(t_cinput t, u_cinput u) noexcept {
+			return (t != u);
+		}
+
+	#pragma endregion
+};
+
+template<
+	class _T,
+	class _U = _T,
+	class _Orderning = get_three_way_comparasion_function_type_t<_T, _U>
+>
+struct is_diff {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType			= is_diff;
+
+		// Types
+		using T					= _T;
+		using U					= _U;
+		using Orderning			= _Orderning;
+		using T_class			= std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
+
+		// 
+		using t_cinput			= traits::cinput<T>;
+		using u_cinput			= traits::cinput<U>;
+		
+		// Signarures
+		using T_Signature_C		= cmp_t(T_class::*)(u_cinput) const noexcept;
+		using T_Signature_CPP	= Orderning(T_class::*)(u_cinput) const noexcept;
+
+	#pragma endregion
+	#pragma region Expresions
+	public:
+		static constexpr ll_bool_t T_HAS_C_SIGNATURE =
+			traits::common::has_sgtrong_ordening_function_v<T, T_Signature_C>;
+		static constexpr ll_bool_t T_HAS_CPP_SIGNATURE =
+			traits::common::has_sgtrong_ordening_function_v<T, T_Signature_CPP>;
+
+		static constexpr ll_bool_t T_U_BASIC_TYPE =
+			traits::is_basic_type_v<T> && traits::is_basic_type_v<U>;
+
+		static constexpr ll_bool_t IS_COMPARABLE =
+			T_HAS_C_SIGNATURE || T_U_BASIC_TYPE
+			|| T_HAS_CPP_SIGNATURE;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(traits::is_valid_type_checker_v<T>,
+			"type_checker<T> detected an invalid type!");
+		static_assert(traits::is_valid_type_checker_v<U>,
+			"type_checker<U> detected an invalid type!");
+
+	#pragma endregion
+	#pragma region Functions
+	public:
+		__LL_NODISCARD__ static constexpr cmp_t diff_C(t_cinput t, u_cinput u) noexcept {
+			static_assert(T_HAS_C_SIGNATURE || T_U_BASIC_TYPE, "Types are not comparables!");
+			if constexpr (T_U_BASIC_TYPE) {
+				if (t > u) return 1;
+				else if (t < u) return -1;
+				else return 0;
+			}
+			else return (t <=> u);
+		}
+		__LL_NODISCARD__ static constexpr Orderning diff_CPP(t_cinput t, u_cinput u) noexcept {
+			static_assert(T_HAS_CPP_SIGNATURE || T_U_BASIC_TYPE, "Types are not comparables!");
+			return (t <=> u);
+		}
+
+	#pragma endregion
+};
+
+constexpr auto asdfadsd1 = is_diff<double>::diff_C(90.0, 99);
+constexpr auto asdfadsd2 = is_diff<double>::diff_CPP(90.0, 99);
+
+
+constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I8;
+constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I16;
+constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I32;
+constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_I64;
+
+constexpr auto asdfadsd3 = llcpp::ZERO_I8 <=> llcpp::ZERO_F32;
+#pragma endregion
+// Returns hash type by calling hash function
 
 } // namespace traits
 } // namespace meta

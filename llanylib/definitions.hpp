@@ -63,4 +63,29 @@ namespace llcpp { enum class OSEnum { Windows, Posix, Unix, Other }; } // namesp
 #define __LL_ASSERT_B_LOWER_THAN_A__(var_a, var_b, var_a_str, var_b_str) \
 	LL_ASSERT(var_a < var_b, "[" var_a_str " < " var_b_str "] " var_a_str " cannot be lower or equal to " var_b_str "." __FUNCSIG__)
 
+// Defines for logging
+
+#if !defined(__debug_error_nullptr_str)
+	#define __debug_error_nullptr_str(ptr, str) IGNORE()
+#endif
+
+#if !defined(__debug_error_nullptr)
+	#define __debug_error_nullptr(ptr) IGNORE()
+#endif
+
+#if !defined(__debug_error_out_of_range)
+	#define __debug_error_out_of_range(position, max_length) IGNORE()
+#endif
+
+
+
+#if !defined(__debug_warning_nullptr_str)
+	#define __debug_warning_nullptr_str(ptr, str) IGNORE()
+#endif
+
+#if !defined(__debug_warning_no_nullptr_str)
+	#define __debug_warning_no_nullptr_str(ptr, str) IGNORE()
+#endif
+
+
 #endif // LLANYLIB_DEFINITIONS_HPP_

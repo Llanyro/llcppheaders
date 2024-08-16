@@ -76,54 +76,6 @@ constexpr void clear_if_pointer(T& value) {
 		value = LL_NULLPTR;
 }
 
-template<class T, class U = T>
-__LL_NODISCARD__ constexpr meta::OptionalBool is_same_value(const T& t, const U& u) {
-	if constexpr (std::is_pointer_v<T> || std::is_pointer_v<U>) {
-		using noptr_t = std::remove_pointer_t<T>;
-		using noptr_u = std::remove_pointer_t<U>;
-
-		static_assert(std::is_pointer_v<noptr_t>, "Cannot operate with more than one pointer type!");
-		static_assert(std::is_pointer_v<noptr_u>, "Cannot operate with more than one pointer type!");
-
-		if constexpr (std::is_pointer_v<T> && std::is_pointer_v<U>)
-			return common::is_same_value<noptr_t, noptr_u>(*t, *u);
-		else if constexpr (std::is_pointer_v<T>)
-			return common::is_same_value<noptr_t, U>(*t, u);
-		else return common::is_same_value<T, noptr_u>(t, *u);
-	}
-	else if constexpr (traits::is_basic_type_v<T>)
-		return (t == u);
-	else if constexpr (
-		traits::common::has_operator_eq_function_v<T, ll_bool_t(T::*)(const U&) const noexcept> ||
-		traits::common::has_operator_eq_function_v<T, meta::OptionalBool(T::*)(const U&) const noexcept>)
-		return (t == u);
-	else return std::nullopt;
-}
-template<class T, class U = T>
-__LL_NODISCARD__ constexpr meta::OptionalBool is_not_same_value(const T& t, const U& u) {
-	if constexpr (std::is_pointer_v<T> || std::is_pointer_v<U>) {
-		using noptr_t = std::remove_pointer_t<T>;
-		using noptr_u = std::remove_pointer_t<U>;
-
-		static_assert(std::is_pointer_v<noptr_t>, "Cannot operate with more than one pointer type!");
-		static_assert(std::is_pointer_v<noptr_u>, "Cannot operate with more than one pointer type!");
-
-		if constexpr (std::is_pointer_v<T> && std::is_pointer_v<U>)
-			return common::is_same_value<noptr_t, noptr_u>(*t, *u);
-		else if constexpr (std::is_pointer_v<T>)
-			return common::is_same_value<noptr_t, U>(*t, u);
-		else return common::is_same_value<T, noptr_u>(t, *u);
-	}
-	else if constexpr (traits::is_basic_type_v<T>)
-		return (t != u);
-	else if constexpr (
-		traits::common::has_operator_no_eq_function_v<T, ll_bool_t(T::*)(const U&) const noexcept> ||
-		traits::common::has_operator_no_eq_function_v<T, meta::OptionalBool(T::*)(const U&) const noexcept>)
-		return (t != u);
-	else return std::nullopt;
-}
-
-
 } // namespace common
 } // namespace meta
 } // namespace llcpp

@@ -79,7 +79,7 @@ struct ParserFunctionDummy {
 
 	constexpr void writePointer(const void*) noexcept {}
 	__LL_NODISCARD__ constexpr ll_bool_t parserExtra(const meta::StrTypeid&, const void*) noexcept {
-		return LL_FALSE;
+		return llcpp::LL_FALSE;
 	}
 
 	constexpr void write_i64(const i64) noexcept {}
@@ -224,26 +224,26 @@ class Parser : public ParserFunctions {
 			switch (value.getType()) {
 				default:
 				case Printable::PrintType::BadInited:
-					return LL_FALSE;
+					return llcpp::LL_FALSE;
 				case Printable::PrintType::StrPair:
 					this->writeStrPair(value.getStrPair());
-					return LL_TRUE;
+					return llcpp::LL_TRUE;
 				case Printable::PrintType::wStrPair:
 					this->writewStrPair(value.getwStrPair());
-					return LL_TRUE;
+					return llcpp::LL_TRUE;
 				case Printable::PrintType::String:
-					return LL_FALSE;
+					return llcpp::LL_FALSE;
 				case Printable::PrintType::StringBuffer: {
 					// [TOFIX]
 					///StringBuffer buffer;
 					///value.useStringBuffer(buffer);
 					///this->write(buffer);
-					///return LL_TRUE;
-					return LL_FALSE;
+					///return llcpp::LL_TRUE;
+					return llcpp::LL_FALSE;
 				}
 				case Printable::PrintType::Parser:
 					value.useParser(this);
-					return LL_TRUE;
+					return llcpp::LL_TRUE;
 			}
 		}
 		void writeNull() noexcept { this->write(meta::string::NULLPTR); }

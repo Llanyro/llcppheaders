@@ -112,7 +112,7 @@ __LL_NODISCARD__ constexpr ui64 murmur64Combine_r(const ui64 value) noexcept {
 #pragma endregion
 #pragma region Combine
 #pragma region Template
-template<class T, ll_bool_t IS_REVERSE = LL_FALSE>
+template<class T, ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr T simpleCombine(const T value1, const T value2, const ui8 shift) noexcept {
 	if constexpr (IS_REVERSE) return static_cast<T>(value1 ^ (value2 << shift));
 	else return static_cast<T>(value1 ^ (value2 >> shift));
@@ -121,27 +121,27 @@ __LL_NODISCARD__ constexpr T simpleCombine(const T value1, const T value2, const
 #pragma endregion
 #pragma region 8
 // Value in in left position + user shift
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui8 simple8Combine_l(const ui8 value, const ui8 shift) noexcept {
 	return combine::simpleCombine<ui8, IS_REVERSE>(value, combine::combine8, shift);
 }
 // Value in in right position + user shift
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui8 simple8Combine_r(const ui8 value, const ui8 shift) noexcept {
 	return combine::simpleCombine<ui8, IS_REVERSE>(combine::combine8, value, shift);
 }
 // Values + no shift
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui8 simple8Combine_noshift(const ui8 value1, const ui8 value2) noexcept {
 	return combine::simpleCombine<ui8, IS_REVERSE>(value1, value2, combine::llshift8);
 }
 // Value in in left position
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui8 simple8Combine_l(const ui8 value) noexcept {
 	return combine::simple8Combine_l<IS_REVERSE>(value, combine::llshift8);
 }
 // Value in in right position
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui8 simple8Combine_r(const ui8 value) noexcept {
 	return combine::simple8Combine_r<IS_REVERSE>(value, combine::llshift8);
 }
@@ -149,27 +149,27 @@ __LL_NODISCARD__ constexpr ui8 simple8Combine_r(const ui8 value) noexcept {
 #pragma endregion
 #pragma region 32
 // Value in in left position + user shift
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui32 simple32Combine_l(const ui32 value, const ui32 shift) noexcept {
 	return combine::simpleCombine<ui32, IS_REVERSE>(value, combine::combine32, shift);
 }
 // Value in in right position + user shift
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui32 simple32Combine_r(const ui32 value, const ui32 shift) noexcept {
 	return combine::simpleCombine<ui32, IS_REVERSE>(combine::combine32, value, shift);
 }
 // Values + no shift
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui32 simple32Combine_noshift(const ui32 value1, const ui32 value2) noexcept {
 	return combine::simpleCombine<ui32, IS_REVERSE>(value1, value2, combine::llshift32);
 }
 // Value in in left position
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui32 simple32Combine_l(const ui32 value) noexcept {
 	return combine::simple32Combine_l<IS_REVERSE>(value, combine::llshift32);
 }
 // Value in in right position
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui32 simple32Combine_r(const ui32 value) noexcept {
 	return combine::simple32Combine_r<IS_REVERSE>(value, combine::llshift32);
 }
@@ -177,27 +177,27 @@ __LL_NODISCARD__ constexpr ui32 simple32Combine_r(const ui32 value) noexcept {
 #pragma endregion
 #pragma region 64
 // Value in in left position + user shift
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui64 simple64Combine_l(const ui64 value, const ui64 shift) noexcept {
 	return combine::simpleCombine<ui64, IS_REVERSE>(value, combine::combine64, shift);
 }
 // Value in in right position + user shift
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui64 simple64Combine_r(const ui64 value, const ui64 shift) noexcept {
 	return combine::simpleCombine<ui64, IS_REVERSE>(combine::combine64, value, shift);
 }
 // Values + no shift
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui64 simple64Combine_noshift(const ui64 value1, const ui64 value2) noexcept {
 	return combine::simpleCombine<ui64, IS_REVERSE>(value1, value2, combine::llshift64);
 }
 // Value in in left position
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui64 simple64Combine_l(const ui64 value) noexcept {
 	return combine::simple64Combine_l<IS_REVERSE>(value, combine::llshift64);
 }
 // Value in in right position
-template<ll_bool_t IS_REVERSE = LL_FALSE>
+template<ll_bool_t IS_REVERSE = llcpp::LL_FALSE>
 __LL_NODISCARD__ constexpr ui64 simple64Combine_r(const ui64 value) noexcept {
 	return combine::simple64Combine_r<IS_REVERSE>(value, combine::llshift64);
 }

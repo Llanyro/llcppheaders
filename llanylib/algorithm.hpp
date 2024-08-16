@@ -59,7 +59,8 @@ class CompareData {
 		static_assert(traits::is_valid_type_checker_ignore_pointer_v<U>,
 			"type_checker<U> detected an invalid type!");
 		static_assert(traits::is_basic_type_v<result_t>,
-			"Result type must be a basic type! Comment this error if you want to use other custom type.");
+			"Result type must be a basic/primitive type! "
+			"Comment this error if you want to use other custom type.");
 
 	#pragma endregion
 	#pragma region Attributes
@@ -70,15 +71,15 @@ class CompareData {
 
 	#pragma endregion
 	#pragma region Functions
-		#pragma region Protected
-	protected:
+		#pragma region Private
+	private:
 		constexpr void simpleClear(const result_t& result = NULL_RESULT) noexcept {
 			this->result = result;
 			this->value1 = LL_NULLPTR;
 			this->value2 = LL_NULLPTR;
 		}
 		constexpr void simpleClear(result_t&& result) noexcept {
-			this->result = std::move(result);
+			this->result = std::forward<result_t&&>(result);
 			this->value1 = LL_NULLPTR;
 			this->value2 = LL_NULLPTR;
 		}
@@ -92,7 +93,7 @@ class CompareData {
 		constexpr CompareData(const T* value1, const U* value2, const result_t& result) noexcept
 			: value1(value1), value2(value2), result(result) {}
 		constexpr CompareData(const T* value1, const U* value2, result_t&& result) noexcept
-			: value1(value1), value2(value2), result(std::move(result)) {}
+			: value1(value1), value2(value2), result(std::forward<result_t&&>(result)) {}
 
 		constexpr CompareData(const result_t& result) noexcept
 			: CompareData(LL_NULLPTR, LL_NULLPTR, result) {}
@@ -102,10 +103,10 @@ class CompareData {
 			return *this;
 		}
 		constexpr CompareData(result_t&& result) noexcept
-			: CompareData(LL_NULLPTR, LL_NULLPTR, std::move(result)) {}
+			: CompareData(LL_NULLPTR, LL_NULLPTR, std::forward<result_t&&>(result)) {}
 		constexpr CompareData& operator=(result_t&& result) noexcept {
 			this->simpleClear();
-			this->result = std::move(result);
+			this->result = std::forward<result_t&&>(result);
 			return *this;
 		}
 
@@ -145,7 +146,7 @@ class CompareData {
 	public:
 		__LL_NODISCARD__ constexpr const T* getValue1() const noexcept { return this->value1; }
 		__LL_NODISCARD__ constexpr const U* getValue2() const noexcept { return this->value2; }
-		__LL_NODISCARD__ constexpr result_t getResult() const noexcept { return this->result; }
+		__LL_NODISCARD__ constexpr const result_t& getResult() const noexcept { return this->result; }
 		__LL_NODISCARD__ constexpr void clear() noexcept { this->simpleClear(); }
 
 		#pragma endregion
@@ -157,16 +158,16 @@ using CompareConditional = std::conditional_t<GET_DATA, algorithm::CompareData<T
 template<class T, class U, ll_bool_t GET_DATA>
 using CompareConditionalCmpT = algorithm::CompareConditional<T, U, cmp_t, ZERO_CMP, GET_DATA>;
 template<class T, class U, ll_bool_t GET_DATA>
-using CompareConditionalBool = algorithm::CompareConditional<T, U, ll_bool_t, LL_FALSE, GET_DATA>;
+using CompareConditionalBool = algorithm::CompareConditional<T, U, ll_bool_t, llcpp::FALSE, GET_DATA>;
 
-template<class T, class U = T, ll_bool_t GET_DATA = LL_FALSE>
-__LL_NODISCARD__ constexpr CompareConditionalBool<T, U, GET_DATA> compareConversor(CompareConditionalCmpT<T, U, GET_DATA>&& res) noexcept {
+template<class T, class U = T, ll_bool_t GET_DATA = llcpp::FALSE>
+__LL_NODISCARD__ constexpr CompareConditionalBool<T, U, GET_DATA> compareConversor(const CompareConditionalCmpT<T, U, GET_DATA>& res) noexcept {
 	if constexpr (GET_DATA)
 		return CompareConditionalBool<T, U, GET_DATA>(res.getValue1(), res.getValue2(), res.getResult() == ZERO_CMP);
 	else return res == ZERO_CMP;
 }
-template<class T, class U = T, ll_bool_t GET_DATA = LL_FALSE>
-__LL_NODISCARD__ constexpr CompareConditionalBool<T, U, GET_DATA> compareConversor(const CompareConditionalCmpT<T, U, GET_DATA>& res) noexcept {
+template<class T, class U = T, ll_bool_t GET_DATA = llcpp::FALSE>
+__LL_NODISCARD__ constexpr CompareConditionalBool<T, U, GET_DATA> compareConversor(CompareConditionalCmpT<T, U, GET_DATA>&& res) noexcept {
 	if constexpr (GET_DATA)
 		return CompareConditionalBool<T, U, GET_DATA>(res.getValue1(), res.getValue2(), res.getResult() == ZERO_CMP);
 	else return res == ZERO_CMP;
@@ -178,9 +179,16 @@ template<class _T, class _U = _T>
 class CompareDefault {
 	#pragma region Types
 	public:
-		using _MyType	= CompareDefault;
-		using T			= _T;
-		using U			= _U;
+		using _MyType		= CompareDefault;
+		using T				= _T;
+		using U				= _U;
+		using is_comparable = traits::is_comparable<T, U>;
+
+	#pragma endregion
+	#pragma region Assert
+	public:
+		static_assert(is_comparable::IS_COMPARABLE_EQ, "Types are not comparables!");
+		static_assert(is_comparable::IS_COMPARABLE_NEQ, "Types are not comparables!");
 
 	#pragma endregion
 	#pragma region Functions
@@ -207,13 +215,18 @@ class CompareDefault {
 		#pragma region ClassFunctions
 	public:
 		__LL_NODISCARD__ constexpr cmp_t compare(traits::cinput<T> a, traits::cinput<U> b) const noexcept {
-			return a - b;
+			if constexpr (traits::is_basic_type_v<>)
+				return static_cast<cmp_t>(a - b);
+			else if constexpr (traits::common::has_compare_function_v<>) {
+
+			}
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t compareBool(traits::cinput<T> a, traits::cinput<U> b) const noexcept {
-			return a == b;
+			return is_comparable::is_same_value(a, b);
 		}
 
 		#pragma endregion
+
 	#pragma endregion
 };
 
@@ -345,7 +358,7 @@ class ComparatorChecker : public _Comparator {
 	#pragma endregion
 };
 
-template<class _T, class _U = _T, ll_bool_t GET_DATA = LL_FALSE, class _Comparator = algorithm::CompareDefault<_T, _U>>
+template<class _T, class _U = _T, ll_bool_t GET_DATA = llcpp::FALSE, class _Comparator = algorithm::CompareDefault<_T, _U>>
 class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> {
 	#pragma region Types
 	public:
@@ -442,18 +455,18 @@ class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> 
 		#pragma region Compare
 		#pragma region CompareBase
 	public:
-		// Returns false if check not pass
+		// Returns llcpp::FALSE if check not pass
 		__LL_NODISCARD__ static constexpr ll_bool_t compareCheck(const T* _array1, const U* _array2, CompareResult& res) noexcept {
 			if (static_cast<const void*>(_array1) == static_cast<const void*>(_array2)) {
 				res = ZERO_CMP;
-				return LL_FALSE;
+				return llcpp::LL_FALSE;
 			}
 			else if (!_array1 || !_array2) {
 				res = ((!_array1) ? -1 : 1);
-				return LL_FALSE;
+				return llcpp::LL_FALSE;
 			}
 
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr CompareResult compare(const T* _array1, const U* _array2, len_t size) noexcept {
 			CompareResult res(ZERO_CMP);
@@ -480,6 +493,38 @@ class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> 
 				if (result != ZERO_CMP) {
 					if constexpr (GET_DATA)
 						res = CompareResult(_array1, _array2, result);
+					else res = result;
+					break;
+				}
+			}
+
+			return res;
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool compareBool(const T* _array1, const U* _array2, len_t size) noexcept {
+			CompareResultBool res(LL_FALSE);
+			if (!this->compareCheck(_array1, _array2, res)) return res;
+
+			for (; size > ZERO_UI64; --size, ++_array1, ++_array2) {
+				ll_bool_t result = this->compareBool(*_array1, *_array2);
+				if (!result) {
+					if constexpr (GET_DATA) 
+						res = CompareResultBool(_array1, _array2, result);
+					else res = result;
+					break;
+				}
+			}
+
+			return res;
+		}
+		__LL_NODISCARD__ constexpr CompareResultBool compareBool(const T* _array1, const U* _array2, len_t size) const noexcept {
+			CompareResultBool res(LL_FALSE);
+			if (!this->compareCheck(_array1, _array2, res)) return res;
+
+			for (; size > ZERO_UI64; --size, ++_array1, ++_array2) {
+				ll_bool_t result = this->compareBool(*_array1, *_array2);
+				if (!result) {
+					if constexpr (GET_DATA)
+						res = CompareResultBool(_array1, _array2, result);
 					else res = result;
 					break;
 				}
@@ -643,17 +688,17 @@ class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> 
 		#pragma endregion
 		#pragma region StartsWith
 	public:
-		// Returns false if check not pass
+		// Returns llcpp::FALSE if check not pass
 		__LL_NODISCARD__ constexpr ll_bool_t startsWithImmpementationCheck(const T* _array, const U* needle, CompareResultBool& res) const noexcept {
 			if (static_cast<const void*>(_array) == static_cast<const void*>(needle)) {
-				res = LL_TRUE;
-				return LL_FALSE;
+				res = llcpp::LL_TRUE;
+				return llcpp::LL_FALSE;
 			}
 			else if (!_array || !needle) {
-				res = LL_FALSE;
-				return LL_FALSE;
+				res = llcpp::LL_FALSE;
+				return llcpp::LL_FALSE;
 			}
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		// _array size needs to be bigger or equal to needle
 		__LL_NODISCARD__ constexpr CompareResultBool startsWithImmpementation(const T* _array, const U* needle, len_t size) noexcept {
@@ -1010,7 +1055,7 @@ class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> 
 	#pragma endregion
 };
 
-template<class _T, class _U = _T, ll_bool_t POSITION = LL_TRUE, class _Comparator = algorithm::CompareDefault<_T, _U>>
+template<class _T, class _U = _T, ll_bool_t POSITION = llcpp::FALSE, class _Comparator = algorithm::CompareDefault<_T, _U>>
 struct FindersCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> {
 	#pragma region Types
 	public:
@@ -1113,8 +1158,8 @@ struct FindersCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator>
 		__LL_NODISCARD__ static constexpr ll_bool_t findCheck(const T* begin, const T* end, FindResult& result) noexcept {
 			if constexpr (POSITION) result = algorithm::npos;
 			else result = end;
-			if (!begin || !end || end <= begin) return LL_FALSE;
-			else return LL_TRUE;
+			if (!begin || !end || end <= begin) return llcpp::LL_FALSE;
+			else return llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr FindResult find(const T* begin, const T* end, cinput_u object) noexcept {
 			FindResult result{};
@@ -1270,12 +1315,12 @@ struct FindersCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator>
 		#pragma region All
 		#pragma region NoConst
 		__LL_NODISCARD__ constexpr ll_bool_t all(const T* begin, const T* end, cinput_u object) noexcept {
-			if (!begin || !end || end <= begin) return LL_FALSE;
+			if (!begin || !end || end <= begin) return llcpp::LL_FALSE;
 
 			for (; begin < end; ++begin)
 				if (!this->compareBool(*begin, object))
-					return LL_FALSE;
-			return LL_TRUE;
+					return llcpp::LL_FALSE;
+			return llcpp::LL_TRUE;
 		}
 		template<len_t N>
 		__LL_NODISCARD__ constexpr ll_bool_t all(const T (&data)[N], cinput_u object) noexcept {
@@ -1291,12 +1336,12 @@ struct FindersCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator>
 		#pragma endregion
 		#pragma region Const
 		__LL_NODISCARD__ constexpr ll_bool_t all(const T* begin, const T* end, cinput_u object) const noexcept {
-			if (!begin || !end || end <= begin) return LL_FALSE;
+			if (!begin || !end || end <= begin) return llcpp::LL_FALSE;
 
 			for (; begin < end; ++begin)
 				if (!this->compareBool(*begin, object))
-					return LL_FALSE;
-			return LL_TRUE;
+					return llcpp::LL_FALSE;
+			return llcpp::LL_TRUE;
 		}
 		template<len_t N>
 		__LL_NODISCARD__ constexpr ll_bool_t all(const T (&data)[N], cinput_u object) const noexcept {
@@ -1548,14 +1593,14 @@ class DataManipulatorCluster : public _Manipulator {
 		}
 
 		constexpr ll_bool_t reverse_s(T* _array, T* end) noexcept {
-			if (!_array || !end || end <= _array) return LL_FALSE;
+			if (!_array || !end || end <= _array) return llcpp::LL_FALSE;
 			this->reverse(_array, end);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		constexpr ll_bool_t reverse_s(T* _array, T* end) const noexcept {
-			if (!_array || !end || end <= _array) return LL_FALSE;
+			if (!_array || !end || end <= _array) return llcpp::LL_FALSE;
 			this->reverse(_array, end);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 
 		#pragma endregion
@@ -1625,21 +1670,21 @@ class DataManipulatorCluster : public _Manipulator {
 
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t fill_s(T* dst, T* end, W object, FunctionManipulator&& man) const noexcept {
-			if (!dst || !end || end <= dst) return LL_FALSE;
+			if (!dst || !end || end <= dst) return llcpp::LL_FALSE;
 			this->fill<U, W, FunctionManipulator>(dst, end, object, std::forward<FunctionManipulator>(man));
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t fill_s(T* dst, T* end, W object) const noexcept {
-			if (!dst || !end || end <= dst) return LL_FALSE;
+			if (!dst || !end || end <= dst) return llcpp::LL_FALSE;
 			this->fill<U, W, FunctionManipulator>(dst, end, object);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, CopyExtraSignature<W> COPY = meta::common::simple_set<T, W>>
 		constexpr ll_bool_t fill_s(T* dst, T* end, W object) const noexcept {
-			if (!dst || !end || end <= dst) return LL_FALSE;
+			if (!dst || !end || end <= dst) return llcpp::LL_FALSE;
 			this->fill<U, W, COPY>(dst, end, object);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 
 		#pragma endregion
@@ -1735,21 +1780,21 @@ class DataManipulatorCluster : public _Manipulator {
 
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t copy_s(const U* src, T* dst, len_t size, FunctionManipulator&& man) const noexcept {
-			if (!src || !dst || size == ZERO_UI64) return LL_FALSE;
+			if (!src || !dst || size == ZERO_UI64) return llcpp::LL_FALSE;
 			this->copy<U, W, FunctionManipulator>(src, dst, size, std::forward<FunctionManipulator>(man));
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t copy_s(const U* src, T* dst, len_t size) const noexcept {
-			if (!src || !dst || size == ZERO_UI64) return LL_FALSE;
+			if (!src || !dst || size == ZERO_UI64) return llcpp::LL_FALSE;
 			this->copy<U, W, FunctionManipulator>(src, dst, size);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, CopyExtraSignature<W> COPY = meta::common::simple_set<T, W>>
 		constexpr ll_bool_t copy_s(const U* src, T* dst, len_t size) const noexcept {
-			if (!src || !dst || size == ZERO_UI64) return LL_FALSE;
+			if (!src || !dst || size == ZERO_UI64) return llcpp::LL_FALSE;
 			this->copy<U, W, COPY>(src, dst, size);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 
 		#pragma endregion
@@ -1917,15 +1962,15 @@ class DataManipulatorCluster : public _Manipulator {
 
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move_s(U* src, T* dst, len_t size, FunctionManipulator&& man) const noexcept {
-			if (!src || !dst || size == ZERO_UI64) return LL_FALSE;
+			if (!src || !dst || size == ZERO_UI64) return llcpp::LL_FALSE;
 			this->move<U, FunctionManipulator>(src, dst, size, std::forward<FunctionManipulator>(man));
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr void move_s(U* src, T* dst, len_t size) const noexcept {
-			if (!src || !dst || size == ZERO_UI64) return LL_FALSE;
+			if (!src || !dst || size == ZERO_UI64) return llcpp::LL_FALSE;
 			this->move<U, FunctionManipulator>(src, dst, size);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, MoveExtraSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr void move_s(U* src, T* dst, len_t size) const noexcept {
@@ -2110,9 +2155,9 @@ class DataManipulatorCluster : public _Manipulator {
 		constexpr ll_bool_t shiftLeft_s(T* _array, T* last, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
 			// First element in array must be first
 			// And last, must be last
-			if (_array > last) return LL_FALSE;
+			if (_array > last) return llcpp::LL_FALSE;
 			// Also, num cannot be 0
-			if (num != ZERO_UI64) return LL_FALSE;
+			if (num != ZERO_UI64) return llcpp::LL_FALSE;
 			/// First: 1
 			/// Num: 3
 			/// size: 10
@@ -2130,23 +2175,23 @@ class DataManipulatorCluster : public _Manipulator {
 			// If so, we update the values
 			if (num > first) first = num;
 			this->shiftLeft<U, W, FunctionManipulator>(_array, last, first, num, null, std::forward<FunctionManipulator>(man));
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t shiftLeft_s(T* _array, T* last, const len_t first, const len_t num, W null) const noexcept {
-			if (_array > last) return LL_FALSE;
-			if (num != ZERO_UI64) return LL_FALSE;
+			if (_array > last) return llcpp::LL_FALSE;
+			if (num != ZERO_UI64) return llcpp::LL_FALSE;
 			if (num > first) first = num;
 			this->shiftLeft<U, W, FunctionManipulator>(_array, last, first, num, null);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, CopyExtraSignature<W> COPY = meta::common::simple_set<T, W>>
 		constexpr ll_bool_t shiftLeft_s(T* _array, T* last, const len_t first, const len_t num, W null) const noexcept {
-			if (_array > last) return LL_FALSE;
-			if (num != ZERO_UI64) return LL_FALSE;
+			if (_array > last) return llcpp::LL_FALSE;
+			if (num != ZERO_UI64) return llcpp::LL_FALSE;
 			if (num > first) first = num;
 			this->shiftLeft<U, W, COPY>(_array, last, first, num, null);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 
 		#pragma endregion
@@ -2268,24 +2313,24 @@ class DataManipulatorCluster : public _Manipulator {
 
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t shiftRight_s(T* _array, T* last, const len_t first, const len_t num, W null, FunctionManipulator&& man) const noexcept {
-			if (_array > last) return LL_FALSE;
-			if (num != ZERO_UI64) return LL_FALSE;
+			if (_array > last) return llcpp::LL_FALSE;
+			if (num != ZERO_UI64) return llcpp::LL_FALSE;
 			this->shiftRight<U, W, FunctionManipulator>(_array, last, first, num, null, std::forward<FunctionManipulator>(man));
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>
 		constexpr ll_bool_t shiftRight_s(T* _array, T* last, const len_t first, const len_t num, W null) const noexcept {
-			if (_array > last) return LL_FALSE;
-			if (num != ZERO_UI64) return LL_FALSE;
+			if (_array > last) return llcpp::LL_FALSE;
+			if (num != ZERO_UI64) return llcpp::LL_FALSE;
 			this->shiftRight<U, W, FunctionManipulator>(_array, last, first, num, null);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		template<class U = T, class W = traits::cinput<U>, CopyExtraSignature<W> COPY = meta::common::simple_set<T, W>>
 		constexpr ll_bool_t shiftRight_s(T* _array, T* last, const len_t first, const len_t num, W null) const noexcept {
-			if (_array > last) return LL_FALSE;
-			if (num != ZERO_UI64) return LL_FALSE;
+			if (_array > last) return llcpp::LL_FALSE;
+			if (num != ZERO_UI64) return llcpp::LL_FALSE;
 			this->shiftRight<U, W, COPY>(_array, last, first, num, null);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 
 		#pragma endregion

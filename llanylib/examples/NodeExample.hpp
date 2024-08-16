@@ -9,6 +9,8 @@
 
 #include "../Node.hpp"
 
+#include <array>
+
 #if !defined(LLANYLIB_EXAMPLES_NODEEXAMPLE_HPP_)
 #define LLANYLIB_EXAMPLES_NODEEXAMPLE_HPP_
 
@@ -101,7 +103,7 @@ class NodeFunctions : public meta::Container<_T> {
 };
 
 template<class T>
-using FuncNode = Node<NodeFunctions<T>, LL_TRUE>;
+using FuncNode = Node<NodeFunctions<T>, llcpp::LL_TRUE>;
 template<class T, len_t N>
 using ArrayTypeFuncNode = std::array<FuncNode<T>, N>;
 
@@ -195,17 +197,17 @@ constexpr int merge_sort() noexcept {
 	return (n) ? n->get(POS)->operator*() : 0;
 }
 
-constexpr int merge_sort_00 = merge_sort<10, 0>();
-constexpr int merge_sort_01 = merge_sort<10, 1>();
-constexpr int merge_sort_02 = merge_sort<10, 2>();
-constexpr int merge_sort_03 = merge_sort<10, 3>();
-constexpr int merge_sort_04 = merge_sort<10, 4>();
-constexpr int merge_sort_05 = merge_sort<10, 5>();
-constexpr int merge_sort_06 = merge_sort<10, 6>();
-constexpr int merge_sort_07 = merge_sort<10, 7>();
-constexpr int merge_sort_08 = merge_sort<10, 8>();
-constexpr int merge_sort_09 = merge_sort<10, 9>();
-constexpr int merge_sort_10 = merge_sort<10, 10>();
+//constexpr int merge_sort_00 = merge_sort<10, 0>();
+//constexpr int merge_sort_01 = merge_sort<10, 1>();
+//constexpr int merge_sort_02 = merge_sort<10, 2>();
+//constexpr int merge_sort_03 = merge_sort<10, 3>();
+//constexpr int merge_sort_04 = merge_sort<10, 4>();
+//constexpr int merge_sort_05 = merge_sort<10, 5>();
+//constexpr int merge_sort_06 = merge_sort<10, 6>();
+//constexpr int merge_sort_07 = merge_sort<10, 7>();
+//constexpr int merge_sort_08 = merge_sort<10, 8>();
+//constexpr int merge_sort_09 = merge_sort<10, 9>();
+//constexpr int merge_sort_10 = merge_sort<10, 10>();
 
 ///////////////////////////////////////////////// Sort2 /////////////////////////////////////////////////
 
@@ -225,16 +227,6 @@ constexpr std::pair<int, int> merge_sort2() noexcept {
 }
 
 constexpr auto merge_sort_00 = merge_sort2<10>();
-
-
-
-
-
-
-
-
-
-
 
 } // namespace linked
 } // namespace meta

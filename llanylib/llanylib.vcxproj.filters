@@ -201,5 +201,14 @@
     <ClInclude Include="examples\algorithmExample.hpp">
       <Filter>Source Files\examples</Filter>
     </ClInclude>
+    <ClInclude Include="BaseNodeList.hpp">
+      <Filter>Source Files\utils\lists\linked</Filter>
+    </ClInclude>
+    <ClInclude Include="Boolean.hpp">
+      <Filter>Source Files\types</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base.hpp">
+      <Filter>Source Files\types</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

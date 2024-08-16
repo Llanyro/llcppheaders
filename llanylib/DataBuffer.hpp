@@ -125,12 +125,12 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 		template<class T, MoveOrAllocator<T> FUNC>
 		__LL_NODISCARD__ ll_bool_t push_back_body(T* mem, const len_t bytes) noexcept {
 			if (!this->avaible(bytes)) {
-				if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + bytes)) return LL_FALSE;
+				if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + bytes)) return llcpp::LL_FALSE;
 				else this->advanceEnd(bytes);
 			}
 			(this->*FUNC)(mem, this->filled(), bytes);
 			this->advanceFilled(bytes);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 	public:
 		__LL_NODISCARD__ ll_bool_t _push_back_copy(const void* mem, const len_t bytes) noexcept {
@@ -154,7 +154,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 			// Copy pointers would lead in future bad behabiours
 			// Ex, copy the pointer, then delete the data in other point
 			// Memory will be invalidated, but this pointer not...
-			if constexpr (std::is_pointer_v<T>) return LL_FALSE;
+			if constexpr (std::is_pointer_v<T>) return llcpp::LL_FALSE;
 			else if constexpr (traits::is_basic_type_v<T>)
 				return this->_push_back_copy(mem, sizeof(T) * len);
 			else {
@@ -164,7 +164,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 				// Reserve size for all elemets
 				len_t size_of = sizeof(T) * len;
 				if (!this->avaible(size_of)) {
-					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
+					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return llcpp::LL_FALSE;
 					else this->advanceEnd(size_of);
 				}
 
@@ -175,7 +175,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 					using ArrType = traits::type_conversor<T>::array_to_type_t;
 					for (; mem < end; ++mem)
 						if (!this->push_back_copy<ArrType, traits::array_size<T>>(*mem))
-							return LL_FALSE;
+							return llcpp::LL_FALSE;
 				}
 				else {
 					// Construct all elements with copy constructor
@@ -184,7 +184,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 						new (to_fill) T(*mem);
 					this->advanceFilled(size_of);
 				}
-				return LL_TRUE;
+				return llcpp::LL_TRUE;
 			}
 		}
 		template<class T>
@@ -197,7 +197,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 
 				len_t size_of = sizeof(T) * len;
 				if (!this->avaible(size_of)) {
-					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
+					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return llcpp::LL_FALSE;
 					else this->advanceEnd(size_of);
 				}
 
@@ -207,7 +207,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 					using ArrType = traits::type_conversor<T>::array_to_type_t;
 					for (; mem < end; ++mem)
 						if (!this->push_back_move<ArrType, traits::array_size<T>>(*mem))
-							return LL_FALSE;
+							return llcpp::LL_FALSE;
 				}
 				else {
 					T* to_fill = this->filled<T>();
@@ -215,7 +215,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 						new (to_fill) T(std::move(*mem));
 					this->advanceFilled(size_of);
 				}
-				return LL_TRUE;
+				return llcpp::LL_TRUE;
 			}
 
 
@@ -226,19 +226,19 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 			// Copy pointers would lead in future bad behabiours
 			// Ex, copy the pointer, then delete the data in other point
 			// Memory will be invalidated, but this pointer not...
-			if constexpr (std::is_pointer_v<U>) return LL_FALSE;
+			if constexpr (std::is_pointer_v<U>) return llcpp::LL_FALSE;
 			else if constexpr (std::is_array_v<U>)
 				return this->push_back_copy(object, traits::array_size<U>);
 			else {
 				static_assert(std::is_copy_constructible_v<Allocator>, "Class provided needs a noexcept copy constructor!");
 				constexpr len_t size_of = sizeof(U);
 				if (!this->avaible(size_of)) {
-					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
+					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return llcpp::LL_FALSE;
 					else this->advanceEnd(size_of);
 				}
 				new (this->filled<ll_char_t>()) U(object);
 				this->advanceFilled(size_of);
-				return LL_TRUE;
+				return llcpp::LL_TRUE;
 			}
 		}
 		template<class U>
@@ -249,7 +249,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 				static_assert(std::is_move_constructible_v<U>, "Class provided needs a noexcept move constructor!");
 				constexpr len_t size_of = sizeof(U);
 				if (!this->avaible(size_of)) {
-					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return LL_FALSE;
+					if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + size_of)) return llcpp::LL_FALSE;
 					else this->advanceEnd(size_of);
 				}
 
@@ -262,7 +262,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 				else new (this->filled<void>()) U(std::move(object));
 
 				this->advanceFilled(size_of);
-				return LL_TRUE;
+				return llcpp::LL_TRUE;
 			}
 		}
 
@@ -277,14 +277,14 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 			this->length = ZERO_UI64;
 		}
 		ll_bool_t reserve(const len_t bytes) noexcept {
-			if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + bytes)) return LL_FALSE;
+			if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + bytes)) return llcpp::LL_FALSE;
 			else this->advanceEnd(bytes);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		ll_bool_t reserve() noexcept {
-			if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + INCREMENT)) return LL_FALSE;
+			if (!AllocatorCheckerBase::reallocate(this->mem, this->len() + INCREMENT)) return llcpp::LL_FALSE;
 			else this->advanceEnd(INCREMENT);
-			return LL_TRUE;
+			return llcpp::LL_TRUE;
 		}
 		// CAREFULL, THIS FUNCTION IS NOT SECURE!!!
 		// USE AT YOUR OWN RISK
@@ -292,9 +292,9 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 		__LL_NODISCARD__ ll_bool_t advanceFilled_s(const len_t bytes) noexcept {
 			this->advanceFilled(bytes);
 			if (this->filled_len() <= this->len())
-				return LL_TRUE;
+				return llcpp::LL_TRUE;
 			this->len_filled -= bytes;
-			return LL_FALSE;
+			return llcpp::LL_FALSE;
 		}
 
 		#pragma endregion

@@ -22,11 +22,36 @@
 #define LLANYLIB_MEM_MINOR_ 0
 
 #include "Node.hpp"
+#include "Container.hpp"
 
 namespace llcpp {
 namespace meta {
 
 constexpr len_t HOLDER_BUFFER_SZIE = 256;
+
+template<class _T, len_t N>
+class NodeData : meta::Container<_T[N]> {
+	#pragma region Types
+	public:
+		using _MyType	= NodeData;
+		using Container = meta::Container<_T[N]>;
+
+		using T			= _T;
+
+	#pragma endregion
+	#pragma region Assets
+	public:
+
+
+	#pragma endregion
+	#pragma region Attributes
+
+	#pragma endregion
+
+
+
+
+};
 
 template<class T>
 class Holder : public linked::NodeNext<Holder<T>> {

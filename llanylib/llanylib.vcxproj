@@ -47,7 +47,9 @@
     <ClInclude Include="hash_pack.hpp" />
     <ClInclude Include="hash_tools.hpp" />
     <ClInclude Include="hash_types.hpp" />
+    <ClInclude Include="BaseNodeList.hpp" />
     <ClInclude Include="llanyhash.hpp" />
+    <ClInclude Include="Boolean.hpp" />
     <ClInclude Include="math.hpp" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="NodeDouble.hpp" />
@@ -67,6 +69,7 @@
     <ClInclude Include="traits.hpp" />
     <ClInclude Include="Typeid.hpp" />
     <ClInclude Include="types.hpp" />
+    <ClInclude Include="types_base.hpp" />
     <ClInclude Include="utility.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -19,10 +19,10 @@ namespace meta {
 namespace algorithm {
 
 using cmp = algorithm::CompareCluster<ll_char_t>;
-using cmp_res = algorithm::CompareCluster<ll_char_t, ll_char_t, LL_TRUE, algorithm::CompareDefault<ll_char_t>>;
+using cmp_res = algorithm::CompareCluster<ll_char_t, ll_char_t, llcpp::LL_TRUE, algorithm::CompareDefault<ll_char_t>>;
 
 using find = algorithm::FindersCluster<ll_char_t>;
-using find_res = algorithm::FindersCluster<ll_char_t, ll_char_t, LL_FALSE, algorithm::CompareDefault<ll_char_t>>;
+using find_res = algorithm::FindersCluster<ll_char_t, ll_char_t, llcpp::LL_FALSE, algorithm::CompareDefault<ll_char_t>>;
 
 constexpr cmp comparator;
 constexpr cmp_res comparator_res;
@@ -95,10 +95,10 @@ constexpr auto endsWith_02_res = comparator_res.endsWith(example_str1, 13, examp
 constexpr auto endsWith_03_res = comparator_res.endsWith(example_str1, "asdf*");
 constexpr auto endsWith_04_res = comparator_res.endsWith(example_str1, 15, "asdf*", 4);
 
-static_assert(endsWith_01 == LL_FALSE, __LL_ERROR__);
-static_assert(endsWith_02 == LL_TRUE , __LL_ERROR__);
-static_assert(endsWith_03 == LL_TRUE , __LL_ERROR__);	// Here is different to start_with cause the '\0' at end
-static_assert(endsWith_04 == LL_FALSE, __LL_ERROR__);	// Here is different to start_with cause the '\0' at end
+static_assert(endsWith_01 == llcpp::LL_FALSE, __LL_ERROR__);
+static_assert(endsWith_02 == llcpp::LL_TRUE , __LL_ERROR__);
+static_assert(endsWith_03 == llcpp::LL_TRUE , __LL_ERROR__);	// Here is different to start_with cause the '\0' at end
+static_assert(endsWith_04 == llcpp::LL_FALSE, __LL_ERROR__);	// Here is different to start_with cause the '\0' at end
 
 static_assert(!endsWith_01_res.getResult(), __LL_ERROR__);
 static_assert( endsWith_02_res.getResult(), __LL_ERROR__);
@@ -219,7 +219,7 @@ constexpr auto shift_left_example() {
 	for (len_t i{}; i < 10; ++i) block[i] = i;
 	//DataManipulatorCluster<len_t>()
 	//	.shiftLeft<int, const int, meta::common::simple_set<len_t, const int>>(block, 0, 2, 999);
-	return algorithm::CompareCluster<len_t, len_t, LL_TRUE>().equals(block, block_cmp);
+	return algorithm::CompareCluster<len_t, len_t, llcpp::LL_TRUE>().equals(block, block_cmp);
 	//return false;
 }
 
@@ -234,7 +234,7 @@ constexpr auto shift_right_example() {
 	const len_t block_cmp[] = { 999ull, 999ull, 2ull, 3ull, 4ull, 5ull, 6ull, 7ull, 8ull, 9ull };
 	for (len_t i{}; i < 10; ++i) block[i] = i;
 	//data_manipulation_cluster<len_t>::shifRight<len_t>(block, 10, 0, 2, 999);
-	return algorithm::CompareCluster<len_t, len_t, LL_TRUE>().equals(block, block_cmp);
+	return algorithm::CompareCluster<len_t, len_t, llcpp::LL_TRUE>().equals(block, block_cmp);
 }
 
 //constexpr auto shift_right_00 = shift_right_example();
@@ -276,15 +276,15 @@ __LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const T* v2, len_t
 }
 template<class T>
 __LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const len_t size1, const T* v2, const len_t size2) noexcept(true) {
-	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : LL_FALSE;
+	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : llcpp::LL_FALSE;
 }
 template<class T, len_t size1, len_t size2 = size1>
 __LL_NODISCARD__ constexpr CompareResult compare(const T* v1, const T* v2) noexcept(true) {
-	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : LL_FALSE;
+	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : llcpp::LL_FALSE;
 }
 template<class T, len_t size1, len_t size2>
 __LL_NODISCARD__ constexpr CompareResult compare(const T(&v1)[size1], const T(&v2)[size2]) noexcept(true) {
-	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : LL_FALSE;
+	return (size1 == size2) ? compare<T>(v1, v2, size1) == 0 : llcpp::LL_FALSE;
 }
 
 #pragma endregion
@@ -298,8 +298,8 @@ __LL_NODISCARD__ constexpr i8 contains(const T* v, len_t size, const ObjType obj
 	const T* end = v + size;
 	for (; v < end; ++v)
 		if (*v == obj)
-			return LL_TRUE;
-	return LL_FALSE;
+			return llcpp::LL_TRUE;
+	return llcpp::LL_FALSE;
 }
 
 constexpr ll_bool_t is_any(ll_string_t str, const ll_char_t c) {
@@ -310,7 +310,7 @@ constexpr ll_bool_t is_any(const ll_char_t c, const ll_char_t(&str)[N]) {
 	ll_string_t end = str + N;
 	for (ll_string_t v = str; v < end; ++v)
 		if ()
-			return LL_FALSE;
+			return llcpp::LL_FALSE;
 	return c <= '9' && c >= '0';
 }
 

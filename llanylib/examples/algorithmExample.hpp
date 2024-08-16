@@ -21,8 +21,8 @@ namespace algorithm {
 using cmp = algorithm::CompareCluster<ll_char_t>;
 using cmp_res = algorithm::CompareCluster<ll_char_t, ll_char_t, llcpp::TRUE, algorithm::CompareDefault<ll_char_t>>;
 
-using find = algorithm::FindersCluster<ll_char_t>;
-using find_res = algorithm::FindersCluster<ll_char_t, ll_char_t, llcpp::FALSE, algorithm::CompareDefault<ll_char_t>>;
+using find = algorithm::FindersCluster<ll_char_t, ll_char_t, llcpp::TRUE, algorithm::CompareDefault<ll_char_t>>;
+using find_res = algorithm::FindersCluster<ll_char_t>;
 
 constexpr cmp comparator;
 constexpr cmp_res comparator_res;

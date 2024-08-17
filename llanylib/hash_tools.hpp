@@ -102,7 +102,7 @@ class HashTool : public hash::HashFunctionPack<HashType, HashGenerator> {
 			if constexpr (std::is_pointer_v<T>) return std::nullopt;
 			// Calls defined function to hash arrays
 			else if constexpr (std::is_array_v<T>) {
-				using array_type_t = std::remove_extent_t<T>;
+				using array_type_t = traits::array_type_t<T>;
 				auto h = this->hashArray<traits::array_size<T>, array_type_t>(*_array++);
 				// If first element hashed is invalid, other elements will be invalid too
 				if (!h.has_value()) return std::nullopt;

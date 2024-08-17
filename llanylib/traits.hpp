@@ -174,6 +174,11 @@ __LL_VAR_INLINE__ constexpr len_t array_size = ZERO_UI64;
 template<class T, len_t N>
 __LL_VAR_INLINE__ constexpr len_t array_size<T[N]> = N;
 
+template<class T>
+using array_type_t = std::remove_extent_t<T>;
+
+constexpr auto asdfasda = array_size<int[5]>;
+
 template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_a_basic_type_v = (traits::is_basic_type_v<Args> || ...);
 template<class... Args>
@@ -183,6 +188,11 @@ template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_a_floating_type_v = (traits::is_floating_type_v<Args> || ...);
 template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_all_of_a_floating_type_v = (traits::is_floating_type_v<Args> && ...);
+
+template<class>
+__LL_VAR_INLINE__ constexpr len_t type_or_array_size = 1ull;
+template<class T, len_t N>
+__LL_VAR_INLINE__ constexpr len_t type_or_array_size<T[N]> = N;
 
 #pragma endregion
 #pragma region IntegralConstant
@@ -356,7 +366,7 @@ struct is_nothrow_swappeable {
 		if constexpr (std::is_pointer_v<T> || traits::is_basic_type_v<T>)
 			return std::true_type{};
 		else if constexpr (std::is_array_v<T>)
-			return is_nothrow_swappeable<std::remove_extent_t<T>>::test();
+			return is_nothrow_swappeable<traits::array_type_t<T>>::test();
 		// Already includes basic types
 		else if constexpr (std::is_move_constructible_v<T> && std::is_move_assignable_v<T>) {
 			if constexpr (std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_assignable_v<T>)
@@ -391,7 +401,7 @@ struct is_nothrow_copyable {
 			else return is_nothrow_copyable<__noptr>::test();
 		}
 		else if constexpr (std::is_array_v<T>) {
-			return is_nothrow_copyable<std::remove_extent_t<T>>::test();
+			return is_nothrow_copyable<traits::array_type_t<T>>::test();
 		}
 		// Already includes basic types
 		else if constexpr (std::is_copy_assignable_v<T> && std::is_nothrow_copy_assignable_v<T>)
@@ -612,15 +622,13 @@ struct get_three_way_comparasion_function_type {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType = get_three_way_comparasion_function_type;
+		using _MyType	= get_three_way_comparasion_function_type;
 
 		// Types
-		using T = _T;
-		using U = _U;
-
-		// 
-		using t_cinput = traits::cinput<T>;
-		using u_cinput = traits::cinput<U>;
+		using T			= _T;
+		using U			= _U;
+		using t_cinput	= traits::cinput<T>;
+		using u_cinput	= traits::cinput<U>;
 
 		// Type if basic type
 		using no_function_type = std::conditional_t<
@@ -646,16 +654,10 @@ struct get_three_way_comparasion_function_type {
 	public:
 		template<class>
 		static constexpr auto test(auto(T::* _)(u_cinput) noexcept) noexcept ->
-			traits::double_type_container<
-				std::true_type,
-				std::invoke_result_t<decltype(_), T>
-			>;
+			traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), T>>;
 		template<class>
-		static constexpr auto test(auto(T::* _)(u_cinput) noexcept) const noexcept ->
-			traits::double_type_container<
-				std::true_type,
-				std::invoke_result_t<decltype(_), T>
-			>;
+		static constexpr auto test(auto(T::* _)(u_cinput) const noexcept) noexcept ->
+			traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), T>>;
 		template<class>
 		static constexpr auto test(...) noexcept ->
 			traits::double_type_container<std::false_type, no_function_type>;

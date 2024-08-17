@@ -22,12 +22,21 @@
 #define LLANYLIB_CONTAINER_MINOR_ 0
 
 #include "hash_types.hpp"
-#include "algorithm.hpp"
+#include "utility.hpp"
+#include "common.hpp"
+
+#include <array>
+
+struct Data {
+	int v;
+	constexpr Data() noexcept : v(99) {}
+	constexpr Data(int v) noexcept : v(v) {}
+};
 
 namespace llcpp {
 namespace meta {
 
-template<class _T>
+template<class _T, len_t _N>
 class BasicContainer {
 	#pragma region Types
 	public:
@@ -35,9 +44,14 @@ class BasicContainer {
 		using _MyType	= BasicContainer;
 
 		// Types
-		using T = _T;
-		using pointer	= std::conditional_t<std::is_pointer_v<T>, T, T*>;
-		//using const_pointer	= std::conditional_t<std::is_pointer_v<T>, std::remove_pointer_t<T>* const, T* const>;
+		using T			= _T;
+		using t_array	= std::array<_T, _N>;
+		using pointer	= std::conditional_t<std::is_pointer_v<_T>, _T, _T*>;
+
+	#pragma endregion
+	#pragma region Expresions
+	public:
+		static constexpr len_t N = _N;
 
 	#pragma endregion
 	#pragma region Assersts
@@ -46,11 +60,12 @@ class BasicContainer {
 			"type_checker<T> detected an invalid type!");
 		static_assert(traits::is_valid_constructor_checker_v<T>,
 			"constructor_checker<T> detected an invalid type!");
+		static_assert(N > 0, "Size cannot be 0!");
 
 	#pragma endregion
 	#pragma region Attributes
-	private:
-		T data;
+	public:
+		t_array data;
 
 	#pragma endregion
 	#pragma region Functions
@@ -59,37 +74,37 @@ class BasicContainer {
 		constexpr BasicContainer() noexcept : data() {}
 		template<class... Args>
 		constexpr BasicContainer(Args&&... args) noexcept
-			: data(std::forward<Args>(args)...) {}
+			: data(utils::make_constructed_array<t_array, T, N>(std::forward<Args>(args)...)) {}
 		constexpr ~BasicContainer() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
 		constexpr BasicContainer(const BasicContainer& other) noexcept
-			: data(other.data) {}
+			: data(std::forward<const t_array&>(other.data)) {}
 		constexpr BasicContainer& operator=(const BasicContainer& other) noexcept {
-			this->data = other.data;
+			this->data = std::forward<const t_array&>(other.data);
 			return *this;
 		}
 		constexpr BasicContainer(BasicContainer&& other) noexcept
-			: data(std::move(other.data)) { meta::common::clear_if_pointer<T>(other.data); }
+			: data(std::forward<t_array&&>(other.data))
+		{ meta::common::clear_if_pointer<T>(other.data._Elems); }
 		constexpr BasicContainer& operator=(BasicContainer&& other) noexcept {
-			this->data = std::move(other.data);
-			meta::common::clear_if_pointer<T>(other.data);
+			this->data = std::forward<t_array&&>(other.data);
+			meta::common::clear_if_pointer<T>(other.data._Elems);
 			return *this;
 		}
 
-		constexpr BasicContainer(const T& data) noexcept
-			: data(data) {}
-		constexpr BasicContainer& operator=(const T& data) noexcept {
-			this->data = data;
+		constexpr BasicContainer(const t_array& data) noexcept
+			: data(std::forward<const t_array&>(data)) {}
+		constexpr BasicContainer& operator=(const t_array& data) noexcept {
+			this->data = std::forward<const t_array&>(data);
 			return *this;
 		}
-		constexpr BasicContainer(T&& data) noexcept
-			: data(std::move(data)) { meta::common::clear_if_pointer<T>(data); }
-		constexpr BasicContainer& operator=(T&& data) noexcept {
-			this->data = std::move(data);
-			meta::common::clear_if_pointer<T>(data);
+		constexpr BasicContainer(t_array&& data) noexcept
+			: data(std::forward<t_array&&>(data)) {}
+		constexpr BasicContainer& operator=(t_array&& data) noexcept {
+			this->data = std::forward<t_array&&>(data);
 			return *this;
 		}
 
@@ -102,62 +117,31 @@ class BasicContainer {
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr pointer operator->() noexcept {
-			return std::pointer_traits<pointer>::pointer_to(&this->data);
-		}
-		__LL_NODISCARD__ constexpr const pointer operator->() const noexcept {
-			return std::pointer_traits<pointer>::pointer_to(&this->data);
-		}
-		__LL_NODISCARD__ constexpr T& operator*() noexcept { return this->data; }
-		__LL_NODISCARD__ constexpr const T& operator*() const noexcept { return this->data; }
+		__LL_NODISCARD__ constexpr ll_bool_t inRange(const len_t position) const noexcept { return N > position; }
+		__LL_NODISCARD__ constexpr len_t length() const noexcept { return N; }
+		__LL_NODISCARD__ constexpr len_t size() const noexcept { return this->length(); }
+		__LL_NODISCARD__ constexpr len_t count() const noexcept { return this->length(); }
 
-		/*__LL_NODISCARD__ constexpr meta::OptionalBool compare_eq(BasicContainer& other) const noexcept {
+		__LL_NODISCARD__ constexpr pointer operator->() noexcept { return std::addressof(this->data._Elems[0]); }
+		__LL_NODISCARD__ constexpr const pointer operator->() const noexcept = delete;
 
+		__LL_NODISCARD__ constexpr T& operator*() noexcept { return this->data._Elems[0]; }
+		__LL_NODISCARD__ constexpr const T& operator*() const noexcept { return this->data._Elems[0]; }
 
-		}
+		__LL_NODISCARD__ constexpr T& operator[](const len_t position) noexcept {
+#if defined(_DEBUG)
+			if (this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
 
-		template<class U>
-		__LL_NODISCARD__ constexpr meta::OptionalBool compare_eq(const BasicContainer<U>& other) const noexcept {
-			if constexpr (std::is_array_v<T> && std::is_array_v<U> && traits::array_size<T> == traits::array_size<U>) {
-				if constexpr (traits::array_size<T> == traits::array_size<U>)
-					return llcpp::FALSE;
-				else return algorithm::CompareCluster<T, U>().compareBool(this->data, other.data, traits::array_size<U>);
-			}
-			else return meta::common::is_same_value<T, U>(this->data, other.data);
+			return this->data[position];
 		}
-		template<class U>
-		__LL_NODISCARD__ constexpr meta::OptionalBool compare_no_eq(const BasicContainer<U>& other) const noexcept {
-			return meta::common::is_not_same_value<T, U>(this->data, other.data);
-		}
-		template<class U>
-		__LL_NODISCARD__ constexpr meta::OptionalBool compare_eq(const U& data) const noexcept {
-			return meta::common::is_same_value<T, U>(this->data, data);
-		}
-		template<class U>
-		__LL_NODISCARD__ constexpr meta::OptionalBool compare_no_eq(const U& data) const noexcept {
-			return meta::common::is_not_same_value<T, U>(this->data, data);
-		}
+		__LL_NODISCARD__ constexpr const T& operator[](const len_t position) const noexcept {
+#if defined(_DEBUG)
+			if (this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const BasicContainer& other) const noexcept {
-			auto b = this->compare_eq<T>(std::forward<const BasicContainer&>(other));
-			if (b.has_value()) return b.value();
-			else llcpp::FALSE;
+			return this->data[position];
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const BasicContainer& other) const noexcept {
-			auto b = this->compare_no_eq<T>(std::forward<const BasicContainer&>(other));
-			if (b.has_value()) return b.value();
-			else llcpp::FALSE;
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const T& data) const noexcept {
-			auto b = this->compare_eq<T>(std::forward<const T&>(data));
-			if (b.has_value()) return b.value();
-			else llcpp::FALSE;
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const T& data) const noexcept {
-			auto b = this->compare_no_eq<T>(std::forward<const T&>(data));
-			if (b.has_value()) return b.value();
-			else llcpp::FALSE;
-		}*/
 
 		#pragma endregion
 
@@ -191,18 +175,14 @@ class BasicContainer {
 // 
 // Destructor will call object "preDestruction()" function if is a class and has that function
 //	also, if class _Functions has the function too, it will be called too after object function
-// 
-// 
-// 
-// 
 template<class _T, class _Functions>
-class ContainerExtra : public _Functions, public BasicContainer<_T> {
+class ContainerExtra : public _Functions, public BasicContainer<traits::array_type_t<_T>, traits::type_or_array_size<_T>> {
 	#pragma region Types
 	public:
 		// Class related
 		using _MyType					= ContainerExtra;
 		using Functions					= _Functions;
-		using BasicContainer			= BasicContainer<_T>;
+		using BasicContainer			= BasicContainer<traits::array_type_t<_T>, traits::type_or_array_size<_T>>;
 
 		// Types
 		using T							= _T;
@@ -293,18 +273,28 @@ class ContainerExtra : public _Functions, public BasicContainer<_T> {
 		__LL_NODISCARD__ constexpr const T& operator*() const noexcept { return BasicContainer::operator*(); }
 	public:
 		__LL_NODISCARD__ constexpr auto hash() noexcept {
+			static_assert(
+				traits::common::has_hash_function_v<T_class, T_HashSignature>
+				|| traits::common::has_hash_function_v<Functions, F_HashSignature>,
+				"Cannot hash without hash function"
+			);
+
 			if constexpr (traits::common::has_hash_function_v<T_class, T_HashSignature>)
 				return this->operator*()->hash();
 			else if constexpr (traits::common::has_hash_function_v<Functions, F_HashSignature>)
 				return Functions::hash(this->operator*());
-			else return meta::hash::StandardOptionalHash(std::nullopt);
 		}
 		__LL_NODISCARD__ constexpr auto hash() const noexcept {
+			static_assert(
+				traits::common::has_hash_function_v<T_class, T_HashConstSignature>
+				|| traits::common::has_hash_function_v<Functions, F_HashConstSignature>,
+				"Cannot hash without hash function"
+			);
+
 			if constexpr (traits::common::has_hash_function_v<T_class, T_HashConstSignature>)
 				return this->operator*()->hash();
 			else if constexpr (traits::common::has_hash_function_v<Functions, F_HashConstSignature>)
 				return Functions::hash(this->operator*());
-			else return meta::hash::StandardOptionalHash(std::nullopt);
 		}
 
 		__LL_NODISCARD__ constexpr void clear() noexcept {
@@ -322,8 +312,21 @@ class ContainerExtra : public _Functions, public BasicContainer<_T> {
 template<class T, class ContainerExtraFunctions = void>
 using Container = std::conditional_t<
 	std::is_same_v<ContainerExtraFunctions, void>,
-	BasicContainer<T>,
-	ContainerExtra<T, ContainerExtraFunctions>>;
+	BasicContainer<traits::array_type_t<T>, traits::type_or_array_size<T>>,
+	ContainerExtra<T, ContainerExtraFunctions>
+>;
+
+//constexpr auto asda9 = Container<Data[5]>(10);
+//
+//constexpr int asdad() noexcept {
+//	using asdfasdfa = Container<Data[5]>;
+//	auto asda1 = asdfasdfa(10);
+//	auto asda2 = (*asda1);
+//	auto asda3 = asda1[0].v;
+//	return asda1->v = 9;
+//}
+//
+//constexpr int as = asdad();
 
 } // namespace meta
 } // namespace llcpp

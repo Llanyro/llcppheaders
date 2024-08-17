@@ -368,9 +368,9 @@ class Hash128 {
 		#pragma endregion
 };
 
-__LL_VAR_INLINE__ constexpr hash::OptionalHash32 INVALID_HASH32 = std::nullopt;
-__LL_VAR_INLINE__ constexpr hash::OptionalHash64 INVALID_HASH64 = std::nullopt;
-__LL_VAR_INLINE__ constexpr hash::OptionalHash128 INVALID_HASH128 = std::nullopt;
+//__LL_VAR_INLINE__ constexpr hash::Hash32 INVALID_HASH32 = std::nullopt;
+//__LL_VAR_INLINE__ constexpr hash::Hash64 INVALID_HASH64 = std::nullopt;
+//__LL_VAR_INLINE__ constexpr hash::Hash128 INVALID_HASH128 = std::nullopt;
 
 template<class _HashType>
 class HashChecker {

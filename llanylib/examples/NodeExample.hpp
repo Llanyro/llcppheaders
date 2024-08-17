@@ -28,12 +28,15 @@ template <class _T, class _U = _T>
 class NodeFunctions : public meta::Container<_T> {
 	#pragma region Types
 	public:
+		// Class related
+		using _MyType			= NodeFunctions;
+		using Container			= meta::Container<_T>;
+		using Node				= linked::FunctionalNode<NodeFunctions>;
+		using SearchContainer	= llcpp::meta::Container<_U>;
+
+		// Types
 		using T					= _T;
 		using U					= _U;
-		using _MyType			= NodeFunctions;
-		using Container			= meta::Container<T>;
-		using Node				= FunctionalNode<NodeFunctions>;
-		using SearchContainer	= llcpp::meta::Container<U>;
 
 	#pragma endregion
 	#pragma region Attributes

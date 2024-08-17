@@ -70,10 +70,23 @@ constexpr void copy_n_set(T*& dst, T*& src, T* set_val = LL_NULLPTR) noexcept {
 	dst = src;
 	src = set_val;
 }
+
 template<class T>
 constexpr void clear_if_pointer(T& value) {
 	if constexpr (std::is_pointer_v<T>)
 		value = LL_NULLPTR;
+}
+template<class T, len_t N>
+constexpr void clear_if_pointer(T(&value)[N]) {
+	if constexpr (std::is_pointer_v<T>)
+		for (T data = value, end = value + N; data < end; ++data)
+			data = LL_NULLPTR;
+}
+template<class T>
+constexpr void clear_if_pointer(T begin, T end) {
+	if constexpr (std::is_pointer_v<T>)
+		for (T data = begin; data < end; ++data)
+			data = LL_NULLPTR;
 }
 
 } // namespace common

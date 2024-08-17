@@ -1,16 +1,45 @@
 
 #include "../llanylib/types.hpp"
+#include "../llanylib/utility.hpp"
 
-//#include "../llanylib/Container.hpp"
+#include "../llanylib/Container.hpp"
+
 //#include "../llanylib/Node.hpp"
 #include <iostream>
+#include <array>
 
 class Base {
 	public:
 		int value;
-		Base() noexcept : value(99) {}
-		Base(int value) noexcept : value(value) {}
-		~Base() noexcept {}
+		constexpr Base() noexcept : value(99) {}
+		constexpr Base(int value) noexcept : value(value) {}
+		constexpr ~Base() noexcept {}
+
+		constexpr Base(const Base& other) noexcept : value(other.value) {}
+		constexpr Base& operator=(const Base& other) noexcept {
+			this->value = other.value;
+			return *this;
+		}
+		constexpr Base(Base&& other) noexcept : value(other.value) { other.value = 0; }
+		constexpr Base& operator=(Base&& other) noexcept {
+			this->value = other.value;
+			other.value = 0;
+			return *this;
+		}
+
+		constexpr operator int() const noexcept { return this->value; }
+};
+
+struct ARR {
+	private:
+		Base data[5];
+
+	public:
+		constexpr Base* begin() noexcept { return this->data; }
+		constexpr Base* end() noexcept { return this->data + 5; }
+
+		constexpr const Base* begin() const noexcept { return this->data; }
+		constexpr const Base* end() const noexcept { return this->data + 5; }
 };
 
 class H1 : public Base {
@@ -187,16 +216,40 @@ ll_bool_t get_val() noexcept {
 }
 
 int main() {
-	auto asdf = 1 <=> 9;
-
-	llcpp::ll_bool_t boolean1 = true;
-	llcpp::ll_bool_t boolean2 = false;
-	llcpp::ll_bool_t boolean3 = llcpp::ll_bool_t::enum_bool::FALSE;
-
-	std::cout << "boolean1: " << boolean1.operator bool() << "\n";
-	std::cout << "boolean2: " << boolean2.operator bool() << "\n";
-	std::cout << "boolean3: " << boolean3.operator bool() << "\n";
+	//auto asdf = 1 <=> 9;
+	//
+	//llcpp::ll_bool_t boolean1 = true;
+	//llcpp::ll_bool_t boolean2 = false;
+	//llcpp::ll_bool_t boolean3 = llcpp::ll_bool_t::enum_bool::FALSE;
+	//
+	//std::cout << "boolean1: " << boolean1.operator bool() << "\n";
+	//std::cout << "boolean2: " << boolean2.operator bool() << "\n";
+	//std::cout << "boolean3: " << boolean3.operator bool() << "\n";
 	//std::cout << "boolean0: " << get_val<decltype(llcpp::LL_FALSE), llcpp::LL_FALSE>() << "\n";
+
+	auto print_arr = [](const auto& arr) {
+		for(auto& i : arr)
+			std::cout << i << ", ";
+		std::cout << "\n\n";
+	};
+
+	//auto a = llcpp::meta::utils::make_constructed_array<std::array<Base, 5>, Base, 5>(10);
+	//std::array<Base, 5> asdf{};
+	//print_arr(a);
+	//print_arr(asdf);
+	//asdf = std::forward<std::array<Base, 5>&&>(a);
+	//print_arr(a);
+	//print_arr(asdf);
+
+	//auto a = llcpp::meta::utils::make_constructed_array<ARR, Base, 5>(10);
+	//ARR asdf{};
+	//print_arr(a);
+	//print_arr(asdf);
+	//asdf = std::forward<ARR&&>(a);
+	//print_arr(a);
+	//print_arr(asdf);
+
+	llcpp::meta::Container<int[5]> cont(10);
 
 	return 0;
 }

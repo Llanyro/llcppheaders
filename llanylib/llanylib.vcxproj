@@ -70,7 +70,6 @@
     <ClInclude Include="Typeid.hpp" />
     <ClInclude Include="types.hpp" />
     <ClInclude Include="types_base.hpp" />
-    <ClInclude Include="utility.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

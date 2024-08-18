@@ -23,8 +23,6 @@
 
 #include "hash_algorithm.hpp"
 
-#include <optional>
-
 namespace llcpp {
 namespace meta {
 namespace hash {

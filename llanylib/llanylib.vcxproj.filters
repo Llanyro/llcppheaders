@@ -156,9 +156,6 @@
     <ClInclude Include="Typeid.hpp">
       <Filter>Source Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="utility.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
     <ClInclude Include="algorithm.hpp">
       <Filter>Source Files\utils\lists</Filter>
     </ClInclude>

@@ -33,7 +33,10 @@ template<class _T>
 class ArrayPair {
 	#pragma region Types
 	public:
+		// Class related
 		using _MyType	= ArrayPair;
+
+		// Types
 		using T			= _T;
 
 	#pragma endregion
@@ -161,7 +164,9 @@ class ArrayPair {
 		constexpr void clear() noexcept { this->simpleClear(); }
 
 		#pragma endregion
+
 		#pragma endregion
+
 	#pragma endregion
 };
 
@@ -169,7 +174,10 @@ template<class _T>
 class Array {
 	#pragma region Types
 	public:
+		// Class related
 		using _MyType	= Array;
+
+		// Types
 		using T			= _T;
 
 	#pragma endregion

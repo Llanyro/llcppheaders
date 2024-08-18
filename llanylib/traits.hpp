@@ -506,7 +506,6 @@ namespace common {
 //__LL_HAS_CUSTOM_FUNCTION__(compare_no_eq);
 //__LL_HAS_CUSTOM_FUNCTION__(die);
 
-
 template<class _ClassToCheck, class _Signature> struct has_hash_function {
     using _MyType = has_hash_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::hash>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
 }; template<class ClassToCheck, class Signature> using has_hash_function_t = traits::_has_common<traits::common::has_hash_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_hash_function_v = traits::common::has_hash_function_t<ClassToCheck, Signature>::type::value;

@@ -110,6 +110,7 @@ static_assert(!endsWith_04_res.getResult(), __LL_ERROR__);	// Here is different 
 constexpr len_t find_pos_01 = finder.find(example_str1, ',');
 constexpr len_t find_pos_02 = finder.find(example_str1, '*');
 constexpr len_t find_pos_03 = finder.find(example_str2, '?');
+constexpr len_t find_pos_04 = finder.find(example_str2, 'x');
 
 constexpr auto find_ptr_01 = finder_ptr.find(example_str1, ',');
 constexpr auto find_ptr_02 = finder_ptr.find(example_str1, example_str1 + 15, '*');
@@ -128,6 +129,7 @@ constexpr auto rfind_ptr_04 = finder_ptr.rfind(example_str2, '\0');
 static_assert(find_pos_01 == 07, __LL_ERROR__);
 static_assert(find_pos_02 == 13, __LL_ERROR__);
 static_assert(find_pos_03 == 13, __LL_ERROR__);
+static_assert(find_pos_04 == algorithm::npos, __LL_ERROR__);
 
 static_assert(*find_ptr_01 == ',', __LL_ERROR__);
 static_assert(*find_ptr_02 == '*', __LL_ERROR__);

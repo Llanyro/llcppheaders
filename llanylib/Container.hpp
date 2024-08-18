@@ -22,31 +22,27 @@
 #define LLANYLIB_CONTAINER_MINOR_ 0
 
 #include "hash_types.hpp"
-#include "utility.hpp"
-#include "common.hpp"
+#include "algorithm.hpp"
 
 #include <array>
 
-struct Data {
-	int v;
-	constexpr Data() noexcept : v(99) {}
-	constexpr Data(int v) noexcept : v(v) {}
-};
-
 namespace llcpp {
 namespace meta {
+namespace containers {
 
 template<class _T, len_t _N>
 class BasicContainer {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType	= BasicContainer;
+		using _MyType				= BasicContainer;
 
 		// Types
-		using T			= _T;
-		using t_array	= std::array<_T, _N>;
-		using pointer	= std::conditional_t<std::is_pointer_v<_T>, _T, _T*>;
+		using T						= _T;
+		using t_array				= std::array<_T, _N>;
+		using pointer				= std::conditional_t<std::is_pointer_v<_T>, _T, _T*>;
+		using ContainerArray		= meta::Array<T>;
+		using ContainerArrayPair	= meta::ArrayPair<T>;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -74,7 +70,7 @@ class BasicContainer {
 		constexpr BasicContainer() noexcept : data() {}
 		template<class... Args>
 		constexpr BasicContainer(Args&&... args) noexcept
-			: data(utils::make_constructed_array<t_array, T, N>(std::forward<Args>(args)...)) {}
+			: data(algorithm::make_constructed_array<t_array, T, N>(std::forward<Args>(args)...)) {}
 		constexpr ~BasicContainer() noexcept {}
 
 		#pragma endregion
@@ -143,6 +139,21 @@ class BasicContainer {
 			return this->data[position];
 		}
 
+		__LL_NODISCARD__ constexpr ContainerArray getContainerArray() noexcept {
+			return ContainerArray(this->data._Elems, N);
+		}
+		__LL_NODISCARD__ constexpr ContainerArrayPair getContainerArrayPair() const noexcept {
+			return ContainerArrayPair(this->data._Elems, N);
+		}
+
+		__LL_NODISCARD__ constexpr operator ContainerArray() noexcept {
+			return this->getContainerArray();
+		}
+		__LL_NODISCARD__ constexpr operator  ContainerArrayPair() const noexcept {
+			return this->getContainerArrayPair();
+		}
+
+
 		#pragma endregion
 
 	#pragma endregion
@@ -190,15 +201,16 @@ class ContainerExtra : public _Functions, public BasicContainer<traits::array_ty
 		using pointer					= typename BasicContainer::pointer;
 		using reference					= T&;
 		using creference				= const T&;
-
 		using T_HashType				= traits::hash::get_hash_function_type_t<T>;
 		using F_HashType				= traits::hash::get_hash_function_type_t<Functions>;
 
+		// Signarures T
 		using T_HashSignature			= T_HashType(T_class::*)() noexcept;
 		using T_HashConstSignature		= T_HashType(T_class::*)() const noexcept;
 		using T_ClearSignature			= void(T_class::*)() noexcept;
 		using T_PreDestructSignature	= void(T_class::*)() noexcept;
 
+		// Signarures F
 		using F_HashSignature			= F_HashType(Functions::*)(reference) noexcept;
 		using F_HashConstSignature		= F_HashType(Functions::*)(creference) const noexcept;
 		using F_ClearSignature			= void(Functions::*)(reference) noexcept;
@@ -312,22 +324,11 @@ class ContainerExtra : public _Functions, public BasicContainer<traits::array_ty
 template<class T, class ContainerExtraFunctions = void>
 using Container = std::conditional_t<
 	std::is_same_v<ContainerExtraFunctions, void>,
-	BasicContainer<traits::array_type_t<T>, traits::type_or_array_size<T>>,
-	ContainerExtra<T, ContainerExtraFunctions>
+	containers::BasicContainer<traits::array_type_t<T>, traits::type_or_array_size<T>>,
+	containers::ContainerExtra<T, ContainerExtraFunctions>
 >;
 
-//constexpr auto asda9 = Container<Data[5]>(10);
-//
-//constexpr int asdad() noexcept {
-//	using asdfasdfa = Container<Data[5]>;
-//	auto asda1 = asdfasdfa(10);
-//	auto asda2 = (*asda1);
-//	auto asda3 = asda1[0].v;
-//	return asda1->v = 9;
-//}
-//
-//constexpr int as = asdad();
-
+} // namespace containers
 } // namespace meta
 } // namespace llcpp
 

@@ -213,10 +213,10 @@ int main3() {
 	//asdf.size();
 	//std::initializer_list
 
-	auto a = llcpp::meta::utils::make_constructed_array<std::array<len_t, 10>, len_t, 10>(999);
+	auto a = llcpp::meta::algorithm::make_constructed_array<std::array<len_t, 10>, len_t, 10>(999);
 	len_t* mem = (len_t*)std::malloc(sizeof(len_t) * 10);
-	mem = llcpp::meta::utils::make_constructed_new_mem<len_t, 10>(mem, 999);
-	//auto c = llcpp::meta::utils::make_filled_StaticArray<len_t, 10, 0ull>(999);
+	mem = llcpp::meta::algorithm::make_constructed_new_mem<len_t, 10>(mem, 999);
+	//auto c = llcpp::meta::algorithm::make_filled_StaticArray<len_t, 10, 0ull>(999);
 	llcpp::meta::ArrayPair<len_t> b_arr(mem, 10);
 
 	print_arr(a);

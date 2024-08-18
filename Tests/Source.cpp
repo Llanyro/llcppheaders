@@ -1,13 +1,14 @@
 
 #include "../llanylib/types.hpp"
-#include "../llanylib/utility.hpp"
 
 #include "../llanylib/Container.hpp"
+#include "../llanylib/algorithm.hpp"
+#include "../llanylib/Node.hpp"
 
-//#include "../llanylib/Node.hpp"
 #include <iostream>
-#include <array>
+//#include <array>
 
+#pragma region Inheritance
 class Base {
 	public:
 		int value;
@@ -73,18 +74,18 @@ class IntFunctions {
 		__LL_NODISCARD__ constexpr int hash(const int*& v) const noexcept { return *v; }
 		__LL_NODISCARD__ constexpr void predestruction(int*& v) noexcept { delete v; }
 };
-
+#pragma endregion
 #pragma region Nodes
-/*template <class _T, class _U = _T>
-class NodeFunctions : public llcpp::meta::Container<_T> {
+template <class _T, class _U = _T>
+class NodeFunctions : public llcpp::meta::containers::Container<_T> {
 	#pragma region Types
 	public:
 		using T					= _T;
 		using U					= _U;
 		using _MyType			= NodeFunctions;
-		using Container			= llcpp::meta::Container<T>;
+		using Container			= llcpp::meta::containers::Container<T>;
 		using Node				= llcpp::meta::linked::FunctionalNode<NodeFunctions>;
-		using SearchContainer	= llcpp::meta::Container<U>;
+		using SearchContainer	= llcpp::meta::containers::Container<U>;
 
 	#pragma endregion
 	#pragma region Attributes
@@ -148,6 +149,7 @@ class NodeFunctions : public llcpp::meta::Container<_T> {
 			return (**a == **b) ? 0 : ((**a > **b) ? 1 : -1);
 		}
 		__LL_NODISCARD__ constexpr SearchContainer& to_search() noexcept { return this->search; }
+		__LL_NODISCARD__ constexpr void die() noexcept {}
 
 		#pragma endregion
 
@@ -155,7 +157,7 @@ class NodeFunctions : public llcpp::meta::Container<_T> {
 };
 
 template<class T>
-using FuncNode = llcpp::meta::linked::Node<NodeFunctions<T>, llcpp::LL_TRUE>;
+using FuncNode = llcpp::meta::linked::Node<NodeFunctions<T>, llcpp::TRUE>;
 template<class T, len_t N>
 using ArrayTypeFuncNode = std::array<FuncNode<T>, N>;
 
@@ -170,44 +172,46 @@ constexpr void fix_node_array(ArrayTypeFuncNode<T, N>& nodes) {
 }
 
 template<len_t N, len_t POS>
-int merge_sort() noexcept {
-	ArrayTypeFuncNode<int, N> nodes;
-	fix_node_array<int, N>(nodes);
-	int val = 59;
+len_t merge_sort() noexcept {
+	using arr = ArrayTypeFuncNode<len_t, N>;
+	arr nodes;
+	//arr nodes = llcpp::meta::algorithm::make_constructed_array<arr, int, N>(99);
+	fix_node_array<len_t, N>(nodes);
+	len_t val = 59;
 	for (auto& i : nodes) {
 		i = val;
 		val = (val + ((val > 0) ? 2 : -2)) * -1;
 	}
 	auto* end = &nodes[N - 1];
 	auto* n = nodes[0].mergeSort_s(end);
+	end = n->getLast(LL_NULLPTR);
 	end->set(n);
 	return (n) ? n->get(POS)->operator*() : 0;
 }
 void main_nodes() {
 	D1 a(80, 70);
-	llcpp::meta::Container<int*, IntFunctions> cont(new int(10));
-	using t = decltype(cont)::reference;
+	//llcpp::meta::containers::Container<int*, IntFunctions> cont(new int(10));
+	//using t = decltype(cont)::reference;
 	//cont.clear();
 	
 	//std::cout << "ASDF: " << llcpp::meta::linked::asdf() << "\n";
 	
-	std::cout << "Base1: " << llcpp::meta::traits::common::has_hash_function_v<D1, int(D1::*)() noexcept> << "\n";
-	std::cout << "Base2: " << llcpp::meta::traits::common::has_hash_function_v<H2, int(H2::*)() noexcept> << "\n";
+	//std::cout << "Base1: " << llcpp::meta::traits::common::has_hash_function_v<D1, int(D1::*)() noexcept> << "\n";
+	//std::cout << "Base2: " << llcpp::meta::traits::common::has_hash_function_v<H2, int(H2::*)() noexcept> << "\n";
+	//
+	//std::cout << "Base1: " << llcpp::meta::traits::has_simple_type_operator_v<D1, int> << "\n";
+	//std::cout << "Base2: " << llcpp::meta::traits::has_simple_type_operator_v<H2, int> << "\n";
+	//std::cout << "Base3: " << llcpp::meta::traits::has_simple_type_operator_v<int, int> << "\n";
 	
-	std::cout << "Base1: " << llcpp::meta::traits::has_simple_type_operator_v<D1, int> << "\n";
-	std::cout << "Base2: " << llcpp::meta::traits::has_simple_type_operator_v<H2, int> << "\n";
-	std::cout << "Base3: " << llcpp::meta::traits::has_simple_type_operator_v<int, int> << "\n";
-	
-	std::cout << "Base: " << sizeof(Base) << "\n";
-	std::cout << "H1: " << sizeof(H1) << "\n";
-	std::cout << "H2: " << sizeof(H2) << "\n";
-	std::cout << "D1: " << sizeof(D1) << "\n";
-	std::cout << "A: " << sizeof(a) << "\n";
-	std::cout << "Value1: " << a.H1::value << "\tValue2: " << a.H2::value << "\n";
-	merge_sort<10, 0>();
+	//std::cout << "Base: " << sizeof(Base) << "\n";
+	//std::cout << "H1: " << sizeof(H1) << "\n";
+	//std::cout << "H2: " << sizeof(H2) << "\n";
+	//std::cout << "D1: " << sizeof(D1) << "\n";
+	//std::cout << "A: " << sizeof(a) << "\n";
+	//std::cout << "Value1: " << a.H1::value << "\tValue2: " << a.H2::value << "\n";
+	std::cout << merge_sort<10, 0>() << std::endl;
 }
 
-*/
 #pragma endregion
 
 template<class T, T val>
@@ -233,7 +237,7 @@ int main() {
 		std::cout << "\n\n";
 	};
 
-	//auto a = llcpp::meta::utils::make_constructed_array<std::array<Base, 5>, Base, 5>(10);
+	//auto a = llcpp::meta::algorithm::make_constructed_array<std::array<Base, 5>, Base, 5>(10);
 	//std::array<Base, 5> asdf{};
 	//print_arr(a);
 	//print_arr(asdf);
@@ -241,7 +245,7 @@ int main() {
 	//print_arr(a);
 	//print_arr(asdf);
 
-	//auto a = llcpp::meta::utils::make_constructed_array<ARR, Base, 5>(10);
+	//auto a = llcpp::meta::algorithm::make_constructed_array<ARR, Base, 5>(10);
 	//ARR asdf{};
 	//print_arr(a);
 	//print_arr(asdf);
@@ -249,7 +253,8 @@ int main() {
 	//print_arr(a);
 	//print_arr(asdf);
 
-	llcpp::meta::Container<int[5]> cont(10);
+	//llcpp::meta::containers::Container<int[5]> cont(10);
+	main_nodes();
 
 	return 0;
 }

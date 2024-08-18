@@ -25,7 +25,7 @@
 
 namespace llcpp {
 
-void IGNORE(...) {}
+constexpr void IGNORE(...) {}
 
 #pragma region Expresions
 constexpr ui8 ZERO_UI8 = 0u;

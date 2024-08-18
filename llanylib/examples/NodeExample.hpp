@@ -8,8 +8,7 @@
 //////////////////////////////////////////////
 
 #include "../Node.hpp"
-
-#include <array>
+#include "../Container.hpp"
 
 #if !defined(LLANYLIB_EXAMPLES_NODEEXAMPLE_HPP_)
 #define LLANYLIB_EXAMPLES_NODEEXAMPLE_HPP_
@@ -18,21 +17,20 @@ namespace llcpp {
 namespace meta {
 namespace linked {
 
-
 ///////////////////////////////////////////////// Types and classes /////////////////////////////////////////////////
 
 // Example to FunctionalNode
 // This class is the extra function container and at the same time
 //	is a container to give each node a internal value
 template <class _T, class _U = _T>
-class NodeFunctions : public meta::Container<_T> {
+class NodeFunctions : public meta::containers::Container<_T> {
 	#pragma region Types
 	public:
 		// Class related
 		using _MyType			= NodeFunctions;
-		using Container			= meta::Container<_T>;
-		using Node				= linked::FunctionalNode<NodeFunctions>;
-		using SearchContainer	= llcpp::meta::Container<_U>;
+		using Container			= meta::containers::Container<_T>;
+		using Node				= meta::linked::FunctionalNode<NodeFunctions>;
+		using SearchContainer	= meta::containers::Container<_U>;
 
 		// Types
 		using T					= _T;
@@ -122,6 +120,8 @@ constexpr void fix_node_array(ArrayTypeFuncNode<T, N>& nodes) {
 
 ///////////////////////////////////////////////// Node return value /////////////////////////////////////////////////
 
+constexpr auto aasdasdfas = FuncNode<int>(99);
+
 template<class T>
 constexpr T get_value(const T& val) noexcept {
 	return *FuncNode<T>(LL_NULLPTR, val, 0);
@@ -188,7 +188,7 @@ constexpr int find_element_04 = find_element<10>(4);
 template<len_t N, len_t POS>
 constexpr int merge_sort() noexcept {
 	ArrayTypeFuncNode<int, N> nodes;
-	linked::fix_node_array<int, N>(nodes);
+	meta::linked::fix_node_array<int, N>(nodes);
 	int val = 59;
 	for (auto& i : nodes) {
 		i = val;
@@ -196,21 +196,22 @@ constexpr int merge_sort() noexcept {
 	}
 	auto* end = &nodes[N - 1];
 	auto* n = nodes[0].mergeSort_s(end);
+	end = n->getLast(LL_NULLPTR);
 	end->set(n);
 	return (n) ? n->get(POS)->operator*() : 0;
 }
 
-//constexpr int merge_sort_00 = merge_sort<10, 0>();
-//constexpr int merge_sort_01 = merge_sort<10, 1>();
-//constexpr int merge_sort_02 = merge_sort<10, 2>();
-//constexpr int merge_sort_03 = merge_sort<10, 3>();
-//constexpr int merge_sort_04 = merge_sort<10, 4>();
-//constexpr int merge_sort_05 = merge_sort<10, 5>();
-//constexpr int merge_sort_06 = merge_sort<10, 6>();
-//constexpr int merge_sort_07 = merge_sort<10, 7>();
-//constexpr int merge_sort_08 = merge_sort<10, 8>();
-//constexpr int merge_sort_09 = merge_sort<10, 9>();
-//constexpr int merge_sort_10 = merge_sort<10, 10>();
+constexpr int merge_sort_00 = merge_sort<10, 0>();
+constexpr int merge_sort_01 = merge_sort<10, 1>();
+constexpr int merge_sort_02 = merge_sort<10, 2>();
+constexpr int merge_sort_03 = merge_sort<10, 3>();
+constexpr int merge_sort_04 = merge_sort<10, 4>();
+constexpr int merge_sort_05 = merge_sort<10, 5>();
+constexpr int merge_sort_06 = merge_sort<10, 6>();
+constexpr int merge_sort_07 = merge_sort<10, 7>();
+constexpr int merge_sort_08 = merge_sort<10, 8>();
+constexpr int merge_sort_09 = merge_sort<10, 9>();
+constexpr int merge_sort_10 = merge_sort<10, 10>();
 
 ///////////////////////////////////////////////// Sort2 /////////////////////////////////////////////////
 

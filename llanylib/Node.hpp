@@ -22,9 +22,6 @@
 #define LLANYLIB_NODE_MINOR_ 0
 
 #include "traits.hpp"
-#include "Container.hpp"
-
-#include <utility>
 
 namespace llcpp {
 namespace meta {
@@ -34,7 +31,10 @@ template <class _NodeType>
 class BaseNode {
 	#pragma region Types
 	public:
+		// Class related
 		using _MyType	= BaseNode;
+
+		// Types
 		using NodeType = _NodeType;
 
 	#pragma endregion
@@ -105,6 +105,10 @@ class BaseNode {
 template<class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE>
 class BaseNodeList;
 
+#define HAS_NODECHECKER_STR "'NodeFunctions::nodeChecker() const noexcept' or 'NodeFunctions::nodeChecker() noexcept' is required!"
+#define HAS_NODECHECKER_CONST_STR "'NodeFunctions::nodeChecker() const noexcept' is required!"
+#define HAS_NODECOMPARE_STR "'NodeFunctions::compareNode() const noexcept' or 'NodeFunctions::compareNode() noexcept' is required!"
+
 // If any function requires a parameter that its called "end"
 //	Means that it will operate until "end" if found (not included)
 //	If "end" is nullptr, node list should not be a circular list or it could lead to a endless loop
@@ -114,17 +118,31 @@ template<class _NodeFunctions>
 class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_NodeFunctions>> {
 	#pragma region Types
 	public:
-		using _MyType				= FunctionalNode;
-		using NodeType				= FunctionalNode;
-		using NodeFunctions			= _NodeFunctions;
-		using BaseNode				= BaseNode<NodeType>;
+		// Class related
+		using _MyType					= FunctionalNode;
+		using NodeType					= FunctionalNode;
+		using NodeFunctions				= _NodeFunctions;
+		using BaseNode					= BaseNode<NodeType>;
 
-		using NodePack				= std::pair<NodeType*, NodeType*>;
-		using NodePackConst			= std::pair<const NodeType*, const NodeType*>;
+		// Types
+		using NodePack					= std::pair<NodeType*, NodeType*>;
+		using NodePackConst				= std::pair<const NodeType*, const NodeType*>;
 
-		using NodeCheckerSignature	= ll_bool_t(NodeFunctions::*)(const NodeType*) const noexcept;
-		using NodeCompareSignature	= cmp_t(NodeFunctions::*)(const NodeType*, const NodeType*) const noexcept;
-		using DieSignature			= void(NodeFunctions::*)() noexcept;
+		// Signarures
+		using NodeCheckerSignature		= ll_bool_t(NodeFunctions::*)(const NodeType*) noexcept;
+		using NodeCheckerConstSignature	= ll_bool_t(NodeFunctions::*)(const NodeType*) const noexcept;
+		using NodeCompareSignature		= cmp_t(NodeFunctions::*)(const NodeType*, const NodeType*) noexcept;
+		using NodeCompareConstSignature	= cmp_t(NodeFunctions::*)(const NodeType*, const NodeType*) const noexcept;
+		using DieSignature				= void(NodeFunctions::*)() noexcept;
+
+	#pragma endregion
+	#pragma region Expresions
+	public:
+		static constexpr ll_bool_t HAS_NODECHECKER = traits::common::has_nodeChecker_function_v<NodeFunctions, NodeCheckerSignature>;
+		static constexpr ll_bool_t HAS_NODECHECKER_CONST = traits::common::has_nodeChecker_function_v<NodeFunctions, NodeCheckerConstSignature>;
+
+		static constexpr ll_bool_t HAS_NODECOMPARE = traits::common::has_compareNode_function_v<NodeFunctions, NodeCompareSignature>;
+		static constexpr ll_bool_t HAS_NODECOMPARE_CONST = traits::common::has_compareNode_function_v<NodeFunctions, NodeCompareConstSignature>;
 
 	#pragma endregion
 	#pragma region Assersts
@@ -133,11 +151,6 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			"type_checker<NodeFunctions> detected an invalid type!");
 		static_assert(traits::is_valid_class_checker_v<NodeFunctions>,
 			"class_checker<NodeFunctions> detected an invalid class type!");
-
-		static_assert(traits::common::has_nodeChecker_function_v<NodeFunctions, NodeCheckerSignature>,
-			"NodeFunctions::nodeChecker() const noexcept is required by default! Non const function is optional");
-		static_assert(traits::common::has_compareNode_function_v<NodeFunctions, NodeCompareSignature>,
-			"NodeFunctions::compareNode() const noexcept is required by default! Non const function is optional");
 
 		static_assert(traits::common::has_die_function_v<NodeFunctions, DieSignature>,
 			"NodeFunctions::die() noexcept is required!");
@@ -304,6 +317,8 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 		#pragma region FindPrev
 	private:
 		__LL_NODISCARD__ constexpr NodePack findprev_impl(const NodeType* end) noexcept {
+			static_assert(HAS_NODECHECKER || HAS_NODECHECKER_CONST, HAS_NODECHECKER_STR);
+
 			// This could never be nullptr
 			NodeType* begin = this;
 			NodeType* prev = LL_NULLPTR;
@@ -316,6 +331,8 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			return { LL_NULLPTR, LL_NULLPTR };
 		}
 		__LL_NODISCARD__ constexpr NodePackConst findprev_impl(const NodeType* end) const noexcept {
+			static_assert(HAS_NODECHECKER_CONST, HAS_NODECHECKER_CONST_STR);
+
 			// This could never be nullptr
 			const NodeType* begin = this;
 			const NodeType* prev = LL_NULLPTR;
@@ -424,6 +441,8 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 		#pragma region All
 	private:
 		__LL_NODISCARD__ constexpr ll_bool_t all_impl(const NodeType* end) noexcept {
+			static_assert(HAS_NODECHECKER || HAS_NODECHECKER_CONST, HAS_NODECHECKER_STR);
+
 			NodeType* begin = this;
 			do {
 				if (!NodeFunctions::nodeChecker(begin)) return llcpp::FALSE;
@@ -432,6 +451,8 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			return llcpp::TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t all_impl(const NodeType* end) const noexcept {
+			static_assert(HAS_NODECHECKER_CONST, HAS_NODECHECKER_CONST_STR);
+
 			const NodeType* begin = this;
 			do {
 				if (!NodeFunctions::nodeChecker(begin)) return llcpp::FALSE;
@@ -742,10 +763,12 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			return nodes.second;
 		}
 		__LL_NODISCARD__ static constexpr NodeType* merge_lists(NodeType* left, NodeType* right) noexcept {
+			static_assert(HAS_NODECOMPARE || HAS_NODECOMPARE_CONST, HAS_NODECOMPARE_STR);
+
 			if (!left) return right;
 			if (!right) return left;
 
-			if (left->compareNode(left, right) <= ZERO_I32) {
+			if (left->compareNode(left, right) <= llcpp::ZERO_CMP) {
 				left->set(FunctionalNode::merge_lists(left->get(), right));
 				return left;
 			}
@@ -768,9 +791,10 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 		__LL_NODISCARD__ constexpr NodeType* mergeSort(NodeType* end) noexcept {
 #if defined(_DEBUG)
 			if (!this) __debug_error_nullptr_str(this, "this");
+			if (!end) __debug_error_nullptr_str(end, "end");
 #endif // _DEBUG
 
-			if(!end) end->set(LL_NULLPTR);
+			end->set(LL_NULLPTR);
 			return FunctionalNode::merge_impl(this);
 		}
 		__LL_NODISCARD__ constexpr NodeType* mergeSort() noexcept {
@@ -781,13 +805,12 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 			return FunctionalNode::merge_impl(this);
 		}
 		__LL_NODISCARD__ constexpr NodeType* mergeSort_s(NodeType* end) noexcept {
-			if (!this) return LL_NULLPTR;
-			if (!end) end->set(LL_NULLPTR);
+			if (!this || !end) return LL_NULLPTR;
+			end->set(LL_NULLPTR);
 			return FunctionalNode::merge_impl(this);
 		}
 		__LL_NODISCARD__ constexpr NodeType* mergeSort_s() noexcept {
 			if (!this) return LL_NULLPTR;
-			if (!end) end->set(LL_NULLPTR);
 			return FunctionalNode::merge_impl(this);
 		}
 
@@ -797,6 +820,10 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 	#pragma endregion
 };
+
+#undef HAS_NODECHECKER_STR
+#undef HAS_NODECHECKER_CONST_STR
+#undef HAS_NODECOMPARE_STR
 
 template <class _NodeType>
 class ClassicNode : public BaseNode<_NodeType> {

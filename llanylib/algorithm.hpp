@@ -25,6 +25,8 @@
 #include "math.hpp"
 #include "common.hpp"
 
+#include <utility>
+
 #if defined(WINDOWS_SYSTEM)
 	#pragma warning(push)
 	#if defined(__LL_SPECTRE_FUNCTIONS__)
@@ -35,6 +37,31 @@
 namespace llcpp {
 namespace meta {
 namespace algorithm {
+
+namespace __algorithm__ {
+
+template<class U, class T, class... Args, len_t... Idx>
+__LL_NODISCARD__ constexpr auto make_constructed_array(const Args&... args, std::index_sequence<Idx...>) noexcept -> U {
+	return U{ (Idx, T(args...))... };
+}
+template<class T, class... Args, len_t... Idx>
+__LL_NODISCARD__ constexpr auto make_constructed_new_mem(T* mem, const Args&... args, std::index_sequence<Idx...>) noexcept -> T* {
+	return new (mem) T[sizeof...(Idx)]{ (Idx, T(args...))... };
+}
+
+} // namespace __algorithm__
+
+// Constructs ALL objects in an array with the same arguments
+// Class U needs to have a constructor of  parameter pack
+template<class U, class T, len_t N, class... Args>
+__LL_NODISCARD__ constexpr U make_constructed_array(const Args&... args) noexcept {
+	return __algorithm__::make_constructed_array<U, T, Args...>(args..., std::make_index_sequence<N>{});
+}
+// Constructs ALL objects in an array memory with the same arguments
+template<class T, len_t N, class... Args>
+__LL_NODISCARD__ constexpr T* make_constructed_new_mem(T* mem, const Args&... args) noexcept {
+	return __algorithm__::make_constructed_new_mem<T, Args...>(mem, args..., std::make_index_sequence<N>{});
+}
 
 #pragma region Comparators
 template<class _T, class _U, class _result_t, _result_t _NULL_RESULT_>
@@ -2098,36 +2125,36 @@ class DataManipulatorCluster : public _Manipulator {
 		#pragma region StaticFunction
 		template<class U = T, MoveExtraSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr void move(U* src, const len_t src_size, Array_t& dst) const noexcept {
-			this->move<U, MOVE>(src, dst.begin(), math::min<len_t>(src_size, dst.size()), FunctionManipulator());
+			this->move<U, MOVE>(src, dst.begin(), math::min<len_t>(src_size, dst.size()));
 		}
 		template<class U = T, MoveExtraSignature<U> MOVE = meta::common::simple_move<T, U>, len_t N>
 		constexpr void move(U* src, const len_t src_size, T(&dst)[N]) const noexcept {
-			this->move<U, MOVE>(src, dst, math::min<len_t>(src_size, N), FunctionManipulator());
+			this->move<U, MOVE>(src, dst, math::min<len_t>(src_size, N));
 		}
 		template<class U = T, MoveExtraSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr void move(meta::ArrayPair<U>& src, T* dst, const len_t dst_size) const noexcept {
-			this->move<U, MOVE>(src, dst.begin(), math::min<len_t>(src.size(), dst_size), FunctionManipulator());
+			this->move<U, MOVE>(src, dst.begin(), math::min<len_t>(src.size(), dst_size));
 		}
 		template<class U = T, MoveExtraSignature<U> MOVE = meta::common::simple_move<T, U>, len_t N>
 		constexpr void move(U(&src)[N], T* dst, const len_t dst_size) const noexcept {
-			this->move<U, MOVE>(src, dst, math::min<len_t>(N, dst_size), FunctionManipulator());
+			this->move<U, MOVE>(src, dst, math::min<len_t>(N, dst_size));
 		}
 
 		template<class U = T, MoveExtraSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr ll_bool_t move_s(U* src, const len_t src_size, Array_t& dst) const noexcept {
-			return this->move_s<U, MOVE>(src, dst.begin(), math::min<len_t>(src_size, dst.size()), FunctionManipulator());
+			return this->move_s<U, MOVE>(src, dst.begin(), math::min<len_t>(src_size, dst.size()));
 		}
 		template<class U = T, MoveExtraSignature<U> MOVE = meta::common::simple_move<T, U>, len_t N>
 		constexpr ll_bool_t move_s(U* src, const len_t src_size, T(&dst)[N]) const noexcept {
-			return this->move_s<U, MOVE>(src, dst, math::min<len_t>(src_size, N), FunctionManipulator());
+			return this->move_s<U, MOVE>(src, dst, math::min<len_t>(src_size, N));
 		}
 		template<class U = T, MoveExtraSignature<U> MOVE = meta::common::simple_move<T, U>>
 		constexpr ll_bool_t move_s(meta::ArrayPair<U>& src, T* dst, const len_t dst_size) const noexcept {
-			return this->move_s<U, MOVE>(src, dst.begin(), math::min<len_t>(src.size(), dst_size), FunctionManipulator());
+			return this->move_s<U, MOVE>(src, dst.begin(), math::min<len_t>(src.size(), dst_size));
 		}
 		template<class U = T, MoveExtraSignature<U> MOVE = meta::common::simple_move<T, U>, len_t N>
 		constexpr ll_bool_t move_s(U(&src)[N], T* dst, const len_t dst_size) const noexcept {
-			return this->move_s<U, MOVE>(src, dst, math::min<len_t>(N, dst_size), FunctionManipulator());
+			return this->move_s<U, MOVE>(src, dst, math::min<len_t>(N, dst_size));
 		}
 
 		#pragma endregion
@@ -2351,7 +2378,7 @@ class DataManipulatorCluster : public _Manipulator {
 				Manipulator::move(*prev, *next);
 
 			// Here we will use copy
-			this->fill<U, W, COPY>(begin, end, null, std::forward<FunctionManipulator>(man));
+			this->fill<U, W, COPY>(begin, end, null);
 		}
 
 		template<class U = T, class W = traits::cinput<U>, class FunctionManipulator = algorithm::ManipulatorDefault<T, U>>

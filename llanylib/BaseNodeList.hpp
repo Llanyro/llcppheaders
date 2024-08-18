@@ -33,10 +33,13 @@ template<class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE>
 class BaseNodeList : public meta::CountableL {
 	#pragma region Types
 	public:
+		// Class related
 		using _MyType		= BaseNodeList;
 		using ExtraClass	= Node_Type_Or_Functions;
-		using NodeType		= linked::Node<Node_Type_Or_Functions, IS_SPECIAL>;
 		using Countable		= meta::CountableL;
+
+		// Types
+		using NodeType		= linked::Node<ExtraClass, IS_SPECIAL>;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -49,7 +52,6 @@ class BaseNodeList : public meta::CountableL {
 
 	#pragma endregion
 	#pragma region Functions
-		#pragma region ClassFunctions
 		#pragma region Private
 	private:
 		constexpr void simpleClear() noexcept {
@@ -63,7 +65,7 @@ class BaseNodeList : public meta::CountableL {
 		constexpr BaseNodeList() noexcept : BaseNodeList(LL_NULLPTR, LL_NULLPTR) {}
 		constexpr BaseNodeList(NodeType* root, NodeType* root_end) noexcept
 			: Countable(), begin(root), end(root_end) {}
-		constexpr ~Countable() noexcept {}
+		constexpr ~BaseNodeList() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
@@ -248,7 +250,6 @@ class BaseNodeList : public meta::CountableL {
 
 		#pragma endregion
 
-		#pragma endregion
 	#pragma endregion
 };
 

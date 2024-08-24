@@ -65,27 +65,74 @@ namespace llcpp { enum class OSEnum { Windows, Posix, Unix, Other }; } // namesp
 
 // Defines for logging
 
-#if !defined(__debug_error_nullptr_str)
-	#define __debug_error_nullptr_str(ptr, str) IGNORE()
-#endif
+#pragma region Error
 
+// Nullptr
 #if !defined(__debug_error_nullptr)
-	#define __debug_error_nullptr(ptr) IGNORE()
+	#define __debug_error_nullptr(var) IGNORE()
 #endif
 
+#if !defined(__debug_error_nullptr_str)
+	#define __debug_error_nullptr_str(var, var_str) IGNORE()
+#endif
+
+#if !defined(__debug_error_not_nullptr)
+	#define __debug_error_not_nullptr(var) IGNORE()
+#endif
+
+#if !defined(__debug_error_not_nullptr_str)
+	#define __debug_error_not_nullptr_str(var, var_str) IGNORE()
+#endif
+
+// Ranges
 #if !defined(__debug_error_out_of_range)
-	#define __debug_error_out_of_range(position, max_length) IGNORE()
+	#define __debug_error_out_of_range(var, len) IGNORE()
 #endif
 
+#if !defined(__debug_error_out_of_range_str)
+	#define __debug_error_out_of_range_str(var, var_str, len) IGNORE()
+#endif
 
+// Other
+#if !defined(__debug_error_zero_value_str)
+	#define __debug_error_zero_value_str(var_str) IGNORE()
+#endif
+
+#pragma endregion
+#pragma region Warning
+
+// Nullptr
+#if !defined(__debug_warning_nullptr)
+	#define __debug_warning_nullptr(var) IGNORE()
+#endif
 
 #if !defined(__debug_warning_nullptr_str)
-	#define __debug_warning_nullptr_str(ptr, str) IGNORE()
+	#define __debug_warning_nullptr_str(var, var_str) IGNORE()
 #endif
 
-#if !defined(__debug_warning_no_nullptr_str)
-	#define __debug_warning_no_nullptr_str(ptr, str) IGNORE()
+#if !defined(__debug_warning_not_nullptr)
+	#define __debug_warning_not_nullptr(var) IGNORE()
 #endif
+
+#if !defined(__debug_warning_not_nullptr_str)
+	#define __debug_warning_not_nullptr_str(var, var_str) IGNORE()
+#endif
+
+// Ranges
+#if !defined(__debug_warning_out_of_range)
+	#define __debug_warning_out_of_range(var, len) IGNORE()
+#endif
+
+#if !defined(__debug_warning_out_of_range_str)
+	#define __debug_warning_out_of_range_str(var, var_str, len) IGNORE()
+#endif
+
+// Other
+#if !defined(__debug_warning_zero_value_str)
+	#define __debug_warning_zero_value_str(var_str) IGNORE()
+#endif
+
+#pragma endregion
 
 
 #endif // LLANYLIB_DEFINITIONS_HPP_

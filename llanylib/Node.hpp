@@ -102,7 +102,7 @@ class BaseNode {
 	#pragma endregion
 };
 
-template<class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE>
+template<class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL>
 class BaseNodeList;
 
 #define HAS_NODECHECKER_STR "'NodeFunctions::nodeChecker() const noexcept' or 'NodeFunctions::nodeChecker() noexcept' is required!"
@@ -243,7 +243,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region Insert
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr void insert_impl(NodeType* node) noexcept {
 			node->set(this->get());
 			this->set(node);
@@ -265,7 +265,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region Extract
-	private:
+	protected:
 		// @param[in] node Node that point to this node, this nodes does not has acces to that node
 		__LL_NODISCARD__ constexpr void extract_impl(NodeType* node) noexcept {
 			node->set(this->get());
@@ -290,7 +290,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region Remove
-	private:
+	protected:
 		// @param[in] node Node that point to this node, this nodes does not has acces to that node
 		__LL_NODISCARD__ constexpr void remove_impl(NodeType* node) noexcept {
 			this->extract_impl(node);
@@ -315,7 +315,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region FindPrev
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr NodePack findprev_impl(const NodeType* end) noexcept {
 			static_assert(HAS_NODECHECKER || HAS_NODECHECKER_CONST, HAS_NODECHECKER_STR);
 
@@ -371,7 +371,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region Find
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr NodeType* find_impl(const NodeType* end) noexcept {
 			return this->findprev_impl(end).second;
 		}
@@ -405,7 +405,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region Contains
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr ll_bool_t contains_impl(const NodeType* end) noexcept {
 			return static_cast<ll_bool_t>(this->find_impl(end));
 		}
@@ -439,7 +439,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region All
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr ll_bool_t all_impl(const NodeType* end) noexcept {
 			static_assert(HAS_NODECHECKER || HAS_NODECHECKER_CONST, HAS_NODECHECKER_STR);
 
@@ -487,7 +487,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region Any
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr ll_bool_t any_impl(const NodeType* end) noexcept {
 			return this->contains_impl(end);
 		}
@@ -521,7 +521,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region None
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr ll_bool_t none_impl(const NodeType* end) noexcept {
 			return !this->contains_impl(end);
 		}
@@ -555,7 +555,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region GetLastAndMiddle
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr NodePack getLastAndMiddle_impl(const NodeType* end) noexcept {
 			NodeType* slow = this;
 			NodeType* fast = this;
@@ -607,7 +607,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region GetMiddle
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr NodeType* getMiddle_impl(const NodeType* end) noexcept {
 			return this->getLastAndMiddle_impl(end).first;
 		}
@@ -641,7 +641,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region GetPrevMiddle
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr NodePack getPrevMiddle_impl(const NodeType* end) noexcept {
 			NodeType* slow = this;
 			NodeType* fast = this;
@@ -695,7 +695,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region GetLast
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr NodeType* getLast_impl(const NodeType* end) noexcept {
 			NodeType* result = this;
 			for (NodeType* tmp = LL_NULLPTR; (tmp = result->get()) != end; result = tmp);
@@ -733,7 +733,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region Distance
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr len_t distance_impl(const NodeType* end) const noexcept {
 			len_t distance{};
 			for (const NodeType* begin = this; begin != end; begin = begin->get(), ++distance);
@@ -755,7 +755,7 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 
 		#pragma endregion
 		#pragma region MergeSort
-	private:
+	protected:
 		// Finds middle node of list and splits the list
 		__LL_NODISCARD__ static constexpr NodeType* split_list(NodeType* begin) noexcept {
 			NodePack nodes = begin->getPrevMiddle(LL_NULLPTR);

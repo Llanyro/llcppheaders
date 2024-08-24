@@ -30,14 +30,16 @@ namespace llcpp {
 class Boolean {
 	#pragma region Types
 	public:
+		// Class related
+		using _MyType = Boolean;
+
+		// Types and enums
 		enum class enum_bool : ui8 {
 			FALSE = false,
 			TRUE = true,
 			UNKNOWN,
 			INVALID
 		};
-
-		using _MyType		= Boolean;
 
 	#pragma endregion
 	#pragma region Attributes

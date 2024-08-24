@@ -126,14 +126,14 @@ class BasicContainer {
 
 		__LL_NODISCARD__ constexpr T& operator[](const len_t position) noexcept {
 #if defined(_DEBUG)
-			if (this->inRange(position)) __debug_error_out_of_range(position, this->length());
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
 #endif // _DEBUG
 
 			return this->data[position];
 		}
 		__LL_NODISCARD__ constexpr const T& operator[](const len_t position) const noexcept {
 #if defined(_DEBUG)
-			if (this->inRange(position)) __debug_error_out_of_range(position, this->length());
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
 #endif // _DEBUG
 
 			return this->data[position];

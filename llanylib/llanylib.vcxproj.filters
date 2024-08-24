@@ -207,5 +207,8 @@
     <ClInclude Include="types_base.hpp">
       <Filter>Source Files\types</Filter>
     </ClInclude>
+    <ClInclude Include="SimplestContainer.hpp">
+      <Filter>Source Files\types</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

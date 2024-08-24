@@ -28,7 +28,6 @@ namespace llcpp {
 namespace meta {
 namespace linked {
 
-
 template<class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE>
 class BaseNodeList : public meta::CountableL {
 	#pragma region Types
@@ -64,7 +63,7 @@ class BaseNodeList : public meta::CountableL {
 	public:
 		constexpr BaseNodeList() noexcept : BaseNodeList(LL_NULLPTR, LL_NULLPTR) {}
 		constexpr BaseNodeList(NodeType* root, NodeType* root_end) noexcept
-			: Countable(), begin(root), end(root_end) {}
+			: Countable(), root(root), root_end(root_end) {}
 		constexpr ~BaseNodeList() noexcept {}
 
 		#pragma endregion
@@ -87,8 +86,8 @@ class BaseNodeList : public meta::CountableL {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const BaseNodeList*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator BaseNodeList*() noexcept = delete;
+		__LL_NODISCARD__ constexpr operator const BaseNodeList*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator BaseNodeList*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -100,12 +99,12 @@ class BaseNodeList : public meta::CountableL {
 
 		#pragma endregion
 		#pragma region GetNode
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr NodeType* getNode_impl(const len_t position) noexcept {
-			return this->root->get(position)
+			return this->root->get(position);
 		}
 		__LL_NODISCARD__ constexpr const NodeType* getNode_impl(const len_t position) const noexcept {
-			return this->root->get(position)
+			return this->root->get(position);
 		}
 
 	public:
@@ -114,14 +113,14 @@ class BaseNodeList : public meta::CountableL {
 			if (!this->isValidPosition(position)) __debug_error_out_of_range(node, this->lenght());
 #endif // _DEBUG
 
-			return this->getNode_impl(position)
+			return this->getNode_impl(position);
 		}
 		__LL_NODISCARD__ constexpr const NodeType* getNode(const len_t position) const noexcept {
 #if defined(_DEBUG)
 			if (!this->isValidPosition(position)) __debug_error_out_of_range(node, this->lenght());
 #endif // _DEBUG
 
-			return this->getNode_impl(position)
+			return this->getNode_impl(position);
 		}
 		__LL_NODISCARD__ constexpr NodeType* getNode_s(const len_t position) noexcept {
 			return this->isValidPosition(position) ? this->getNode_impl(position) : LL_NULLPTR;
@@ -132,7 +131,7 @@ class BaseNodeList : public meta::CountableL {
 
 		#pragma endregion
 		#pragma region PushBack
-	private:
+	protected:
 		// Adds a node to the end of the list
 		constexpr void push_back_impl(NodeType* node) noexcept {
 			if (Countable::empty()) this->root = node;
@@ -159,7 +158,7 @@ class BaseNodeList : public meta::CountableL {
 
 		#pragma endregion
 		#pragma region PushFront
-	private:
+	protected:
 		// Adds a node to the beginning of the list
 		constexpr void push_front_impl(NodeType* node) noexcept {
 			this->root = node;
@@ -187,7 +186,7 @@ class BaseNodeList : public meta::CountableL {
 
 		#pragma endregion
 		#pragma region Extract
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr NodeType* extract_impl(const len_t position) noexcept {
 			NodeType* extracted = LL_NULLPTR;
 			// If is thee first node, we have different things to do
@@ -221,15 +220,15 @@ class BaseNodeList : public meta::CountableL {
 			if (!this->isValidPosition(position)) __debug_error_out_of_range(node, this->lenght());
 #endif // _DEBUG
 
-			return this->extract_impl(node);
+			return this->extract_impl(position);
 		}
-		constexpr NodeType* extract(const len_t position) noexcept {
+		constexpr NodeType* extract_s(const len_t position) noexcept {
 			return this->isValidPosition(position) ? this->extract_impl(position) : LL_NULLPTR;
 		}
 
 		#pragma endregion
 		#pragma region Remove
-	private:
+	protected:
 		__LL_NODISCARD__ constexpr void remove_impl(const len_t position) noexcept {
 			this->extract_impl(position)->die();
 		}
@@ -240,9 +239,9 @@ class BaseNodeList : public meta::CountableL {
 			if (!this->isValidPosition(position)) __debug_error_out_of_range(node, this->lenght());
 #endif // _DEBUG
 
-			return this->remove_impl(node);
+			return this->remove_impl(position);
 		}
-		constexpr NodeType* remove(const len_t position) noexcept {
+		constexpr NodeType* remove_s(const len_t position) noexcept {
 			return this->isValidPosition(position) ? this->remove_impl(position) : LL_NULLPTR;
 		}
 

@@ -61,6 +61,7 @@
     <ClInclude Include="Printable.hpp" />
     <ClInclude Include="Random.hpp" />
     <ClInclude Include="reflection.hpp" />
+    <ClInclude Include="SimplestContainer.hpp" />
     <ClInclude Include="Singleton.hpp" />
     <ClInclude Include="mem.hpp" />
     <ClInclude Include="StandardHash.hpp" />

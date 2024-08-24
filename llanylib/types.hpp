@@ -22,6 +22,22 @@
 #define LLANYLIB_TYPES_MINOR_ 0
 
 #include "Boolean.hpp"
+#include "SimplestContainer.hpp"
+
+// Simplified Signed
+using i128 = llcpp::simplest_container<i64>;
+using i256 = llcpp::simplest_container<i128>;
+
+// Simplified Unsigned
+using ui128 = llcpp::simplest_container<ui64>;
+using ui256 = llcpp::simplest_container<ui128>;
+
+// BytesTypes
+using size_bytes128_t = ui128;
+using size_bytes256_t = ui256;
+
+using b128 = size_bytes128_t;
+using b256 = size_bytes256_t;
 
 namespace llcpp {
 

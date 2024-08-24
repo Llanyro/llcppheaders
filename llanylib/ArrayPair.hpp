@@ -35,6 +35,7 @@ class ArrayPair {
 	public:
 		// Class related
 		using _MyType	= ArrayPair;
+		using Array		= Array<_T>;
 
 		// Types
 		using T			= _T;
@@ -87,10 +88,10 @@ class ArrayPair {
 			return *this;
 		}
 
-		constexpr ArrayPair(const Array<T>& other) noexcept;
-		constexpr ArrayPair& operator=(const Array<T>& other) noexcept;
-		constexpr ArrayPair(Array<T>&& other) noexcept;
-		constexpr ArrayPair& operator=(Array<T>&& other) noexcept;
+		constexpr ArrayPair(const Array& other) noexcept;
+		constexpr ArrayPair& operator=(const Array& other) noexcept;
+		constexpr ArrayPair(Array&& other) noexcept;
+		constexpr ArrayPair& operator=(Array&& other) noexcept;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
@@ -102,28 +103,82 @@ class ArrayPair {
 		#pragma region ClassFunctions
 		#pragma region Getters
 	public:
-		__LL_NODISCARD__ constexpr const T* get(const len_t pos) const noexcept {
-			return this->mem + pos;
+		__LL_NODISCARD__ constexpr const T* get(const len_t position) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return this->mem + position;
+		}
+		__LL_NODISCARD__ constexpr const T* get_s(const len_t position) const noexcept {
+			return this->inRange(position) ? this->mem + position : LL_NULLPTR;
 		}
 		__LL_NODISCARD__ constexpr ArrayPair get(const len_t first, const len_t last) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
+
 			return ArrayPair(this->get(first), this->get(last));
 		}
-		__LL_NODISCARD__ constexpr const T* rget(const len_t pos) const noexcept {
-			return this->mem_end - pos;
+		__LL_NODISCARD__ constexpr ArrayPair get_s(const len_t first, const len_t last) const noexcept {
+			return (this->inRange(first) && this->inRange(last))
+				? ArrayPair(this->get(first), this->get(last))
+				: ArrayPair(LL_NULLPTR, LL_NULLPTR);
+		}
+		__LL_NODISCARD__ constexpr const T* rget(const len_t position) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return this->mem_end - position;
+		}
+		__LL_NODISCARD__ constexpr const T* rget_s(const len_t position) const noexcept {
+			return this->inRange(position) ? this->mem_end - position : LL_NULLPTR;
 		}
 		__LL_NODISCARD__ constexpr ArrayPair rget(const len_t first, const len_t last) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
+
 			return ArrayPair(this->rget(first), this->rget(last));
 		}
+		__LL_NODISCARD__ constexpr ArrayPair rget_s(const len_t first, const len_t last) const noexcept {
+			return (this->inRange(first) && this->inRange(last))
+				? ArrayPair(this->rget(first), this->rget(last))
+				: ArrayPair(LL_NULLPTR, LL_NULLPTR);
+		}
 		__LL_NODISCARD__ constexpr ArrayPair substr(const len_t first, const len_t last) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
+
 			return this->get(first, last);
 		}
-		__LL_NODISCARD__ constexpr const T& operator[](const len_t pos) const noexcept {
-			return *this->get(pos);
+		__LL_NODISCARD__ constexpr ArrayPair substr_s(const len_t first, const len_t last) const noexcept {
+			return this->get_s(first, last);
 		}
-		__LL_NODISCARD__ constexpr const T& operator^(const len_t pos) const noexcept {
-			return *this->rget(pos);
+
+		// No-secure function
+		__LL_NODISCARD__ constexpr const T& operator[](const len_t position) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return *this->get(position);
+		}
+		// Non-standard operator
+		__LL_NODISCARD__ constexpr const T& operator^(const len_t position) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return *this->rget(position);
 		}
 #if defined(LL_REAL_CXX23)
+		// No-secure function
 		__LL_NODISCARD__ constexpr ArrayPair operator[](const len_t first, const len_t last) const noexcept {
 			return this->substr(first, last);
 		}
@@ -138,6 +193,12 @@ class ArrayPair {
 		}
 		__LL_NODISCARD__ constexpr len_t size() const noexcept { return this->lenght(); }
 		__LL_NODISCARD__ constexpr len_t count() const noexcept { return this->lenght(); }
+		__LL_NODISCARD__ constexpr ll_bool_t inRange(const len_t position) const noexcept {
+			return position < this->lenght();
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t isValidPosition(const len_t position) const noexcept {
+			return this->inRange(position);
+		}
 
 		#pragma endregion
 		#pragma region std
@@ -159,7 +220,7 @@ class ArrayPair {
 		#pragma region Other
 	public:
 		__LL_NODISCARD__ constexpr ll_bool_t isValid() const noexcept {
-			return !this->empty() && (this->begin() < this->end());
+			return (this->begin() < this->end()) && !this->empty();
 		}
 		constexpr void clear() noexcept { this->simpleClear(); }
 
@@ -176,6 +237,7 @@ class Array {
 	public:
 		// Class related
 		using _MyType	= Array;
+		using ArrayPair = meta::ArrayPair<_T>;
 
 		// Types
 		using T			= _T;
@@ -230,68 +292,178 @@ class Array {
 	public:
 		__LL_NODISCARD__ constexpr operator const Array* () const noexcept { return this; }
 		__LL_NODISCARD__ constexpr operator Array* () noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator ArrayPair<T>() const noexcept {
-			return ArrayPair<T>(*this);
+		__LL_NODISCARD__ constexpr operator ArrayPair() const noexcept {
+			return ArrayPair(*this);
 		}
-		__LL_NODISCARD__ constexpr ArrayPair<T> operator()() const noexcept {
-			return ArrayPair<T>(*this);
+		__LL_NODISCARD__ constexpr ArrayPair operator()() const noexcept {
+			return this->operator ArrayPair();
+		}
+		__LL_NODISCARD__ constexpr ArrayPair to_ArrayPair() const noexcept {
+			return this->operator ArrayPair();
 		}
 
 		#pragma endregion
 		#pragma region ClassFunctions
 		#pragma region Getters
 	public:
-		__LL_NODISCARD__ constexpr T* get(const len_t pos) noexcept {
-			return this->mem + pos;
+		__LL_NODISCARD__ constexpr T* get(const len_t position) noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return this->mem + position;
 		}
-		__LL_NODISCARD__ constexpr const T* get(const len_t pos) const noexcept {
-			return this->mem + pos;
+		__LL_NODISCARD__ constexpr const T* get(const len_t position) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return this->mem + position;
+		}
+		__LL_NODISCARD__ constexpr T* get_s(const len_t position) noexcept {
+			return this->inRange(position) ? this->mem + position : LL_NULLPTR;
+		}
+		__LL_NODISCARD__ constexpr const T* get_s(const len_t position) const noexcept {
+			return this->inRange(position) ? this->mem + position : LL_NULLPTR;
 		}
 		__LL_NODISCARD__ constexpr Array get(const len_t first, const len_t last) noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
+
 			return Array(this->get(first), this->get(last));
 		}
-		__LL_NODISCARD__ constexpr ArrayPair<T> get(const len_t first, const len_t last) const noexcept {
-			return ArrayPair<T>(this->get(first), this->get(last));
-		}
+		__LL_NODISCARD__ constexpr ArrayPair get(const len_t first, const len_t last) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
 
-		__LL_NODISCARD__ constexpr T* rget(const len_t pos) noexcept {
-			return this->mem_end - pos;
+			return ArrayPair(this->get(first), this->get(last));
 		}
-		__LL_NODISCARD__ constexpr const T* rget(const len_t pos) const noexcept {
-			return this->mem_end - pos;
+		__LL_NODISCARD__ constexpr Array get_s(const len_t first, const len_t last) noexcept {
+			return (this->inRange(first) && this->inRange(last))
+				? Array(this->get(first), this->get(last))
+				: Array(LL_NULLPTR, LL_NULLPTR);
+		}
+		__LL_NODISCARD__ constexpr ArrayPair get_s(const len_t first, const len_t last) const noexcept {
+			return (this->inRange(first) && this->inRange(last))
+				? ArrayPair(this->get(first), this->get(last))
+				: ArrayPair(LL_NULLPTR, LL_NULLPTR);
+		}
+		__LL_NODISCARD__ constexpr T* rget(const len_t position) noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return this->mem_end - position;
+		}
+		__LL_NODISCARD__ constexpr const T* rget(const len_t position) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return this->mem_end - position;
+		}
+		__LL_NODISCARD__ constexpr T* rget_s(const len_t position) noexcept {
+			return this->inRange(position) ? this->mem_end - position : LL_NULLPTR;
+		}
+		__LL_NODISCARD__ constexpr const T* rget_s(const len_t position) const noexcept {
+			return this->inRange(position) ? this->mem_end - position : LL_NULLPTR;
 		}
 		__LL_NODISCARD__ constexpr Array rget(const len_t first, const len_t last) noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
+
 			return Array(this->rget(first), this->rget(last));
 		}
-		__LL_NODISCARD__ constexpr ArrayPair<T> rget(const len_t first, const len_t last) const noexcept {
-			return ArrayPair<T>(this->rget(first), this->rget(last));
-		}
+		__LL_NODISCARD__ constexpr ArrayPair rget(const len_t first, const len_t last) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
 
+			return ArrayPair(this->rget(first), this->rget(last));
+		}
+		__LL_NODISCARD__ constexpr Array rget_s(const len_t first, const len_t last) noexcept {
+			return (this->inRange(first) && this->inRange(last))
+				? Array(this->rget(first), this->rget(last))
+				: Array(LL_NULLPTR, LL_NULLPTR);
+		}
+		__LL_NODISCARD__ constexpr ArrayPair rget_s(const len_t first, const len_t last) const noexcept {
+			return (this->inRange(first) && this->inRange(last))
+				? ArrayPair(this->rget(first), this->rget(last))
+				: ArrayPair(LL_NULLPTR, LL_NULLPTR);
+		}
 		__LL_NODISCARD__ constexpr Array substr(const len_t first, const len_t last) noexcept {
-			return this->get(first, last);
-		}
-		__LL_NODISCARD__ constexpr ArrayPair<T> substr(const len_t first, const len_t last) const noexcept {
-			return this->get(first, last);
-		}
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
 
-		__LL_NODISCARD__ constexpr T& operator[](const len_t pos) noexcept {
-			return *this->get(pos);
+			return this->get(first, last);
 		}
-		__LL_NODISCARD__ constexpr const T& operator[](const len_t pos) const noexcept {
-			return *this->get(pos);
+		__LL_NODISCARD__ constexpr ArrayPair substr(const len_t first, const len_t last) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
+
+			return this->get(first, last);
 		}
-		__LL_NODISCARD__ constexpr T& operator^(const len_t pos) noexcept {
-			return *this->rget(pos);
+		__LL_NODISCARD__ constexpr Array substr_s(const len_t first, const len_t last) noexcept {
+			return this->get_s(first, last);
 		}
-		__LL_NODISCARD__ constexpr const T& operator^(const len_t pos) const noexcept {
-			return *this->rget(pos);
+		__LL_NODISCARD__ constexpr ArrayPair substr_s(const len_t first, const len_t last) const noexcept {
+			return this->get_s(first, last);
+		}
+		__LL_NODISCARD__ constexpr T& operator[](const len_t position) noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return *this->get(position);
+		}
+		__LL_NODISCARD__ constexpr const T& operator[](const len_t position) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return *this->get(position);
+		}
+		__LL_NODISCARD__ constexpr T& operator^(const len_t position) noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return *this->rget(position);
+		}
+		__LL_NODISCARD__ constexpr const T& operator^(const len_t position) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(position)) __debug_error_out_of_range(position, this->length());
+#endif // _DEBUG
+
+			return *this->rget(position);
 		}
 
 #if defined(LL_REAL_CXX23)
 		__LL_NODISCARD__ constexpr Array operator[](const len_t first, const len_t last) noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
+
 			return this->substr(first, last);
 		}
 		__LL_NODISCARD__ constexpr ArrayPair operator[](const len_t first, const len_t last) const noexcept {
+#if defined(_DEBUG)
+			if (!this->inRange(first)) __debug_error_out_of_range_str(first, "first", this->length());
+			if (!this->inRange(last)) __debug_error_out_of_range_str(last, "last", this->length());
+#endif // _DEBUG
+
 			return this->substr(first, last);
 		}
 
@@ -305,6 +477,12 @@ class Array {
 		}
 		__LL_NODISCARD__ constexpr len_t size() const noexcept { return this->lenght(); }
 		__LL_NODISCARD__ constexpr len_t count() const noexcept { return this->lenght(); }
+		__LL_NODISCARD__ constexpr ll_bool_t inRange(const len_t position) const noexcept {
+			return position < this->lenght();
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t isValidPosition(const len_t position) const noexcept {
+			return this->inRange(position);
+		}
 
 		#pragma endregion
 		#pragma region std
@@ -349,25 +527,27 @@ class Array {
 			this->mem_end = LL_NULLPTR;
 		}
 		#pragma endregion
+
 		#pragma endregion
+
 	#pragma endregion
 };
 
 #pragma region Array_ArrayPair_Compatibility
 template<class T>
-__LL_INLINE__ constexpr ArrayPair<T>::ArrayPair(const Array<T>& other) noexcept
+__LL_INLINE__ constexpr ArrayPair<T>::ArrayPair(const Array& other) noexcept
 	: mem(other.begin()), mem_end(other.end()) {}
 template<class T>
-__LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(const Array<T>& other) noexcept {
+__LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(const Array& other) noexcept {
 	this->mem = other.mem;
 	this->mem_end = other.mem_end;
 	return *this;
 }
 template<class T>
-__LL_INLINE__ constexpr ArrayPair<T>::ArrayPair(Array<T>&& other) noexcept
+__LL_INLINE__ constexpr ArrayPair<T>::ArrayPair(Array&& other) noexcept
 	: mem(other.begin()), mem_end(other.end()) {}
 template<class T>
-__LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(Array<T>&& other) noexcept {
+__LL_INLINE__ constexpr ArrayPair<T>& ArrayPair<T>::operator=(Array&& other) noexcept {
 	this->mem = other.mem;
 	this->mem_end = other.mem_end;
 	other.simpleClear();

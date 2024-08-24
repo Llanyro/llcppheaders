@@ -162,12 +162,6 @@ class directory_entry;
 
 namespace llcpp {
 
-template<class T>
-struct ByteExtender {
-	T l;
-	T h;
-};
-
 struct EmptyStruct {};
 class Emptyclass {};
 
@@ -208,20 +202,5 @@ using wStrTypeid	= Typeid<ll_wchar_t, hash::Hash64>;
 } // namespace meta
 
 } // namespace llcpp
-
-// Simplified Signed
-using i128 = llcpp::ByteExtender<i64>;
-using i256 = llcpp::ByteExtender<i128>;
-
-// Simplified Unsigned
-using ui128 = llcpp::ByteExtender<ui64>;
-using ui256 = llcpp::ByteExtender<ui128>;
-
-// BytesTypes
-using size_bytes128_t = ui128;
-using size_bytes256_t = ui256;
-
-using b128 = size_bytes128_t;
-using b256 = size_bytes256_t;
 
 #endif // LLANYLIB_TYPESBASE_HPP_

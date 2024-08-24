@@ -87,7 +87,7 @@ class Countable {
 			return *this;
 		}
 		constexpr Countable(T&& counter) noexcept : counter(std::forward<T&&>(counter)) {}
-		constexpr Countable& operator=(Countable&& other) noexcept {
+		constexpr Countable& operator=(T&& counter) noexcept {
 			this->counter = std::forward<T&&>(counter);
 			return *this;
 		}

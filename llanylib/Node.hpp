@@ -138,11 +138,15 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 	#pragma endregion
 	#pragma region Expresions
 	public:
-		static constexpr ll_bool_t HAS_NODECHECKER = traits::common::has_nodeChecker_function_v<NodeFunctions, NodeCheckerSignature>;
-		static constexpr ll_bool_t HAS_NODECHECKER_CONST = traits::common::has_nodeChecker_function_v<NodeFunctions, NodeCheckerConstSignature>;
+		static constexpr ll_bool_t HAS_NODECHECKER
+			= traits::common::has_nodeChecker_function_v<NodeFunctions, NodeCheckerSignature>;
+		static constexpr ll_bool_t HAS_NODECHECKER_CONST
+			= traits::common::has_nodeChecker_function_v<NodeFunctions, NodeCheckerConstSignature>;
 
-		static constexpr ll_bool_t HAS_NODECOMPARE = traits::common::has_compareNode_function_v<NodeFunctions, NodeCompareSignature>;
-		static constexpr ll_bool_t HAS_NODECOMPARE_CONST = traits::common::has_compareNode_function_v<NodeFunctions, NodeCompareConstSignature>;
+		static constexpr ll_bool_t HAS_NODECOMPARE
+			= traits::common::has_compareNode_function_v<NodeFunctions, NodeCompareSignature>;
+		static constexpr ll_bool_t HAS_NODECOMPARE_CONST
+			= traits::common::has_compareNode_function_v<NodeFunctions, NodeCompareConstSignature>;
 
 	#pragma endregion
 	#pragma region Assersts

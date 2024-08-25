@@ -88,48 +88,48 @@ class Hash32 {
 		#pragma region CombineAndHash
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash32 simpleCombine_l(const ui32 value, const ui8 shift) const noexcept {
-			return hash::combine::simpleCombine<ui32, IS_REVERSE>(this->value, value, shift);
+			return hash::algorithm::simpleCombine<ui32, IS_REVERSE>(this->value, value, shift);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash32 simpleCombine_r(const ui32 value, const ui8 shift) const noexcept {
-			return hash::combine::simpleCombine<ui32, IS_REVERSE>(value, this->value, shift);
+			return hash::algorithm::simpleCombine<ui32, IS_REVERSE>(value, this->value, shift);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash32 simpleCombine_l_noshift(const ui32 value) const noexcept {
-			return hash::combine::simple32Combine_noshift<IS_REVERSE>(this->value, value);
+			return hash::algorithm::simple32Combine_noshift<IS_REVERSE>(this->value, value);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash32 simpleCombine_r_noshift(const ui32 value) const noexcept {
-			return hash::combine::simple32Combine_noshift<IS_REVERSE>(value, this->value);
+			return hash::algorithm::simple32Combine_noshift<IS_REVERSE>(value, this->value);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash32 simpleCombine_l(const ui8 shift) const noexcept {
-			return hash::combine::simple32Combine_l<IS_REVERSE>(this->value, shift);
+			return hash::algorithm::simple32Combine_l<IS_REVERSE>(this->value, shift);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash32 simpleCombine_r(const ui8 shift) const noexcept {
-			return hash::combine::simple32Combine_r<IS_REVERSE>(this->value, shift);
+			return hash::algorithm::simple32Combine_r<IS_REVERSE>(this->value, shift);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash32 simpleCombine_l() const noexcept {
-			return hash::combine::simple32Combine_l<IS_REVERSE>(this->value);
+			return hash::algorithm::simple32Combine_l<IS_REVERSE>(this->value);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash32 simpleCombine_r() const noexcept {
-			return hash::combine::simple32Combine_r<IS_REVERSE>(this->value);
+			return hash::algorithm::simple32Combine_r<IS_REVERSE>(this->value);
 		}
 
 		__LL_NODISCARD__ constexpr hash::Hash32 mur_l(const ui32 value) const noexcept {
-			return hash::combine::murmur32Combine(this->value, value);
+			return hash::algorithm::murmur32Combine(this->value, value);
 		}
 		__LL_NODISCARD__ constexpr hash::Hash32 mur_r(const ui32 value) const noexcept {
-			return hash::combine::murmur32Combine(value, this->value);
+			return hash::algorithm::murmur32Combine(value, this->value);
 		}
 		__LL_NODISCARD__ constexpr hash::Hash32 mur_l() const noexcept {
-			return hash::combine::murmur32Combine_l(this->value);
+			return hash::algorithm::murmur32Combine_l(this->value);
 		}
 		__LL_NODISCARD__ constexpr hash::Hash32 mur_r() const noexcept {
-			return hash::combine::murmur32Combine_r(this->value);
+			return hash::algorithm::murmur32Combine_r(this->value);
 		}
 
 		#pragma endregion
@@ -198,48 +198,48 @@ class Hash64 {
 		#pragma region CombineAndHash
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_l(const ui64 value, const ui8 shift) const noexcept {
-			return hash::combine::simpleCombine<ui64, IS_REVERSE>(this->value, value, shift);
+			return hash::algorithm::simpleCombine<ui64, IS_REVERSE>(this->value, value, shift);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_r(const ui64 value, const ui8 shift) const noexcept {
-			return hash::combine::simpleCombine<ui64, IS_REVERSE>(value, this->value, shift);
+			return hash::algorithm::simpleCombine<ui64, IS_REVERSE>(value, this->value, shift);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_l_noshift(const ui64 value) const noexcept {
-			return hash::combine::simple64Combine_noshift<IS_REVERSE>(this->value, value);
+			return hash::algorithm::simple64Combine_noshift<IS_REVERSE>(this->value, value);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_r_noshift(const ui64 value) const noexcept {
-			return hash::combine::simple64Combine_noshift<IS_REVERSE>(value, this->value);
+			return hash::algorithm::simple64Combine_noshift<IS_REVERSE>(value, this->value);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_l(const ui8 shift) const noexcept {
-			return hash::combine::simple64Combine_l<IS_REVERSE>(this->value, shift);
+			return hash::algorithm::simple64Combine_l<IS_REVERSE>(this->value, shift);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_r(const ui8 shift) const noexcept {
-			return hash::combine::simple64Combine_r<IS_REVERSE>(this->value, shift);
+			return hash::algorithm::simple64Combine_r<IS_REVERSE>(this->value, shift);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_l() const noexcept {
-			return hash::combine::simple64Combine_l<IS_REVERSE>(this->value);
+			return hash::algorithm::simple64Combine_l<IS_REVERSE>(this->value);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_r() const noexcept {
-			return hash::combine::simple64Combine_r<IS_REVERSE>(this->value);
+			return hash::algorithm::simple64Combine_r<IS_REVERSE>(this->value);
 		}
 
 		__LL_NODISCARD__ constexpr hash::Hash64 mur_l(const ui64 value) const noexcept {
-			return hash::combine::murmur64Combine(this->value, value);
+			return hash::algorithm::murmur64Combine(this->value, value);
 		}
 		__LL_NODISCARD__ constexpr hash::Hash64 mur_r(const ui64 value) const noexcept {
-			return hash::combine::murmur64Combine(value, this->value);
+			return hash::algorithm::murmur64Combine(value, this->value);
 		}
 		__LL_NODISCARD__ constexpr hash::Hash64 mur_l() const noexcept {
-			return hash::combine::murmur64Combine_l(this->value);
+			return hash::algorithm::murmur64Combine_l(this->value);
 		}
 		__LL_NODISCARD__ constexpr hash::Hash64 mur_r() const noexcept {
-			return hash::combine::murmur64Combine_r(this->value);
+			return hash::algorithm::murmur64Combine_r(this->value);
 		}
 
 		#pragma endregion
@@ -331,29 +331,29 @@ class Hash128 {
 		#pragma region CombineAndHash
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_l(const ui8 shift) const noexcept {
-			return hash::combine::simpleCombine<ui64, IS_REVERSE>(this->low, this->high, shift);
+			return hash::algorithm::simpleCombine<ui64, IS_REVERSE>(this->low, this->high, shift);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_r(const ui8 shift) const noexcept {
-			return hash::combine::simpleCombine<ui64, IS_REVERSE>(this->high, this->low, shift);
+			return hash::algorithm::simpleCombine<ui64, IS_REVERSE>(this->high, this->low, shift);
 		}
 
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_l() const noexcept {
-			return hash::combine::simple64Combine_noshift<IS_REVERSE>(this->low, this->high);
+			return hash::algorithm::simple64Combine_noshift<IS_REVERSE>(this->low, this->high);
 		}
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash64 simpleCombine_r() const noexcept {
-			return hash::combine::simple64Combine_noshift<IS_REVERSE>(this->high, this->low);
+			return hash::algorithm::simple64Combine_noshift<IS_REVERSE>(this->high, this->low);
 		}
 
 		// Low left, high right
 		__LL_NODISCARD__ constexpr hash::Hash64 mur_l() const noexcept {
-			return hash::combine::murmur64Combine(this->low, this->high);
+			return hash::algorithm::murmur64Combine(this->low, this->high);
 		}
 		// Low right, high left
 		__LL_NODISCARD__ constexpr hash::Hash64 mur_r() const noexcept {
-			return hash::combine::murmur64Combine(this->high, this->low);
+			return hash::algorithm::murmur64Combine(this->high, this->low);
 		}
 
 		__LL_NODISCARD__ constexpr hash::Hash64 toHash64() const noexcept {
@@ -374,14 +374,16 @@ template<class _HashType>
 class HashChecker {
 	#pragma region Types
 	public:
+		// Class related
 		using _MyType		= HashChecker;
+
+		// Types and enums
 		using HashType		= _HashType;
-		using OptionalHash	= std::optional<HashType>;
 
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(hash::__::is_hash_type_v<HashType>,
+		static_assert(traits::is_hash_type_v<HashType>,
 			"Needs to be a valid hash type! If you want to use your own hash objects comment this assert");
 
 		static_assert(traits::is_valid_type_checker_v<HashType>,

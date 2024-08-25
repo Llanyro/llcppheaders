@@ -38,6 +38,7 @@ namespace llcpp {
 namespace meta {
 namespace algorithm {
 
+#pragma region ArrayConstructorFiller
 namespace __algorithm__ {
 
 template<class U, class T, class... Args, len_t... Idx>
@@ -63,12 +64,17 @@ __LL_NODISCARD__ constexpr T* make_constructed_new_mem(T* mem, const Args&... ar
 	return __algorithm__::make_constructed_new_mem<T, Args...>(mem, args..., std::make_index_sequence<N>{});
 }
 
+#pragma endregion
+
 #pragma region Comparators
 template<class _T, class _U, class _result_t, _result_t _NULL_RESULT_>
 class CompareData {
 	#pragma region Types
 	public:
+		// Class related
 		using _MyType		= CompareData;
+
+		// Types and enums
 		using T				= _T;
 		using U				= _U;
 		using result_t		= _result_t;
@@ -86,7 +92,7 @@ class CompareData {
 		static_assert(traits::is_valid_type_checker_ignore_pointer_v<U>,
 			"type_checker<U> detected an invalid type!");
 		static_assert(traits::is_basic_type_v<result_t>,
-			"Result type must be a basic/primitive type! "
+			"Result type is recommended to be a basic/primitive type! "
 			"Comment this error if you want to use other custom type.");
 
 	#pragma endregion
@@ -177,6 +183,7 @@ class CompareData {
 		__LL_NODISCARD__ constexpr void clear() noexcept { this->simpleClear(); }
 
 		#pragma endregion
+
 	#pragma endregion
 };
 
@@ -215,7 +222,8 @@ class CompareDefault {
 		using t_cinput		= traits::cinput<T>;
 		using u_cinput		= traits::cinput<U>;
 
-		using is_diff		= traits::is_diff<T, U>;
+		//using is_diff		= traits::is_diff<T, U>;
+		using is_diff		= traits::is_diff<T, U, traits::get_three_way_comparasion_function_type_t<T, U>>;
 		using is_comparable = traits::is_comparable<T, U>;
 
 	#pragma endregion
@@ -270,7 +278,7 @@ class ManipulatorDefault {
 		// Class related
 		using _MyType	= ManipulatorDefault;
 
-		// Types
+		// Types and enums
 		using T			= _T;
 		using U			= _U;
 
@@ -311,6 +319,7 @@ class ManipulatorDefault {
 		}
 
 		#pragma endregion
+
 	#pragma endregion
 };
 
@@ -322,7 +331,7 @@ class ComparatorChecker : public _Comparator {
 		using _MyType				= ComparatorChecker;
 		using Comparator			= _Comparator;
 
-		// Types
+		// Types and enums
 		using T						= _T;
 		using U						= _U;
 		using cinput_t				= traits::cinput<T>;
@@ -408,7 +417,7 @@ class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> 
 		using Comparator		= _Comparator;
 		using ComparatorChecker	= algorithm::ComparatorChecker<_T, _U, Comparator>;
 
-		// Types
+		// Types and enums
 		using T					= _T;
 		using U					= _U;
 		using cinput_t			= ComparatorChecker::cinput_t;
@@ -1126,7 +1135,7 @@ struct FindersCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator>
 		using Comparator		= _Comparator;
 		using ComparatorChecker	= algorithm::ComparatorChecker<_T, _U, Comparator>;
 
-		// Types
+		// Types and enums
 		using T					= _T;
 		using U					= _U;
 		using cinput_t			= ComparatorChecker::cinput_t;
@@ -1569,7 +1578,7 @@ class DataManipulatorCluster : public _Manipulator {
 		using _MyType				= DataManipulatorCluster;
 		using Manipulator			= _Manipulator;
 
-		// Types
+		// Types and enums
 		using T						= _T;
 		using cinput_t				= traits::cinput<T>;
 		using Array_t				= meta::Array<T>;

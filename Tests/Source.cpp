@@ -4,6 +4,7 @@
 #include "../llanylib/Container.hpp"
 #include "../llanylib/algorithm.hpp"
 #include "../llanylib/Node.hpp"
+#include "../llanylib/mem.hpp"
 
 #include <iostream>
 //#include <array>
@@ -254,7 +255,9 @@ int main() {
 	//print_arr(asdf);
 
 	//llcpp::meta::containers::Container<int[5]> cont(10);
-	main_nodes();
+	//main_nodes();
+
+	std::cout << llcpp::meta::mem::test_prep<int>(2) << std::endl;
 
 	return 0;
 }

@@ -37,7 +37,7 @@ class BasicContainer {
 		// Class related
 		using _MyType				= BasicContainer;
 
-		// Types
+		// Types and enums
 		using T						= _T;
 		using t_array				= std::array<_T, _N>;
 		using pointer				= std::conditional_t<std::is_pointer_v<_T>, _T, _T*>;
@@ -195,13 +195,13 @@ class ContainerExtra : public _Functions, public BasicContainer<traits::array_ty
 		using Functions					= _Functions;
 		using BasicContainer			= BasicContainer<traits::array_type_t<_T>, traits::type_or_array_size<_T>>;
 
-		// Types
+		// Types and enums
 		using T							= _T;
 		using T_class					= std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
 		using pointer					= typename BasicContainer::pointer;
 		using reference					= T&;
 		using creference				= const T&;
-		using T_HashType				= traits::hash::get_hash_function_type_t<T>;
+		using T_HashType				= traits::hash::get_hash_function_type_t<T_class>;
 		using F_HashType				= traits::hash::get_hash_function_type_t<Functions>;
 
 		// Signarures T

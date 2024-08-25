@@ -34,16 +34,78 @@
 namespace llcpp {
 namespace meta {
 namespace traits {
+namespace __traits__ {
+
+template<class _T, ll_bool_t _PROMOTE>
+struct type_promotion {
+	// Class related
+	using _MyType = type_promotion;
+
+	// Types and enums
+	using T = _T;
+
+	template<class U> struct promote_type	{ using type = U; };
+	template<> struct promote_type<i8>		{ using type = std::conditional_t<_PROMOTE, i16, i8>; };
+	template<> struct promote_type<i16>		{ using type = std::conditional_t<_PROMOTE, i32, i8>; };
+	template<> struct promote_type<i32>		{ using type = std::conditional_t<_PROMOTE, i64, i16>; };
+	template<> struct promote_type<i64>		{ using type = std::conditional_t<_PROMOTE, i128, i64>; };
+	template<> struct promote_type<i128>	{ using type = std::conditional_t<_PROMOTE, i256, i128>; };
+	template<> struct promote_type<i256>	{ using type = std::conditional_t<_PROMOTE, i256, i128>; };
+
+	template<> struct promote_type<ui8>		{ using type = std::conditional_t<_PROMOTE, ui16, ui8>; };
+	template<> struct promote_type<ui16>	{ using type = std::conditional_t<_PROMOTE, ui32, ui8>; };
+	template<> struct promote_type<ui32>	{ using type = std::conditional_t<_PROMOTE, ui64, ui16>; };
+	template<> struct promote_type<ui64>	{ using type = std::conditional_t<_PROMOTE, ui128, ui64>; };
+	template<> struct promote_type<ui128>	{ using type = std::conditional_t<_PROMOTE, ui256, ui128>; };
+	template<> struct promote_type<ui256>	{ using type = std::conditional_t<_PROMOTE, ui256, ui128>; };
+
+	template<> struct promote_type<f32>		{ using type = std::conditional_t<_PROMOTE, f64, f32>; };
+	template<> struct promote_type<f64>		{ using type = std::conditional_t<_PROMOTE, f128, f64>; };
+	template<> struct promote_type<f128>	{ using type = std::conditional_t<_PROMOTE, f128, f64>; };
+
+	using type = promote_type<_T>::type;
+
+	// Expresions
+	static constexpr ll_bool_t PROMOTE = _PROMOTE;
+};
+
+// Used in ParameterPacks
+template<class T, class... uArgs>
+struct FirstType {
+	// Class related
+	using _MyType	= FirstType;
+
+	// Types and enums
+	using type		= T;
+	using next		= FirstType<uArgs...>;
+};
+template<class T>
+struct FirstType<T> {
+	// Class related
+	using _MyType	= FirstType;
+
+	// Types and enums
+	using type		= T;
+	using next		= EmptyStruct;
+};
+
+} // namespace __traits__
 
 #pragma region TraitsTypesAndCheckers
 template<class _T>
 struct type_container {
+	// Class related
 	using _MyType	= type_container;
+
+	// Types and enums
 	using T			= _T;
 };
 template<class _T, class _U>
 struct double_type_container {
+	// Class related
 	using _MyType	= double_type_container;
+
+	// Types and enums
 	using T			= _T;
 	using U			= _U;
 };
@@ -54,30 +116,32 @@ template<class _U, class _Signature, _Signature> struct SignatureChecker {};
 // Standard checker for types in this lib
 template<class _T, ll_bool_t _IGNORE_POINTER = llcpp::FALSE, ll_bool_t _IGNORE_ARRAY = llcpp::FALSE, ll_bool_t _IGNORE_VOLATILE = llcpp::FALSE>
 struct type_checker {
+	// Class related
 	using _MyType	= type_checker;
+
+	// Types and enums
 	using T			= _T;
 
+	// Expresions
 	static constexpr ll_bool_t IGNORE_POINTER	= _IGNORE_POINTER;
 	static constexpr ll_bool_t IGNORE_ARRAY		= _IGNORE_ARRAY;
 	static constexpr ll_bool_t IGNORE_VOLATILE	= _IGNORE_VOLATILE;
-
 	static constexpr ll_bool_t POINTER = (IGNORE_POINTER || !std::is_pointer_v<T>);
 	static constexpr ll_bool_t ARRAY = (IGNORE_ARRAY || !std::is_array_v<T>);
 	static constexpr ll_bool_t VOLATILE = (IGNORE_VOLATILE || !std::is_volatile_v<T>);
-
-	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
-	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
-
-	static_assert(POINTER, "Pointer type is forbidden!");
-	static_assert(ARRAY, "Array type is forbidden!");
-	static_assert(VOLATILE, "Volatile type is forbidden!");
-
 	static constexpr ll_bool_t is_valid_v =
 		!std::is_const_v<T> &&
 		!std::is_reference_v<T> &&
 		ARRAY &&
 		VOLATILE &&
 		POINTER;
+
+	// Asserts
+	static_assert(!std::is_reference_v<T>, "Reference type is forbidden!");
+	static_assert(!std::is_const_v<T>, "Const type is forbidden!");
+	static_assert(POINTER, "Pointer type is forbidden!");
+	static_assert(ARRAY, "Array type is forbidden!");
+	static_assert(VOLATILE, "Volatile type is forbidden!");
 };
 
 template<class T>
@@ -100,16 +164,13 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_pa_v =
 // Checks contruction / destruction and other operations needed
 template<class _T>
 struct constructor_checker {
+	// Class related
 	using _MyType	= constructor_checker;
+
+	// Types and enums
 	using T			= _T;
 
-	static_assert(std::is_nothrow_constructible_v<T>, "T needs a noexcept constructor!");
-	static_assert(std::is_nothrow_destructible_v<T>, "T needs a noexcept destructor!");
-	static_assert(std::is_copy_constructible_v<T>, "T needs a noexcept copy constructor!");
-	static_assert(std::is_copy_assignable_v<T>, "T needs a noexcept copy asignable!");
-	static_assert(std::is_move_constructible_v<T>, "T needs a noexcept move constructor!");
-	static_assert(std::is_move_assignable_v<T>, "T needs a noexcept move asignable!");
-
+	// Expresions
 	static constexpr ll_bool_t is_valid_v =
 		std::is_nothrow_constructible_v<T>
 		&& std::is_nothrow_destructible_v<T>
@@ -117,6 +178,14 @@ struct constructor_checker {
 		&& std::is_copy_assignable_v<T>
 		&& std::is_move_constructible_v<T>
 		&& std::is_move_assignable_v<T>;
+
+	// Asserts
+	static_assert(std::is_nothrow_constructible_v<T>, "T needs a noexcept constructor!");
+	static_assert(std::is_nothrow_destructible_v<T>, "T needs a noexcept destructor!");
+	static_assert(std::is_copy_constructible_v<T>, "T needs a noexcept copy constructor!");
+	static_assert(std::is_copy_assignable_v<T>, "T needs a noexcept copy asignable!");
+	static_assert(std::is_move_constructible_v<T>, "T needs a noexcept move constructor!");
+	static_assert(std::is_move_assignable_v<T>, "T needs a noexcept move asignable!");
 };
 
 template<class T>
@@ -126,13 +195,18 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_v =
 // Standard checker for classes in this lib
 template<class _T>
 struct class_checker : public traits::constructor_checker<_T> {
+	// Class related
 	using _MyType				= class_checker;
+	using constructor_checker	= traits::constructor_checker<_T>;
+
+	// Types and enums
 	using T						= _T;
-	using constructor_checker	= traits::constructor_checker<T>;
 
+	// Expresions
+	static constexpr ll_bool_t is_valid_v = constructor_checker::is_valid_v && std::is_class_v<T>;
+	
+	// Asserts
 	static_assert(std::is_class_v<T>, "T needs to be a class!");
-
-	static constexpr ll_bool_t is_valid_v =  constructor_checker::is_valid_v && std::is_class_v<T>;
 };
 
 template<class T>
@@ -142,16 +216,20 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_class_checker_v = traits::class_c
 // Follow any class that this inherites to check how to do a new checker 
 template<class _Base>
 struct _has_common : public _Base {
+	// Class related
 	using _MyType		= _has_common;
 	using Base			= _Base;
 	using ClassToCheck	= typename Base::ClassToCheck;
 
+	// Types and enums
+	using T				= typename Base::T;
+	using type			= decltype(Base::template test<ClassToCheck>(LL_NULLPTR));
+
+	// Asserts
 	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
 		"type_checker<ClassToCheck> detected an invalid type!");
 	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
 		"class_checker<ClassToCheck> detected an invalid class type!");
-
-	using type = decltype(Base::template test<ClassToCheck>(LL_NULLPTR));
 };
 
 #pragma endregion
@@ -196,13 +274,19 @@ __LL_VAR_INLINE__ constexpr len_t type_or_array_size<T[N]> = N;
 
 #pragma endregion
 #pragma region IntegralConstant
-template<class _T, class _U, _T VALUE>
+template<class _T, class _U, _T _VALUE>
 struct integral_constant_container {
+	// Class related
 	using _MyType			= integral_constant_container;
+	using integral_constant = std::integral_constant<_T, _VALUE>;
+	using container			= traits::type_container<_U>;
+
+	// Types and enums
 	using T					= _T;
 	using U					= _U;
-	using integral_constant = std::integral_constant<T, VALUE>;
-	using container			= traits::type_container<U>;
+
+	// Expresions
+	static constexpr T VALUE = integral_constant::value;
 };
 
 template<ll_bool_t VALUE, class U>
@@ -220,50 +304,21 @@ using input = std::conditional_t<traits::is_basic_type_v<T> || std::is_pointer_v
 template<class T>
 using cinput = std::conditional_t<traits::is_basic_type_v<T> || std::is_pointer_v<T>, const T, const T&>;
 
-template<class _T, ll_bool_t _promote>
+template<class _T, ll_bool_t _PROMOTE>
 struct type_promotion {
+	// Class related
 	using _MyType	= type_promotion;
+
+	// Types and enums
 	using T			= _T;
+	using type		= traits::__traits__::type_promotion<_T, _PROMOTE>::type;
 
-	static constexpr ll_bool_t promote = _promote;
+	// Expresions
+	static constexpr ll_bool_t PROMOTE = _PROMOTE;
 
-	static_assert(traits::is_valid_type_checker_v<T>, "type_checker<T> detected an invalid type!");
-
-	template<ll_bool_t promote> struct __type_promotion { using type = T; };
-	template<> struct __type_promotion<llcpp::TRUE> {
-		template<class U> struct promote_type { using type = U; };
-		template<> struct promote_type<i8> { using type = i16; };
-		template<> struct promote_type<i16> { using type = i32; };
-		template<> struct promote_type<i32> { using type = i64; };
-		template<> struct promote_type<i64> { using type = i128; };
-		template<> struct promote_type<i128> { using type = i256; };
-		template<> struct promote_type<ui8> { using type = ui16; };
-		template<> struct promote_type<ui16> { using type = ui32; };
-		template<> struct promote_type<ui32> { using type = ui64; };
-		template<> struct promote_type<ui64> { using type = ui128; };
-		template<> struct promote_type<ui128> { using type = ui256; };
-		template<> struct promote_type<f32> { using type = f64; };
-		template<> struct promote_type<f64> { using type = f128; };
-		using type = promote_type<T>::type;
-	};
-	template<> struct __type_promotion<llcpp::FALSE> {
-		template<class U> struct promote_type { using type = U; };
-		template<> struct promote_type<i16> { using type = i8; };
-		template<> struct promote_type<i32> { using type = i16; };
-		template<> struct promote_type<i64> { using type = i32; };
-		template<> struct promote_type<i128> { using type = i64; };
-		template<> struct promote_type<i256> { using type = i128; };
-		template<> struct promote_type<ui16> { using type = ui8; };
-		template<> struct promote_type<ui32> { using type = ui16; };
-		template<> struct promote_type<ui64> { using type = ui32; };
-		template<> struct promote_type<ui128> { using type = ui64; };
-		template<> struct promote_type<ui256> { using type = ui128; };
-		template<> struct promote_type<f64> { using type = f32; };
-		template<> struct promote_type<f128> { using type = f64; };
-		using type = promote_type<T>::type;
-	};
-
-	using type = __type_promotion<promote>::type;
+	// Asserts
+	static_assert(traits::is_valid_type_checker_v<_T>,
+		"type_checker<T> detected an invalid type!");
 };
 
 #pragma endregion
@@ -298,20 +353,24 @@ struct type_promotion {
 #pragma region CharConditional
 template<class _T, class _TypeChar, class _TypeWChar, class _ExtraType = void>
 struct get_by_char_type {
+	// Class related
 	using _MyType	= get_by_char_type;
+
+	// Types and enums
 	using T			= _T;
 	using TypeChar	= _TypeChar;
 	using TypeWChar = _TypeWChar;
 	using ExtraType = _ExtraType;
 
+	template <class U> struct SFINAE { using _val = ExtraType; };
+	template<> struct SFINAE<ll_char_t> { using _val = TypeChar; };
+	template<> struct SFINAE<ll_wchar_t> { using _val = TypeWChar; };
+
+	using type = SFINAE<T>::_val;
+
+	// Asserts
 	static_assert(traits::is_valid_type_checker_v<T>,
 		"type_checker<U> detected an invalid type!");
-
-	template <class U> struct __struct__ { using _val = ExtraType; };
-	template<> struct __struct__<ll_char_t> { using _val = TypeChar; };
-	template<> struct __struct__<ll_wchar_t> { using _val = TypeWChar; };
-
-	using type = __struct__<T>::_val;
 };
 
 template<class T, class TypeChar, class TypeWChar, class ExtraType = void>
@@ -321,7 +380,10 @@ using get_by_char_type_t = traits::get_by_char_type<T, TypeChar, TypeWChar, Extr
 #pragma region FunctionalReflector
 template<class _ClassToCheck, class _OperatorType, class _Signature>
 struct has_type_operator {
+	// Class related
 	using _MyType		= has_type_operator;
+
+	// Types and enums
 	using ClassToCheck	= _ClassToCheck;
 	using OperatorType	= _OperatorType;
 	using Signature		= _Signature;
@@ -334,8 +396,11 @@ struct has_type_operator {
 	using type_default_result =
 		typename SFINAE<traits::is_basic_type_v<ClassToCheck>, std::is_same_v<ClassToCheck, OperatorType>>::type;
 
+	// Assets
 	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
 		"type_checker<ClassToCheck> detected an invalid type!");
+
+	// Functions
 
 	template<class _U>
 	static constexpr auto test(checker<&_U::operator OperatorType>*) noexcept	-> std::true_type;
@@ -354,14 +419,19 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_type_operator_v =
 #pragma region SwapChecker
 template<class _T>
 struct is_nothrow_swappeable {
+	// Class related
 	using _MyType	= is_nothrow_swappeable;
+
+	// Types and enums
 	using T			= _T;
 
+	// Asserts
 	static_assert(traits::is_valid_type_checker_v<T>,
 		"type_checker<T> detected an invalid type!");
 	static_assert(traits::is_valid_class_checker_v<T>,
 		"class_checker<T> detected an invalid class type!");
 
+	// Functions
 	static constexpr auto test() noexcept {
 		if constexpr (std::is_pointer_v<T> || traits::is_basic_type_v<T>)
 			return std::true_type{};
@@ -386,14 +456,19 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_swappeable_v = is_nothrow_swapp
 #pragma region CopyChecker
 template<class _T>
 struct is_nothrow_copyable {
+	// Class related
 	using _MyType	= is_nothrow_copyable;
+
+	// Types and enums
 	using T			= _T;
 
+	// Asserts
 	static_assert(traits::is_valid_type_checker_v<T>,
 		"type_checker<T> detected an invalid type!");
 	static_assert(traits::is_valid_class_checker_v<T>,
 		"class_checker<T> detected an invalid class type!");
 
+	// Functions
 	static constexpr auto test() noexcept {
 		if constexpr (std::is_pointer_v<T>) {
 			using __noptr = std::remove_pointer_t<T>;
@@ -419,19 +494,13 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyabl
 #pragma region ParameterPacks
 template <class... Args>
 struct parameter_pack_operations {
-	template<class T, class... uArgs>
-	struct FirstType {
-		using type = T;
-		using next = FirstType<uArgs...>;
-	};
-	template<class T>
-	struct FirstType<T> {
-		using type = T;
-		using next = EmptyStruct;
-	};
+	// Class related
+	using _MyType = parameter_pack_operations;
 
-	using pack_first = typename FirstType<Args...>;
-	using get_first_type = typename FirstType<Args...>::type;
+	using pack_first = typename traits::__traits__::FirstType<Args...>;
+	using get_first_type = typename traits::__traits__::FirstType<Args...>::type;
+
+	// Expresions
 	static constexpr len_t size = sizeof...(Args);
 	static constexpr ll_bool_t empty = (size == ZERO_UI64);
 	static constexpr ll_bool_t has_a_pointer = (std::is_pointer_v<Args> || ...);
@@ -439,10 +508,15 @@ struct parameter_pack_operations {
 };
 template <class T>
 struct parameter_pack_operations<T> {
-	using FirstType = parameter_pack_operations<int, int>::FirstType<T>;
+	// Class related
+	using _MyType = parameter_pack_operations;
 
+	// Types and enums
+	using FirstType = traits::__traits__::FirstType<T>;
 	using pack_first = typename FirstType;
 	using get_first_type = typename pack_first::type;
+
+	// Expresions
 	static constexpr len_t size = 1ull;
 	static constexpr ll_bool_t empty = llcpp::FALSE;
 	static constexpr ll_bool_t has_a_pointer = std::is_pointer_v<T>;
@@ -450,10 +524,15 @@ struct parameter_pack_operations<T> {
 };
 template <>
 struct parameter_pack_operations<> {
-	using FirstType = parameter_pack_operations<int, int>::FirstType<void>;
+	// Class related
+	using _MyType = parameter_pack_operations;
 
+	// Types and enums
+	using FirstType = traits::__traits__::FirstType<void>;
 	using pack_first = FirstType;
 	using get_first_type = pack_first::type;
+
+	// Expresions
 	static constexpr len_t size = ZERO_UI64;
 	static constexpr ll_bool_t empty = llcpp::TRUE;
 	static constexpr ll_bool_t has_a_pointer = llcpp::FALSE;
@@ -564,28 +643,76 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_clear_function_v =
   // Returns hash type by calling hash function
 #pragma region HashTypeChecker
 namespace hash {
+namespace __hash__ {
 
 template<class _ClassToCheck>
 struct get_hash_function_type {
-	using ClassToCheck	= _ClassToCheck;
+	// Class related
+	using _MyType		= get_hash_function_type;
 
+	// Types and enums
+	using ClassToCheck	= _ClassToCheck;
+	using T_Class		= std::conditional_t<std::is_class_v<_ClassToCheck>, _ClassToCheck, llcpp::Emptyclass>;
+
+	// Asserts
 	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
 		"type_checker<ClassToCheck> detected an invalid type!");
 	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
 		"class_checker<ClassToCheck> detected an invalid class type!");
 
+	// Functions
 	template<class>
-	static constexpr auto test(auto(ClassToCheck::* _)() noexcept) noexcept ->
-		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), ClassToCheck>>;
-	template<class>
-	static constexpr auto test(auto(ClassToCheck::* _)() const noexcept) noexcept ->
-		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), ClassToCheck>>;
+	static constexpr auto test(auto(T_Class::* _)() noexcept) noexcept ->
+		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), T_Class>>;
 	template<class>
 	static constexpr auto test(...) noexcept ->
 		traits::double_type_container<std::false_type, void>;
 
-	using container = decltype(get_hash_function_type::test<ClassToCheck>(&ClassToCheck::hash));
+	using container = decltype(_MyType::test<T_Class>(&T_Class::hash));
 	using type = container::U;
+};
+template<class _ClassToCheck>
+struct get_hash_function_type_const {
+	// Class related
+	using _MyType		= get_hash_function_type_const;
+
+	// Types and enums
+	using ClassToCheck	= _ClassToCheck;
+	using T_Class		= std::conditional_t<std::is_class_v<_ClassToCheck>, _ClassToCheck, llcpp::Emptyclass>;
+
+	// Asserts
+	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
+		"type_checker<ClassToCheck> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<ClassToCheck>,
+		"class_checker<ClassToCheck> detected an invalid class type!");
+
+	// Functions
+	template<class>
+	static constexpr auto test(auto(T_Class::* _)() const noexcept) noexcept ->
+		traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), T_Class>>;
+	template<class>
+	static constexpr auto test(...) noexcept ->
+		traits::double_type_container<std::false_type, void>;
+
+	using container = decltype(_MyType::test<T_Class>(&T_Class::hash));
+	using type = container::U;
+};
+
+} // namespace hash
+
+template<class _ClassToCheck>
+struct get_hash_function_type {
+	// Class related
+	using _MyType						= get_hash_function_type;
+	using _get_hash_function_type		= traits::hash::__hash__::get_hash_function_type<_ClassToCheck>
+	using _get_hash_function_type_const	= traits::hash::__hash__::get_hash_function_type_const<_ClassToCheck>
+
+	// Types and enums
+	using ClassToCheck	= _ClassToCheck;
+	using _type			= typename _get_hash_function_type::type;
+	using _type_const	= typename _get_hash_function_type_const::type;
+
+	using type = std::conditional_t<!std::is_same_v<_type, void>, _type, _type_const>;
 	static_assert(!std::is_same_v<type, void>, "T::hash() cannot return void!");
 };
 
@@ -628,6 +755,7 @@ struct get_three_way_comparasion_function_type {
 		using U			= _U;
 		using t_cinput	= traits::cinput<T>;
 		using u_cinput	= traits::cinput<U>;
+		using T_class	= 
 
 		// Type if basic type
 		using no_function_type = std::conditional_t<
@@ -651,9 +779,9 @@ struct get_three_way_comparasion_function_type {
 	#pragma endregion
 	#pragma region Functions
 	public:
-		template<class>
-		static constexpr auto test(auto(T::* _)(u_cinput) noexcept) noexcept ->
-			traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), T>>;
+		//template<class>
+		//static constexpr auto test(auto(T::* _)(u_cinput) noexcept) noexcept ->
+		//	traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), T>>;
 		template<class>
 		static constexpr auto test(auto(T::* _)(u_cinput) const noexcept) noexcept ->
 			traits::double_type_container<std::true_type, std::invoke_result_t<decltype(_), T>>;
@@ -661,7 +789,7 @@ struct get_three_way_comparasion_function_type {
 		static constexpr auto test(...) noexcept ->
 			traits::double_type_container<std::false_type, no_function_type>;
 
-		using container = decltype(_MyType::test<T>(&T::operator<=>));
+		using container = decltype(_MyType::test(&T::operator<=>));
 		using type = container::U;
 
 	#pragma endregion
@@ -679,7 +807,7 @@ struct is_comparable {
 		// Class related
 		using _MyType				= is_comparable;
 
-		// Types
+		// Types and enums
 		using T						= _T;
 		using U						= _U;
 		using Boolean				= _Boolean;
@@ -695,14 +823,14 @@ struct is_comparable {
 	#pragma region Expresions
 	public:
 		static constexpr ll_bool_t T_HAS_EQ_SIGNATURE_BOOL =
-			traits::common::has_operator_eq_function_v<T, T_Signature_bool>;
+			traits::common::has_operator_eq_function_v<T_class, T_Signature_bool>;
 		static constexpr ll_bool_t T_HAS_EQ_SIGNATURE_LL_BOOL_T =
-			traits::common::has_operator_eq_function_v<T, T_Signature_ll_bool_t>;
+			traits::common::has_operator_eq_function_v<T_class, T_Signature_ll_bool_t>;
 
 		static constexpr ll_bool_t T_HAS_NEQ_SIGNATURE_BOOL =
-			traits::common::has_operator_no_eq_function_v<T, T_Signature_bool>;
+			traits::common::has_operator_no_eq_function_v<T_class, T_Signature_bool>;
 		static constexpr ll_bool_t T_HAS_NEQ_SIGNATURE_LL_BOOL_T =
-			traits::common::has_operator_no_eq_function_v<T, T_Signature_ll_bool_t>;
+			traits::common::has_operator_no_eq_function_v<T_class, T_Signature_ll_bool_t>;
 
 		static constexpr ll_bool_t T_U_BASIC_TYPE =
 			traits::is_basic_type_v<T> && traits::is_basic_type_v<U>;

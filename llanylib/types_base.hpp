@@ -189,7 +189,7 @@ class Hash128;
 //using OptionalHash64		= std::optional<hash::Hash64>;
 //using OptionalHash128		= std::optional<hash::Hash128>;
 
-using StandardHash			= Hash64;
+using StandardHash = Hash64;
 //using StandardOptionalHash	= OptionalHash64;
 
 } // namespace hash

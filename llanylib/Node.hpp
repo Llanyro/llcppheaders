@@ -40,6 +40,7 @@ class BaseNode {
 	#pragma endregion
 	#pragma region Assersts
 	public:
+		// [TOFIX]
 		//static_assert(std::is_base_of_v<_MyType, NodeType>,
 		//	"_MyType is not a base of NodeType");
 

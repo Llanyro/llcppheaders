@@ -297,7 +297,7 @@ struct FirstType<T> {
 
 	// Types and enums
 	using type		= T;
-	using next		= EmptyStruct;
+	using next		= llcpp::EmptyStruct;
 };
 
 #pragma endregion
@@ -461,6 +461,51 @@ struct type_promotion {
 	static_assert(traits::is_valid_type_checker_v<_T>,
 		"type_checker<T> detected an invalid type!");
 };
+
+// Returns a type that coincides with one given
+// get_conincidence<X, Args..> where:
+//	X		-> Type to find
+//	Args... -> all arguments to find stored in a traits::double_type_container<T, U> where:
+//		T -> type to compare with X
+//		U -> type to return if X is same type as T
+template<class _VoidType = void>
+struct type_selection {
+	// Class related
+	using _MyType = type_selection;
+
+	// Types and enums
+	using VoidType = _VoidType;
+
+	// Functions
+	template<class X, class T, class... Args>
+	__LL_NODISCARD__ static constexpr auto get_by_type() noexcept {
+		// [TOFIX]
+		// Insert here a static_assert to check if args are double containers type
+		if constexpr (std::is_same_v<T::T, X>)
+			return traits::type_container<T::U>{};
+		else return type_selection<VoidType>::get_by_type<X, Args...>();
+	}
+	template<class X, class T>
+	__LL_NODISCARD__ static constexpr auto get_by_type() noexcept {
+		if constexpr (std::is_same_v<T::T, X>)
+			return traits::type_container<T::U>{};
+		else return traits::type_container<VoidType>{};
+	}
+	template<class X>
+	__LL_NODISCARD__ static constexpr auto get_by_type() noexcept {
+		return traits::type_container<VoidType>{};
+	}
+	template<class X, class... Args>
+	using get_conincidence = decltype(_MyType::get_by_type<X, Args...>())::T;
+};
+
+using testing = type_selection<void>::get_conincidence<
+	int,
+	traits::double_type_container<char, char>,
+	traits::double_type_container<float, float>,
+	traits::double_type_container<int, int>,
+	traits::double_type_container<double, double>
+>;
 
 #pragma endregion
 #pragma region MyRegion
@@ -681,7 +726,7 @@ struct parameter_pack_operations<> {
 };
 
 #pragma endregion
-
+#pragma region CommonClassCheckers
 namespace common {
 
 #define __LL_HAS_CUSTOM_FUNCTION_NAMED__(name, functionname) \
@@ -781,6 +826,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_clear_function_v =
 
 } // namespace common
 
+#pragma endregion
   // Returns hash type by calling hash function
 #pragma region HashTypeChecker
 namespace hash {

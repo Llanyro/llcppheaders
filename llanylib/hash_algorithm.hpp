@@ -115,6 +115,8 @@ __LL_NODISCARD__ constexpr ui64 murmur64Combine_r(const ui64 value) noexcept {
 #pragma endregion
 #pragma region Combine
 #pragma region Template
+// IS_REVERSE means that shift is left if true
+//		or shift right if false
 template<class T, ll_bool_t IS_REVERSE = llcpp::FALSE>
 __LL_NODISCARD__ constexpr T simpleCombine(const T value1, const T value2, const ui8 shift) noexcept {
 	if constexpr (IS_REVERSE) return static_cast<T>(value1 ^ (value2 << shift));

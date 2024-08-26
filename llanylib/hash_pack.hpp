@@ -27,12 +27,15 @@ namespace llcpp {
 namespace meta {
 namespace hash {
 
-template<class HashType = hash::Hash64>
+template<class _HashType = hash::StandardHash>
 class HashGeneratorDummy {
 	#pragma region Types
 	public:
-		using OptionalHash = std::optional<HashType>;
-		using Hash = HashType;
+		// Class related
+		using _MyType	= HashGeneratorDummy;
+
+		// Types
+		using HashType	= _HashType;
 
 	#pragma endregion
 	#pragma region Functions
@@ -52,50 +55,50 @@ class HashGeneratorDummy {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashGeneratorDummy* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashGeneratorDummy* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const HashGeneratorDummy*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator HashGeneratorDummy*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr OptionalHash hash(ll_string_t s, const len_t n) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(ll_string_t s, const len_t n) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(ll_wstring_t s, const len_t n) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(ll_wstring_t s, const len_t n) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const std::string& s) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const std::string& s) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const std::wstring& s) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const std::wstring& s) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const meta::StrPair& s) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const meta::StrPair& s) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const meta::wStrPair& s) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const meta::wStrPair& s) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const meta::Str& s) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const meta::Str& s) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const meta::wStr& s) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const meta::wStr& s) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const hash::Hash32& h) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const hash::Hash32& h) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const hash::Hash64& h) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const hash::Hash64& h) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const hash::Hash128& h) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const hash::Hash128& h) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const void* o, const meta::StrTypeid& id) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const void* o, const meta::StrTypeid& id) const noexcept {
+			return HashType();
 		}
-		__LL_NODISCARD__ constexpr OptionalHash hash(const void* o, const meta::wStrTypeid& id) const noexcept {
-			return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hash(const void* o, const meta::wStrTypeid& id) const noexcept {
+			return HashType();
 		}
 
 		#pragma endregion
@@ -107,45 +110,49 @@ class Object {
 	private:
 		hash::Hash128 h;
 	public:
-		__LL_NODISCARD__ constexpr operator OptionalHash32() const noexcept {
-			return std::nullopt;
-		}
-		__LL_NODISCARD__ constexpr operator OptionalHash64() const noexcept {
-			return std::nullopt;
-		}
-		__LL_NODISCARD__ constexpr operator OptionalHash128() const noexcept {
-			return std::nullopt;
-		}
+		__LL_NODISCARD__ constexpr operator Hash32() const noexcept { return Hash32(); }
+		__LL_NODISCARD__ constexpr operator Hash64() const noexcept { return Hash64(); }
+		__LL_NODISCARD__ constexpr operator Hash128() const noexcept { return Hash128(); }
 };
 
-template<class HashType = hash::Hash64, class HashGenerator = hash::HashGeneratorDummy<HashType>>
-class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGenerator {
+template<class _HashType = hash::StandardHash, class _HashGenerator = hash::HashGeneratorDummy<_HashType>>
+class HashGeneratorChecker : public hash::HashChecker<_HashType>, public _HashGenerator {
 	#pragma region Types
 	public:
-		using HashChecker = hash::HashChecker<HashType>;
-		using OptionalHash = HashChecker::OptionalHash;
-		using Hash = HashChecker::Hash;
+		// Class related
+		using _MyType		= HashGeneratorChecker;
+		using HashChecker	= hash::HashChecker<_HashType>;
+		using HashGenerator = _HashGenerator;
 
-		using HashConstFunction = OptionalHash(HashGenerator::*)(ll_string_t, len_t) const noexcept;
-		using wHashConstFunction = OptionalHash(HashGenerator::*)(ll_wstring_t, len_t) const noexcept;
-		using StringPairHashConstFunction = OptionalHash(HashGenerator::*)(const std::string&) const noexcept;
-		using wStringPairHashConstFunction = OptionalHash(HashGenerator::*)(const std::wstring&) const noexcept;
-		using StrPairHashConstFunction = OptionalHash(HashGenerator::*)(const meta::StrPair&) const noexcept;
-		using wStrPairHashConstFunction = OptionalHash(HashGenerator::*)(const meta::wStrPair&) const noexcept;
-		using StrHashConstFunction = OptionalHash(HashGenerator::*)(const meta::Str&) const noexcept;
-		using wStrHashConstFunction = OptionalHash(HashGenerator::*)(const meta::wStr&) const noexcept;
+		// Types and enums
+		using HashType		= _HashType;
+
+		// Signatures
+		using HashConstFunction				= HashType(HashGenerator::*)(ll_string_t, len_t) const noexcept;
+		using wHashConstFunction			= HashType(HashGenerator::*)(ll_wstring_t, len_t) const noexcept;
+		using StringPairHashConstFunction	= HashType(HashGenerator::*)(const std::string&) const noexcept;
+		using wStringPairHashConstFunction	= HashType(HashGenerator::*)(const std::wstring&) const noexcept;
+		using StrPairHashConstFunction		= HashType(HashGenerator::*)(const meta::StrPair&) const noexcept;
+		using wStrPairHashConstFunction		= HashType(HashGenerator::*)(const meta::wStrPair&) const noexcept;
+		using StrHashConstFunction			= HashType(HashGenerator::*)(const meta::Str&) const noexcept;
+		using wStrHashConstFunction			= HashType(HashGenerator::*)(const meta::wStr&) const noexcept;
 		
-		using RecursiveHash32ConstFunction = OptionalHash(HashGenerator::*)(const hash::Hash32&) const noexcept;
-		using RecursiveHash64ConstFunction = OptionalHash(HashGenerator::*)(const hash::Hash64&) const noexcept;
-		using RecursiveHash128ConstFunction = OptionalHash(HashGenerator::*)(const hash::Hash128&) const noexcept;
+		using RecursiveHash32ConstFunction	= HashType(HashGenerator::*)(const hash::Hash32&) const noexcept;
+		using RecursiveHash64ConstFunction	= HashType(HashGenerator::*)(const hash::Hash64&) const noexcept;
+		using RecursiveHash128ConstFunction	= HashType(HashGenerator::*)(const hash::Hash128&) const noexcept;
 
-		using RecursiveHashConstFunction = std::conditional_t<!std::_Is_any_of_v<HashType, Hash32, Hash64, Hash128>,
-			OptionalHash(HashGenerator::*)(const HashType&) const noexcept,
-			void
-		>;
+		using Prev_RecursiveHashConstFunction = HashType(HashGenerator::*)(const HashType&) const noexcept;
 
-		using StrTypeidHashConstFunction = OptionalHash(HashGenerator::*)(const void*, const StrTypeid&) const noexcept;
-		using wStrTypeidHashConstFunction = OptionalHash(HashGenerator::*)(const void*, const wStrTypeid&) const noexcept;
+		using RecursiveHashConstFunction =
+			traits::type_selection<Prev_RecursiveHashConstFunction>::get_conincidence<
+				HashType,
+				traits::double_type_container<Hash32, RecursiveHash32ConstFunction>,
+				traits::double_type_container<Hash64, RecursiveHash64ConstFunction>,
+				traits::double_type_container<Hash128, RecursiveHash128ConstFunction>
+			>;
+
+		using StrTypeidHashConstFunction	= HashType(HashGenerator::*)(const void*, const StrTypeid&) const noexcept;
+		using wStrTypeidHashConstFunction	= HashType(HashGenerator::*)(const void*, const wStrTypeid&) const noexcept;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -191,7 +198,7 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 		static_assert(traits::common::has_hash_function_v<HashGenerator, RecursiveHash32ConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		
-		static_assert(std::is_same_v<RecursiveHashConstFunction, void> || traits::common::has_hash_function_v<HashGenerator, RecursiveHashConstFunction>,
+		static_assert(traits::common::has_hash_function_v<HashGenerator, RecursiveHashConstFunction>,
 			"HashGenerator::hash() const noexcept is required by default! Non const function is optional");
 		
 		static_assert(traits::common::has_hash_function_v<HashGenerator, StrTypeidHashConstFunction>,
@@ -265,8 +272,8 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashGeneratorChecker* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashGeneratorChecker* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const HashGeneratorChecker*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator HashGeneratorChecker*() noexcept { return this; }
 
 		#pragma endregion
 
@@ -279,11 +286,17 @@ class HashGeneratorChecker : public hash::HashChecker<HashType>, public HashGene
 #define __LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__(num) \
 	static_assert(num != ZERO_UI64, "Cannot hash 0 elements");
 
-template<class HashType = hash::Hash64, class HashGenerator = hash::HashGeneratorDummy<HashType>>
+template<class HashType = hash::StandardHash, class HashGenerator = hash::HashGeneratorDummy<HashType>>
 class HashFunctionPack : public hash::HashGeneratorChecker<HashType, HashGenerator> {
 	#pragma region Types
 	public:
+		// Class related
+		using _MyType	= HashFunctionPack;
 		using HashGeneratorChecker = hash::HashGeneratorChecker<HashType, HashGenerator>;
+
+		// Types
+
+
 		using OptionalHash = HashGeneratorChecker::OptionalHash;
 		using Hash = HashGeneratorChecker::Hash;
 	private:
@@ -543,7 +556,7 @@ class HashFunctionPack : public hash::HashGeneratorChecker<HashType, HashGenerat
 #undef __LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__
 #undef __LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__
 
-template<class HashType = hash::Hash64, class HashGenerator = hash::HashGeneratorDummy<HashType>>
+template<class HashType = hash::StandardHash, class HashGenerator = hash::HashGeneratorDummy<HashType>>
 class HashFunctionPackNoConstexpr : public hash::HashGeneratorChecker<HashType, HashGenerator> {
 	#pragma region Types
 	public:
@@ -659,6 +672,8 @@ template<class HashGenerator = hash::HashGeneratorDummy<hash::Hash64>>
 using Hash64FunctionPack = HashFunctionPackBase<hash::Hash64, HashGenerator>;
 template<class HashGenerator = hash::HashGeneratorDummy<hash::Hash128>>
 using Hash128FunctionPack = HashFunctionPackBase<hash::Hash128, HashGenerator>;
+template<class HashGenerator = hash::HashGeneratorDummy<hash::StandardHash>>
+using StandardHashFunctionPack = HashFunctionPackBase<hash::StandardHash, HashGenerator>;
 
 } // namespace hash
 } // namespace meta

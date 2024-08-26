@@ -132,6 +132,19 @@ class Hash32 {
 			return hash::algorithm::murmur32Combine_r(this->value);
 		}
 
+		__LL_NODISCARD__ constexpr hash::Hash32 fastCombine(const ui32 value) const noexcept {
+			return this->simpleCombine_r(value);
+		}
+		__LL_NODISCARD__ constexpr hash::Hash32 fastCombine() const noexcept {
+			return this->simpleCombine_r();
+		}
+		__LL_NODISCARD__ constexpr hash::Hash32 slowcombine(const ui32 value) const noexcept {
+			return this->mur_r(value);
+		}
+		__LL_NODISCARD__ constexpr hash::Hash32 slowCombine() const noexcept {
+			return this->mur_l();
+		}
+
 		#pragma endregion
 
 		#pragma endregion
@@ -240,6 +253,19 @@ class Hash64 {
 		}
 		__LL_NODISCARD__ constexpr hash::Hash64 mur_r() const noexcept {
 			return hash::algorithm::murmur64Combine_r(this->value);
+		}
+
+		__LL_NODISCARD__ constexpr hash::Hash64 fastCombine(const ui64 value) const noexcept {
+			return this->simpleCombine_r(value);
+		}
+		__LL_NODISCARD__ constexpr hash::Hash64 fastCombine() const noexcept {
+			return this->simpleCombine_r();
+		}
+		__LL_NODISCARD__ constexpr hash::Hash64 slowcombine(const ui64 value) const noexcept {
+			return this->mur_r(value);
+		}
+		__LL_NODISCARD__ constexpr hash::Hash64 slowCombine() const noexcept {
+			return this->mur_l();
 		}
 
 		#pragma endregion
@@ -360,6 +386,38 @@ class Hash128 {
 			return hash::Hash64(this->mur_l());
 		}
 		__LL_NODISCARD__ constexpr operator ui64() const noexcept { return this->toHash64(); }
+
+		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
+		__LL_NODISCARD__ constexpr hash::Hash128 simpleCombine_l(const hash::Hash128& other, const ui8 shift) const noexcept {
+			return
+				hash::Hash128(
+					hash::algorithm::simpleCombine<ui64, IS_REVERSE>(this->low, other.low, shift),
+					hash::algorithm::simpleCombine<ui64, IS_REVERSE>(this->high, other.high, shift)
+				);
+		}
+		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
+		__LL_NODISCARD__ constexpr hash::Hash128 simpleCombine_r(const hash::Hash128& other, const ui8 shift) const noexcept {
+			return
+				hash::Hash128(
+					hash::algorithm::simpleCombine<ui64, IS_REVERSE>(other.low, this->low, shift),
+					hash::algorithm::simpleCombine<ui64, IS_REVERSE>(other.high, this->high, shift)
+				);
+		}
+
+		__LL_NODISCARD__ constexpr hash::Hash128 mur_l(const hash::Hash128& other) const noexcept {
+			return
+				hash::Hash128(
+					hash::algorithm::murmur64Combine(this->low, other.low),
+					hash::algorithm::murmur64Combine(this->high, other.high)
+				);
+		}
+		__LL_NODISCARD__ constexpr hash::Hash128 mur_r(const hash::Hash128& other) const noexcept {
+			return
+				hash::Hash128(
+					hash::algorithm::murmur64Combine(other.low, this->low),
+					hash::algorithm::murmur64Combine(other.high, this->high)
+				);
+		}
 
 		#pragma endregion
 

@@ -133,7 +133,7 @@ class Hash32 {
 		}
 
 		__LL_NODISCARD__ constexpr hash::Hash32 fastCombine(const ui32 value) const noexcept {
-			return this->simpleCombine_r(value);
+			return this->simpleCombine_r_noshift(value);
 		}
 		__LL_NODISCARD__ constexpr hash::Hash32 fastCombine() const noexcept {
 			return this->simpleCombine_r();
@@ -256,7 +256,7 @@ class Hash64 {
 		}
 
 		__LL_NODISCARD__ constexpr hash::Hash64 fastCombine(const ui64 value) const noexcept {
-			return this->simpleCombine_r(value);
+			return this->simpleCombine_r_noshift(value);
 		}
 		__LL_NODISCARD__ constexpr hash::Hash64 fastCombine() const noexcept {
 			return this->simpleCombine_r();

@@ -28,22 +28,27 @@ namespace llcpp {
 namespace meta {
 
 // Requires a char type to fit software chars: char, wchar...
-template<class CharType, class HashType>
+template<class _CharType, class _HashType>
 class Typeid {
 	#pragma region Types
 	public:
+		// Class related
+		using _MyType	= Typeid;
+
+		// Types and enums
+		using CharType	= _CharType;
+		using HashType	= _HashType;
 		using NameType = meta::ArrayPair<CharType>;
-		using OptionalHash = std::optional<HashType>;
 
 		template<class HashGenerator>
-		using HashNameTypeFunction = OptionalHash(HashGenerator::*)(const NameType&) noexcept;
+		using HashNameTypeFunction		= HashType(HashGenerator::*)(const NameType&) noexcept;
 		template<class HashGenerator>
-		using HashNameTypeConstFunction = OptionalHash(HashGenerator::*)(const NameType&) const noexcept;
+		using HashNameTypeConstFunction = HashType(HashGenerator::*)(const NameType&) const noexcept;
 
 		template<class HashGenerator>
-		using HashCharTypeFunction = OptionalHash(HashGenerator::*)(const CharType*, len_t) noexcept;
+		using HashCharTypeFunction		= HashType(HashGenerator::*)(const CharType*, len_t) noexcept;
 		template<class HashGenerator>
-		using HashCharTypeConstFunction = OptionalHash(HashGenerator::*)(const CharType*, len_t) const noexcept;
+		using HashCharTypeConstFunction = HashType(HashGenerator::*)(const CharType*, len_t) const noexcept;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -73,8 +78,8 @@ class Typeid {
 	#pragma region Functions
 		#pragma region Constructor
 	public:
-		Typeid() noexcept : hash_name(), name() {}
-		~Typeid() noexcept {}
+		constexpr Typeid() noexcept : hash_name(), name() {}
+		constexpr ~Typeid() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
@@ -87,14 +92,31 @@ class Typeid {
 			return *this;
 		}
 		constexpr Typeid(Typeid&& other) noexcept
-			: hash_name(std::move(other.hash_name))
-			, name(std::move(other.name))
+			: hash_name(std::forward<HashType&&>(other.hash_name))
+			, name(std::forward<NameType&&>(other.name))
 		{}
 		constexpr Typeid& operator=(Typeid&& other) noexcept {
-			this->hash_name = std::move(other.hash_name);
-			this->name = std::move(other.name);
+			this->hash_name = std::forward<HashType&&>(other.hash_name);
+			this->name = std::forward<NameType&&>(other.name);
 			return *this;
 		}
+
+		constexpr Typeid(const NameType& name, const HashType& hash_name) noexcept
+			: name(name)
+			, hash_name(hash_name)
+		{}
+		constexpr Typeid(const NameType& name, HashType&& hash_name) noexcept
+			: name(name)
+			, hash_name(std::forward<HashType&&>(hash_name))
+		{}
+		constexpr Typeid(NameType&& name, const HashType& hash_name) noexcept
+			: name(std::forward<NameType&&>(name))
+			, hash_name(hash_name)
+		{}
+		constexpr Typeid(NameType&& name, HashType&& hash_name) noexcept
+			: name(std::forward<NameType&&>(name))
+			, hash_name(std::forward<HashType&&>(hash_name))
+		{}
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
@@ -105,67 +127,59 @@ class Typeid {
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr const hash::Hash64& hash() const noexcept {
-			return this->hash_name;
-		}
-		__LL_NODISCARD__ constexpr const NameType& getName() const noexcept {
-			return this->name;
-		}
+		__LL_NODISCARD__ constexpr const hash::Hash64& hash() const noexcept { return this->hash_name; }
+		__LL_NODISCARD__ constexpr const NameType& getName() const noexcept { return this->name; }
 
-		__LL_NODISCARD__ constexpr void reset(const NameType& name, const HashType& hash_name) noexcept {
+		constexpr void reset(const NameType& name, const HashType& hash_name) noexcept {
 			this->name = name;
 			this->hash_name = hash_name;
 		}
-		__LL_NODISCARD__ constexpr void reset(const NameType& name, HashType&& hash_name) noexcept {
+		constexpr void reset(const NameType& name, HashType&& hash_name) noexcept {
 			this->name = name;
-			this->hash_name = std::move(hash_name);
+			this->hash_name = std::forward<HashType&&>(hash_name);
 		}
-		__LL_NODISCARD__ constexpr void reset(NameType&& name, const HashType& hash_name) noexcept {
-			this->name = std::move(name);
+		constexpr void reset(NameType&& name, const HashType& hash_name) noexcept {
+			this->name = std::forward<NameType&&>(name);
 			this->hash_name = hash_name;
 		}
-		__LL_NODISCARD__ constexpr void reset(NameType&& name, HashType&& hash_name) noexcept {
-			this->name = std::move(name);
-			this->hash_name = std::move(hash_name);
+		constexpr void reset(NameType&& name, HashType&& hash_name) noexcept {
+			this->name = std::forward<NameType&&>(name);
+			this->hash_name = std::forward<HashType&&>(hash_name);
 		}
 
+	private:
 		template<class HashGenerator>
-		__LL_NODISCARD__ constexpr ll_bool_t reset(const NameType& name, HashGenerator& gen) noexcept {
+		constexpr void reset_impl(const NameType& name, HashGenerator& gen) noexcept {
 			using HashName = HashNameTypeFunction<HashGenerator>;
 			using HashNameConst = HashNameTypeConstFunction<HashGenerator>;
 			using HashChar = HashCharTypeFunction<HashGenerator>;
 			using HashCharConst = HashCharTypeConstFunction<HashGenerator>;
+			constexpr ll_bool_t HAS_ARRAY_HASH =
+				traits::common::has_hash_function_v<HashGenerator, HashName>
+				|| traits::common::has_hash_function_v<HashGenerator, HashNameConst>;
+			constexpr ll_bool_t HAS_CHAR_HASH =
+				traits::common::has_hash_function_v<HashGenerator, HashChar>
+				|| traits::common::has_hash_function_v<HashGenerator, HashCharConst>;
 
-			OptionalHash result;
-
-			if constexpr (hash::traits::has_any_hash_function<HashGenerator, HashName, HashNameConst>)
-				result = gen.hash(name);
-			else if constexpr (hash::traits::has_any_hash_function<HashGenerator, HashChar, HashCharConst>)
-				result = gen.hash(name);
-			else return llcpp::FALSE;
-
-			if (result.has_value()) this->hash_name = *result;
-			else this->hash_name = HashType();
+			static_assert(HAS_ARRAY_HASH || HAS_CHAR_HASH,
+				"This function requires by HashGenerator a hash function to generate a hash of an "
+				"NameType or a CharType"
+				);
+			if constexpr (HAS_ARRAY_HASH)
+				this->hash_name = gen.hash(name);
+			else if constexpr (HAS_CHAR_HASH)
+				this->hash_name = gen.hash(name.begin(), name.lenght());
+		}
+	public:
+		template<class HashGenerator>
+		constexpr void reset(const NameType& name, HashGenerator& gen) noexcept {
+			this->reset_impl(name, gen);
 			this->name = name;
 		}
 		template<class HashGenerator>
-		__LL_NODISCARD__ constexpr ll_bool_t reset(NameType&& name, HashGenerator& gen) noexcept {
-			using HashName = HashNameTypeFunction<HashGenerator>;
-			using HashNameConst = HashNameTypeConstFunction<HashGenerator>;
-			using HashChar = HashCharTypeFunction<HashGenerator>;
-			using HashCharConst = HashCharTypeConstFunction<HashGenerator>;
-
-			OptionalHash result;
-
-			if constexpr (hash::traits::has_any_hash_function<HashGenerator, HashName, HashNameConst>)
-				result = gen.hash(name);
-			else if constexpr (hash::traits::has_any_hash_function<HashGenerator, HashChar, HashCharConst>)
-				result = gen.hash(name);
-			else return llcpp::FALSE;
-
-			if (result.has_value()) this->hash_name = *result;
-			else this->hash_name = HashType();
-			this->name = std::move(name);
+		constexpr void reset(NameType&& name, HashGenerator& gen) noexcept {
+			this->reset_impl(name, gen);
+			this->name = std::forward<NameType&&>(name);
 		}
 
 		#pragma endregion

@@ -262,9 +262,10 @@ class Parser : public ParserFunctions {
 			ParserFunctions::operator=(other);
 			return *this;
 		}
-		Parser(Parser&& other) noexcept : ParserFunctions(std::move(other)) {}
+		Parser(Parser&& other) noexcept
+			: ParserFunctions(std::forward<Parser&&>(other)) {}
 		Parser& operator=(Parser&& other) noexcept {
-			ParserFunctions::operator=(std::move(other));
+			ParserFunctions::operator=(std::forward<Parser&&>(other));
 			return *this;
 		}
 

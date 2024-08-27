@@ -155,17 +155,17 @@ __LL_NODISCARD__ constexpr ui8 simple8Combine_r(const ui8 value) noexcept {
 #pragma region 32
 // Value in in left position + user shift
 template<ll_bool_t IS_REVERSE = llcpp::FALSE>
-__LL_NODISCARD__ constexpr ui32 simple32Combine_l(const ui32 value, const ui32 shift) noexcept {
+__LL_NODISCARD__ constexpr ui32 simple32Combine_l(const ui32 value, const ui8 shift) noexcept {
 	return meta::hash::algorithm::simpleCombine<ui32, IS_REVERSE>(value, hash::algorithm::__algorithm__::combine32, shift);
 }
 // Value in in right position + user shift
 template<ll_bool_t IS_REVERSE = llcpp::FALSE>
-__LL_NODISCARD__ constexpr ui32 simple32Combine_r(const ui32 value, const ui32 shift) noexcept {
+__LL_NODISCARD__ constexpr ui32 simple32Combine_r(const ui32 value, const ui8 shift) noexcept {
 	return meta::hash::algorithm::simpleCombine<ui32, IS_REVERSE>(hash::algorithm::__algorithm__::combine32, value, shift);
 }
 // Values + no shift
 template<ll_bool_t IS_REVERSE = llcpp::FALSE>
-__LL_NODISCARD__ constexpr ui32 simple32Combine_noshift(const ui32 value1, const ui32 value2) noexcept {
+__LL_NODISCARD__ constexpr ui32 simple32Combine_noshift(const ui32 value1, const ui8 value2) noexcept {
 	return meta::hash::algorithm::simpleCombine<ui32, IS_REVERSE>(value1, value2, hash::algorithm::__algorithm__::llshift32);
 }
 // Value in in left position
@@ -183,12 +183,12 @@ __LL_NODISCARD__ constexpr ui32 simple32Combine_r(const ui32 value) noexcept {
 #pragma region 64
 // Value in in left position + user shift
 template<ll_bool_t IS_REVERSE = llcpp::FALSE>
-__LL_NODISCARD__ constexpr ui64 simple64Combine_l(const ui64 value, const ui64 shift) noexcept {
+__LL_NODISCARD__ constexpr ui64 simple64Combine_l(const ui64 value, const ui8 shift) noexcept {
 	return meta::hash::algorithm::simpleCombine<ui64, IS_REVERSE>(value, hash::algorithm::__algorithm__::combine64, shift);
 }
 // Value in in right position + user shift
 template<ll_bool_t IS_REVERSE = llcpp::FALSE>
-__LL_NODISCARD__ constexpr ui64 simple64Combine_r(const ui64 value, const ui64 shift) noexcept {
+__LL_NODISCARD__ constexpr ui64 simple64Combine_r(const ui64 value, const ui8 shift) noexcept {
 	return meta::hash::algorithm::simpleCombine<ui64, IS_REVERSE>(hash::algorithm::__algorithm__::combine64, value, shift);
 }
 // Values + no shift

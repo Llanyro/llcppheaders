@@ -207,7 +207,7 @@ class ArrayPair {
 			return this->begin();
 		}
 		__LL_NODISCARD__ constexpr const T* begin() const noexcept {
-			return this->get(ZERO_UI64);
+			return this->mem;
 		}
 		__LL_NODISCARD__ constexpr const T* end() const noexcept {
 			return this->mem_end;
@@ -494,10 +494,10 @@ class Array {
 			return this->begin();
 		}
 		__LL_NODISCARD__ constexpr T* begin() noexcept {
-			return this->get(ZERO_UI64);
+			return this->mem;
 		}
 		__LL_NODISCARD__ constexpr const T* begin() const noexcept {
-			return this->get(ZERO_UI64);
+			return this->mem;
 		}
 		__LL_NODISCARD__ constexpr T* rbegin() noexcept {
 			return this->mem_end - 1;

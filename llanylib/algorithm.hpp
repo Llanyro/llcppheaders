@@ -315,7 +315,7 @@ class ManipulatorDefault {
 			a = b;
 		}
 		__LL_NODISCARD__ constexpr void move(T& a, U& b) const noexcept {
-			a = std::move(b);
+			a = std::forward<U&&>(b);
 		}
 
 		#pragma endregion

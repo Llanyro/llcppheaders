@@ -58,7 +58,7 @@ class NodeDouble : public linked::SimplePrev<NodeType>, public linked::SimpleNex
 		constexpr NodeDouble(const NodeDouble&) noexcept = delete;
 		constexpr NodeDouble& operator=(const NodeDouble&) noexcept = delete;
 		constexpr NodeDouble(NodeDouble&& other) noexcept : NodeDouble() {
-			this->swapSimple(std::move(other));	// Move all from other node to this node
+			this->swapSimple(std::forward<NodeDouble&&>(other));	// Move all from other node to this node
 		}
 		constexpr NodeDouble& operator=(NodeDouble&& other) noexcept {
 			this->unlink();				// Extract from list, and set it empty

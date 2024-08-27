@@ -481,14 +481,14 @@ struct type_selection {
 	__LL_NODISCARD__ static constexpr auto get_by_type() noexcept {
 		// [TOFIX]
 		// Insert here a static_assert to check if args are double containers type
-		if constexpr (std::is_same_v<T::T, X>)
-			return traits::type_container<T::U>{};
-		else return type_selection<VoidType>::get_by_type<X, Args...>();
+		if constexpr (std::is_same_v<typename T::T, X>)
+			return traits::type_container<typename T::U>{};
+		else return _MyType::get_by_type<X, Args...>();
 	}
 	template<class X, class T>
 	__LL_NODISCARD__ static constexpr auto get_by_type() noexcept {
-		if constexpr (std::is_same_v<T::T, X>)
-			return traits::type_container<T::U>{};
+		if constexpr (std::is_same_v<typename T::T, X>)
+			return traits::type_container<typename T::U>{};
 		else return traits::type_container<VoidType>{};
 	}
 	template<class X>
@@ -827,7 +827,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_clear_function_v =
 } // namespace common
 
 #pragma endregion
-  // Returns hash type by calling hash function
+// Returns hash type by calling hash function
 #pragma region HashTypeChecker
 namespace hash {
 

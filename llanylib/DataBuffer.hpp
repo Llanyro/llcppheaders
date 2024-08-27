@@ -56,7 +56,10 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 	public:
 		#pragma region Constructors
 		DataBuffer() noexcept
-			: AllocatorCheckerBase(), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64) {
+			: AllocatorCheckerBase()
+			, mem(LL_NULLPTR)
+			, len_filled(ZERO_UI64)
+			, length(ZERO_UI64) {
 			this->mem = this->allocate(INCREMENT);
 			this->updateFilled(0ull);
 			this->updateEnd(INCREMENT);
@@ -64,7 +67,10 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 		~DataBuffer() noexcept { this->invalidate(); }
 
 		DataBuffer(const DataBuffer& other) noexcept
-			: AllocatorCheckerBase(other), mem(LL_NULLPTR), len_filled(ZERO_UI64), length(ZERO_UI64)
+			: AllocatorCheckerBase(other)
+			, mem(LL_NULLPTR)
+			, len_filled(ZERO_UI64)
+			, length(ZERO_UI64)
 		{ this->copyOther(other); }
 		DataBuffer& operator=(const DataBuffer& other) noexcept {
 			AllocatorCheckerBase::operator=(other);
@@ -73,10 +79,13 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 			return *this;
 		}
 		DataBuffer(DataBuffer&& other) noexcept
-			: AllocatorCheckerBase(std::move(other)), mem(other.mem), len_filled(other.len_filled), length(other.length)
+			: AllocatorCheckerBase(std::forward<AllocatorCheckerBase&&>(other))
+			, mem(other.mem)
+			, len_filled(other.len_filled)
+			, length(other.length)
 		{ other.simpleClear(); }
 		DataBuffer& operator=(DataBuffer&& other) noexcept {
-			AllocatorCheckerBase::operator=(std::move(other));
+			AllocatorCheckerBase::operator=(std::forward<AllocatorCheckerBase&&>(other));
 			this->invalidate();
 			this->mem = other.mem;
 			this->len_filled = other.len_filled;
@@ -212,7 +221,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 				else {
 					T* to_fill = this->filled<T>();
 					for (; mem < end; ++mem, ++to_fill)
-						new (to_fill) T(std::move(*mem));
+						new (to_fill) T(std::forward<T&&>(*mem));
 					this->advanceFilled(size_of);
 				}
 				return llcpp::TRUE;
@@ -259,7 +268,7 @@ class DataBuffer : public AllocatorChecker<Allocator> {
 				}
 				else if constexpr (traits::is_basic_type_v<U>)
 					*this->filled<U>() = object;
-				else new (this->filled<void>()) U(std::move(object));
+				else new (this->filled<void>()) U(std::forward<U&&>(object));
 
 				this->advanceFilled(size_of);
 				return llcpp::TRUE;

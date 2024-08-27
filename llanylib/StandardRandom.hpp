@@ -36,7 +36,7 @@ __LL_NODISCARD__ constexpr Random STANDARD_RANDOM(const T& seed) {
 }
 template<class T>
 __LL_NODISCARD__ constexpr Random STANDARD_RANDOM(T&& seed) {
-	return Random(std::move(seed), hash::STANDARD_HASH_FUNCTION_PACK);
+	return Random(std::forward<T&&>(seed), hash::STANDARD_HASH_FUNCTION_PACK);
 }
 
 __LL_NODISCARD__ constexpr Random FAST_RANDOM() {
@@ -48,7 +48,7 @@ __LL_NODISCARD__ constexpr Random FAST_RANDOM(const T& seed) {
 }
 template<class T>
 __LL_NODISCARD__ constexpr Random FAST_RANDOM(T&& seed) {
-	return Random(std::move(seed), hash::FAST_HASH_FUNCTION_PACK);
+	return Random(std::forward<T&&>(seed), hash::FAST_HASH_FUNCTION_PACK);
 }
 
 } // namespace meta

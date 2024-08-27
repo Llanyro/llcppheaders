@@ -428,9 +428,9 @@ constexpr void test(FunctionData<T>* args) noexcept {
 				*tmp = value;
 				value = (value + ((value > 0) ? 2 : -2)) * -1;
 			}
-			else {
-				throw "Err";
-			}
+			//else {
+			//	throw "Err";
+			//}
 		}
 	}
 	

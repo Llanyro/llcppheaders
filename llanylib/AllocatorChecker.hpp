@@ -179,7 +179,8 @@ class AllocatorChecker : public Allocator {
 	public:
 		constexpr AllocatorChecker() noexcept : Allocator() {}
 		template<class... Args>
-		constexpr AllocatorChecker(Args&&... args) noexcept : Allocator(std::forward<Args>(args)...) {}
+		constexpr AllocatorChecker(Args&&... args) noexcept
+			: Allocator(std::forward<Args>(args)...) {}
 		constexpr ~AllocatorChecker() noexcept {}
 
 		#pragma endregion
@@ -190,9 +191,10 @@ class AllocatorChecker : public Allocator {
 			Allocator::operator=(other);
 			return *this;
 		}
-		constexpr AllocatorChecker(AllocatorChecker&& other) noexcept : Allocator(std::move(other)) {}
+		constexpr AllocatorChecker(AllocatorChecker&& other) noexcept
+			: Allocator(std::forward<Allocator&&>(other)) {}
 		constexpr AllocatorChecker& operator=(AllocatorChecker&& other) noexcept {
-			Allocator::operator=(std::move(other));
+			Allocator::operator=(std::forward<Allocator&&>(other));
 			return *this;
 		}
 
@@ -201,9 +203,10 @@ class AllocatorChecker : public Allocator {
 			Allocator::operator=(other);
 			return *this;
 		}
-		constexpr AllocatorChecker(Allocator&& other) noexcept : Allocator(std::move(other)) {}
+		constexpr AllocatorChecker(Allocator&& other) noexcept
+			: Allocator(std::forward<Allocator&&>(other)) {}
 		constexpr AllocatorChecker& operator=(Allocator&& other) noexcept {
-			Allocator::operator=(std::move(other));
+			Allocator::operator=(std::forward<Allocator&&>(other));
 			return *this;
 		}
 
@@ -242,31 +245,36 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 	public:
 		constexpr AllocatorCheckerTyped() noexcept : AllocatorCheckerBase() {}
 		template<class... Args>
-		constexpr AllocatorCheckerTyped(Args&&... args) noexcept : AllocatorCheckerBase(std::forward<Args>(args)...) {}
+		constexpr AllocatorCheckerTyped(Args&&... args) noexcept
+			: AllocatorCheckerBase(std::forward<Args>(args)...) {}
 		constexpr ~AllocatorCheckerTyped() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr AllocatorCheckerTyped(const AllocatorCheckerTyped& other) noexcept : AllocatorCheckerBase(other) {}
+		constexpr AllocatorCheckerTyped(const AllocatorCheckerTyped& other) noexcept
+			: AllocatorCheckerBase(other) {}
 		constexpr AllocatorCheckerTyped& operator=(const AllocatorCheckerTyped& other) noexcept {
 			AllocatorCheckerBase::operator=(other);
 			return *this;
 		}
-		constexpr AllocatorCheckerTyped(AllocatorCheckerTyped&& other) noexcept : AllocatorCheckerBase(std::move(other)) {}
+		constexpr AllocatorCheckerTyped(AllocatorCheckerTyped&& other) noexcept
+			: AllocatorCheckerBase(std::forward<AllocatorCheckerBase&&>(other)) {}
 		constexpr AllocatorCheckerTyped& operator=(AllocatorCheckerTyped&& other) noexcept {
-			AllocatorCheckerBase::operator=(std::move(other));
+			AllocatorCheckerBase::operator=(std::forward<AllocatorCheckerBase&&>(other));
 			return *this;
 		}
 
-		constexpr AllocatorCheckerTyped(const AllocatorCheckerBase& other) noexcept : AllocatorCheckerBase(other) {}
+		constexpr AllocatorCheckerTyped(const AllocatorCheckerBase& other) noexcept
+			: AllocatorCheckerBase(other) {}
 		constexpr AllocatorCheckerTyped& operator=(const AllocatorCheckerBase& other) noexcept {
 			AllocatorCheckerBase::operator=(other);
 			return *this;
 		}
-		constexpr AllocatorCheckerTyped(AllocatorCheckerBase&& other) noexcept : AllocatorCheckerBase(std::move(other)) {}
+		constexpr AllocatorCheckerTyped(AllocatorCheckerBase&& other) noexcept
+			: AllocatorCheckerBase(std::forward<AllocatorCheckerBase&&>(other)) {}
 		constexpr AllocatorCheckerTyped& operator=(AllocatorCheckerBase&& other) noexcept {
-			AllocatorCheckerBase::operator=(std::move(other));
+			AllocatorCheckerBase::operator=(std::forward<AllocatorCheckerBase&&>(other));
 			return *this;
 		}
 
@@ -396,7 +404,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			else {
 				const T* end = src + lenght;
 				for (; src < end; ++src, ++dst)
-					new (dst) T(std::move(*src));
+					new (dst) T(std::forward<T&&>(*src));
 			}
 		}
 		// Moves objects with move operator
@@ -406,7 +414,7 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 			else {
 				const T* end = src + lenght;
 				for (; src < end; ++src, ++dst)
-					*dst = std::move(*src);
+					*dst = std::forward<T&&>(*src);
 			}
 		}
 		// Clear all objects with its destructor

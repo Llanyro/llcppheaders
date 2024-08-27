@@ -264,9 +264,9 @@ class ContainerExtra : public _Functions, public BasicContainer<traits::array_ty
 			return *this;
 		}
 		constexpr ContainerExtra(T&& data) noexcept
-			: Functions(), BasicContainer(std::move(data)) {}
+			: Functions(), BasicContainer(std::forward<T&&>(data)) {}
 		constexpr ContainerExtra& operator=(T&& data) noexcept {
-			BasicContainer::operator=(std::move(data));
+			BasicContainer::operator=(std::forward<T&&>(data));
 			return *this;
 		}
 

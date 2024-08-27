@@ -129,7 +129,7 @@ __LL_NODISCARD__ constexpr T transformTo8(const T value) noexcept {
 #pragma endregion
 
 #pragma region TypeDivision(?)
-template<class T, class U = traits::type_promotion<T, false>::value>
+template<class T, class U = traits::type_promotion<T, false>::type>
 struct type_division {
 	using __type_division = type_division<T, U>;
 	using __t = T;

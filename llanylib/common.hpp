@@ -35,9 +35,9 @@ constexpr void simple_swap(T& v1, T& v2) noexcept {
 		v2 = tmp;
 	}
 	else {
-		T tmp = std::move(v1);
-		v1 = std::move(v2);
-		v2 = std::move(tmp);
+		T tmp = std::forward<T&&>(v1);
+		v1 = std::forward<T&&>(v2);
+		v2 = std::forward<T&&>(tmp);
 	}
 }
 template<class T, class U = T>

@@ -286,19 +286,18 @@ class HashGeneratorChecker : public hash::HashChecker<_HashType>, public _HashGe
 #define __LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__(num) \
 	static_assert(num != ZERO_UI64, "Cannot hash 0 elements");
 
-template<class HashType = hash::StandardHash, class HashGenerator = hash::HashGeneratorDummy<HashType>>
-class HashFunctionPack : public hash::HashGeneratorChecker<HashType, HashGenerator> {
+template<class _HashType = hash::StandardHash, class _HashGenerator = hash::HashGeneratorDummy<_HashType>>
+class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGenerator> {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType	= HashFunctionPack;
-		using HashGeneratorChecker = hash::HashGeneratorChecker<HashType, HashGenerator>;
+		using _MyType				= HashFunctionPack;
+		using HashGeneratorChecker	= hash::HashGeneratorChecker<_HashType, _HashGenerator>;
 
 		// Types
+		using HashType				= _HashType;
+		using HashGenerator			= _HashGenerator;
 
-
-		using OptionalHash = HashGeneratorChecker::OptionalHash;
-		using Hash = HashGeneratorChecker::Hash;
 	private:
 		template<class U = HashType>
 		struct OperatorTypeChecker {
@@ -327,39 +326,44 @@ class HashFunctionPack : public hash::HashGeneratorChecker<HashType, HashGenerat
 	public:
 		constexpr HashFunctionPack() noexcept : HashGeneratorChecker() {}
 		template<class... Args>
-		constexpr HashFunctionPack(Args&&... args) noexcept : HashGeneratorChecker(std::forward<Args>(args)...) {}
+		constexpr HashFunctionPack(Args&&... args) noexcept
+			: HashGeneratorChecker(std::forward<Args>(args)...) {}
 		constexpr ~HashFunctionPack() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr HashFunctionPack(const HashFunctionPack& other) noexcept : HashGeneratorChecker(other) {}
+		constexpr HashFunctionPack(const HashFunctionPack& other) noexcept
+			: HashGeneratorChecker(other) {}
 		constexpr HashFunctionPack& operator=(const HashFunctionPack& other) noexcept {
 			HashGeneratorChecker::operator=(other);
 			return *this;
 		}
-		constexpr HashFunctionPack(HashFunctionPack&& other) noexcept : HashGeneratorChecker(std::move(other)) {}
+		constexpr HashFunctionPack(HashFunctionPack&& other) noexcept
+			: HashGeneratorChecker(std::forward<HashGeneratorChecker&&>(other)) {}
 		constexpr HashFunctionPack& operator=(HashFunctionPack&& other) noexcept {
-			HashGeneratorChecker::operator=(std::move(other));
+			HashGeneratorChecker::operator=(std::forward<HashGeneratorChecker&&>(other));
 			return *this;
 		}
 
-		constexpr HashFunctionPack(const HashGeneratorChecker& other) noexcept : HashGeneratorChecker(other) {}
+		constexpr HashFunctionPack(const HashGeneratorChecker& other) noexcept
+			: HashGeneratorChecker(other) {}
 		constexpr HashFunctionPack& operator=(const HashGeneratorChecker& other) noexcept {
 			HashGeneratorChecker::operator=(other);
 			return *this;
 		}
-		constexpr HashFunctionPack(HashGeneratorChecker&& other) noexcept : HashGeneratorChecker(std::move(other)) {}
+		constexpr HashFunctionPack(HashGeneratorChecker&& other) noexcept
+			: HashGeneratorChecker(std::forward<HashGeneratorChecker&&>(other)) {}
 		constexpr HashFunctionPack& operator=(HashGeneratorChecker&& other) noexcept {
-			HashGeneratorChecker::operator=(std::move(other));
+			HashGeneratorChecker::operator=(std::forward<HashGeneratorChecker&&>(other));
 			return *this;
 		}
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashFunctionPack* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashFunctionPack* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator const HashFunctionPack*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr operator HashFunctionPack*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -368,7 +372,7 @@ class HashFunctionPack : public hash::HashGeneratorChecker<HashType, HashGenerat
 		// Basic type to char array
 		// If type has 7 bytes, array will be of 7
 		template<class U, class W = meta::traits::cinput<U>>
-		__LL_NODISCARD__ constexpr void b2a(ll_char_t*& buffer, W value) const noexcept {
+		__LL_NODISCARD__ static constexpr void b2a(ll_char_t*& buffer, W value) noexcept {
 			__LL_HASHFUNCTIONPACK_B2A_ASSERT__(U);
 			constexpr len_t N = sizeof(U);
 			constexpr len_t BYTES = (N << 3) - 8;

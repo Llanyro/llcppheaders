@@ -5,6 +5,7 @@
 #include "../llanylib/algorithm.hpp"
 #include "../llanylib/Node.hpp"
 #include "../llanylib/mem.hpp"
+#include "../llanylib/Typeid.hpp"
 
 #include <iostream>
 //#include <array>
@@ -257,7 +258,14 @@ int main() {
 	//llcpp::meta::containers::Container<int[5]> cont(10);
 	//main_nodes();
 
+	llcpp::meta::StrTypeid id(llcpp::meta::make_ArrayPair("Patata"), 57);
+	auto& name = id.getName();
+
 	std::cout << llcpp::meta::mem::test_prep<int>(2) << std::endl;
+	printf("Size: %llu\n", id.getName().lenght());
+	std::cout << std::string_view(name.begin(), name.end()) << std::endl;
+	//printf("%*.s\n", (ui32)id.getName().lenght(), id.getName().begin());
+	std::cout << id.hash().get() << std::endl;
 
 	return 0;
 }

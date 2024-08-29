@@ -115,6 +115,14 @@ class Object {
 		__LL_NODISCARD__ constexpr operator Hash128() const noexcept { return Hash128(); }
 };
 
+using testing_t = traits::common::has_hash_function_t<
+	llcpp::meta::hash::Object,
+	llcpp::meta::hash::Hash32(llcpp::meta::hash::Object::*)() const noexcept
+>;
+using t2 = testing_t::Signature;
+constexpr ll_bool_t asdasdasd = testing_t::type::value;
+
+
 template<class _HashType = hash::StandardHash, class _HashGenerator = hash::HashGeneratorDummy<_HashType>>
 class HashGeneratorChecker : public hash::HashChecker<_HashType>, public _HashGenerator {
 	#pragma region Types
@@ -281,7 +289,12 @@ class HashGeneratorChecker : public hash::HashChecker<_HashType>, public _HashGe
 };
 
 #define __LL_HASHFUNCTIONPACK_B2A_ASSERT__(type) \
-	static_assert(HashFunctionPack::is_convertible_v<type>, "Invalid type to hash. Type is not convertible to array.")
+	static_assert(HashFunctionPack::is_convertible_v<type>, \
+	"Invalid type to hash. Type is not convertible to array.")
+
+#define __LL_HASHFUNCTIONPACK_OBJECT_NO_HASH_FUNCTION_ASSERT__(hash_operator) \
+	static_assert(!std::is_same_v<hash_operator, void>, \
+	"Invalid type to hash. Object has no valid hash operator.")
 
 #define __LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__(num) \
 	static_assert(num != ZERO_UI64, "Cannot hash 0 elements");
@@ -303,20 +316,25 @@ class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGener
 		struct OperatorTypeChecker {
 			// Is for being used in auto mode in check_valid_types, hashArray()
 			template<class T>
-			static constexpr ll_bool_t is_valid_v = traits::has_simple_type_operator_v<U, T>;
+			static constexpr ll_bool_t is_valid_v =
+				traits::has_simple_type_operator_v<U, T>
+				|| traits::has_simple_type_const_operator_v<U, T>;
 			using U = traits::check_valid_types<OperatorTypeChecker, void>::type<ui8, ui16, ui32, ui64, i8, i16, i32, i64>;
 		};
 		template<class V>
 		struct HashTypeChecker {
 			// Is for being used in auto mode in check_valid_types, hashArray()
 			template<class T>
-			static constexpr ll_bool_t is_valid_v = traits::has_simple_type_operator_v<V, T>;
-			using U = traits::check_valid_types<HashTypeChecker, void>::type<OptionalHash32, OptionalHash64, OptionalHash128, OptionalHash>;
+			static constexpr ll_bool_t is_valid_v =
+				traits::has_simple_type_operator_v<V, T>
+				|| traits::has_simple_type_const_operator_v<V, T>;
+			using U = traits::check_valid_types<HashTypeChecker, void>::type<hash::Hash32, hash::Hash64, hash::Hash128, HashType>;
 		};
 
 	#pragma endregion
 	#pragma region Expresions
 	public:
+		// Checks if type is 
 		template<class T>
 		static constexpr ll_bool_t is_convertible_v = std::_Is_any_of_v<T, i8, ui8, i16, ui16, i32, ui32, i64, ui64, ll_wchar_t>;
 
@@ -380,30 +398,40 @@ class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGener
 			for (len_t i{}; i < N; ++i, ++buffer, byte -= 8)
 				*buffer = static_cast<ui8>(value >> byte) & 0xff;
 		}
+		template<class U, class W = meta::traits::cinput<U>>
+		__LL_NODISCARD__ static constexpr void basicType2ascii(ll_char_t*& buffer, W value) noexcept {
+			return _MyType::b2a<U, W>(buffer, value);
+		}
+		template<class U, class W = meta::traits::cinput<U>>
+		__LL_NODISCARD__ static constexpr void primitive2ascii(ll_char_t*& buffer, W value) noexcept {
+			return _MyType::b2a<U, W>(buffer, value);
+		}
 
 	private:
 		// This function is the const part of "hashValue() noexcept" && "hashValue() const noexcept"
 		// Both functions call this function if 
 		template<class U, class W = meta::traits::cinput<U>>
-		__LL_NODISCARD__ constexpr OptionalHash hashValuePriv(W value) const noexcept {
-			using ObjectOptionalHash = HashTypeChecker<U>::U;
-			if constexpr (!std::is_same_v<ObjectOptionalHash, void>) {
-				ObjectOptionalHash h = value.operator ObjectOptionalHash();
-				if constexpr (!std::is_same_v<ObjectOptionalHash, OptionalHash>)
-					return h.has_value() ? this->hashValue<ui32>(h->operator ui32()) : std::nullopt;
-				else return h;
-			}
-			else return std::nullopt;
+		__LL_NODISCARD__ constexpr HashType hashValuePriv(W value) const noexcept {
+			using ObjectHash = HashTypeChecker<U>::U;
+			__LL_HASHFUNCTIONPACK_OBJECT_NO_HASH_FUNCTION_ASSERT__(ObjectHash);
+			
+
+			if constexpr (std::is_same_v<ObjectHash, HashType>)
+				return value.operator HashType();
+			else this->hashValue<ObjectHash>(h->operator ObjectHash());
 		}
+
 	public:
 		// Generates hashes by basic types
-		// Prior 32-64-128
+		// Prior 32-64-128-OwnType
 		// Uses "operator type() const noexcept" to hash the object
 		// As a last option it prior custom user hash: "operator std::optional<UserHashType>() const noexcept"
 		template<class U, class W = meta::traits::cinput<U>>
-		__LL_NODISCARD__ constexpr OptionalHash hashValue(W value) noexcept {
-			using ObjectOptionalHash = HashTypeChecker<U>::U;
-			if constexpr (!std::is_same_v<ObjectOptionalHash, void>)
+		__LL_NODISCARD__ constexpr HashType hashValue(W value) noexcept {
+			using ObjectHash = HashTypeChecker<U>::U;
+			static_assert()
+
+			if constexpr (!std::is_same_v<ObjectHash, void>)
 				return this->hashValuePriv<U, W>(value);
 			else {
 				__LL_HASHFUNCTIONPACK_B2A_ASSERT__(U);
@@ -419,9 +447,9 @@ class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGener
 		// Uses "operator type() const noexcept" to hash the object
 		// As a last option it prior custom user hash: "operator std::optional<UserHashType>() const noexcept"
 		template<class U, class W = meta::traits::cinput<U>>
-		__LL_NODISCARD__ constexpr OptionalHash hashValue(W value) const noexcept {
-			using ObjectOptionalHash = HashTypeChecker<U>::U;
-			if constexpr (!std::is_same_v<ObjectOptionalHash, void>)
+		__LL_NODISCARD__ constexpr HashType hashValue(W value) const noexcept {
+			using ObjectHash = HashTypeChecker<U>::U;
+			if constexpr (!std::is_same_v<ObjectHash, void>)
 				return this->hashValuePriv<U, W>(value);
 			else {
 				__LL_HASHFUNCTIONPACK_B2A_ASSERT__(U);

@@ -30,7 +30,7 @@ class Base {
 			return *this;
 		}
 
-		constexpr operator int() const noexcept { return this->value; }
+		__LL_NODISCARD__ constexpr operator int() const noexcept { return this->value; }
 };
 
 struct ARR {
@@ -38,11 +38,11 @@ struct ARR {
 		Base data[5];
 
 	public:
-		constexpr Base* begin() noexcept { return this->data; }
-		constexpr Base* end() noexcept { return this->data + 5; }
+		__LL_NODISCARD__ constexpr Base* begin() noexcept { return this->data; }
+		__LL_NODISCARD__ constexpr Base* end() noexcept { return this->data + 5; }
 
-		constexpr const Base* begin() const noexcept { return this->data; }
-		constexpr const Base* end() const noexcept { return this->data + 5; }
+		__LL_NODISCARD__ constexpr const Base* begin() const noexcept { return this->data; }
+		__LL_NODISCARD__ constexpr const Base* end() const noexcept { return this->data + 5; }
 };
 
 class H1 : public Base {
@@ -190,6 +190,11 @@ len_t merge_sort() noexcept {
 	end->set(n);
 	return (n) ? n->get(POS)->operator*() : 0;
 }
+
+//constexpr ll_bool_t asdasd = llcpp::meta::traits::has_type_operator_v<D1, int, int(D1::*)() const noexcept>;
+//constexpr ll_bool_t asdasd = llcpp::meta::traits::has_simple_type_const_operator_v<H2, int>;
+//constexpr ll_bool_t asdasd = llcpp::meta::traits::has_simple_type_const_operator_v<int, int>;
+
 void main_nodes() {
 	D1 a(80, 70);
 	//llcpp::meta::containers::Container<int*, IntFunctions> cont(new int(10));
@@ -221,7 +226,19 @@ ll_bool_t get_val() noexcept {
 	return val;
 }
 
+union example {
+	ui32 l[2];
+	ui64 real;
+};
+
 int main() {
+	example e{};
+	e.real = llcpp::meta::hash::algorithm::__algorithm__::kMul64;
+
+	std::cout << e.real << std::endl;
+	std::cout << e.l[0] << std::endl;
+	std::cout << e.l[1] << std::endl;
+
 	//auto asdf = 1 <=> 9;
 	//
 	//llcpp::ll_bool_t boolean1 = true;

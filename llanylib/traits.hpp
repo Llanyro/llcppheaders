@@ -55,7 +55,7 @@ struct double_type_container {
 };
 
 // SFINAE checker for signatures
-template<class _U, class _Signature, _Signature> struct SignatureChecker {};
+template<class _U, class _Signature, _Signature A> struct SignatureChecker {};
 
 // Standard checker for types in this lib
 template<class _T, ll_bool_t _IGNORE_POINTER = llcpp::FALSE, ll_bool_t _IGNORE_ARRAY = llcpp::FALSE, ll_bool_t _IGNORE_VOLATILE = llcpp::FALSE>
@@ -259,19 +259,19 @@ struct type_promotion {
 	template<> struct promote_type<i8>		{ using type = std::conditional_t<_PROMOTE, i16, i8>; };
 	template<> struct promote_type<i16>		{ using type = std::conditional_t<_PROMOTE, i32, i8>; };
 	template<> struct promote_type<i32>		{ using type = std::conditional_t<_PROMOTE, i64, i16>; };
-	template<> struct promote_type<i64>		{ using type = std::conditional_t<_PROMOTE, i128, i64>; };
-	template<> struct promote_type<i128>	{ using type = std::conditional_t<_PROMOTE, i256, i128>; };
+	template<> struct promote_type<i64>		{ using type = std::conditional_t<_PROMOTE, i128, i32>; };
+	template<> struct promote_type<i128>	{ using type = std::conditional_t<_PROMOTE, i256, i64>; };
 	template<> struct promote_type<i256>	{ using type = std::conditional_t<_PROMOTE, i256, i128>; };
 
 	template<> struct promote_type<ui8>		{ using type = std::conditional_t<_PROMOTE, ui16, ui8>; };
 	template<> struct promote_type<ui16>	{ using type = std::conditional_t<_PROMOTE, ui32, ui8>; };
 	template<> struct promote_type<ui32>	{ using type = std::conditional_t<_PROMOTE, ui64, ui16>; };
-	template<> struct promote_type<ui64>	{ using type = std::conditional_t<_PROMOTE, ui128, ui64>; };
-	template<> struct promote_type<ui128>	{ using type = std::conditional_t<_PROMOTE, ui256, ui128>; };
+	template<> struct promote_type<ui64>	{ using type = std::conditional_t<_PROMOTE, ui128, ui32>; };
+	template<> struct promote_type<ui128>	{ using type = std::conditional_t<_PROMOTE, ui256, ui64>; };
 	template<> struct promote_type<ui256>	{ using type = std::conditional_t<_PROMOTE, ui256, ui128>; };
 
 	template<> struct promote_type<f32>		{ using type = std::conditional_t<_PROMOTE, f64, f32>; };
-	template<> struct promote_type<f64>		{ using type = std::conditional_t<_PROMOTE, f128, f64>; };
+	template<> struct promote_type<f64>		{ using type = std::conditional_t<_PROMOTE, f128, f32>; };
 	template<> struct promote_type<f128>	{ using type = std::conditional_t<_PROMOTE, f128, f64>; };
 
 	using type = promote_type<_T>::type;
@@ -509,25 +509,25 @@ using testing = type_selection<void>::get_conincidence<
 
 #pragma endregion
 #pragma region MyRegion
-//template<class _Checker, class _VoidType = void>
-//struct check_valid_types {
-//	using Checker	= _Checker;
-//	using VoidType	= _VoidType;
-//
-//	static_assert(traits::is_valid_type_checker_v<Checker>,
-//		"type_checker<Checker> detected an invalid type!");
-//	static_assert(traits::is_valid_class_checker_v<Checker>,
-//		"class_checker<Checker> detected an invalid class type!");
-//
-//	template<class T>
-//	static constexpr auto get_first() noexcept ->
-//		std::conditional_t<Checker::is_valid_v<T>, T, VoidType>;
-//	template<class T, class... Args>
-//	static constexpr auto get_first() noexcept ->
-//		std::conditional_t<Checker::is_valid_v<T>, T, decltype(get_first<Args...>())>;
-//	template<class... Args>
-//	using type = decltype(get_first<Args...>());
-//};
+template<class _Checker, class _VoidType = void>
+struct check_valid_types {
+	using Checker	= _Checker;
+	using VoidType	= _VoidType;
+
+	static_assert(traits::is_valid_type_checker_v<Checker>,
+		"type_checker<Checker> detected an invalid type!");
+	static_assert(traits::is_valid_class_checker_v<Checker>,
+		"class_checker<Checker> detected an invalid class type!");
+
+	template<class T>
+	static constexpr auto get_first() noexcept ->
+		std::conditional_t<Checker::is_valid_v<T>, T, VoidType>;
+	template<class T, class... Args>
+	static constexpr auto get_first() noexcept ->
+		std::conditional_t<Checker::is_valid_v<T>, T, decltype(get_first<Args...>())>;
+	template<class... Args>
+	using type = decltype(get_first<Args...>());
+};
 
 #define __LL_GENERIC_CHECKER__(name, checker) \
 	struct is_valid_##name##_checker { \
@@ -564,42 +564,38 @@ using get_by_char_type_t = traits::get_by_char_type<T, TypeChar, TypeWChar, Extr
 
 #pragma endregion
 #pragma region FunctionalReflector
-template<class _ClassToCheck, class _OperatorType, class _Signature>
+template<class ClassToCheck, class OperatorType, class Signature>
 struct has_type_operator {
-	// Class related
-	using _MyType		= has_type_operator;
-
-	// Types and enums
-	using ClassToCheck	= _ClassToCheck;
-	using OperatorType	= _OperatorType;
-	using Signature		= _Signature;
-	template<Signature SIG>
-	using checker		= traits::SignatureChecker<ClassToCheck, Signature, SIG>;
-
 	template<ll_bool_t, ll_bool_t> struct SFINAE { using type = std::false_type; };
 	template<> struct SFINAE<llcpp::TRUE, llcpp::TRUE> { using type = std::true_type; };
-
 	using type_default_result =
 		typename SFINAE<traits::is_basic_type_v<ClassToCheck>, std::is_same_v<ClassToCheck, OperatorType>>::type;
-
-	// Assets
-	static_assert(traits::is_valid_type_checker_v<ClassToCheck>,
-		"type_checker<ClassToCheck> detected an invalid type!");
-
-	// Functions
-
-	template<class _U>
-	static constexpr auto test(checker<&_U::operator OperatorType>*) noexcept	-> std::true_type;
-	template<class _U> static constexpr auto test(...) noexcept					-> type_default_result;
-
-	using type = decltype(_MyType::test<ClassToCheck>(LL_NULLPTR));
+	template<class U>
+	static constexpr auto test(Signature) noexcept -> std::true_type;
+	template<class U>
+	static constexpr auto test(...) noexcept -> type_default_result;
+	using type = decltype(has_type_operator::test<ClassToCheck>(&ClassToCheck::operator OperatorType));
 };
+
 template<class ClassToCheck, class OperatorType, class Signature>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v =
-	traits::has_type_operator<ClassToCheck, OperatorType, Signature>::type::value;
-template<class ClassToCheck, class OperatorType, class __ = std::conditional_t<std::is_class_v<ClassToCheck>, ClassToCheck, llcpp::Emptyclass>>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_type_operator_v = traits::has_type_operator<ClassToCheck, OperatorType, Signature>::type::value;
+template<class ClassToCheck, class OperatorType>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_type_operator_v =
-	traits::has_type_operator_v<ClassToCheck, OperatorType, OperatorType(__::*)() const noexcept>;
+	traits::has_type_operator<ClassToCheck, OperatorType, OperatorType(std::conditional_t<std::is_class_v<ClassToCheck>, ClassToCheck, llcpp::Emptyclass>::*)() noexcept>::type::value;
+template<class ClassToCheck, class OperatorType, class T_Class = std::conditional_t<std::is_class_v<ClassToCheck>, ClassToCheck, llcpp::Emptyclass>>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_simple_type_const_operator_v =
+traits::has_type_operator<ClassToCheck, OperatorType, OperatorType(std::conditional_t<std::is_class_v<ClassToCheck>, ClassToCheck, llcpp::Emptyclass>::*)() const noexcept>::type::value;
+
+constexpr ll_bool_t has_operator_or_func_res_1 =
+	traits::has_simple_type_const_operator_v<traits::TestClassBase, ll_bool_t>;
+
+constexpr ll_bool_t has_operator_or_func_res_2 =
+	traits::has_type_operator<
+		traits::TestClassBase,
+		ll_bool_t,
+		//ll_bool_t(traits::TestClassBase::*)()
+		ll_bool_t(traits::TestClassBase::*)() const noexcept
+	>::type::value;
 
 #pragma endregion
 #pragma region SwapChecker
@@ -735,8 +731,8 @@ namespace common {
 		using _MyType		= has_##name##_function; \
 		using ClassToCheck	= _ClassToCheck; \
 		using Signature		= _Signature; \
-		template<Signature SIG> \
-		using checker		= traits::SignatureChecker<ClassToCheck, Signature, SIG>; \
+		template<_Signature SIG> \
+		using checker		= traits::SignatureChecker<_ClassToCheck, _Signature, SIG>; \
 		template<class _U> \
 		static constexpr auto test(checker<&_U::##functionname##>*) noexcept	-> std::true_type; \
 		template<class _U> static constexpr auto test(...) noexcept				-> std::false_type; \

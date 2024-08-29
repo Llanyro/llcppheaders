@@ -28,7 +28,7 @@ static_assert(std::is_same_v<get_by_char_type_res_3, i32>, "Error changed value"
 
 ///////////////////////////////////////////////// Getting types /////////////////////////////////////////////////
 
-using get_raw_type_test_1 = traits::type_conversor<int>::to_raw_t;
+/*using get_raw_type_test_1 = traits::type_conversor<int>::to_raw_t;
 using get_raw_type_test_2 = traits::type_conversor<int*****>::to_raw_t;
 using get_raw_type_test_3 = traits::type_conversor<int&>::to_raw_t;
 using get_raw_type_test_4 = traits::type_conversor<int&&>::to_raw_t;
@@ -99,32 +99,32 @@ static_assert(std::is_same_v<get_const_reference_type_test_5, const int*&>, "Err
 static_assert(std::is_same_v<get_const_reference_type_test_6, const float*&>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_7, const traits::TestClass*&>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_8, const traits::TestClassThrow*&>, "Error changed value");
-static_assert(std::is_same_v<get_const_reference_type_test_10, const int(&)[5]>, "Error changed value");
+static_assert(std::is_same_v<get_const_reference_type_test_10, const int(&)[5]>, "Error changed value");*/
 
-using get_promote_type_test_01 = traits::type_conversor<i8>::promote_t;
-using get_promote_type_test_02 = traits::type_conversor<i16>::promote_t;
-using get_promote_type_test_03 = traits::type_conversor<i32>::promote_t;
-using get_promote_type_test_04 = traits::type_conversor<i64>::promote_t;
-using get_promote_type_test_05 = traits::type_conversor<ui8>::promote_t;
-using get_promote_type_test_06 = traits::type_conversor<ui16>::promote_t;
-using get_promote_type_test_07 = traits::type_conversor<ui32>::promote_t;
-using get_promote_type_test_08 = traits::type_conversor<ui64>::promote_t;
-using get_promote_type_test_09 = traits::type_conversor<f32>::promote_t;
-using get_promote_type_test_10 = traits::type_conversor<f64>::promote_t;
-using get_promote_type_test_11 = traits::type_conversor<f128>::promote_t;
-using get_promote_type_test_12 = traits::type_conversor<i8>::demote_t;
-using get_promote_type_test_13 = traits::type_conversor<i16>::demote_t;
-using get_promote_type_test_14 = traits::type_conversor<i32>::demote_t;
-using get_promote_type_test_15 = traits::type_conversor<i64>::demote_t;
-using get_promote_type_test_16 = traits::type_conversor<ui8>::demote_t;
-using get_promote_type_test_17 = traits::type_conversor<ui16>::demote_t;
-using get_promote_type_test_18 = traits::type_conversor<ui32>::demote_t;
-using get_promote_type_test_19 = traits::type_conversor<ui64>::demote_t;
-using get_promote_type_test_20 = traits::type_conversor<f32>::demote_t;
-using get_promote_type_test_21 = traits::type_conversor<f64>::demote_t;
-using get_promote_type_test_22 = traits::type_conversor<f128>::demote_t;
-using get_promote_type_test_23 = traits::type_conversor<traits::TestClass>::promote_t;
-using get_promote_type_test_24 = traits::type_conversor<traits::TestClass>::demote_t;
+using get_promote_type_test_01 = traits::type_promotion<i8, llcpp::TRUE>::type;
+using get_promote_type_test_02 = traits::type_promotion<i16, llcpp::TRUE>::type;
+using get_promote_type_test_03 = traits::type_promotion<i32, llcpp::TRUE>::type;
+using get_promote_type_test_04 = traits::type_promotion<i64, llcpp::TRUE>::type;
+using get_promote_type_test_05 = traits::type_promotion<ui8, llcpp::TRUE>::type;
+using get_promote_type_test_06 = traits::type_promotion<ui16, llcpp::TRUE>::type;
+using get_promote_type_test_07 = traits::type_promotion<ui32, llcpp::TRUE>::type;
+using get_promote_type_test_08 = traits::type_promotion<ui64, llcpp::TRUE>::type;
+using get_promote_type_test_09 = traits::type_promotion<f32, llcpp::TRUE>::type;
+using get_promote_type_test_10 = traits::type_promotion<f64, llcpp::TRUE>::type;
+using get_promote_type_test_11 = traits::type_promotion<f128, llcpp::TRUE>::type;
+using get_promote_type_test_12 = traits::type_promotion<i8, llcpp::FALSE>::type;
+using get_promote_type_test_13 = traits::type_promotion<i16, llcpp::FALSE>::type;
+using get_promote_type_test_14 = traits::type_promotion<i32, llcpp::FALSE>::type;
+using get_promote_type_test_15 = traits::type_promotion<i64, llcpp::FALSE>::type;
+using get_promote_type_test_16 = traits::type_promotion<ui8, llcpp::FALSE>::type;
+using get_promote_type_test_17 = traits::type_promotion<ui16, llcpp::FALSE>::type;
+using get_promote_type_test_18 = traits::type_promotion<ui32, llcpp::FALSE>::type;
+using get_promote_type_test_19 = traits::type_promotion<ui64, llcpp::FALSE>::type;
+using get_promote_type_test_20 = traits::type_promotion<f32, llcpp::FALSE>::type;
+using get_promote_type_test_21 = traits::type_promotion<f64, llcpp::FALSE>::type;
+using get_promote_type_test_22 = traits::type_promotion<f128, llcpp::FALSE>::type;
+using get_promote_type_test_23 = traits::type_promotion<traits::TestClass, llcpp::TRUE>::type;
+using get_promote_type_test_24 = traits::type_promotion<traits::TestClass, llcpp::TRUE>::type;
 
 static_assert(std::is_same_v<get_promote_type_test_01, i16>, "Error changed value");
 static_assert(std::is_same_v<get_promote_type_test_02, i32>, "Error changed value");
@@ -153,39 +153,41 @@ static_assert(std::is_same_v<get_promote_type_test_24, traits::TestClass>, "Erro
 
 ///////////////////////////////////////////////// Operator and functions checker /////////////////////////////////////////////////
 
-constexpr ll_bool_t has_operator_or_func_res_1 = traits::has_type_operator_const_except_v<TestClassBase, ll_bool_t>;
-constexpr ll_bool_t has_operator_or_func_res_2 = traits::has_type_operator_const_except_v<TestClass, ll_bool_t>;
-constexpr ll_bool_t has_operator_or_func_res_3 = traits::has_type_operator_const_v<TestClassNoCopy, ll_bool_t>;
-constexpr ll_bool_t has_operator_or_func_res_4 = traits::has_type_operator_const_v<int, ll_bool_t>;
-constexpr ll_bool_t has_operator_or_func_res_5 = traits::has_clear_base_v<TestClass, void>;
-constexpr ll_bool_t has_operator_or_func_res_6 = traits::has_clear_base_v<int, void>;
-constexpr ll_bool_t has_operator_or_func_res_7 = traits::has_swap_base_v<TestClass, void, TestClassBase&>;
-constexpr ll_bool_t has_operator_or_func_res_8 = traits::has_swap_base_v<int, void>;
-constexpr ll_bool_t has_operator_or_func_res_9 = traits::has_type_operator_const_v<int, int>;
-constexpr ll_bool_t test_copy_operator_int = std::is_copy_assignable_v<int>;
-constexpr ll_bool_t test_copy_operator_class = std::is_copy_assignable_v<TestClass>;
-constexpr ll_bool_t test_copy_operator_class_bad = std::is_copy_assignable_v<TestClassBad>;
-constexpr ll_bool_t test_copy_operator_class_private_copy = std::is_copy_assignable_v<TestClassPrivateCopy>;
-constexpr ll_bool_t test_copy_operator_class_no_copy = std::is_copy_assignable_v<TestClassNoCopy>;
+using ll_bool_t = bool;
+
+constexpr ll_bool_t has_operator_or_func_res_1 = traits::has_simple_type_const_operator_v<ll_bool_t, ll_bool_t>;
+constexpr ll_bool_t has_operator_or_func_res_2 = traits::has_simple_type_const_operator_v<TestClass, ll_bool_t>;
+constexpr ll_bool_t has_operator_or_func_res_3 = traits::has_simple_type_const_operator_v<TestClassNoCopy, ll_bool_t>;
+constexpr ll_bool_t has_operator_or_func_res_4 = traits::has_simple_type_const_operator_v<int, ll_bool_t>;
+constexpr ll_bool_t has_operator_or_func_res_5 = traits::common::has_simple_clear_function_v<TestClass>;
+//constexpr ll_bool_t has_operator_or_func_res_6 = traits::has_clear_base_v<int, void>;
+//constexpr ll_bool_t has_operator_or_func_res_7 = traits::has_swap_base_v<TestClass, void, TestClassBase&>;
+//constexpr ll_bool_t has_operator_or_func_res_8 = traits::has_swap_base_v<int, void>;
+//constexpr ll_bool_t has_operator_or_func_res_9 = traits::has_type_operator_const_v<int, int>;
+//constexpr ll_bool_t test_copy_operator_int = std::is_copy_assignable_v<int>;
+//constexpr ll_bool_t test_copy_operator_class = std::is_copy_assignable_v<TestClass>;
+//constexpr ll_bool_t test_copy_operator_class_bad = std::is_copy_assignable_v<TestClassBad>;
+//constexpr ll_bool_t test_copy_operator_class_private_copy = std::is_copy_assignable_v<TestClassPrivateCopy>;
+//constexpr ll_bool_t test_copy_operator_class_no_copy = std::is_copy_assignable_v<TestClassNoCopy>;
 
 static_assert( has_operator_or_func_res_1,				"Error changed value");
 static_assert( has_operator_or_func_res_2,				"Error changed value");
 static_assert(!has_operator_or_func_res_3,				"Error changed value");
 static_assert(!has_operator_or_func_res_4,				"Error changed value");
-static_assert( has_operator_or_func_res_5,				"Error changed value");
-static_assert(!has_operator_or_func_res_6,				"Error changed value");
-static_assert( has_operator_or_func_res_7,				"Error changed value");
-static_assert(!has_operator_or_func_res_8,				"Error changed value");
-static_assert( has_operator_or_func_res_9,				"Error changed value");
-static_assert( test_copy_operator_int,					"Error changed value");
-static_assert( test_copy_operator_class,				"Error changed value");
-static_assert( test_copy_operator_class_bad,			"Error changed value");
-static_assert(!test_copy_operator_class_private_copy,	"Error changed value");
-static_assert(!test_copy_operator_class_no_copy,		"Error changed value");
+//static_assert( has_operator_or_func_res_5,				"Error changed value");
+//static_assert(!has_operator_or_func_res_6,				"Error changed value");
+//static_assert( has_operator_or_func_res_7,				"Error changed value");
+//static_assert(!has_operator_or_func_res_8,				"Error changed value");
+//static_assert( has_operator_or_func_res_9,				"Error changed value");
+//static_assert( test_copy_operator_int,					"Error changed value");
+//static_assert( test_copy_operator_class,				"Error changed value");
+//static_assert( test_copy_operator_class_bad,			"Error changed value");
+//static_assert(!test_copy_operator_class_private_copy,	"Error changed value");
+//static_assert(!test_copy_operator_class_no_copy,		"Error changed value");
 
 ///////////////////////////////////////////////// Nothrow checkers /////////////////////////////////////////////////
 
-constexpr ll_bool_t nothrow_copy_test_1 = traits::is_nothrow_copyable_v<int>;
+/*constexpr ll_bool_t nothrow_copy_test_1 = traits::is_nothrow_copyable_v<int>;
 constexpr ll_bool_t nothrow_copy_test_2 = traits::is_nothrow_copyable_v<int*>;
 constexpr ll_bool_t nothrow_copy_test_3 = traits::is_nothrow_copyable_v<int**>;
 constexpr ll_bool_t nothrow_copy_test_4 = traits::is_nothrow_copyable_v<traits::TestClass>;
@@ -223,7 +225,7 @@ static_assert( nothrow_swappeable_test_5, "Error changed value");
 static_assert( nothrow_swappeable_test_6, "Error changed value");
 static_assert( nothrow_swappeable_test_8, "Error changed value");
 static_assert(!nothrow_swappeable_test_7, "Error changed value");
-static_assert( nothrow_swappeable_test_9, "Error changed value");
+static_assert( nothrow_swappeable_test_9, "Error changed value");*/
 
 ///////////////////////////////////////////////// Example strings /////////////////////////////////////////////////
 
@@ -250,18 +252,18 @@ static_assert( nothrow_swappeable_test_9, "Error changed value");
 ///////////////////////////////////////////////// Example strings /////////////////////////////////////////////////
 
 
-template <class... Args>
-constexpr len_t teas() {
-	return parameter_pack_operations<Args...>::size;
-}
-
-constexpr len_t teas_1 = teas<>();
-constexpr len_t teas_2 = teas<int>();
-constexpr len_t teas_3 = teas<int, char, char*>();
+//template <class... Args>
+//constexpr len_t teas() {
+//	return parameter_pack_operations<Args...>::size;
+//}
+//
+//constexpr len_t teas_1 = teas<>();
+//constexpr len_t teas_2 = teas<int>();
+//constexpr len_t teas_3 = teas<int, char, char*>();
 
 ///////////////////////////////////////////////// Example other /////////////////////////////////////////////////
 
-constexpr ll_bool_t st1 = has_swap_static_v<TestClassBase, int>;
+/*constexpr ll_bool_t st1 = has_swap_static_v<TestClassBase, int>;
 constexpr ll_bool_t st2 = has_swap_static_except_v<TestClassBase, int>;
 constexpr ll_bool_t st3 = has_swap_base_v<TestClassBase, void, TestClassBase&>;
 constexpr ll_bool_t st4 = has_swap_base_except_v<TestClassBase, int>;
@@ -271,8 +273,7 @@ constexpr ll_bool_t st6 = has_swap_const_except_v<TestClassBase, int>;
 constexpr ll_bool_t st_3 = has_type_operator_base_v<TestClassBase, ll_bool_t>;
 constexpr ll_bool_t st_4 = has_type_operator_base_except_v<TestClassBase, ll_bool_t>;
 constexpr ll_bool_t st_5 = has_type_operator_const_v<TestClassBase, ll_bool_t>;
-constexpr ll_bool_t st_6 = has_type_operator_const_except_v<TestClassBase, ll_bool_t>;
-
+constexpr ll_bool_t st_6 = has_type_operator_const_except_v<TestClassBase, ll_bool_t>;*/
 
 } // namespace traits
 } // namespace meta

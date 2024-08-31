@@ -39,8 +39,8 @@ class BasicContainer {
 
 		// Types and enums
 		using T						= _T;
-		using t_array				= std::array<_T, _N>;
-		using pointer				= std::conditional_t<std::is_pointer_v<_T>, _T, _T*>;
+		using t_array				= std::array<T, _N>;
+		using pointer				= std::conditional_t<std::is_pointer_v<T>, T, T*>;
 		using ContainerArray		= meta::Array<T>;
 		using ContainerArrayPair	= meta::ArrayPair<T>;
 
@@ -197,18 +197,18 @@ class ContainerExtra : public _Functions, public BasicContainer<traits::array_ty
 
 		// Types and enums
 		using T							= _T;
-		using T_class					= std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
+		using T_Class					= traits::T_Class<T>;
 		using pointer					= typename BasicContainer::pointer;
 		using reference					= T&;
 		using creference				= const T&;
-		using T_HashType				= traits::hash::get_hash_function_type_t<T_class>;
+		using T_HashType				= traits::hash::get_hash_function_type_t<T_Class>;
 		using F_HashType				= traits::hash::get_hash_function_type_t<Functions>;
 
 		// Signarures T
-		using T_HashSignature			= T_HashType(T_class::*)() noexcept;
-		using T_HashConstSignature		= T_HashType(T_class::*)() const noexcept;
-		using T_ClearSignature			= void(T_class::*)() noexcept;
-		using T_PreDestructSignature	= void(T_class::*)() noexcept;
+		using T_HashSignature			= T_HashType(T_Class::*)() noexcept;
+		using T_HashConstSignature		= T_HashType(T_Class::*)() const noexcept;
+		using T_ClearSignature			= void(T_Class::*)() noexcept;
+		using T_PreDestructSignature	= void(T_Class::*)() noexcept;
 
 		// Signarures F
 		using F_HashSignature			= F_HashType(Functions::*)(reference) noexcept;
@@ -231,7 +231,7 @@ class ContainerExtra : public _Functions, public BasicContainer<traits::array_ty
 		constexpr ContainerExtra(Args&&... args) noexcept
 			: Functions(), BasicContainer(std::forward<Args>(args)...) {}
 		constexpr ~ContainerExtra() noexcept {
-			if constexpr (traits::common::has_predestruction_function_v<T_class, T_PreDestructSignature>)
+			if constexpr (traits::common::has_predestruction_function_v<T_Class, T_PreDestructSignature>)
 				this->operator*()->predestruction();
 			if constexpr (traits::common::has_predestruction_function_v<Functions, F_PreDestructSignature>)
 				Functions::predestruction(this->operator*());
@@ -286,31 +286,31 @@ class ContainerExtra : public _Functions, public BasicContainer<traits::array_ty
 	public:
 		__LL_NODISCARD__ constexpr auto hash() noexcept {
 			static_assert(
-				traits::common::has_hash_function_v<T_class, T_HashSignature>
+				traits::common::has_hash_function_v<T_Class, T_HashSignature>
 				|| traits::common::has_hash_function_v<Functions, F_HashSignature>,
 				"Cannot hash without hash function"
 			);
 
-			if constexpr (traits::common::has_hash_function_v<T_class, T_HashSignature>)
+			if constexpr (traits::common::has_hash_function_v<T_Class, T_HashSignature>)
 				return this->operator*()->hash();
 			else if constexpr (traits::common::has_hash_function_v<Functions, F_HashSignature>)
 				return Functions::hash(this->operator*());
 		}
 		__LL_NODISCARD__ constexpr auto hash() const noexcept {
 			static_assert(
-				traits::common::has_hash_function_v<T_class, T_HashConstSignature>
+				traits::common::has_hash_function_v<T_Class, T_HashConstSignature>
 				|| traits::common::has_hash_function_v<Functions, F_HashConstSignature>,
 				"Cannot hash without hash function"
 			);
 
-			if constexpr (traits::common::has_hash_function_v<T_class, T_HashConstSignature>)
+			if constexpr (traits::common::has_hash_function_v<T_Class, T_HashConstSignature>)
 				return this->operator*()->hash();
 			else if constexpr (traits::common::has_hash_function_v<Functions, F_HashConstSignature>)
 				return Functions::hash(this->operator*());
 		}
 
 		__LL_NODISCARD__ constexpr void clear() noexcept {
-			if constexpr (traits::common::has_clear_function_v<T_class, T_ClearSignature>)
+			if constexpr (traits::common::has_clear_function_v<T_Class, T_ClearSignature>)
 				this->operator*()->clear();
 			else if constexpr (traits::common::has_clear_function_v<Functions, F_ClearSignature>)
 				Functions::clear(this->operator*());

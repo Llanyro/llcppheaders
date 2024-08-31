@@ -115,14 +115,6 @@ class Object {
 		__LL_NODISCARD__ constexpr operator Hash128() const noexcept { return Hash128(); }
 };
 
-using testing_t = traits::common::has_hash_function_t<
-	llcpp::meta::hash::Object,
-	llcpp::meta::hash::Hash32(llcpp::meta::hash::Object::*)() const noexcept
->;
-using t2 = testing_t::Signature;
-constexpr ll_bool_t asdasdasd = testing_t::type::value;
-
-
 template<class _HashType = hash::StandardHash, class _HashGenerator = hash::HashGeneratorDummy<_HashType>>
 class HashGeneratorChecker : public hash::HashChecker<_HashType>, public _HashGenerator {
 	#pragma region Types
@@ -328,7 +320,8 @@ class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGener
 			static constexpr ll_bool_t is_valid_v =
 				traits::has_simple_type_operator_v<V, T>
 				|| traits::has_simple_type_const_operator_v<V, T>;
-			using U = traits::check_valid_types<HashTypeChecker, void>::type<hash::Hash32, hash::Hash64, hash::Hash128, HashType>;
+			static constexpr ll_bool_t is_valid_v_ = is_valid_v<hash::Hash32>;
+			using type = traits::check_valid_types<HashTypeChecker, void>::type<hash::Hash32, hash::Hash64, hash::Hash128, HashType>;
 		};
 
 	#pragma endregion
@@ -407,20 +400,6 @@ class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGener
 			return _MyType::b2a<U, W>(buffer, value);
 		}
 
-	private:
-		// This function is the const part of "hashValue() noexcept" && "hashValue() const noexcept"
-		// Both functions call this function if 
-		template<class U, class W = meta::traits::cinput<U>>
-		__LL_NODISCARD__ constexpr HashType hashValuePriv(W value) const noexcept {
-			using ObjectHash = HashTypeChecker<U>::U;
-			__LL_HASHFUNCTIONPACK_OBJECT_NO_HASH_FUNCTION_ASSERT__(ObjectHash);
-			
-
-			if constexpr (std::is_same_v<ObjectHash, HashType>)
-				return value.operator HashType();
-			else this->hashValue<ObjectHash>(h->operator ObjectHash());
-		}
-
 	public:
 		// Generates hashes by basic types
 		// Prior 32-64-128-OwnType
@@ -428,18 +407,22 @@ class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGener
 		// As a last option it prior custom user hash: "operator std::optional<UserHashType>() const noexcept"
 		template<class U, class W = meta::traits::cinput<U>>
 		__LL_NODISCARD__ constexpr HashType hashValue(W value) noexcept {
-			using ObjectHash = HashTypeChecker<U>::U;
-			static_assert()
+			using ObjectHash = HashTypeChecker<U>::type;
+			static_assert(!std::is_same_v<ObjectHash, void> || _MyType::is_convertible_v<U>,
+				"Object must be hasheable or be a valid basic type");
 
-			if constexpr (!std::is_same_v<ObjectHash, void>)
-				return this->hashValuePriv<U, W>(value);
-			else {
-				__LL_HASHFUNCTIONPACK_B2A_ASSERT__(U);
-				constexpr len_t BUFFERLEN = sizeof(U);
-				ll_char_t buffer[BUFFERLEN]{};
-				ll_char_t* buffer_begin = buffer;
-				HashFunctionPack::b2a<U, W>(buffer_begin, value);
-				return this->hash(buffer, BUFFERLEN);
+			if constexpr (_MyType::is_convertible_v<U>) {
+					constexpr len_t BUFFERLEN = sizeof(U);
+					ll_char_t buffer[BUFFERLEN]{};
+					ll_char_t* buffer_begin = buffer;
+					HashFunctionPack::b2a<U, W>(buffer_begin, value);
+					return this->hash(buffer, BUFFERLEN);
+			}
+			else if constexpr (traits::is_basic_type_v<U>) {}
+			else if constexpr (!std::is_same_v<ObjectHash, void>) {
+				if constexpr (std::is_same_v<ObjectHash, HashType>)
+					return value.operator ObjectHash();
+				else this->hash(value.operator ObjectHash());
 			}
 		}
 		// Generates hashes by basic types

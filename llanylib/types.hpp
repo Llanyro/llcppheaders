@@ -25,23 +25,23 @@
 #include "SimplestContainer.hpp"
 
 // Simplified Signed
-using i128 = llcpp::simplest_container<i64>;
-using i256 = llcpp::simplest_container<i128>;
+using i128				= llcpp::simplest_container<i64>;
+using i256				= llcpp::simplest_container<i128>;
 
 // Simplified Unsigned
-using ui128 = llcpp::simplest_container<ui64>;
-using ui256 = llcpp::simplest_container<ui128>;
+using ui128				= llcpp::simplest_container<ui64>;
+using ui256				= llcpp::simplest_container<ui128>;
 
 // BytesTypes
-using size_bytes128_t = ui128;
-using size_bytes256_t = ui256;
+using size_bytes128_t	= ui128;
+using size_bytes256_t	= ui256;
 
-using b128 = size_bytes128_t;
-using b256 = size_bytes256_t;
+using b128				= size_bytes128_t;
+using b256				= size_bytes256_t;
 
 namespace llcpp {
 
-constexpr void IGNORE(...) {}
+__LL_INLINE__ constexpr void IGNORE(...) {}
 
 #pragma region Expresions
 constexpr ui8 ZERO_UI8 = 0u;
@@ -91,31 +91,21 @@ using CompareExtra		= cmp_t(*)(const void* __t1, const void* __t2, void* __extra
 using CompareBoolExtra	= ll_bool_t(*)(const void* __t1, const void* __t2, void* __extra__) noexcept;
 
 namespace classic {
-template<class T, class U = T>
-using Compare		= cmp_t(*)(T __t1, U __t2) noexcept;
-template<class T, class U = T>
-using CompareBool	= ll_bool_t(*)(T __t1, U __t2) noexcept;
-template<class T, class U = T>
-using SwapFunction	= void(*)(T& __t1, U& __t2) noexcept;
-template<class T, class U = T&>
-using SetFunction	= void(*)(T& __t1, U __t2) noexcept;
+template<class T, class U = T>  using Compare		= cmp_t(*)(T __t1, U __t2) noexcept;
+template<class T, class U = T>  using CompareBool	= ll_bool_t(*)(T __t1, U __t2) noexcept;
+template<class T, class U = T>  using SwapFunction	= void(*)(T& __t1, U& __t2) noexcept;
+template<class T, class U = T&> using SetFunction	= void(*)(T& __t1, U __t2) noexcept;
 
 } // namespace classic
 namespace lambda {
 
-template<class T, class U = T>
-using Compare = std::function<cmp_t(T __t1, U __t2)>;
-template<class T, class U = T>
-using CompareBool = std::function<ll_bool_t(T __t1, U __t2)>;
-template<class T, class U = T>
-using SwapFunction = std::function<void(T& __t1, U& __t2)>;
-template<class T, class U = T&>
-using SetFunction = std::function<void(T& __t1, U __t2)>;
+template<class T, class U = T>  using Compare		= std::function<cmp_t(T __t1, U __t2)>;
+template<class T, class U = T>  using CompareBool	= std::function<ll_bool_t(T __t1, U __t2)>;
+template<class T, class U = T>  using SwapFunction	= std::function<void(T& __t1, U& __t2)>;
+template<class T, class U = T&> using SetFunction	= std::function<void(T& __t1, U __t2)>;
 
-template<class T>
-using SearchFunction = std::function<cmp_t(T __t1)>;
-template<class T>
-using SearchFunctionBool = std::function<ll_bool_t(T __t1)>;
+template<class T> using SearchFunction				= std::function<cmp_t(T __t1)>;
+template<class T> using SearchFunctionBool			= std::function<ll_bool_t(T __t1)>;
 
 } // namespace lambda
 } // namespace functional

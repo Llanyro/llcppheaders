@@ -95,8 +95,8 @@ class Countable {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const Countable*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator Countable*() noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator const Countable*() const noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator Countable*() noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions

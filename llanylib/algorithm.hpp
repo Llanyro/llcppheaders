@@ -171,8 +171,8 @@ class CompareData {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const CompareData*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator CompareData*() noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator const CompareData*() const noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator CompareData*() noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -253,8 +253,8 @@ class CompareDefault {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const CompareDefault*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator CompareDefault*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const CompareDefault*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator CompareDefault*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -300,8 +300,8 @@ class ManipulatorDefault {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const ManipulatorDefault*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator ManipulatorDefault*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const ManipulatorDefault*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator ManipulatorDefault*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -400,8 +400,8 @@ class ComparatorChecker : public _Comparator {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const ComparatorChecker* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator ComparatorChecker* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const ComparatorChecker* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator ComparatorChecker* () noexcept { return this; }
 
 		#pragma endregion
 
@@ -484,8 +484,8 @@ class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const CompareCluster*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator CompareCluster*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const CompareCluster*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator CompareCluster*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -1205,8 +1205,8 @@ struct FindersCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator>
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const FindersCluster*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator FindersCluster*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const FindersCluster*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator FindersCluster*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -1654,8 +1654,8 @@ class DataManipulatorCluster : public _Manipulator {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const DataManipulatorCluster*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator DataManipulatorCluster*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const DataManipulatorCluster*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator DataManipulatorCluster*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

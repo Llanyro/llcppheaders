@@ -107,8 +107,8 @@ class BasicContainer {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const BasicContainer*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator BasicContainer*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const BasicContainer*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator BasicContainer*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -146,10 +146,10 @@ class BasicContainer {
 			return ContainerArrayPair(this->data._Elems, N);
 		}
 
-		__LL_NODISCARD__ constexpr operator ContainerArray() noexcept {
+		__LL_NODISCARD__ constexpr explicit operator ContainerArray() noexcept {
 			return this->getContainerArray();
 		}
-		__LL_NODISCARD__ constexpr operator  ContainerArrayPair() const noexcept {
+		__LL_NODISCARD__ constexpr explicit operator ContainerArrayPair() const noexcept {
 			return this->getContainerArrayPair();
 		}
 
@@ -273,8 +273,8 @@ class ContainerExtra : public _Functions, public BasicContainer<traits::array_ty
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const ContainerExtra*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator ContainerExtra*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const ContainerExtra*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator ContainerExtra*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

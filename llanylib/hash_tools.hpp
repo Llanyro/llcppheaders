@@ -88,8 +88,8 @@ class HashTool : public hash::HashFunctionPack<HashType, HashGenerator> {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashTool* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashTool* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const HashTool* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator HashTool* () noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -228,8 +228,8 @@ class HashTool {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename const HashTool*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator typename HashTool*() noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator typename const HashTool*() const noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator typename HashTool*() noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions

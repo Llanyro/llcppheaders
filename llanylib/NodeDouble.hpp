@@ -69,8 +69,8 @@ class NodeDouble : public linked::SimplePrev<NodeType>, public linked::SimpleNex
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const NodeDouble*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator NodeDouble*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const NodeDouble*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator NodeDouble*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

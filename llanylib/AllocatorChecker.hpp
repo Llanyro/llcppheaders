@@ -100,8 +100,8 @@ class AllocatorDummy {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const AllocatorDummy*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator AllocatorDummy*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const AllocatorDummy*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator AllocatorDummy*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -213,8 +213,8 @@ class AllocatorChecker : public Allocator {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const AllocatorChecker*() const noexcept { return *this; }
-		__LL_NODISCARD__ constexpr operator AllocatorChecker*() noexcept { return *this; }
+		__LL_NODISCARD__ constexpr explicit operator const AllocatorChecker*() const noexcept { return *this; }
+		__LL_NODISCARD__ constexpr explicit operator AllocatorChecker*() noexcept { return *this; }
 
 		#pragma endregion
 
@@ -281,8 +281,8 @@ class AllocatorCheckerTyped : public AllocatorChecker<Allocator> {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const AllocatorCheckerTyped*() const noexcept { return *this; }
-		__LL_NODISCARD__ constexpr operator AllocatorCheckerTyped*() noexcept { return *this; }
+		__LL_NODISCARD__ constexpr explicit operator const AllocatorCheckerTyped*() const noexcept { return *this; }
+		__LL_NODISCARD__ constexpr explicit operator AllocatorCheckerTyped*() noexcept { return *this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

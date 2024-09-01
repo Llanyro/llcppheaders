@@ -27,6 +27,8 @@ namespace llcpp {
 
 // Similar to std::pair
 // But only recomended for primitive types
+// Does not use move contructor, so if you want to user no primitive types
+//	you have to move them by yourself
 template<class _T, class _U = _T>
 struct simplest_container {
 	#pragma region Types
@@ -71,8 +73,6 @@ struct simplest_container {
 
 	#pragma endregion
 };
-
-constexpr simplest_container<unsigned int> a = { 10u, 10u };
 
 } // namespace llcpp
 

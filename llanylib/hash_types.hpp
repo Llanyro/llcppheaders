@@ -53,13 +53,13 @@ class Hash32 {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename const Hash32*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator typename Hash32*() noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator typename const Hash32*() const noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator typename Hash32*() noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions
 		#pragma region Other
-		__LL_NODISCARD__ constexpr operator ui32() const noexcept { return this->value; }
+		__LL_NODISCARD__ constexpr explicit operator ui32() const noexcept { return this->value; }
 		__LL_NODISCARD__ constexpr ui32 get() const noexcept { return this->value; }
 
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const Hash32& other) const noexcept {
@@ -176,13 +176,13 @@ class Hash64 {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator typename const Hash64*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator typename Hash64*() noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator typename const Hash64*() const noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator typename Hash64*() noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions
 		#pragma region Other
-		__LL_NODISCARD__ constexpr operator ui64() const noexcept { return this->value; }
+		__LL_NODISCARD__ constexpr explicit operator ui64() const noexcept { return this->value; }
 		__LL_NODISCARD__ constexpr ui64 get() const noexcept { return this->value; }
 
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const Hash64& other) const noexcept {
@@ -304,8 +304,8 @@ class Hash128 {
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
-		__LL_NODISCARD__ constexpr operator const Hash128* () const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator Hash128* () noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator const Hash128* () const noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator Hash128* () noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -385,7 +385,7 @@ class Hash128 {
 		__LL_NODISCARD__ constexpr hash::Hash64 toHash64() const noexcept {
 			return hash::Hash64(this->mur_l());
 		}
-		__LL_NODISCARD__ constexpr operator ui64() const noexcept { return this->toHash64(); }
+		__LL_NODISCARD__ constexpr explicit operator ui64() const noexcept { return this->toHash64(); }
 
 		template<ll_bool_t IS_REVERSE = llcpp::FALSE>
 		__LL_NODISCARD__ constexpr hash::Hash128 simpleCombine_l(const hash::Hash128& other, const ui8 shift) const noexcept {
@@ -467,8 +467,8 @@ class HashChecker {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashChecker*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashChecker*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const HashChecker*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator HashChecker*() noexcept { return this; }
 
 		#pragma endregion
 

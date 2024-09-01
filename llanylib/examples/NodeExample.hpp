@@ -84,8 +84,8 @@ class NodeFunctions : public meta::containers::Container<_T> {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const NodeFunctions*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator NodeFunctions*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const NodeFunctions*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator NodeFunctions*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

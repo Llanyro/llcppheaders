@@ -114,8 +114,8 @@ class NodeData : public meta::containers::Container<_T[_N]> {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const NodeData*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator NodeData*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const NodeData*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator NodeData*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -265,8 +265,8 @@ class Pool : protected meta::linked::BaseNodeList<NodeData<_T, _N>, llcpp::TRUE>
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const Pool*() const noexcept = delete;
-		__LL_NODISCARD__ constexpr operator Pool*() noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator const Pool*() const noexcept = delete;
+		__LL_NODISCARD__ constexpr explicit operator Pool*() noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -378,8 +378,8 @@ class StackAllocator {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const StackAllocator*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator StackAllocator*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const StackAllocator*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator StackAllocator*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

@@ -210,5 +210,8 @@
     <ClInclude Include="SimplestContainer.hpp">
       <Filter>Source Files\types</Filter>
     </ClInclude>
+    <ClInclude Include="Cluster.hpp">
+      <Filter>Source Files\types</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

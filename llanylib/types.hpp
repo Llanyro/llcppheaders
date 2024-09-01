@@ -23,6 +23,7 @@
 
 #include "Boolean.hpp"
 #include "SimplestContainer.hpp"
+#include "Cluster.hpp"
 
 // Simplified Signed
 using i128				= llcpp::simplest_container<i64>;
@@ -41,7 +42,9 @@ using b256				= size_bytes256_t;
 
 namespace llcpp {
 
-__LL_INLINE__ constexpr void IGNORE(...) {}
+template<class... Args> __LL_INLINE__ constexpr void IGNORE(Args&&...) {}
+template<class T> __LL_INLINE__ constexpr void IGNORE(T&&...) {}
+template<> __LL_INLINE__ constexpr void IGNORE() {}
 
 #pragma region Expresions
 constexpr ui8 ZERO_UI8 = 0u;

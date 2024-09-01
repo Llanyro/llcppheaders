@@ -85,16 +85,15 @@ using f128 = ll_longdouble_t;
 
 #pragma endregion
 #pragma region LibaryCustom
-using len_t = ui64;							// Used to cound things (natural number)
-using cmp_t = i32;							// Old type in comparations, compatible with C libs
+using len_t = ui64;								// Used to count things (natural number)
+using cmp_t = i32;								// Old type in comparations, compatible with C libs
 
-using ll_string_t = const ll_char_t*;		// Used to point to non editable strings
-using ll_wstring_t = const ll_wchar_t*;		// Used to point to non editable strings
-/// [DEPRECATED] Unsigned char sometimes crashes Visual Studio IntelliSense
-///					using traits
-using ll_ustring_t = const ll_uchar_t*;		// Used to point to non editable unsigned strings 
+using ll_string_t	= const ll_char_t*;			// Used to point to non editable strings
+using ll_wstring_t	= const ll_wchar_t*;		// Used to point to non editable strings
+/// [DEPRECATED] Unsigned char sometimes crashes Visual Studio IntelliSense using traits
+using ll_ustring_t	= const ll_uchar_t*;		// Used to point to non editable unsigned strings 
 
-using ll_lib_t = void*;						// Handle for dynamic library linked/shared objects
+using ll_lib_t = void*;							// Handle for dynamic library linked/shared objects
 
 #pragma region BytesTypes
 using size_bytes8_t = ui8;
@@ -184,13 +183,7 @@ namespace hash {
 class Hash32;
 class Hash64;
 class Hash128;
-
-//using OptionalHash32		= std::optional<hash::Hash32>;
-//using OptionalHash64		= std::optional<hash::Hash64>;
-//using OptionalHash128		= std::optional<hash::Hash128>;
-
 using StandardHash = Hash64;
-//using StandardOptionalHash	= OptionalHash64;
 
 } // namespace hash
 

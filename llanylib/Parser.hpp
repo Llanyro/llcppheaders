@@ -58,8 +58,8 @@ struct ParserFunctionDummy {
 	constexpr ParserFunctionDummy(ParserFunctionDummy&&) noexcept {}
 	constexpr ParserFunctionDummy& operator=(ParserFunctionDummy&&) noexcept {}
 
-	__LL_NODISCARD__ constexpr operator const ParserFunctionDummy*() const noexcept { return this; }
-	__LL_NODISCARD__ constexpr operator ParserFunctionDummy*() noexcept { return this; }
+	__LL_NODISCARD__ constexpr explicit operator const ParserFunctionDummy*() const noexcept { return this; }
+	__LL_NODISCARD__ constexpr explicit operator ParserFunctionDummy*() noexcept { return this; }
 
 	constexpr void writeChar(const ll_char_t) noexcept {}
 	constexpr void writewChar(const ll_wchar_t) noexcept {}
@@ -272,8 +272,8 @@ class Parser : public ParserFunctions {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const Parser*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator Parser*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const Parser*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator Parser*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

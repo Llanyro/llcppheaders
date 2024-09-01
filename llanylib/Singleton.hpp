@@ -57,12 +57,12 @@ class  Singleton {
 		Singleton(Singleton&&) noexcept = delete;
 		Singleton& operator=(Singleton&&) noexcept = delete;
 
-		constexpr operator const Singleton*() const noexcept = delete;
-		constexpr operator Singleton* () noexcept = delete;
+		constexpr explicit operator const Singleton*() const noexcept = delete;
+		constexpr explicit operator Singleton* () noexcept = delete;
 
 		// [TOCHECK]
 		template <class... Args>
-		__LL_NODISCARD__ static T& getInstance(Args&&... args) noexcept(llcpp::FALSE) {
+		__LL_NODISCARD__ static T& getInstance(Args&&... args) noexcept {
 			if constexpr (traits::parameter_pack_operations<Args...>::empty) {
 				static T instance;
 				return instance;
@@ -92,11 +92,11 @@ class  Singleton {
 //		Singleton(__Singleton::move) noexcept = delete;
 //		__Singleton::ref operator=(__Singleton::move) noexcept = delete;
 //
-//		constexpr operator typename __Singleton::cref() const noexcept = delete;
-//		constexpr operator typename __Singleton::ref() noexcept = delete;
+//		constexpr explicit operator typename __Singleton::cref() const noexcept = delete;
+//		constexpr explicit operator typename __Singleton::ref() noexcept = delete;
 //
 //		template <class... Args>
-//		static T& getInstance(Args&&... args) noexcept(llcpp::FALSE) {
+//		static T& getInstance(Args&&... args) noexcept {
 //			if (!Singleton<T>::instance) {
 //				if constexpr (traits::pack_has_args<Args...>)
 //					Singleton<T>::instance = new T(std::forward<Args>(args)...));

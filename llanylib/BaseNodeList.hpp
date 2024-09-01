@@ -86,8 +86,8 @@ class BaseNodeList : public meta::CountableL {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const BaseNodeList*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator BaseNodeList*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const BaseNodeList*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator BaseNodeList*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

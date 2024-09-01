@@ -134,5 +134,4 @@ namespace llcpp { enum class OSEnum { Windows, Posix, Unix, Other }; } // namesp
 
 #pragma endregion
 
-
 #endif // LLANYLIB_DEFINITIONS_HPP_

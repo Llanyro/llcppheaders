@@ -96,8 +96,8 @@ class ArrayPair {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const ArrayPair* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator ArrayPair* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const ArrayPair* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator ArrayPair* () noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -290,9 +290,9 @@ class Array {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const Array* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator Array* () noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator ArrayPair() const noexcept {
+		__LL_NODISCARD__ constexpr explicit operator const Array* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator Array* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator ArrayPair() const noexcept {
 			return ArrayPair(*this);
 		}
 		__LL_NODISCARD__ constexpr ArrayPair operator()() const noexcept {

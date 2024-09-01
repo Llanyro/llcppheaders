@@ -26,6 +26,7 @@
     <ClInclude Include="ArrayPair.hpp" />
     <ClInclude Include="bits.hpp" />
     <ClInclude Include="cityhash.hpp" />
+    <ClInclude Include="Cluster.hpp" />
     <ClInclude Include="common.hpp" />
     <ClInclude Include="Container.hpp" />
     <ClInclude Include="Countable.hpp" />

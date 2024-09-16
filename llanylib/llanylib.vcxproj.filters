@@ -13,44 +13,65 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source Files\utils">
-      <UniqueIdentifier>{8f625efc-af0f-4c4e-9c0d-e6459870feb2}</UniqueIdentifier>
+    <Filter Include="Source Files\v10">
+      <UniqueIdentifier>{a3531787-7360-41bb-98c8-d7fd67a91697}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\utils\lists">
-      <UniqueIdentifier>{c8212b79-1063-4446-b1c9-4ed73eae1e2f}</UniqueIdentifier>
+    <Filter Include="Source Files\old">
+      <UniqueIdentifier>{ee4a42f1-6c3c-4096-9fe4-07b92b7bccb5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\utils\lists\linked">
-      <UniqueIdentifier>{6c0ee5bc-f841-4796-b6bb-6259973006da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\examples">
-      <UniqueIdentifier>{da89fac3-1e0d-4172-878f-b633106c7eda}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\standards">
-      <UniqueIdentifier>{00e40e75-2a5a-4a48-aedf-c92e8f19e94d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\hash">
+    <Filter Include="Source Files\old\hash">
       <UniqueIdentifier>{e03b962a-c161-4c48-a3fd-0f3a46df8209}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\hash\hashes">
+    <Filter Include="Source Files\old\hash\hashes">
       <UniqueIdentifier>{55852399-2688-4e6e-a48e-283bc4f6351b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\other">
-      <UniqueIdentifier>{5752054d-a959-40b1-b883-014d74ca574f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\defines">
-      <UniqueIdentifier>{e90f5574-8aad-499b-930e-5d42105b6ccf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\expresions">
+    <Filter Include="Source Files\old\expresions">
       <UniqueIdentifier>{2e8bd116-f9a5-41e4-a404-a361e9f96be3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\types">
-      <UniqueIdentifier>{127ec860-0183-4786-98b2-0b7355c8ec60}</UniqueIdentifier>
+    <Filter Include="Source Files\old\examples">
+      <UniqueIdentifier>{da89fac3-1e0d-4172-878f-b633106c7eda}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\utils\parser">
+    <Filter Include="Source Files\old\traits">
+      <UniqueIdentifier>{c01459d4-73ae-4b35-8200-db8cf12fd966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\old\other">
+      <UniqueIdentifier>{5752054d-a959-40b1-b883-014d74ca574f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\old\standards">
+      <UniqueIdentifier>{00e40e75-2a5a-4a48-aedf-c92e8f19e94d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\old\utils">
+      <UniqueIdentifier>{8f625efc-af0f-4c4e-9c0d-e6459870feb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\old\utils\lists">
+      <UniqueIdentifier>{c8212b79-1063-4446-b1c9-4ed73eae1e2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\old\utils\lists\linked">
+      <UniqueIdentifier>{6c0ee5bc-f841-4796-b6bb-6259973006da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\old\utils\lists\node">
+      <UniqueIdentifier>{d3599bd6-91d0-4998-a4b3-ca69ecac673b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\old\utils\parser">
       <UniqueIdentifier>{145643bb-e34c-48f5-8cd1-0741536b838b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\utils\lists\node">
-      <UniqueIdentifier>{d3599bd6-91d0-4998-a4b3-ca69ecac673b}</UniqueIdentifier>
+    <Filter Include="Source Files\v10\defines">
+      <UniqueIdentifier>{e90f5574-8aad-499b-930e-5d42105b6ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v10\types">
+      <UniqueIdentifier>{127ec860-0183-4786-98b2-0b7355c8ec60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v10\traits">
+      <UniqueIdentifier>{f19c8069-e1c6-4f88-8671-d702e6980ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v10\types_extra">
+      <UniqueIdentifier>{a3275196-46fb-4a82-9658-e600ed0c4303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v10\math">
+      <UniqueIdentifier>{f277ab28-188d-472b-899a-b8d6d56d61e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v10\utils">
+      <UniqueIdentifier>{6514b6bb-6384-4b42-b8ab-16f51507c192}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,158 +81,89 @@
     <ClInclude Include="..\llanylibsimple.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="traits.hpp">
-      <Filter>Source Files\types</Filter>
+    <ClInclude Include="defines\definitions.hpp">
+      <Filter>Source Files\v10\defines</Filter>
     </ClInclude>
-    <ClInclude Include="types.hpp">
-      <Filter>Source Files\types</Filter>
+    <ClInclude Include="defines\os.hpp">
+      <Filter>Source Files\v10\defines</Filter>
     </ClInclude>
-    <ClInclude Include="definitions.hpp">
-      <Filter>Source Files\defines</Filter>
+    <ClInclude Include="defines\expresions.hpp">
+      <Filter>Source Files\v10\defines</Filter>
     </ClInclude>
-    <ClInclude Include="os.hpp">
-      <Filter>Source Files\defines</Filter>
+    <ClInclude Include="defines.hpp">
+      <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="expresions\color.hpp">
-      <Filter>Source Files\expresions</Filter>
+    <ClInclude Include="types_base\Boolean.hpp">
+      <Filter>Source Files\v10\types</Filter>
     </ClInclude>
-    <ClInclude Include="expresions\math.hpp">
-      <Filter>Source Files\expresions</Filter>
+    <ClInclude Include="types_base\Cluster.hpp">
+      <Filter>Source Files\v10\types</Filter>
     </ClInclude>
-    <ClInclude Include="ostypes.hpp">
-      <Filter>Source Files\types</Filter>
+    <ClInclude Include="types_base\expresions.hpp">
+      <Filter>Source Files\v10\types</Filter>
     </ClInclude>
-    <ClInclude Include="expresions\ascii.hpp">
-      <Filter>Source Files\expresions</Filter>
+    <ClInclude Include="types_base\ostypes.hpp">
+      <Filter>Source Files\v10\types</Filter>
     </ClInclude>
-    <ClInclude Include="expresions\string.hpp">
-      <Filter>Source Files\expresions</Filter>
+    <ClInclude Include="types_base\types_base.hpp">
+      <Filter>Source Files\v10\types</Filter>
     </ClInclude>
-    <ClInclude Include="bits.hpp">
-      <Filter>Source Files\utils</Filter>
+    <ClInclude Include="types_base\types_base_extra.hpp">
+      <Filter>Source Files\v10\types</Filter>
     </ClInclude>
-    <ClInclude Include="examples\bitsExample.hpp">
-      <Filter>Source Files\examples</Filter>
+    <ClInclude Include="traits\type_traits.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="cityhash.hpp">
-      <Filter>Source Files\hash\hashes</Filter>
+    <ClInclude Include="types_simple.hpp">
+      <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="common.hpp">
-      <Filter>Source Files\utils</Filter>
+    <ClInclude Include="traits\traits_base.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="dynamiclibrarylinking.hpp">
-      <Filter>Source Files\other</Filter>
+    <ClInclude Include="traits\traits_checker.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="hash_algorithm.hpp">
-      <Filter>Source Files\hash</Filter>
+    <ClInclude Include="traits\traits_promotion.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="hash_pack.hpp">
-      <Filter>Source Files\hash</Filter>
+    <ClInclude Include="traits\traits_parameter_pack.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="hash_tools.hpp">
-      <Filter>Source Files\hash</Filter>
+    <ClInclude Include="traits\traits_type_selection.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="hash_types.hpp">
-      <Filter>Source Files\hash</Filter>
+    <ClInclude Include="traits\traits_signature.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="llanyhash.hpp">
-      <Filter>Source Files\hash\hashes</Filter>
+    <ClInclude Include="traits\traits_comparations.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="math.hpp">
-      <Filter>Source Files\utils</Filter>
+    <ClInclude Include="traits\traits_three_way_compare.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="examples\mathExample.hpp">
-      <Filter>Source Files\examples</Filter>
+    <ClInclude Include="traits\traits_primitive_types.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="ArrayPair.hpp">
-      <Filter>Source Files\utils\lists</Filter>
+    <ClInclude Include="traits\traits_hash.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="StandardHash.hpp">
-      <Filter>Source Files\standards</Filter>
+    <ClInclude Include="traits\traits_old.hpp">
+      <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="StandardRandom.hpp">
-      <Filter>Source Files\standards</Filter>
+    <ClInclude Include="types_extra\pair.hpp">
+      <Filter>Source Files\v10\types_extra</Filter>
     </ClInclude>
-    <ClInclude Include="StandardTypeid.hpp">
-      <Filter>Source Files\standards</Filter>
+    <ClInclude Include="utils\Container.hpp">
+      <Filter>Source Files\old\utils</Filter>
     </ClInclude>
-    <ClInclude Include="reflection.hpp">
-      <Filter>Source Files\utils</Filter>
+    <ClInclude Include="math\limits.hpp">
+      <Filter>Source Files\v10\math</Filter>
     </ClInclude>
-    <ClInclude Include="Random.hpp">
-      <Filter>Source Files\utils</Filter>
+    <ClInclude Include="utils\Array.hpp">
+      <Filter>Source Files\v10\utils</Filter>
     </ClInclude>
-    <ClInclude Include="examples\RandomExample.hpp">
-      <Filter>Source Files\examples</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="examples\traits_test_class.hpp">
-      <Filter>Source Files\examples</Filter>
-    </ClInclude>
-    <ClInclude Include="examples\traitsExample.hpp">
-      <Filter>Source Files\examples</Filter>
-    </ClInclude>
-    <ClInclude Include="Typeid.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm.hpp">
-      <Filter>Source Files\utils\lists</Filter>
-    </ClInclude>
-    <ClInclude Include="Countable.hpp">
-      <Filter>Source Files\utils\lists</Filter>
-    </ClInclude>
-    <ClInclude Include="DataBuffer.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.hpp">
-      <Filter>Source Files\utils\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Printable.hpp">
-      <Filter>Source Files\utils\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="AllocatorChecker.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="mem.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Node.hpp">
-      <Filter>Source Files\utils\lists\node</Filter>
-    </ClInclude>
-    <ClInclude Include="NodeNext.hpp">
-      <Filter>Source Files\utils\lists\node</Filter>
-    </ClInclude>
-    <ClInclude Include="NodePrev.hpp">
-      <Filter>Source Files\utils\lists\node</Filter>
-    </ClInclude>
-    <ClInclude Include="NodeDouble.hpp">
-      <Filter>Source Files\utils\lists\node</Filter>
-    </ClInclude>
-    <ClInclude Include="Container.hpp">
-      <Filter>Source Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="examples\NodeExample.hpp">
-      <Filter>Source Files\examples</Filter>
-    </ClInclude>
-    <ClInclude Include="examples\algorithmExample.hpp">
-      <Filter>Source Files\examples</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseNodeList.hpp">
-      <Filter>Source Files\utils\lists\linked</Filter>
-    </ClInclude>
-    <ClInclude Include="Boolean.hpp">
-      <Filter>Source Files\types</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base.hpp">
-      <Filter>Source Files\types</Filter>
-    </ClInclude>
-    <ClInclude Include="SimplestContainer.hpp">
-      <Filter>Source Files\types</Filter>
-    </ClInclude>
-    <ClInclude Include="Cluster.hpp">
-      <Filter>Source Files\types</Filter>
+    <ClInclude Include="old\examples\traitsExample.hpp">
+      <Filter>Source Files\old\examples</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@
 #define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MAYOR_ 9
 #define LLANYLIB_EXAMPLES_TRAITS_TEST_CLASS_MINOR_ 0
 
-#include "../types.hpp"
+#include "../../types_base/types_base_extra.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -33,9 +33,10 @@ struct TestClassBase {
 	void swap(TestClassBase& other) {}
 	ll_bool_t swap_s(TestClassBase& other) {}
 	ll_bool_t move(TestClassBase&& other) {}
-	void clear() {}
+	void clear() noexcept {}
 	ll_bool_t clear_s() {}
 	int operator<=>(const TestClassBase& other) const { return 0; }
+	__LL_NODISCARD__ constexpr ll_bool_t operator==(char) const { return false; }
 
 	//virtual operator int() const = 0;
 	//

@@ -95,7 +95,7 @@ class LlanyHash {
 			ui8 leftovers = static_cast<ui8>(len & 0b111);
 
 			const len_t* vector = reinterpret_cast<const ui64*>(s);
-			const len_t* vector_end = vector + full_parts;;
+			const len_t* vector_end = vector + full_parts;
 			ui64 result = hash::combine::kMul64;
 			for (const len_t* i = vector; i < vector_end; ++i)
 				result = combine(result, *i);

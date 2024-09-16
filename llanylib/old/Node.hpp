@@ -68,8 +68,8 @@ class BaseNode {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const BaseNode*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator BaseNode*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const BaseNode*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator BaseNode*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -116,16 +116,17 @@ class BaseNodeList;
 //	Also, the begin of the operation in the list is the node that calls the function itself
 //		If you are not sure that node pointer is not nullptr, you could use "*_s" functions
 template<class _NodeFunctions>
-class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_NodeFunctions>> {
+class FunctionalNode : public llcpp::meta::HalfCluster, public _NodeFunctions, public linked::BaseNode<FunctionalNode<_NodeFunctions>> {
 	#pragma region Types
 	public:
 		// Class related
 		using _MyType					= FunctionalNode;
-		using NodeType					= FunctionalNode;
+		using Cluster					= llcpp::meta::HalfCluster;
 		using NodeFunctions				= _NodeFunctions;
-		using BaseNode					= BaseNode<NodeType>;
+		using BaseNode					= linked::BaseNode<_MyType>;
 
-		// Types
+		// Types and enums
+		using NodeType					= FunctionalNode;
 		using NodePack					= std::pair<NodeType*, NodeType*>;
 		using NodePackConst				= std::pair<const NodeType*, const NodeType*>;
 
@@ -169,24 +170,29 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 	#pragma region Functions
 		#pragma region Contructors
 	public:
-		constexpr FunctionalNode() noexcept : NodeFunctions(), BaseNode() {}
+		constexpr FunctionalNode() noexcept : Cluster(), NodeFunctions(), BaseNode() {}
 		template<class... Args>
 		constexpr FunctionalNode(NodeType* node, Args&&... args) noexcept
-			: NodeFunctions(std::forward<Args>(args)...), BaseNode(node) {}
+			: Cluster()
+			, NodeFunctions(std::forward<Args>(args)...)
+			, BaseNode(node)
+		{}
 		constexpr ~FunctionalNode() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
 		constexpr FunctionalNode(const FunctionalNode& other) noexcept
-			: NodeFunctions(std::forward<const NodeFunctions&>(other))
+			: Cluster()
+			, NodeFunctions(std::forward<const NodeFunctions&>(other))
 			, BaseNode() {}
 		constexpr FunctionalNode& operator=(const FunctionalNode& other) noexcept {
 			NodeFunctions::operator=(std::forward<const NodeFunctions&>(other));
 			return *this;
 		}
 		constexpr FunctionalNode(FunctionalNode&& other) noexcept
-			: NodeFunctions(std::forward<NodeFunctions&&>(other))
+			: Cluster()
+			, NodeFunctions(std::forward<NodeFunctions&&>(other))
 			, BaseNode() {}
 		constexpr FunctionalNode& operator=(FunctionalNode&& other) noexcept {
 			NodeFunctions::operator=(std::forward<NodeFunctions&&>(other));
@@ -194,14 +200,16 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 		}
 
 		constexpr FunctionalNode(const NodeFunctions& other) noexcept
-			: NodeFunctions(std::forward<const NodeFunctions&>(other))
+			: Cluster()
+			, NodeFunctions(std::forward<const NodeFunctions&>(other))
 			, BaseNode() {}
 		constexpr FunctionalNode& operator=(const NodeFunctions& other) noexcept {
 			NodeFunctions::operator=(std::forward<const NodeFunctions&>(other));
 			return *this;
 		}
 		constexpr FunctionalNode(NodeFunctions&& other) noexcept
-			: NodeFunctions(std::forward<NodeFunctions&&>(other))
+			: Cluster()
+			, NodeFunctions(std::forward<NodeFunctions&&>(other))
 			, BaseNode() {}
 		constexpr FunctionalNode& operator=(NodeFunctions&& other) noexcept {
 			NodeFunctions::operator=(std::forward<NodeFunctions&&>(other));
@@ -211,8 +219,8 @@ class FunctionalNode : public _NodeFunctions, public BaseNode<FunctionalNode<_No
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const FunctionalNode*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator FunctionalNode*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const FunctionalNode*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator FunctionalNode*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -857,8 +865,8 @@ class ClassicNode : public BaseNode<_NodeType> {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const ClassicNode*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator ClassicNode*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const ClassicNode*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator ClassicNode*() noexcept { return this; }
 
 		#pragma endregion
 
@@ -896,8 +904,8 @@ using Node = std::conditional_t<
 			constexpr Node##name##& operator=(Node##name##&&) noexcept = delete; \
 	\
 		public: \
-			__LL_NODISCARD__ constexpr operator const Node##name##*() const noexcept { return this; } \
-			__LL_NODISCARD__ constexpr operator Node##name##*() noexcept { return this; } \
+			__LL_NODISCARD__ constexpr explicit operator const Node##name##*() const noexcept { return this; } \
+			__LL_NODISCARD__ constexpr explicit operator Node##name##*() noexcept { return this; } \
 	\
 		public: \
 			__LL_NODISCARD__ constexpr const NodeType* get##name##() const noexcept { return Node::get(); } \

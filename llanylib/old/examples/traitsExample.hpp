@@ -7,7 +7,11 @@
 //	Version: 9.0							//
 //////////////////////////////////////////////
 
-#include "../traits.hpp"
+#define LL_TRAITS_TEST
+
+#include "traits_test_class.hpp"
+#include "../../traits/traits_signature.hpp"
+#include "../../traits/traits_three_way_compare.hpp"
 
 #if !defined(LLANYLIB_EXAMPLES_TRAITSEXAMPLE_HPP_) && defined(LL_TRAITS_TEST)
 #define LLANYLIB_EXAMPLES_TRAITSEXAMPLE_HPP_
@@ -101,65 +105,70 @@ static_assert(std::is_same_v<get_const_reference_type_test_7, const traits::Test
 static_assert(std::is_same_v<get_const_reference_type_test_8, const traits::TestClassThrow*&>, "Error changed value");
 static_assert(std::is_same_v<get_const_reference_type_test_10, const int(&)[5]>, "Error changed value");*/
 
-using get_promote_type_test_01 = traits::type_promotion<i8, llcpp::TRUE>::type;
-using get_promote_type_test_02 = traits::type_promotion<i16, llcpp::TRUE>::type;
-using get_promote_type_test_03 = traits::type_promotion<i32, llcpp::TRUE>::type;
-using get_promote_type_test_04 = traits::type_promotion<i64, llcpp::TRUE>::type;
-using get_promote_type_test_05 = traits::type_promotion<ui8, llcpp::TRUE>::type;
-using get_promote_type_test_06 = traits::type_promotion<ui16, llcpp::TRUE>::type;
-using get_promote_type_test_07 = traits::type_promotion<ui32, llcpp::TRUE>::type;
-using get_promote_type_test_08 = traits::type_promotion<ui64, llcpp::TRUE>::type;
-using get_promote_type_test_09 = traits::type_promotion<f32, llcpp::TRUE>::type;
-using get_promote_type_test_10 = traits::type_promotion<f64, llcpp::TRUE>::type;
-using get_promote_type_test_11 = traits::type_promotion<f128, llcpp::TRUE>::type;
-using get_promote_type_test_12 = traits::type_promotion<i8, llcpp::FALSE>::type;
-using get_promote_type_test_13 = traits::type_promotion<i16, llcpp::FALSE>::type;
-using get_promote_type_test_14 = traits::type_promotion<i32, llcpp::FALSE>::type;
-using get_promote_type_test_15 = traits::type_promotion<i64, llcpp::FALSE>::type;
-using get_promote_type_test_16 = traits::type_promotion<ui8, llcpp::FALSE>::type;
-using get_promote_type_test_17 = traits::type_promotion<ui16, llcpp::FALSE>::type;
-using get_promote_type_test_18 = traits::type_promotion<ui32, llcpp::FALSE>::type;
-using get_promote_type_test_19 = traits::type_promotion<ui64, llcpp::FALSE>::type;
-using get_promote_type_test_20 = traits::type_promotion<f32, llcpp::FALSE>::type;
-using get_promote_type_test_21 = traits::type_promotion<f64, llcpp::FALSE>::type;
-using get_promote_type_test_22 = traits::type_promotion<f128, llcpp::FALSE>::type;
-using get_promote_type_test_23 = traits::type_promotion<traits::TestClass, llcpp::TRUE>::type;
-using get_promote_type_test_24 = traits::type_promotion<traits::TestClass, llcpp::TRUE>::type;
-
-static_assert(std::is_same_v<get_promote_type_test_01, i16>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_02, i32>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_03, i64>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_04, i128>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_05, ui16>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_06, ui32>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_07, ui64>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_08, ui128>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_09, f64>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_10, f128>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_11, f128>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_12, i8>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_13, i8>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_14, i16>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_15, i32>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_16, ui8>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_17, ui8>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_18, ui16>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_19, ui32>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_20, f32>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_21, f32>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_22, f64>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_23, traits::TestClass>, "Error changed value");
-static_assert(std::is_same_v<get_promote_type_test_24, traits::TestClass>, "Error changed value");
+//using get_promote_type_test_01 = traits::type_promotion<i8, llcpp::TRUE>::type;
+//using get_promote_type_test_02 = traits::type_promotion<i16, llcpp::TRUE>::type;
+//using get_promote_type_test_03 = traits::type_promotion<i32, llcpp::TRUE>::type;
+//using get_promote_type_test_04 = traits::type_promotion<i64, llcpp::TRUE>::type;
+//using get_promote_type_test_05 = traits::type_promotion<u8, llcpp::TRUE>::type;
+//using get_promote_type_test_06 = traits::type_promotion<u16, llcpp::TRUE>::type;
+//using get_promote_type_test_07 = traits::type_promotion<u32, llcpp::TRUE>::type;
+//using get_promote_type_test_08 = traits::type_promotion<u64, llcpp::TRUE>::type;
+//using get_promote_type_test_09 = traits::type_promotion<f32, llcpp::TRUE>::type;
+//using get_promote_type_test_10 = traits::type_promotion<f64, llcpp::TRUE>::type;
+//using get_promote_type_test_11 = traits::type_promotion<f128, llcpp::TRUE>::type;
+//using get_promote_type_test_12 = traits::type_promotion<i8, llcpp::FALSE>::type;
+//using get_promote_type_test_13 = traits::type_promotion<i16, llcpp::FALSE>::type;
+//using get_promote_type_test_14 = traits::type_promotion<i32, llcpp::FALSE>::type;
+//using get_promote_type_test_15 = traits::type_promotion<i64, llcpp::FALSE>::type;
+//using get_promote_type_test_16 = traits::type_promotion<u8, llcpp::FALSE>::type;
+//using get_promote_type_test_17 = traits::type_promotion<u16, llcpp::FALSE>::type;
+//using get_promote_type_test_18 = traits::type_promotion<u32, llcpp::FALSE>::type;
+//using get_promote_type_test_19 = traits::type_promotion<u64, llcpp::FALSE>::type;
+//using get_promote_type_test_20 = traits::type_promotion<f32, llcpp::FALSE>::type;
+//using get_promote_type_test_21 = traits::type_promotion<f64, llcpp::FALSE>::type;
+//using get_promote_type_test_22 = traits::type_promotion<f128, llcpp::FALSE>::type;
+//using get_promote_type_test_23 = traits::type_promotion<traits::TestClass, llcpp::TRUE>::type;
+//using get_promote_type_test_24 = traits::type_promotion<traits::TestClass, llcpp::TRUE>::type;
+//
+//static_assert(std::is_same_v<get_promote_type_test_01, i16>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_02, i32>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_03, i64>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_04, i128>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_05, u16>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_06, u32>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_07, u64>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_08, u128>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_09, f64>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_10, f128>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_11, f128>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_12, i8>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_13, i8>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_14, i16>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_15, i32>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_16, u8>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_17, u8>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_18, u16>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_19, u32>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_20, f32>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_21, f32>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_22, f64>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_23, traits::TestClass>, "Error changed value");
+//static_assert(std::is_same_v<get_promote_type_test_24, traits::TestClass>, "Error changed value");
 
 ///////////////////////////////////////////////// Operator and functions checker /////////////////////////////////////////////////
 
 using ll_bool_t = bool;
 
+constexpr ll_bool_t asjdhfkljusdh =
+	traits::common::has_swap_function_v<TestClassBase, void(TestClassBase::*)(TestClassBase&)>;
+
+
+
 constexpr ll_bool_t has_operator_or_func_res_1 = traits::has_simple_type_const_operator_v<ll_bool_t, ll_bool_t>;
 constexpr ll_bool_t has_operator_or_func_res_2 = traits::has_simple_type_const_operator_v<TestClass, ll_bool_t>;
 constexpr ll_bool_t has_operator_or_func_res_3 = traits::has_simple_type_const_operator_v<TestClassNoCopy, ll_bool_t>;
 constexpr ll_bool_t has_operator_or_func_res_4 = traits::has_simple_type_const_operator_v<int, ll_bool_t>;
-constexpr ll_bool_t has_operator_or_func_res_5 = traits::common::has_simple_clear_function_v<TestClass>;
+constexpr ll_bool_t has_operator_or_func_res_5 = traits::common::has_simple_clear_function_v<TestClassBase>;
 //constexpr ll_bool_t has_operator_or_func_res_6 = traits::has_clear_base_v<int, void>;
 //constexpr ll_bool_t has_operator_or_func_res_7 = traits::has_swap_base_v<TestClass, void, TestClassBase&>;
 //constexpr ll_bool_t has_operator_or_func_res_8 = traits::has_swap_base_v<int, void>;
@@ -174,7 +183,7 @@ static_assert( has_operator_or_func_res_1,				"Error changed value");
 static_assert( has_operator_or_func_res_2,				"Error changed value");
 static_assert(!has_operator_or_func_res_3,				"Error changed value");
 static_assert(!has_operator_or_func_res_4,				"Error changed value");
-//static_assert( has_operator_or_func_res_5,				"Error changed value");
+static_assert( has_operator_or_func_res_5,				"Error changed value");
 //static_assert(!has_operator_or_func_res_6,				"Error changed value");
 //static_assert( has_operator_or_func_res_7,				"Error changed value");
 //static_assert(!has_operator_or_func_res_8,				"Error changed value");
@@ -274,6 +283,11 @@ constexpr ll_bool_t st_3 = has_type_operator_base_v<TestClassBase, ll_bool_t>;
 constexpr ll_bool_t st_4 = has_type_operator_base_except_v<TestClassBase, ll_bool_t>;
 constexpr ll_bool_t st_5 = has_type_operator_const_v<TestClassBase, ll_bool_t>;
 constexpr ll_bool_t st_6 = has_type_operator_const_except_v<TestClassBase, ll_bool_t>;*/
+
+///////////////////////////////////////////////// Three way comparation /////////////////////////////////////////////////
+
+using three_way_comparation_return_1 = traits::get_three_way_comparasion_return_t<int, int>;
+
 
 } // namespace traits
 } // namespace meta

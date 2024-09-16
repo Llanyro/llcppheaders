@@ -21,11 +21,131 @@
 #define LLANYLIB_HASHTYPES_MAYOR_ 9
 #define LLANYLIB_HASHTYPES_MINOR_ 0
 
-#include "hash_algorithm.hpp"
+#include "traits.hpp"
 
 namespace llcpp {
 namespace meta {
 namespace hash {
+
+
+//static constexpr Hash INVALID_HASH = Hash();
+
+//template<class _T, _T _NULL_VALUE>
+using _T = int;
+constexpr _T _NULL_VALUE = 0;
+class Hash {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType				= Hash;
+
+		// Types and enums
+		using T						= _T;
+		using cinput_t				= traits::cinput<T>;
+		using input_t				= traits::input<T>;
+		using T_Class				= traits::T_Class<T>;
+
+		// Signatures
+		using EqualSignature		= ll_bool_t(T_Class::*)(cinput_t) const noexcept;
+		using GreaterSignature		= ll_bool_t(T_Class::*)(cinput_t) const noexcept;
+		using LowerSignature		= ll_bool_t(T_Class::*)(cinput_t) const noexcept;
+		using EqualGreaterSignature	= ll_bool_t(T_Class::*)(cinput_t) const noexcept;
+		using EqualLowerSignature	= ll_bool_t(T_Class::*)(cinput_t) const noexcept;
+
+	#pragma endregion
+	#pragma region Expresions
+	public:
+		static constexpr T NULL_VALUE = _NULL_VALUE;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(traits::is_valid_type_checker_v<T>,
+			"type_checker<T> detected an invalid type!");
+
+		static_assert(traits::common::has_operator_eq_function_v<T, EqualSignature>,
+			"T::operator==(const T) const noexcept is required!");
+		static_assert(traits::common::has_operator_no_eq_function_v<T, EqualSignature>,
+			"T::operator!=(const T) const noexcept is required!");
+
+	#pragma endregion
+	#pragma region Attibutes
+	private:
+		T value;
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		constexpr Hash() noexcept : value(NULL_VALUE) {}
+		constexpr ~Hash() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr Hash(const Hash& other) noexcept
+			: value(std::forward<cinput_t>(other.value)) {}
+		constexpr Hash& operator=(const Hash& other) noexcept {
+			this->value = std::forward<cinput_t>(other.value);
+			return *this;
+		}
+		constexpr Hash(Hash&& other) noexcept
+			: value(std::forward<T&&>(other)) {}
+		constexpr Hash& operator=(Hash&& other) noexcept {
+			this->value = std::forward<T&&>(other);
+			return *this;
+		}
+
+		constexpr Hash(cinput_t value) noexcept
+			: value(std::forward<cinput_t>(value)) {}
+		constexpr Hash& operator=(cinput_t value) noexcept {
+			this->value = std::forward<cinput_t>(value);
+			return *this;
+		}
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr explicit operator const Hash*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator Hash*() noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ constexpr explicit operator input_t() noexcept { return this->value; }
+		__LL_NODISCARD__ constexpr explicit operator cinput_t() const noexcept { return this->value; }
+
+		__LL_NODISCARD__ constexpr input_t get() noexcept { return this->value; }
+		__LL_NODISCARD__ constexpr cinput_t get() const noexcept { return this->value; }
+
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const Hash& other) const noexcept {
+			return this->value == other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const Hash& other) const noexcept {
+			return !this->operator==(other);
+		}
+
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const Hash& other) const noexcept {
+			return this->value > other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const Hash& other) const noexcept {
+			return this->value >= other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const Hash& other) const noexcept {
+			return this->value < other.value;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const Hash& other) const noexcept {
+			return this->value <= other.value;
+		}
+
+		constexpr void clear() noexcept { this->value = ZERO_UI32; }
+
+
+		#pragma endregion
+	#pragma endregion
+
+
+};
 
 class Hash32 {
 	private:

@@ -1,14 +1,14 @@
 
 #include "../llanylib/types.hpp"
 
-#include "../llanylib/Container.hpp"
+//#include "../llanylib/Container.hpp"
 #include "../llanylib/algorithm.hpp"
-#include "../llanylib/Node.hpp"
-#include "../llanylib/mem.hpp"
-#include "../llanylib/Typeid.hpp"
+//#include "../llanylib/Node.hpp"
+//#include "../llanylib/mem.hpp"
+//#include "../llanylib/Typeid.hpp"
 
 #include <iostream>
-//#include <array>
+#include <array>
 
 #pragma region Inheritance
 class Base {
@@ -78,7 +78,7 @@ class IntFunctions {
 };
 #pragma endregion
 #pragma region Nodes
-template <class _T, class _U = _T>
+/*template <class _T, class _U = _T>
 class NodeFunctions : public llcpp::meta::containers::Container<_T> {
 	#pragma region Types
 	public:
@@ -189,7 +189,7 @@ len_t merge_sort() noexcept {
 	end = n->getLast(LL_NULLPTR);
 	end->set(n);
 	return (n) ? n->get(POS)->operator*() : 0;
-}
+}*/
 
 //constexpr ll_bool_t asdasd = llcpp::meta::traits::has_type_operator_v<D1, int, int(D1::*)() const noexcept>;
 //constexpr ll_bool_t asdasd = llcpp::meta::traits::has_simple_type_const_operator_v<H2, int>;
@@ -216,7 +216,7 @@ void main_nodes() {
 	//std::cout << "D1: " << sizeof(D1) << "\n";
 	//std::cout << "A: " << sizeof(a) << "\n";
 	//std::cout << "Value1: " << a.H1::value << "\tValue2: " << a.H2::value << "\n";
-	std::cout << merge_sort<10, 0>() << std::endl;
+	//std::cout << merge_sort<10, 0>() << std::endl;
 }
 
 #pragma endregion
@@ -226,18 +226,33 @@ ll_bool_t get_val() noexcept {
 	return val;
 }
 
+struct _ui32 {
+	ui32 l;
+	ui32 h;
+};
+
 union example {
-	ui32 l[2];
+	_ui32 div;
 	ui64 real;
 };
 
-int main() {
-	example e{};
-	e.real = llcpp::meta::hash::algorithm::__algorithm__::kMul64;
+//__LL_NODISCARD__ static constexpr example calculate_impl(ui32& v) noexcept {
+//	example e{};
+//	e.real = llcpp::meta::hash::algorithm::__algorithm__::kMul64;
+//	//v = e.div.h;
+//	return e;
+//}
+//__LL_NODISCARD__ static constexpr example calculate() noexcept {
+//	ui32 v = 0;
+//	return calculate_impl(v);
+//}
 
-	std::cout << e.real << std::endl;
-	std::cout << e.l[0] << std::endl;
-	std::cout << e.l[1] << std::endl;
+int main() {
+	//constexpr example e = calculate();
+
+	//std::cout << e.real << std::endl;
+	//std::cout << e.div.l << std::endl;
+	//std::cout << e.div.h << std::endl;
 
 	//auto asdf = 1 <=> 9;
 	//
@@ -256,13 +271,13 @@ int main() {
 		std::cout << "\n\n";
 	};
 
-	//auto a = llcpp::meta::algorithm::make_constructed_array<std::array<Base, 5>, Base, 5>(10);
-	//std::array<Base, 5> asdf{};
-	//print_arr(a);
-	//print_arr(asdf);
-	//asdf = std::forward<std::array<Base, 5>&&>(a);
-	//print_arr(a);
-	//print_arr(asdf);
+	auto a = llcpp::meta::algorithm::make_constructed_array<std::array<Base, 5>, Base, 5>(10);
+	std::array<Base, 5> asdf{};
+	print_arr(a);
+	print_arr(asdf);
+	asdf = std::forward<std::array<Base, 5>&&>(a);
+	print_arr(a);
+	print_arr(asdf);
 
 	//auto a = llcpp::meta::algorithm::make_constructed_array<ARR, Base, 5>(10);
 	//ARR asdf{};
@@ -275,14 +290,14 @@ int main() {
 	//llcpp::meta::containers::Container<int[5]> cont(10);
 	//main_nodes();
 
-	llcpp::meta::StrTypeid id(llcpp::meta::make_ArrayPair("Patata"), 57);
-	auto& name = id.getName();
-
-	std::cout << llcpp::meta::mem::test_prep<int>(2) << std::endl;
-	printf("Size: %llu\n", id.getName().lenght());
-	std::cout << std::string_view(name.begin(), name.end()) << std::endl;
-	//printf("%*.s\n", (ui32)id.getName().lenght(), id.getName().begin());
-	std::cout << id.hash().get() << std::endl;
+	//llcpp::meta::StrTypeid id(llcpp::meta::make_ArrayPair("Patata"), 57);
+	//auto& name = id.getName();
+	//
+	//std::cout << llcpp::meta::mem::test_prep<int>(2) << std::endl;
+	//printf("Size: %llu\n", id.getName().lenght());
+	//std::cout << std::string_view(name.begin(), name.end()) << std::endl;
+	////printf("%*.s\n", (ui32)id.getName().lenght(), id.getName().begin());
+	//std::cout << id.hash().get() << std::endl;
 
 	return 0;
 }

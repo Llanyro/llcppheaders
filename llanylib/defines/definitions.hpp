@@ -4,57 +4,48 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 9.0							//
+//	Version: 10.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_DEFINITIONS_HPP_) // Guard && version protector
-	#if LLANYLIB_DEFINITIONS_MAYOR_ != 9 || LLANYLIB_DEFINITIONS_MINOR_ < 0
-		#if defined(LL_REAL_CXX23)
+	#if LLANYLIB_DEFINITIONS_MAYOR_ != 10 || LLANYLIB_DEFINITIONS_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
 			#warning "definitions.hpp version error!"
 		#else
 			#error "definitions.hpp version error!"
-		#endif // LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23
 	#endif // LLANYLIB_DEFINITIONS_MAYOR_ || LLANYLIB_DEFINITIONS_MINOR_
 
 #else !defined(LLANYLIB_DEFINITIONS_HPP_)
 #define LLANYLIB_DEFINITIONS_HPP_
-#define LLANYLIB_DEFINITIONS_MAYOR_ 9
+#define LLANYLIB_DEFINITIONS_MAYOR_ 10
 #define LLANYLIB_DEFINITIONS_MINOR_ 0
 
 #include "os.hpp"
 
-namespace llcpp { enum class OSEnum { Windows, Posix, Unix, Other }; } // namespace llcpp
-
 // Sets more env definitions by OS
-#if defined(WINDOWS_SYSTEM)
+#if defined(__LL_WINDOWS_SYSTEM)
 	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ _NODISCARD
 	#define __LL_UNSECURE_FUNCTIONS__
 	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_INLINE__ __forceinline
 	#define __LL_VAR_INLINE__ inline
-	__LL_VAR_INLINE__ constexpr llcpp::OSEnum OS_SYSTEM = llcpp::OSEnum::Windows;
-#elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
+#elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
 	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ NODISCARD
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline
-	#if defined(POSIX_SYSTEM)
-		__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Posix;
-	#else
-		__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Unix;
-	#endif // defined(POSIX_SYSTEM)
 #else
 	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ [[nodiscard]]
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline
-	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Other;
-#endif
+#endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
 
 // Definitions
-//#define __LL_EXCEPT___ noexcept(true)
 #define LL_NULLPTR nullptr
+//#define __LL_EXCEPT___ noexcept(true)
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 
 #define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, "[" var_str "] cannot be 0. " __FUNCSIG__)

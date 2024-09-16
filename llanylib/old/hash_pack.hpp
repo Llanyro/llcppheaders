@@ -55,8 +55,8 @@ class HashGeneratorDummy {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashGeneratorDummy*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashGeneratorDummy*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const HashGeneratorDummy*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator HashGeneratorDummy*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -110,9 +110,17 @@ class Object {
 	private:
 		hash::Hash128 h;
 	public:
-		__LL_NODISCARD__ constexpr operator Hash32() const noexcept { return Hash32(); }
-		__LL_NODISCARD__ constexpr operator Hash64() const noexcept { return Hash64(); }
-		__LL_NODISCARD__ constexpr operator Hash128() const noexcept { return Hash128(); }
+		constexpr Object() noexcept {}
+		constexpr ~Object() noexcept {}
+
+		constexpr Object(Object&) noexcept {}
+		constexpr Object& operator=(const Object&) noexcept { return *this; }
+		constexpr Object(Object&&) noexcept {}
+		constexpr Object& operator=(Object&&) noexcept { return *this; }
+
+		__LL_NODISCARD__ constexpr explicit operator Hash32() const noexcept { return Hash32(); }
+		__LL_NODISCARD__ constexpr explicit operator Hash64() const noexcept { return Hash64(); }
+		__LL_NODISCARD__ constexpr explicit operator Hash128() const noexcept { return Hash128(); }
 };
 
 template<class _HashType = hash::StandardHash, class _HashGenerator = hash::HashGeneratorDummy<_HashType>>
@@ -272,8 +280,8 @@ class HashGeneratorChecker : public hash::HashChecker<_HashType>, public _HashGe
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashGeneratorChecker*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashGeneratorChecker*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const HashGeneratorChecker*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator HashGeneratorChecker*() noexcept { return this; }
 
 		#pragma endregion
 
@@ -373,8 +381,8 @@ class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGener
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashFunctionPack*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashFunctionPack*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const HashFunctionPack*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator HashFunctionPack*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -402,50 +410,39 @@ class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGener
 
 	public:
 		// Generates hashes by basic types
-		// Prior 32-64-128-OwnType
-		// Uses "operator type() const noexcept" to hash the object
-		// As a last option it prior custom user hash: "operator std::optional<UserHashType>() const noexcept"
-		template<class U, class W = meta::traits::cinput<U>>
-		__LL_NODISCARD__ constexpr HashType hashValue(W value) noexcept {
-			using ObjectHash = HashTypeChecker<U>::type;
-			static_assert(!std::is_same_v<ObjectHash, void> || _MyType::is_convertible_v<U>,
-				"Object must be hasheable or be a valid basic type");
-
-			if constexpr (_MyType::is_convertible_v<U>) {
-					constexpr len_t BUFFERLEN = sizeof(U);
-					ll_char_t buffer[BUFFERLEN]{};
-					ll_char_t* buffer_begin = buffer;
-					HashFunctionPack::b2a<U, W>(buffer_begin, value);
-					return this->hash(buffer, BUFFERLEN);
-			}
-			else if constexpr (traits::is_basic_type_v<U>) {}
-			else if constexpr (!std::is_same_v<ObjectHash, void>) {
-				if constexpr (std::is_same_v<ObjectHash, HashType>)
-					return value.operator ObjectHash();
-				else this->hash(value.operator ObjectHash());
-			}
-		}
-		// Generates hashes by basic types
 		// Prior 32-64-128
 		// Uses "operator type() const noexcept" to hash the object
 		// As a last option it prior custom user hash: "operator std::optional<UserHashType>() const noexcept"
 		template<class U, class W = meta::traits::cinput<U>>
 		__LL_NODISCARD__ constexpr HashType hashValue(W value) const noexcept {
-			using ObjectHash = HashTypeChecker<U>::U;
-			if constexpr (!std::is_same_v<ObjectHash, void>)
-				return this->hashValuePriv<U, W>(value);
-			else {
-				__LL_HASHFUNCTIONPACK_B2A_ASSERT__(U);
+			using ObjectSignature = HashType(HashGenerator::*)(W) const noexcept;
+
+			if constexpr (traits::common::has_hash_function_v<HashGenerator, ObjectSignature>)
+				return this->hash(value);
+			else if constexpr (_MyType::is_convertible_v<U>) {
 				constexpr len_t BUFFERLEN = sizeof(U);
 				ll_char_t buffer[BUFFERLEN]{};
 				ll_char_t* buffer_begin = buffer;
 				HashFunctionPack::b2a<U, W>(buffer_begin, value);
 				return this->hash(buffer, BUFFERLEN);
 			}
+			else if constexpr (traits::is_basic_type_v<U>) {
+				static_assert(_MyType::is_convertible_v<U>,
+					"Basic type not valid convertible");
+			}
+			else {
+				using ObjectHash = HashTypeChecker<U>::type;
+				static_assert(!std::is_same_v<ObjectHash, void>,
+					"Object needs a valid hash function!");
+				if constexpr (!std::is_same_v<ObjectHash, void>) {
+					if constexpr (std::is_same_v<ObjectHash, HashType>)
+						return value.operator ObjectHash();
+					else return this->hash(value.operator ObjectHash());
+				}
+			}
 		}
 
-
-
+		/*
 		template<len_t N, class T>
 		__LL_NODISCARD__ constexpr OptionalHash hashArray(const T* values) noexcept {
 			__LL_HASHFUNCTIONPACK_HASHVALUES_ASSERT__(N);
@@ -561,7 +558,7 @@ class HashFunctionPack : public hash::HashGeneratorChecker<_HashType, _HashGener
 				this->b2a<U>(i, hashes->operator U());
 			return this->hash(buffer, BUFFERLEN);
 		}
-
+		*/
 		#pragma endregion
 
 	#pragma endregion
@@ -616,8 +613,8 @@ class HashFunctionPackNoConstexpr : public hash::HashGeneratorChecker<HashType, 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr operator const HashFunctionPackNoConstexpr* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr operator HashFunctionPackNoConstexpr* () noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const HashFunctionPackNoConstexpr* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator HashFunctionPackNoConstexpr* () noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

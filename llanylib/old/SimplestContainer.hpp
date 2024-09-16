@@ -24,6 +24,7 @@
 #include "types_base.hpp"
 
 namespace llcpp {
+namespace meta {
 
 // Similar to std::pair
 // But only recomended for primitive types
@@ -70,10 +71,21 @@ struct simplest_container {
 		__LL_NODISCARD__ constexpr explicit operator simplest_container*() noexcept { return this; }
 
 		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const simplest_container& other) const noexcept {
+			return this->first == other.first && this->second == other.second;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const simplest_container& other) const noexcept {
+			return this->first != other.first || this->second != other.second;
+		}
+
+		#pragma endregion
 
 	#pragma endregion
 };
 
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_SIMPLESTCONTAINER_HPP_

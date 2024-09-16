@@ -65,7 +65,211 @@ __LL_NODISCARD__ constexpr T* make_constructed_new_mem(T* mem, const Args&... ar
 }
 
 #pragma endregion
+#pragma region AlgorithmInternalClasses
 
+namespace __algorithm__ {
+
+template<class _T, class _U = _T>
+class CompareDefault {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType		= CompareDefault;
+
+		// Types
+		using T				= _T;
+		using U				= _U;
+		using t_cinput		= traits::cinput<T>;
+		using u_cinput		= traits::cinput<U>;
+
+		//using is_diff		= traits::is_diff<T, U>;
+		using is_diff		= traits::is_diff<T, U, traits::get_three_way_comparasion_function_type_t<T, U>>;
+		using is_comparable = traits::is_comparable<T, U>;
+
+	#pragma endregion
+	#pragma region Assert
+	public:
+		static_assert(is_diff::T_HAS_C_SIGNATURE || is_diff::T_U_BASIC_TYPE,
+			"Types are not comparables!");
+
+		static_assert(is_comparable::T_HAS_EQ_SIGNATURE_BOOL || is_comparable::T_U_BASIC_TYPE,
+			"Types are not comparables!");
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		constexpr CompareDefault() noexcept {}
+		constexpr ~CompareDefault() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr CompareDefault(const CompareDefault&) noexcept {}
+		constexpr CompareDefault& operator=(const CompareDefault&) noexcept { return *this; }
+		constexpr CompareDefault(CompareDefault&&) noexcept {}
+		constexpr CompareDefault& operator=(CompareDefault&&) noexcept { return *this; }
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr explicit operator const CompareDefault*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator CompareDefault*() noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ constexpr cmp_t compare(t_cinput t, u_cinput u) const noexcept {
+			return is_diff::diff_C(t, u);
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t compareBool(t_cinput t, u_cinput u) const noexcept {
+			return is_comparable::is_same_value(t, u);
+		}
+
+		#pragma endregion
+
+	#pragma endregion
+};
+
+template<class _T, class _U = _T>
+class ManipulatorDefault {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType	= ManipulatorDefault;
+
+		// Types and enums
+		using T			= _T;
+		using U			= _U;
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		constexpr ManipulatorDefault() noexcept {}
+		constexpr ~ManipulatorDefault() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr ManipulatorDefault(const ManipulatorDefault&) noexcept {}
+		constexpr ManipulatorDefault& operator=(const ManipulatorDefault&) noexcept { return *this; }
+		constexpr ManipulatorDefault(ManipulatorDefault&&) noexcept {}
+		constexpr ManipulatorDefault& operator=(ManipulatorDefault&&) noexcept { return *this; }
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr explicit operator const ManipulatorDefault*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator ManipulatorDefault*() noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ constexpr void swap(T& a, U& b) const noexcept {
+			T tmp = a;
+			a = b;
+			b = tmp;
+		}
+		__LL_NODISCARD__ constexpr void copy(T& a, traits::cinput<U> b) const noexcept {
+			a = b;
+		}
+		__LL_NODISCARD__ constexpr void move(T& a, U& b) const noexcept {
+			a = std::forward<U&&>(b);
+		}
+
+		#pragma endregion
+
+	#pragma endregion
+};
+
+template<class _T, class _U = _T, class _Comparator = algorithm::__algorithm__::CompareDefault<_T, _U>>
+class ComparatorChecker : public _Comparator {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType				= ComparatorChecker;
+		using Comparator			= _Comparator;
+
+		// Types and enums
+		using T						= _T;
+		using U						= _U;
+		using cinput_t				= traits::cinput<T>;
+		using cinput_u				= traits::cinput<U>;
+
+		// Signarures
+		using CompareSignature		= cmp_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
+		using CompareSignatureBool	= ll_bool_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(traits::is_valid_type_checker_ignore_pointer_v<T>,
+			"type_checker<T> detected an invalid type!");
+		static_assert(traits::is_valid_type_checker_ignore_pointer_v<U>,
+			"type_checker<U> detected an invalid type!");
+		static_assert(traits::is_valid_type_checker_v<Comparator>,
+			"type_checker<Comparator> detected an invalid type!");
+		static_assert(traits::is_valid_class_checker_v<Comparator>,
+			"class_checker<Comparator> detected an invalid class type!");
+
+		static_assert(traits::common::has_compare_function_v<Comparator, CompareSignature>,
+			"Comparator::compare() const noexcept is required by default! Non const function is optional");
+		static_assert(traits::common::has_compareBool_function_v<Comparator, CompareSignatureBool>,
+			"Comparator::compare() const noexcept is required by default! Non const function is optional");
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructor
+	public:
+		constexpr ComparatorChecker() noexcept : Comparator() {}
+		template<class... Args>
+		constexpr ComparatorChecker(Args&&... args) noexcept
+			: Comparator(std::forward<Args>(args)...) {}
+		constexpr ~ComparatorChecker() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr ComparatorChecker(const ComparatorChecker& other) noexcept
+			: Comparator(std::forward<const Comparator&>(other)) {}
+		constexpr ComparatorChecker& operator=(const ComparatorChecker& other) noexcept {
+			Comparator::operator=(std::forward<const Comparator&>(other));
+			return *this;
+		}
+		constexpr ComparatorChecker(ComparatorChecker&& other) noexcept
+			: Comparator(std::forward<Comparator&&>(other)) {}
+		constexpr ComparatorChecker& operator=(ComparatorChecker&& other) noexcept {
+			Comparator::operator=(std::forward<Comparator&&>(other));
+			return *this;
+		}
+
+		constexpr ComparatorChecker(const Comparator& other) noexcept
+			: Comparator(std::forward<const Comparator&>(other)) {}
+		constexpr ComparatorChecker& operator=(const Comparator& other) noexcept {
+			Comparator::operator=(std::forward<const Comparator&>(other));
+			return *this;
+		}
+		constexpr ComparatorChecker(Comparator&& other) noexcept
+			: Comparator(std::forward<Comparator&&>(other)) {}
+		constexpr ComparatorChecker& operator=(Comparator&& other) noexcept {
+			Comparator::operator=(std::forward<Comparator&&>(other));
+			return *this;
+		}
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr explicit operator const ComparatorChecker* () const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator ComparatorChecker* () noexcept { return this; }
+
+		#pragma endregion
+
+	#pragma endregion
+};
+
+} // namespace __algorithm__
+#pragma endregion
 #pragma region Comparators
 template<class _T, class _U, class _result_t, _result_t _NULL_RESULT_>
 class CompareData {
@@ -209,207 +413,8 @@ __LL_NODISCARD__ constexpr CompareConditionalBool<T, U, GET_DATA> compareConvers
 
 #pragma endregion
 
-template<class _T, class _U = _T>
-class CompareDefault {
-	#pragma region Types
-	public:
-		// Class related
-		using _MyType		= CompareDefault;
-
-		// Types
-		using T				= _T;
-		using U				= _U;
-		using t_cinput		= traits::cinput<T>;
-		using u_cinput		= traits::cinput<U>;
-
-		//using is_diff		= traits::is_diff<T, U>;
-		using is_diff		= traits::is_diff<T, U, traits::get_three_way_comparasion_function_type_t<T, U>>;
-		using is_comparable = traits::is_comparable<T, U>;
-
-	#pragma endregion
-	#pragma region Assert
-	public:
-		static_assert(is_diff::T_HAS_C_SIGNATURE || is_diff::T_U_BASIC_TYPE,
-			"Types are not comparables!");
-
-		static_assert(is_comparable::T_HAS_EQ_SIGNATURE_BOOL || is_comparable::T_U_BASIC_TYPE,
-			"Types are not comparables!");
-
-	#pragma endregion
-	#pragma region Functions
-		#pragma region Constructor
-	public:
-		constexpr CompareDefault() noexcept {}
-		constexpr ~CompareDefault() noexcept {}
-
-		#pragma endregion
-		#pragma region CopyMove
-	public:
-		constexpr CompareDefault(const CompareDefault&) noexcept {}
-		constexpr CompareDefault& operator=(const CompareDefault&) noexcept { return *this; }
-		constexpr CompareDefault(CompareDefault&&) noexcept {}
-		constexpr CompareDefault& operator=(CompareDefault&&) noexcept { return *this; }
-
-		#pragma endregion
-		#pragma region ClassReferenceOperators
-	public:
-		__LL_NODISCARD__ constexpr explicit operator const CompareDefault*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator CompareDefault*() noexcept { return this; }
-
-		#pragma endregion
-		#pragma region ClassFunctions
-	public:
-		__LL_NODISCARD__ constexpr cmp_t compare(t_cinput t, u_cinput u) const noexcept {
-			return is_diff::diff_C(t, u);
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t compareBool(t_cinput t, u_cinput u) const noexcept {
-			return is_comparable::is_same_value(t, u);
-		}
-
-		#pragma endregion
-
-	#pragma endregion
-};
-
-template<class _T, class _U = _T>
-class ManipulatorDefault {
-	#pragma region Types
-	public:
-		// Class related
-		using _MyType	= ManipulatorDefault;
-
-		// Types and enums
-		using T			= _T;
-		using U			= _U;
-
-	#pragma endregion
-	#pragma region Functions
-		#pragma region Constructor
-	public:
-		constexpr ManipulatorDefault() noexcept {}
-		constexpr ~ManipulatorDefault() noexcept {}
-
-		#pragma endregion
-		#pragma region CopyMove
-	public:
-		constexpr ManipulatorDefault(const ManipulatorDefault&) noexcept {}
-		constexpr ManipulatorDefault& operator=(const ManipulatorDefault&) noexcept { return *this; }
-		constexpr ManipulatorDefault(ManipulatorDefault&&) noexcept {}
-		constexpr ManipulatorDefault& operator=(ManipulatorDefault&&) noexcept { return *this; }
-
-		#pragma endregion
-		#pragma region ClassReferenceOperators
-	public:
-		__LL_NODISCARD__ constexpr explicit operator const ManipulatorDefault*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator ManipulatorDefault*() noexcept { return this; }
-
-		#pragma endregion
-		#pragma region ClassFunctions
-	public:
-		__LL_NODISCARD__ constexpr void swap(T& a, U& b) const noexcept {
-			T tmp = a;
-			a = b;
-			b = tmp;
-		}
-		__LL_NODISCARD__ constexpr void copy(T& a, traits::cinput<U> b) const noexcept {
-			a = b;
-		}
-		__LL_NODISCARD__ constexpr void move(T& a, U& b) const noexcept {
-			a = std::forward<U&&>(b);
-		}
-
-		#pragma endregion
-
-	#pragma endregion
-};
-
-template<class _T, class _U = _T, class _Comparator = algorithm::CompareDefault<_T, _U>>
-class ComparatorChecker : public _Comparator {
-	#pragma region Types
-	public:
-		// Class related
-		using _MyType				= ComparatorChecker;
-		using Comparator			= _Comparator;
-
-		// Types and enums
-		using T						= _T;
-		using U						= _U;
-		using cinput_t				= traits::cinput<T>;
-		using cinput_u				= traits::cinput<U>;
-
-		// Signarures
-		using CompareSignature		= cmp_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
-		using CompareSignatureBool	= ll_bool_t(Comparator::*)(cinput_t, cinput_u) const noexcept;
-
-	#pragma endregion
-	#pragma region Asserts
-	public:
-		static_assert(traits::is_valid_type_checker_ignore_pointer_v<T>,
-			"type_checker<T> detected an invalid type!");
-		static_assert(traits::is_valid_type_checker_ignore_pointer_v<U>,
-			"type_checker<U> detected an invalid type!");
-		static_assert(traits::is_valid_type_checker_v<Comparator>,
-			"type_checker<Comparator> detected an invalid type!");
-		static_assert(traits::is_valid_class_checker_v<Comparator>,
-			"class_checker<Comparator> detected an invalid class type!");
-
-		static_assert(traits::common::has_compare_function_v<Comparator, CompareSignature>,
-			"Comparator::compare() const noexcept is required by default! Non const function is optional");
-		static_assert(traits::common::has_compareBool_function_v<Comparator, CompareSignatureBool>,
-			"Comparator::compare() const noexcept is required by default! Non const function is optional");
-
-	#pragma endregion
-	#pragma region Functions
-		#pragma region Constructor
-	public:
-		constexpr ComparatorChecker() noexcept : Comparator() {}
-		template<class... Args>
-		constexpr ComparatorChecker(Args&&... args) noexcept
-			: Comparator(std::forward<Args>(args)...) {}
-		constexpr ~ComparatorChecker() noexcept {}
-
-		#pragma endregion
-		#pragma region CopyMove
-	public:
-		constexpr ComparatorChecker(const ComparatorChecker& other) noexcept
-			: Comparator(std::forward<const Comparator&>(other)) {}
-		constexpr ComparatorChecker& operator=(const ComparatorChecker& other) noexcept {
-			Comparator::operator=(std::forward<const Comparator&>(other));
-			return *this;
-		}
-		constexpr ComparatorChecker(ComparatorChecker&& other) noexcept
-			: Comparator(std::forward<Comparator&&>(other)) {}
-		constexpr ComparatorChecker& operator=(ComparatorChecker&& other) noexcept {
-			Comparator::operator=(std::forward<Comparator&&>(other));
-			return *this;
-		}
-
-		constexpr ComparatorChecker(const Comparator& other) noexcept
-			: Comparator(std::forward<const Comparator&>(other)) {}
-		constexpr ComparatorChecker& operator=(const Comparator& other) noexcept {
-			Comparator::operator=(std::forward<const Comparator&>(other));
-			return *this;
-		}
-		constexpr ComparatorChecker(Comparator&& other) noexcept
-			: Comparator(std::forward<Comparator&&>(other)) {}
-		constexpr ComparatorChecker& operator=(Comparator&& other) noexcept {
-			Comparator::operator=(std::forward<Comparator&&>(other));
-			return *this;
-		}
-
-		#pragma endregion
-		#pragma region ClassReferenceOperators
-	public:
-		__LL_NODISCARD__ constexpr explicit operator const ComparatorChecker* () const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator ComparatorChecker* () noexcept { return this; }
-
-		#pragma endregion
-
-	#pragma endregion
-};
-
-template<class _T, class _U = _T, ll_bool_t GET_DATA = llcpp::FALSE, class _Comparator = algorithm::CompareDefault<_T, _U>>
-class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> {
+template<class _T, class _U = _T, ll_bool_t GET_DATA = llcpp::FALSE, class _Comparator = algorithm::__algorithm__::CompareDefault<_T, _U>>
+class CompareCluster : public algorithm::__algorithm__::ComparatorChecker<_T, _U, _Comparator> {
 	#pragma region Types
 	public:
 		// Class related
@@ -1126,8 +1131,8 @@ class CompareCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> 
 	#pragma endregion
 };
 
-template<class _T, class _U = _T, ll_bool_t POSITION = llcpp::FALSE, class _Comparator = algorithm::CompareDefault<_T, _U>>
-struct FindersCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator> {
+template<class _T, class _U = _T, ll_bool_t POSITION = llcpp::FALSE, class _Comparator = algorithm::__algorithm__::CompareDefault<_T, _U>>
+struct FindersCluster : public algorithm::__algorithm__::ComparatorChecker<_T, _U, _Comparator> {
 	#pragma region Types
 	public:
 		// Class related
@@ -1570,7 +1575,7 @@ struct FindersCluster : public algorithm::ComparatorChecker<_T, _U, _Comparator>
 	#pragma endregion
 };
 
-template<class _T, class _Manipulator = algorithm::ManipulatorDefault<_T>>
+template<class _T, class _Manipulator = algorithm::__algorithm__::ManipulatorDefault<_T>>
 class DataManipulatorCluster : public _Manipulator {
 	#pragma region Types
 	public:

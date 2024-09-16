@@ -33,9 +33,9 @@ namespace linked {
 //////////////////////////////////////////////////////////////////////
 //__LL_NAMED_NODE__(Prev);
 template <class Node_Type_Or_Functions, ll_bool_t IS_SPECIAL = llcpp::FALSE> class NodePrev : private Node<Node_Type_Or_Functions, IS_SPECIAL> {
-public: using _MyType = NodePrev; using ExtraClass = Node_Type_Or_Functions; using Node = Node<Node_Type_Or_Functions, IS_SPECIAL>; using NodeType = std::conditional_t<IS_SPECIAL, NodePrev, ExtraClass>; public: static constexpr ll_bool_t IS_SPECIAL_NODE = IS_SPECIAL; public: constexpr NodePrev() noexcept : Node(nullptr) {} constexpr NodePrev(NodeType* next) noexcept : Node(next) {} constexpr ~NodePrev() noexcept {} public: constexpr NodePrev(const NodePrev&) noexcept = delete; constexpr NodePrev& operator=(const NodePrev&) noexcept = delete; constexpr NodePrev(NodePrev&&) noexcept = delete; constexpr NodePrev& operator=(NodePrev&&) noexcept = delete; public: [[nodiscard]] constexpr operator const NodePrev* () const noexcept {
+public: using _MyType = NodePrev; using ExtraClass = Node_Type_Or_Functions; using Node = Node<Node_Type_Or_Functions, IS_SPECIAL>; using NodeType = std::conditional_t<IS_SPECIAL, NodePrev, ExtraClass>; public: static constexpr ll_bool_t IS_SPECIAL_NODE = IS_SPECIAL; public: constexpr NodePrev() noexcept : Node(nullptr) {} constexpr NodePrev(NodeType* next) noexcept : Node(next) {} constexpr ~NodePrev() noexcept {} public: constexpr NodePrev(const NodePrev&) noexcept = delete; constexpr NodePrev& operator=(const NodePrev&) noexcept = delete; constexpr NodePrev(NodePrev&&) noexcept = delete; constexpr NodePrev& operator=(NodePrev&&) noexcept = delete; public: [[nodiscard]] constexpr explicit operator const NodePrev* () const noexcept {
     return this;
-} [[nodiscard]] constexpr operator NodePrev* () noexcept {
+} [[nodiscard]] constexpr explicit operator NodePrev* () noexcept {
     return this;
 } public: [[nodiscard]] constexpr const NodeType* getPrev() const noexcept {
     return Node::get();

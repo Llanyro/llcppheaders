@@ -4,21 +4,21 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 9.0							//
+//	Version: 10.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_BOOLEAN_HPP_) // Guard && version protector
-	#if LLANYLIB_BOOLEAN_MAYOR_ != 9 || LLANYLIB_BOOLEAN_MINOR_ < 0
-		#if defined(LL_REAL_CXX23)
+	#if LLANYLIB_BOOLEAN_MAYOR_ != 10 || LLANYLIB_BOOLEAN_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
 			#warning "Boolean.hpp version error!"
 		#else
 			#error "Boolean.hpp version error!"
-		#endif // LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23
 	#endif // LLANYLIB_BOOLEAN_MAYOR_ || LLANYLIB_BOOLEAN_MINOR_
 
 #else !defined(LLANYLIB_BOOLEAN_HPP_)
 #define LLANYLIB_BOOLEAN_HPP_
-#define LLANYLIB_BOOLEAN_MAYOR_ 9
+#define LLANYLIB_BOOLEAN_MAYOR_ 10
 #define LLANYLIB_BOOLEAN_MINOR_ 0
 
 #include "types_base.hpp"
@@ -26,6 +26,7 @@
 using ll_bool_t = bool;
 
 namespace llcpp {
+namespace meta {
 
 class Boolean {
 	#pragma region Types
@@ -34,7 +35,7 @@ class Boolean {
 		using _MyType = Boolean;
 
 		// Types and enums
-		enum class enum_bool : ui8 {
+		enum class enum_bool : u8 {
 			FALSE = false,
 			TRUE = true,
 			UNKNOWN,
@@ -109,17 +110,17 @@ class Boolean {
 			return this->operator enum_bool();
 		}
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const Boolean& other) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const Boolean& other) const noexcept {
 			return this->value == other.value;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const Boolean& other) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const Boolean& other) const noexcept {
 			return this->value != other.value;
 		}
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const ll_bool_t value) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const ll_bool_t value) const noexcept {
 			return this->value == static_cast<enum_bool>(value);
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const ll_bool_t value) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const ll_bool_t value) const noexcept {
 			return this->value != static_cast<enum_bool>(value);
 		}
 
@@ -128,6 +129,7 @@ class Boolean {
 	#pragma endregion
 };
 
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_BOOLEAN_HPP_

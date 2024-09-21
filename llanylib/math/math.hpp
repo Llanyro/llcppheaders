@@ -4,20 +4,21 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 9.0							//
+//	Version: 10.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_MATH_HPP_) // Guard && version protector
-	#if LLANYLIB_MATH_MAYOR_ != 9 || LLANYLIB_MATH_MINOR_ < 0
+	#if LLANYLIB_MATH_MAYOR_ != 10 || LLANYLIB_MATH_MINOR_ < 0
 		#error "math.hpp version error!"
 	#endif // LLANYLIB_MATH_MAYOR_ || LLANYLIB_MATH_MINOR_
 
 #else !defined(LLANYLIB_MATH_HPP_)
 #define LLANYLIB_MATH_HPP_
-#define LLANYLIB_MATH_MAYOR_ 9
+#define LLANYLIB_MATH_MAYOR_ 10
 #define LLANYLIB_MATH_MINOR_ 0
 
-#include "traits.hpp"
+#include "limits.hpp"
+#include "../traits/traits_base.hpp"
 
 #undef min
 #undef max

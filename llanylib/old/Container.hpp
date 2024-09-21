@@ -21,8 +21,9 @@
 #define LLANYLIB_CONTAINER_MAYOR_ 9
 #define LLANYLIB_CONTAINER_MINOR_ 0
 
-#include "hash_types.hpp"
-#include "algorithm.hpp"
+//#include "hash_types.hpp"
+//#include "algorithm.hpp"
+#include "Array.hpp"
 
 #include <array>
 
@@ -30,7 +31,7 @@ namespace llcpp {
 namespace meta {
 namespace containers {
 
-template<class _T, len_t _N>
+template<class _T, u64 _N>
 class BasicContainer {
 	#pragma region Types
 	public:
@@ -42,7 +43,7 @@ class BasicContainer {
 		using t_array				= std::array<T, _N>;
 		using pointer				= std::conditional_t<std::is_pointer_v<T>, T, T*>;
 		using ContainerArray		= meta::Array<T>;
-		using ContainerArrayPair	= meta::ArrayPair<T>;
+		using ContainerConstArray	= meta::ConstArray<T>;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -142,15 +143,15 @@ class BasicContainer {
 		__LL_NODISCARD__ constexpr ContainerArray getContainerArray() noexcept {
 			return ContainerArray(this->data._Elems, N);
 		}
-		__LL_NODISCARD__ constexpr ContainerArrayPair getContainerArrayPair() const noexcept {
-			return ContainerArrayPair(this->data._Elems, N);
+		__LL_NODISCARD__ constexpr ContainerConstArray getContainerConstArray() const noexcept {
+			return ContainerConstArray(this->data._Elems, N);
 		}
 
 		__LL_NODISCARD__ constexpr explicit operator ContainerArray() noexcept {
 			return this->getContainerArray();
 		}
-		__LL_NODISCARD__ constexpr explicit operator ContainerArrayPair() const noexcept {
-			return this->getContainerArrayPair();
+		__LL_NODISCARD__ constexpr explicit operator ContainerConstArray() const noexcept {
+			return this->getContainerConstArray();
 		}
 
 

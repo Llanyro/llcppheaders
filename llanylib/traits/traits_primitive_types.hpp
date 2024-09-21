@@ -41,7 +41,7 @@ class PrimitiveClass {
 
 		template<class U>
 		using OrdeningByType	=
-			std::conditional_t<
+			traits::conditional_t<
 				std::is_floating_point_v<T> || std::is_floating_point_v<U>,
 				std::partial_ordering,
 				std::strong_ordering
@@ -104,9 +104,14 @@ class PrimitiveClass {
 			__LL_PRIMITIVE_U_TYPE_CHECK(U, llcpp::TRUE);
 		}
 		template<class U>
-		__LL_NODISCARD__ constexpr OrdeningByType<U> operator<=>(u_cinput) const noexcept {
+		__LL_NODISCARD__ constexpr OrdeningByType<U> operator<=>(const U) const noexcept {
 			__LL_PRIMITIVE_U_TYPE_CHECK(U, OrdeningByType<U>());
 		}
+		template<class U>
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const U) const noexcept {
+			__LL_PRIMITIVE_U_TYPE_CHECK(U, llcpp::ZERO_CMP);
+		}
+
 #undef __LL_PRIMITIVE_U_TYPE_CHECK
 
 		#pragma endregion
@@ -114,8 +119,8 @@ class PrimitiveClass {
 	#pragma endregion
 };
 
-template<class T, class CompareTo>
-using T_PrimitiveClass = std::conditional_t<std::is_class_v<T>, T, traits::PrimitiveClass<T, CompareTo>>;
+template<class T>
+using T_PrimitiveClass = traits::conditional_t<std::is_class_v<T>, T, traits::PrimitiveClass<T>>;
 
 } // namespace traits
 } // namespace meta

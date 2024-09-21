@@ -73,6 +73,23 @@ using true_type = traits::bool_constant_container<llcpp::TRUE, _U>;
 template<class _U>
 using false_type = traits::bool_constant_container<llcpp::FALSE, _U>;
 
+
+template<bool, class T, class U>
+struct conditional { using type = T; };
+template<class T, class U>
+struct conditional<false, T, U> { using type = U; };
+template<bool CONDITION, class T, class U>
+using conditional_t = conditional<CONDITION, T, U>::type;
+
+
+template<bool, class T, T _ELEM_1, T _ELEM_2>
+struct conditional_value { static constexpr T value = _ELEM_1; };
+template<class T, T _ELEM_1, T _ELEM_2>
+struct conditional_value<false, T, _ELEM_1, _ELEM_2> { static constexpr T value = _ELEM_2; };
+template<bool CONDITION, class T, T _ELEM_1, T _ELEM_2>
+__LL_VAR_INLINE__ constexpr T conditional_value_v = conditional_value<CONDITION, T, _ELEM_1, _ELEM_2>::value;
+
+
 } // namespace traits
 } // namespace meta
 } // namespace llcpp

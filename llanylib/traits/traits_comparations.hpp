@@ -24,19 +24,25 @@
 #include "traits_three_way_compare.hpp"
 #include "traits_signature.hpp"
 #include "traits_primitive_types.hpp"
+#include "traits_selection.hpp"
 
 namespace llcpp {
 namespace meta {
 namespace traits {
 
-template<class _T, class _U = _T, class _Boolean = llcpp::meta::Boolean, class _ExtraFunctions = llcpp::Emptyclass>
-class is_comparable : public llcpp::meta::Cluster, public _ExtraFunctions {
+template<
+	class _T,
+	class _U = _T,
+	class _Boolean = llcpp::meta::Boolean,
+	class _ExtraFunctions = llcpp::Emptyclass
+>
+class IsComparable : public llcpp::meta::Cluster, public _ExtraFunctions {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType			= is_comparable;				// This class with template
+		using _MyType			= IsComparable;					// This class with template
 		using ExtraFunctions	= _ExtraFunctions;				// Type of inherited class with extra function
-		using Cluster			= llcpp::meta::Cluster;			// Flag to 
+		using Cluster			= llcpp::meta::Cluster;			// This is a cluster type class
 
 		// Types and enums
 		using T					= _T;							// Element to compare by
@@ -47,9 +53,8 @@ class is_comparable : public llcpp::meta::Cluster, public _ExtraFunctions {
 		using u_cinput			= traits::cinput<U>;
 		
 		// Signarures
-		using BoolSignature		= ll_bool_t(T_PrimitiveClass::*)(u_cinput) const noexcept;
-		using BooleanSignature	= Boolean(T_PrimitiveClass::*)(u_cinput) const noexcept;
-
+		using BoolSignature			= ll_bool_t(T_PrimitiveClass::*)(u_cinput) const noexcept;
+		using BooleanSignature		= Boolean(T_PrimitiveClass::*)(u_cinput) const noexcept;
 		using BoolExtraSignature	= ll_bool_t(ExtraFunctions::*)(t_cinput, u_cinput) const noexcept;
 		using BooleanExtraSignature	= Boolean(ExtraFunctions::*)(t_cinput, u_cinput) const noexcept;
 
@@ -76,14 +81,14 @@ class is_comparable : public llcpp::meta::Cluster, public _ExtraFunctions {
 		#pragma region ClassExpresions
 	public:
 		static constexpr ll_bool_t HAS_EQ_SIGNATURE_BOOL_EXTRA =
-			traits::common::has_compare_eq_function_v<T_PrimitiveClass, BoolSignature>;
+			traits::common::has_compare_eq_function_v<ExtraFunctions, BoolExtraSignature>;
 		static constexpr ll_bool_t HAS_EQ_SIGNATURE_BOOLEAN_EXTRA =
-			traits::common::has_compare_eq_function_v<T_PrimitiveClass, BooleanSignature>;
+			traits::common::has_compare_eq_function_v<ExtraFunctions, BooleanExtraSignature>;
 
 		static constexpr ll_bool_t HAS_NEQ_SIGNATURE_BOOL_EXTRA =
-			traits::common::has_compare_no_eq_function_v<T_PrimitiveClass, BoolSignature>;
+			traits::common::has_compare_no_eq_function_v<ExtraFunctions, BoolExtraSignature>;
 		static constexpr ll_bool_t HAS_NEQ_SIGNATURE_BOOLEAN_EXTRA =
-			traits::common::has_compare_no_eq_function_v<T_PrimitiveClass, BooleanSignature>;
+			traits::common::has_compare_no_eq_function_v<ExtraFunctions, BooleanExtraSignature>;
 
 		static constexpr ll_bool_t IS_COMPARABLE_EQ_EXTRA =
 			HAS_EQ_SIGNATURE_BOOL_EXTRA || HAS_EQ_SIGNATURE_BOOLEAN_EXTRA;
@@ -100,61 +105,96 @@ class is_comparable : public llcpp::meta::Cluster, public _ExtraFunctions {
 		static_assert(traits::is_valid_type_checker_v<U>,
 			"type_checker<U> detected an invalid type!");
 
+		static_assert(traits::is_valid_type_checker_v<ExtraFunctions>,
+			"type_checker<ExtraFunctions> detected an invalid type!");
+		static_assert(traits::is_valid_constructor_checker_v<ExtraFunctions>,
+			"constructor_checker<ExtraFunctions> detected an invalid type!");
+		static_assert(std::is_class_v<ExtraFunctions>,
+			"ExtraFunctions is not a class!");
+
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr is_comparable() noexcept : ExtraFunctions(), Cluster() {}
-		constexpr ~is_comparable() noexcept {}
+		constexpr IsComparable() noexcept
+			: Cluster()
+			, ExtraFunctions()
+		{}
+		template<class... Args>
+		constexpr IsComparable(Args&&... args) noexcept
+			: Cluster()
+			, ExtraFunctions(std::forward<Args>(args)...)
+		{}
+		constexpr ~IsComparable() noexcept {}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr is_comparable(const pair& other) noexcept
-			: t_val(std::forward<const T&>(other.t_val))
-			, u_val(std::forward<const U&>(other.u_val))
+		constexpr IsComparable(const IsComparable& other) noexcept
+			: Cluster()
+			, ExtraFunctions(std::forward<const ExtraFunctions&>(other))
 		{}
-		constexpr is_comparable& operator=(const is_comparable& other) noexcept {
-			this->t_val = std::forward<const T&>(other.t_val);
-			this->u_val = std::forward<const U&>(other.u_val);
+		constexpr IsComparable& operator=(const IsComparable& other) noexcept {
+			ExtraFunctions::operator=(std::forward<const ExtraFunctions&>(other));
 			return *this;
 		}
-		constexpr pair(pair&& other) noexcept
-			: t_val(std::forward<T&&>(other.t_val))
-			, u_val(std::forward<U&&>(other.u_val))
-		{ other.ExtraFunctions::clear(other.t_val, other.u_val) }
-		constexpr pair& operator=(pair&& other) noexcept {
-			this->t_val = std::forward<T&&>(other.t_val);
-			this->u_val = std::forward<U&&>(other.u_val);
-			other.ExtraFunctions::clear(other.t_val, other.u_val)
+		constexpr IsComparable(IsComparable&& other) noexcept
+			: Cluster()
+			, ExtraFunctions(std::forward<ExtraFunctions&&>(other))
+		{}
+		constexpr IsComparable& operator=(IsComparable&& other) noexcept {
+			ExtraFunctions::operator=(std::forward<ExtraFunctions&&>(other));
 			return *this;
 		}
-		constexpr pair(const volatile pair&) = delete;
-		constexpr pair& operator=(const volatile pair&) = delete;
+		constexpr IsComparable(const volatile IsComparable&) = delete;
+		constexpr IsComparable& operator=(const volatile IsComparable&) = delete;
+		constexpr IsComparable(volatile IsComparable&&) = delete;
+		constexpr IsComparable& operator=(volatile IsComparable&&) = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr explicit operator const pair*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator pair*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const IsComparable*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator IsComparable*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
-
 	public:
-		using compare_eq_type =
-			std::conditional_t<T_HAS_EQ_SIGNATURE_BOOL, ll_bool_t, Boolean>;
-		using compare_neq_type =
-			std::conditional_t<T_HAS_NEQ_SIGNATURE_BOOL, ll_bool_t, Boolean>;
+		using compare_eq_type = traits::type_selection<void>::get_conincidence_condition<
+			traits::bool_constant_container<HAS_EQ_SIGNATURE_BOOL, ll_bool_t>,
+			traits::bool_constant_container<HAS_EQ_SIGNATURE_BOOLEAN, Boolean>,
+			traits::bool_constant_container<HAS_EQ_SIGNATURE_BOOL_EXTRA, ll_bool_t>,
+			traits::bool_constant_container<HAS_EQ_SIGNATURE_BOOLEAN_EXTRA, Boolean>
+		>;
+		using compare_neq_type = traits::type_selection<void>::get_conincidence_condition<
+			traits::bool_constant_container<HAS_NEQ_SIGNATURE_BOOL, ll_bool_t>,
+			traits::bool_constant_container<HAS_NEQ_SIGNATURE_BOOLEAN, Boolean>,
+			traits::bool_constant_container<HAS_NEQ_SIGNATURE_BOOL_EXTRA, ll_bool_t>,
+			traits::bool_constant_container<HAS_NEQ_SIGNATURE_BOOLEAN_EXTRA, Boolean>
+		>;
 
 		__LL_NODISCARD__ constexpr compare_eq_type is_same_value(t_cinput t, u_cinput u) const noexcept {
-			static_assert(IS_COMPARABLE_EQ, "Types are not comparables!");
-			return (t == u);
+			static_assert(!std::is_same_v<compare_eq_type, void>,
+				"Types are not comparables!");
+
+			if constexpr (IS_COMPARABLE_EQ)
+				return (t == u);
+			else if constexpr (IS_COMPARABLE_EQ_EXTRA)
+				return ExtraFunctions::compare_eq(t, u);
+			else {}
 		}
-		__LL_NODISCARD__ constexpr compare_eq_type is_not_same_value(t_cinput t, u_cinput u) const noexcept {
-			static_assert(IS_COMPARABLE_NEQ, "Types are not comparables!");
-			return (t != u);
+		__LL_NODISCARD__ constexpr compare_neq_type is_not_same_value(t_cinput t, u_cinput u) const noexcept {
+			static_assert(!std::is_same_v<compare_eq_type, void>,
+				"Types are not comparables!");
+
+			if constexpr (IS_COMPARABLE_EQ)
+				return (t != u);
+			else if constexpr (IS_COMPARABLE_EQ_EXTRA)
+				return ExtraFunctions::compare_no_eq(t, u);
+			else {}
 		}
+
+		#pragma endregion
 
 	#pragma endregion
 };
@@ -162,42 +202,50 @@ class is_comparable : public llcpp::meta::Cluster, public _ExtraFunctions {
 template<
 	class _T,
 	class _U = _T,
-	class _Orderning = traits::get_three_way_comparasion_function_type_t<_T, _U>
+	class _ExtraFunctions = llcpp::Emptyclass,
+	class _Orderning = traits::get_three_way_comparasion_return_t<_T, _U>
 >
-struct is_diff {
+struct IsDifferenciable : public llcpp::meta::Cluster, public _ExtraFunctions {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType			= is_diff;
+		using _MyType			= IsDifferenciable;					// This class with template
+		using ExtraFunctions	= _ExtraFunctions;				// Type of inherited class with extra function
+		using Cluster			= llcpp::meta::Cluster;			// This is a cluster type class
 
-		// Types
-		using T					= _T;
-		using U					= _U;
+		// Types and enums
+		using T					= _T;							// Element to compare by
+		using U					= _U;							// Element to compare to
+		using T_PrimitiveClass	= traits::T_PrimitiveClass<T>;	// Provides primitive wrapper if primitive type
 		using Orderning			= _Orderning;
-		using T_Class			= traits::T_Class<T>;
-
-		// 
 		using t_cinput			= traits::cinput<T>;
 		using u_cinput			= traits::cinput<U>;
 		
 		// Signarures
-		using T_Signature_C		= cmp_t(T_Class::*)(u_cinput) const noexcept;
-		using T_Signature_CPP	= Orderning(T_Class::*)(u_cinput) const noexcept;
+		using CSignature		= c_cmp_t(T_PrimitiveClass::*)(u_cinput) const noexcept;
+		using CPPSignature		= Orderning(T_PrimitiveClass::*)(u_cinput) const noexcept;
+		using CExtraSignature	= c_cmp_t(ExtraFunctions::*)(t_cinput, u_cinput) const noexcept;
+		using CPPExtraSignature	= Orderning(ExtraFunctions::*)(t_cinput, u_cinput) const noexcept;
 
 	#pragma endregion
 	#pragma region Expresions
+	#pragma region TypeExpresions
 	public:
-		static constexpr ll_bool_t T_HAS_C_SIGNATURE =
-			traits::common::has_sgtrong_ordening_function_v<T_Class, T_Signature_C>;
-		static constexpr ll_bool_t T_HAS_CPP_SIGNATURE =
-			traits::common::has_sgtrong_ordening_function_v<T_Class, T_Signature_CPP>;
+		static constexpr ll_bool_t HAS_C_SIGNATURE =
+			traits::common::has_compare_function_v<T_PrimitiveClass, CSignature>;
+		static constexpr ll_bool_t HAS_CPP_SIGNATURE =
+			traits::common::has_sgtrong_ordening_function_v<T_PrimitiveClass, CPPSignature>;
 
-		static constexpr ll_bool_t T_U_BASIC_TYPE =
-			traits::is_basic_type_v<T> && traits::is_basic_type_v<U>;
+		static constexpr ll_bool_t HAS_C_SIGNATURE_EXTRA =
+			traits::common::has_compare_function_v<T_PrimitiveClass, CSignature>;
+		static constexpr ll_bool_t HAS_CPP_SIGNATURE_EXTRA =
+			traits::common::has_compare_strong_function_v<T_PrimitiveClass, CPPSignature>;
 
-		static constexpr ll_bool_t IS_COMPARABLE =
-			T_HAS_C_SIGNATURE || T_U_BASIC_TYPE
-			|| T_HAS_CPP_SIGNATURE;
+		static constexpr ll_bool_t IS_C_COMPARABLE =
+			HAS_C_SIGNATURE || HAS_C_SIGNATURE_EXTRA;
+
+		static constexpr ll_bool_t IS_CPP_COMPARABLE =
+			HAS_CPP_SIGNATURE || HAS_CPP_SIGNATURE_EXTRA;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -207,22 +255,89 @@ struct is_diff {
 		static_assert(traits::is_valid_type_checker_v<U>,
 			"type_checker<U> detected an invalid type!");
 
+		static_assert(traits::is_valid_type_checker_v<ExtraFunctions>,
+			"type_checker<ExtraFunctions> detected an invalid type!");
+		static_assert(traits::is_valid_constructor_checker_v<ExtraFunctions>,
+			"constructor_checker<ExtraFunctions> detected an invalid type!");
+		static_assert(std::is_class_v<ExtraFunctions>,
+			"ExtraFunctions is not a class!");
+
 	#pragma endregion
 	#pragma region Functions
+		#pragma region Constructors
 	public:
-		__LL_NODISCARD__ static constexpr cmp_t diff_C(t_cinput t, u_cinput u) noexcept {
-			static_assert(T_HAS_C_SIGNATURE || T_U_BASIC_TYPE, "Types are not comparables!");
-			if constexpr (T_U_BASIC_TYPE) {
-				if (t > u) return 1;
-				else if (t < u) return -1;
-				else return 0;
+		constexpr IsDifferenciable() noexcept
+			: Cluster()
+			, ExtraFunctions()
+		{}
+		template<class... Args>
+		constexpr IsDifferenciable(Args&&... args) noexcept
+			: Cluster()
+			, ExtraFunctions(std::forward<Args>(args)...)
+		{}
+		constexpr ~IsDifferenciable() noexcept {}
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr IsDifferenciable(const IsDifferenciable& other) noexcept
+			: Cluster()
+			, ExtraFunctions(std::forward<const ExtraFunctions&>(other))
+		{}
+		constexpr IsDifferenciable& operator=(const IsDifferenciable& other) noexcept {
+			ExtraFunctions::operator=(std::forward<const ExtraFunctions&>(other));
+			return *this;
+		}
+		constexpr IsDifferenciable(IsDifferenciable&& other) noexcept
+			: Cluster()
+			, ExtraFunctions(std::forward<ExtraFunctions&&>(other))
+		{}
+		constexpr IsDifferenciable& operator=(IsDifferenciable&& other) noexcept {
+			ExtraFunctions::operator=(std::forward<ExtraFunctions&&>(other));
+			return *this;
+		}
+		constexpr IsDifferenciable(const volatile IsDifferenciable&) = delete;
+		constexpr IsDifferenciable& operator=(const volatile IsDifferenciable&) = delete;
+		constexpr IsDifferenciable(volatile IsDifferenciable&&) = delete;
+		constexpr IsDifferenciable& operator=(volatile IsDifferenciable&&) = delete;
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr explicit operator const IsDifferenciable*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator IsDifferenciable*() noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	public:
+		__LL_NODISCARD__ constexpr c_cmp_t c_diff(t_cinput t, u_cinput u) const noexcept {
+			static_assert(IS_C_COMPARABLE,
+				"Types are not comparables!");
+
+			if constexpr (HAS_C_SIGNATURE) {
+				if constexpr (traits::is_basic_type_v<T> && traits::is_basic_type_v<U>) {
+					if (t > u) return 1;
+					else if (t < u) return -1;
+					else return 0;
+				}
+				else return (t <=> u);
 			}
-			else return (t <=> u);
+			else if constexpr (HAS_C_SIGNATURE_EXTRA)
+				return ExtraFunctions::compare(t, u);
+			else {}
 		}
-		__LL_NODISCARD__ static constexpr Orderning diff_CPP(t_cinput t, u_cinput u) noexcept {
-			static_assert(T_HAS_CPP_SIGNATURE || T_U_BASIC_TYPE, "Types are not comparables!");
-			return (t <=> u);
+		__LL_NODISCARD__ constexpr Orderning diff(t_cinput t, u_cinput u) const noexcept {
+			static_assert(IS_CPP_COMPARABLE,
+				"Types are not comparables!");
+
+			if constexpr (HAS_CPP_SIGNATURE)
+				return (t <=> u);
+			else if constexpr (HAS_CPP_SIGNATURE_EXTRA)
+				return ExtraFunctions::compare_strong(t, u);
+			else {}
 		}
+
+		#pragma endregion
 
 	#pragma endregion
 };

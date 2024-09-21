@@ -48,7 +48,7 @@ using ConstwStr	= ConstArray<ll_wchar_t>;
 using Str		= Array<ll_char_t>;
 using wStr		= Array<ll_wchar_t>;
 
-template<u64 _EXTENSION>
+template<class T, u64 _EXTENSION, ll_bool_t _IS_SIGNED>
 class Integer;
 
 } // namespace meta
@@ -56,7 +56,7 @@ class Integer;
 //using len_t	= meta::traits::Integer<1>;	// Used to count things (natural number)
 
 // Unsigned
-using u128 = meta::Integer<1>;
+using u128 = std::pair<u64, u64>;
 using u256 = std::pair<u128, u128>;
 
 // Signed

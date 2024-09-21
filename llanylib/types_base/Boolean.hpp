@@ -87,6 +87,11 @@ class Boolean {
 			return value;
 		}
 
+		constexpr Boolean(const volatile Boolean&) = delete;
+		constexpr Boolean& operator=(const volatile Boolean&) = delete;
+		constexpr Boolean(volatile Boolean&&) = delete;
+		constexpr Boolean& operator=(volatile Boolean&&) = delete;
+
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:

@@ -61,6 +61,11 @@ class GenericCluster {
 		constexpr GenericCluster(GenericCluster&& other) noexcept {}
 		constexpr GenericCluster& operator=(GenericCluster&& other) noexcept { return *this; }
 
+		constexpr GenericCluster(const volatile GenericCluster&) = delete;
+		constexpr GenericCluster& operator=(const volatile GenericCluster&) = delete;
+		constexpr GenericCluster(volatile GenericCluster&&) = delete;
+		constexpr GenericCluster& operator=(volatile GenericCluster&&) = delete;
+
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:

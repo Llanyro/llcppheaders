@@ -40,8 +40,8 @@ class pair : public llcpp::meta::Cluster, public _ExtraFunctions {
 
 		using cinput_t			= traits::cinput<T>;
 		using cinput_u			= traits::cinput<U>;
-		using is_comparable_t	= traits::is_comparable<T>;
-		using is_comparable_u	= traits::is_comparable<U>;
+		using is_comparable_t	= traits::IsComparable<T>;
+		using is_comparable_u	= traits::IsComparable<U>;
 
 		// Signatures
 		using ClearSignature	= void(ExtraFunctions::*)(T&, U&) const noexcept;
@@ -72,7 +72,7 @@ class pair : public llcpp::meta::Cluster, public _ExtraFunctions {
 
 	#pragma endregion
 	#pragma region Attributes
-	protected:
+	private:
 		T t_val;
 		U u_val;
 

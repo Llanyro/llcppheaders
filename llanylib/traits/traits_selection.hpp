@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	traits_type_selection.hpp				//
+//	traits_selection.hpp					//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -7,19 +7,19 @@
 //	Version: 10.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_TRAITSTYPESELECTION_HPP_) // Guard && version protector
-	#if LLANYLIB_TRAITSTYPESELECTION_MAYOR_ != 10 || LLANYLIB_TRAITSTYPESELECTION_MINOR_ < 0
+#if defined(LLANYLIB_TRAITSSELECTION_HPP_) // Guard && version protector
+	#if LLANYLIB_TRAITSSELECTION_MAYOR_ != 10 || LLANYLIB_TRAITSSELECTION_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
-			#warning "traits_type_selection.hpp version error!"
+			#warning "traits_selection.hpp version error!"
 		#else
-			#error "traits_type_selection.hpp version error!"
+			#error "traits_selection.hpp version error!"
 		#endif // __LL_REAL_CXX23
-	#endif // LLANYLIB_TRAITSTYPESELECTION_MAYOR_ || LLANYLIB_TRAITSTYPESELECTION_MINOR_
+	#endif // LLANYLIB_TRAITSSELECTION_MAYOR_ || LLANYLIB_TRAITSSELECTION_MINOR_
 
-#else !defined(LLANYLIB_TRAITSTYPESELECTION_HPP_)
-#define LLANYLIB_TRAITSTYPESELECTION_HPP_
-#define LLANYLIB_TRAITSTYPESELECTION_MAYOR_ 10
-#define LLANYLIB_TRAITSTYPESELECTION_MINOR_ 0
+#else !defined(LLANYLIB_TRAITSSELECTION_HPP_)
+#define LLANYLIB_TRAITSSELECTION_HPP_
+#define LLANYLIB_TRAITSSELECTION_MAYOR_ 10
+#define LLANYLIB_TRAITSSELECTION_MINOR_ 0
 
 #include "type_traits.hpp"
 
@@ -62,6 +62,23 @@ struct type_selection {
 	}
 	template<class X, class... Args>
 	using get_conincidence = decltype(_MyType::get_by_type<X, Args...>())::T;
+
+	template<class T, class... Args>
+	__LL_NODISCARD__ static constexpr auto get_by_condition() noexcept {
+		// [TOFIX]
+		// Insert here a static_assert to check if args are double containers type
+		if constexpr (T::VALUE)
+			return traits::type_container<typename T::U>{};
+		else return _MyType::get_by_condition<Args...>();
+	}
+	template<class T>
+	__LL_NODISCARD__ static constexpr auto get_by_condition() noexcept {
+		if constexpr (T::VALUE)
+			return traits::type_container<typename T::U>{};
+		else return traits::type_container<VoidType>{};
+	}
+	template<class... Args>
+	using get_conincidence_condition = decltype(_MyType::get_by_condition<Args...>())::T;
 };
 
 template<class T, class TypeChar, class TypeWChar, class ExtraType = void>
@@ -75,4 +92,4 @@ using get_by_char_type_t = traits::type_selection<ExtraType>::get_conincidence<
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_TRAITSTYPESELECTION_HPP_
+#endif // LLANYLIB_TRAITSSELECTION_HPP_

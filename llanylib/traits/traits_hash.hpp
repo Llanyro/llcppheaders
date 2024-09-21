@@ -101,7 +101,7 @@ struct get_hash_function_type {
 	using _type			= typename _get_hash_function_type::type;
 	using _type_const	= typename _get_hash_function_type_const::type;
 
-	using type = std::conditional_t<!std::is_same_v<_type, void>, _type, _type_const>;
+	using type = traits::conditional_t<!std::is_same_v<_type, void>, _type, _type_const>;
 	static_assert(!std::is_same_v<type, void>, "T::hash() cannot return void!");
 };
 

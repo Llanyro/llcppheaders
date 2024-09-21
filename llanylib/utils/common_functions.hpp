@@ -1,27 +1,27 @@
 //////////////////////////////////////////////
-//	common.hpp								//
+//	common_functions.hpp					//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 9.0							//
+//	Version: 10.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_COMMON_HPP_) // Guard && version protector
-	#if LLANYLIB_COMMON_MAYOR_ != 9 || LLANYLIB_COMMON_MINOR_ < 0
+#if defined(LLANYLIB_COMMONFUNCTIONS_HPP_) // Guard && version protector
+	#if LLANYLIB_COMMONFUNCTIONS_MAYOR_ != 10 || LLANYLIB_COMMONFUNCTIONS_MINOR_ < 0
 		#if defined(LL_REAL_CXX23)
-			#warning "common.hpp version error!"
+			#warning "common_functions.hpp version error!"
 		#else
-			#error "common.hpp version error!"
+			#error "common_functions.hpp version error!"
 		#endif // LL_REAL_CXX23
-	#endif // LLANYLIB_COMMON_MAYOR_ || LLANYLIB_COMMON_MINOR_
+	#endif // LLANYLIB_COMMONFUNCTIONS_MAYOR_ || LLANYLIB_COMMONFUNCTIONS_MINOR_
 
-#else !defined(LLANYLIB_COMMON_HPP_)
-#define LLANYLIB_COMMON_HPP_
-#define LLANYLIB_COMMON_MAYOR_ 9
-#define LLANYLIB_COMMON_MINOR_ 0
+#else !defined(LLANYLIB_COMMONFUNCTIONS_HPP_)
+#define LLANYLIB_COMMONFUNCTIONS_HPP_
+#define LLANYLIB_COMMONFUNCTIONS_MAYOR_ 10
+#define LLANYLIB_COMMONFUNCTIONS_MINOR_ 0
 
-#include "traits.hpp"
+#include "../traits/traits_base.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -41,13 +41,13 @@ constexpr void simple_swap(T& v1, T& v2) noexcept {
 	}
 }
 template<class T, class U = T>
-constexpr cmp_t compare_with_operators(T v1, U v2) noexcept {
+constexpr c_cmp_t compare_with_operators(T v1, U v2) noexcept {
 	if (v1 == v2) return 0;
 	else if (v1 > v2) return 1;
 	else return -1;
 }
 template<class T, class U = T>
-constexpr cmp_t compare_with_operators_void(const void* _a, const void* _b) noexcept {
+constexpr c_cmp_t compare_with_operators_void(const void* _a, const void* _b) noexcept {
 	__LL_ASSERT_VAR_NULL__(_a, "_a");
 	__LL_ASSERT_VAR_NULL__(_b, "_b");
 
@@ -76,7 +76,7 @@ constexpr void clear_if_pointer(T& value) {
 	if constexpr (std::is_pointer_v<T>)
 		value = LL_NULLPTR;
 }
-template<class T, len_t N>
+template<class T, u64 N>
 constexpr void clear_if_pointer(T(&value)[N]) {
 	if constexpr (std::is_pointer_v<T>)
 		for (T data = value, end = value + N; data < end; ++data)
@@ -93,4 +93,4 @@ constexpr void clear_if_pointer(T begin, T end) {
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_COMMON_HPP_
+#endif // LLANYLIB_COMMONFUNCTIONS_HPP_

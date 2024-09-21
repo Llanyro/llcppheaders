@@ -120,6 +120,7 @@ namespace common {
 //__LL_HAS_CUSTOM_FUNCTION__(compare_no_eq);
 //__LL_HAS_CUSTOM_FUNCTION__(die);
 //__LL_HAS_CUSTOM_FUNCTION__(combine);
+//__LL_HAS_CUSTOM_FUNCTION__(compare_strong);
 //__LL_HAS_CUSTOM_FUNCTION_NAMED__(operator_eq, operator==);
 //__LL_HAS_CUSTOM_FUNCTION_NAMED__(operator_no_eq, operator!=);
 //__LL_HAS_CUSTOM_FUNCTION_NAMED__(operator_greater, operator>);
@@ -167,12 +168,12 @@ template<class _ClassToCheck, class _Signature> struct has_compare_no_eq_functio
 template<class _ClassToCheck, class _Signature> struct has_die_function {
 	using _MyType = has_die_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::die>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
 }; template<class ClassToCheck, class Signature> using has_die_function_t = traits::_has_common<traits::common::has_die_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_die_function_v = traits::common::has_die_function_t<ClassToCheck, Signature>::type::value;
-template<class _ClassToCheck, class _Signature> struct has_sgtrong_ordening_function {
-	using _MyType = has_sgtrong_ordening_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::operator<=>>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
-}; template<class ClassToCheck, class Signature> using has_sgtrong_ordening_function_t = traits::_has_common<traits::common::has_sgtrong_ordening_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_sgtrong_ordening_function_v = traits::common::has_sgtrong_ordening_function_t<ClassToCheck, Signature>::type::value;
 template<class _ClassToCheck, class _Signature> struct has_combine_function {
 	using _MyType = has_combine_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<_Signature SIG> using checker = traits::SignatureChecker<_ClassToCheck, _Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::combine>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
 }; template<class ClassToCheck, class Signature> using has_combine_function_t = traits::_has_common<traits::common::has_combine_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_combine_function_v = traits::common::has_combine_function_t<ClassToCheck, Signature>::type::value;
+template<class _ClassToCheck, class _Signature> struct has_compare_strong_function {
+	using _MyType = has_compare_strong_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<_Signature SIG> using checker = traits::SignatureChecker<_ClassToCheck, _Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::compare_strong>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
+}; template<class ClassToCheck, class Signature> using has_compare_strong_function_t = traits::_has_common<traits::common::has_compare_strong_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_compare_strong_function_v = traits::common::has_compare_strong_function_t<ClassToCheck, Signature>::type::value;;
 
 template<class ClassToCheck>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_simple_clear_function_v =
@@ -196,6 +197,9 @@ template<class _ClassToCheck, class _Signature> struct has_operator_eq_lower_fun
 template<class _ClassToCheck, class _Signature> struct has_operator_no_eq_function {
 	using _MyType = has_operator_no_eq_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker < &_U::operator!=>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
 }; template<class ClassToCheck, class Signature> using has_operator_no_eq_function_t = traits::_has_common<traits::common::has_operator_no_eq_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_operator_no_eq_function_v = traits::common::has_operator_no_eq_function_t<ClassToCheck, Signature>::type::value;
+template<class _ClassToCheck, class _Signature> struct has_sgtrong_ordening_function {
+	using _MyType = has_sgtrong_ordening_function; using ClassToCheck = _ClassToCheck; using Signature = _Signature; template<Signature SIG> using checker = traits::SignatureChecker<ClassToCheck, Signature, SIG>; template<class _U> static constexpr auto test(checker<&_U::operator<=>>*) noexcept -> std::true_type; template<class _U> static constexpr auto test(...) noexcept -> std::false_type;
+}; template<class ClassToCheck, class Signature> using has_sgtrong_ordening_function_t = traits::_has_common<traits::common::has_sgtrong_ordening_function<ClassToCheck, Signature>>; template<class ClassToCheck, class Signature> inline constexpr ll_bool_t has_sgtrong_ordening_function_v = traits::common::has_sgtrong_ordening_function_t<ClassToCheck, Signature>::type::value;
 
 } // namespace common
 

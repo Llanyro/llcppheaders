@@ -19,41 +19,8 @@
     <Filter Include="Source Files\old">
       <UniqueIdentifier>{ee4a42f1-6c3c-4096-9fe4-07b92b7bccb5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\old\hash">
-      <UniqueIdentifier>{e03b962a-c161-4c48-a3fd-0f3a46df8209}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\hash\hashes">
-      <UniqueIdentifier>{55852399-2688-4e6e-a48e-283bc4f6351b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\expresions">
-      <UniqueIdentifier>{2e8bd116-f9a5-41e4-a404-a361e9f96be3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\old\examples">
       <UniqueIdentifier>{da89fac3-1e0d-4172-878f-b633106c7eda}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\traits">
-      <UniqueIdentifier>{c01459d4-73ae-4b35-8200-db8cf12fd966}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\other">
-      <UniqueIdentifier>{5752054d-a959-40b1-b883-014d74ca574f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\standards">
-      <UniqueIdentifier>{00e40e75-2a5a-4a48-aedf-c92e8f19e94d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\utils">
-      <UniqueIdentifier>{8f625efc-af0f-4c4e-9c0d-e6459870feb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\utils\lists">
-      <UniqueIdentifier>{c8212b79-1063-4446-b1c9-4ed73eae1e2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\utils\lists\linked">
-      <UniqueIdentifier>{6c0ee5bc-f841-4796-b6bb-6259973006da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\utils\lists\node">
-      <UniqueIdentifier>{d3599bd6-91d0-4998-a4b3-ca69ecac673b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\old\utils\parser">
-      <UniqueIdentifier>{145643bb-e34c-48f5-8cd1-0741536b838b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\v10\defines">
       <UniqueIdentifier>{e90f5574-8aad-499b-930e-5d42105b6ccf}</UniqueIdentifier>
@@ -123,13 +90,13 @@
     <ClInclude Include="traits\traits_checker.hpp">
       <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="traits\traits_promotion.hpp">
+    <ClInclude Include="traits\traits_type_update.hpp">
       <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
     <ClInclude Include="traits\traits_parameter_pack.hpp">
       <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="traits\traits_type_selection.hpp">
+    <ClInclude Include="traits\traits_selection.hpp">
       <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
     <ClInclude Include="traits\traits_signature.hpp">
@@ -150,12 +117,6 @@
     <ClInclude Include="traits\traits_old.hpp">
       <Filter>Source Files\v10\traits</Filter>
     </ClInclude>
-    <ClInclude Include="types_extra\pair.hpp">
-      <Filter>Source Files\v10\types_extra</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\Container.hpp">
-      <Filter>Source Files\old\utils</Filter>
-    </ClInclude>
     <ClInclude Include="math\limits.hpp">
       <Filter>Source Files\v10\math</Filter>
     </ClInclude>
@@ -164,6 +125,21 @@
     </ClInclude>
     <ClInclude Include="old\examples\traitsExample.hpp">
       <Filter>Source Files\old\examples</Filter>
+    </ClInclude>
+    <ClInclude Include="types_extra\pair.hpp">
+      <Filter>Source Files\old</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\algorithm.hpp">
+      <Filter>Source Files\v10\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="math\math.hpp">
+      <Filter>Source Files\v10\math</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\common_functions.hpp">
+      <Filter>Source Files\v10\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="types_extra\Integer.hpp">
+      <Filter>Source Files\v10\types_extra</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

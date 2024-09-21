@@ -89,13 +89,13 @@ struct get_three_way_comparasion_function_type {
 		using U			= _U;
 		using t_cinput	= traits::cinput<T>;
 		using u_cinput	= traits::cinput<U>;
-		using T_Class	= std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
+		using T_Class	= traits::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
 
 		// Type if basic type
-		using no_function_type = std::conditional_t<
+		using no_function_type = traits::conditional_t<
 			!traits::is_all_of_a_basic_type_v<T, U>,
 			traits::false_type<llcpp::Emptyclass>,
-			std::conditional_t<
+			traits::conditional_t<
 				traits::is_any_of_a_floating_type_v<T, U>,
 				traits::true_type<std::partial_ordering>,
 				traits::true_type<std::strong_ordering>
@@ -134,7 +134,7 @@ struct get_three_way_comparasion_function_type {
 //	using Checker	= _Checker;
 //	using VoidType	= _VoidType;
 //	template<class T, class _U = VoidType>
-//	using return_type = std::conditional_t<Checker::is_valid_v<T>, T, _U>;
+//	using return_type = traits::conditional_t<Checker::is_valid_v<T>, T, _U>;
 //
 //	static_assert(traits::is_valid_type_checker_v<Checker>,
 //		"type_checker<Checker> detected an invalid type!");

@@ -80,10 +80,10 @@ struct get_three_way_comparasion_return<_T, _U, llcpp::FALSE> {
 		using u_cinput	= traits::cinput<U>;
 
 		// Type if basic type
-		using no_function_type = std::conditional_t<
+		using no_function_type = traits::conditional_t<
 			!traits::is_all_of_a_basic_type_v<T, U>,
 			traits::false_type<llcpp::Emptyclass>,
-			std::conditional_t<
+			traits::conditional_t<
 				traits::is_any_of_a_floating_type_v<T, U>,
 				traits::true_type<std::partial_ordering>,
 				traits::true_type<std::strong_ordering>

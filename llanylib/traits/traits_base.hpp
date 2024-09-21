@@ -72,12 +72,12 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_str_type_v = std::_Is_any_of_v<T, Str, 
 template<class T>
 using array_type_t = std::remove_extent_t<T>;
 template<class T>
-using input = std::conditional_t<std::is_class_v<T>, T&, T>;
+using input = traits::conditional_t<std::is_class_v<T>, T&, T>;
 template<class T>
-using cinput = std::conditional_t< std::is_class_v<T>, const T&, const T>;
+using cinput = traits::conditional_t< std::is_class_v<T>, const T&, const T>;
 // Returns type if type is class or llcpp::Emptyclass if not
 template<class T>
-using T_Class = std::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
+using T_Class = traits::conditional_t<std::is_class_v<T>, T, llcpp::Emptyclass>;
 
 } // namespace traits
 } // namespace meta

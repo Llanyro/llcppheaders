@@ -33,7 +33,7 @@ namespace traits {
 //	Args... -> all arguments to find stored in a traits::double_type_container<T, U> where:
 //		T -> type to compare with X
 //		U -> type to return if X is same type as T
-template<class _VoidType = void>
+template<class _VoidType = llcpp::Emptyclass>
 struct type_selection {
 	// Class related
 	using _MyType	= type_selection;
@@ -79,6 +79,28 @@ struct type_selection {
 	}
 	template<class... Args>
 	using get_conincidence_condition = decltype(_MyType::get_by_condition<Args...>())::T;
+
+	// Functions
+	template<class X, class T, class... Args>
+	__LL_NODISCARD__ static constexpr auto get_first_difference_f() noexcept {
+		// [TOFIX]
+		// Insert here a static_assert to check if args are double containers type
+		if constexpr (!std::is_same_v<typename T::T, X>)
+			return traits::type_container<typename T::U>{};
+		else return _MyType::get_by_type<X, Args...>();
+	}
+	template<class X, class T>
+	__LL_NODISCARD__ static constexpr auto get_first_difference_f() noexcept {
+		if constexpr (!std::is_same_v<typename T::T, X>)
+			return traits::type_container<typename T::U>{};
+		else return traits::type_container<VoidType>{};
+	}
+	template<class X>
+	__LL_NODISCARD__ static constexpr auto get_first_difference_f() noexcept {
+		return traits::type_container<VoidType>{};
+	}
+	template<class X, class... Args>
+	using get_first_difference = decltype(_MyType::get_first_difference_f<X, Args...>())::T;
 };
 
 template<class T, class TypeChar, class TypeWChar, class ExtraType = void>

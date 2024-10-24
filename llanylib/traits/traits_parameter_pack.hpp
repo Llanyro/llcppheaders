@@ -58,10 +58,10 @@ struct parameter_pack_operations {
 	using get_first_type	= typename traits::__traits__::FirstType<Args...>::T;
 
 	// Expresions
-	static constexpr u64 size					= sizeof...(Args);
-	static constexpr ll_bool_t empty			= (size == llcpp::ZERO_UI64);
-	static constexpr ll_bool_t has_a_pointer	= (std::is_pointer_v<Args> || ...);
-	static constexpr ll_bool_t has_a_array		= (std::is_array_v<Args> || ...);
+	static constexpr u64 SIZE					= sizeof...(Args);
+	static constexpr ll_bool_t EMPTY			= (size == llcpp::ZERO_U64);
+	static constexpr ll_bool_t HAS_A_POINTER	= (std::is_pointer_v<Args> || ...);
+	static constexpr ll_bool_t HAS_AN_ARRAY		= (std::is_array_v<Args> || ...);
 };
 template <class T>
 struct parameter_pack_operations<T> {
@@ -74,10 +74,10 @@ struct parameter_pack_operations<T> {
 	using get_first_type	= typename pack_first::T;
 
 	// Expresions
-	static constexpr u64 size					= 1ull;
-	static constexpr ll_bool_t empty			= llcpp::FALSE;
-	static constexpr ll_bool_t has_a_pointer	= std::is_pointer_v<T>;
-	static constexpr ll_bool_t has_a_array		= std::is_array_v<T>;
+	static constexpr u64 SIZE					= 1ull;
+	static constexpr ll_bool_t EMPTY			= llcpp::FALSE;
+	static constexpr ll_bool_t HAS_A_POINTER	= std::is_pointer_v<T>;
+	static constexpr ll_bool_t HAS_AN_ARRAY		= std::is_array_v<T>;
 };
 template <>
 struct parameter_pack_operations<> {
@@ -90,10 +90,10 @@ struct parameter_pack_operations<> {
 	using get_first_type	= pack_first::T;
 
 	// Expresions
-	static constexpr u64 size					= llcpp::ZERO_UI64;
-	static constexpr ll_bool_t empty			= llcpp::TRUE;
-	static constexpr ll_bool_t has_a_pointer	= llcpp::FALSE;
-	static constexpr ll_bool_t has_a_array		= llcpp::FALSE;
+	static constexpr u64 SIZE					= llcpp::ZERO_U64;
+	static constexpr ll_bool_t EMPTY			= llcpp::TRUE;
+	static constexpr ll_bool_t HAS_A_POINTER	= llcpp::FALSE;
+	static constexpr ll_bool_t HAS_AN_ARRAY		= llcpp::FALSE;
 };
 
 } // namespace traits

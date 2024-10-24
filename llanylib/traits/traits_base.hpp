@@ -41,7 +41,7 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = std::_Is_any_of_v<T, ll_char_t, ll_wchar_t>;
 
 template<class>
-__LL_VAR_INLINE__ constexpr u64 array_size = llcpp::ZERO_UI64;
+__LL_VAR_INLINE__ constexpr u64 array_size = llcpp::ZERO_U64;
 template<class T, u64 N>
 __LL_VAR_INLINE__ constexpr u64 array_size<T[N]> = N;
 
@@ -60,9 +60,18 @@ __LL_VAR_INLINE__ constexpr u64 type_or_array_size = 1ull;
 template<class T, u64 N>
 __LL_VAR_INLINE__ constexpr u64 type_or_array_size<T[N]> = N;
 
+template<class _T>
+constexpr ll_bool_t is_raw_type = traits::is_basic_type_v<_T> || std::is_class_v<_T>;
+
+
+//////////////////////////////////////////////////////////////// TODO ////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// TODO ////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// TODO ////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// TODO ////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// TODO ////////////////////////////////////////////////////////////////
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_hash_type_v =
-	std::_Is_any_of_v<std::remove_cv_t<T>, meta::hash::Hash32, meta::hash::Hash64, meta::hash::Hash128>;
+	std::_Is_any_of_v<T, meta::hash::Hash32, meta::hash::Hash64, meta::hash::Hash128>;
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_string_type_v = std::_Is_any_of_v<T, ConstStr, ConstwStr>;

@@ -114,8 +114,8 @@ __LL_VAR_INLINE__ constexpr bool DLL = __LL_DLL_BUILD;
 
 __LL_VAR_INLINE__ constexpr bool DEBUG = __LL_DEBUG;
 
-template<class T>
-__LL_VAR_INLINE__ constexpr T* NULLPTR = LL_NULLPTR;
+//template<class T>
+//__LL_VAR_INLINE__ constexpr T* NULLPTR = LL_NULLPTR;
 
 } // namespace llcpp
 

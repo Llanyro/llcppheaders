@@ -21,36 +21,50 @@
 #define LLANYLIB_MATHLIMITS_MAYOR_ 10
 #define LLANYLIB_MATHLIMITS_MINOR_ 0
 
-#include "../types_base/expresions.hpp"
+#include "../traits/traits_type_update.hpp"
 
 namespace llcpp {
+namespace meta {
 namespace math {
 
-__LL_VAR_INLINE__ constexpr u8 MAX_UI8		= static_cast<u8>(-1);
-__LL_VAR_INLINE__ constexpr u16 MAX_UI16	= static_cast<u16>(-1);
-__LL_VAR_INLINE__ constexpr u32 MAX_UI32	= static_cast<u32>(-1);
-__LL_VAR_INLINE__ constexpr u64 MAX_UI64	= static_cast<u64>(-1);
+template<class T>
+__LL_VAR_INLINE__ constexpr T MAX_VALUE =
+	traits::conditional_value_simple_v<
+		std::is_unsigned_v<T>,
+		T,
+		T(-1),
+		((MAX_VALUE<traits::type_signed<T, llcpp::FALSE>>) >> 1)
+	>;
 
-__LL_VAR_INLINE__ constexpr i8 MAX_I8		= MAX_UI8 >> 1;
-__LL_VAR_INLINE__ constexpr i16 MAX_I16		= MAX_UI16 >> 1;
-__LL_VAR_INLINE__ constexpr i32 MAX_I32		= MAX_UI32 >> 1;
-__LL_VAR_INLINE__ constexpr i64 MAX_I64		= MAX_UI64 >> 1;
+template<class T>
+__LL_VAR_INLINE__ constexpr T MIN_VALUE = MAX_VALUE<T> + 1;
 
-//__LL_VAR_INLINE__ constexpr f32 MAX_F32		= 0.0f;
-//__LL_VAR_INLINE__ constexpr f64 MAX_F64		= 0.0;
-//__LL_VAR_INLINE__ constexpr f128 MAX_F128	= 0.0l;
+template<class T>
+__LL_VAR_INLINE__ constexpr T ZERO_VALUE = traits::type_selection<llcpp::Emptyclass>::get_conincidence<
+	T,
+	traits::double_type_container<i8,	std::integral_constant<i8, 0>>,
+	traits::double_type_container<i16,	std::integral_constant<i16, 0>>,
+	traits::double_type_container<i32,	std::integral_constant<i32, 0>>,
+	traits::double_type_container<i64,	std::integral_constant<i64, 0ll>>,
+	//traits::double_type_container<i128, std::integral_constant<i128, llcpp::ZERO_I128>>,
+	//traits::double_type_container<i256, std::integral_constant<i256, llcpp::ZERO_I256>>,
 
-__LL_VAR_INLINE__ constexpr u8 MIN_UI8		= static_cast<u8>(-1);
-__LL_VAR_INLINE__ constexpr u16 MIN_UI16	= static_cast<u16>(-1);
-__LL_VAR_INLINE__ constexpr u32 MIN_UI32	= static_cast<u32>(-1);
-__LL_VAR_INLINE__ constexpr u64 MIN_UI64	= static_cast<u64>(-1);
+	traits::double_type_container<u8,	std::integral_constant<u8, 0u>>,
+	traits::double_type_container<u16,	std::integral_constant<u16, 0u>>,
+	traits::double_type_container<u32,	std::integral_constant<u32, 0u>>,
+	traits::double_type_container<u64,	std::integral_constant<u64, 0ull>>,
+	//traits::double_type_container<u128,	std::integral_constant<u128, llcpp::ZERO_U128>>,
+	//traits::double_type_container<u256,	std::integral_constant<u256, llcpp::ZERO_U256>>,
 
-__LL_VAR_INLINE__ constexpr i8 MIN_I8		= MAX_UI8 >> 1;
-__LL_VAR_INLINE__ constexpr i16 MIN_I16		= MAX_UI16 >> 1;
-__LL_VAR_INLINE__ constexpr i32 MIN_I32		= MAX_UI32 >> 1;
-__LL_VAR_INLINE__ constexpr i64 MIN_I64		= MAX_UI64 >> 1;
+	traits::double_type_container<f32,	std::integral_constant<f32, 0.0f>>,
+	traits::double_type_container<f64,	std::integral_constant<f64, 0.0>>,
+	traits::double_type_container<f128,	std::integral_constant<f128, 0.0l>>,
+
+	traits::double_type_container<ll_bool_t, std::integral_constant<ll_bool_t, llcpp::FALSE>>
+>::value;
 
 } // namespace math
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_MATHLIMITS_HPP_

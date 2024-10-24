@@ -73,22 +73,91 @@ using true_type = traits::bool_constant_container<llcpp::TRUE, _U>;
 template<class _U>
 using false_type = traits::bool_constant_container<llcpp::FALSE, _U>;
 
+#pragma region Conditional
+template<ll_bool_t _CONDITION, class T, class U>
+struct conditional {
+	// Class related
+	using _MyType	= conditional;
 
-template<bool, class T, class U>
-struct conditional { using type = T; };
+	// Types and enums
+	using type		= T;
+
+	// Expresions
+	static constexpr ll_bool_t CONDITION	= _CONDITION;
+};
 template<class T, class U>
-struct conditional<false, T, U> { using type = U; };
-template<bool CONDITION, class T, class U>
+struct conditional<llcpp::FALSE, T, U> {
+	// Class related
+	using _MyType	= conditional;
+
+	// Types and enums
+	using type		= U;
+
+	// Expresions
+	static constexpr ll_bool_t CONDITION	= llcpp::FALSE;
+};
+template<ll_bool_t CONDITION, class T, class U>
 using conditional_t = conditional<CONDITION, T, U>::type;
 
+template<ll_bool_t _CONDITION, class T, class U, T _ELEM_1, U _ELEM_2>
+struct conditional_value {
+	// Class related
+	using _MyType	= conditional_value;
 
-template<bool, class T, T _ELEM_1, T _ELEM_2>
-struct conditional_value { static constexpr T value = _ELEM_1; };
-template<class T, T _ELEM_1, T _ELEM_2>
-struct conditional_value<false, T, _ELEM_1, _ELEM_2> { static constexpr T value = _ELEM_2; };
+	// Types and enums
+	using type		= T;
+
+	// Expresions
+	static constexpr ll_bool_t CONDITION 	= _CONDITION;
+	static constexpr T VALUE				= _ELEM_1;
+	static constexpr T ELEM_1				= _ELEM_1;
+	static constexpr U ELEM_2				= _ELEM_2;
+};
+template<class T, class U, T _ELEM_1, U _ELEM_2>
+struct conditional_value<llcpp::FALSE, T, U, _ELEM_1, _ELEM_2> {
+	// Class related
+	using _MyType	= conditional_value;
+
+	// Types and enums
+	using type		= U;
+
+	// Expresions
+	static constexpr ll_bool_t CONDITION	= _CONDITION;
+	static constexpr U VALUE				= _ELEM_2;
+	static constexpr T ELEM_1				= _ELEM_1;
+	static constexpr U ELEM_2				= _ELEM_2;
+};
+
+template<bool CONDITION, class T, class U, T _ELEM_1, U _ELEM_2>
+__LL_VAR_INLINE__ constexpr traits::conditional_t<CONDITION, T, U> conditional_value_v = conditional_value<CONDITION, T, U, _ELEM_1, _ELEM_2>::VALUE;
 template<bool CONDITION, class T, T _ELEM_1, T _ELEM_2>
-__LL_VAR_INLINE__ constexpr T conditional_value_v = conditional_value<CONDITION, T, _ELEM_1, _ELEM_2>::value;
+__LL_VAR_INLINE__ constexpr T conditional_value_simple_v = conditional_value<CONDITION, T, T, _ELEM_1, _ELEM_2>::VALUE;
 
+#pragma endregion
+
+namespace dev {
+
+struct Testing {
+	int a;
+	virtual ~Testing() {}
+};
+
+template<class _T>
+struct test_a {
+	// Class related
+	using _MyType	= test_a;
+
+	// Types and enums
+	using T			= _T;
+
+	// Expresions
+	static constexpr ll_bool_t IS_VIRTUAL	= std::has_virtual_destructor_v<T>;
+	static constexpr u64 SIZEOF				= sizeof(T);
+	static constexpr u64 SIZEOF_OFFSET		= (IS_VIRTUAL ? sizeof(void*) : 0);
+	static constexpr u64 REAL_SIZEOF		= SIZEOF - SIZEOF_OFFSET;
+};
+
+} // namespace dev
 
 } // namespace traits
 } // namespace meta

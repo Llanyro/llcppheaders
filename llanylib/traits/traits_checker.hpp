@@ -27,13 +27,39 @@ namespace llcpp {
 namespace meta {
 namespace traits {
 
+struct checker_attributes_t {
+	// Class related
+	using _MyType						= checker_attributes_t;
+
+	// Attributes
+	ll_bool_t IGNORE_POINTER			: 1;
+	ll_bool_t IGNORE_ARRAY				: 1;
+	ll_bool_t IGNORE_VOLATILE			: 1;
+	ll_bool_t IGNORE_CONST				: 1;
+	ll_bool_t IGNORE_REFERENCE			: 1;
+
+	ll_bool_t IGNORE_CONSTRUCTIBLE		: 1;
+	ll_bool_t IGNORE_COPY_CONSTRUCTIBLE	: 1;
+	ll_bool_t IGNORE_COPY_ASSIGNABLE	: 1;
+	ll_bool_t IGNORE_MOVE_CONSTRUCTIBLE	: 1;
+	ll_bool_t IGNORE_MOVE_ASSIGNABLE	: 1;
+};
+
+namespace checker {
+//																				Pointer			Array		Volatile		Const		 Reference		Construct	CopyConstruct CopyAssign	MoveConstruct	MoveAssig
+__LL_VAR_INLINE__ constexpr traits::checker_attributes_t DEFAULT			= { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_POINTER		= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_ARRAY		= { llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CONST		= { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_VOLATILE	= { llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_PA			= { llcpp::TRUE,  llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CPA			= { llcpp::TRUE,  llcpp::TRUE,  llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CP			= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+
+} // namespace checker
+
 // Standard checker for types in this lib
-template<
-	class _T,
-	ll_bool_t _IGNORE_POINTER = llcpp::FALSE,
-	ll_bool_t _IGNORE_ARRAY = llcpp::FALSE,
-	ll_bool_t _IGNORE_VOLATILE = llcpp::FALSE
->
+template<class _T, traits::checker_attributes_t _ATTRIBUTES>
 struct type_checker {
 	// Class related
 	using _MyType	= type_checker;
@@ -42,18 +68,14 @@ struct type_checker {
 	using T			= _T;
 
 	// Expresions
-	static constexpr ll_bool_t IGNORE_POINTER	= _IGNORE_POINTER;
-	static constexpr ll_bool_t IGNORE_ARRAY		= _IGNORE_ARRAY;
-	static constexpr ll_bool_t IGNORE_VOLATILE	= _IGNORE_VOLATILE;
-	static constexpr ll_bool_t POINTER			= (IGNORE_POINTER	|| !std::is_pointer_v<T>);
-	static constexpr ll_bool_t ARRAY			= (IGNORE_ARRAY		|| !std::is_array_v<T>);
-	static constexpr ll_bool_t VOLATILE			= (IGNORE_VOLATILE	|| !std::is_volatile_v<T>);
-	static constexpr ll_bool_t is_valid_v =
-		!std::is_const_v<T> &&
-		!std::is_reference_v<T> &&
-		ARRAY &&
-		VOLATILE &&
-		POINTER;
+	static constexpr traits::checker_attributes_t ATTRIBUTES = _ATTRIBUTES;
+	static constexpr ll_bool_t CONST			= (ATTRIBUTES.IGNORE_CONST		|| !std::is_const_v<T>);
+	static constexpr ll_bool_t REFERENCE		= (ATTRIBUTES.IGNORE_REFERENCE	|| !std::is_reference_v<T>);
+	static constexpr ll_bool_t POINTER			= (ATTRIBUTES.IGNORE_POINTER	|| !std::is_pointer_v<T>);
+	static constexpr ll_bool_t ARRAY			= (ATTRIBUTES.IGNORE_ARRAY		|| !std::is_array_v<T>);
+	static constexpr ll_bool_t VOLATILE			= (ATTRIBUTES.IGNORE_VOLATILE	|| !std::is_volatile_v<T>);
+
+	static constexpr ll_bool_t is_valid_v = CONST && REFERENCE && ARRAY && VOLATILE && POINTER;
 
 	// Asserts
 	static_assert(!std::is_reference_v<T>,	"Reference type is forbidden!");
@@ -63,32 +85,13 @@ struct type_checker {
 	static_assert(VOLATILE,					"Volatile type is forbidden!");
 };
 
-template<class T>
+template<class T, traits::checker_attributes_t ATTRIBUTES = checker::DEFAULT>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_v = 
-	traits::type_checker<T>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_pointer_v = 
-	traits::type_checker<T, llcpp::TRUE, llcpp::FALSE, llcpp::FALSE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_array_v = 
-	traits::type_checker<T, llcpp::FALSE, llcpp::TRUE, llcpp::FALSE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_ignore_pa_v = 
-	traits::type_checker<T, llcpp::TRUE, llcpp::TRUE, llcpp::FALSE>::is_valid_v;
+	traits::type_checker<T, ATTRIBUTES>::is_valid_v;
 
 // Standard checker for classes and objects
 // Checks contruction / destruction and other operations needed
-template<
-	class _T,
-	ll_bool_t _IGNORE_CONSTRUCTIBLE = llcpp::FALSE,
-	ll_bool_t _IGNORE_COPY_CONSTRUCTIBLE = llcpp::FALSE,
-	ll_bool_t _IGNORE_COPY_ASSIGNABLE = llcpp::FALSE,
-	ll_bool_t _IGNORE_MOVE_CONSTRUCTIBLE = llcpp::FALSE,
-	ll_bool_t _IGNORE_MOVE_ASSIGNABLE = llcpp::FALSE
->
+template<class _T, traits::checker_attributes_t _ATTRIBUTES>
 struct constructor_checker {
 	// Class related
 	using _MyType	= constructor_checker;
@@ -97,17 +100,12 @@ struct constructor_checker {
 	using T			= _T;
 
 	// Expresions
-	static constexpr ll_bool_t IGNORE_CONSTRUCTIBLE			= _IGNORE_CONSTRUCTIBLE;
-	static constexpr ll_bool_t IGNORE_COPY_CONSTRUCTIBLE	= _IGNORE_COPY_CONSTRUCTIBLE;
-	static constexpr ll_bool_t IGNORE_COPY_ASSIGNABLE		= _IGNORE_COPY_ASSIGNABLE;
-	static constexpr ll_bool_t IGNORE_MOVE_CONSTRUCTIBLE	= _IGNORE_MOVE_CONSTRUCTIBLE;
-	static constexpr ll_bool_t IGNORE_MOVE_ASSIGNABLE		= _IGNORE_MOVE_ASSIGNABLE;
-
-	static constexpr ll_bool_t CONSTRUCTIBLE		= IGNORE_CONSTRUCTIBLE || std::is_nothrow_constructible_v<T>;
-	static constexpr ll_bool_t COPY_CONSTRUCTIBLE	= IGNORE_COPY_CONSTRUCTIBLE || std::is_nothrow_copy_constructible_v<T>;
-	static constexpr ll_bool_t COPY_ASSIGNABLE		= IGNORE_COPY_ASSIGNABLE || std::is_nothrow_copy_assignable_v<T>;
-	static constexpr ll_bool_t MOVE_CONSTRUCTIBLE	= IGNORE_MOVE_CONSTRUCTIBLE || std::is_nothrow_move_constructible_v<T>;
-	static constexpr ll_bool_t MOVE_ASSIGNABLE		= IGNORE_MOVE_ASSIGNABLE || std::is_nothrow_move_assignable_v<T>;
+	static constexpr traits::checker_attributes_t ATTRIBUTES = _ATTRIBUTES;
+	static constexpr ll_bool_t CONSTRUCTIBLE		= (ATTRIBUTES.IGNORE_CONSTRUCTIBLE		|| std::is_nothrow_constructible_v<T>);
+	static constexpr ll_bool_t COPY_CONSTRUCTIBLE	= (ATTRIBUTES.IGNORE_COPY_CONSTRUCTIBLE	|| std::is_nothrow_copy_constructible_v<T>);
+	static constexpr ll_bool_t COPY_ASSIGNABLE		= (ATTRIBUTES.IGNORE_COPY_ASSIGNABLE	|| std::is_nothrow_copy_assignable_v<T>);
+	static constexpr ll_bool_t MOVE_CONSTRUCTIBLE	= (ATTRIBUTES.IGNORE_MOVE_CONSTRUCTIBLE	|| std::is_nothrow_move_constructible_v<T>);
+	static constexpr ll_bool_t MOVE_ASSIGNABLE		= (ATTRIBUTES.IGNORE_MOVE_ASSIGNABLE	|| std::is_nothrow_move_assignable_v<T>);
 
 	static constexpr ll_bool_t is_valid_v =
 		CONSTRUCTIBLE
@@ -126,50 +124,9 @@ struct constructor_checker {
 	static_assert(MOVE_ASSIGNABLE,						"T needs a noexcept move asignable!");
 };
 
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_v = 
-	traits::constructor_checker<T>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_constructor_v = 
-	traits::constructor_checker<T, llcpp::TRUE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_copy_constructor_v = 
-	traits::constructor_checker<T, llcpp::FALSE, llcpp::TRUE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_copy_assignable_v = 
-	traits::constructor_checker<T, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_move_constructor_v = 
-	traits::constructor_checker<T, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_move_assignable_v = 
-	traits::constructor_checker<T, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE>::is_valid_v;
-
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_copy_v = 
-	traits::constructor_checker<T, llcpp::FALSE, llcpp::TRUE, llcpp::TRUE, llcpp::FALSE, llcpp::FALSE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_move_v = 
-	traits::constructor_checker<T, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE, llcpp::TRUE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_constructors_v = 
-	traits::constructor_checker<T, llcpp::TRUE, llcpp::TRUE, llcpp::FALSE, llcpp::TRUE, llcpp::FALSE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_assignable_v = 
-	traits::constructor_checker<T, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE, llcpp::FALSE, llcpp::TRUE>::is_valid_v;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_ignore_all_v = 
-	traits::constructor_checker<T, llcpp::TRUE, llcpp::TRUE, llcpp::TRUE, llcpp::TRUE, llcpp::TRUE>::is_valid_v;
+template<class T, traits::checker_attributes_t ATTRIBUTES = checker::DEFAULT>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_v =
+	traits::constructor_checker<T, ATTRIBUTES>::is_valid_v;
 
 /*template<class _T>
 struct is_nothrow_swappeable {

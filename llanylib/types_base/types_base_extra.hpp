@@ -26,15 +26,59 @@
 
 namespace llcpp {
 
-struct EmptyStruct {};
-class Emptyclass {};
+struct EmptyStruct	{ using _MyType = EmptyStruct; };
+class Emptyclass	{ using _MyType = Emptyclass; };
 
-enum class Position {
-	Unknown,
-	Left, Right, Up, Down
+enum class Position : u8 {
+	Idle	= 0,
+	Unknown = static_cast<u8>(-1),
+
+	// Base
+	Left			= (1 << 0),
+	Right			= (1 << 1),
+	Up				= (1 << 2),
+	Down			= (1 << 3),
+	Front			= (1 << 4),
+	Back			= (1 << 5),
+
+	// Pair Combinations
+	LeftUp			= Left	| Up,
+	LeftDown		= Left	| Down,
+	LeftFront		= Left	| Front,
+	LeftBack		= Left	| Back,
+
+	RightUp			= Right	| Up,
+	RightDown		= Right	| Down,
+	RightFront		= Right	| Front,
+	RightBack		= Right	| Back,
+
+	UpFront			= Up	| Front,
+	UpBack			= Up	| Back,
+	DownFront		= Down	| Front,
+	DownBack		= Down	| Back,
+
+	// Triple Combinations
+	LeftUpFront		= Left	| Up	| Front,
+	LeftUpBack		= Left	| Up	| Back,
+	LeftDownFront	= Left	| Down	| Front,
+	LeftDownBack	= Left	| Down	| Back,
+
+	RightUpFront	= Right | Up	| Front,
+	RightUpBack		= Right | Up	| Back,
+	RightDownFront	= Right | Down	| Front,
+	RightDownBack	= Right | Down	| Back
 };
 
 namespace meta {
+
+struct function_attributes_t {
+	// Class related
+	using _MyType = function_attributes_t;
+
+	// Attributes
+	ll_bool_t CONST			: 1;
+	ll_bool_t NOEXCEPTION	: 1;
+};
 
 using StandardComparation = std::strong_ordering;
 

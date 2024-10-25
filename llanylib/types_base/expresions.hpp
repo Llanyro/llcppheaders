@@ -25,21 +25,21 @@
 
 namespace llcpp {
 
-__LL_VAR_INLINE__ constexpr u8 ZERO_UI8		= 0u;
-__LL_VAR_INLINE__ constexpr u16 ZERO_UI16	= 0u;
-__LL_VAR_INLINE__ constexpr u32 ZERO_UI32	= 0u;
-__LL_VAR_INLINE__ constexpr u64 ZERO_UI64	= 0ull;
-
-__LL_VAR_INLINE__ constexpr i8 ZERO_I8		= 0;
-__LL_VAR_INLINE__ constexpr i16 ZERO_I16	= 0;
-__LL_VAR_INLINE__ constexpr i32 ZERO_I32	= 0;
-__LL_VAR_INLINE__ constexpr i64 ZERO_I64	= 0ll;
-
-__LL_VAR_INLINE__ constexpr f32 ZERO_F32	= 0.0f;
-__LL_VAR_INLINE__ constexpr f64 ZERO_F64	= 0.0;
-__LL_VAR_INLINE__ constexpr f128 ZERO_F128	= 0.0l;
-
-__LL_VAR_INLINE__ constexpr c_cmp_t ZERO_CMP	= ZERO_I32;
+//__LL_VAR_INLINE__ constexpr u8 ZERO_U8	= 0u;
+//__LL_VAR_INLINE__ constexpr u16 ZERO_U16	= 0u;
+//__LL_VAR_INLINE__ constexpr u32 ZERO_U32	= 0u;
+//__LL_VAR_INLINE__ constexpr u64 ZERO_U64	= 0ull;
+//
+//__LL_VAR_INLINE__ constexpr i8 ZERO_I8		= 0;
+//__LL_VAR_INLINE__ constexpr i16 ZERO_I16	= 0;
+//__LL_VAR_INLINE__ constexpr i32 ZERO_I32	= 0;
+//__LL_VAR_INLINE__ constexpr i64 ZERO_I64	= 0ll;
+//
+//__LL_VAR_INLINE__ constexpr f32 ZERO_F32	= 0.0f;
+//__LL_VAR_INLINE__ constexpr f64 ZERO_F64	= 0.0;
+//__LL_VAR_INLINE__ constexpr f128 ZERO_F128	= 0.0l;
+//
+//__LL_VAR_INLINE__ constexpr c_cmp_t ZERO_CMP	= ZERO_I32;
 
 __LL_VAR_INLINE__ constexpr ll_bool_t FALSE		= false;
 __LL_VAR_INLINE__ constexpr ll_bool_t TRUE		= true;
@@ -50,10 +50,18 @@ __LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_INVALID		= meta::Boolean::enum
 __LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_UNKNOWN_BOOL	= meta::Boolean::enum_bool::UNKNOWN;
 
 namespace meta {
+namespace functional {
+
+__LL_VAR_INLINE__ constexpr meta::function_attributes_t CLASSIC				= { llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr meta::function_attributes_t CONST				= { llcpp::TRUE,  llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr meta::function_attributes_t NOEXCEPTION			= { llcpp::FALSE, llcpp::TRUE };
+__LL_VAR_INLINE__ constexpr meta::function_attributes_t CONSTNOEXCEPTION	= { llcpp::TRUE,  llcpp::TRUE };
+
+} // namespace functional
 namespace algorithm {
 
-__LL_VAR_INLINE__ constexpr u64 MAX_LIST_SIZE = static_cast<u64>(-1);
-__LL_VAR_INLINE__ constexpr u64 npos = MAX_LIST_SIZE;
+__LL_VAR_INLINE__ constexpr u64 MAX_LIST_SIZE	= static_cast<u64>(-1);
+__LL_VAR_INLINE__ constexpr u64 npos			= MAX_LIST_SIZE;
 
 } // namespace algorithm
 } // namespace meta

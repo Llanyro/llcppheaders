@@ -31,14 +31,26 @@
     <Filter Include="Source Files\v10\traits">
       <UniqueIdentifier>{f19c8069-e1c6-4f88-8671-d702e6980ef1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\v10\types_extra">
-      <UniqueIdentifier>{a3275196-46fb-4a82-9658-e600ed0c4303}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\v10\math">
       <UniqueIdentifier>{f277ab28-188d-472b-899a-b8d6d56d61e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\v10\utils">
+    <Filter Include="Source Files\old2">
+      <UniqueIdentifier>{241b531d-971e-404c-92d6-0d8704164f85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\old2\types_extra">
+      <UniqueIdentifier>{a3275196-46fb-4a82-9658-e600ed0c4303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\old2\utils">
       <UniqueIdentifier>{6514b6bb-6384-4b42-b8ab-16f51507c192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v10\utils">
+      <UniqueIdentifier>{29762082-a6aa-4d7b-9827-70b1b900327d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v10\utils\node">
+      <UniqueIdentifier>{0e570732-fa8b-4ba8-a5c4-af88a10ebbdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v10\traits_extra">
+      <UniqueIdentifier>{0d171803-1e87-4fca-8875-fbf104f5d56f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,50 +90,11 @@
     <ClInclude Include="types_base\types_base_extra.hpp">
       <Filter>Source Files\v10\types</Filter>
     </ClInclude>
-    <ClInclude Include="traits\type_traits.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
     <ClInclude Include="types_simple.hpp">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="traits\traits_base.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_checker.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_type_update.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_parameter_pack.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_selection.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_signature.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_comparations.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_three_way_compare.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_primitive_types.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_hash.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_old.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
     <ClInclude Include="math\limits.hpp">
       <Filter>Source Files\v10\math</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\Array.hpp">
-      <Filter>Source Files\v10\utils</Filter>
     </ClInclude>
     <ClInclude Include="old\examples\traitsExample.hpp">
       <Filter>Source Files\old\examples</Filter>
@@ -130,16 +103,67 @@
       <Filter>Source Files\old</Filter>
     </ClInclude>
     <ClInclude Include="utils\algorithm.hpp">
-      <Filter>Source Files\v10\utils</Filter>
+      <Filter>Source Files\old2\utils</Filter>
     </ClInclude>
     <ClInclude Include="math\math.hpp">
       <Filter>Source Files\v10\math</Filter>
     </ClInclude>
     <ClInclude Include="utils\common_functions.hpp">
-      <Filter>Source Files\v10\utils</Filter>
+      <Filter>Source Files\old2\utils</Filter>
     </ClInclude>
     <ClInclude Include="types_extra\Integer.hpp">
-      <Filter>Source Files\v10\types_extra</Filter>
+      <Filter>Source Files\old2\types_extra</Filter>
+    </ClInclude>
+    <ClInclude Include="traits\type_traits.hpp">
+      <Filter>Source Files\v10\traits</Filter>
+    </ClInclude>
+    <ClInclude Include="traits\traits_parameter_pack.hpp">
+      <Filter>Source Files\v10\traits</Filter>
+    </ClInclude>
+    <ClInclude Include="traits\traits_base.hpp">
+      <Filter>Source Files\v10\traits</Filter>
+    </ClInclude>
+    <ClInclude Include="traits\traits_checker.hpp">
+      <Filter>Source Files\v10\traits</Filter>
+    </ClInclude>
+    <ClInclude Include="traits\traits_selection.hpp">
+      <Filter>Source Files\v10\traits</Filter>
+    </ClInclude>
+    <ClInclude Include="traits\traits_signature.hpp">
+      <Filter>Source Files\v10\traits</Filter>
+    </ClInclude>
+    <ClInclude Include="traits\traits_type_update.hpp">
+      <Filter>Source Files\v10\traits</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Array.hpp">
+      <Filter>Source Files\v10\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\node\Node.hpp">
+      <Filter>Source Files\v10\utils\node</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\node\NodeDouble.hpp">
+      <Filter>Source Files\v10\utils\node</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\node\NodeNext.hpp">
+      <Filter>Source Files\v10\utils\node</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\node\NodePrev.hpp">
+      <Filter>Source Files\v10\utils\node</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_extra\traits_return_getters.hpp">
+      <Filter>Source Files\v10\traits_extra</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_extra\traits_object_checker.hpp">
+      <Filter>Source Files\v10\traits_extra</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_extra\traits_old.hpp">
+      <Filter>Source Files\v10\traits_extra</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_extra\traits_primitive_types.hpp">
+      <Filter>Source Files\v10\traits_extra</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_extra\traits_comparations.hpp">
+      <Filter>Source Files\v10\traits_extra</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

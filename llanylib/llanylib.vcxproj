@@ -30,16 +30,16 @@
     <ClInclude Include="old\examples\traitsExample.hpp" />
     <ClInclude Include="traits\traits_base.hpp" />
     <ClInclude Include="traits\traits_checker.hpp" />
-    <ClInclude Include="traits\traits_comparations.hpp" />
-    <ClInclude Include="traits\traits_hash.hpp" />
-    <ClInclude Include="traits\traits_old.hpp" />
     <ClInclude Include="traits\traits_parameter_pack.hpp" />
-    <ClInclude Include="traits\traits_primitive_types.hpp" />
     <ClInclude Include="traits\traits_type_update.hpp" />
     <ClInclude Include="traits\traits_signature.hpp" />
-    <ClInclude Include="traits\traits_three_way_compare.hpp" />
     <ClInclude Include="traits\traits_selection.hpp" />
     <ClInclude Include="traits\type_traits.hpp" />
+    <ClInclude Include="traits_extra\traits_comparations.hpp" />
+    <ClInclude Include="traits_extra\traits_object_checker.hpp" />
+    <ClInclude Include="traits_extra\traits_old.hpp" />
+    <ClInclude Include="traits_extra\traits_primitive_types.hpp" />
+    <ClInclude Include="traits_extra\traits_return_getters.hpp" />
     <ClInclude Include="types_extra\Integer.hpp" />
     <ClInclude Include="types_extra\pair.hpp" />
     <ClInclude Include="types_simple.hpp" />
@@ -52,6 +52,10 @@
     <ClInclude Include="utils\algorithm.hpp" />
     <ClInclude Include="utils\Array.hpp" />
     <ClInclude Include="utils\common_functions.hpp" />
+    <ClInclude Include="utils\node\Node.hpp" />
+    <ClInclude Include="utils\node\NodeDouble.hpp" />
+    <ClInclude Include="utils\node\NodeNext.hpp" />
+    <ClInclude Include="utils\node\NodePrev.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

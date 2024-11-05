@@ -4,26 +4,44 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 10.0							//
+//	Version: 11.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_BOOLEAN_HPP_) // Guard && version protector
-	#if LLANYLIB_BOOLEAN_MAYOR_ != 10 || LLANYLIB_BOOLEAN_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_BOOLEAN_INCOMPLETE_HPP_)
+	#if LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_BOOLEAN_INCOMPLETE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "Boolean.hpp(incomplete) version error!"
+		#else
+			#error "Boolean.hpp(incomplete) version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ || LLANYLIB_BOOLEAN_INCOMPLETE_MINOR_
+
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_BOOLEAN_INCOMPLETE_HPP_)
+#define LLANYLIB_BOOLEAN_INCOMPLETE_HPP_
+#define LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ 11
+#define LLANYLIB_BOOLEAN_INCOMPLETE_MINOR_ 0
+
+#include "types_base_extra.hpp"
+
+namespace llcpp { namespace meta { class Boolean; } } // namespace llcpp
+
+#elif defined(LLANYLIB_BOOLEAN_HPP_)
+	#if LLANYLIB_BOOLEAN_MAYOR_ != 11 || LLANYLIB_BOOLEAN_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "Boolean.hpp version error!"
 		#else
 			#error "Boolean.hpp version error!"
 		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_BOOLEAN_MAYOR_ || LLANYLIB_BOOLEAN_MINOR_
 
-#else !defined(LLANYLIB_BOOLEAN_HPP_)
+#else
 #define LLANYLIB_BOOLEAN_HPP_
-#define LLANYLIB_BOOLEAN_MAYOR_ 10
+#define LLANYLIB_BOOLEAN_MAYOR_ 11
 #define LLANYLIB_BOOLEAN_MINOR_ 0
 
-#include "types_base.hpp"
-
-using ll_bool_t = bool;
+#include "types_base_extra.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -36,8 +54,8 @@ class Boolean {
 
 		// Types and enums
 		enum class enum_bool : u8 {
-			FALSE = false,
-			TRUE = true,
+			FALSE	= false,
+			TRUE	= true,
 			UNKNOWN,
 			INVALID
 		};
@@ -135,6 +153,16 @@ class Boolean {
 };
 
 } // namespace meta
+
+__LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_FALSE			= llcpp::FALSE;
+__LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_TRUE			= llcpp::TRUE;
+__LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_INVALID		= meta::Boolean::enum_bool::INVALID;
+__LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_UNKNOWN_BOOL	= meta::Boolean::enum_bool::UNKNOWN;
+
 } // namespace llcpp
 
 #endif // LLANYLIB_BOOLEAN_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

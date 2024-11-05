@@ -4,21 +4,22 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 10.0							//
+//	Version: 11.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_TYPESBASE_HPP_) // Guard && version protector
-	#if LLANYLIB_TYPESBASE_MAYOR_ != 10 || LLANYLIB_TYPESBASE_MINOR_ < 0
+	#if LLANYLIB_TYPESBASE_MAYOR_ != 11 || LLANYLIB_TYPESBASE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "types_base.hpp version error!"
 		#else
 			#error "types_base.hpp version error!"
 		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TYPESBASE_MAYOR_ || LLANYLIB_TYPESBASE_MINOR_
 
 #else !defined(LLANYLIB_TYPESBASE_HPP_)
 #define LLANYLIB_TYPESBASE_HPP_
-#define LLANYLIB_TYPESBASE_MAYOR_ 10
+#define LLANYLIB_TYPESBASE_MAYOR_ 11
 #define LLANYLIB_TYPESBASE_MINOR_ 0
 
 #include "../defines.hpp"
@@ -96,6 +97,8 @@ using ll_ustring_t		= const ll_uchar_t*;	// Used to point to non editable unsign
 
 using ll_lib_t = void*;							// Handle for dynamic library linked/shared objects
 
+using ll_bool_t = bool;
+
 #pragma region BytesTypes
 using size_bytes8_t		= u8;
 using size_bytes16_t	= u16;
@@ -164,3 +167,7 @@ class directory_entry;
 #pragma endregion
 
 #endif // LLANYLIB_TYPESBASE_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

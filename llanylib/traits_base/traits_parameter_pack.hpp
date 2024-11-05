@@ -4,21 +4,62 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 10.0							//
+//	Version: 11.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_TRAITSPARAMETERPACK_HPP_) // Guard && version protector
-	#if LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ != 10 || LLANYLIB_TRAITSPARAMETERPACK_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_HPP_)
+	#if LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "traits_parameter_pack.hpp(incomplete) version error!"
+		#else
+			#error "traits_parameter_pack.hpp(incomplete) version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_
+
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_HPP_)
+#define LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_HPP_
+#define LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ 11
+#define LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_ 0
+
+#include "type_traits.hpp"
+
+namespace llcpp {
+namespace meta {
+namespace traits {
+namespace __traits__ {
+
+template<class _T, class... uArgs>
+struct FirstType;
+template<class _T>
+struct FirstType<_T>;
+
+} // namespace __traits__
+
+template <class... Args>
+struct parameter_pack_operations;
+template <class T>
+struct parameter_pack_operations<T>;
+template <>
+struct parameter_pack_operations<>;
+
+} // namespace traits
+} // namespace meta
+} // namespace llcpp
+
+#elif defined(LLANYLIB_TRAITSPARAMETERPACK_HPP_)
+	#if LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ != 11 || LLANYLIB_TRAITSPARAMETERPACK_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "traits_parameter_pack.hpp version error!"
 		#else
 			#error "traits_parameter_pack.hpp version error!"
 		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ || LLANYLIB_TRAITSPARAMETERPACK_MINOR_
 
-#else !defined(LLANYLIB_TRAITSPARAMETERPACK_HPP_)
+#else
 #define LLANYLIB_TRAITSPARAMETERPACK_HPP_
-#define LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ 10
+#define LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ 11
 #define LLANYLIB_TRAITSPARAMETERPACK_MINOR_ 0
 
 #include "type_traits.hpp"
@@ -90,7 +131,7 @@ struct parameter_pack_operations<> {
 	using get_first_type	= pack_first::T;
 
 	// Expresions
-	static constexpr u64 SIZE					= llcpp::ZERO_U64;
+	static constexpr u64 SIZE					= 0ull;
 	static constexpr ll_bool_t EMPTY			= llcpp::TRUE;
 	static constexpr ll_bool_t HAS_A_POINTER	= llcpp::FALSE;
 	static constexpr ll_bool_t HAS_AN_ARRAY		= llcpp::FALSE;
@@ -101,3 +142,7 @@ struct parameter_pack_operations<> {
 } // namespace llcpp
 
 #endif // LLANYLIB_TRAITSPARAMETERPACK_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

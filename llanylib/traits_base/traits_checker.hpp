@@ -4,21 +4,49 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 10.0							//
+//	Version: 11.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_TRAITSCHECKER_HPP_) // Guard && version protector
-	#if LLANYLIB_TRAITSCHECKER_MAYOR_ != 10 || LLANYLIB_TRAITSCHECKER_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSCHECKER_INCOMPLETE_HPP_)
+	#if LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "traits_checker.hpp(incomplete) version error!"
+		#else
+			#error "traits_checker.hpp(incomplete) version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_
+
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSCHECKER_INCOMPLETE_HPP_)
+#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_HPP_
+#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ 11
+#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_ 0
+
+#include "traits_base.hpp"
+
+namespace llcpp {
+namespace meta {
+namespace traits {
+
+struct checker_attributes_t;
+
+} // namespace traits
+} // namespace meta
+} // namespace llcpp
+
+#elif defined(LLANYLIB_TRAITSCHECKER_HPP_)
+	#if LLANYLIB_TRAITSCHECKER_MAYOR_ != 11 || LLANYLIB_TRAITSCHECKER_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "traits_checker.hpp version error!"
 		#else
 			#error "traits_checker.hpp version error!"
 		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSCHECKER_MAYOR_ || LLANYLIB_TRAITSCHECKER_MINOR_
 
-#else !defined(LLANYLIB_TRAITSCHECKER_HPP_)
+#else
 #define LLANYLIB_TRAITSCHECKER_HPP_
-#define LLANYLIB_TRAITSCHECKER_MAYOR_ 10
+#define LLANYLIB_TRAITSCHECKER_MAYOR_ 11
 #define LLANYLIB_TRAITSCHECKER_MINOR_ 0
 
 #include "traits_base.hpp"
@@ -55,6 +83,7 @@ __LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_VOLATILE	= { llc
 __LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_PA			= { llcpp::TRUE,  llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
 __LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CPA			= { llcpp::TRUE,  llcpp::TRUE,  llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
 __LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CP			= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CPV			= { llcpp::TRUE,  llcpp::FALSE, llcpp::TRUE,  llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
 
 } // namespace checker
 
@@ -203,3 +232,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyabl
 } // namespace llcpp
 
 #endif // LLANYLIB_TRAITSCHECKER_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

@@ -4,21 +4,22 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 10.0							//
+//	Version: 11.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_DEFINITIONSEXPRESIONS_HPP_) // Guard && version protector
-	#if LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ != 10 || LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_ < 0
+	#if LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ != 11 || LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "expresions.hpp version error!"
 		#else
 			#error "expresions.hpp version error!"
 		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ || LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_
 
 #else !defined(LLANYLIB_DEFINITIONSEXPRESIONS_HPP_)
 #define LLANYLIB_DEFINITIONSEXPRESIONS_HPP_
-#define LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ 10
+#define LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ 11
 #define LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_ 0
 
 #include "definitions.hpp"
@@ -82,9 +83,9 @@ enum class OSEnum { Windows, Posix, Unix, Unknown };
 
 #pragma endregion
 
-__LL_VAR_INLINE__ constexpr unsigned char BITS_SYSTEM = __LL_WORD;
-__LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_64 = BITS_SYSTEM == 64u;
-__LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_32 = BITS_SYSTEM == 32u;
+__LL_VAR_INLINE__ constexpr unsigned char BITS_SYSTEM	= __LL_WORD;
+__LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_64			= BITS_SYSTEM == 64u;
+__LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_32			= BITS_SYSTEM == 32u;
 
 ///////////////////////////////////////// DLL deinitions /////////////////////////////////////////
 
@@ -120,3 +121,7 @@ __LL_VAR_INLINE__ constexpr bool DEBUG = __LL_DEBUG;
 } // namespace llcpp
 
 #endif // LLANYLIB_DEFINITIONSEXPRESIONS_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

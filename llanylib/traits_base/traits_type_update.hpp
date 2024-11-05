@@ -4,21 +4,50 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 10.0							//
+//	Version: 11.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_TRAITSTYPEUPDATE_HPP_) // Guard && version protector
-	#if LLANYLIB_TRAITSTYPEUPDATE_MAYOR_ != 10 || LLANYLIB_TRAITSTYPEUPDATE_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_HPP_)
+	#if LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "traits_type_update.hpp(incomplete) version error!"
+		#else
+			#error "traits_type_update.hpp(incomplete) version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_MINOR_
+
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_HPP_)
+#define LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_HPP_
+#define LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_MAYOR_ 11
+#define LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_MINOR_ 0
+
+#include "traits_selection.hpp"
+
+namespace llcpp {
+namespace meta {
+namespace traits {
+
+struct type_update_t;
+struct attribute_counter;
+
+} // namespace traits
+} // namespace meta
+} // namespace llcpp
+
+#elif defined(LLANYLIB_TRAITSTYPEUPDATE_HPP_)
+	#if LLANYLIB_TRAITSTYPEUPDATE_MAYOR_ != 11 || LLANYLIB_TRAITSTYPEUPDATE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "traits_type_update.hpp version error!"
 		#else
 			#error "traits_type_update.hpp version error!"
 		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSTYPEUPDATE_MAYOR_ || LLANYLIB_TRAITSTYPEUPDATE_MINOR_
 
-#else !defined(LLANYLIB_TRAITSTYPEUPDATE_HPP_)
+#else
 #define LLANYLIB_TRAITSTYPEUPDATE_HPP_
-#define LLANYLIB_TRAITSTYPEUPDATE_MAYOR_ 10
+#define LLANYLIB_TRAITSTYPEUPDATE_MAYOR_ 11
 #define LLANYLIB_TRAITSTYPEUPDATE_MINOR_ 0
 
 #include "traits_selection.hpp"
@@ -28,6 +57,18 @@ namespace meta {
 namespace traits {
 
 struct type_update_t {
+	// Class related
+	using _MyType = type_update_t;
+
+	// Attributes
+	ll_bool_t REMOVE_POINTER	: 1;
+	ll_bool_t REMOVE_CONST		: 1;
+	ll_bool_t REMOVE_VOLATILE	: 1;
+	ll_bool_t REMOVE_ARRAY		: 1;
+	ll_bool_t REMOVE_REFERENCE	: 1;
+};
+
+struct attribute_counter {
 	// Class related
 	using _MyType = type_update_t;
 
@@ -141,14 +182,12 @@ using type_signed = traits::type_selection<llcpp::Emptyclass>::get_conincidence<
 	traits::double_type_container<u256,	traits::conditional_t<SIGNALIZE, i256, u256>>
 >;
 
-// Get type of math operation type
-template<class T, class U>
-using type_bigger_of_two = traits::conditional_t<(sizeof(T) > sizeof(U)), T, U>;
-template<class T, class U>
-using type_smaller_of_two = traits::conditional_t<(sizeof(T) < sizeof(U)), T, U>;
-
 } // namespace traits
 } // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_TRAITSTYPEUPDATE_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

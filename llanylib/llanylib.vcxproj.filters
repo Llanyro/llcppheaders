@@ -22,14 +22,8 @@
     <Filter Include="Source Files\old\examples">
       <UniqueIdentifier>{da89fac3-1e0d-4172-878f-b633106c7eda}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\v10\defines">
-      <UniqueIdentifier>{e90f5574-8aad-499b-930e-5d42105b6ccf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\v10\types">
       <UniqueIdentifier>{127ec860-0183-4786-98b2-0b7355c8ec60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\v10\traits">
-      <UniqueIdentifier>{f19c8069-e1c6-4f88-8671-d702e6980ef1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\v10\math">
       <UniqueIdentifier>{f277ab28-188d-472b-899a-b8d6d56d61e4}</UniqueIdentifier>
@@ -52,6 +46,33 @@
     <Filter Include="Source Files\v10\traits_extra">
       <UniqueIdentifier>{0d171803-1e87-4fca-8875-fbf104f5d56f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\v10\traits_base">
+      <UniqueIdentifier>{f19c8069-e1c6-4f88-8671-d702e6980ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v10\utils\parser">
+      <UniqueIdentifier>{ca964027-8951-4f6a-bcbe-9a90697bffd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v11">
+      <UniqueIdentifier>{66c2b0e3-6774-4b5f-8851-0b79f1997cd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v11\1 defines">
+      <UniqueIdentifier>{711544b3-5ea4-4fa0-a686-7844bbcefdb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v11\2 types_base">
+      <UniqueIdentifier>{1729c745-6348-4491-a7d4-08217ee13b22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v11\3 traits_base">
+      <UniqueIdentifier>{6fe6ff50-b789-4e67-aa73-097dbdfedf2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v11\5 traits_extra">
+      <UniqueIdentifier>{bee7d5cf-00f1-4e3e-9e1f-ddd924789c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v11\6 utils_extra">
+      <UniqueIdentifier>{bd47e75e-487f-445f-88d4-63427150ee30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\v11\4 utils_base">
+      <UniqueIdentifier>{69b24f81-34fc-487c-a707-1bf41a70da8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\llanylib.hpp">
@@ -60,41 +81,11 @@
     <ClInclude Include="..\llanylibsimple.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="defines\definitions.hpp">
-      <Filter>Source Files\v10\defines</Filter>
-    </ClInclude>
-    <ClInclude Include="defines\os.hpp">
-      <Filter>Source Files\v10\defines</Filter>
-    </ClInclude>
-    <ClInclude Include="defines\expresions.hpp">
-      <Filter>Source Files\v10\defines</Filter>
-    </ClInclude>
     <ClInclude Include="defines.hpp">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="types_base\Boolean.hpp">
-      <Filter>Source Files\v10\types</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\Cluster.hpp">
-      <Filter>Source Files\v10\types</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\expresions.hpp">
-      <Filter>Source Files\v10\types</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\ostypes.hpp">
-      <Filter>Source Files\v10\types</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\types_base.hpp">
-      <Filter>Source Files\v10\types</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\types_base_extra.hpp">
-      <Filter>Source Files\v10\types</Filter>
-    </ClInclude>
     <ClInclude Include="types_simple.hpp">
       <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="math\limits.hpp">
-      <Filter>Source Files\v10\math</Filter>
     </ClInclude>
     <ClInclude Include="old\examples\traitsExample.hpp">
       <Filter>Source Files\old\examples</Filter>
@@ -113,30 +104,6 @@
     </ClInclude>
     <ClInclude Include="types_extra\Integer.hpp">
       <Filter>Source Files\old2\types_extra</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\type_traits.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_parameter_pack.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_base.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_checker.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_selection.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_signature.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="traits\traits_type_update.hpp">
-      <Filter>Source Files\v10\traits</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\Array.hpp">
-      <Filter>Source Files\v10\utils</Filter>
     </ClInclude>
     <ClInclude Include="utils\node\Node.hpp">
       <Filter>Source Files\v10\utils\node</Filter>
@@ -159,11 +126,74 @@
     <ClInclude Include="traits_extra\traits_old.hpp">
       <Filter>Source Files\v10\traits_extra</Filter>
     </ClInclude>
-    <ClInclude Include="traits_extra\traits_primitive_types.hpp">
-      <Filter>Source Files\v10\traits_extra</Filter>
-    </ClInclude>
     <ClInclude Include="traits_extra\traits_comparations.hpp">
       <Filter>Source Files\v10\traits_extra</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\TLVParser.hpp">
+      <Filter>Source Files\v10\utils\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="defines\os.hpp">
+      <Filter>Source Files\v11\1 defines</Filter>
+    </ClInclude>
+    <ClInclude Include="defines\definitions.hpp">
+      <Filter>Source Files\v11\1 defines</Filter>
+    </ClInclude>
+    <ClInclude Include="defines\expresions.hpp">
+      <Filter>Source Files\v11\1 defines</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\types_base.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\Cluster.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\Boolean.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\ostypes.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\types_base_extra.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_base.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_checker.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_parameter_pack.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_selection.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_signature.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_type_update.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\type_traits.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_limits.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_extra\traits_type_wrapper.hpp">
+      <Filter>Source Files\v11\5 traits_extra</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\Array.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\ClusterEnum.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\functional_attributes.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\Position.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

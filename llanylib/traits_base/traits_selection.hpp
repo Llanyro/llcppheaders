@@ -4,21 +4,50 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 10.0							//
+//	Version: 11.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_TRAITSSELECTION_HPP_) // Guard && version protector
-	#if LLANYLIB_TRAITSSELECTION_MAYOR_ != 10 || LLANYLIB_TRAITSSELECTION_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSSELECTION_INCOMPLETE_HPP_)
+	#if LLANYLIB_TRAITSSELECTION_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSSELECTION_INCOMPLETE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "traits_selection.hpp(incomplete) version error!"
+		#else
+			#error "traits_selection.hpp(incomplete) version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_TRAITSSELECTION_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSSELECTION_INCOMPLETE_MINOR_
+
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSSELECTION_INCOMPLETE_HPP_)
+#define LLANYLIB_TRAITSSELECTION_INCOMPLETE_HPP_
+#define LLANYLIB_TRAITSSELECTION_INCOMPLETE_MAYOR_ 11
+#define LLANYLIB_TRAITSSELECTION_INCOMPLETE_MINOR_ 0
+
+#include "type_traits.hpp"
+
+namespace llcpp {
+namespace meta {
+namespace traits {
+
+template<class _VoidType = llcpp::Emptyclass>
+struct type_selection;
+
+} // namespace traits
+} // namespace meta
+} // namespace llcpp
+
+#elif defined(LLANYLIB_TRAITSSELECTION_HPP_)
+	#if LLANYLIB_TRAITSSELECTION_MAYOR_ != 11 || LLANYLIB_TRAITSSELECTION_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "traits_selection.hpp version error!"
 		#else
 			#error "traits_selection.hpp version error!"
 		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSSELECTION_MAYOR_ || LLANYLIB_TRAITSSELECTION_MINOR_
 
-#else !defined(LLANYLIB_TRAITSSELECTION_HPP_)
+#else
 #define LLANYLIB_TRAITSSELECTION_HPP_
-#define LLANYLIB_TRAITSSELECTION_MAYOR_ 10
+#define LLANYLIB_TRAITSSELECTION_MAYOR_ 11
 #define LLANYLIB_TRAITSSELECTION_MINOR_ 0
 
 #include "type_traits.hpp"
@@ -103,7 +132,7 @@ struct type_selection {
 	using get_first_difference = decltype(_MyType::get_first_difference_f<X, Args...>())::T;
 };
 
-template<class T, class TypeChar, class TypeWChar, class ExtraType = void>
+template<class T, class TypeChar, class TypeWChar, class ExtraType = llcpp::Emptyclass>
 using get_by_char_type_t = traits::type_selection<ExtraType>::get_conincidence<
 	T,
 	traits::double_type_container<ll_char_t, TypeChar>,
@@ -115,3 +144,7 @@ using get_by_char_type_t = traits::type_selection<ExtraType>::get_conincidence<
 } // namespace llcpp
 
 #endif // LLANYLIB_TRAITSSELECTION_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

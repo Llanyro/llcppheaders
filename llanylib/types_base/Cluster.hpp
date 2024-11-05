@@ -4,34 +4,56 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 10.0							//
+//	Version: 11.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_CLUSTER_HPP_) // Guard && version protector
-	#if LLANYLIB_CLUSTER_MAYOR_ != 10 || LLANYLIB_CLUSTER_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CLUSTER_INCOMPLETE_HPP_)
+	#if LLANYLIB_CLUSTER_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_CLUSTER_INCOMPLETE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "Cluster.hpp(incomplete) version error!"
+		#else
+			#error "Cluster.hpp(incomplete) version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_CLUSTER_INCOMPLETE_MAYOR_ || LLANYLIB_CLUSTER_INCOMPLETE_MINOR_
+
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_CLUSTER_INCOMPLETE_HPP_)
+#define LLANYLIB_CLUSTER_INCOMPLETE_HPP_
+#define LLANYLIB_CLUSTER_INCOMPLETE_MAYOR_ 11
+#define LLANYLIB_CLUSTER_INCOMPLETE_MINOR_ 0
+
+#include "ClusterEnum.hpp"
+
+namespace llcpp {
+namespace meta {
+
+template<::llcpp::meta::__meta__::ClusterType _CLUSTER_TYPE>
+class GenericCluster;
+
+} // namespace meta
+} // namespace llcpp
+
+#elif defined(LLANYLIB_CLUSTER_HPP_)
+	#if LLANYLIB_CLUSTER_MAYOR_ != 11 || LLANYLIB_CLUSTER_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "Cluster.hpp version error!"
 		#else
 			#error "Cluster.hpp version error!"
 		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CLUSTER_MAYOR_ || LLANYLIB_CLUSTER_MINOR_
 
-#else !defined(LLANYLIB_CLUSTER_HPP_)
+#else
 #define LLANYLIB_CLUSTER_HPP_
-#define LLANYLIB_CLUSTER_MAYOR_ 10
+#define LLANYLIB_CLUSTER_MAYOR_ 11
 #define LLANYLIB_CLUSTER_MINOR_ 0
 
-#include "types_base.hpp"
+#include "ClusterEnum.hpp"
 
 namespace llcpp {
 namespace meta {
-namespace __meta__ {
 
-enum class ClusterType : u8 { Cluster, Half };
-
-} // namespace __meta__
-
-template<llcpp::meta::__meta__::ClusterType _CLUSTER_TYPE>
+template<::llcpp::meta::__meta__::ClusterType _CLUSTER_TYPE>
 class GenericCluster {
 	#pragma region Types
 	public:
@@ -39,7 +61,7 @@ class GenericCluster {
 		using _MyType		= GenericCluster;
 
 		// Types and enums
-		using ClusterType	= llcpp::meta::__meta__::ClusterType;
+		using ClusterType	= ::llcpp::meta::__meta__::ClusterType;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -87,6 +109,14 @@ class GenericCluster {
 	#pragma endregion
 };
 
+} // namespace meta
+} // namespace llcpp
+
+#endif // LLANYLIB_CLUSTER_HPP_
+
+#if !defined(LLANYLIB_CLUSTER_EXTRA_HPP_) && !defined(LLANYLIB_ERROR_HPP_) && defined(LLANYLIB_CLUSTERENUM_HPP_)
+#define LLANYLIB_CLUSTER_EXTRA_HPP_
+
 // Clusters are templates that shares same position as interfaces
 // That means:
 //	- Interfaces are classes that shares the same group of funtions to make a generic use of classes
@@ -104,15 +134,16 @@ class GenericCluster {
 //	Functions:
 //		Interfaces can have any type of functions
 //		Clusters can only have const functions (by llanystandard)
-using Cluster = GenericCluster<llcpp::meta::__meta__::ClusterType::Cluster>;
+using Cluster = ::llcpp::meta::GenericCluster<::llcpp::meta::__meta__::ClusterType::Cluster>;
 // HalfClusters are similar to clusters but has a few differences
 // HalfClusters should inherit also from an object
 // The object inherited usually is edited by HalfCluster's functions
 //	So, the main difference its that HalfClusters can have "no const" functions that enable
 //	inherited object edition Ex: llcpp::meta::linked::FunctionalNode
-using HalfCluster = GenericCluster<llcpp::meta::__meta__::ClusterType::Half>;
+using HalfCluster = ::llcpp::meta::GenericCluster<::llcpp::meta::__meta__::ClusterType::Half>;
 
-} // namespace meta
-} // namespace llcpp
+#endif // !LLANYLIB_CLUSTER_EXTRA_HPP_ && !LLANYLIB_ERROR_HPP_ && LLANYLIB_CLUSTERENUM_HPP_
 
-#endif // LLANYLIB_CLUSTER_HPP_
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

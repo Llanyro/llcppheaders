@@ -7,8 +7,6 @@
 //	Version: 11.0							//
 //////////////////////////////////////////////
 
-#define LLANYLIB_INCOMPLETE_HPP_
-
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TYPETRAITS_INCOMPLETE_HPP_)
 	#if LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)

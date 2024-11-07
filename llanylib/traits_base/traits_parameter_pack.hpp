@@ -7,6 +7,8 @@
 //	Version: 11.0							//
 //////////////////////////////////////////////
 
+#define LLANYLIB_INCOMPLETE_HPP_
+
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
@@ -85,7 +87,7 @@ struct FirstType<_T> {
 
 	// Types and enums
 	using T			= _T;
-	using next		= llcpp::EmptyStruct;
+	using next		= llcpp::Emptyclass;
 };
 
 } // namespace __traits__
@@ -142,6 +144,11 @@ struct parameter_pack_operations<> {
 } // namespace llcpp
 
 #endif // LLANYLIB_TRAITSPARAMETERPACK_HPP_
+
+#if !defined(LLANYLIB_TRAITSPARAMETERPACK_EXTRA_HPP_) && !defined(LLANYLIB_ERROR_HPP_)
+#define LLANYLIB_TRAITSPARAMETERPACK_EXTRA_HPP_
+
+#endif // LLANYLIB_TRAITSPARAMETERPACK_EXTRA_HPP_
 
 #if defined(LLANYLIB_ERROR_HPP_)
 	#undef LLANYLIB_ERROR_HPP_

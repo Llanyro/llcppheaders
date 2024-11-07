@@ -7,39 +7,45 @@
 //	Version: 11.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_QWERTY_INCOMPLETE_HPP_)
-	#if LLANYLIB_QWERTY_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_QWERTY_INCOMPLETE_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_HPP_)
+	#if LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "functional_attributes.hpp(incomplete) version error!"
 		#else
 			#error "functional_attributes.hpp(incomplete) version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
-	#endif // LLANYLIB_QWERTY_INCOMPLETE_MAYOR_ || LLANYLIB_QWERTY_INCOMPLETE_MINOR_
+	#endif // LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MAYOR_ || LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MINOR_
 
-#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_QWERTY_INCOMPLETE_HPP_)
-#define LLANYLIB_QWERTY_INCOMPLETE_HPP_
-#define LLANYLIB_QWERTY_INCOMPLETE_MAYOR_ 11
-#define LLANYLIB_QWERTY_INCOMPLETE_MINOR_ 0
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_HPP_)
+#define LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_HPP_
+#define LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MAYOR_ 11
+#define LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MINOR_ 0
 
 #include "types_base_extra.hpp"
 
-namespace llcpp { namespace meta { struct function_attributes_t; } } // namespace llcpp
+namespace llcpp {
+namespace meta {
 
-#elif defined(LLANYLIB_QWERTY_HPP_)
-	#if LLANYLIB_QWERTY_MAYOR_ != 11 || LLANYLIB_QWERTY_MINOR_ < 0
+struct function_attributes_t;
+
+} // namespace meta
+} // namespace llcpp
+
+#elif defined(LLANYLIB_FUNCTIONALATTRIBUTES_HPP_)
+	#if LLANYLIB_FUNCTIONALATTRIBUTES_MAYOR_ != 11 || LLANYLIB_FUNCTIONALATTRIBUTES_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "functional_attributes.hpp version error!"
 		#else
 			#error "functional_attributes.hpp version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
-	#endif // LLANYLIB_QWERTY_MAYOR_ || LLANYLIB_QWERTY_MINOR_
+	#endif // LLANYLIB_FUNCTIONALATTRIBUTES_MAYOR_ || LLANYLIB_FUNCTIONALATTRIBUTES_MINOR_
 
 #else
-#define LLANYLIB_QWERTY_HPP_
-#define LLANYLIB_QWERTY_MAYOR_ 11
-#define LLANYLIB_QWERTY_MINOR_ 0
+#define LLANYLIB_FUNCTIONALATTRIBUTES_HPP_
+#define LLANYLIB_FUNCTIONALATTRIBUTES_MAYOR_ 11
+#define LLANYLIB_FUNCTIONALATTRIBUTES_MINOR_ 0
 
 #include "types_base_extra.hpp"
 
@@ -66,7 +72,7 @@ __LL_VAR_INLINE__ constexpr meta::function_attributes_t CONSTNOEXCEPTION	= { llc
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_QWERTY_HPP_
+#endif // LLANYLIB_FUNCTIONALATTRIBUTES_HPP_
 
 #if defined(LLANYLIB_ERROR_HPP_)
 	#undef LLANYLIB_ERROR_HPP_

@@ -24,7 +24,13 @@
 
 #include "types_base_extra.hpp"
 
-namespace llcpp { namespace meta { class Boolean; } } // namespace llcpp
+namespace llcpp {
+namespace meta {
+
+class Boolean;
+
+} // namespace meta
+} // namespace llcpp
 
 #elif defined(LLANYLIB_BOOLEAN_HPP_)
 	#if LLANYLIB_BOOLEAN_MAYOR_ != 11 || LLANYLIB_BOOLEAN_MINOR_ < 0

@@ -23,12 +23,19 @@
 #define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_ 0
 
 #include "traits_base.hpp"
+#undef LLANYLIB_INCOMPLETE_HPP_
+#include "../types_base/checker_attributes.hpp"
+#define LLANYLIB_INCOMPLETE_HPP_
 
 namespace llcpp {
 namespace meta {
 namespace traits {
 
-struct checker_attributes_t;
+template<class _T, attributes::checker_attributes_t _ATTRIBUTES>
+struct type_checker;
+
+template<class _T, attributes::checker_attributes_t _ATTRIBUTES>
+struct constructor_checker;
 
 } // namespace traits
 } // namespace meta
@@ -50,45 +57,14 @@ struct checker_attributes_t;
 #define LLANYLIB_TRAITSCHECKER_MINOR_ 0
 
 #include "traits_base.hpp"
+#include "../types_base/checker_attributes.hpp"
 
 namespace llcpp {
 namespace meta {
 namespace traits {
 
-struct checker_attributes_t {
-	// Class related
-	using _MyType						= checker_attributes_t;
-
-	// Attributes
-	ll_bool_t IGNORE_POINTER			: 1;
-	ll_bool_t IGNORE_ARRAY				: 1;
-	ll_bool_t IGNORE_VOLATILE			: 1;
-	ll_bool_t IGNORE_CONST				: 1;
-	ll_bool_t IGNORE_REFERENCE			: 1;
-
-	ll_bool_t IGNORE_CONSTRUCTIBLE		: 1;
-	ll_bool_t IGNORE_COPY_CONSTRUCTIBLE	: 1;
-	ll_bool_t IGNORE_COPY_ASSIGNABLE	: 1;
-	ll_bool_t IGNORE_MOVE_CONSTRUCTIBLE	: 1;
-	ll_bool_t IGNORE_MOVE_ASSIGNABLE	: 1;
-};
-
-namespace checker {
-//																				Pointer			Array		Volatile		Const		 Reference		Construct	CopyConstruct CopyAssign	MoveConstruct	MoveAssig
-__LL_VAR_INLINE__ constexpr traits::checker_attributes_t DEFAULT			= { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_POINTER		= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_ARRAY		= { llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CONST		= { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_VOLATILE	= { llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_PA			= { llcpp::TRUE,  llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CPA			= { llcpp::TRUE,  llcpp::TRUE,  llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CP			= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::checker_attributes_t IGNORE_CPV			= { llcpp::TRUE,  llcpp::FALSE, llcpp::TRUE,  llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-
-} // namespace checker
-
 // Standard checker for types in this lib
-template<class _T, traits::checker_attributes_t _ATTRIBUTES>
+template<class _T, attributes::checker_attributes_t _ATTRIBUTES>
 struct type_checker {
 	// Class related
 	using _MyType	= type_checker;
@@ -114,13 +90,13 @@ struct type_checker {
 	static_assert(VOLATILE,					"Volatile type is forbidden!");
 };
 
-template<class T, traits::checker_attributes_t ATTRIBUTES = checker::DEFAULT>
+template<class T, attributes::checker_attributes_t ATTRIBUTES = attributes::checker::DEFAULT>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_v = 
 	traits::type_checker<T, ATTRIBUTES>::is_valid_v;
 
 // Standard checker for classes and objects
 // Checks contruction / destruction and other operations needed
-template<class _T, traits::checker_attributes_t _ATTRIBUTES>
+template<class _T, attributes::checker_attributes_t _ATTRIBUTES>
 struct constructor_checker {
 	// Class related
 	using _MyType	= constructor_checker;
@@ -153,7 +129,7 @@ struct constructor_checker {
 	static_assert(MOVE_ASSIGNABLE,						"T needs a noexcept move asignable!");
 };
 
-template<class T, traits::checker_attributes_t ATTRIBUTES = checker::DEFAULT>
+template<class T, attributes::checker_attributes_t ATTRIBUTES = attributes::checker::DEFAULT>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_v =
 	traits::constructor_checker<T, ATTRIBUTES>::is_valid_v;
 

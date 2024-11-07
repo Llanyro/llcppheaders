@@ -145,6 +145,11 @@ using get_by_char_type_t = traits::type_selection<ExtraType>::get_conincidence<
 
 #endif // LLANYLIB_TRAITSSELECTION_HPP_
 
+#if !defined(LLANYLIB_TRAITSSELECTION_EXTRA_HPP_) && !defined(LLANYLIB_ERROR_HPP_)
+#define LLANYLIB_TRAITSSELECTION_EXTRA_HPP_
+
+#endif // LLANYLIB_TRAITSSELECTION_EXTRA_HPP_
+
 #if defined(LLANYLIB_ERROR_HPP_)
 	#undef LLANYLIB_ERROR_HPP_
 #endif // LLANYLIB_ERROR_HPP_

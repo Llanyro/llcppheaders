@@ -7,20 +7,20 @@
 //	Version: 11.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSLIMITS_INCOMPLETE_HPP_)
-	#if LLANYLIB_TRAITSLIMITS_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSLIMITS_INCOMPLETE_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_QWERTY_INCOMPLETE_HPP_)
+	#if LLANYLIB_QWERTY_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_QWERTY_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
-			#warning "traits_limits.hpp(incomplete) version error!"
+			#warning "qwerty.hpp(incomplete) version error!"
 		#else
-			#error "traits_limits.hpp(incomplete) version error!"
+			#error "qwerty.hpp(incomplete) version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
-	#endif // LLANYLIB_TRAITSLIMITS_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSLIMITS_INCOMPLETE_MINOR_
+	#endif // LLANYLIB_QWERTY_INCOMPLETE_MAYOR_ || LLANYLIB_QWERTY_INCOMPLETE_MINOR_
 
-#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSLIMITS_INCOMPLETE_HPP_)
-#define LLANYLIB_TRAITSLIMITS_INCOMPLETE_HPP_
-#define LLANYLIB_TRAITSLIMITS_INCOMPLETE_MAYOR_ 11
-#define LLANYLIB_TRAITSLIMITS_INCOMPLETE_MINOR_ 0
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_QWERTY_INCOMPLETE_HPP_)
+#define LLANYLIB_QWERTY_INCOMPLETE_HPP_
+#define LLANYLIB_QWERTY_INCOMPLETE_MAYOR_ 11
+#define LLANYLIB_QWERTY_INCOMPLETE_MINOR_ 0
 
 #include "traits_type_update.hpp"
 
@@ -35,20 +35,20 @@ struct RangeChecker;
 } // namespace meta
 } // namespace llcpp
 
-#elif defined(LLANYLIB_TRAITSLIMITS_HPP_)
-	#if LLANYLIB_TRAITSLIMITS_MAYOR_ != 11 || LLANYLIB_TRAITSLIMITS_MINOR_ < 0
+#elif defined(LLANYLIB_QWERTY_HPP_)
+	#if LLANYLIB_QWERTY_MAYOR_ != 11 || LLANYLIB_QWERTY_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
-			#warning "traits_limits.hpp version error!"
+			#warning "qwerty.hpp version error!"
 		#else
-			#error "traits_limits.hpp version error!"
+			#error "qwerty.hpp version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
-	#endif // LLANYLIB_TRAITSLIMITS_MAYOR_ || LLANYLIB_TRAITSLIMITS_MINOR_
+	#endif // LLANYLIB_QWERTY_MAYOR_ || LLANYLIB_QWERTY_MINOR_
 
 #else
-#define LLANYLIB_TRAITSLIMITS_HPP_
-#define LLANYLIB_TRAITSLIMITS_MAYOR_ 11
-#define LLANYLIB_TRAITSLIMITS_MINOR_ 0
+#define LLANYLIB_QWERTY_HPP_
+#define LLANYLIB_QWERTY_MAYOR_ 11
+#define LLANYLIB_QWERTY_MINOR_ 0
 
 #include "traits_type_update.hpp"
 
@@ -80,7 +80,6 @@ struct RangeChecker {
 		"Type cannot be floating point! Results are valid but not correct!");
 };
 
-
 } // namespace traits
 
 template<class T>
@@ -92,10 +91,10 @@ __LL_VAR_INLINE__ constexpr T MIN_VALUE = traits::RangeChecker<T>::MIN_VALUE;
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_TRAITSLIMITS_HPP_
+#endif // LLANYLIB_QWERTY_HPP_
 
-#if !defined(LLANYLIB_TRAITSLIMITS_EXTRA_HPP_) && !defined(LLANYLIB_ERROR_HPP_)
-#define LLANYLIB_TRAITSLIMITS_EXTRA_HPP_
+#if !defined(LLANYLIB_QWERTY_EXTRA_HPP_) && !defined(LLANYLIB_ERROR_HPP_)
+#define LLANYLIB_QWERTY_EXTRA_HPP_
 
 namespace llcpp {
 namespace meta {
@@ -106,7 +105,7 @@ __LL_VAR_INLINE__ constexpr T ZERO_VALUE = T{};
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_TRAITSLIMITS_EXTRA_HPP_
+#endif // LLANYLIB_QWERTY_EXTRA_HPP_
 
 #if defined(LLANYLIB_ERROR_HPP_)
 	#undef LLANYLIB_ERROR_HPP_

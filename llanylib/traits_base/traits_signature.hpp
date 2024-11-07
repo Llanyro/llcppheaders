@@ -23,6 +23,9 @@
 #define LLANYLIB_TRAITSSIGNATURE_INCOMPLETE_MINOR_ 0
 
 #include "traits_checker.hpp"
+#undef LLANYLIB_INCOMPLETE_HPP_
+#include "../types_base/functional_attributes.hpp"
+#define LLANYLIB_INCOMPLETE_HPP_
 
 namespace llcpp {
 namespace meta {
@@ -31,8 +34,11 @@ namespace __traits__ {
 
 template<class _Base>
 struct has_common_signature;
+template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args>
+struct return_common;
 
 } // namespace __traits__
+
 namespace signature {
 
 template<class _ClassToCheck, class _OperatorType, class _Signature>
@@ -41,8 +47,8 @@ struct has_type_operator;
 } // namespace signature
 namespace signature {
 
-#define __LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(name, functionname)		\
-	template<class _ClassToCheck, class _Signature>							\
+#define __LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(name, functionname)	\
+	template<class _ClassToCheck, class _Signature>				\
 	struct _has_##name##_function
 
 #define __LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(name) __LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(name, name)
@@ -52,7 +58,7 @@ namespace signature {
 // 	macros and visual studio										//
 //////////////////////////////////////////////////////////////////////
 
-#define __LL_EASY_CUSTOM_FUNCTION_INCOMPLETE_ALL_1 \
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1 \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(hash); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(clear); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(swap); \
@@ -61,45 +67,45 @@ namespace signature {
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(compare); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(compareBool)
 
-#define __LL_EASY_CUSTOM_FUNCTION_INCOMPLETE_ALL_2 \
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_2 \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(predestruction); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(nodeChecker); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(compareNode); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(compare_eq); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(compare_no_eq)
 
-#define __LL_EASY_CUSTOM_FUNCTION_INCOMPLETE_ALL_3 \
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_3 \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(die); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(combine); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(compare_strong); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(begin); \
 	__LL_HAS_CUSTOM_FUNCTION_INCOMPLETE__(size)
 
-#define __LL_EASY_CUSTOM_OPERATOR_INCOMPLETE_ALL_1 \
+#define __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_1 \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(operator_eq, operator==); \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(operator_no_eq, operator!=); \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(operator_greater, operator>); \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(operator_lower, operator<); \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(operator_eq_greater, operator>=)
 
-#define __LL_EASY_CUSTOM_OPERATOR_INCOMPLETE_ALL_2 \
+#define __LL_EASY_CUSTOM_OPERATOR_ALL_2 \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(operator_eq_lower, operator<=); \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(sgtrong_ordening, operator<=>); \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(operator_pointer, operator*); \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(operator_increment, operator++); \
 	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(operator_decrement, operator--)
 
-#define __LL_EASY_CUSTOM_OPERATOR_INCOMPLETE_ALL_3 \
-	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(bitwise_and, operator&); \
-	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(bitwise_or, operator|); \
-	__LL_HAS_CUSTOM_FUNCTION_NAMED_INCOMPLETE__(bitwise_xor, operator^)
+#define __LL_EASY_CUSTOM_OPERATOR_ALL_3 \
+	__LL_HAS_CUSTOM_FUNCTION_NAMED__(bitwise_and, operator&); \
+	__LL_HAS_CUSTOM_FUNCTION_NAMED__(bitwise_or, operator|); \
+	__LL_HAS_CUSTOM_FUNCTION_NAMED__(bitwise_xor, operator^)
 
-//__LL_EASY_CUSTOM_FUNCTION_INCOMPLETE_ALL_1;
-//__LL_EASY_CUSTOM_FUNCTION_INCOMPLETE_ALL_2;
-//__LL_EASY_CUSTOM_FUNCTION_INCOMPLETE_ALL_3;
-//__LL_EASY_CUSTOM_OPERATOR_INCOMPLETE_ALL_1;
-//__LL_EASY_CUSTOM_OPERATOR_INCOMPLETE_ALL_2;
-//__LL_EASY_CUSTOM_OPERATOR_INCOMPLETE_ALL_3;
+//__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1;
+//__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_2;
+//__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_3;
+//__LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_1;
+//__LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_2;
+//__LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_3;
 
 template<class _ClassToCheck, class _Signature> struct _has_hash_function; template<class _ClassToCheck, class _Signature> struct _has_clear_function; template<class _ClassToCheck, class _Signature> struct _has_swap_function; template<class _ClassToCheck, class _Signature> struct _has_copy_function; template<class _ClassToCheck, class _Signature> struct _has_move_function; template<class _ClassToCheck, class _Signature> struct _has_compare_function; template<class _ClassToCheck, class _Signature> struct _has_compareBool_function;
 template<class _ClassToCheck, class _Signature> struct _has_predestruction_function; template<class _ClassToCheck, class _Signature> struct _has_nodeChecker_function; template<class _ClassToCheck, class _Signature> struct _has_compareNode_function; template<class _ClassToCheck, class _Signature> struct _has_compare_eq_function; template<class _ClassToCheck, class _Signature> struct _has_compare_no_eq_function;
@@ -108,14 +114,73 @@ template<class _ClassToCheck, class _Signature> struct _has_operator_eq_function
 template<class _ClassToCheck, class _Signature> struct _has_operator_eq_lower_function; template<class _ClassToCheck, class _Signature> struct _has_sgtrong_ordening_function; template<class _ClassToCheck, class _Signature> struct _has_operator_pointer_function; template<class _ClassToCheck, class _Signature> struct _has_operator_increment_function; template<class _ClassToCheck, class _Signature> struct _has_operator_decrement_function;
 template<class _ClassToCheck, class _Signature> struct _has_bitwise_and_function; template<class _ClassToCheck, class _Signature> struct _has_bitwise_or_function; template<class _ClassToCheck, class _Signature> struct _has_bitwise_xor_function;
 
-#undef __LL_EASY_CUSTOM_FUNCTION_INCOMPLETE_ALL_1
-#undef __LL_EASY_CUSTOM_FUNCTION_INCOMPLETE_ALL_2
-#undef __LL_EASY_CUSTOM_FUNCTION_INCOMPLETE_ALL_3
-#undef __LL_EASY_CUSTOM_OPERATOR_INCOMPLETE_ALL_1
-#undef __LL_EASY_CUSTOM_OPERATOR_INCOMPLETE_ALL_2
-#undef __LL_EASY_CUSTOM_OPERATOR_INCOMPLETE_ALL_3
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_2
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_3
+#undef __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_1
+#undef __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_2
+#undef __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_3
 
 } // namespace signature
+namespace return_detection {
+
+#define __LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(name, functionname)							\
+	template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args>	\
+	struct return_##name##_function
+
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1 \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(begin, begin); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(fill, fill); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(hash, hash)
+
+#define __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_1 \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_eq, operator==); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_no_eq, operator!=); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_greater, operator>); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_lower, operator<); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_eq_greater, operator>=); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_eq_lower, operator<=)
+
+#define __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_2 \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(sgtrong_ordening, operator<=>); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_pointer, operator*); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_arrow, operator->); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_increment, operator++); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_subscript, operator[]); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_comma, operator,); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_modulo, operator%); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_modulo_assigment, operator%=); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(operator_decrement, operator--)
+
+#define __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_3 \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_and, operator&); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_and_assigment, operator&=); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_or, operator|); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_or_assigment, operator|=); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_not, operator~); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_right_shift, operator>>); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_right_shift_assigment, operator>>=); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_left_shift, operator<<); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_left_shift_assigment, operator<<=); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_xor, operator^); \
+	__LL_RETURN_FUNCTION_NAMED_INCOMPLETE__(bitwise_xor_assigment, operator^=)
+
+//__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1;
+//__LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_1;
+//__LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_2;
+//__LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_3;
+
+template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_begin_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_fill_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_hash_function;
+template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_eq_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_no_eq_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_greater_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_lower_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_eq_greater_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_eq_lower_function;
+template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_sgtrong_ordening_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_pointer_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_arrow_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_increment_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_subscript_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_comma_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_modulo_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_modulo_assigment_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_operator_decrement_function;
+template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_and_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_and_assigment_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_or_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_or_assigment_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_not_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_right_shift_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_right_shift_assigment_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_left_shift_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_left_shift_assigment_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_xor_function; template<class _ClassToCheck, meta::function_attributes_t _ATTRIBUTES, class... Args> struct return_bitwise_xor_assigment_function;
+
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1
+#undef __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_1
+#undef __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_2
+#undef __LL_EASY_CUSTOM_OPERATOR_ALL_INCOMPLETE_3
+
+} // namespace return_detection
 } // namespace traits
 } // namespace meta
 } // namespace llcpp
@@ -136,6 +201,7 @@ template<class _ClassToCheck, class _Signature> struct _has_bitwise_and_function
 #define LLANYLIB_TRAITSSIGNATURE_MINOR_ 0
 
 #include "traits_checker.hpp"
+#include "../types_base/functional_attributes.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -431,7 +497,7 @@ namespace return_detection {
 	__LL_RETURN_FUNCTION_NAMED__(operator_no_eq, operator!=); \
 	__LL_RETURN_FUNCTION_NAMED__(operator_greater, operator>); \
 	__LL_RETURN_FUNCTION_NAMED__(operator_lower, operator<); \
-	__LL_RETURN_FUNCTION_NAMED__(operator_eq_greater, operator>=) \
+	__LL_RETURN_FUNCTION_NAMED__(operator_eq_greater, operator>=); \
 	__LL_RETURN_FUNCTION_NAMED__(operator_eq_lower, operator<=)
 
 #define __LL_EASY_CUSTOM_OPERATOR_ALL_2 \

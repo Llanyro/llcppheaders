@@ -7,6 +7,8 @@
 //	Version: 11.0							//
 //////////////////////////////////////////////
 
+#define LLANYLIB_INCOMPLETE_HPP_
+
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
@@ -23,6 +25,9 @@
 #define LLANYLIB_TRAITSTYPEUPDATE_INCOMPLETE_MINOR_ 0
 
 #include "traits_selection.hpp"
+#undef LLANYLIB_INCOMPLETE_HPP_
+#include "../types_base/type_update.hpp"
+#define LLANYLIB_INCOMPLETE_HPP_
 
 namespace llcpp {
 namespace meta {
@@ -30,6 +35,9 @@ namespace traits {
 
 struct type_update_t;
 struct attribute_counter;
+
+template<class _T, attributes::type_update_t _ATTRIBUTES>
+constexpr auto type_modifier();
 
 } // namespace traits
 } // namespace meta
@@ -51,14 +59,19 @@ struct attribute_counter;
 #define LLANYLIB_TRAITSTYPEUPDATE_MINOR_ 0
 
 #include "traits_selection.hpp"
+#include "../types_base/type_update.hpp"
 
 namespace llcpp {
 namespace meta {
 namespace traits {
 
-struct type_update_t {
+// [TODO]
+// 	Use a data container to count type attributes
+// 	So user can select how many attributes wants to remove or add...
+// [TOFIX]
+struct attribute_counter_t {
 	// Class related
-	using _MyType = type_update_t;
+	using _MyType = attribute_counter_t;
 
 	// Attributes
 	ll_bool_t REMOVE_POINTER	: 1;
@@ -68,28 +81,7 @@ struct type_update_t {
 	ll_bool_t REMOVE_REFERENCE	: 1;
 };
 
-struct attribute_counter {
-	// Class related
-	using _MyType = type_update_t;
-
-	// Attributes
-	ll_bool_t REMOVE_POINTER	: 1;
-	ll_bool_t REMOVE_CONST		: 1;
-	ll_bool_t REMOVE_VOLATILE	: 1;
-	ll_bool_t REMOVE_ARRAY		: 1;
-	ll_bool_t REMOVE_REFERENCE	: 1;
-};
-
-namespace update {
-
-__LL_VAR_INLINE__ constexpr traits::type_update_t REMOVE_CONSTS		= { llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::type_update_t REMOVE_POINTERS	= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::type_update_t REMOVE_ARRAYS		= { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr traits::type_update_t RAW_TYPE			= { llcpp::TRUE,  llcpp::TRUE,  llcpp::TRUE,  llcpp::TRUE,  llcpp::TRUE  };
-
-} // namespace update
-
-template<class _T, traits::type_update_t _ATTRIBUTES>
+template<class _T, attributes::type_update_t _ATTRIBUTES>
 constexpr auto type_modifier() {
 	if constexpr (std::is_array_v<_T>) {
 		// Remove array from type
@@ -139,8 +131,8 @@ constexpr auto type_modifier() {
 	else return traits::type_container<_T>{};
 }
 
-template<class _T, traits::type_update_t _ATTRIBUTES>
-using type_modifier_t = decltype(type_modifier<_T, _ATTRIBUTES>())::T;
+template<class _T, attributes::type_update_t _ATTRIBUTES>
+using type_modifier_t = decltype(traits::type_modifier<_T, _ATTRIBUTES>())::T;
 
 template<class T, ll_bool_t PROMOTE = llcpp::TRUE>
 using type_promotion = traits::type_selection<llcpp::Emptyclass>::get_conincidence<

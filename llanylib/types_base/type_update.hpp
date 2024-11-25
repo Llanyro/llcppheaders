@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	checker_attributes.hpp					//
+//	type_update.hpp							//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -10,9 +10,9 @@
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TYPEUPDATE_INCOMPLETE_HPP_)
 	#if LLANYLIB_TYPEUPDATE_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TYPEUPDATE_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
-			#warning "checker_attributes.hpp(incomplete) version error!"
+			#warning "type_update.hpp(incomplete) version error!"
 		#else
-			#error "checker_attributes.hpp(incomplete) version error!"
+			#error "type_update.hpp(incomplete) version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TYPEUPDATE_INCOMPLETE_MAYOR_ || LLANYLIB_TYPEUPDATE_INCOMPLETE_MINOR_
@@ -28,7 +28,7 @@ namespace llcpp {
 namespace meta {
 namespace traits {
 
-struct checker_attributes_t;
+struct type_update_t;
 
 } // namespace traits
 } // namespace meta
@@ -37,9 +37,9 @@ struct checker_attributes_t;
 #elif defined(LLANYLIB_TYPEUPDATE_HPP_)
 	#if LLANYLIB_TYPEUPDATE_MAYOR_ != 11 || LLANYLIB_TYPEUPDATE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
-			#warning "checker_attributes.hpp version error!"
+			#warning "type_update.hpp version error!"
 		#else
-			#error "checker_attributes.hpp version error!"
+			#error "type_update.hpp version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TYPEUPDATE_MAYOR_ || LLANYLIB_TYPEUPDATE_MINOR_
@@ -52,6 +52,7 @@ struct checker_attributes_t;
 #include "../types_base/types_base_extra.hpp"
 
 namespace llcpp {
+namespace meta {
 namespace attributes {
 
 struct type_update_t {
@@ -64,18 +65,25 @@ struct type_update_t {
 	ll_bool_t REMOVE_VOLATILE	: 1;
 	ll_bool_t REMOVE_ARRAY		: 1;
 	ll_bool_t REMOVE_REFERENCE	: 1;
+
+	template<ll_bool_t REMOVE_POINTER, ll_bool_t REMOVE_CONST, ll_bool_t REMOVE_VOLATILE, ll_bool_t REMOVE_ARRAY, ll_bool_t REMOVE_REFERENCE>
+	static constexpr _MyType CUSTOM = { REMOVE_POINTER, REMOVE_CONST, REMOVE_VOLATILE, REMOVE_ARRAY, REMOVE_REFERENCE };
 };
 
 namespace update {
-//																			Pointer			Const		Volatile		Array		Reference
-__LL_VAR_INLINE__ constexpr attributes::type_update_t REMOVE_CONSTS		= { llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr attributes::type_update_t REMOVE_POINTERS	= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr attributes::type_update_t REMOVE_ARRAYS		= { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr attributes::type_update_t RAW_TYPE			= { llcpp::TRUE,  llcpp::TRUE,  llcpp::TRUE,  llcpp::TRUE,  llcpp::TRUE  };
+
+using _MyType = ::llcpp::meta::attributes::type_update_t::_MyType;
+
+//														Pointer			Const		Volatile		Array		Reference
+__LL_VAR_INLINE__ constexpr _MyType REMOVE_CONSTS	= { llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType REMOVE_POINTERS	= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType REMOVE_ARRAYS	= { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType RAW_TYPE		= { llcpp::TRUE,  llcpp::TRUE,  llcpp::TRUE,  llcpp::TRUE,  llcpp::TRUE  };
 
 } // namespace update
 
 } // namespace attributes
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_TYPEUPDATE_HPP_

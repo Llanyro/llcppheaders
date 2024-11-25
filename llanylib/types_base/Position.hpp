@@ -25,7 +25,11 @@
 #include "types_base.hpp"
 
 namespace llcpp {
+namespace misc {
+
 enum class Position : u8;
+
+} // namespace misc
 } // namespace llcpp
 
 #elif defined(LLANYLIB_POSITION_HPP_)
@@ -46,6 +50,7 @@ enum class Position : u8;
 #include "types_base.hpp"
 
 namespace llcpp {
+namespace misc {
 
 enum class Position : u8 {
 	Idle	= 0,
@@ -87,6 +92,7 @@ enum class Position : u8 {
 	RightDownBack	= Right | Down	| Back
 };
 
+} // namespace misc
 } // namespace llcpp
 
 #endif // LLANYLIB_POSITION_HPP_

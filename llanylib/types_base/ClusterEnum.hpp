@@ -26,11 +26,9 @@
 
 namespace llcpp {
 namespace meta {
-namespace __meta__ {
 
 enum class ClusterType : u8;
 
-} // namespace __meta__
 } // namespace meta
 } // namespace llcpp
 
@@ -53,7 +51,6 @@ enum class ClusterType : u8;
 
 namespace llcpp {
 namespace meta {
-namespace __meta__ {
 
 enum class ClusterType : u8 {
 	Cluster,
@@ -62,7 +59,6 @@ enum class ClusterType : u8 {
 	Unknown = static_cast<u8>(-1)
 };
 
-} // namespace __meta__
 } // namespace meta
 } // namespace llcpp
 

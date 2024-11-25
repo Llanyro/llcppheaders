@@ -27,7 +27,7 @@
 namespace llcpp {
 namespace meta {
 
-template<::llcpp::meta::__meta__::ClusterType _CLUSTER_TYPE>
+template<::llcpp::meta::ClusterType _CLUSTER_TYPE>
 class GenericCluster;
 
 } // namespace meta
@@ -53,7 +53,7 @@ class GenericCluster;
 namespace llcpp {
 namespace meta {
 
-template<::llcpp::meta::__meta__::ClusterType _CLUSTER_TYPE>
+template<::llcpp::meta::ClusterType _CLUSTER_TYPE>
 class GenericCluster {
 	#pragma region Types
 	public:
@@ -61,7 +61,7 @@ class GenericCluster {
 		using _MyType		= GenericCluster;
 
 		// Types and enums
-		using ClusterType	= ::llcpp::meta::__meta__::ClusterType;
+		using ClusterType	= ::llcpp::meta::ClusterType;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -99,7 +99,7 @@ class GenericCluster {
 	public:
 		__LL_NODISCARD__ constexpr ClusterType getClusterType() const noexcept { return CLUSTER_TYPE; }
 
-		template<llcpp::meta::__meta__::ClusterType _CLUSTER_TYPE_>
+		template<llcpp::meta::ClusterType _CLUSTER_TYPE_>
 		__LL_NODISCARD__ constexpr ll_bool_t isSameClusterType(const GenericCluster<_CLUSTER_TYPE_>& other) const noexcept { return llcpp::FALSE; }
 		template<>
 		__LL_NODISCARD__ constexpr ll_bool_t isSameClusterType<CLUSTER_TYPE>(const GenericCluster<CLUSTER_TYPE>& other) const noexcept { return llcpp::TRUE; }
@@ -116,6 +116,9 @@ class GenericCluster {
 
 #if !defined(LLANYLIB_CLUSTER_EXTRA_HPP_) && !defined(LLANYLIB_ERROR_HPP_) && defined(LLANYLIB_CLUSTERENUM_HPP_)
 #define LLANYLIB_CLUSTER_EXTRA_HPP_
+
+namespace llcpp {
+namespace meta {
 
 // Clusters are templates that shares same position as interfaces
 // That means:
@@ -134,13 +137,16 @@ class GenericCluster {
 //	Functions:
 //		Interfaces can have any type of functions
 //		Clusters can only have const functions (by llanystandard)
-using Cluster = ::llcpp::meta::GenericCluster<::llcpp::meta::__meta__::ClusterType::Cluster>;
+using Cluster = ::llcpp::meta::GenericCluster<::llcpp::meta::ClusterType::Cluster>;
 // HalfClusters are similar to clusters but has a few differences
 // HalfClusters should inherit also from an object
 // The object inherited usually is edited by HalfCluster's functions
 //	So, the main difference its that HalfClusters can have "no const" functions that enable
 //	inherited object edition Ex: llcpp::meta::linked::FunctionalNode
-using HalfCluster = ::llcpp::meta::GenericCluster<::llcpp::meta::__meta__::ClusterType::Half>;
+using HalfCluster = ::llcpp::meta::GenericCluster<::llcpp::meta::ClusterType::Half>;
+
+} // namespace meta
+} // namespace llcpp
 
 #endif // !LLANYLIB_CLUSTER_EXTRA_HPP_ && !LLANYLIB_ERROR_HPP_ && LLANYLIB_CLUSTERENUM_HPP_
 

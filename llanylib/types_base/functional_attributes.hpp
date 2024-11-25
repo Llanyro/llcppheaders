@@ -51,6 +51,7 @@ struct function_attributes_t;
 
 namespace llcpp {
 namespace meta {
+namespace attributes {
 
 struct function_attributes_t {
 	// Class related
@@ -59,16 +60,35 @@ struct function_attributes_t {
 	// Attributes
 	ll_bool_t CONST			: 1;
 	ll_bool_t NOEXCEPTION	: 1;
+
+	template<ll_bool_t IS_CONST, ll_bool_t IS_NOEXCEPT>
+	static constexpr _MyType CUSTOM = { IS_CONST, IS_NOEXCEPT };
+
+	constexpr ll_bool_t operator==(const _MyType& other) const noexcept {
+		return this->CONST == other.CONST && this->NOEXCEPTION == other.NOEXCEPTION;
+	}
 };
 
 namespace functional {
 
-__LL_VAR_INLINE__ constexpr meta::function_attributes_t CLASSIC				= { llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr meta::function_attributes_t CONST				= { llcpp::TRUE,  llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr meta::function_attributes_t NOEXCEPTION			= { llcpp::FALSE, llcpp::TRUE };
-__LL_VAR_INLINE__ constexpr meta::function_attributes_t CONSTNOEXCEPTION	= { llcpp::TRUE,  llcpp::TRUE };
+using _MyType = ::llcpp::meta::attributes::function_attributes_t::_MyType;
+
+template<ll_bool_t IS_CONST, ll_bool_t IS_NOEXCEPT>
+static constexpr _MyType CUSTOM = { IS_CONST, IS_NOEXCEPT };
+
+//															const			noexception
+__LL_VAR_INLINE__ constexpr _MyType CLASSIC				= { llcpp::FALSE, llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType CONST				= { llcpp::TRUE,  llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType NOEXCEPTION			= { llcpp::FALSE, llcpp::TRUE };
+__LL_VAR_INLINE__ constexpr _MyType CONSTNOEXCEPTION	= { llcpp::TRUE,  llcpp::TRUE  };
 
 } // namespace functional
+
+ll_bool_t operator==(function_attributes_t&, function_attributes_t&) noexcept {
+	return false;
+}
+
+} // namespace attributes
 } // namespace meta
 } // namespace llcpp
 

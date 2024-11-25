@@ -75,12 +75,12 @@ class Boolean {
 	#pragma region Functions
 		#pragma region Private
 	private:
-		constexpr void simpleClear() noexcept { this->value = enum_bool::UNKNOWN; }
+		constexpr void simpleClear() noexcept { this->value = _MyType::enum_bool::UNKNOWN; }
 
 		#pragma endregion
 		#pragma region Constructor
 	public:
-		constexpr Boolean() noexcept : value(enum_bool::UNKNOWN) {}
+		constexpr Boolean() noexcept : value(_MyType::enum_bool::UNKNOWN) {}
 		constexpr ~Boolean() noexcept {}
 
 		#pragma endregion
@@ -158,13 +158,18 @@ class Boolean {
 	#pragma endregion
 };
 
+namespace boolean {
+
+using _MyType = ::llcpp::meta::Boolean::_MyType;
+
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_FALSE			= ::llcpp::FALSE;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_TRUE			= ::llcpp::TRUE;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_INVALID			= _MyType::enum_bool::INVALID;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_UNKNOWN_BOOL	= _MyType::enum_bool::UNKNOWN;
+
+} // namespace boolean
+
 } // namespace meta
-
-__LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_FALSE			= llcpp::FALSE;
-__LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_TRUE			= llcpp::TRUE;
-__LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_INVALID		= meta::Boolean::enum_bool::INVALID;
-__LL_VAR_INLINE__ constexpr meta::Boolean BOOLEAN_UNKNOWN_BOOL	= meta::Boolean::enum_bool::UNKNOWN;
-
 } // namespace llcpp
 
 #endif // LLANYLIB_BOOLEAN_HPP_

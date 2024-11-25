@@ -55,12 +55,16 @@ using StandardComparation = std::strong_ordering;
 
 namespace llcpp {
 
-struct empty_struct	{ using _MyType = empty_struct; };
-class Emptyclass	{ using _MyType = Emptyclass; };
+class Emptyclass				{ using _MyType = Emptyclass; };
+// When using incomplete lib && some type is not possible to exist but using complete lib
+//	this type will be used
+class UndefinedIncompleteObject	{ using _MyType = UndefinedIncompleteObject; };
+
+using Void						= ::llcpp::Emptyclass;
 
 namespace meta {
 
-using StandardComparation = std::strong_ordering;
+using StandardComparation = ::std::strong_ordering;
 
 } // namespace meta
 } // namespace llcpp
@@ -83,7 +87,7 @@ namespace meta {
 namespace algorithm {
 
 __LL_VAR_INLINE__ constexpr u64 MAX_LIST_SIZE	= static_cast<u64>(-1);
-__LL_VAR_INLINE__ constexpr u64 npos			= MAX_LIST_SIZE;
+__LL_VAR_INLINE__ constexpr u64 npos			= ::llcpp::meta::algorithm::MAX_LIST_SIZE;
 
 } // namespace algorithm
 } // namespace meta

@@ -66,6 +66,15 @@ struct type_update_t {
 	ll_bool_t REMOVE_ARRAY		: 1;
 	ll_bool_t REMOVE_REFERENCE	: 1;
 
+	constexpr ll_bool_t operator==(const _MyType& other) const noexcept {
+		return
+			this->REMOVE_POINTER == other.REMOVE_POINTER
+			&& this->REMOVE_CONST == other.REMOVE_CONST
+			&& this->REMOVE_VOLATILE == other.REMOVE_VOLATILE
+			&& this->REMOVE_ARRAY == other.REMOVE_ARRAY
+			&& this->REMOVE_REFERENCE == other.REMOVE_REFERENCE;
+	}
+
 	template<ll_bool_t REMOVE_POINTER, ll_bool_t REMOVE_CONST, ll_bool_t REMOVE_VOLATILE, ll_bool_t REMOVE_ARRAY, ll_bool_t REMOVE_REFERENCE>
 	static constexpr _MyType CUSTOM = { REMOVE_POINTER, REMOVE_CONST, REMOVE_VOLATILE, REMOVE_ARRAY, REMOVE_REFERENCE };
 };

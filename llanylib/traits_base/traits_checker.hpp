@@ -31,11 +31,11 @@ namespace llcpp {
 namespace meta {
 namespace traits {
 
-template<class _T, attributes::checker_attributes_t _ATTRIBUTES>
-struct type_checker;
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _ATTRIBUTES>
+class TypeChecker;
 
-template<class _T, attributes::checker_attributes_t _ATTRIBUTES>
-struct constructor_checker;
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _ATTRIBUTES>
+class ConstructorChecker;
 
 } // namespace traits
 } // namespace meta
@@ -64,74 +64,80 @@ namespace meta {
 namespace traits {
 
 // Standard checker for types in this lib
-template<class _T, attributes::checker_attributes_t _ATTRIBUTES>
-struct type_checker {
-	// Class related
-	using _MyType	= type_checker;
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _ATTRIBUTES>
+class TypeChecker {
+	public:
+		// Class related
+		using _MyType	= TypeChecker;
 
-	// Types and enums
-	using T			= _T;
+		// Types and enums
+		using T			= _T;
 
-	// Expresions
-	static constexpr traits::checker_attributes_t ATTRIBUTES = _ATTRIBUTES;
-	static constexpr ll_bool_t CONST			= (ATTRIBUTES.IGNORE_CONST		|| !std::is_const_v<T>);
-	static constexpr ll_bool_t REFERENCE		= (ATTRIBUTES.IGNORE_REFERENCE	|| !std::is_reference_v<T>);
-	static constexpr ll_bool_t POINTER			= (ATTRIBUTES.IGNORE_POINTER	|| !std::is_pointer_v<T>);
-	static constexpr ll_bool_t ARRAY			= (ATTRIBUTES.IGNORE_ARRAY		|| !std::is_array_v<T>);
-	static constexpr ll_bool_t VOLATILE			= (ATTRIBUTES.IGNORE_VOLATILE	|| !std::is_volatile_v<T>);
+	public:
+		// Expresions
+		static constexpr ::llcpp::meta::attributes::checker_attributes_t ATTRIBUTES	= _ATTRIBUTES;
+		static constexpr ll_bool_t CONST			= (ATTRIBUTES.IGNORE_CONST		|| !::std::is_const_v<T>);
+		static constexpr ll_bool_t REFERENCE		= (ATTRIBUTES.IGNORE_REFERENCE	|| !::std::is_reference_v<T>);
+		static constexpr ll_bool_t POINTER			= (ATTRIBUTES.IGNORE_POINTER	|| !::std::is_pointer_v<T>);
+		static constexpr ll_bool_t ARRAY			= (ATTRIBUTES.IGNORE_ARRAY		|| !::std::is_array_v<T>);
+		static constexpr ll_bool_t VOLATILE			= (ATTRIBUTES.IGNORE_VOLATILE	|| !::std::is_volatile_v<T>);
+		static constexpr ll_bool_t is_valid_v = CONST && REFERENCE && ARRAY && VOLATILE && POINTER;
 
-	static constexpr ll_bool_t is_valid_v = CONST && REFERENCE && ARRAY && VOLATILE && POINTER;
-
-	// Asserts
-	static_assert(!std::is_reference_v<T>,	"Reference type is forbidden!");
-	static_assert(!std::is_const_v<T>,		"Const type is forbidden!");
-	static_assert(POINTER,					"Pointer type is forbidden!");
-	static_assert(ARRAY,					"Array type is forbidden!");
-	static_assert(VOLATILE,					"Volatile type is forbidden!");
+	public:
+		// Asserts
+		static_assert(!::std::is_reference_v<T>,	"Reference type is forbidden!");
+		static_assert(!::std::is_const_v<T>,		"Const type is forbidden!");
+		static_assert(POINTER,						"Pointer type is forbidden!");
+		static_assert(ARRAY,						"Array type is forbidden!");
+		static_assert(VOLATILE,						"Volatile type is forbidden!");
 };
 
-template<class T, attributes::checker_attributes_t ATTRIBUTES = attributes::checker::DEFAULT>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_v = 
-	traits::type_checker<T, ATTRIBUTES>::is_valid_v;
+template<class T, ::llcpp::meta::attributes::checker_attributes_t ATTRIBUTES = ::llcpp::meta::attributes::checker::DEFAULT>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_v =
+	::llcpp::meta::traits::TypeChecker<T, ATTRIBUTES>::is_valid_v;
 
 // Standard checker for classes and objects
 // Checks contruction / destruction and other operations needed
-template<class _T, attributes::checker_attributes_t _ATTRIBUTES>
-struct constructor_checker {
-	// Class related
-	using _MyType	= constructor_checker;
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _ATTRIBUTES>
+class ConstructorChecker {
+	public:
+		// Class related
+		using _MyType	= ConstructorChecker;
 
-	// Types and enums
-	using T			= _T;
+		// Types and enums
+		using T			= _T;
 
-	// Expresions
-	static constexpr traits::checker_attributes_t ATTRIBUTES = _ATTRIBUTES;
-	static constexpr ll_bool_t CONSTRUCTIBLE		= (ATTRIBUTES.IGNORE_CONSTRUCTIBLE		|| std::is_nothrow_constructible_v<T>);
-	static constexpr ll_bool_t COPY_CONSTRUCTIBLE	= (ATTRIBUTES.IGNORE_COPY_CONSTRUCTIBLE	|| std::is_nothrow_copy_constructible_v<T>);
-	static constexpr ll_bool_t COPY_ASSIGNABLE		= (ATTRIBUTES.IGNORE_COPY_ASSIGNABLE	|| std::is_nothrow_copy_assignable_v<T>);
-	static constexpr ll_bool_t MOVE_CONSTRUCTIBLE	= (ATTRIBUTES.IGNORE_MOVE_CONSTRUCTIBLE	|| std::is_nothrow_move_constructible_v<T>);
-	static constexpr ll_bool_t MOVE_ASSIGNABLE		= (ATTRIBUTES.IGNORE_MOVE_ASSIGNABLE	|| std::is_nothrow_move_assignable_v<T>);
+	public:
+		// Expresions
+		static constexpr ::llcpp::meta::attributes::checker_attributes_t ATTRIBUTES = _ATTRIBUTES;
+		static constexpr ll_bool_t CONSTRUCTIBLE		= (ATTRIBUTES.IGNORE_CONSTRUCTIBLE		|| std::is_nothrow_constructible_v<T>);
+		static constexpr ll_bool_t COPY_CONSTRUCTIBLE	= (ATTRIBUTES.IGNORE_COPY_CONSTRUCTIBLE	|| std::is_nothrow_copy_constructible_v<T>);
+		static constexpr ll_bool_t COPY_ASSIGNABLE		= (ATTRIBUTES.IGNORE_COPY_ASSIGNABLE	|| std::is_nothrow_copy_assignable_v<T>);
+		static constexpr ll_bool_t MOVE_CONSTRUCTIBLE	= (ATTRIBUTES.IGNORE_MOVE_CONSTRUCTIBLE	|| std::is_nothrow_move_constructible_v<T>);
+		static constexpr ll_bool_t MOVE_ASSIGNABLE		= (ATTRIBUTES.IGNORE_MOVE_ASSIGNABLE	|| std::is_nothrow_move_assignable_v<T>);
+		static constexpr ll_bool_t NOEXCEPT_DESTRUCT	= (ATTRIBUTES.IGNORE_NOEXCEPT_DESTRUCT	|| std::is_nothrow_destructible_v<T>);
 
-	static constexpr ll_bool_t is_valid_v =
-		CONSTRUCTIBLE
-		&& std::is_nothrow_destructible_v<T>
-		&& COPY_CONSTRUCTIBLE
-		&& COPY_ASSIGNABLE
-		&& MOVE_CONSTRUCTIBLE
-		&& MOVE_ASSIGNABLE;
+		static constexpr ll_bool_t is_valid_v =
+			CONSTRUCTIBLE
+			&& NOEXCEPT_DESTRUCT
+			&& COPY_CONSTRUCTIBLE
+			&& COPY_ASSIGNABLE
+			&& MOVE_CONSTRUCTIBLE
+			&& MOVE_ASSIGNABLE;
 
-	// Asserts
-	static_assert(CONSTRUCTIBLE,						"T needs a noexcept constructor!");
-	static_assert(std::is_nothrow_destructible_v<T>,	"T needs a noexcept destructor!");
-	static_assert(COPY_CONSTRUCTIBLE,					"T needs a noexcept copy constructor!");
-	static_assert(COPY_ASSIGNABLE,						"T needs a noexcept copy asignable!");
-	static_assert(MOVE_CONSTRUCTIBLE,					"T needs a noexcept move constructor!");
-	static_assert(MOVE_ASSIGNABLE,						"T needs a noexcept move asignable!");
+	public:
+		// Asserts
+		static_assert(CONSTRUCTIBLE,						"T needs a noexcept constructor!");
+		static_assert(NOEXCEPT_DESTRUCT,					"T needs a noexcept destructor!");
+		static_assert(COPY_CONSTRUCTIBLE,					"T needs a noexcept copy constructor!");
+		static_assert(COPY_ASSIGNABLE,						"T needs a noexcept copy asignable!");
+		static_assert(MOVE_CONSTRUCTIBLE,					"T needs a noexcept move constructor!");
+		static_assert(MOVE_ASSIGNABLE,						"T needs a noexcept move asignable!");
 };
 
-template<class T, attributes::checker_attributes_t ATTRIBUTES = attributes::checker::DEFAULT>
+template<class T, ::llcpp::meta::attributes::checker_attributes_t ATTRIBUTES = ::llcpp::meta::attributes::checker::DEFAULT>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_v =
-	traits::constructor_checker<T, ATTRIBUTES>::is_valid_v;
+	::llcpp::meta::traits::ConstructorChecker<T, ATTRIBUTES>::is_valid_v;
 
 /*template<class _T>
 struct is_nothrow_swappeable {
@@ -143,7 +149,7 @@ struct is_nothrow_swappeable {
 
 	// Asserts
 	static_assert(traits::is_valid_type_checker_v<T>,
-		"type_checker<T> detected an invalid type!");
+		"TypeChecker<T> detected an invalid type!");
 	static_assert(traits::is_valid_constructor_checker_v<T>,
 		"class_checker<T> detected an invalid class type!");
 
@@ -178,7 +184,7 @@ struct is_nothrow_copyable {
 
 	// Asserts
 	static_assert(traits::is_valid_type_checker_v<T>,
-		"type_checker<T> detected an invalid type!");
+		"TypeChecker<T> detected an invalid type!");
 	static_assert(traits::is_valid_constructor_checker_v<T>,
 		"class_checker<T> detected an invalid class type!");
 

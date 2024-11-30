@@ -92,7 +92,11 @@ class TypeChecker {
 		static_assert(VOLATILE,						"Volatile type is forbidden!");
 };
 
-template<class T, ::llcpp::meta::attributes::checker_attributes_t ATTRIBUTES = ::llcpp::meta::attributes::checker::DEFAULT>
+template<
+	class T,
+	::llcpp::meta::attributes::checker_attributes_t ATTRIBUTES =
+		::llcpp::meta::attributes::checker::DEFAULT
+>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_v =
 	::llcpp::meta::traits::TypeChecker<T, ATTRIBUTES>::is_valid_v;
 
@@ -138,76 +142,6 @@ class ConstructorChecker {
 template<class T, ::llcpp::meta::attributes::checker_attributes_t ATTRIBUTES = ::llcpp::meta::attributes::checker::DEFAULT>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_v =
 	::llcpp::meta::traits::ConstructorChecker<T, ATTRIBUTES>::is_valid_v;
-
-/*template<class _T>
-struct is_nothrow_swappeable {
-	// Class related
-	using _MyType = is_nothrow_swappeable;
-
-	// Types and enums
-	using T = _T;
-
-	// Asserts
-	static_assert(traits::is_valid_type_checker_v<T>,
-		"TypeChecker<T> detected an invalid type!");
-	static_assert(traits::is_valid_constructor_checker_v<T>,
-		"class_checker<T> detected an invalid class type!");
-
-	// Functions
-	static constexpr auto test() noexcept {
-		if constexpr (std::is_pointer_v<T> || traits::is_basic_type_v<T>)
-			return std::true_type{};
-		else if constexpr (std::is_array_v<T>)
-			return is_nothrow_swappeable<traits::array_type_t<T>>::test();
-		// Already includes basic types
-		else if constexpr (std::is_move_constructible_v<T> && std::is_move_assignable_v<T>) {
-			if constexpr (std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_assignable_v<T>)
-				return std::true_type{};
-			else return std::false_type{};
-		}
-		else return std::false_type{};
-	}
-	using type = decltype(test());
-};
-template<class T>
-using is_nothrow_swappeable_t = is_nothrow_swappeable<T>::type;
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_swappeable_v = is_nothrow_swappeable_t<T>::value;
-
-template<class _T>
-struct is_nothrow_copyable {
-	// Class related
-	using _MyType = is_nothrow_copyable;
-
-	// Types and enums
-	using T = _T;
-
-	// Asserts
-	static_assert(traits::is_valid_type_checker_v<T>,
-		"TypeChecker<T> detected an invalid type!");
-	static_assert(traits::is_valid_constructor_checker_v<T>,
-		"class_checker<T> detected an invalid class type!");
-
-	// Functions
-	static constexpr auto test() noexcept {
-		if constexpr (std::is_pointer_v<T>) {
-			using __noptr = std::remove_pointer_t<T>;
-			if constexpr (std::is_pointer_v<__noptr>) return std::false_type{};
-			else return is_nothrow_copyable<__noptr>::test();
-		}
-		else if constexpr (std::is_array_v<T>)
-			return is_nothrow_copyable<traits::array_type_t<T>>::test();
-		// Already includes basic types
-		else if constexpr (std::is_copy_assignable_v<T> && std::is_nothrow_copy_assignable_v<T>)
-			return std::true_type{};
-		else return std::false_type{};
-	}
-	using type = decltype(test());
-};
-template<class T>
-using is_nothrow_copyable_t = is_nothrow_copyable<T>::type;
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_nothrow_copyable_v = is_nothrow_copyable_t<T>::value;*/
 
 } // namespace traits
 } // namespace meta

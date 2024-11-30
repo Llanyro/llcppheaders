@@ -7,8 +7,6 @@
 //	Version: 11.0							//
 //////////////////////////////////////////////
 
-#define LLANYLIB_INCOMPLETE_HPP_
-
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSSIGNATURE_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSSIGNATURE_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSSIGNATURE_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
@@ -44,10 +42,10 @@ class FunctionGetterBase;
 } // namespace __traits__
 namespace signatures {
 
-#define GENERIC_FUNCTION_GETTER_SIGNATURE_INCOMPLETE(function, name)																						\
-	class __FunctionGetter##name##;																												\
-	using FunctionGetter##name## =																												\
-		::llcpp::meta::traits::__traits__::FunctionGetterBase<																					\
+#define GENERIC_FUNCTION_GETTER_SIGNATURE_INCOMPLETE(function, name)	\
+	class __FunctionGetter##name##;										\
+	using FunctionGetter##name## =										\
+		::llcpp::meta::traits::__traits__::FunctionGetterBase<			\
 		::llcpp::meta::traits::signatures::__FunctionGetter##name##>
 
 GENERIC_FUNCTION_GETTER_SIGNATURE_INCOMPLETE(dummy, Dummy);
@@ -56,17 +54,9 @@ GENERIC_FUNCTION_GETTER_SIGNATURE_INCOMPLETE(swap, Swap);
 } // namespace signatures
 
 template<
-	class _ClassToCheck,
 	::llcpp::meta::attributes::function_attributes_t _ATTRIBUTES
 		= ::llcpp::meta::attributes::functional::CLASSIC,
-	class _FunctionGetter,	class... _Args
->
-class SignatureChecker;
-
-template<
-	::llcpp::meta::attributes::function_attributes_t _ATTRIBUTES
-		= ::llcpp::meta::attributes::functional::CLASSIC,
-	class _ReturnType = void, class... _Args
+	class _ReturnType = void, class... _FunctionArguments
 >
 class SignatureContainer;
 
@@ -76,7 +66,7 @@ template<
 		::llcpp::meta::attributes::functional::CONSTNOEXCEPTION,
 	class _FunctionGetter =
 		::llcpp::meta::traits::signatures::FunctionGetterDummy,
-	class... _Args
+	class... _FunctionArguments
 >
 class SignatureChecker;
 
@@ -86,7 +76,7 @@ template<
 		::llcpp::meta::attributes::functional::CONSTNOEXCEPTION,
 	class _FunctionGetter =
 		::llcpp::meta::traits::signatures::FunctionGetterDummy,
-	class _ReturnType = void, class... _Args
+	class _ReturnType = void, class... _FunctionArguments
 >
 class SignatureCheckerWithReturn;
 
@@ -132,7 +122,7 @@ class SignatureDummy {
 		using _MyType		= SignatureDummy;
 
 		// Types and enums
-		template<class... _Args>
+		template<class... _FunctionArguments>
 		using FillObject	= void;
 };
 
@@ -145,17 +135,17 @@ class FunctionGetterBase : public _Getter {
 
 	public:
 		// Types and enums
-		template<class ClassToCheck, class... Args>
-		using ReturnType = decltype(Getter::template get_return_type<ClassToCheck, Args...>(LL_NULLPTR));
+		template<class ClassToCheck, class... FunctionArguments>
+		using ReturnType = decltype(Getter::template get_return_type<ClassToCheck, FunctionArguments...>(LL_NULLPTR));
 
-		template<class ClassToCheck, class... Args>
+		template<class ClassToCheck, class... FunctionArguments>
 		using FunctionData = traits::IntegralConstantContainer<
 			::llcpp::meta::attributes::function_attributes_t,
 			::llcpp::meta::attributes::function_attributes_t::CUSTOM<
 				::std::is_const_v<ClassToCheck>,
-				decltype(Getter::template get_noexcept<ClassToCheck, Args...>(LL_NULLPTR))::value
+				decltype(Getter::template get_noexcept<ClassToCheck, FunctionArguments...>(LL_NULLPTR))::value
 			>,
-			decltype(Getter::template get_return_type<ClassToCheck, Args...>(LL_NULLPTR))
+			decltype(Getter::template get_return_type<ClassToCheck, FunctionArguments...>(LL_NULLPTR))
 		>;
 };
 
@@ -169,12 +159,12 @@ namespace signatures {
 		protected:																																\
 			template<class, class>																												\
 			static constexpr auto get_return_type(...) noexcept			-> llcpp::Emptyclass;													\
-			template<class T, class... Args>																									\
-			static constexpr auto get_return_type(T* c) noexcept		-> decltype(c->##function##(::std::declval<Args>()...));				\
+			template<class T, class... FunctionArguments>																									\
+			static constexpr auto get_return_type(T* c) noexcept		-> decltype(c->##function##(::std::declval<FunctionArguments>()...));				\
 			template<class, class>																												\
 			static constexpr auto get_noexcept(...) noexcept			-> std::false_type;														\
-			template<class T, class... Args>																									\
-			static constexpr auto get_noexcept(T* c) noexcept			-> std::bool_constant<noexcept(c->dummy(::std::declval<Args>()...))>;	\
+			template<class T, class... FunctionArguments>																									\
+			static constexpr auto get_noexcept(T* c) noexcept			-> std::bool_constant<noexcept(c->dummy(::std::declval<FunctionArguments>()...))>;	\
 	};																																			\
 	using FunctionGetter##name## =																												\
 		::llcpp::meta::traits::__traits__::FunctionGetterBase<																					\
@@ -188,7 +178,7 @@ GENERIC_FUNCTION_GETTER_SIGNATURE(swap, Swap);
 template<
 	class _ClassToCheck,
 	::llcpp::meta::attributes::function_attributes_t _ATTRIBUTES,
-	class _FunctionGetter,	class... _Args
+	class _FunctionGetter,	class... _FunctionArguments
 >
 class SignatureChecker;
 
@@ -197,7 +187,7 @@ class SignatureChecker;
 template<
 	::llcpp::meta::attributes::function_attributes_t _ATTRIBUTES
 		= ::llcpp::meta::attributes::functional::CLASSIC,
-	class _ReturnType = void, class... _Args
+	class _ReturnType = void, class... _FunctionArguments
 >
 class SignatureContainer {
 	public:
@@ -219,24 +209,24 @@ class SignatureContainer {
 		template<class T>
 		static constexpr auto get_signature(T*) noexcept {
 			if constexpr (ATTRIBUTES.CONST && ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(T::*)(_Args...) const noexcept>{};
+				return traits::TypeContainer<ReturnType(T::*)(_FunctionArguments...) const noexcept>{};
 			else if constexpr (!ATTRIBUTES.CONST && ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(T::*)(_Args...) noexcept>{};
+				return traits::TypeContainer<ReturnType(T::*)(_FunctionArguments...) noexcept>{};
 			else if constexpr (ATTRIBUTES.CONST && !ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(T::*)(_Args...) const>{};
+				return traits::TypeContainer<ReturnType(T::*)(_FunctionArguments...) const>{};
 			else //if constexpr (!ATTRIBUTES.CONST && !ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(T::*)(_Args...)>{};
+				return traits::TypeContainer<ReturnType(T::*)(_FunctionArguments...)>{};
 		}
 		template<>
 		static constexpr auto get_signature<void>(void*) noexcept {
 			if constexpr (ATTRIBUTES.CONST && ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(*)(_Args...) const noexcept>{};
+				return traits::TypeContainer<ReturnType(*)(_FunctionArguments...) const noexcept>{};
 			else if constexpr (!ATTRIBUTES.CONST && ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(*)(_Args...) noexcept>{};
+				return traits::TypeContainer<ReturnType(*)(_FunctionArguments...) noexcept>{};
 			else if constexpr (ATTRIBUTES.CONST && !ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(*)(_Args...) const>{};
+				return traits::TypeContainer<ReturnType(*)(_FunctionArguments...) const>{};
 			else //if constexpr (!ATTRIBUTES.CONST && !ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(*)(_Args...)>{};
+				return traits::TypeContainer<ReturnType(*)(_FunctionArguments...)>{};
 		}
 
 	public:
@@ -245,18 +235,31 @@ class SignatureContainer {
 		using Signature = typename decltype(_MyType::get_signature<ClassType>(LL_NULLPTR))::T;
 		// Fills a template with a parameter pack of signature arguments
 		template<class FunctionalityContainer>
-		using FillObject = typename FunctionalityContainer::template FillObject<_Args...>;
+		using FillObject = typename FunctionalityContainer::template FillObject<_FunctionArguments...>;
 		// Fills a template with attributes of signature arguments
 		template<class FunctionalityContainer>
 		using FillObjectAttr = typename FunctionalityContainer::template FillObjectAttr<_ATTRIBUTES>;
 		// Fills a template with a parameter pack and attributes of signature arguments
 		template<class FunctionalityContainer>
-		using FillObjectAll = typename FunctionalityContainer::template FillObjectAll<_ATTRIBUTES, _Args...>;
+		using FillObjectAll = typename FunctionalityContainer::template FillObjectAll<_ATTRIBUTES, _FunctionArguments...>;
 
 		template<class ClassToCheck, class FunctionGetter>
 		using GetSignatureChecker =
-			::llcpp::meta::traits::SignatureChecker<ClassToCheck, _ATTRIBUTES, FunctionGetter, _Args...>;
+			::llcpp::meta::traits::SignatureChecker<ClassToCheck, _ATTRIBUTES, FunctionGetter, _FunctionArguments...>;
 };
+
+template<class ReturnType, class... FunctionArguments>
+using SigatureNoexcept = SignatureContainer<::llcpp::meta::attributes::functional::NOEXCEPTION, ReturnType, FunctionArguments>;
+
+template<class ReturnType, class... FunctionArguments>
+using SignatureConst = SignatureContainer<::llcpp::meta::attributes::functional::CONST, ReturnType, FunctionArguments>;
+
+template<class ReturnType, class... FunctionArguments>
+using SignatureConstNoexcept = SignatureContainer<::llcpp::meta::attributes::functional::CONSTNOEXCEPTION, ReturnType, FunctionArguments>;
+
+// Alias for SignatureConstNoexcept
+template<class ReturnType, class... FunctionArguments>
+using SigCN = SignatureConstNoexcept<ReturnType, FunctionArguments>;
 
 #pragma endregion
 
@@ -276,7 +279,7 @@ template<
 		::llcpp::meta::attributes::functional::CONSTNOEXCEPTION,
 	class _FunctionGetter =
 		::llcpp::meta::traits::signatures::FunctionGetterDummy,
-	class... _Args
+	class... _FunctionArguments
 >
 class SignatureChecker {
 	public:
@@ -290,7 +293,7 @@ class SignatureChecker {
 		// Sets class to const if const reqired in signature
 		using ClassEditedByAttributes = ::llcpp::meta::traits::conditional_t<_ATTRIBUTES.CONST, const ClassToCheck, ClassToCheck>;
 		// Process data to get the container that will be processed to validate if is valid signature
-		using ResultContainer = FunctionGetter::template FunctionData<ClassEditedByAttributes, _Args...>;
+		using ResultContainer = FunctionGetter::template FunctionData<ClassEditedByAttributes, _FunctionArguments...>;
 
 	public:
 		// Expresions
@@ -317,13 +320,13 @@ template<
 		::llcpp::meta::attributes::functional::CONSTNOEXCEPTION,
 	class _FunctionGetter =
 		::llcpp::meta::traits::signatures::FunctionGetterDummy,
-	class _ReturnType = void, class... _Args
+	class _ReturnType = void, class... _FunctionArguments
 >
-class SignatureCheckerWithReturn : public SignatureChecker<_ClassToCheck, _ATTRIBUTES, _FunctionGetter, _Args...> {
+class SignatureCheckerWithReturn : public SignatureChecker<_ClassToCheck, _ATTRIBUTES, _FunctionGetter, _FunctionArguments...> {
 	public:
 		// Class related
 		using _MyType			= SignatureCheckerWithReturn;
-		using SignatureChecker	= SignatureChecker<_ClassToCheck, _ATTRIBUTES, _FunctionGetter, _Args...>;
+		using SignatureChecker	= SignatureChecker<_ClassToCheck, _ATTRIBUTES, _FunctionGetter, _FunctionArguments...>;
 
 		// Types and enums
 		using ClassToCheck		= _ClassToCheck;

@@ -47,6 +47,9 @@ class ConditionalValue<llcpp::FALSE, _T, _U, _ELEM_1, _ELEM_2>;
 template<class _T, class _U, class _OnEqual = llcpp::Emptyclass>
 class CompareConditional;
 
+template<class _T>
+class RangeChecker;
+
 } // namespace traits
 } // namespace meta
 } // namespace llcpp
@@ -73,6 +76,7 @@ class CompareConditional;
 namespace llcpp {
 
 // [TOFIX]
+// Update types to Integer
 using i128 = ::std::pair<i64, i64>;
 using i256 = ::std::pair<i128, i128>;
 

@@ -7,6 +7,10 @@
 //	Version: 11.0							//
 //////////////////////////////////////////////
 
+#include "../defines/definitions.hpp"
+
+#if !defined(__LL_DEPRECATED__)
+
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSSELECTION_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSSELECTION_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSSELECTION_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
@@ -59,10 +63,10 @@ namespace traits {
 // Returns a type that coincides with one given
 // get_conincidence<X, Args..> where:
 //	X		-> Type to find
-//	Args... -> all arguments to find stored in a traits::double_type_container<T, U> where:
+//	Args... -> all arguments to find stored in a traits::DoubleTypeContainer<T, U> where:
 //		T -> type to compare with X
 //		U -> type to return if X is same type as T
-template<class _VoidType = llcpp::Emptyclass>
+template<class _VoidType = ::llcpp::Emptyclass>
 struct type_selection {
 	// Class related
 	using _MyType	= type_selection;
@@ -75,19 +79,19 @@ struct type_selection {
 	__LL_NODISCARD__ static constexpr auto get_by_type() noexcept {
 		// [TOFIX]
 		// Insert here a static_assert to check if args are double containers type
-		if constexpr (std::is_same_v<typename T::T, X>)
-			return traits::type_container<typename T::U>{};
+		if constexpr (::std::is_same_v<typename T::T, X>)
+			return traits::TypeContainer<typename T::U>{};
 		else return _MyType::get_by_type<X, Args...>();
 	}
 	template<class X, class T>
 	__LL_NODISCARD__ static constexpr auto get_by_type() noexcept {
-		if constexpr (std::is_same_v<typename T::T, X>)
-			return traits::type_container<typename T::U>{};
-		else return traits::type_container<VoidType>{};
+		if constexpr (::std::is_same_v<typename T::T, X>)
+			return traits::TypeContainer<typename T::U>{};
+		else return traits::TypeContainer<VoidType>{};
 	}
 	template<class X>
 	__LL_NODISCARD__ static constexpr auto get_by_type() noexcept {
-		return traits::type_container<VoidType>{};
+		return traits::TypeContainer<VoidType>{};
 	}
 	template<class X, class... Args>
 	using get_conincidence = decltype(_MyType::get_by_type<X, Args...>())::T;
@@ -97,14 +101,14 @@ struct type_selection {
 		// [TOFIX]
 		// Insert here a static_assert to check if args are double containers type
 		if constexpr (T::VALUE)
-			return traits::type_container<typename T::U>{};
+			return traits::TypeContainer<typename T::U>{};
 		else return _MyType::get_by_condition<Args...>();
 	}
 	template<class T>
 	__LL_NODISCARD__ static constexpr auto get_by_condition() noexcept {
 		if constexpr (T::VALUE)
-			return traits::type_container<typename T::U>{};
-		else return traits::type_container<VoidType>{};
+			return traits::TypeContainer<typename T::U>{};
+		else return traits::TypeContainer<VoidType>{};
 	}
 	template<class... Args>
 	using get_conincidence_condition = decltype(_MyType::get_by_condition<Args...>())::T;
@@ -114,30 +118,23 @@ struct type_selection {
 	__LL_NODISCARD__ static constexpr auto get_first_difference_f() noexcept {
 		// [TOFIX]
 		// Insert here a static_assert to check if args are double containers type
-		if constexpr (!std::is_same_v<typename T::T, X>)
-			return traits::type_container<typename T::U>{};
+		if constexpr (!::std::is_same_v<typename T::T, X>)
+			return traits::TypeContainer<typename T::U>{};
 		else return _MyType::get_by_type<X, Args...>();
 	}
 	template<class X, class T>
 	__LL_NODISCARD__ static constexpr auto get_first_difference_f() noexcept {
-		if constexpr (!std::is_same_v<typename T::T, X>)
-			return traits::type_container<typename T::U>{};
-		else return traits::type_container<VoidType>{};
+		if constexpr (!::std::is_same_v<typename T::T, X>)
+			return traits::TypeContainer<typename T::U>{};
+		else return traits::TypeContainer<VoidType>{};
 	}
 	template<class X>
 	__LL_NODISCARD__ static constexpr auto get_first_difference_f() noexcept {
-		return traits::type_container<VoidType>{};
+		return traits::TypeContainer<VoidType>{};
 	}
 	template<class X, class... Args>
 	using get_first_difference = decltype(_MyType::get_first_difference_f<X, Args...>())::T;
 };
-
-template<class T, class TypeChar, class TypeWChar, class ExtraType = llcpp::Emptyclass>
-using get_by_char_type_t = traits::type_selection<ExtraType>::get_conincidence<
-	T,
-	traits::double_type_container<ll_char_t, TypeChar>,
-	traits::double_type_container<ll_wchar_t, TypeWChar>
->;
 
 } // namespace traits
 } // namespace meta
@@ -153,3 +150,5 @@ using get_by_char_type_t = traits::type_selection<ExtraType>::get_conincidence<
 #if defined(LLANYLIB_ERROR_HPP_)
 	#undef LLANYLIB_ERROR_HPP_
 #endif // LLANYLIB_ERROR_HPP_
+
+#endif // __LL_DEPRECATED__

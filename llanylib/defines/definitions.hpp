@@ -46,6 +46,8 @@
 
 // Definitions
 #define LL_NULLPTR nullptr
+// Undef this to activate deprecated functionality in any header
+#define __LL_DEPRECATED__
 //#define __LL_EXCEPT___ noexcept(true)
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 

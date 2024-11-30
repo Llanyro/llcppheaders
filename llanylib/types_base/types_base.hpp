@@ -27,47 +27,49 @@
 namespace llcpp {
 
 #pragma region Standard
-/*
- *	32 bits
- *	char 		Bytes 1 : -128 to 127												-> 255
- *	short 		Bytes 2 : -32,768 to 32,767											-> 65,535
- *	int 		Bytes 4 : -2,147,483,648 to 2,147,483,647							-> 4,294,967,295
- *	long 		Bytes 4 : -2,147,483,648 to 2,147,483,647							-> 4,294,967,295
- *	long long	Bytes 8 : -9,223,372,036,854,775,808 to 9,223,372,036,854,775,808	-> 18,446,744,073,709,551,615
- *
- *	64 bits
- *	char 		Bytes 1 : -128 to 127												-> 255
- *	short 		Bytes 2 : -32,768 to 32,767											-> 65,535
- *	int 		Bytes 4 : -2,147,483,648 to 2,147,483,647							-> 4,294,967,295
- *	long 		Bytes 8 : -9,223,372,036,854,775,808 to 9,223,372,036,854,775,808	-> 18,446,744,073,709,551,615
- *	long long	Bytes 8 : -9,223,372,036,854,775,808 to 9,223,372,036,854,775,808	-> 18,446,744,073,709,551,615
- *
- *	32 & 64 bits
- *	float		Bytes 4 :
- *	double		Bytes 8 :
- *	long double	Bytes 16:
-*/
-// Signed
+//
+//	32 bits
+//	char 		Bytes 1 : -128 to 127												-> 255
+//	short 		Bytes 2 : -32,768 to 32,767											-> 65,535
+//	int 		Bytes 4 : -2,147,483,648 to 2,147,483,647							-> 4,294,967,295
+//	long 		Bytes 4 : -2,147,483,648 to 2,147,483,647							-> 4,294,967,295
+//	long long	Bytes 8 : -9,223,372,036,854,775,808 to 9,223,372,036,854,775,808	-> 18,446,744,073,709,551,615
+//
+//	64 bits
+//	char 		Bytes 1 : -128 to 127												-> 255
+//	short 		Bytes 2 : -32,768 to 32,767											-> 65,535
+//	int 		Bytes 4 : -2,147,483,648 to 2,147,483,647							-> 4,294,967,295
+//	long 		Bytes 8 : -9,223,372,036,854,775,808 to 9,223,372,036,854,775,808	-> 18,446,744,073,709,551,615
+//	long long	Bytes 8 : -9,223,372,036,854,775,808 to 9,223,372,036,854,775,808	-> 18,446,744,073,709,551,615
+//
+//	32 & 64 bits
+//	float		Bytes 4 :
+//	double		Bytes 8 :
+//	long double	Bytes 16:
+//
+
+/// Signed
 using ll_char_t			= char;
 using ll_short_t		= short;
 using ll_int_t			= int;
 using ll_long_t			= long;
 using ll_longlong_t		= long long;
 
-// Unsigned
+/// Unsigned
 using ll_uchar_t		= unsigned char;
 using ll_ushort_t		= unsigned short;
 using ll_uint_t			= unsigned int;
 using ll_ulong_t		= unsigned long;
 using ll_ulonglong_t	= unsigned long long;
 
-// Floating-point
+/// Floating-point
 using ll_float_t		= float;
 using ll_double_t		= double;
 using ll_longdouble_t	= long double;
 
-// Other
+/// Other
 using ll_wchar_t		= wchar_t;
+using ll_bool_t			= bool;
 
 // Simplified Signed
 using i8				= ll_char_t;
@@ -95,9 +97,8 @@ using ll_wstring_t		= const ll_wchar_t*;	// Used to point to non editable string
 /// [DEPRECATED] Unsigned char sometimes crashes Visual Studio IntelliSense using traits
 using ll_ustring_t		= const ll_uchar_t*;	// Used to point to non editable unsigned strings 
 
-using ll_lib_t = void*;							// Handle for dynamic library linked/shared objects
+using ll_lib_t			= void*;				// Handle for dynamic library linked/shared objects
 
-using ll_bool_t = bool;
 
 #pragma region BytesTypes
 using size_bytes8_t		= u8;
@@ -151,8 +152,8 @@ class function;
 template <class T1, class T2>
 struct pair;
 
-template <class _Ty>
-class optional;
+//template <class _Ty>
+//class optional;
 
 namespace filesystem {
 class directory_entry;

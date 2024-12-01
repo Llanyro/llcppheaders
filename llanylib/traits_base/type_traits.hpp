@@ -114,6 +114,7 @@ using double_type_container_t = ::llcpp::meta::traits::DoubleTypeContainer<_T, _
 template<class _T, class _U>
 using double_type_container_u = ::llcpp::meta::traits::DoubleTypeContainer<_T, _U>::U;
 
+// Can contain 2 types an one constant
 template<class _T, _T _VALUE, class _U>
 class IntegralConstantContainer {
 	public:
@@ -140,10 +141,16 @@ __LL_VAR_INLINE__ constexpr _T integral_constant_container_v = traits::IntegralC
 #pragma endregion
 #pragma region LogicContainers
 
+template<ll_bool_t VALUE, class U>
+using BoolConstantContainer = ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, VALUE, U>;
+
 template<class T, class U, class W>
-using IsSameTypeContainer = ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, ::std::is_same_v<T, U>, W>;
+using IsSameTypeContainer = ::llcpp::meta::traits::BoolConstantContainer<::std::is_same_v<T, U>, W>;
 template<class T, class U, class W>
-using IsNotSameTypeContainer = ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, !::std::is_same_v<T, U>, W>;
+using IsNotSameTypeContainer = ::llcpp::meta::traits::BoolConstantContainer<!::std::is_same_v<T, U>, W>;
+
+using TrueContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::TRUE, ::llcpp::Emptyclass>;
+using FalseContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::TRUE, ::llcpp::Emptyclass>;
 
 #pragma endregion
 #pragma region Conditional
@@ -263,7 +270,7 @@ using type_smaller_of_two_t = ::llcpp::meta::traits::CompareConditional<T, U, On
 template<class T, class... Args>
 using GetFirstCoincidence = std::disjunction<
 	::llcpp::meta::traits::IsSameTypeContainer<T, typename Args::T, typename Args::U>...,
-	::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, ::llcpp::TRUE, llcpp::Emptyclass>
+	::llcpp::meta::traits::TrueContainerEmptyClass
 >;
 
 template<class T, class TypeChar, class TypeWChar>
@@ -283,7 +290,7 @@ using get_by_char_type_u = ::llcpp::meta::traits::GetByCharType<T, TypeChar, Typ
 template<class T, class... Args>
 using GetFirstDifference = std::conjunction<
 	::llcpp::meta::traits::IsSameTypeContainer<T, typename Args::T, typename Args::U>...,
-	::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, ::llcpp::TRUE, llcpp::Emptyclass>
+	::llcpp::meta::traits::TrueContainerEmptyClass
 >;
 
 template<class T, class... Args>

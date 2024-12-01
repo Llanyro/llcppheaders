@@ -55,10 +55,10 @@ using StandardComparation = std::strong_ordering;
 
 namespace llcpp {
 
-class Emptyclass				{ using _MyType = Emptyclass; };
+class Emptyclass				{ public: using _MyType = Emptyclass; };
 // When using incomplete lib && some type is not possible to exist but using complete lib
 //	this type will be used
-class UndefinedIncompleteObject	{ using _MyType = UndefinedIncompleteObject; };
+class UndefinedIncompleteObject	{ public: using _MyType = UndefinedIncompleteObject; };
 
 using Void						= ::llcpp::Emptyclass;
 

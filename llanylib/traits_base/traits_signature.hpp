@@ -42,14 +42,13 @@ class FunctionGetterBase;
 } // namespace __traits__
 namespace signatures {
 
-#define GENERIC_FUNCTION_GETTER_SIGNATURE_INCOMPLETE(function, name)	\
-	class __FunctionGetter##name##;										\
-	using FunctionGetter##name## =										\
-		::llcpp::meta::traits::__traits__::FunctionGetterBase<			\
-		::llcpp::meta::traits::signatures::__FunctionGetter##name##>
-
-GENERIC_FUNCTION_GETTER_SIGNATURE_INCOMPLETE(dummy, Dummy);
-GENERIC_FUNCTION_GETTER_SIGNATURE_INCOMPLETE(swap, Swap);
+#if !defined(__LL_GENERIC_FUNCTION_GETTER_SIGNATURE)
+#define __LL_GENERIC_FUNCTION_GETTER_SIGNATURE(function, name)	\
+	class __Get##name##;										\
+	using FunctionGetter##name## =								\
+		::llcpp::meta::traits::__traits__::FunctionGetterBase<	\
+		::llcpp::meta::traits::signatures::__Get##name##>
+#endif // __LL_GENERIC_FUNCTION_GETTER_SIGNATURE
 
 } // namespace signatures
 
@@ -152,26 +151,120 @@ class FunctionGetterBase : public _Getter {
 } // namespace __traits__
 namespace signatures {
 
-#define GENERIC_FUNCTION_GETTER_SIGNATURE(function, name)																						\
-	class __FunctionGetter##name## {																											\
-		public:																																	\
-			using _MyType = __FunctionGetter##name##;																							\
-		protected:																																\
-			template<class, class>																												\
-			static constexpr auto get_return_type(...) noexcept			-> llcpp::Emptyclass;													\
-			template<class T, class... FunctionArguments>																									\
-			static constexpr auto get_return_type(T* c) noexcept		-> decltype(c->##function##(::std::declval<FunctionArguments>()...));				\
-			template<class, class>																												\
-			static constexpr auto get_noexcept(...) noexcept			-> std::false_type;														\
-			template<class T, class... FunctionArguments>																									\
-			static constexpr auto get_noexcept(T* c) noexcept			-> std::bool_constant<noexcept(c->dummy(::std::declval<FunctionArguments>()...))>;	\
-	};																																			\
-	using FunctionGetter##name## =																												\
-		::llcpp::meta::traits::__traits__::FunctionGetterBase<																					\
-		::llcpp::meta::traits::signatures::__FunctionGetter##name##>
+#pragma region Signatures
 
-GENERIC_FUNCTION_GETTER_SIGNATURE(dummy, Dummy);
-GENERIC_FUNCTION_GETTER_SIGNATURE(swap, Swap);
+#if defined(__LL_GENERIC_FUNCTION_GETTER_SIGNATURE)
+#undef __LL_GENERIC_FUNCTION_GETTER_SIGNATURE
+#endif
+
+#define __LL_GENERIC_FUNCTION_GETTER_SIGNATURE(function, name)											\
+	class __Get##name## {																				\
+		public:																							\
+			using _MyType = __Get##name##;																\
+		public:																							\
+			template<class, class...>																	\
+			static constexpr auto get_return_type(...) noexcept			-> llcpp::Emptyclass;			\
+			template<class T, class... FunctionArguments>												\
+			static constexpr auto get_return_type(T* c) noexcept		->								\
+				decltype(c->##function##(::std::declval<FunctionArguments>()...));						\
+			template<class, class...>																	\
+			static constexpr auto get_noexcept(...) noexcept			-> std::false_type;				\
+			template<class T, class... FunctionArguments>												\
+			static constexpr auto get_noexcept(T* c) noexcept			->								\
+				std::bool_constant<noexcept(c->##function##(::std::declval<FunctionArguments>()...))>;	\
+	};																									\
+	using Get##name## =																					\
+		::llcpp::meta::traits::__traits__::FunctionGetterBase<											\
+		::llcpp::meta::traits::signatures::__Get##name##>
+
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1								\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(dummy, Dummy);						\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(swap, Swap);							\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(hash, Hash);							\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(clear, Clear);						\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(copy, Copy);							\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(move, Move);							\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(compareEQ, CompareEQ);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(compareNEQ, CompareNEQ);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(compare, Compare)
+
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_2								\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(predestruction, Predestruction);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(nodeChecker, NodeChecker);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(compareNode, CompareNode);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(die, Die);							\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(combine, Combine);					\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(begin, Begin);						\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(end, End);							\
+
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_3								\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator==, OperatorEQ);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator!=, OperatorNEQ);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator>, OperatorGreater);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator<, OperatorLower);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator>=, OperatorGEQ);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator<=, OperatorLEQ);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator<=>, OperatorCompare)
+
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_4								\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator+, OperatorSum);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator-, OperatorSub);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator*, OperatorMult);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator/, OperatorDiv);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator+=, OperatorSelfSum);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator-=, OperatorSelfSub);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator*=, OperatorSelfMult);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator/=, OperatorSelfDiv);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator++, OperatorIncrement);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator--, OperatorDecrement)
+
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_5								\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator&&, OperatorAnd);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator||, OperatorOr);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator!, OperatorNot);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator->, OperatorArrow);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator(), OperatorFunctionCall);	\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator new, OperatorNew);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator new[], OperatorNewArray);	\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator new, OperatorDelete);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator new[], OperatorDeleteArray)
+
+//	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator,, OperatorComma)
+
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_6								\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator%, OperatorModulus);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator&, BitwiseAnd);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator|, BitwiseOr);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator^, BitwiseXor);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator<<, BitwiseShiftLeft);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator>>, BitwiseShiftRight);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator~, BitwiseNot)
+
+#define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_7								\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator%=, OperatorSelftModulus);	\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator&=, BitwiseSelftAnd);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator|=, BitwiseSelftOr);			\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator^=, BitwiseSelftXor);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator<<=, BitwiseSelftShiftLeft);	\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(operator>>=, BitwiseSelftShiftRight)
+
+__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1;
+__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_2;
+__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_3;
+__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_4;
+__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_5;
+__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_6;
+__LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_7;
+
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_2
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_3
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_4
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_5
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_6
+#undef __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_7
+
+#pragma endregion
 
 } // namespace signatures
 
@@ -197,7 +290,7 @@ class SignatureContainer {
 
 	public:
 		// Expresions
-		::llcpp::meta::attributes::function_attributes_t ATTRIBUTES = _ATTRIBUTES;
+		static constexpr ::llcpp::meta::attributes::function_attributes_t ATTRIBUTES = _ATTRIBUTES;
 
 	public:
 		// Asseerts
@@ -219,12 +312,8 @@ class SignatureContainer {
 		}
 		template<>
 		static constexpr auto get_signature<void>(void*) noexcept {
-			if constexpr (ATTRIBUTES.CONST && ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(*)(_FunctionArguments...) const noexcept>{};
-			else if constexpr (!ATTRIBUTES.CONST && ATTRIBUTES.NOEXCEPTION)
+			if constexpr (ATTRIBUTES.NOEXCEPTION)
 				return traits::TypeContainer<ReturnType(*)(_FunctionArguments...) noexcept>{};
-			else if constexpr (ATTRIBUTES.CONST && !ATTRIBUTES.NOEXCEPTION)
-				return traits::TypeContainer<ReturnType(*)(_FunctionArguments...) const>{};
 			else //if constexpr (!ATTRIBUTES.CONST && !ATTRIBUTES.NOEXCEPTION)
 				return traits::TypeContainer<ReturnType(*)(_FunctionArguments...)>{};
 		}
@@ -233,6 +322,7 @@ class SignatureContainer {
 		// Signature generate by class provided
 		template<class ClassType>
 		using Signature = typename decltype(_MyType::get_signature<ClassType>(LL_NULLPTR))::T;
+
 		// Fills a template with a parameter pack of signature arguments
 		template<class FunctionalityContainer>
 		using FillObject = typename FunctionalityContainer::template FillObject<_FunctionArguments...>;
@@ -249,17 +339,17 @@ class SignatureContainer {
 };
 
 template<class ReturnType, class... FunctionArguments>
-using SigatureNoexcept = SignatureContainer<::llcpp::meta::attributes::functional::NOEXCEPTION, ReturnType, FunctionArguments>;
+using SigatureNoexcept = SignatureContainer<::llcpp::meta::attributes::functional::NOEXCEPTION, ReturnType, FunctionArguments...>;
 
 template<class ReturnType, class... FunctionArguments>
-using SignatureConst = SignatureContainer<::llcpp::meta::attributes::functional::CONST, ReturnType, FunctionArguments>;
+using SignatureConst = SignatureContainer<::llcpp::meta::attributes::functional::CONST, ReturnType, FunctionArguments...>;
 
 template<class ReturnType, class... FunctionArguments>
-using SignatureConstNoexcept = SignatureContainer<::llcpp::meta::attributes::functional::CONSTNOEXCEPTION, ReturnType, FunctionArguments>;
+using SignatureConstNoexcept = SignatureContainer<::llcpp::meta::attributes::functional::CONSTNOEXCEPTION, ReturnType, FunctionArguments...>;
 
 // Alias for SignatureConstNoexcept
 template<class ReturnType, class... FunctionArguments>
-using SigCN = SignatureConstNoexcept<ReturnType, FunctionArguments>;
+using SigCN = SignatureConstNoexcept<ReturnType, FunctionArguments...>;
 
 #pragma endregion
 
@@ -278,7 +368,7 @@ template<
 	::llcpp::meta::attributes::function_attributes_t _ATTRIBUTES =
 		::llcpp::meta::attributes::functional::CONSTNOEXCEPTION,
 	class _FunctionGetter =
-		::llcpp::meta::traits::signatures::FunctionGetterDummy,
+		::llcpp::meta::traits::signatures::GetDummy,
 	class... _FunctionArguments
 >
 class SignatureChecker {
@@ -308,8 +398,8 @@ class SignatureChecker {
 	protected:
 		template<class ReturnType>
 		static constexpr ll_bool_t IS_VALID =
-			SignatureChecker::IS_VALID_SIGNATURE_AND_ATTRIBUTES
-			&& std::is_same_v<typename SignatureChecker::ReturnType, ReturnType>;
+			_MyType::IS_VALID_SIGNATURE_AND_ATTRIBUTES
+			&& std::is_same_v<_MyType::ReturnType, ReturnType>;
 };
 
 // This utility has some blind points
@@ -319,7 +409,7 @@ template<
 	::llcpp::meta::attributes::function_attributes_t _ATTRIBUTES =
 		::llcpp::meta::attributes::functional::CONSTNOEXCEPTION,
 	class _FunctionGetter =
-		::llcpp::meta::traits::signatures::FunctionGetterDummy,
+		::llcpp::meta::traits::signatures::GetDummy,
 	class _ReturnType = void, class... _FunctionArguments
 >
 class SignatureCheckerWithReturn : public SignatureChecker<_ClassToCheck, _ATTRIBUTES, _FunctionGetter, _FunctionArguments...> {
@@ -350,7 +440,7 @@ class SignatureCheckerWithReturn : public SignatureChecker<_ClassToCheck, _ATTRI
 template<
 	class _ClassToCheck,
 	class _SignatureContainer,
-	class _FunctionGetter = ::llcpp::meta::traits::signatures::FunctionGetterDummy
+	class _FunctionGetter = ::llcpp::meta::traits::signatures::GetDummy
 >
 class SignatureCheckerBySignature : public _SignatureContainer::template GetSignatureChecker<_ClassToCheck, _FunctionGetter> {
 	public:
@@ -367,9 +457,6 @@ class SignatureCheckerBySignature : public _SignatureContainer::template GetSign
 	public:
 		// Expresions
 		static constexpr ::llcpp::meta::attributes::function_attributes_t ATTRIBUTES = SignatureChecker::ATTRIBUTES;
-
-	public:
-		// Asserts
 
 	public:
 		// Functional

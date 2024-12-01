@@ -84,10 +84,6 @@ __LL_VAR_INLINE__ constexpr _MyType CONSTNOEXCEPTION	= { llcpp::TRUE,  llcpp::TR
 
 } // namespace functional
 
-ll_bool_t operator==(function_attributes_t&, function_attributes_t&) noexcept {
-	return false;
-}
-
 } // namespace attributes
 } // namespace meta
 } // namespace llcpp

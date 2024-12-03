@@ -463,6 +463,19 @@ class SignatureCheckerBySignature : public _SignatureContainer::template GetSign
 		static constexpr ll_bool_t IS_VALID = SignatureChecker::template IS_VALID<ReturnType>;
 };
 
+namespace signature_easy {
+
+template<class T, class U>
+using return_strong_ordening_function_easy_t =
+	::llcpp::meta::traits::SignatureChecker<
+		T,
+		::llcpp::meta::attributes::functional::CONSTNOEXCEPTION,
+		::llcpp::meta::traits::signatures::GetOperatorCompare,
+		U
+	>::ReturnType;
+
+} // namespace signature_easy
+
 } // namespace traits
 } // namespace meta
 } // namespace llcpp

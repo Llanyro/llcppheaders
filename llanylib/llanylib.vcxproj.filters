@@ -22,9 +22,6 @@
     <Filter Include="Source Files\old\examples">
       <UniqueIdentifier>{da89fac3-1e0d-4172-878f-b633106c7eda}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\v10\types">
-      <UniqueIdentifier>{127ec860-0183-4786-98b2-0b7355c8ec60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\v10\math">
       <UniqueIdentifier>{f277ab28-188d-472b-899a-b8d6d56d61e4}</UniqueIdentifier>
     </Filter>
@@ -45,9 +42,6 @@
     </Filter>
     <Filter Include="Source Files\v10\traits_extra">
       <UniqueIdentifier>{0d171803-1e87-4fca-8875-fbf104f5d56f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\v10\traits_base">
-      <UniqueIdentifier>{f19c8069-e1c6-4f88-8671-d702e6980ef1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\v10\utils\parser">
       <UniqueIdentifier>{ca964027-8951-4f6a-bcbe-9a90697bffd1}</UniqueIdentifier>
@@ -120,13 +114,7 @@
     <ClInclude Include="traits_extra\traits_return_getters.hpp">
       <Filter>Source Files\v10\traits_extra</Filter>
     </ClInclude>
-    <ClInclude Include="traits_extra\traits_object_checker.hpp">
-      <Filter>Source Files\v10\traits_extra</Filter>
-    </ClInclude>
     <ClInclude Include="traits_extra\traits_old.hpp">
-      <Filter>Source Files\v10\traits_extra</Filter>
-    </ClInclude>
-    <ClInclude Include="traits_extra\traits_comparations.hpp">
       <Filter>Source Files\v10\traits_extra</Filter>
     </ClInclude>
     <ClInclude Include="parser\TLVParser.hpp">
@@ -171,17 +159,11 @@
     <ClInclude Include="traits_base\traits_signature.hpp">
       <Filter>Source Files\v11\3 traits_base</Filter>
     </ClInclude>
-    <ClInclude Include="traits_base\traits_type_update.hpp">
+    <ClInclude Include="traits_base\traits_type_modifier.hpp">
       <Filter>Source Files\v11\3 traits_base</Filter>
     </ClInclude>
     <ClInclude Include="traits_base\type_traits.hpp">
       <Filter>Source Files\v11\3 traits_base</Filter>
-    </ClInclude>
-    <ClInclude Include="traits_base\traits_limits.hpp">
-      <Filter>Source Files\v11\3 traits_base</Filter>
-    </ClInclude>
-    <ClInclude Include="traits_extra\traits_type_wrapper.hpp">
-      <Filter>Source Files\v11\5 traits_extra</Filter>
     </ClInclude>
     <ClInclude Include="utils_base\Array.hpp">
       <Filter>Source Files\v11\4 utils_base</Filter>
@@ -194,6 +176,21 @@
     </ClInclude>
     <ClInclude Include="types_base\Position.hpp">
       <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\checker_attributes.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="types_base\type_update.hpp">
+      <Filter>Source Files\v11\2 types_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_type_wrapper.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_compare.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\traits_object_checker.hpp">
+      <Filter>Source Files\v11\3 traits_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

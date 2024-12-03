@@ -7,20 +7,20 @@
 //	Version: 11.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSCOMPARATION_INCOMPLETE_HPP_)
-	#if LLANYLIB_TRAITSCOMPARATION_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSCOMPARATION_INCOMPLETE_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSCOMPARE_INCOMPLETE_HPP_)
+	#if LLANYLIB_TRAITSCOMPARE_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSCOMPARE_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "traits_comparations.hpp(incomplete) version error!"
 		#else
 			#error "traits_comparations.hpp(incomplete) version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
-	#endif // LLANYLIB_TRAITSCOMPARATION_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSCOMPARATION_INCOMPLETE_MINOR_
+	#endif // LLANYLIB_TRAITSCOMPARE_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSCOMPARE_INCOMPLETE_MINOR_
 
-#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSCOMPARATION_INCOMPLETE_HPP_)
-#define LLANYLIB_TRAITSCOMPARATION_INCOMPLETE_HPP_
-#define LLANYLIB_TRAITSCOMPARATION_INCOMPLETE_MAYOR_ 11
-#define LLANYLIB_TRAITSCOMPARATION_INCOMPLETE_MINOR_ 0
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSCOMPARE_INCOMPLETE_HPP_)
+#define LLANYLIB_TRAITSCOMPARE_INCOMPLETE_HPP_
+#define LLANYLIB_TRAITSCOMPARE_INCOMPLETE_MAYOR_ 11
+#define LLANYLIB_TRAITSCOMPARE_INCOMPLETE_MINOR_ 0
 
 #include "../types_base/Boolean.hpp"
 #include "../types_base/Cluster.hpp"
@@ -51,24 +51,25 @@ class IsDifferenciable;
 } // namespace meta
 } // namespace llcpp
 
-#elif defined(LLANYLIB_TRAITSCOMPARATION_HPP_)
-	#if LLANYLIB_TRAITSCOMPARATION_MAYOR_ != 11 || LLANYLIB_TRAITSCOMPARATION_MINOR_ < 0
+#elif defined(LLANYLIB_TRAITSCOMPARE_HPP_)
+	#if LLANYLIB_TRAITSCOMPARE_MAYOR_ != 11 || LLANYLIB_TRAITSCOMPARE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "traits_comparations.hpp version error!"
 		#else
 			#error "traits_comparations.hpp version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
-	#endif // LLANYLIB_TRAITSCOMPARATION_MAYOR_ || LLANYLIB_TRAITSCOMPARATION_MINOR_
+	#endif // LLANYLIB_TRAITSCOMPARE_MAYOR_ || LLANYLIB_TRAITSCOMPARE_MINOR_
 
 #else
-#define LLANYLIB_TRAITSCOMPARATION_HPP_
-#define LLANYLIB_TRAITSCOMPARATION_MAYOR_ 11
-#define LLANYLIB_TRAITSCOMPARATION_MINOR_ 0
+#define LLANYLIB_TRAITSCOMPARE_HPP_
+#define LLANYLIB_TRAITSCOMPARE_MAYOR_ 11
+#define LLANYLIB_TRAITSCOMPARE_MINOR_ 0
 
 #include "../types_base/Boolean.hpp"
 #include "../types_base/Cluster.hpp"
 #include "traits_signature.hpp"
+#include "traits_type_wrapper.hpp"
 
 #include <string_view>
 #include <typeinfo>
@@ -109,28 +110,30 @@ class IsComparable : public llcpp::meta::Cluster, public _ExtraFunctions {
 		using Cluster			= ::llcpp::meta::Cluster;		// This is a cluster type class
 
 		// Types and enums
-		using T			= _T;							// Element to compare by
-		using U			= _U;							// Element to compare to
-		using Boolean	= _Boolean;						// Boolean class Type
-		using t_cinput	= ::llcpp::meta::traits::cinput<T>;
-		using u_cinput	= ::llcpp::meta::traits::cinput<U>;
+		using T					= _T;											// Element to compare by
+		using U					= _U;											// Element to compare to
+		using WrappedT			= ::llcpp::meta::traits::PrimitiveWrapper<T>;	// T wrapped if primitive
+		using Boolean			= _Boolean;										// Boolean class Type
+		using t_cinput			= ::llcpp::meta::traits::cinput<T>;				// T type as const type
+		using u_cinput			= ::llcpp::meta::traits::cinput<U>;				// U type as const type
 
 		// Signature types prep
-		using FunctionEQCompare_T		= ::llcpp::meta::traits::signatures::GetOperatorEQ;
-		using FunctionNEQCompare_T		= ::llcpp::meta::traits::signatures::GetOperatorEQ;
-		using FunctionCompareEQ_E		= ::llcpp::meta::traits::signatures::GetCompareEQ;
-		using FunctionCompareNEQ_E		= ::llcpp::meta::traits::signatures::GetCompareNEQ;
-
 		template<class Signature, class Function>
-		using SignatureCheck_T		= ::llcpp::meta::traits::SignatureCheckerBySignature<T, Signature, Function>;
+		using SignatureCheck_T		= ::llcpp::meta::traits::SignatureCheckerBySignature<WrappedT, Signature, Function>;
 		template<class Signature, class Function>
 		using SignatureCheck_E		= ::llcpp::meta::traits::SignatureCheckerBySignature<ExtraFunctions, Signature, Function>;
 
-		// Signarures
-		using BoolSignature_T		= ::llcpp::meta::traits::SigCN<ll_bool_t, u_cinput>;
-		using BooleanSignature_T	= ::llcpp::meta::traits::SigCN<Boolean, u_cinput>;
-		using BoolSignature_E		= ::llcpp::meta::traits::SigCN<ll_bool_t, t_cinput, u_cinput>;
-		using BooleanSignature_E	= ::llcpp::meta::traits::SigCN<Boolean, t_cinput, u_cinput>;
+		// Signatures
+		using FunctionEQCompare_T			= ::llcpp::meta::traits::signatures::GetOperatorEQ;
+		using FunctionNEQCompare_T			= ::llcpp::meta::traits::signatures::GetOperatorEQ;
+		using FunctionCompareEQ_E			= ::llcpp::meta::traits::signatures::GetCompareEQ;
+		using FunctionCompareNEQ_E			= ::llcpp::meta::traits::signatures::GetCompareNEQ;
+
+		// Signarure containerss
+		using BoolSignature_T				= ::llcpp::meta::traits::SigCN<ll_bool_t, u_cinput>;
+		using BooleanSignature_T			= ::llcpp::meta::traits::SigCN<Boolean, u_cinput>;
+		using BoolSignature_E				= ::llcpp::meta::traits::SigCN<ll_bool_t, t_cinput, u_cinput>;
+		using BooleanSignature_E			= ::llcpp::meta::traits::SigCN<Boolean, t_cinput, u_cinput>;
 
 		// Signature checkers
 		using BoolEQSignatureCheck_T		= SignatureCheck_T<BoolSignature_T, FunctionEQCompare_T>;
@@ -244,24 +247,24 @@ class IsComparable : public llcpp::meta::Cluster, public _ExtraFunctions {
 			::llcpp::meta::traits::TrueContainerEmptyClass
 		>::U;
 
-		__LL_NODISCARD__ constexpr compare_eq_type_t is_same_value(t_cinput t, u_cinput u) const noexcept {
+		__LL_NODISCARD__ constexpr compare_eq_type_t isSameValue(t_cinput t, u_cinput u) const noexcept {
 			static_assert(!std::is_same_v<compare_eq_type_t, ::llcpp::Emptyclass>,
 				"Types are not comparables!");
 
 			if constexpr (IS_COMPARABLE_EQ)
 				return (t == u);
 			else if constexpr (IS_COMPARABLE_EQ_EXTRA)
-				return ExtraFunctions::compare_eq(t, u);
+				return ExtraFunctions::compareEQ(t, u);
 			else {}
 		}
-		__LL_NODISCARD__ constexpr compare_neq_type_t is_not_same_value(t_cinput t, u_cinput u) const noexcept {
+		__LL_NODISCARD__ constexpr compare_neq_type_t isNotSameValue(t_cinput t, u_cinput u) const noexcept {
 			static_assert(!std::is_same_v<compare_neq_type_t, ::llcpp::Emptyclass>,
 				"Types are not comparables!");
 
 			if constexpr (IS_COMPARABLE_NEQ)
 				return (t != u);
 			else if constexpr (IS_COMPARABLE_NEQ_EXTRA)
-				return ExtraFunctions::compare_no_eq(t, u);
+				return ExtraFunctions::compareNEQ(t, u);
 			else {}
 		}
 
@@ -270,25 +273,12 @@ class IsComparable : public llcpp::meta::Cluster, public _ExtraFunctions {
 	#pragma endregion
 };
 
-using CompareTest = IsComparable<ASDF, u8, ::llcpp::meta::Boolean, ASDF>;
-
-constexpr bool asdf1 = CompareTest::BoolEQSignatureCheck_T::IS_VALID;
-constexpr bool asdf2 = CompareTest::BoolNEQSignatureCheck_T::IS_VALID;
-constexpr bool asdf3 = CompareTest::BooleanEQSignatureCheck_T::IS_VALID;
-constexpr bool asdf4 = CompareTest::BooleanNEQSignatureCheck_T::IS_VALID;
-constexpr bool asdf5 = CompareTest::IS_COMPARABLE_EQ;
-constexpr bool asdf6 = CompareTest::IS_COMPARABLE_NEQ;
-constexpr bool asdf7 = CompareTest::IS_COMPARABLE_EQ_EXTRA;
-constexpr bool asdf8 = CompareTest::IS_COMPARABLE_NEQ_EXTRA;
-
-constexpr bool asdf8 = CompareTest().compareEQ(ASDF(0), 0x7);
-
 /*
 template<
 	class _T,
 	class _U = _T,
 	class _ExtraFunctions = llcpp::Emptyclass,
-	class _Orderning = traits::return_detection::return_sgtrong_ordening_function_easy_t<traits::PrimitiveWrapper<_T>, _U>
+	class _Orderning = traits::return_sgtrong_ordening_function_easy_t<traits::PrimitiveWrapper<_T>, _U>
 >
 class IsDifferenciable : public llcpp::meta::Cluster, public _ExtraFunctions {
 	#pragma region Types
@@ -425,13 +415,13 @@ class IsDifferenciable : public llcpp::meta::Cluster, public _ExtraFunctions {
 
 	#pragma endregion
 };
-*/
+		*/
 
 } // namespace traits
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_TRAITSCOMPARATION_HPP_
+#endif // LLANYLIB_TRAITSCOMPARE_HPP_
 
 #if defined(LLANYLIB_ERROR_HPP_)
 	#undef LLANYLIB_ERROR_HPP_

@@ -59,8 +59,6 @@ class PrimitiveInteger;
 
 #include "traits_checker.hpp"
 
-#include <compare>
-
 namespace llcpp {
 namespace meta {
 namespace traits {
@@ -94,24 +92,18 @@ class PrimitiveBase {
 		using Big_bool	= TBig<ll_bool_t>;
 
 		using OrdeningByType =
-			traits::conditional_t<
-				std::is_floating_point_v<T>,
-				std::partial_ordering,
-				std::strong_ordering
+			::llcpp::meta::traits::conditional_t<
+				::std::is_floating_point_v<T>,
+				::std::partial_ordering,
+				::std::strong_ordering
 			>;
-
-	#pragma endregion
-	#pragma region Expresions
-	public:
-		static constexpr T ZERO_VALUE = ::llcpp::ZERO_VALUE<T>;
-		static constexpr T ZERO_C_CMP_VALUE = ::llcpp::ZERO_VALUE<c_cmp_t>;
 
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(meta::traits::is_basic_type_v<T>,
+		static_assert(::llcpp::meta::traits::is_basic_type_v<T>,
 			"Type must be a basic/primitive type");
-		static_assert(traits::is_valid_type_checker_v<T>,
+		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T>,
 			"type_checker<T> detected an invalid type!");
 
 	#pragma endregion
@@ -123,7 +115,7 @@ class PrimitiveBase {
 	#pragma region Functions
 		#pragma region Constructor
 	public:
-		constexpr PrimitiveBase() noexcept : primitive(_MyType::ZERO_VALUE) {}
+		constexpr PrimitiveBase() noexcept : primitive(::llcpp::ZERO_VALUE<T>) {}
 		constexpr ~PrimitiveBase() noexcept {}
 
 		#pragma endregion
@@ -169,109 +161,122 @@ class PrimitiveBase {
 		#pragma region ClassFunctions
 		#pragma region Comparations
 	public:
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const u8) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const u16) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const u32) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const u64) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const i8) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const i16) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const i32) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const i64) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const f32) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const f64) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const f128) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const ll_bool_t) const noexcept { return llcpp::FALSE; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const u8 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const u16 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const u32 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const u64 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const i8 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const i16 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const i32 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const i64 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const f32 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const f64 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const f128 v) const noexcept { return this->primitive == v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const ll_bool_t v) const noexcept { return this->primitive == v; }
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const u8) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const u16) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const u32) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const u64) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const i8) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const i16) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const i32) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const i64) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const f32) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const f64) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const f128) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const ll_bool_t) const noexcept { return llcpp::TRUE; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const u8 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const u16 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const u32 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const u64 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const i8 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const i16 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const i32 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const i64 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const f32 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const f64 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const f128 v) const noexcept { return this->primitive != v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const ll_bool_t v) const noexcept { return this->primitive != v; }
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const u8) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const u16) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const u32) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const u64) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const i8) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const i16) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const i32) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const i64) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const f32) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const f64) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const f128) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>(const ll_bool_t) const noexcept { return llcpp::TRUE; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const u8 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const u16 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const u32 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const u64 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const i8 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const i16 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const i32 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const i64 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const f32 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const f64 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const f128 v) const noexcept { return this->primitive > v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>(const ll_bool_t v) const noexcept { return this->primitive > v; }
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const u8) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const u16) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const u32) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const u64) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const i8) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const i16) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const i32) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const i64) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const f32) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const f64) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const f128) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<(const ll_bool_t) const noexcept { return llcpp::FALSE; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const u8 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const u16 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const u32 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const u64 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const i8 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const i16 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const i32 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const i64 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const f32 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const f64 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const f128 v) const noexcept { return this->primitive < v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<(const ll_bool_t v) const noexcept { return this->primitive < v; }
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const u8) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const u16) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const u32) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const u64) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const i8) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const i16) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const i32) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const i64) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const f32) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const f64) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const f128) const noexcept { return llcpp::TRUE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const ll_bool_t) const noexcept { return llcpp::TRUE; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const u8 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const u16 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const u32 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const u64 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const i8 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const i16 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const i32 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const i64 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const f32 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const f64 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const f128 v) const noexcept { return this->primitive >= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const ll_bool_t v) const noexcept { return this->primitive >= v; }
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const u8) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const u16) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const u32) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const u64) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const i8) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const i16) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const i32) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const i64) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const f32) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const f64) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const f128) const noexcept { return llcpp::FALSE; }
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const ll_bool_t) const noexcept { return llcpp::FALSE; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const u8 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const u16 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const u32 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const u64 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const i8 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const i16 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const i32 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const i64 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const f32 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const f64 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const f128 v) const noexcept { return this->primitive <= v; }
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const ll_bool_t v) const noexcept { return this->primitive <= v; }
 
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const u8) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const u16) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const u32) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const u64) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const i8) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const i16) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const i32) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const i64) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const f32) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const f64) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const f128) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const ll_bool_t) const noexcept { return _MyType::ZERO_C_CMP_VALUE; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const u8) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const u16) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const u32) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const u64) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const i8) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const i16) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const i32) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const i64) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const f32) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const f64) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const f128) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t compare(const ll_bool_t) const noexcept { return (this->primitive <=> v)._Value; }
 
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u8) const noexcept { return OrdeningByType(); }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u16) const noexcept { return OrdeningByType(); }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u32) const noexcept { return OrdeningByType(); }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u64) const noexcept { return OrdeningByType(); }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i8) const noexcept { return OrdeningByType(); }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i16) const noexcept { return OrdeningByType(); }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i32) const noexcept { return OrdeningByType(); }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i64) const noexcept { return OrdeningByType(); }
-		__LL_NODISCARD__ constexpr std::partial_ordering operator<=>(const f32) const noexcept { return std::partial_ordering(); }
-		__LL_NODISCARD__ constexpr std::partial_ordering operator<=>(const f64) const noexcept { return std::partial_ordering(); }
-		__LL_NODISCARD__ constexpr std::partial_ordering operator<=>(const f128) const noexcept { return std::partial_ordering(); }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const ll_bool_t) const noexcept { return OrdeningByType(); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const u8) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const u16) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const u32) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const u64) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const i8) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const i16) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const i32) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const i64) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const ll_bool_t) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering compare(const f32) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering compare(const f64) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering compare(const f128) const noexcept { return (this->primitive <=> v); }
+
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u8) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u16) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u32) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u64) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i8) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i16) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i32) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i64) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const ll_bool_t) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering operator<=>(const f32) const noexcept { return this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering operator<=>(const f64) const noexcept { return this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering operator<=>(const f128) const noexcept { return this->primitive <=> v; }
 
 		#pragma endregion
 		#pragma region Operations
@@ -283,10 +288,10 @@ class PrimitiveBase {
 		__LL_NODISCARD__ constexpr Big_i16 operator+(const i16 value) const noexcept { return this->primitive + value; }
 		__LL_NODISCARD__ constexpr Big_i32 operator+(const i32 value) const noexcept { return this->primitive + value; }
 		__LL_NODISCARD__ constexpr Big_i64 operator+(const i64 value) const noexcept { return this->primitive + value; }
+		__LL_NODISCARD__ constexpr Big_bool operator+(const ll_bool_t value) const noexcept { return this->primitive + value; }
 		__LL_NODISCARD__ constexpr Big_f32 operator+(const f32 value) const noexcept { return this->primitive + value; }
 		__LL_NODISCARD__ constexpr Big_f64 operator+(const f64 value) const noexcept { return this->primitive + value; }
 		__LL_NODISCARD__ constexpr Big_f128 operator+(const f128 value) const noexcept { return this->primitive + value; }
-		__LL_NODISCARD__ constexpr Big_bool operator+(const ll_bool_t value) const noexcept { return this->primitive + value; }
 
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const u8 value) noexcept { this->primitive += value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const u16 value) noexcept { this->primitive += value; return *this; }
@@ -296,10 +301,10 @@ class PrimitiveBase {
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const i16 value) noexcept { this->primitive += value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const i32 value) noexcept { this->primitive += value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const i64 value) noexcept { this->primitive += value; return *this; }
+		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const ll_bool_t value) noexcept { this->primitive += value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const f32 value) noexcept { this->primitive += value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const f64 value) noexcept { this->primitive += value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const f128 value) noexcept { this->primitive += value; return *this; }
-		__LL_NODISCARD__ constexpr PrimitiveBase& operator+=(const ll_bool_t value) noexcept { this->primitive += value; return *this; }
 
 		__LL_NODISCARD__ constexpr Big_u8 operator-(const u8 value) const noexcept { return this->primitive - value; }
 		__LL_NODISCARD__ constexpr Big_u16 operator-(const u16 value) const noexcept { return this->primitive - value; }
@@ -309,10 +314,10 @@ class PrimitiveBase {
 		__LL_NODISCARD__ constexpr Big_i16 operator-(const i16 value) const noexcept { return this->primitive - value; }
 		__LL_NODISCARD__ constexpr Big_i32 operator-(const i32 value) const noexcept { return this->primitive - value; }
 		__LL_NODISCARD__ constexpr Big_i64 operator-(const i64 value) const noexcept { return this->primitive - value; }
+		__LL_NODISCARD__ constexpr Big_bool operator-(const ll_bool_t value) const noexcept { return this->primitive - value; }
 		__LL_NODISCARD__ constexpr Big_f32 operator-(const f32 value) const noexcept { return this->primitive - value; }
 		__LL_NODISCARD__ constexpr Big_f64 operator-(const f64 value) const noexcept { return this->primitive - value; }
 		__LL_NODISCARD__ constexpr Big_f128 operator-(const f128 value) const noexcept { return this->primitive - value; }
-		__LL_NODISCARD__ constexpr Big_bool operator-(const ll_bool_t value) const noexcept { return this->primitive - value; }
 
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const u8 value) noexcept { this->primitive -= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const u16 value) noexcept { this->primitive -= value; return *this; }
@@ -322,10 +327,10 @@ class PrimitiveBase {
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const i16 value) noexcept { this->primitive -= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const i32 value) noexcept { this->primitive -= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const i64 value) noexcept { this->primitive -= value; return *this; }
+		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const ll_bool_t value) noexcept { this->primitive -= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const f32 value) noexcept { this->primitive -= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const f64 value) noexcept { this->primitive -= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const f128 value) noexcept { this->primitive -= value; return *this; }
-		__LL_NODISCARD__ constexpr PrimitiveBase& operator-=(const ll_bool_t value) noexcept { this->primitive -= value; return *this; }
 
 		__LL_NODISCARD__ constexpr Big_u8 operator*(const u8 value) const noexcept { return this->primitive * value; }
 		__LL_NODISCARD__ constexpr Big_u16 operator*(const u16 value) const noexcept { return this->primitive * value; }
@@ -335,10 +340,10 @@ class PrimitiveBase {
 		__LL_NODISCARD__ constexpr Big_i16 operator*(const i16 value) const noexcept { return this->primitive * value; }
 		__LL_NODISCARD__ constexpr Big_i32 operator*(const i32 value) const noexcept { return this->primitive * value; }
 		__LL_NODISCARD__ constexpr Big_i64 operator*(const i64 value) const noexcept { return this->primitive * value; }
+		__LL_NODISCARD__ constexpr Big_bool operator*(const ll_bool_t value) const noexcept { return this->primitive * value; }
 		__LL_NODISCARD__ constexpr Big_f32 operator*(const f32 value) const noexcept { return this->primitive * value; }
 		__LL_NODISCARD__ constexpr Big_f64 operator*(const f64 value) const noexcept { return this->primitive * value; }
 		__LL_NODISCARD__ constexpr Big_f128 operator*(const f128 value) const noexcept { return this->primitive * value; }
-		__LL_NODISCARD__ constexpr Big_bool operator*(const ll_bool_t value) const noexcept { return this->primitive * value; }
 
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const u8 value) noexcept { this->primitive *= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const u16 value) noexcept { this->primitive *= value; return *this; }
@@ -348,10 +353,10 @@ class PrimitiveBase {
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const i16 value) noexcept { this->primitive *= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const i32 value) noexcept { this->primitive *= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const i64 value) noexcept { this->primitive *= value; return *this; }
+		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const ll_bool_t value) noexcept { this->primitive *= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const f32 value) noexcept { this->primitive *= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const f64 value) noexcept { this->primitive *= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const f128 value) noexcept { this->primitive *= value; return *this; }
-		__LL_NODISCARD__ constexpr PrimitiveBase& operator*=(const ll_bool_t value) noexcept { this->primitive *= value; return *this; }
 
 		__LL_NODISCARD__ constexpr Big_u8 operator/(const u8 value) const noexcept { return this->primitive / value; }
 		__LL_NODISCARD__ constexpr Big_u16 operator/(const u16 value) const noexcept { return this->primitive / value; }
@@ -361,10 +366,10 @@ class PrimitiveBase {
 		__LL_NODISCARD__ constexpr Big_i16 operator/(const i16 value) const noexcept { return this->primitive / value; }
 		__LL_NODISCARD__ constexpr Big_i32 operator/(const i32 value) const noexcept { return this->primitive / value; }
 		__LL_NODISCARD__ constexpr Big_i64 operator/(const i64 value) const noexcept { return this->primitive / value; }
+		__LL_NODISCARD__ constexpr Big_bool operator/(const ll_bool_t value) const noexcept { return this->primitive / value; }
 		__LL_NODISCARD__ constexpr Big_f32 operator/(const f32 value) const noexcept { return this->primitive / value; }
 		__LL_NODISCARD__ constexpr Big_f64 operator/(const f64 value) const noexcept { return this->primitive / value; }
 		__LL_NODISCARD__ constexpr Big_f128 operator/(const f128 value) const noexcept { return this->primitive / value; }
-		__LL_NODISCARD__ constexpr Big_bool operator/(const ll_bool_t value) const noexcept { return this->primitive / value; }
 
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const u8 value) noexcept { this->primitive /= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const u16 value) noexcept { this->primitive /= value; return *this; }
@@ -374,10 +379,10 @@ class PrimitiveBase {
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const i16 value) noexcept { this->primitive /= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const i32 value) noexcept { this->primitive /= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const i64 value) noexcept { this->primitive /= value; return *this; }
+		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const ll_bool_t value) noexcept { this->primitive /= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const f32 value) noexcept { this->primitive /= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const f64 value) noexcept { this->primitive /= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const f128 value) noexcept { this->primitive /= value; return *this; }
-		__LL_NODISCARD__ constexpr PrimitiveBase& operator/=(const ll_bool_t value) noexcept { this->primitive /= value; return *this; }
 
 		#pragma endregion
 		#pragma region Conversions
@@ -389,10 +394,10 @@ class PrimitiveBase {
 		__LL_NODISCARD__ constexpr explicit operator i16() const noexcept { return static_cast<i16>(this->primitive); }
 		__LL_NODISCARD__ constexpr explicit operator i32() const noexcept { return static_cast<i32>(this->primitive); }
 		__LL_NODISCARD__ constexpr explicit operator i64() const noexcept { return static_cast<i64>(this->primitive); }
+		__LL_NODISCARD__ constexpr explicit operator ll_bool_t() const noexcept { return static_cast<ll_bool_t>(this->primitive); }
 		__LL_NODISCARD__ constexpr explicit operator f32() const noexcept { return static_cast<f32>(this->primitive); }
 		__LL_NODISCARD__ constexpr explicit operator f64() const noexcept { return static_cast<f64>(this->primitive); }
 		__LL_NODISCARD__ constexpr explicit operator f128() const noexcept { return static_cast<f128>(this->primitive); }
-		__LL_NODISCARD__ constexpr explicit operator ll_bool_t() const noexcept { return static_cast<ll_bool_t>(this->primitive); }
 
 		#pragma endregion
 

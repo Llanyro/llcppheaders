@@ -417,6 +417,7 @@ template<class T>
 __LL_VAR_INLINE__ constexpr T MAX_VALUE		= ::llcpp::meta::traits::RangeChecker<T>::MAX_VALUE;
 template<class T>
 __LL_VAR_INLINE__ constexpr T MIN_VALUE		= ::llcpp::meta::traits::RangeChecker<T>::MIN_VALUE;
+// Zero value or default value returns a base type (default contructor)
 template<class T>
 __LL_VAR_INLINE__ constexpr T ZERO_VALUE	= T{};
 

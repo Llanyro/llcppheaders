@@ -175,7 +175,8 @@ namespace signatures {
 	};																									\
 	using Get##name## =																					\
 		::llcpp::meta::traits::__traits__::FunctionGetterBase<											\
-		::llcpp::meta::traits::signatures::__Get##name##>
+			::llcpp::meta::traits::signatures::__Get##name##											\
+		>
 
 #define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_1								\
 	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(dummy, Dummy);						\
@@ -186,6 +187,9 @@ namespace signatures {
 	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(move, Move);							\
 	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(compareEQ, CompareEQ);				\
 	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(compareNEQ, CompareNEQ);				\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(strongCompare, StrongCompare);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(partialCompare, PartialCompare);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(weakCompare, WeakCompare);			\
 	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(compare, Compare)
 
 #define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_2								\

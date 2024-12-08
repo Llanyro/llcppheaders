@@ -98,7 +98,9 @@ class ASDF {
 
 // IsComparable<> is a simple version of IsDifferenciable<>
 //	This requires only 2-4 functions (operator==, operator!= || compareEQ, compareNEQ)
-//
+// Priority:
+//	1. operator==	|| operator!=
+//	2. compareEQ	|| compareNEQ
 template<
 	class _T,
 	class _U = _T,
@@ -109,17 +111,17 @@ class IsComparable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType			= IsComparable;					// This class with template
-		using ExtraFunctions	= _ExtraFunctions;				// Type of inherited class with extra function
-		using Cluster			= ::llcpp::meta::Cluster;		// This is a cluster type class
+		using _MyType				= IsComparable;				// This class with template
+		using ExtraFunctions		= _ExtraFunctions;			// Type of inherited class with extra function
+		using Cluster				= ::llcpp::meta::Cluster;	// This is a cluster type class
 
 		// Types and enums
-		using T					= _T;											// Element to compare by
-		using U					= _U;											// Element to compare to
-		using WrappedT			= ::llcpp::meta::traits::PrimitiveWrapper<T>;	// T wrapped if primitive
-		using Boolean			= _Boolean;										// Boolean user type
-		using t_cinput			= ::llcpp::meta::traits::cinput<T>;				// T type as const type
-		using u_cinput			= ::llcpp::meta::traits::cinput<U>;				// U type as const type
+		using T						= _T;											// Element to compare by
+		using U						= _U;											// Element to compare to
+		using WrappedT				= ::llcpp::meta::traits::PrimitiveWrapper<T>;	// T wrapped if primitive
+		using Boolean				= _Boolean;										// Boolean user type
+		using t_cinput				= ::llcpp::meta::traits::cinput<T>;				// T type as const type
+		using u_cinput				= ::llcpp::meta::traits::cinput<U>;				// U type as const type
 
 		// Signature types prep
 		template<class Signature, class Function>
@@ -128,47 +130,39 @@ class IsComparable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 		using SignatureCheck_E		= ::llcpp::meta::traits::SignatureCheckerBySignature<ExtraFunctions, Signature, Function>;
 
 		// Signatures
-		using OperatorEQCompare		= ::llcpp::meta::traits::signatures::GetOperatorEQ;
-		using OperatorNEQCompare	= ::llcpp::meta::traits::signatures::GetOperatorNEQ;
-		using FunctionCompareEQ		= ::llcpp::meta::traits::signatures::GetCompareEQ;
-		using FunctionCompareNEQ	= ::llcpp::meta::traits::signatures::GetCompareNEQ;
+		using OperatorEQ			= ::llcpp::meta::traits::signatures::GetOperatorEQ;
+		using OperatorNEQ			= ::llcpp::meta::traits::signatures::GetOperatorNEQ;
+		using CompareEQ				= ::llcpp::meta::traits::signatures::GetCompareEQ;
+		using CompareNEQ			= ::llcpp::meta::traits::signatures::GetCompareNEQ;
 
-		// Signarure containerss
-		using BoolSignature_T		= ::llcpp::meta::traits::SigCN<Boolean,		u_cinput>;
-		using BoolSignature_E		= ::llcpp::meta::traits::SigCN<Boolean,		t_cinput, u_cinput>;
+		// Signarure containers
+		using ClassSignature_T		= ::llcpp::meta::traits::SigCN<Boolean, u_cinput>;
+		using ClassSignature_E		= ::llcpp::meta::traits::SigCN<Boolean, t_cinput, u_cinput>;
 
-		// Signature bool checkers T
-		using BoolOperatorEQSignatureCheck_T	= SignatureCheck_T<BoolSignature_T,		OperatorEQCompare>;
-		using BoolOperatorNEQSignatureCheck_T	= SignatureCheck_T<BoolSignature_T,		OperatorNEQCompare>;
-		using BoolFunctionEQSignatureCheck_T	= SignatureCheck_T<BoolSignature_T,		FunctionCompareEQ>;
-		using BoolFunctionNEQSignatureCheck_T	= SignatureCheck_T<BoolSignature_T,		FunctionCompareEQ>;
+		// Signature checkers for T (or wrapped T)
+		using OperatorEQCheck		= SignatureCheck_T<ClassSignature_T, OperatorEQ>;
+		using OperatorNEQCheck		= SignatureCheck_T<ClassSignature_T, OperatorNEQ>;
+		using FunctionEQCheck_T		= SignatureCheck_T<ClassSignature_T, CompareEQ>;
+		using FunctionNEQCheck_T	= SignatureCheck_T<ClassSignature_T, CompareNEQ>;
 
-		// Signature bool/boolean checkers ExtraFunctions
-		using BoolEQSignatureCheck_E			= SignatureCheck_E<BoolSignature_E,		FunctionCompareEQ>;
-		using BoolNEQSignatureCheck_E			= SignatureCheck_E<BoolSignature_E,		FunctionCompareNEQ>;
+		// Signature checkers for ExtraFunctions
+		using FunctionEQCheck_E		= SignatureCheck_E<ClassSignature_E, CompareEQ>;
+		using FunctionNEQCheck_E	= SignatureCheck_E<ClassSignature_E, CompareNEQ>;
 
 	#pragma endregion
 	#pragma region Expresions
-		#pragma region TypeExpresions
 	public:
-		static constexpr ll_bool_t HAS_OPERATOR_EQ_BOOL		= BoolOperatorEQSignatureCheck_T::IS_VALID;
-		static constexpr ll_bool_t HAS_OPERATOR_NEQ_BOOL	= BoolOperatorNEQSignatureCheck_T::IS_VALID;
-		static constexpr ll_bool_t HAS_FUNCTION_EQ_BOOL		= BoolFunctionEQSignatureCheck_T::IS_VALID;
-		static constexpr ll_bool_t HAS_FUNCTION_NEQ_BOOL	= BoolFunctionNEQSignatureCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_OPERATOR_EQ_BOOL		= OperatorEQCheck::IS_VALID;
+		static constexpr ll_bool_t HAS_OPERATOR_NEQ_BOOL	= OperatorNEQCheck::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_EQ_BOOL		= FunctionEQCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_NEQ_BOOL	= FunctionNEQCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_EQ_BOOL_EXTRA		= FunctionEQCheck_E::IS_VALID;
+		static constexpr ll_bool_t HAS_NEQ_BOOL_EXTRA		= FunctionNEQCheck_E::IS_VALID;
 
 		static constexpr ll_bool_t IS_COMPARABLE_EQ			= HAS_OPERATOR_EQ_BOOL || HAS_FUNCTION_EQ_BOOL;
 		static constexpr ll_bool_t IS_COMPARABLE_NEQ		= HAS_OPERATOR_NEQ_BOOL || HAS_FUNCTION_NEQ_BOOL;
-
-		#pragma endregion
-		#pragma region ClassExpresions
-	public:
-		static constexpr ll_bool_t HAS_EQ_BOOL_EXTRA		= BoolEQSignatureCheck_E::IS_VALID;
-		static constexpr ll_bool_t HAS_NEQ_BOOL_EXTRA		= BoolNEQSignatureCheck_E::IS_VALID;
-
 		static constexpr ll_bool_t IS_COMPARABLE_EQ_EXTRA	= HAS_EQ_BOOL_EXTRA;
 		static constexpr ll_bool_t IS_COMPARABLE_NEQ_EXTRA	= HAS_NEQ_BOOL_EXTRA;
-
-		#pragma endregion
 
 	#pragma endregion
 	#pragma region Asserts
@@ -234,7 +228,7 @@ class IsComparable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 		#pragma region ClassFunctions
 	public:
 		__LL_NODISCARD__ constexpr Boolean isSameValue(t_cinput t, u_cinput u) const noexcept {
-			static_assert(!std::is_same_v<Boolean, ::llcpp::Emptyclass>,
+			static_assert(IS_COMPARABLE_EQ || IS_COMPARABLE_EQ_EXTRA,
 				"Types are not comparables!");
 
 			if constexpr (HAS_OPERATOR_EQ_BOOL)
@@ -246,7 +240,7 @@ class IsComparable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 			else return ::llcpp::ZERO_VALUE<Boolean>;
 		}
 		__LL_NODISCARD__ constexpr Boolean isNotSameValue(t_cinput t, u_cinput u) const noexcept {
-			static_assert(!std::is_same_v<Boolean, ::llcpp::Emptyclass>,
+			static_assert(IS_COMPARABLE_NEQ || IS_COMPARABLE_NEQ_EXTRA,
 				"Types are not comparables!");
 
 			if constexpr (HAS_OPERATOR_NEQ_BOOL)
@@ -263,19 +257,6 @@ class IsComparable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 	#pragma endregion
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 template<
 	class _T,
 	class _U = _T,
@@ -286,17 +267,17 @@ class IsDifferenciable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType			= IsDifferenciable;				// This class with template
-		using ExtraFunctions	= _ExtraFunctions;				// Type of inherited class with extra function
-		using Cluster			= ::llcpp::meta::Cluster;		// This is a cluster type class
+		using _MyType				= IsDifferenciable;			// This class with template
+		using ExtraFunctions		= _ExtraFunctions;			// Type of inherited class with extra function
+		using Cluster				= ::llcpp::meta::Cluster;	// This is a cluster type class
 
 		// Types and enums
-		using T					= _T;											// Element to compare by
-		using U					= _U;											// Element to compare to
-		using WrappedT			= ::llcpp::meta::traits::PrimitiveWrapper<T>;	// T wrapped if primitive
-		using Orderning			= _Orderning;
-		using t_cinput			= ::llcpp::meta::traits::cinput<T>;				// T type as const type
-		using u_cinput			= ::llcpp::meta::traits::cinput<U>;				// U type as const type
+		using T						= _T;											// Element to compare by
+		using U						= _U;											// Element to compare to
+		using WrappedT				= ::llcpp::meta::traits::PrimitiveWrapper<T>;	// T wrapped if primitive
+		using Orderning				= _Orderning;
+		using t_cinput				= ::llcpp::meta::traits::cinput<T>;				// T type as const type
+		using u_cinput				= ::llcpp::meta::traits::cinput<U>;				// U type as const type
 		
 		// Signature types prep
 		template<class Signature, class Function>
@@ -305,27 +286,28 @@ class IsDifferenciable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 		using SignatureCheck_E		= ::llcpp::meta::traits::SignatureCheckerBySignature<ExtraFunctions, Signature, Function>;
 
 		// Signatures
-		using OperatorCompare			= ::llcpp::meta::traits::signatures::GetOperatorCompare;
-		using FunctionCompare			= ::llcpp::meta::traits::signatures::GetCompare;
-		using FunctionStrongCompare		= ::llcpp::meta::traits::signatures::GetStrongCompare;
-		using FunctionPartialCompare	= ::llcpp::meta::traits::signatures::GetPartialCompare;
-		using FunctionWeakCompare		= ::llcpp::meta::traits::signatures::GetWeakCompare;
+		using OperatorCompare		= ::llcpp::meta::traits::signatures::GetOperatorCompare;
+		using Compare				= ::llcpp::meta::traits::signatures::GetCompare;
+		using StrongCompare			= ::llcpp::meta::traits::signatures::GetStrongCompare;
+		using PartialCompare		= ::llcpp::meta::traits::signatures::GetPartialCompare;
+		using WeakCompare			= ::llcpp::meta::traits::signatures::GetWeakCompare;
 
-		// Signarure containerss
-		using CSignature_T				= ::llcpp::meta::traits::SigCN<c_cmp_t,		u_cinput>;
-		using CPPSignature_T			= ::llcpp::meta::traits::SigCN<Orderning,	u_cinput>;
+		// Signarure containers
+		using ClassSignature_T		= ::llcpp::meta::traits::SigCN<Orderning, u_cinput>;
+		using ClassSignature_E		= ::llcpp::meta::traits::SigCN<Orderning, t_cinput, u_cinput>;
 
-		using CSignature_E				= ::llcpp::meta::traits::SigCN<c_cmp_t,		t_cinput, u_cinput>;
-		using CPPSignature_E			= ::llcpp::meta::traits::SigCN<Orderning,	t_cinput, u_cinput>;
+		// Signature checkers for T (or wrapped T)
+		using OperatorCompareCheck	= SignatureCheck_T<ClassSignature_T, OperatorCompare>;
+		using FunctionCompareCheck_T= SignatureCheck_T<ClassSignature_T, Compare>;
+		using FunctionStrongCheck_T	= SignatureCheck_T<ClassSignature_T, StrongCompare>;
+		using FunctionPartialCheck_T= SignatureCheck_T<ClassSignature_T, PartialCompare>;
+		using FunctionWeakCheck_T	= SignatureCheck_T<ClassSignature_T, WeakCompare>;
 
-		// Signature checkers
-		using CSignatureCheck_T				= SignatureCheck_T<CSignature_T,	OperatorCompare>;
-		using CPPSignatureCheck_T			= SignatureCheck_T<CPPSignature_T,	OperatorCompare>;
-		using CompareSignatureCheck_T		= SignatureCheck_T<CSignature_T,	FunctionCompare>;
-		using CompareStrongSignatureCheck_T	= SignatureCheck_T<CPPSignature_T,	FunctionCompareStrong>;
-
-		using CSignatureCheck_E				= SignatureCheck_E<CSignature_E,		FunctionCompare>;
-		using CPPSignatureCheck_E			= SignatureCheck_E<CPPSignature_E,		FunctionCompareStrong>;
+		// Signature checkers for ExtraFunctions
+		using FunctionCompareCheck_E= SignatureCheck_E<ClassSignature_E, Compare>;
+		using FunctionStrongCheck_E	= SignatureCheck_E<ClassSignature_E, StrongCompare>;
+		using FunctionPartialCheck_E= SignatureCheck_E<ClassSignature_E, PartialCompare>;
+		using FunctionWeakCheck_E	= SignatureCheck_E<ClassSignature_E, WeakCompare>;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -403,19 +385,6 @@ class IsDifferenciable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr c_cmp_t diff_c(t_cinput t, u_cinput u) const noexcept {
-			static_assert(IS_C_COMPARABLE,
-				"Types are not comparables!");
-
-			if constexpr (HAS_C_SIGNATURE) {
-				if constexpr (::llcpp::meta::traits::is_basic_type_v<T>)
-					return (t <=> u)._Value;
-				else return (t <=> u);
-			}
-			else if constexpr (HAS_C_SIGNATURE_EXTRA)
-				return ExtraFunctions::compare(t, u);
-			else return ::llcpp::ZERO_VALUE<c_cmp_t>;
-		}
 		__LL_NODISCARD__ constexpr Orderning diff(t_cinput t, u_cinput u) const noexcept {
 			static_assert(IS_CPP_COMPARABLE,
 				"Types are not comparables!");
@@ -433,6 +402,7 @@ class IsDifferenciable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 };
 
 constexpr auto i1 = IsDifferenciable<int, char>().diff(1, 1)._Value;
+using asdffffffff = IsDifferenciable<int, char>::FunctionCompareCheck_E::IS_VALID;
 constexpr auto i2 = IsComparable<int, char>().isSameValue(1, 1);
 constexpr auto i3 = IsComparable<int, char>().isSameValue(3, 1);
 

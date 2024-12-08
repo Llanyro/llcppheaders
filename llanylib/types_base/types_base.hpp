@@ -127,6 +127,7 @@ using b64				= size_bytes64_t;
 namespace std {
 struct strong_ordering;
 struct partial_ordering;
+struct weak_ordering;
 
 template <class _Ty>
 class allocator;

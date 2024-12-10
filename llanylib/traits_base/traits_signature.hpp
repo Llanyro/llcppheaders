@@ -22,12 +22,12 @@
 #define LLANYLIB_TRAITSSIGNATURE_INCOMPLETE_MAYOR_ 11
 #define LLANYLIB_TRAITSSIGNATURE_INCOMPLETE_MINOR_ 0
 
-#include "traits_signature_pre.hpp"
-
-#include "traits_checker.hpp"
 #undef LLANYLIB_INCOMPLETE_HPP_
 #include "../types_base/functional_attributes.hpp"
 #define LLANYLIB_INCOMPLETE_HPP_
+
+#include "traits_checker.hpp"
+#include "traits_signature_pre.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -116,8 +116,10 @@ class SignatureCheckerBySignature;
 #define LLANYLIB_TRAITSSIGNATURE_MAYOR_ 11
 #define LLANYLIB_TRAITSSIGNATURE_MINOR_ 0
 
-#include "traits_checker.hpp"
 #include "../types_base/functional_attributes.hpp"
+
+#include "traits_checker.hpp"
+#include "traits_signature_pre.hpp"
 
 namespace llcpp {
 namespace meta {

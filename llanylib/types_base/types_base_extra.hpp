@@ -64,7 +64,7 @@ using Void						= ::llcpp::Emptyclass;
 
 namespace meta {
 
-using StandardComparation = ::std::strong_ordering;
+using StandardComparation		= ::std::strong_ordering;
 
 } // namespace meta
 } // namespace llcpp

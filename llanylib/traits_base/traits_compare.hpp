@@ -152,17 +152,21 @@ class IsComparable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 	#pragma endregion
 	#pragma region Expresions
 	public:
-		static constexpr ll_bool_t HAS_OPERATOR_EQ_BOOL		= OperatorEQCheck::IS_VALID;
-		static constexpr ll_bool_t HAS_OPERATOR_NEQ_BOOL	= OperatorNEQCheck::IS_VALID;
-		static constexpr ll_bool_t HAS_FUNCTION_EQ_BOOL		= FunctionEQCheck_T::IS_VALID;
-		static constexpr ll_bool_t HAS_FUNCTION_NEQ_BOOL	= FunctionNEQCheck_T::IS_VALID;
-		static constexpr ll_bool_t HAS_EQ_BOOL_EXTRA		= FunctionEQCheck_E::IS_VALID;
-		static constexpr ll_bool_t HAS_NEQ_BOOL_EXTRA		= FunctionNEQCheck_E::IS_VALID;
+		static constexpr ll_bool_t HAS_OPERATOR_EQ	= OperatorEQCheck::IS_VALID;
+		static constexpr ll_bool_t HAS_OPERATOR_NEQ	= OperatorNEQCheck::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_EQ	= FunctionEQCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_NEQ	= FunctionNEQCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_EQ_EXTRA		= FunctionEQCheck_E::IS_VALID;
+		static constexpr ll_bool_t HAS_NEQ_EXTRA	= FunctionNEQCheck_E::IS_VALID;
 
-		static constexpr ll_bool_t IS_COMPARABLE_EQ			= HAS_OPERATOR_EQ_BOOL || HAS_FUNCTION_EQ_BOOL;
-		static constexpr ll_bool_t IS_COMPARABLE_NEQ		= HAS_OPERATOR_NEQ_BOOL || HAS_FUNCTION_NEQ_BOOL;
-		static constexpr ll_bool_t IS_COMPARABLE_EQ_EXTRA	= HAS_EQ_BOOL_EXTRA;
-		static constexpr ll_bool_t IS_COMPARABLE_NEQ_EXTRA	= HAS_NEQ_BOOL_EXTRA;
+		static constexpr ll_bool_t IS_COMPARABLE_EQ	=
+			HAS_OPERATOR_EQ
+			|| HAS_FUNCTION_EQ
+			|| HAS_EQ_EXTRA;
+		static constexpr ll_bool_t IS_COMPARABLE_NEQ =
+			HAS_OPERATOR_NEQ
+			|| HAS_FUNCTION_NEQ
+			|| HAS_NEQ_EXTRA;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -228,26 +232,26 @@ class IsComparable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 		#pragma region ClassFunctions
 	public:
 		__LL_NODISCARD__ constexpr Boolean isSameValue(t_cinput t, u_cinput u) const noexcept {
-			static_assert(IS_COMPARABLE_EQ || IS_COMPARABLE_EQ_EXTRA,
+			static_assert(IS_COMPARABLE_EQ,
 				"Types are not comparables!");
 
-			if constexpr (HAS_OPERATOR_EQ_BOOL)
+			if constexpr (HAS_OPERATOR_EQ)
 				return (t == u);
-			else if constexpr (HAS_FUNCTION_EQ_BOOL)
+			else if constexpr (HAS_FUNCTION_EQ)
 				return t.compareEQ(u);
-			else if constexpr (HAS_EQ_BOOL_EXTRA)
+			else if constexpr (HAS_EQ_EXTRA)
 				return ExtraFunctions::compareEQ(t, u);
 			else return ::llcpp::ZERO_VALUE<Boolean>;
 		}
 		__LL_NODISCARD__ constexpr Boolean isNotSameValue(t_cinput t, u_cinput u) const noexcept {
-			static_assert(IS_COMPARABLE_NEQ || IS_COMPARABLE_NEQ_EXTRA,
+			static_assert(IS_COMPARABLE_NEQ,
 				"Types are not comparables!");
 
-			if constexpr (HAS_OPERATOR_NEQ_BOOL)
+			if constexpr (HAS_OPERATOR_NEQ)
 				return (t != u);
-			else if constexpr (HAS_FUNCTION_NEQ_BOOL)
+			else if constexpr (HAS_FUNCTION_NEQ)
 				return t.compareNEQ(u);
-			else if constexpr (HAS_NEQ_BOOL_EXTRA)
+			else if constexpr (HAS_NEQ_EXTRA)
 				return ExtraFunctions::compareNEQ(t, u);
 			else return ::llcpp::ZERO_VALUE<Boolean>;
 		}
@@ -312,15 +316,29 @@ class IsDifferenciable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 	#pragma endregion
 	#pragma region Expresions
 	public:
-		static constexpr ll_bool_t HAS_C_SIGNATURE = CSignatureCheck_T::IS_VALID;
-		static constexpr ll_bool_t HAS_C_SIGNATURE = CSignatureCheck_T::IS_VALID;
-		static constexpr ll_bool_t HAS_CPP_SIGNATURE = CPPSignatureCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_OPERATOR_COMPARE		= OperatorCompareCheck::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_COMPARE_T	= FunctionCompareCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_STRONG_T	= FunctionStrongCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_PARTIAL_T	= FunctionPartialCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_WEAK_T		= FunctionWeakCheck_T::IS_VALID;
 
-		static constexpr ll_bool_t HAS_C_SIGNATURE_EXTRA = CSignatureCheck_E::IS_VALID;
-		static constexpr ll_bool_t HAS_CPP_SIGNATURE_EXTRA = CPPSignatureCheck_E::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_COMPARE_E	= FunctionCompareCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_STRONG_E	= FunctionStrongCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_PARTIAL_E	= FunctionPartialCheck_T::IS_VALID;
+		static constexpr ll_bool_t HAS_FUNCTION_WEAK_E		= FunctionWeakCheck_T::IS_VALID;
 
-		static constexpr ll_bool_t IS_C_COMPARABLE = HAS_C_SIGNATURE || HAS_C_SIGNATURE_EXTRA;
-		static constexpr ll_bool_t IS_CPP_COMPARABLE = HAS_CPP_SIGNATURE || HAS_CPP_SIGNATURE_EXTRA;
+		static constexpr ll_bool_t IS_DIFFERENCIABLE =
+			HAS_OPERATOR_COMPARE
+			|| HAS_FUNCTION_COMPARE_T
+			|| HAS_FUNCTION_STRONG_T
+			|| HAS_FUNCTION_PARTIAL_T
+			|| HAS_FUNCTION_WEAK_T
+			
+			|| HAS_FUNCTION_COMPARE_E
+			|| HAS_FUNCTION_STRONG_E
+			|| HAS_FUNCTION_PARTIAL_E
+			|| HAS_FUNCTION_WEAK_E;
+
 
 	#pragma endregion
 	#pragma region Asserts
@@ -386,13 +404,28 @@ class IsDifferenciable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 		#pragma region ClassFunctions
 	public:
 		__LL_NODISCARD__ constexpr Orderning diff(t_cinput t, u_cinput u) const noexcept {
-			static_assert(IS_CPP_COMPARABLE,
-				"Types are not comparables!");
+			static_assert(IS_DIFFERENCIABLE,
+				"Types are not differenciables!");
 
-			if constexpr (HAS_CPP_SIGNATURE)
+			if constexpr (HAS_OPERATOR_COMPARE)
 				return (t <=> u);
-			else if constexpr (HAS_CPP_SIGNATURE_EXTRA)
+			else if constexpr (HAS_FUNCTION_COMPARE_T)
+				return t.compare(u);
+			else if constexpr (HAS_FUNCTION_STRONG_T)
+				return t.strongCompare(u);
+			else if constexpr (HAS_FUNCTION_PARTIAL_T)
+				return t.partialCompare(u);
+			else if constexpr (HAS_FUNCTION_WEAK_T)
+				return t.weakCompare(u);
+
+			else if constexpr (HAS_FUNCTION_COMPARE_E)
 				return ExtraFunctions::compare(t, u);
+			else if constexpr (HAS_FUNCTION_STRONG_E)
+				return ExtraFunctions::strongCompare(t, u);
+			else if constexpr (HAS_FUNCTION_PARTIAL_E)
+				return ExtraFunctions::partialCompare(t, u);
+			else if constexpr (HAS_FUNCTION_WEAK_E)
+				return ExtraFunctions::weakCompare(t, u);
 			else return ::llcpp::ZERO_VALUE<Orderning>;
 		}
 
@@ -400,11 +433,6 @@ class IsDifferenciable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
 
 	#pragma endregion
 };
-
-constexpr auto i1 = IsDifferenciable<int, char>().diff(1, 1)._Value;
-using asdffffffff = IsDifferenciable<int, char>::FunctionCompareCheck_E::IS_VALID;
-constexpr auto i2 = IsComparable<int, char>().isSameValue(1, 1);
-constexpr auto i3 = IsComparable<int, char>().isSameValue(3, 1);
 
 } // namespace traits
 } // namespace meta

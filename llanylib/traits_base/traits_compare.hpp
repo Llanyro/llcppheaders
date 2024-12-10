@@ -22,8 +22,6 @@
 #define LLANYLIB_TRAITSCOMPARE_INCOMPLETE_MAYOR_ 11
 #define LLANYLIB_TRAITSCOMPARE_INCOMPLETE_MINOR_ 0
 
-#include "../types_base/Boolean.hpp"
-#include "../types_base/Cluster.hpp"
 #include "traits_signature.hpp"
 #include "traits_type_wrapper.hpp"
 
@@ -34,16 +32,16 @@ namespace traits {
 template<
 	class _T,
 	class _U = _T,
-	class _Boolean = llcpp::meta::Boolean,
-	class _ExtraFunctions = llcpp::Emptyclass
+	class _Boolean = ll_bool_t,
+	class _ExtraFunctions = ::llcpp::Emptyclass
 >
 class IsComparable;
 
 template<
 	class _T,
 	class _U = _T,
-	class _ExtraFunctions = llcpp::Emptyclass,
-	class _Orderning = llcpp::UndefinedIncompleteObject
+	class _Orderning = ::llcpp::meta::StandardComparation,
+	class _ExtraFunctions = ::llcpp::Emptyclass
 >
 class IsDifferenciable;
 
@@ -66,35 +64,13 @@ class IsDifferenciable;
 #define LLANYLIB_TRAITSCOMPARE_MAYOR_ 11
 #define LLANYLIB_TRAITSCOMPARE_MINOR_ 0
 
-#include "../types_base/Boolean.hpp"
 #include "../types_base/Cluster.hpp"
 #include "traits_signature.hpp"
 #include "traits_type_wrapper.hpp"
 
-#include <string_view>
-#include <typeinfo>
-#include <compare>
-
 namespace llcpp {
 namespace meta {
 namespace traits {
-
-class ASDF {
-	public:
-		int a;
-		constexpr ASDF() noexcept : a(0) {}
-		constexpr ASDF(int a) noexcept : a(a) {}
-		constexpr ASDF(const ASDF&) noexcept : a(0) {}
-		constexpr ASDF& operator=(const ASDF&) noexcept { return *this; }
-		constexpr ASDF(ASDF&&) noexcept : a(0) {}
-		constexpr ASDF& operator=(ASDF&&) noexcept { return *this; }
-		constexpr ~ASDF() noexcept {}
-		constexpr ll_bool_t operator==(const u8 a) const noexcept { return this->a == a; }
-		constexpr ll_bool_t operator!=(const u8 a) const noexcept { return this->a != a; }
-
-		constexpr ll_bool_t compareEQ(const ASDF& a, const u8 aa) const noexcept { return a.a == aa; }
-		constexpr ll_bool_t compareNEQ(const ASDF& a, const u8 aa) const noexcept { return a.a == aa; }
-};
 
 // IsComparable<> is a simple version of IsDifferenciable<>
 //	This requires only 2-4 functions (operator==, operator!= || compareEQ, compareNEQ)

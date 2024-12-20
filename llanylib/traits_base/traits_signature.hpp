@@ -295,6 +295,8 @@ using SigCN = SignatureConstNoexcept<ReturnType, FunctionArguments...>;
 //		Function with double parameter will not work properly
 //		If functions differ by const attribute, it works, but if both has same signature but one conflictive type
 //			it will not work properly
+//	Do not use "void" as @_FunctionArguments. When compiler compiles decltype<void>() would return an error
+//		making result as false by default (in any case). So, if a funcion is empty, just leave it empty
 //		
 //	If user is looking for a function that is overloaded, and its only parameter is a float
 template<

@@ -122,13 +122,13 @@ class PrimitiveBase {
 		#pragma region CopyMove
 	public:
 		constexpr PrimitiveBase(const PrimitiveBase& other) noexcept
-			: primitive(std::forward<const T&>(other.primitive)) {}
+			: primitive(::std::forward<const T&>(other.primitive)) {}
 		constexpr PrimitiveBase& operator=(const PrimitiveBase& other) noexcept {
 			this->primitive = std::forward<const T&>(other.primitive);
 			return *this;
 		}
 		constexpr PrimitiveBase(PrimitiveBase&& other) noexcept
-			: primitive(std::forward<T&&>(other.primitive))
+			: primitive(::std::forward<T&&>(other.primitive))
 		{ other.clear(); }
 		constexpr PrimitiveBase& operator=(PrimitiveBase&& other) noexcept {
 			this->primitive = std::forward<T&&>(other.primitive);
@@ -137,13 +137,13 @@ class PrimitiveBase {
 		}
 
 		constexpr PrimitiveBase(const T& primitive) noexcept
-			: primitive(std::forward<const T&>(primitive)) {}
+			: primitive(::std::forward<const T&>(primitive)) {}
 		constexpr PrimitiveBase& operator=(const T& primitive) noexcept {
 			this->primitive = std::forward<const T&>(primitive);
 			return *this;
 		}
 		constexpr PrimitiveBase(T&& primitive) noexcept
-			: primitive(std::forward<T&&>(primitive))
+			: primitive(::std::forward<T&&>(primitive))
 		{ primitive = _MyType::ZERO_VALUE; }
 		constexpr PrimitiveBase& operator=(T&& primitive) noexcept {
 			this->primitive = std::forward<T&&>(primitive);
@@ -425,9 +425,9 @@ class PrimitiveFloating : public PrimitiveBase<_T> {
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(traits::is_floating_type_v<T>,
+		static_assert(::llcpp::meta::traits::is_floating_type_v<T>,
 			"Type must be a floating-point type");
-		static_assert(traits::is_valid_type_checker_v<T>,
+		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T>,
 			"type_checker<T> detected an invalid type!");
 
 	#pragma endregion
@@ -441,27 +441,27 @@ class PrimitiveFloating : public PrimitiveBase<_T> {
 		#pragma region CopyMove
 	public:
 		constexpr PrimitiveFloating(const PrimitiveFloating& other) noexcept
-			: PrimitiveBase(std::forward<const PrimitiveBase&>(other)) {}
+			: PrimitiveBase(::std::forward<const PrimitiveBase&>(other)) {}
 		constexpr PrimitiveFloating& operator=(const PrimitiveFloating& other) noexcept {
-			PrimitiveBase::operator=(std::forward<const PrimitiveBase&>(other));
+			PrimitiveBase::operator=(::std::forward<const PrimitiveBase&>(other));
 			return *this;
 		}
 		constexpr PrimitiveFloating(PrimitiveFloating&& other) noexcept
-			: PrimitiveBase(std::forward<const PrimitiveBase&>(other)) {}
+			: PrimitiveBase(::std::forward<const PrimitiveBase&>(other)) {}
 		constexpr PrimitiveFloating& operator=(PrimitiveFloating&& other) noexcept {
 			return *this;
 		}
 
 		constexpr PrimitiveFloating(const T& primitive) noexcept
-			: PrimitiveBase(std::forward<const T&>(primitive)) {}
+			: PrimitiveBase(::std::forward<const T&>(primitive)) {}
 		constexpr PrimitiveFloating& operator=(const T& primitive) noexcept {
-			PrimitiveBase::operator=(std::forward<const T&>(primitive));
+			PrimitiveBase::operator=(::std::forward<const T&>(primitive));
 			return *this;
 		}
 		constexpr PrimitiveFloating(T&& primitive) noexcept
-			: PrimitiveBase(std::forward<T&&>(primitive)) {}
+			: PrimitiveBase(::std::forward<T&&>(primitive)) {}
 		constexpr PrimitiveFloating& operator=(T&& primitive) noexcept {
-			PrimitiveBase::operator=(std::forward<T&&>(primitive));
+			PrimitiveBase::operator=(::std::forward<T&&>(primitive));
 			return *this;
 		}
 
@@ -517,39 +517,39 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(std::is_integral_v<T>,
+		static_assert(::std::is_integral_v<T>,
 			"Type must be a integral type");
-		static_assert(traits::is_valid_type_checker_v<T>,
+		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T>,
 			"type_checker<T> detected an invalid type!");
 
-		static_assert(!std::is_same_v<T_Signed, llcpp::Emptyclass>,
+		static_assert(!::std::is_same_v<T_Signed, llcpp::Emptyclass>,
 			"T_Signed is not valid!");
 
-		static_assert(!std::is_same_v<Big_u8, llcpp::Emptyclass>, "Big_u8 is not valid!");
-		static_assert(!std::is_same_v<Big_u16, llcpp::Emptyclass>, "Big_u16 is not valid!");
-		static_assert(!std::is_same_v<Big_u32, llcpp::Emptyclass>, "Big_u32 is not valid!");
-		static_assert(!std::is_same_v<Big_u64, llcpp::Emptyclass>, "Big_u64 is not valid!");
-		static_assert(!std::is_same_v<Big_i8, llcpp::Emptyclass>, "Big_i8 is not valid!");
-		static_assert(!std::is_same_v<Big_i16, llcpp::Emptyclass>, "Big_i16 is not valid!");
-		static_assert(!std::is_same_v<Big_i32, llcpp::Emptyclass>, "Big_i32 is not valid!");
-		static_assert(!std::is_same_v<Big_i64, llcpp::Emptyclass>, "Big_i64 is not valid!");
-		static_assert(!std::is_same_v<Big_f32, llcpp::Emptyclass>, "Big_f32 is not valid!");
-		static_assert(!std::is_same_v<Big_f64, llcpp::Emptyclass>, "Big_f64 is not valid!");
-		static_assert(!std::is_same_v<Big_f128, llcpp::Emptyclass>, "Big_f128 is not valid!");
-		static_assert(!std::is_same_v<Big_bool, llcpp::Emptyclass>, "Big_bool is not valid!");
+		static_assert(!::std::is_same_v<Big_u8, llcpp::Emptyclass>, "Big_u8 is not valid!");
+		static_assert(!::std::is_same_v<Big_u16, llcpp::Emptyclass>, "Big_u16 is not valid!");
+		static_assert(!::std::is_same_v<Big_u32, llcpp::Emptyclass>, "Big_u32 is not valid!");
+		static_assert(!::std::is_same_v<Big_u64, llcpp::Emptyclass>, "Big_u64 is not valid!");
+		static_assert(!::std::is_same_v<Big_i8, llcpp::Emptyclass>, "Big_i8 is not valid!");
+		static_assert(!::std::is_same_v<Big_i16, llcpp::Emptyclass>, "Big_i16 is not valid!");
+		static_assert(!::std::is_same_v<Big_i32, llcpp::Emptyclass>, "Big_i32 is not valid!");
+		static_assert(!::std::is_same_v<Big_i64, llcpp::Emptyclass>, "Big_i64 is not valid!");
+		static_assert(!::std::is_same_v<Big_f32, llcpp::Emptyclass>, "Big_f32 is not valid!");
+		static_assert(!::std::is_same_v<Big_f64, llcpp::Emptyclass>, "Big_f64 is not valid!");
+		static_assert(!::std::is_same_v<Big_f128, llcpp::Emptyclass>, "Big_f128 is not valid!");
+		static_assert(!::std::is_same_v<Big_bool, llcpp::Emptyclass>, "Big_bool is not valid!");
 
-		static_assert(!std::is_same_v<Small_u8, llcpp::Emptyclass>, "Small_u8 is not valid!");
-		static_assert(!std::is_same_v<Small_u16, llcpp::Emptyclass>, "Small_u16 is not valid!");
-		static_assert(!std::is_same_v<Small_u32, llcpp::Emptyclass>, "Small_u32 is not valid!");
-		static_assert(!std::is_same_v<Small_u64, llcpp::Emptyclass>, "Small_u64 is not valid!");
-		static_assert(!std::is_same_v<Small_i8, llcpp::Emptyclass>, "Small_i8 is not valid!");
-		static_assert(!std::is_same_v<Small_i16, llcpp::Emptyclass>, "Small_i16 is not valid!");
-		static_assert(!std::is_same_v<Small_i32, llcpp::Emptyclass>, "Small_i32 is not valid!");
-		static_assert(!std::is_same_v<Small_i64, llcpp::Emptyclass>, "Small_i64 is not valid!");
-		static_assert(!std::is_same_v<Small_f32, llcpp::Emptyclass>, "Small_f32 is not valid!");
-		static_assert(!std::is_same_v<Small_f64, llcpp::Emptyclass>, "Small_f64 is not valid!");
-		static_assert(!std::is_same_v<Small_f128, llcpp::Emptyclass>, "Small_f128 is not valid!");
-		static_assert(!std::is_same_v<Small_bool, llcpp::Emptyclass>, "Small_bool is not valid!");
+		static_assert(!::std::is_same_v<Small_u8, llcpp::Emptyclass>, "Small_u8 is not valid!");
+		static_assert(!::std::is_same_v<Small_u16, llcpp::Emptyclass>, "Small_u16 is not valid!");
+		static_assert(!::std::is_same_v<Small_u32, llcpp::Emptyclass>, "Small_u32 is not valid!");
+		static_assert(!::std::is_same_v<Small_u64, llcpp::Emptyclass>, "Small_u64 is not valid!");
+		static_assert(!::std::is_same_v<Small_i8, llcpp::Emptyclass>, "Small_i8 is not valid!");
+		static_assert(!::std::is_same_v<Small_i16, llcpp::Emptyclass>, "Small_i16 is not valid!");
+		static_assert(!::std::is_same_v<Small_i32, llcpp::Emptyclass>, "Small_i32 is not valid!");
+		static_assert(!::std::is_same_v<Small_i64, llcpp::Emptyclass>, "Small_i64 is not valid!");
+		static_assert(!::std::is_same_v<Small_f32, llcpp::Emptyclass>, "Small_f32 is not valid!");
+		static_assert(!::std::is_same_v<Small_f64, llcpp::Emptyclass>, "Small_f64 is not valid!");
+		static_assert(!::std::is_same_v<Small_f128, llcpp::Emptyclass>, "Small_f128 is not valid!");
+		static_assert(!::std::is_same_v<Small_bool, llcpp::Emptyclass>, "Small_bool is not valid!");
 
 	#pragma endregion
 	#pragma region Functions
@@ -562,27 +562,27 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 		#pragma region CopyMove
 	public:
 		constexpr PrimitiveInteger(const PrimitiveInteger& other) noexcept
-			: PrimitiveBase(std::forward<const PrimitiveBase&>(other)) {}
+			: PrimitiveBase(::std::forward<const PrimitiveBase&>(other)) {}
 		constexpr PrimitiveInteger& operator=(const PrimitiveInteger& other) noexcept {
-			PrimitiveBase::operator=(std::forward<const PrimitiveBase&>(other));
+			PrimitiveBase::operator=(::std::forward<const PrimitiveBase&>(other));
 			return *this;
 		}
 		constexpr PrimitiveInteger(PrimitiveInteger&& other) noexcept
-			: PrimitiveBase(std::forward<const PrimitiveBase&>(other)) {}
+			: PrimitiveBase(::std::forward<const PrimitiveBase&>(other)) {}
 		constexpr PrimitiveInteger& operator=(PrimitiveInteger&& other) noexcept {
 			return *this;
 		}
 
 		constexpr PrimitiveInteger(const T& primitive) noexcept
-			: PrimitiveBase(std::forward<const T&>(primitive)) {}
+			: PrimitiveBase(::std::forward<const T&>(primitive)) {}
 		constexpr PrimitiveInteger& operator=(const T& primitive) noexcept {
-			PrimitiveBase::operator=(std::forward<const T&>(primitive));
+			PrimitiveBase::operator=(::std::forward<const T&>(primitive));
 			return *this;
 		}
 		constexpr PrimitiveInteger(T&& primitive) noexcept
-			: PrimitiveBase(std::forward<T&&>(primitive)) {}
+			: PrimitiveBase(::std::forward<T&&>(primitive)) {}
 		constexpr PrimitiveInteger& operator=(T&& primitive) noexcept {
-			PrimitiveBase::operator=(std::forward<T&&>(primitive));
+			PrimitiveBase::operator=(::std::forward<T&&>(primitive));
 			return *this;
 		}
 
@@ -595,15 +595,18 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr Small_u8 operator%(const u8 value) const noexcept { return this->primitive % value; }
-		__LL_NODISCARD__ constexpr Small_u16 operator%(const u16 value) const noexcept { return this->primitive % value; }
-		__LL_NODISCARD__ constexpr Small_u32 operator%(const u32 value) const noexcept { return this->primitive % value; }
-		__LL_NODISCARD__ constexpr Small_u64 operator%(const u64 value) const noexcept { return this->primitive % value; }
-		__LL_NODISCARD__ constexpr Small_i8 operator%(const i8 value) const noexcept { return this->primitive % value; }
-		__LL_NODISCARD__ constexpr Small_i16 operator%(const i16 value) const noexcept { return this->primitive % value; }
-		__LL_NODISCARD__ constexpr Small_i32 operator%(const i32 value) const noexcept { return this->primitive % value; }
-		__LL_NODISCARD__ constexpr Small_i64 operator%(const i64 value) const noexcept { return this->primitive % value; }
-		__LL_NODISCARD__ constexpr Small_bool operator%(const ll_bool_t value) const noexcept { return this->primitive % value; }
+		__LL_NODISCARD__ constexpr ll_bool_t isMax() const noexcept { return this->primitive == ::llcpp::MAX_VALUE<T>; }
+		__LL_NODISCARD__ constexpr ll_bool_t isMin() const noexcept { return this->primitive == ::llcpp::MIN_VALUE<T>; }
+
+		__LL_NODISCARD__ constexpr Small_u8		operator%(const u8 value) const noexcept { return this->primitive % value; }
+		__LL_NODISCARD__ constexpr Small_u16	operator%(const u16 value) const noexcept { return this->primitive % value; }
+		__LL_NODISCARD__ constexpr Small_u32	operator%(const u32 value) const noexcept { return this->primitive % value; }
+		__LL_NODISCARD__ constexpr Small_u64	operator%(const u64 value) const noexcept { return this->primitive % value; }
+		__LL_NODISCARD__ constexpr Small_i8		operator%(const i8 value) const noexcept { return this->primitive % value; }
+		__LL_NODISCARD__ constexpr Small_i16	operator%(const i16 value) const noexcept { return this->primitive % value; }
+		__LL_NODISCARD__ constexpr Small_i32	operator%(const i32 value) const noexcept { return this->primitive % value; }
+		__LL_NODISCARD__ constexpr Small_i64	operator%(const i64 value) const noexcept { return this->primitive % value; }
+		__LL_NODISCARD__ constexpr Small_bool	operator%(const ll_bool_t value) const noexcept { return this->primitive % value; }
 
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator%=(const u8 value) noexcept { this->primitive %= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator%=(const u16 value) noexcept { this->primitive %= value; return *this; }
@@ -615,15 +618,15 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator%=(const i64 value) noexcept { this->primitive %= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator%=(const ll_bool_t value) noexcept { this->primitive %= value; return *this; }
 
-		__LL_NODISCARD__ constexpr Small_u8 operator&(const u8 value) const noexcept { return this->primitive & value; }
-		__LL_NODISCARD__ constexpr Small_u16 operator&(const u16 value) const noexcept { return this->primitive & value; }
-		__LL_NODISCARD__ constexpr Small_u32 operator&(const u32 value) const noexcept { return this->primitive & value; }
-		__LL_NODISCARD__ constexpr Small_u64 operator&(const u64 value) const noexcept { return this->primitive & value; }
-		__LL_NODISCARD__ constexpr Small_i8 operator&(const i8 value) const noexcept { return this->primitive & value; }
-		__LL_NODISCARD__ constexpr Small_i16 operator&(const i16 value) const noexcept { return this->primitive & value; }
-		__LL_NODISCARD__ constexpr Small_i32 operator&(const i32 value) const noexcept { return this->primitive & value; }
-		__LL_NODISCARD__ constexpr Small_i64 operator&(const i64 value) const noexcept { return this->primitive & value; }
-		__LL_NODISCARD__ constexpr Small_bool operator&(const ll_bool_t value) const noexcept { return this->primitive & value; }
+		__LL_NODISCARD__ constexpr Small_u8		operator&(const u8 value) const noexcept { return this->primitive & value; }
+		__LL_NODISCARD__ constexpr Small_u16	operator&(const u16 value) const noexcept { return this->primitive & value; }
+		__LL_NODISCARD__ constexpr Small_u32	operator&(const u32 value) const noexcept { return this->primitive & value; }
+		__LL_NODISCARD__ constexpr Small_u64	operator&(const u64 value) const noexcept { return this->primitive & value; }
+		__LL_NODISCARD__ constexpr Small_i8		operator&(const i8 value) const noexcept { return this->primitive & value; }
+		__LL_NODISCARD__ constexpr Small_i16	operator&(const i16 value) const noexcept { return this->primitive & value; }
+		__LL_NODISCARD__ constexpr Small_i32	operator&(const i32 value) const noexcept { return this->primitive & value; }
+		__LL_NODISCARD__ constexpr Small_i64	operator&(const i64 value) const noexcept { return this->primitive & value; }
+		__LL_NODISCARD__ constexpr Small_bool	operator&(const ll_bool_t value) const noexcept { return this->primitive & value; }
 
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator&=(const u8 value) noexcept { this->primitive &= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator&=(const u16 value) noexcept { this->primitive &= value; return *this; }
@@ -635,15 +638,15 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator&=(const i64 value) noexcept { this->primitive &= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator&=(const ll_bool_t value) noexcept { this->primitive &= value; return *this; }
 
-		__LL_NODISCARD__ constexpr Small_u8 operator|(const u8 value) const noexcept { return this->primitive | value; }
-		__LL_NODISCARD__ constexpr Small_u16 operator|(const u16 value) const noexcept { return this->primitive | value; }
-		__LL_NODISCARD__ constexpr Small_u32 operator|(const u32 value) const noexcept { return this->primitive | value; }
-		__LL_NODISCARD__ constexpr Small_u64 operator|(const u64 value) const noexcept { return this->primitive | value; }
-		__LL_NODISCARD__ constexpr Small_i8 operator|(const i8 value) const noexcept { return this->primitive | value; }
-		__LL_NODISCARD__ constexpr Small_i16 operator|(const i16 value) const noexcept { return this->primitive | value; }
-		__LL_NODISCARD__ constexpr Small_i32 operator|(const i32 value) const noexcept { return this->primitive | value; }
-		__LL_NODISCARD__ constexpr Small_i64 operator|(const i64 value) const noexcept { return this->primitive | value; }
-		__LL_NODISCARD__ constexpr Small_bool operator|(const ll_bool_t value) const noexcept { return this->primitive | value; }
+		__LL_NODISCARD__ constexpr Small_u8		operator|(const u8 value) const noexcept { return this->primitive | value; }
+		__LL_NODISCARD__ constexpr Small_u16	operator|(const u16 value) const noexcept { return this->primitive | value; }
+		__LL_NODISCARD__ constexpr Small_u32	operator|(const u32 value) const noexcept { return this->primitive | value; }
+		__LL_NODISCARD__ constexpr Small_u64	operator|(const u64 value) const noexcept { return this->primitive | value; }
+		__LL_NODISCARD__ constexpr Small_i8		operator|(const i8 value) const noexcept { return this->primitive | value; }
+		__LL_NODISCARD__ constexpr Small_i16	operator|(const i16 value) const noexcept { return this->primitive | value; }
+		__LL_NODISCARD__ constexpr Small_i32	operator|(const i32 value) const noexcept { return this->primitive | value; }
+		__LL_NODISCARD__ constexpr Small_i64	operator|(const i64 value) const noexcept { return this->primitive | value; }
+		__LL_NODISCARD__ constexpr Small_bool	operator|(const ll_bool_t value) const noexcept { return this->primitive | value; }
 
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator|=(const u8 value) noexcept { this->primitive |= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator|=(const u16 value) noexcept { this->primitive |= value; return *this; }
@@ -655,15 +658,15 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator|=(const i64 value) noexcept { this->primitive |= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator|=(const ll_bool_t value) noexcept { this->primitive |= value; return *this; }
 
-		__LL_NODISCARD__ constexpr Small_u8 operator^(const u8 value) const noexcept { return this->primitive ^ value; }
-		__LL_NODISCARD__ constexpr Small_u16 operator^(const u16 value) const noexcept { return this->primitive ^ value; }
-		__LL_NODISCARD__ constexpr Small_u32 operator^(const u32 value) const noexcept { return this->primitive ^ value; }
-		__LL_NODISCARD__ constexpr Small_u64 operator^(const u64 value) const noexcept { return this->primitive ^ value; }
-		__LL_NODISCARD__ constexpr Small_i8 operator^(const i8 value) const noexcept { return this->primitive ^ value; }
-		__LL_NODISCARD__ constexpr Small_i16 operator^(const i16 value) const noexcept { return this->primitive ^ value; }
-		__LL_NODISCARD__ constexpr Small_i32 operator^(const i32 value) const noexcept { return this->primitive ^ value; }
-		__LL_NODISCARD__ constexpr Small_i64 operator^(const i64 value) const noexcept { return this->primitive ^ value; }
-		__LL_NODISCARD__ constexpr Small_bool operator^(const ll_bool_t value) const noexcept { return this->primitive ^ value; }
+		__LL_NODISCARD__ constexpr Small_u8		operator^(const u8 value) const noexcept { return this->primitive ^ value; }
+		__LL_NODISCARD__ constexpr Small_u16	operator^(const u16 value) const noexcept { return this->primitive ^ value; }
+		__LL_NODISCARD__ constexpr Small_u32	operator^(const u32 value) const noexcept { return this->primitive ^ value; }
+		__LL_NODISCARD__ constexpr Small_u64	operator^(const u64 value) const noexcept { return this->primitive ^ value; }
+		__LL_NODISCARD__ constexpr Small_i8		operator^(const i8 value) const noexcept { return this->primitive ^ value; }
+		__LL_NODISCARD__ constexpr Small_i16	operator^(const i16 value) const noexcept { return this->primitive ^ value; }
+		__LL_NODISCARD__ constexpr Small_i32	operator^(const i32 value) const noexcept { return this->primitive ^ value; }
+		__LL_NODISCARD__ constexpr Small_i64	operator^(const i64 value) const noexcept { return this->primitive ^ value; }
+		__LL_NODISCARD__ constexpr Small_bool	operator^(const ll_bool_t value) const noexcept { return this->primitive ^ value; }
 
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator^=(const u8 value) noexcept { this->primitive ^= value; return *this; }
 		__LL_NODISCARD__ constexpr PrimitiveBase& operator^=(const u16 value) noexcept { this->primitive ^= value; return *this; }

@@ -35,6 +35,9 @@ class DoubleTypeContainer;
 template<class _T, _T _VALUE, class _U>
 class IntegralConstantContainer;
 
+template<class _T, class _U, _T _FIRST, _U _SECOND>
+class DoubleConstantContainer;
+
 template<ll_bool_t _CONDITION, class _T, class _U>
 class Conditional;
 template<class _T, class _U>
@@ -136,7 +139,35 @@ using integral_constant_container_t = ::llcpp::meta::traits::IntegralConstantCon
 template<class _T, _T _VALUE, class _U>
 using integral_constant_container_u = ::llcpp::meta::traits::IntegralConstantContainer<_T, _VALUE, _U>::U;
 template<class _T, _T _VALUE, class _U>
-__LL_VAR_INLINE__ constexpr _T integral_constant_container_v = traits::IntegralConstantContainer<_T, _VALUE, _U>::VALUE;
+__LL_VAR_INLINE__ constexpr _T integral_constant_container_v =
+	::llcpp::meta::traits::IntegralConstantContainer<_T, _VALUE, _U>::VALUE;
+
+template<class _T, class _U, _T _FIRST, _U _SECOND>
+class DoubleConstantContainer {
+	public:
+		// Class related
+		using _MyType				= DoubleConstantContainer;
+
+		// Types and enums
+		using T						= _T;
+		using U						= _U;
+
+	public:
+		// Expresions
+		static constexpr T FIRST	= _FIRST;
+		static constexpr T SECOND	= _SECOND;
+};
+
+template<class _T, class _U, _T _FIRST, _U _SECOND>
+using double_constant_container_t = ::llcpp::meta::traits::DoubleConstantContainer<_T, _U, _FIRST, _SECOND>::T;
+template<class _T, class _U, _T _FIRST, _U _SECOND>
+using double_constant_container_u = ::llcpp::meta::traits::DoubleConstantContainer<_T, _U, _FIRST, _SECOND>::U;
+template<class _T, class _U, _T _FIRST, _U _SECOND>
+__LL_VAR_INLINE__ constexpr _T double_constant_container_first =
+	::llcpp::meta::traits::DoubleConstantContainer<_T, _U, _FIRST, _SECOND>::FIRST;
+template<class _T, class _U, _T _FIRST, _U _SECOND>
+__LL_VAR_INLINE__ constexpr _T double_constant_container_second =
+	::llcpp::meta::traits::DoubleConstantContainer<_T, _U, _FIRST, _SECOND>::SECOND;
 
 #pragma endregion
 #pragma region LogicContainers
@@ -351,6 +382,10 @@ template<class T>
 using type_signalize_u =	::llcpp::meta::traits::TypeSigned<T, ::llcpp::TRUE>;
 template<class T>
 using type_unsignalize_u =	::llcpp::meta::traits::TypeSigned<T, ::llcpp::FALSE>;
+
+#pragma endregion
+#pragma region ConstChecker
+
 
 #pragma endregion
 #pragma region Limits

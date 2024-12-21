@@ -18,9 +18,9 @@
 	#endif // LLANYLIB_CLUSTER_INCOMPLETE_MAYOR_ || LLANYLIB_CLUSTER_INCOMPLETE_MINOR_
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_CLUSTER_INCOMPLETE_HPP_)
-#define LLANYLIB_CLUSTER_INCOMPLETE_HPP_
-#define LLANYLIB_CLUSTER_INCOMPLETE_MAYOR_ 11
-#define LLANYLIB_CLUSTER_INCOMPLETE_MINOR_ 0
+	#define LLANYLIB_CLUSTER_INCOMPLETE_HPP_
+	#define LLANYLIB_CLUSTER_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_CLUSTER_INCOMPLETE_MINOR_ 0
 
 #include "ClusterEnum.hpp"
 
@@ -44,9 +44,9 @@ class GenericCluster;
 	#endif // LLANYLIB_CLUSTER_MAYOR_ || LLANYLIB_CLUSTER_MINOR_
 
 #else
-#define LLANYLIB_CLUSTER_HPP_
-#define LLANYLIB_CLUSTER_MAYOR_ 11
-#define LLANYLIB_CLUSTER_MINOR_ 0
+	#define LLANYLIB_CLUSTER_HPP_
+	#define LLANYLIB_CLUSTER_MAYOR_ 11
+	#define LLANYLIB_CLUSTER_MINOR_ 0
 
 #include "ClusterEnum.hpp"
 
@@ -114,8 +114,21 @@ class GenericCluster {
 
 #endif // LLANYLIB_CLUSTER_HPP_
 
-#if !defined(LLANYLIB_CLUSTER_EXTRA_HPP_) && !defined(LLANYLIB_ERROR_HPP_) && defined(LLANYLIB_CLUSTERENUM_HPP_)
-#define LLANYLIB_CLUSTER_EXTRA_HPP_
+#if !defined(LLANYLIB_ERROR_HPP_)
+	#if defined(LLANYLIB_CLUSTERENUM_HPP_)
+		#if defined(LLANYLIB_CLUSTER_EXTRA_HPP_)
+			#if LLANYLIB_CLUSTER_EXTRA_MAYOR_ != 11 || LLANYLIB_CLUSTER_EXTRA_MINOR_ < 0
+				#if defined(__LL_REAL_CXX23)
+					#warning "Cluster.hpp(extra) version error!"
+				#else
+					#error "Cluster.hpp(extra) version error!"
+				#endif // __LL_REAL_CXX23
+			#endif // LLANYLIB_CLUSTER_EXTRA_MAYOR_ || LLANYLIB_CLUSTER_EXTRA_MINOR_
+
+		#else
+			#define LLANYLIB_CLUSTER_EXTRA_HPP_
+			#define LLANYLIB_CLUSTER_EXTRA_MAYOR_ 11
+			#define LLANYLIB_CLUSTER_EXTRA_MINOR_ 0
 
 namespace llcpp {
 namespace meta {
@@ -148,8 +161,8 @@ using HalfCluster = ::llcpp::meta::GenericCluster<::llcpp::meta::ClusterType::Ha
 } // namespace meta
 } // namespace llcpp
 
-#endif // !LLANYLIB_CLUSTER_EXTRA_HPP_ && !LLANYLIB_ERROR_HPP_ && LLANYLIB_CLUSTERENUM_HPP_
-
-#if defined(LLANYLIB_ERROR_HPP_)
+		#endif // LLANYLIB_CLUSTER_EXTRA_HPP_
+	#endif // LLANYLIB_CLUSTERENUM_HPP_
+#else
 	#undef LLANYLIB_ERROR_HPP_
 #endif // LLANYLIB_ERROR_HPP_

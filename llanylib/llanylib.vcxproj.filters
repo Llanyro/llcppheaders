@@ -67,6 +67,9 @@
     <Filter Include="Source Files\v11\4 utils_base">
       <UniqueIdentifier>{69b24f81-34fc-487c-a707-1bf41a70da8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\v11\3 traits_base\checker">
+      <UniqueIdentifier>{bab08c34-2426-4749-a23c-d183f01ca696}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\llanylib.hpp">
@@ -189,8 +192,32 @@
     <ClInclude Include="traits_base\traits_compare.hpp">
       <Filter>Source Files\v11\3 traits_base</Filter>
     </ClInclude>
-    <ClInclude Include="traits_base\traits_object_checker.hpp">
+    <ClInclude Include="traits_base\traits_signature_pre.hpp">
       <Filter>Source Files\v11\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\checker\traits_iterator_checker.hpp">
+      <Filter>Source Files\v11\3 traits_base\checker</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\Cleaner.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\common_functions.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\algorithm.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\NodePrev.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\Node.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\NodeDouble.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\NodeNext.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

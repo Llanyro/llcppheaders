@@ -18,9 +18,9 @@
 	#endif // LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ || LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TYPETRAITS_INCOMPLETE_HPP_)
-#define LLANYLIB_TYPETRAITS_INCOMPLETE_HPP_
-#define LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ 11
-#define LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ 0
+	#define LLANYLIB_TYPETRAITS_INCOMPLETE_HPP_
+	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ 0
 
 #include "../types_base/types_base_extra.hpp"
 
@@ -68,9 +68,9 @@ class RangeChecker;
 	#endif // LLANYLIB_TYPETRAITS_MAYOR_ || LLANYLIB_TYPETRAITS_MINOR_
 
 #else
-#define LLANYLIB_TYPETRAITS_HPP_
-#define LLANYLIB_TYPETRAITS_MAYOR_ 11
-#define LLANYLIB_TYPETRAITS_MINOR_ 0
+	#define LLANYLIB_TYPETRAITS_HPP_
+	#define LLANYLIB_TYPETRAITS_MAYOR_ 11
+	#define LLANYLIB_TYPETRAITS_MINOR_ 0
 
 #include "../types_base/types_base_extra.hpp"
 
@@ -462,8 +462,20 @@ __LL_VAR_INLINE__ constexpr T ZERO_VALUE	= T{};
 
 #endif // LLANYLIB_TYPETRAITS_HPP_
 
-#if !defined(LLANYLIB_TYPETRAITS_EXTRA_HPP_) && !defined(LLANYLIB_ERROR_HPP_)
-#define LLANYLIB_TYPETRAITS_EXTRA_HPP_
+#if !defined(LLANYLIB_ERROR_HPP_)
+	#if defined(LLANYLIB_TYPETRAITS_EXTRA_HPP_)
+		#if LLANYLIB_TYPETRAITS_EXTRA_MAYOR_ != 11 || LLANYLIB_TYPETRAITS_EXTRA_MINOR_ < 0
+			#if defined(__LL_REAL_CXX23)
+				#warning "type_traits.hpp(extra) version error!"
+			#else
+				#error "type_traits.hpp(extra) version error!"
+			#endif // __LL_REAL_CXX23
+		#endif // LLANYLIB_TYPETRAITS_EXTRA_MAYOR_ || LLANYLIB_TYPETRAITS_EXTRA_MINOR_
+
+	#else
+		#define LLANYLIB_TYPETRAITS_EXTRA_HPP_
+		#define LLANYLIB_TYPETRAITS_EXTRA_MAYOR_ 11
+		#define LLANYLIB_TYPETRAITS_EXTRA_MINOR_ 0
 
 namespace llcpp {
 namespace meta {
@@ -484,8 +496,7 @@ using FalseType			= ::llcpp::meta::traits::BoolConstant<llcpp::FALSE, _U>;
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_TYPETRAITS_EXTRA_HPP_
-
-#if defined(LLANYLIB_ERROR_HPP_)
+	#endif // LLANYLIB_TYPETRAITS_EXTRA_HPP_
+#else
 	#undef LLANYLIB_ERROR_HPP_
 #endif // LLANYLIB_ERROR_HPP_

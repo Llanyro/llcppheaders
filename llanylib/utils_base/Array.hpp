@@ -18,9 +18,9 @@
 	#endif // LLANYLIB_ARRAY_INCOMPLETE_MAYOR_ || LLANYLIB_ARRAY_INCOMPLETE_MINOR_
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_ARRAY_INCOMPLETE_HPP_)
-#define LLANYLIB_ARRAY_INCOMPLETE_HPP_
-#define LLANYLIB_ARRAY_INCOMPLETE_MAYOR_ 11
-#define LLANYLIB_ARRAY_INCOMPLETE_MINOR_ 0
+	#define LLANYLIB_ARRAY_INCOMPLETE_HPP_
+	#define LLANYLIB_ARRAY_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_ARRAY_INCOMPLETE_MINOR_ 0
 
 #undef LLANYLIB_INCOMPLETE_HPP_
 #include "../traits_base/traits_checker.hpp"
@@ -29,9 +29,9 @@
 namespace llcpp {
 namespace meta {
 
-template<class _T, attributes::checker_attributes_t _TYPE_CHECKER>
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
 class Array;
-template<class _T, attributes::checker_attributes_t _TYPE_CHECKER>
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
 class ConstArray;
 
 } // namespace meta
@@ -48,9 +48,9 @@ class ConstArray;
 	#endif // LLANYLIB_ARRAY_MAYOR_ || LLANYLIB_ARRAY_MINOR_
 
 #else
-#define LLANYLIB_ARRAY_HPP_
-#define LLANYLIB_ARRAY_MAYOR_ 11
-#define LLANYLIB_ARRAY_MINOR_ 0
+	#define LLANYLIB_ARRAY_HPP_
+	#define LLANYLIB_ARRAY_MAYOR_ 11
+	#define LLANYLIB_ARRAY_MINOR_ 0
 
 #include "../traits_base/traits_checker.hpp"
 
@@ -323,11 +323,6 @@ class Array {
 	public:
 		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T, TYPE_CHECKER>,
 			"type_checker<T> detected an invalid type!");
-
-	#pragma endregion
-	#pragma region Friends
-	private:
-		friend class ConstArray;
 
 	#pragma endregion
 	#pragma region Attributes
@@ -654,44 +649,83 @@ class Array {
 };
 
 #pragma region Array_ConstArray_Compatibility
-template<class _T, attributes::checker_attributes_t _TYPE_CHECKER>
-__LL_INLINE__ constexpr ConstArray<_T, _TYPE_CHECKER>::ConstArray(const Array& other) noexcept
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
+__LL_INLINE__ constexpr ::llcpp::meta::ConstArray<_T, _TYPE_CHECKER>::ConstArray(const Array& other) noexcept
 	: mem(other.begin()), mem_end(other.end()) {}
-template<class _T, attributes::checker_attributes_t _TYPE_CHECKER>
-__LL_INLINE__ constexpr ConstArray<_T, _TYPE_CHECKER>& ConstArray<_T, _TYPE_CHECKER>::operator=(const Array& other) noexcept {
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
+__LL_INLINE__ constexpr ::llcpp::meta::ConstArray<_T, _TYPE_CHECKER>& ::llcpp::meta::ConstArray<_T, _TYPE_CHECKER>::operator=(const Array& other) noexcept {
 	this->setMem(other.begin());
 	this->setMemEnd(other.end());
 	return *this;
 }
-template<class _T, attributes::checker_attributes_t _TYPE_CHECKER>
-__LL_INLINE__ constexpr ConstArray<_T, _TYPE_CHECKER>::ConstArray(Array&& other) noexcept
-	: mem(other.begin()), mem_end(other.end()) { other.simpleClear(); }
-template<class _T, attributes::checker_attributes_t _TYPE_CHECKER>
-__LL_INLINE__ constexpr ConstArray<_T, _TYPE_CHECKER>& ConstArray<_T, _TYPE_CHECKER>::operator=(Array&& other) noexcept {
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
+__LL_INLINE__ constexpr ::llcpp::meta::ConstArray<_T, _TYPE_CHECKER>::ConstArray(Array&& other) noexcept
+	: mem(other.begin()), mem_end(other.end()) { other.clear(); }
+template<class _T, ::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
+__LL_INLINE__ constexpr ::llcpp::meta::ConstArray<_T, _TYPE_CHECKER>& ::llcpp::meta::ConstArray<_T, _TYPE_CHECKER>::operator=(Array&& other) noexcept {
 	this->setMem(other.begin());
 	this->setMemEnd(other.end());
-	other.simpleClear();
+	other.clear();
 	return *this;
 }
 
 #pragma endregion
 #pragma region Builders
-template<attributes::checker_attributes_t _TYPE_CHECKER = attributes::checker::IGNORE_PA, class _T, u64 _N>
+#pragma region Array
+template<
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+		::llcpp::meta::attributes::checker::IGNORE_PA,
+	class _T, u64 _N
+>
 __LL_NODISCARD__ constexpr Array<_T, _TYPE_CHECKER> make_Array(_T(&_array)[_N]) noexcept {
-	return Array<T>(_array, _array + _N);
+	return Array<_T>(_array, _array + _N);
 }
-template<attributes::checker_attributes_t _TYPE_CHECKER = attributes::checker::IGNORE_PA, class _T, u64 _N>
-__LL_NODISCARD__ constexpr ConstArray<_T, _TYPE_CHECKER> make_ConstArray(const _T(&_array)[_N]) noexcept {
-	return ConstArray<T>(_array, _array + _N);
+template<
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+	::llcpp::meta::attributes::checker::IGNORE_PA,
+	u64 _N
+>
+__LL_NODISCARD__ constexpr Array<ll_char_t, _TYPE_CHECKER> make_Array(const ll_char_t(&_array)[_N]) noexcept {
+	return Array<ll_char_t>(_array, _array + _N);
 }
-template<attributes::checker_attributes_t _TYPE_CHECKER = attributes::checker::IGNORE_PA, u64 _N>
+template<
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+	::llcpp::meta::attributes::checker::IGNORE_PA,
+	u64 _N
+>
+__LL_NODISCARD__ constexpr Array<ll_wchar_t, _TYPE_CHECKER> make_Array(const ll_wchar_t(&_array)[_N]) noexcept {
+	return Array<ll_wchar_t>(_array, _array + _N);
+}
+
+#pragma endregion
+#pragma region ConstArray
+
+template<
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+	::llcpp::meta::attributes::checker::IGNORE_PA,
+	class _T, u64 _N
+>
+__LL_NODISCARD__ constexpr ConstArray<_T, _TYPE_CHECKER> make_ConstArray(_T(&_array)[_N]) noexcept {
+	return ConstArray<_T>(_array, _array + _N);
+}
+template<
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+	::llcpp::meta::attributes::checker::IGNORE_PA,
+	u64 _N
+>
 __LL_NODISCARD__ constexpr ConstArray<ll_char_t, _TYPE_CHECKER> make_ConstArray(const ll_char_t(&_array)[_N]) noexcept {
-	return ConstArray<ll_char_t>(_array, _array + _N - 1);
+	return ConstArray<ll_char_t>(_array, _array + _N);
 }
-template<attributes::checker_attributes_t _TYPE_CHECKER = attributes::checker::IGNORE_PA, u64 _N>
+template<
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+	::llcpp::meta::attributes::checker::IGNORE_PA,
+	u64 _N
+>
 __LL_NODISCARD__ constexpr ConstArray<ll_wchar_t, _TYPE_CHECKER> make_ConstArray(const ll_wchar_t(&_array)[_N]) noexcept {
-	return ConstArray<ll_wchar_t>(_array, _array + _N - 1);
+	return ConstArray<ll_wchar_t>(_array, _array + _N);
 }
+
+#pragma endregion
 
 #pragma endregion
 

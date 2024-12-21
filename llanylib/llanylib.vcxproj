@@ -28,13 +28,14 @@
     <ClInclude Include="math\math.hpp" />
     <ClInclude Include="old\examples\traitsExample.hpp" />
     <ClInclude Include="parser\TLVParser.hpp" />
+    <ClInclude Include="traits_base\checker\traits_iterator_checker.hpp" />
     <ClInclude Include="traits_base\traits_base.hpp" />
     <ClInclude Include="traits_base\traits_checker.hpp" />
     <ClInclude Include="traits_base\traits_compare.hpp" />
-    <ClInclude Include="traits_base\traits_object_checker.hpp" />
     <ClInclude Include="traits_base\traits_parameter_pack.hpp" />
     <ClInclude Include="traits_base\traits_selection.hpp" />
     <ClInclude Include="traits_base\traits_signature.hpp" />
+    <ClInclude Include="traits_base\traits_signature_pre.hpp" />
     <ClInclude Include="traits_base\traits_type_modifier.hpp" />
     <ClInclude Include="traits_base\traits_type_wrapper.hpp" />
     <ClInclude Include="traits_base\type_traits.hpp" />
@@ -59,7 +60,14 @@
     <ClInclude Include="utils\node\NodeDouble.hpp" />
     <ClInclude Include="utils\node\NodeNext.hpp" />
     <ClInclude Include="utils\node\NodePrev.hpp" />
+    <ClInclude Include="utils_base\algorithm.hpp" />
     <ClInclude Include="utils_base\Array.hpp" />
+    <ClInclude Include="utils_base\Cleaner.hpp" />
+    <ClInclude Include="utils_base\common_functions.hpp" />
+    <ClInclude Include="utils_base\Node.hpp" />
+    <ClInclude Include="utils_base\NodeDouble.hpp" />
+    <ClInclude Include="utils_base\NodeNext.hpp" />
+    <ClInclude Include="utils_base\NodePrev.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -34,6 +34,38 @@ class Array;
 template<class _T, ::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
 class ConstArray;
 
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
+using Str = Array<ll_char_t, _TYPE_CHECKER>;
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
+using wStr = Array<ll_wchar_t, _TYPE_CHECKER>;
+
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
+using ConstStr = ConstArray<ll_char_t, _TYPE_CHECKER>;
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
+using ConstwStr = ConstArray<ll_wchar_t, _TYPE_CHECKER>;
+
+#pragma region Builders
+#pragma region Array
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER, class _T, u64 _N>
+__LL_NODISCARD__ constexpr Array<_T, _TYPE_CHECKER> make_Array(_T(&_array)[_N]) noexcept;
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER, u64 _N>
+__LL_NODISCARD__ constexpr Array<ll_char_t, _TYPE_CHECKER> make_Array(const ll_char_t(&_array)[_N]) noexcept;
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER, u64 _N>
+__LL_NODISCARD__ constexpr Array<ll_wchar_t, _TYPE_CHECKER> make_Array(const ll_wchar_t(&_array)[_N]) noexcept;
+
+#pragma endregion
+#pragma region ConstArray
+
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER, class _T, u64 _N>
+__LL_NODISCARD__ constexpr ConstArray<_T, _TYPE_CHECKER> make_ConstArray(_T(&_array)[_N]) noexcept;
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER, u64 _N>
+__LL_NODISCARD__ constexpr ConstArray<ll_char_t, _TYPE_CHECKER> make_ConstArray(const ll_char_t(&_array)[_N]) noexcept;
+template<::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER, u64 _N>
+__LL_NODISCARD__ constexpr ConstArray<ll_wchar_t, _TYPE_CHECKER> make_ConstArray(const ll_wchar_t(&_array)[_N]) noexcept;
+#pragma endregion
+
+#pragma endregion
+
 } // namespace meta
 } // namespace llcpp
 
@@ -670,6 +702,46 @@ __LL_INLINE__ constexpr ::llcpp::meta::ConstArray<_T, _TYPE_CHECKER>& ::llcpp::m
 }
 
 #pragma endregion
+#pragma region StringTypes
+template<::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER = ::llcpp::meta::attributes::checker::IGNORE_PA>
+using Str = ::llcpp::meta::Array<ll_char_t, TYPE_CHECKER>;
+template<::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER = ::llcpp::meta::attributes::checker::IGNORE_PA>
+using wStr = ::llcpp::meta::Array<ll_wchar_t, TYPE_CHECKER>;
+
+template<::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER = ::llcpp::meta::attributes::checker::IGNORE_PA>
+using ConstStr = ::llcpp::meta::ConstArray<ll_char_t, TYPE_CHECKER>;
+template<::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER = ::llcpp::meta::attributes::checker::IGNORE_PA>
+using ConstwStr = ::llcpp::meta::ConstArray<ll_wchar_t, TYPE_CHECKER>;
+
+namespace traits {
+
+template<class T, ::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER = ::llcpp::meta::attributes::checker::IGNORE_PA>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_string_type_v =
+	::std::_Is_any_of_v<
+		T,
+		::llcpp::meta::ConstStr<TYPE_CHECKER>,
+		::llcpp::meta::ConstwStr<TYPE_CHECKER>
+	>;
+
+template<class T, ::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER = ::llcpp::meta::attributes::checker::IGNORE_PA>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_str_type_v =
+	::std::_Is_any_of_v<
+		T,
+		::llcpp::meta::Str<TYPE_CHECKER>,
+		::llcpp::meta::wStr<TYPE_CHECKER>
+	>;
+
+// [TODO]
+/*template<class T>
+using ArrayWrapper = traits::conditional_t<
+	::std::is_array_v<T>,
+	meta::Array<traits::array_type_t<T>>,
+	T
+>;*/
+
+} // namespace traits
+
+#pragma endregion
 #pragma region Builders
 #pragma region Array
 template<
@@ -678,51 +750,53 @@ template<
 	class _T, u64 _N
 >
 __LL_NODISCARD__ constexpr Array<_T, _TYPE_CHECKER> make_Array(_T(&_array)[_N]) noexcept {
-	return Array<_T>(_array, _array + _N);
+	return Array<_T, _TYPE_CHECKER>(_array, _array + _N);
 }
-template<
-	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
-	::llcpp::meta::attributes::checker::IGNORE_PA,
-	u64 _N
->
-__LL_NODISCARD__ constexpr Array<ll_char_t, _TYPE_CHECKER> make_Array(const ll_char_t(&_array)[_N]) noexcept {
-	return Array<ll_char_t>(_array, _array + _N);
-}
-template<
-	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
-	::llcpp::meta::attributes::checker::IGNORE_PA,
-	u64 _N
->
-__LL_NODISCARD__ constexpr Array<ll_wchar_t, _TYPE_CHECKER> make_Array(const ll_wchar_t(&_array)[_N]) noexcept {
-	return Array<ll_wchar_t>(_array, _array + _N);
-}
-
-#pragma endregion
-#pragma region ConstArray
-
 template<
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
 	::llcpp::meta::attributes::checker::IGNORE_PA,
 	class _T, u64 _N
 >
-__LL_NODISCARD__ constexpr ConstArray<_T, _TYPE_CHECKER> make_ConstArray(_T(&_array)[_N]) noexcept {
+__LL_NODISCARD__ constexpr ConstArray<_T, _TYPE_CHECKER> make_ConstArray(const _T(&_array)[_N]) noexcept {
 	return ConstArray<_T>(_array, _array + _N);
 }
+
+#pragma endregion
+#pragma region String
 template<
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
-	::llcpp::meta::attributes::checker::IGNORE_PA,
-	u64 _N
+		::llcpp::meta::attributes::checker::IGNORE_PA,
+	class _T, u64 _N
 >
-__LL_NODISCARD__ constexpr ConstArray<ll_char_t, _TYPE_CHECKER> make_ConstArray(const ll_char_t(&_array)[_N]) noexcept {
-	return ConstArray<ll_char_t>(_array, _array + _N);
+__LL_NODISCARD__ constexpr ::llcpp::meta::Str<_TYPE_CHECKER> make_String(ll_char_t(&_array)[_N]) noexcept {
+	return ::llcpp::meta::Str<_TYPE_CHECKER>(_array, _array + _N - 1);
 }
 template<
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
-	::llcpp::meta::attributes::checker::IGNORE_PA,
-	u64 _N
+		::llcpp::meta::attributes::checker::IGNORE_PA,
+	class _T, u64 _N
 >
-__LL_NODISCARD__ constexpr ConstArray<ll_wchar_t, _TYPE_CHECKER> make_ConstArray(const ll_wchar_t(&_array)[_N]) noexcept {
-	return ConstArray<ll_wchar_t>(_array, _array + _N);
+__LL_NODISCARD__ constexpr ::llcpp::meta::wStr<_TYPE_CHECKER> make_String(ll_wchar_t(&_array)[_N]) noexcept {
+	return ::llcpp::meta::wStr<_TYPE_CHECKER>(_array, _array + _N - 1);
+}
+
+#pragma endregion
+#pragma region ConstString
+template<
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+		::llcpp::meta::attributes::checker::IGNORE_PA,
+	class _T, u64 _N
+>
+__LL_NODISCARD__ constexpr ::llcpp::meta::Str<_TYPE_CHECKER> make_ConstString(const ll_char_t(&_array)[_N]) noexcept {
+	return ::llcpp::meta::ConstStr<_TYPE_CHECKER>(_array, _array + _N - 1);
+}
+template<
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+		::llcpp::meta::attributes::checker::IGNORE_PA,
+	class _T, u64 _N
+>
+__LL_NODISCARD__ constexpr ::llcpp::meta::wStr<_TYPE_CHECKER> make_ConstString(const ll_wchar_t(&_array)[_N]) noexcept {
+	return ::llcpp::meta::ConstwStr<_TYPE_CHECKER>(_array, _array + _N - 1);
 }
 
 #pragma endregion
@@ -733,54 +807,3 @@ __LL_NODISCARD__ constexpr ConstArray<ll_wchar_t, _TYPE_CHECKER> make_ConstArray
 } // namespace llcpp
 
 #endif // LLANYLIB_ARRAY_HPP_
-
-#if !defined(LLANYLIB_ARRAY_EXTRA_HPP_) && !defined(LLANYLIB_ERROR_HPP_)
-#define LLANYLIB_ARRAY_EXTRA_HPP_
-
-namespace llcpp {
-namespace meta {
-
-template<attributes::checker_attributes_t TYPE_CHECKER = attributes::checker::IGNORE_PA>
-using Str = Array<ll_char_t, TYPE_CHECKER>;
-template<attributes::checker_attributes_t TYPE_CHECKER = attributes::checker::IGNORE_PA>
-using wStr = Array<ll_wchar_t, TYPE_CHECKER>;
-
-template<attributes::checker_attributes_t TYPE_CHECKER = attributes::checker::IGNORE_PA>
-using ConstStr = ConstArray<ll_char_t, TYPE_CHECKER>;
-template<attributes::checker_attributes_t TYPE_CHECKER = attributes::checker::IGNORE_PA>
-using ConstwStr = ConstArray<ll_wchar_t, TYPE_CHECKER>;
-
-namespace traits {
-
-template<class T, attributes::checker_attributes_t TYPE_CHECKER = attributes::checker::IGNORE_PA>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_string_type_v =
-	::std::_Is_any_of_v<
-		T,
-		meta::ConstStr<TYPE_CHECKER>,
-		meta::ConstwStr<TYPE_CHECKER>
-	>;
-
-template<class T, attributes::checker_attributes_t TYPE_CHECKER = attributes::checker::IGNORE_PA>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_str_type_v =
-	::std::_Is_any_of_v<
-		T,
-		meta::Str<TYPE_CHECKER>,
-		meta::wStr<TYPE_CHECKER>
-	>;
-
-/*template<class T>
-using ArrayWrapper = traits::conditional_t<
-	::std::is_array_v<T>,
-	meta::Array<traits::array_type_t<T>>,
-	T
->;*/
-
-} // namespace traits
-} // namespace meta
-} // namespace llcpp
-
-#endif // LLANYLIB_ARRAY_EXTRA_HPP_
-
-#if defined(LLANYLIB_ERROR_HPP_)
-	#undef LLANYLIB_ERROR_HPP_
-#endif // LLANYLIB_ERROR_HPP_

@@ -95,16 +95,6 @@ class GenericCluster {
 		__LL_NODISCARD__ constexpr explicit operator GenericCluster*() noexcept { return this; }
 
 		#pragma endregion
-		#pragma region ClassFunctions
-	public:
-		__LL_NODISCARD__ constexpr ClusterType getClusterType() const noexcept { return CLUSTER_TYPE; }
-
-		template<llcpp::meta::ClusterType _CLUSTER_TYPE_>
-		__LL_NODISCARD__ constexpr ll_bool_t isSameClusterType(const GenericCluster<_CLUSTER_TYPE_>& other) const noexcept { return llcpp::FALSE; }
-		template<>
-		__LL_NODISCARD__ constexpr ll_bool_t isSameClusterType<CLUSTER_TYPE>(const GenericCluster<CLUSTER_TYPE>& other) const noexcept { return llcpp::TRUE; }
-
-		#pragma endregion
 
 	#pragma endregion
 };

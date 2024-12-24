@@ -73,11 +73,6 @@ class Boolean {
 
 	#pragma endregion
 	#pragma region Functions
-		#pragma region Private
-	private:
-		constexpr void simpleClear() noexcept { this->value = _MyType::enum_bool::UNKNOWN; }
-
-		#pragma endregion
 		#pragma region Constructor
 	public:
 		constexpr Boolean() noexcept : value(_MyType::enum_bool::UNKNOWN) {}
@@ -88,28 +83,32 @@ class Boolean {
 	public:
 		constexpr Boolean(const Boolean& other) noexcept : value(other.value) {}
 		constexpr Boolean& operator=(const Boolean& other) noexcept {
-			this->value = other.value;
+			this->set(other.value);
 			return *this;
 		}
-		constexpr Boolean(Boolean&& other) noexcept : value(other.value) { other.simpleClear(); }
+		constexpr Boolean(Boolean&& other) noexcept : value(other.value) { other.clear(); }
 		constexpr Boolean& operator=(Boolean&& other) noexcept {
-			this->value = other.value;
-			other.simpleClear();
+			this->set(other.value);
+			other.clear();
 			return *this;
 		}
 
 		constexpr Boolean(const enum_bool value) noexcept : value(value) {}
-		constexpr enum_bool operator=(const enum_bool value) noexcept {
-			this->value = value;
-			return value;
+		constexpr Boolean operator=(const enum_bool value) noexcept {
+			this->set(value);
+			return *this;
 		}
 
-		constexpr Boolean(const ll_bool_t value) noexcept
-			: value(static_cast<enum_bool>(value)) {}
-		constexpr ll_bool_t operator=(const ll_bool_t value) noexcept {
-			this->value = static_cast<enum_bool>(value);
-			return value;
+		constexpr Boolean(const ll_bool_t value) noexcept : value(_MyType::convert(value)) {}
+		constexpr Boolean operator=(const ll_bool_t value) noexcept {
+			this->set(value);
+			return *this;
 		}
+
+		constexpr Boolean(const volatile enum_bool value) noexcept = delete;
+		constexpr Boolean operator=(const volatile enum_bool value) noexcept = delete;
+		constexpr Boolean(const volatile ll_bool_t value) noexcept = delete;
+		constexpr Boolean operator=(const volatile ll_bool_t value) noexcept = delete;
 
 		constexpr Boolean(const volatile Boolean&) = delete;
 		constexpr Boolean& operator=(const volatile Boolean&) = delete;
@@ -125,17 +124,31 @@ class Boolean {
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr explicit operator ll_bool_t() const noexcept {
-			return this->value == enum_bool::TRUE;
+		__LL_NODISCARD__ static constexpr ll_bool_t convert(const enum_bool value) noexcept {
+			return value == enum_bool::TRUE;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t get_bool() const noexcept {
+		__LL_NODISCARD__ static constexpr enum_bool convert(const ll_bool_t value) noexcept {
+			return static_cast<enum_bool>(value);
+		}
+
+		constexpr void set(const ll_bool_t value) noexcept {
+			this->value = _MyType::convert(value);
+		}
+		constexpr void set(const enum_bool value) noexcept {
+			this->value = value;
+		}
+
+		__LL_NODISCARD__ constexpr explicit operator ll_bool_t() const noexcept {
+			return _MyType::convert(value);
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t as_bool() const noexcept {
 			return this->operator ll_bool_t();
 		}
 
 		__LL_NODISCARD__ constexpr explicit operator enum_bool() const noexcept {
 			return this->value;
 		}
-		__LL_NODISCARD__ constexpr enum_bool get_Boolean() const noexcept {
+		__LL_NODISCARD__ constexpr enum_bool as_enum() const noexcept {
 			return this->operator enum_bool();
 		}
 
@@ -147,11 +160,13 @@ class Boolean {
 		}
 
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const ll_bool_t value) const noexcept {
-			return this->value == static_cast<enum_bool>(value);
+			return this->value == _MyType::convert(value);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const ll_bool_t value) const noexcept {
-			return this->value != static_cast<enum_bool>(value);
+			return this->value != _MyType::convert(value);
 		}
+
+		constexpr void clear() noexcept { this->value = _MyType::enum_bool::UNKNOWN; }
 
 		#pragma endregion
 

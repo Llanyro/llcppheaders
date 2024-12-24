@@ -151,6 +151,15 @@ class PrimitiveBase {
 			return *this;
 		}
 
+		constexpr PrimitiveBase(const volatile PrimitiveBase& other) noexcept = delete;
+		constexpr PrimitiveBase& operator=(const volatile PrimitiveBase& other) noexcept = delete;
+		constexpr PrimitiveBase(volatile PrimitiveBase&& other) noexcept = delete;
+		constexpr PrimitiveBase& operator=(volatile PrimitiveBase&& other) noexcept = delete;
+		constexpr PrimitiveBase(const volatile T& primitive) noexcept = delete;
+		constexpr PrimitiveBase& operator=(const volatile T& primitive) noexcept;
+		constexpr PrimitiveBase(volatile T&& primitive) noexcept = delete;
+		constexpr PrimitiveBase& operator=(volatile T&& primitive) noexcept = delete;
+
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
@@ -465,6 +474,15 @@ class PrimitiveFloating : public PrimitiveBase<_T> {
 			return *this;
 		}
 
+		constexpr PrimitiveFloating(const volatile PrimitiveFloating& other) noexcept = delete;
+		constexpr PrimitiveFloating& operator=(const volatile PrimitiveFloating& other) noexcept = delete;
+		constexpr PrimitiveFloating(volatile PrimitiveFloating&& other) noexcept = delete;
+		constexpr PrimitiveFloating& operator=(volatile PrimitiveFloating&& other) noexcept = delete;
+		constexpr PrimitiveFloating(const volatile T& primitive) noexcept = delete;
+		constexpr PrimitiveFloating& operator=(const volatile T& primitive) noexcept;
+		constexpr PrimitiveFloating(volatile T&& primitive) noexcept = delete;
+		constexpr PrimitiveFloating& operator=(volatile T&& primitive) noexcept = delete;
+
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
@@ -585,6 +603,15 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 			PrimitiveBase::operator=(::std::forward<T&&>(primitive));
 			return *this;
 		}
+
+		constexpr PrimitiveInteger(const volatile PrimitiveInteger& other) noexcept = delete;
+		constexpr PrimitiveInteger& operator=(const volatile PrimitiveInteger& other) noexcept = delete;
+		constexpr PrimitiveInteger(volatile PrimitiveInteger&& other) noexcept = delete;
+		constexpr PrimitiveInteger& operator=(volatile PrimitiveInteger&& other) noexcept = delete;
+		constexpr PrimitiveInteger(const volatile T& primitive) noexcept = delete;
+		constexpr PrimitiveInteger& operator=(const volatile T& primitive) noexcept;
+		constexpr PrimitiveInteger(volatile T&& primitive) noexcept = delete;
+		constexpr PrimitiveInteger& operator=(volatile T&& primitive) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators

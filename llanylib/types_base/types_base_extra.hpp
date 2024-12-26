@@ -50,10 +50,32 @@ class UndefinedIncompleteObject;
 
 namespace llcpp {
 
-class Emptyclass				{ public: using _MyType = Emptyclass; };
+class AlwaysValid {
+	public:
+		using _MyType = AlwaysValid;
+};
+class AlwaysInvalid {
+	public:
+		using _MyType = AlwaysInvalid;
+};
+
+class Emptyclass : public ::llcpp::AlwaysInvalid {
+	public:
+		using _MyType = Emptyclass;
+};
+// This class is a base thet does not inherits from anything
+// Can be used to be inherited if any error is detected 
+//	like inherit from AlwaysValid and AlwaysInvalid at the same time
+class DummyClass {
+	public:
+		using _MyType = DummyClass;
+};
 // When using incomplete lib && some type is not possible to exist but using complete lib
 //	this type will be used
-class UndefinedIncompleteObject	{ public: using _MyType = UndefinedIncompleteObject; };
+class UndefinedIncompleteObject : public ::llcpp::AlwaysInvalid {
+	public:
+		using _MyType = UndefinedIncompleteObject;
+};
 
 } // namespace llcpp
 

@@ -76,11 +76,11 @@ using _MyType = ::llcpp::meta::attributes::function_attributes_t::_MyType;
 template<ll_bool_t IS_CONST, ll_bool_t IS_NOEXCEPT>
 static constexpr _MyType CUSTOM = { IS_CONST, IS_NOEXCEPT };
 
-//															const			noexception
-__LL_VAR_INLINE__ constexpr _MyType CLASSIC				= { llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType CONST				= { llcpp::TRUE,  llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType NOEXCEPTION			= { llcpp::FALSE, llcpp::TRUE };
-__LL_VAR_INLINE__ constexpr _MyType CONSTNOEXCEPTION	= { llcpp::TRUE,  llcpp::TRUE  };
+//															const				noexception
+__LL_VAR_INLINE__ constexpr _MyType CLASSIC				= { ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType CONST				= { ::llcpp::TRUE,  ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType NOEXCEPTION			= { ::llcpp::FALSE, ::llcpp::TRUE };
+__LL_VAR_INLINE__ constexpr _MyType CONSTNOEXCEPTION	= { ::llcpp::TRUE,  ::llcpp::TRUE  };
 
 } // namespace functional
 

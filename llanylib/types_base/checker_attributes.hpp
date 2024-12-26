@@ -91,9 +91,9 @@ struct checker_attributes_t {
 	}
 
 	template<ll_bool_t IGNORE_POINTER, ll_bool_t IGNORE_ARRAY, ll_bool_t IGNORE_VOLATILE, ll_bool_t IGNORE_CONST, ll_bool_t IGNORE_REFERENCE>
-	static constexpr _MyType CUSTOM_P1 = { IGNORE_POINTER, IGNORE_ARRAY, IGNORE_VOLATILE, IGNORE_CONST, IGNORE_REFERENCE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
+	static constexpr _MyType CUSTOM_P1 = { IGNORE_POINTER, IGNORE_ARRAY, IGNORE_VOLATILE, IGNORE_CONST, IGNORE_REFERENCE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
 	template<ll_bool_t IGNORE_CONSTRUCTIBLE, ll_bool_t IGNORE_COPY_CONSTRUCTIBLE, ll_bool_t IGNORE_COPY_ASSIGNABLE, ll_bool_t IGNORE_MOVE_CONSTRUCTIBLE, ll_bool_t IGNORE_MOVE_ASSIGNABLE, ll_bool_t IGNORE_NOEXCEPT_DESTRUCT>
-	static constexpr _MyType CUSTOM_P2 = { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, IGNORE_CONSTRUCTIBLE, IGNORE_COPY_CONSTRUCTIBLE, IGNORE_COPY_ASSIGNABLE, IGNORE_MOVE_CONSTRUCTIBLE, IGNORE_MOVE_ASSIGNABLE, IGNORE_NOEXCEPT_DESTRUCT };
+	static constexpr _MyType CUSTOM_P2 = { ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, IGNORE_CONSTRUCTIBLE, IGNORE_COPY_CONSTRUCTIBLE, IGNORE_COPY_ASSIGNABLE, IGNORE_MOVE_CONSTRUCTIBLE, IGNORE_MOVE_ASSIGNABLE, IGNORE_NOEXCEPT_DESTRUCT };
 };
 
 namespace checker {
@@ -101,16 +101,16 @@ namespace checker {
 using _MyType = ::llcpp::meta::attributes::checker_attributes_t::_MyType;
 
 //														Pointer			Array		Volatile		Const		 Reference		Construct	CopyConstruct CopyAssign	MoveConstruct	MoveAssig	Noexcept destructible
-__LL_VAR_INLINE__ constexpr _MyType DEFAULT			= { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType IGNORE_POINTER	= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType IGNORE_ARRAY	= { llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType IGNORE_CONST	= { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType IGNORE_VOLATILE	= { llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType IGNORE_PA		= { llcpp::TRUE,  llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType IGNORE_CPA		= { llcpp::TRUE,  llcpp::TRUE,  llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType IGNORE_CP		= { llcpp::TRUE,  llcpp::FALSE, llcpp::FALSE, llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType IGNORE_CPV		= { llcpp::TRUE,  llcpp::FALSE, llcpp::TRUE,  llcpp::TRUE,	llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType IGNORE_DESTRUCT = { llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::FALSE, llcpp::TRUE  };
+__LL_VAR_INLINE__ constexpr _MyType DEFAULT			= { ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType IGNORE_POINTER	= { ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType IGNORE_ARRAY	= { ::llcpp::FALSE, ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType IGNORE_CONST	= { ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::TRUE,	::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType IGNORE_VOLATILE	= { ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType IGNORE_PA		= { ::llcpp::TRUE,  ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType IGNORE_CPA		= { ::llcpp::TRUE,  ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::TRUE,	::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType IGNORE_CP		= { ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::TRUE,	::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType IGNORE_CPV		= { ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::TRUE,  ::llcpp::TRUE,	::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType IGNORE_DESTRUCT = { ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::TRUE  };
 
 } // namespace checker
 

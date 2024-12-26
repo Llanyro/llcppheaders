@@ -25,11 +25,11 @@
 #include "types_base.hpp"
 
 #if defined(__LL_WINDOWS_SYSTEM)
-	using ll_pid_t = llcpp::u32;
+	using ll_pid_t = ::llcpp::u32;
 #elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
-	using ll_pid_t = llcpp::i32;
+	using ll_pid_t = ::llcpp::i32;
 #else
-	using ll_pid_t = llcpp::i32;
+	using ll_pid_t = ::llcpp::i32;
 #endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
 
 #endif // LLANYLIB_OSTYPES_HPP_

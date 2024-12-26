@@ -66,7 +66,7 @@ namespace traits {
 // Empty dummy class to use with primitive types
 // Its usefull to use in function checkers with primitive types
 template<class _T>
-class PrimitiveBase {
+class PrimitiveBase : ::llcpp::AlwaysValid {
 	#pragma region Types
 	public:
 		// Class related
@@ -755,16 +755,20 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 // Floating-point types are more restrictive than non floating-point types
 // In v11 floating-point types has less functionalities than other types
 template<class T>
-using PrimitiveWrapperSelection = traits::conditional_t<
-	traits::is_floating_type_v<T>,
-	traits::PrimitiveFloating<T>,
-	traits::PrimitiveInteger<T>
+using PrimitiveWrapperSelection = ::llcpp::meta::traits::conditional_t<
+	::llcpp::meta::traits::is_floating_type_v<T>,
+	::llcpp::meta::traits::PrimitiveFloating<T>,
+	::llcpp::meta::traits::PrimitiveInteger<T>
 >;
 
 // Wrapper commonly used in traits/metaprogramming to wrap primitive types
 // It makes easyer to work with primitives as objects
 template<class T>
-using PrimitiveWrapper = traits::conditional_t<std::is_class_v<T>, T, traits::PrimitiveWrapperSelection<T>>;
+using PrimitiveWrapper = ::llcpp::meta::traits::conditional_t<
+	::std::is_class_v<T>,
+	T,
+	::llcpp::meta::traits::PrimitiveWrapperSelection<T>
+>;
 
 } // namespace traits
 } // namespace meta

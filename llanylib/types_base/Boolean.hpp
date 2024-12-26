@@ -52,7 +52,7 @@ class Boolean;
 namespace llcpp {
 namespace meta {
 
-class Boolean {
+class Boolean : public ::llcpp::AlwaysValid {
 	#pragma region Types
 	public:
 		// Class related

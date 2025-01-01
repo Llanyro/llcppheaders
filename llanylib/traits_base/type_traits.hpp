@@ -181,7 +181,7 @@ template<class T, class U, class W>
 using IsNotSameTypeContainer = ::llcpp::meta::traits::BoolConstantContainer<!::std::is_same_v<T, U>, W>;
 
 using TrueContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::TRUE, ::llcpp::Emptyclass>;
-using FalseContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::TRUE, ::llcpp::Emptyclass>;
+using FalseContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::FALSE, ::llcpp::Emptyclass>;
 
 #pragma endregion
 #pragma region Conditional

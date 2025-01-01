@@ -38,6 +38,7 @@
 
 #define __LL_EASY_CUSTOM_FUNCTION_ALL_INCOMPLETE_2								\
 	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(predestruction, Predestruction);		\
+	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(isValid, IsValid);					\
 	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(nodeChecker, NodeChecker);			\
 	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(compareNode, CompareNode);			\
 	__LL_GENERIC_FUNCTION_GETTER_SIGNATURE(die, Die);							\

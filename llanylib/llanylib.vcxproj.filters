@@ -135,9 +135,6 @@
     <ClInclude Include="types_base\types_base.hpp">
       <Filter>Source Files\v11\2 types_base</Filter>
     </ClInclude>
-    <ClInclude Include="types_base\Cluster.hpp">
-      <Filter>Source Files\v11\2 types_base</Filter>
-    </ClInclude>
     <ClInclude Include="types_base\Boolean.hpp">
       <Filter>Source Files\v11\2 types_base</Filter>
     </ClInclude>
@@ -170,9 +167,6 @@
     </ClInclude>
     <ClInclude Include="utils_base\Array.hpp">
       <Filter>Source Files\v11\4 utils_base</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\ClusterEnum.hpp">
-      <Filter>Source Files\v11\2 types_base</Filter>
     </ClInclude>
     <ClInclude Include="types_base\functional_attributes.hpp">
       <Filter>Source Files\v11\2 types_base</Filter>
@@ -218,6 +212,9 @@
     </ClInclude>
     <ClInclude Include="utils_base\NodeNext.hpp">
       <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\checker\traits_validate_checker.hpp">
+      <Filter>Source Files\v11\3 traits_base\checker</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

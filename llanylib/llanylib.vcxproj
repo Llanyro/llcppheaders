@@ -29,6 +29,7 @@
     <ClInclude Include="old\examples\traitsExample.hpp" />
     <ClInclude Include="parser\TLVParser.hpp" />
     <ClInclude Include="traits_base\checker\traits_iterator_checker.hpp" />
+    <ClInclude Include="traits_base\checker\traits_validate_checker.hpp" />
     <ClInclude Include="traits_base\traits_base.hpp" />
     <ClInclude Include="traits_base\traits_checker.hpp" />
     <ClInclude Include="traits_base\traits_compare.hpp" />
@@ -42,7 +43,6 @@
     <ClInclude Include="traits_extra\traits_old.hpp" />
     <ClInclude Include="traits_extra\traits_return_getters.hpp" />
     <ClInclude Include="types_base\checker_attributes.hpp" />
-    <ClInclude Include="types_base\ClusterEnum.hpp" />
     <ClInclude Include="types_base\functional_attributes.hpp" />
     <ClInclude Include="types_base\Position.hpp" />
     <ClInclude Include="types_base\type_update.hpp" />
@@ -50,7 +50,6 @@
     <ClInclude Include="types_extra\pair.hpp" />
     <ClInclude Include="types_simple.hpp" />
     <ClInclude Include="types_base\Boolean.hpp" />
-    <ClInclude Include="types_base\Cluster.hpp" />
     <ClInclude Include="types_base\ostypes.hpp" />
     <ClInclude Include="types_base\types_base.hpp" />
     <ClInclude Include="types_base\types_base_extra.hpp" />

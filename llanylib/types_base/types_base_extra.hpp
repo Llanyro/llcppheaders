@@ -26,8 +26,14 @@
 
 namespace llcpp {
 
+class AlwaysValid;
+class AlwaysInvalid;
 class Emptyclass;
+class DummyClass;
 class UndefinedIncompleteObject;
+
+class Cluster;
+class HalfCluster;
 
 } // namespace llcpp
 
@@ -50,10 +56,15 @@ class UndefinedIncompleteObject;
 
 namespace llcpp {
 
+// This class and all classes that inherits from this, should be always a valid class
+//	It doesnt matter the situation (clear, move, etc)
+// All objects should keep in a valid state
 class AlwaysValid {
 	public:
 		using _MyType = AlwaysValid;
 };
+// This class and all classes that inherits from this, can never be valid objects
+// All objects should keep in an invalid/unchecked state
 class AlwaysInvalid {
 	public:
 		using _MyType = AlwaysInvalid;
@@ -75,6 +86,38 @@ class DummyClass {
 class UndefinedIncompleteObject : public ::llcpp::AlwaysInvalid {
 	public:
 		using _MyType = UndefinedIncompleteObject;
+};
+
+
+// Clusters are templates that shares same position as interfaces
+// That means:
+//	- Interfaces are classes that shares the same group of funtions to make a generic use of classes
+//	- Clusters are interfaces, but has no virtual methods, since they can be used as constexpr (metaprogramming)
+// Other differences are:
+//	CPP file:
+//		Interfaces should have a CPP file
+//		Clusters are full template classes, so they cant have it
+//	Virtual:
+//		Interfaces destructor should be virtual
+//		Clusters cannot have virtual methods (its not permited in metaprogramming)
+//	Inheritance:
+//		Interfaces are inherited from objects that overrides its virtual functions
+//		Clusters inherit from classes that gives them functions that they need to work
+//	Functions:
+//		Interfaces can have any type of functions
+//		Clusters can only have const functions (by llanystandard)
+class Cluster {
+	public:
+		using _MyType = Cluster;
+};
+// HalfClusters are similar to clusters but has a few differences
+// HalfClusters should inherit also from an object
+// The object inherited usually is edited by HalfCluster's functions
+//	So, the main difference its that HalfClusters can have "no const" functions that enable
+//	inherited object edition Ex: llcpp::meta::linked::FunctionalNode
+class HalfCluster {
+	public:
+		using _MyType = HalfCluster;
 };
 
 } // namespace llcpp

@@ -50,7 +50,6 @@ class Boolean;
 #include "types_base_extra.hpp"
 
 namespace llcpp {
-namespace meta {
 
 class Boolean : public ::llcpp::AlwaysValid {
 	#pragma region Types
@@ -175,16 +174,15 @@ class Boolean : public ::llcpp::AlwaysValid {
 
 namespace boolean {
 
-using _MyType = ::llcpp::meta::Boolean::_MyType;
+using _MyType = ::llcpp::Boolean::_MyType;
 
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_FALSE			= ::llcpp::FALSE;
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_TRUE			= ::llcpp::TRUE;
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_INVALID			= _MyType::enum_bool::INVALID;
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_UNKNOWN_BOOL	= _MyType::enum_bool::UNKNOWN;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_FALSE	= ::llcpp::FALSE;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_TRUE	= ::llcpp::TRUE;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_INVALID	= _MyType::enum_bool::INVALID;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_UNKNOWN	= _MyType::enum_bool::UNKNOWN;
 
 } // namespace boolean
 
-} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_BOOLEAN_HPP_

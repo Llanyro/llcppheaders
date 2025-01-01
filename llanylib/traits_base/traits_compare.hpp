@@ -64,9 +64,7 @@ class IsDifferenciable;
 	#define LLANYLIB_TRAITSCOMPARE_MAYOR_ 11
 	#define LLANYLIB_TRAITSCOMPARE_MINOR_ 0
 
-#include "../types_base/Cluster.hpp"
-#include "traits_signature.hpp"
-#include "traits_type_wrapper.hpp"
+#include "checker/traits_validate_checker.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -84,13 +82,16 @@ template<
 	class _Boolean				= ll_bool_t,
 	class _ExtraFunctions		= ::llcpp::Emptyclass
 >
-class IsComparable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
+class IsComparable
+	: public ::llcpp::Cluster
+	, public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValid>
+	, public _ExtraFunctions {
 	#pragma region Types
 	public:
 		// Class related
 		using _MyType				= IsComparable;				// This class with template
 		using ExtraFunctions		= _ExtraFunctions;			// Type of inherited class with extra function
-		using Cluster				= ::llcpp::meta::Cluster;	// This is a cluster type class
+		using Cluster				= ::llcpp::Cluster;			// This is a cluster type class
 
 		// Types and enums
 		using T						= _T;											// Element to compare by
@@ -249,13 +250,16 @@ template<
 	class _Orderning			= ::llcpp::meta::StandardComparation,
 	class _ExtraFunctions		= ::llcpp::Emptyclass
 >
-class IsDifferenciable : public ::llcpp::meta::Cluster, public _ExtraFunctions {
+class IsDifferenciable
+	: public ::llcpp::Cluster
+	, public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValid>
+	, public _ExtraFunctions {
 	#pragma region Types
 	public:
 		// Class related
 		using _MyType				= IsDifferenciable;			// This class with template
 		using ExtraFunctions		= _ExtraFunctions;			// Type of inherited class with extra function
-		using Cluster				= ::llcpp::meta::Cluster;	// This is a cluster type class
+		using Cluster				= ::llcpp::Cluster;			// This is a cluster type class
 
 		// Types and enums
 		using T						= _T;											// Element to compare by

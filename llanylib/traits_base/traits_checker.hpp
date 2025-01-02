@@ -63,6 +63,7 @@ namespace llcpp {
 namespace meta {
 namespace traits {
 
+#pragma region TypeChecker
 // Standard checker for types in this lib
 template<class _T, ::llcpp::meta::attributes::checker_attributes_t _ATTRIBUTES>
 class TypeChecker {
@@ -100,6 +101,8 @@ template<
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_type_checker_v =
 	::llcpp::meta::traits::TypeChecker<T, ATTRIBUTES>::is_valid_v;
 
+#pragma endregion
+#pragma region ClassChecker
 // Standard checker for classes and objects
 // Checks contruction / destruction and other operations needed
 template<class _T, ::llcpp::meta::attributes::checker_attributes_t _ATTRIBUTES>
@@ -142,6 +145,8 @@ class ConstructorChecker {
 template<class T, ::llcpp::meta::attributes::checker_attributes_t ATTRIBUTES = ::llcpp::meta::attributes::checker::DEFAULT>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_constructor_checker_v =
 	::llcpp::meta::traits::ConstructorChecker<T, ATTRIBUTES>::is_valid_v;
+
+#pragma endregion
 
 } // namespace traits
 } // namespace meta

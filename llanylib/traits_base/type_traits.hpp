@@ -449,12 +449,16 @@ class test_a {
 #pragma region LimitsPt2
 // Proxy of MAX_VALUE in ::llcpp::meta::traits
 template<class T>
-__LL_VAR_INLINE__ constexpr T MAX_VALUE		= ::llcpp::meta::traits::RangeChecker<T>::MAX_VALUE;
+__LL_VAR_INLINE__ constexpr T MAX_VALUE			= ::llcpp::meta::traits::RangeChecker<T>::MAX_VALUE;
 template<class T>
-__LL_VAR_INLINE__ constexpr T MIN_VALUE		= ::llcpp::meta::traits::RangeChecker<T>::MIN_VALUE;
+__LL_VAR_INLINE__ constexpr T MIN_VALUE			= ::llcpp::meta::traits::RangeChecker<T>::MIN_VALUE;
 // Zero value or default value returns a base type (default contructor)
 template<class T>
-__LL_VAR_INLINE__ constexpr T ZERO_VALUE	= T{};
+__LL_VAR_INLINE__ constexpr T ZERO_VALUE		= T{};
+template<class T>
+__LL_VAR_INLINE__ constexpr T* ZERO_VALUE<T*>	= LL_NULLPTR;
+template<class T>
+__LL_VAR_INLINE__ constexpr T NULL_VALUE		= ::llcpp::ZERO_VALUE<T>;
 
 #pragma endregion
 

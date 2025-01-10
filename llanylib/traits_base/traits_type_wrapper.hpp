@@ -65,7 +65,7 @@ namespace traits {
 
 // Empty dummy class to use with primitive types
 // Its usefull to use in function checkers with primitive types
-template<class _T>
+template<class _T, _T _INVALID_VALUE = ::llcpp::ZERO_VALUE<_T>>
 class PrimitiveBase : ::llcpp::AlwaysValidTag {
 	#pragma region Types
 	public:
@@ -107,6 +107,11 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 			"type_checker<T> detected an invalid type!");
 
 	#pragma endregion
+	#pragma region Expresions
+	public:
+		static constexpr T INVALID_VALUE = _INVALID_VALUE;
+
+	#pragma endregion
 	#pragma region Attributes
 	protected:
 		T primitive;
@@ -117,7 +122,7 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 	public:
 		constexpr PrimitiveBase() noexcept
 			: AlwaysValidTag()
-			, primitive(::llcpp::ZERO_VALUE<T>)
+			, primitive(INVALID_VALUE)
 		{}
 		constexpr ~PrimitiveBase() noexcept {}
 
@@ -125,32 +130,34 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 		#pragma region CopyMove
 	public:
 		constexpr PrimitiveBase(const PrimitiveBase& other) noexcept
-			: primitive(::std::forward<const T&>(other.primitive)) {}
+			: primitive(::std::forward<const T&>(other.primitive))
+		{}
 		constexpr PrimitiveBase& operator=(const PrimitiveBase& other) noexcept {
-			this->primitive = std::forward<const T&>(other.primitive);
+			this->primitive = ::std::forward<const T&>(other.primitive);
 			return *this;
 		}
 		constexpr PrimitiveBase(PrimitiveBase&& other) noexcept
 			: primitive(::std::forward<T&&>(other.primitive))
 		{ other.clear(); }
 		constexpr PrimitiveBase& operator=(PrimitiveBase&& other) noexcept {
-			this->primitive = std::forward<T&&>(other.primitive);
+			this->primitive = ::std::forward<T&&>(other.primitive);
 			other.clear();
 			return *this;
 		}
 
 		constexpr PrimitiveBase(const T& primitive) noexcept
-			: primitive(::std::forward<const T&>(primitive)) {}
+			: primitive(::std::forward<const T&>(primitive))
+		{}
 		constexpr PrimitiveBase& operator=(const T& primitive) noexcept {
-			this->primitive = std::forward<const T&>(primitive);
+			this->primitive = ::std::forward<const T&>(primitive);
 			return *this;
 		}
 		constexpr PrimitiveBase(T&& primitive) noexcept
 			: primitive(::std::forward<T&&>(primitive))
-		{ primitive = _MyType::ZERO_VALUE; }
+		{ primitive = INVALID_VALUE; }
 		constexpr PrimitiveBase& operator=(T&& primitive) noexcept {
-			this->primitive = std::forward<T&&>(primitive);
-			primitive = _MyType::ZERO_VALUE;
+			this->primitive = ::std::forward<T&&>(primitive);
+			primitive = INVALID_VALUE;
 			return *this;
 		}
 
@@ -414,7 +421,7 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 		#pragma endregion
 
 	public:
-		constexpr void clear() noexcept { this->primitive = ZERO_VALUE; }
+		constexpr void clear() noexcept { this->primitive = INVALID_VALUE; }
 		__LL_NODISCARD__ constexpr T& getPrimitive() noexcept { return this->primitive; }
 		__LL_NODISCARD__ constexpr const T& getPrimitive() const noexcept { return this->primitive; }
 
@@ -423,7 +430,7 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 	#pragma endregion
 };
 
-template<class _T>
+template<class _T, _T _INVALID_VALUE = ::llcpp::ZERO_VALUE<_T>>
 class PrimitiveFloating : public PrimitiveBase<_T> {
 	#pragma region Types
 	public:
@@ -497,7 +504,7 @@ class PrimitiveFloating : public PrimitiveBase<_T> {
 	#pragma endregion
 };
 
-template<class _T>
+template<class _T, _T _INVALID_VALUE = ::llcpp::ZERO_VALUE<_T>>
 class PrimitiveInteger : public PrimitiveBase<_T> {
 	#pragma region Types
 	public:
@@ -757,11 +764,11 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 
 // Floating-point types are more restrictive than non floating-point types
 // In v11 floating-point types has less functionalities than other types
-template<class T>
+template<class T, T INVALID_VALUE = ::llcpp::ZERO_VALUE<T>>
 using PrimitiveWrapperSelection = ::llcpp::meta::traits::conditional_t<
 	::llcpp::meta::traits::is_floating_type_v<T>,
-	::llcpp::meta::traits::PrimitiveFloating<T>,
-	::llcpp::meta::traits::PrimitiveInteger<T>
+	::llcpp::meta::traits::PrimitiveFloating<T, INVALID_VALUE>,
+	::llcpp::meta::traits::PrimitiveInteger<T, INVALID_VALUE>
 >;
 
 // Wrapper commonly used in traits/metaprogramming to wrap primitive types

@@ -70,12 +70,15 @@
 
 ////////////////////////////////////////// System Based //////////////////////////////////////////
 
-#if defined(__x86_64__) || defined(__ILP32__)
-	#define __LL_WORD 32u
+#if defined(__LL_WINDOWS_SYSTEM)
+	#if defined(__x86_64__) || defined(__ILP32__)
+		#define __LL_WORD 32u
+	#else
+		#define __LL_WORD 64u
+	#endif // __x86_64__ || __ILP32__
 #else
 	#define __LL_WORD 64u
-#endif // __x86_64__ || __ILP32__
-
+#endif // __LL_WINDOWS_SYSTEM
 ///////////////////////////////////////// DLL deinitions /////////////////////////////////////////
 
 // Sets env for exporting libraries

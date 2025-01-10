@@ -83,15 +83,15 @@ template<
 	class _ExtraFunctions		= ::llcpp::Emptyclass
 >
 class IsComparable
-	: public ::llcpp::Cluster
-	, public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValid>
+	: public ::llcpp::ClusterTag
+	, public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>
 	, public _ExtraFunctions {
 	#pragma region Types
 	public:
 		// Class related
 		using _MyType				= IsComparable;				// This class with template
 		using ExtraFunctions		= _ExtraFunctions;			// Type of inherited class with extra function
-		using Cluster				= ::llcpp::Cluster;			// This is a cluster type class
+		using ClusterTag			= ::llcpp::ClusterTag;		// This is a cluster type class
 
 		// Types and enums
 		using T						= _T;											// Element to compare by
@@ -172,10 +172,13 @@ class IsComparable
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr IsComparable() noexcept : Cluster(), ExtraFunctions() {}
+		constexpr IsComparable() noexcept
+			: ClusterTag()
+			, ExtraFunctions()
+		{}
 		template<class... Args>
 		constexpr IsComparable(Args&&... args) noexcept
-			: Cluster()
+			: ClusterTag()
 			, ExtraFunctions(::std::forward<Args>(args)...)
 		{}
 		constexpr ~IsComparable() noexcept {}
@@ -184,7 +187,7 @@ class IsComparable
 		#pragma region CopyMove
 	public:
 		constexpr IsComparable(const IsComparable& other) noexcept
-			: Cluster()
+			: ClusterTag()
 			, ExtraFunctions(::std::forward<const ExtraFunctions&>(other))
 		{}
 		constexpr IsComparable& operator=(const IsComparable& other) noexcept {
@@ -192,7 +195,7 @@ class IsComparable
 			return *this;
 		}
 		constexpr IsComparable(IsComparable&& other) noexcept
-			: Cluster()
+			: ClusterTag()
 			, ExtraFunctions(::std::forward<ExtraFunctions&&>(other))
 		{}
 		constexpr IsComparable& operator=(IsComparable&& other) noexcept {
@@ -251,15 +254,15 @@ template<
 	class _ExtraFunctions		= ::llcpp::Emptyclass
 >
 class IsDifferenciable
-	: public ::llcpp::Cluster
-	, public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValid>
+	: public ::llcpp::ClusterTag
+	, public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>
 	, public _ExtraFunctions {
 	#pragma region Types
 	public:
 		// Class related
 		using _MyType				= IsDifferenciable;			// This class with template
 		using ExtraFunctions		= _ExtraFunctions;			// Type of inherited class with extra function
-		using Cluster				= ::llcpp::Cluster;			// This is a cluster type class
+		using ClusterTag			= ::llcpp::ClusterTag;		// This is a cluster type class
 
 		// Types and enums
 		using T						= _T;											// Element to compare by
@@ -353,12 +356,12 @@ class IsDifferenciable
 		#pragma region Constructors
 	public:
 		constexpr IsDifferenciable() noexcept
-			: Cluster()
+			: ClusterTag()
 			, ExtraFunctions()
 		{}
 		template<class... Args>
 		constexpr IsDifferenciable(Args&&... args) noexcept
-			: Cluster()
+			: ClusterTag()
 			, ExtraFunctions(::std::forward<Args>(args)...)
 		{}
 		constexpr ~IsDifferenciable() noexcept {}
@@ -367,7 +370,7 @@ class IsDifferenciable
 		#pragma region CopyMove
 	public:
 		constexpr IsDifferenciable(const IsDifferenciable& other) noexcept
-			: Cluster()
+			: ClusterTag()
 			, ExtraFunctions(::std::forward<const ExtraFunctions&>(other))
 		{}
 		constexpr IsDifferenciable& operator=(const IsDifferenciable& other) noexcept {
@@ -375,7 +378,7 @@ class IsDifferenciable
 			return *this;
 		}
 		constexpr IsDifferenciable(IsDifferenciable&& other) noexcept
-			: Cluster()
+			: ClusterTag()
 			, ExtraFunctions(::std::forward<ExtraFunctions&&>(other))
 		{}
 		constexpr IsDifferenciable& operator=(IsDifferenciable&& other) noexcept {

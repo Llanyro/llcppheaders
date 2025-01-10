@@ -99,6 +99,25 @@ using ll_ustring_t		= const ll_uchar_t*;	// Used to point to non editable unsign
 
 using ll_lib_t			= void*;				// Handle for dynamic library linked/shared objects
 
+//using len_t				= void;
+
+// System size 64/32/16/8 bits
+// [TOCHECK]
+#if __LL_WORD == 64u
+	using isize				= i64;
+	using usize				= u64;
+#elif __LL_WORD == 32u
+	using isize				= i32;
+	using usize				= u32;
+#elif __LL_WORD == 16u
+	using isize				= i16;
+	using usize				= u16;
+#elif __LL_WORD == 8u
+	using isize				= i8;
+	using usize				= u8;
+#else
+	#error "Invalid wordsize"
+#endif // __LL_WORD
 
 #pragma region BytesTypes
 using size_bytes8_t		= u8;

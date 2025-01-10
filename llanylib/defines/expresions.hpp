@@ -81,11 +81,21 @@ enum class OSEnum { Windows, Posix, Unix, Unknown };
 	#undef BITS_SYSTEM_32
 #endif // BITS_SYSTEM_32
 
+#if defined(BITS_SYSTEM_16)
+	#undef BITS_SYSTEM_16
+#endif // BITS_SYSTEM_16
+
+#if defined(BITS_SYSTEM_8)
+	#undef BITS_SYSTEM_8
+#endif // BITS_SYSTEM_8
+
 #pragma endregion
 
 __LL_VAR_INLINE__ constexpr unsigned char BITS_SYSTEM	= __LL_WORD;
 __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_64			= BITS_SYSTEM == 64u;
 __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_32			= BITS_SYSTEM == 32u;
+__LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_16			= BITS_SYSTEM == 16u;
+__LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_8			= BITS_SYSTEM == 8u;
 
 ///////////////////////////////////////// DLL deinitions /////////////////////////////////////////
 

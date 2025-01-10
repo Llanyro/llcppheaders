@@ -51,7 +51,7 @@ class Boolean;
 
 namespace llcpp {
 
-class Boolean : public ::llcpp::AlwaysValid {
+class Boolean : public ::llcpp::AlwaysValidTag {
 	#pragma region Types
 	public:
 		// Class related

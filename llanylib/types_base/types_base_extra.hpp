@@ -26,14 +26,14 @@
 
 namespace llcpp {
 
-class AlwaysValid;
-class AlwaysInvalid;
+class AlwaysValidTag;
+class AlwaysInvalidTag;
 class Emptyclass;
 class DummyClass;
 class UndefinedIncompleteObject;
 
-class Cluster;
-class HalfCluster;
+class ClusterTag;
+class HalfClusterTag;
 
 } // namespace llcpp
 
@@ -59,35 +59,34 @@ namespace llcpp {
 // This class and all classes that inherits from this, should be always a valid class
 //	It doesnt matter the situation (clear, move, etc)
 // All objects should keep in a valid state
-class AlwaysValid {
+class AlwaysValidTag {
 	public:
-		using _MyType = AlwaysValid;
+		using _MyType = AlwaysValidTag;
 };
 // This class and all classes that inherits from this, can never be valid objects
 // All objects should keep in an invalid/unchecked state
-class AlwaysInvalid {
+class AlwaysInvalidTag {
 	public:
-		using _MyType = AlwaysInvalid;
+		using _MyType = AlwaysInvalidTag;
 };
 
-class Emptyclass : public ::llcpp::AlwaysInvalid {
+class Emptyclass : public ::llcpp::AlwaysInvalidTag {
 	public:
 		using _MyType = Emptyclass;
 };
 // This class is a base thet does not inherits from anything
 // Can be used to be inherited if any error is detected 
-//	like inherit from AlwaysValid and AlwaysInvalid at the same time
+//	like inherit from AlwaysValidTag and AlwaysInvalidTag at the same time
 class DummyClass {
 	public:
 		using _MyType = DummyClass;
 };
 // When using incomplete lib && some type is not possible to exist but using complete lib
 //	this type will be used
-class UndefinedIncompleteObject : public ::llcpp::AlwaysInvalid {
+class UndefinedIncompleteObject : public ::llcpp::AlwaysInvalidTag {
 	public:
 		using _MyType = UndefinedIncompleteObject;
 };
-
 
 // Clusters are templates that shares same position as interfaces
 // That means:
@@ -106,18 +105,18 @@ class UndefinedIncompleteObject : public ::llcpp::AlwaysInvalid {
 //	Functions:
 //		Interfaces can have any type of functions
 //		Clusters can only have const functions (by llanystandard)
-class Cluster {
+class ClusterTag {
 	public:
-		using _MyType = Cluster;
+		using _MyType = ClusterTag;
 };
 // HalfClusters are similar to clusters but has a few differences
 // HalfClusters should inherit also from an object
 // The object inherited usually is edited by HalfCluster's functions
 //	So, the main difference its that HalfClusters can have "no const" functions that enable
 //	inherited object edition Ex: llcpp::meta::linked::FunctionalNode
-class HalfCluster {
+class HalfClusterTag {
 	public:
-		using _MyType = HalfCluster;
+		using _MyType = HalfClusterTag;
 };
 
 } // namespace llcpp

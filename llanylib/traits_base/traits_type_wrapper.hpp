@@ -66,7 +66,7 @@ namespace traits {
 // Empty dummy class to use with primitive types
 // Its usefull to use in function checkers with primitive types
 template<class _T>
-class PrimitiveBase : ::llcpp::AlwaysValid {
+class PrimitiveBase : ::llcpp::AlwaysValidTag {
 	#pragma region Types
 	public:
 		// Class related
@@ -115,7 +115,10 @@ class PrimitiveBase : ::llcpp::AlwaysValid {
 	#pragma region Functions
 		#pragma region Constructor
 	public:
-		constexpr PrimitiveBase() noexcept : primitive(::llcpp::ZERO_VALUE<T>) {}
+		constexpr PrimitiveBase() noexcept
+			: AlwaysValidTag()
+			, primitive(::llcpp::ZERO_VALUE<T>)
+		{}
 		constexpr ~PrimitiveBase() noexcept {}
 
 		#pragma endregion

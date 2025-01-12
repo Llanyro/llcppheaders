@@ -197,7 +197,7 @@ class ConstArray {
 		__LL_NODISCARD__ constexpr const_pointer get(const usize position) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return this->begin() + position;
@@ -208,9 +208,9 @@ class ConstArray {
 		__LL_NODISCARD__ constexpr ConstArray get(const usize first, const usize last) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return ConstArray(this->get(first), this->get(last));
@@ -234,9 +234,9 @@ class ConstArray {
 		__LL_NODISCARD__ constexpr ConstArray rget(const usize first, const usize last) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return ConstArray(this->rget(first), this->rget(last));
@@ -249,9 +249,9 @@ class ConstArray {
 		__LL_NODISCARD__ constexpr ConstArray substr(const usize first, const usize last) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return this->get(first, last);
@@ -264,7 +264,7 @@ class ConstArray {
 		__LL_NODISCARD__ constexpr const_reference operator[](const usize position) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return *this->get(position);
@@ -273,7 +273,7 @@ class ConstArray {
 		__LL_NODISCARD__ constexpr const_reference operator^(const usize position) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return *this->rget(position);
@@ -283,9 +283,9 @@ class ConstArray {
 		__LL_NODISCARD__ constexpr ConstArray operator[](const usize first, const usize last) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return this->substr(first, last);
@@ -458,7 +458,7 @@ class Array {
 		__LL_NODISCARD__ constexpr pointer get(const usize position) noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return this->begin() + position;
@@ -466,7 +466,7 @@ class Array {
 		__LL_NODISCARD__ constexpr const_pointer get(const usize position) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return this->begin() + position;
@@ -480,9 +480,9 @@ class Array {
 		__LL_NODISCARD__ constexpr Array get(const usize first, const usize last) noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return Array(this->get(first), this->get(last));
@@ -490,9 +490,9 @@ class Array {
 		__LL_NODISCARD__ constexpr ConstArray get(const usize first, const usize last) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return ConstArray(this->get(first), this->get(last));
@@ -510,7 +510,7 @@ class Array {
 		__LL_NODISCARD__ constexpr pointer rget(const usize position) noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return this->end() - position;
@@ -518,7 +518,7 @@ class Array {
 		__LL_NODISCARD__ constexpr const_pointer rget(const usize position) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return this->end() - position;
@@ -532,9 +532,9 @@ class Array {
 		__LL_NODISCARD__ constexpr Array rget(const usize first, const usize last) noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return Array(this->rget(first), this->rget(last));
@@ -542,9 +542,9 @@ class Array {
 		__LL_NODISCARD__ constexpr ConstArray rget(const usize first, const usize last) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return ConstArray(this->rget(first), this->rget(last));
@@ -562,9 +562,9 @@ class Array {
 		__LL_NODISCARD__ constexpr Array substr(const usize first, const usize last) noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return this->get(first, last);
@@ -572,9 +572,9 @@ class Array {
 		__LL_NODISCARD__ constexpr ConstArray substr(const usize first, const usize last) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return this->get(first, last);
@@ -590,7 +590,7 @@ class Array {
 		__LL_NODISCARD__ constexpr reference operator[](const usize position) noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return *this->get(position);
@@ -599,7 +599,7 @@ class Array {
 		__LL_NODISCARD__ constexpr const_reference operator[](const usize position) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return *this->get(position);
@@ -609,7 +609,7 @@ class Array {
 		__LL_NODISCARD__ constexpr reference operator^(const usize position) noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return *this->rget(position);
@@ -618,7 +618,7 @@ class Array {
 		__LL_NODISCARD__ constexpr const_reference operator^(const usize position) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(position))
-					__debug_error_out_of_range(position, this->length());
+					__debug_error_out_of_range(position, "position", this->length());
 			}
 
 			return *this->rget(position);
@@ -628,9 +628,9 @@ class Array {
 		__LL_NODISCARD__ constexpr Array operator[](const usize first, const usize last) noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return this->substr(first, last);
@@ -638,9 +638,9 @@ class Array {
 		__LL_NODISCARD__ constexpr ConstArray operator[](const usize first, const usize last) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (!this->inRange(first))
-					__debug_error_out_of_range_str(first, "first", this->length());
+					__debug_error_out_of_range(first, "first", this->length());
 				if (!this->inRange(last))
-					__debug_error_out_of_range_str(last, "last", this->length());
+					__debug_error_out_of_range(last, "last", this->length());
 			}
 
 			return this->substr(first, last);

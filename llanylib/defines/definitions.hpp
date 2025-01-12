@@ -61,21 +61,40 @@
 
 #pragma region Error
 
-// Nullptr
-#if !defined(__debug_error_nullptr)
-	#define __debug_error_nullptr(var) IGNORE()
+#if !defined(__debug_error_not_nullptr_str)
+	#define __debug_error_not_nullptr_str(var_str) IGNORE()
 #endif
 
+#if !defined(__debug_error_begin_smaller)
+	#define __debug_error_begin_smaller(begin, end) IGNORE()
+#endif
+
+#if !defined(__debug_error_out_of_range)
+	#define __debug_error_out_of_range(var, var_str, len) IGNORE()
+#endif
+
+
+#pragma endregion
+#pragma region Warning
+
+#if !defined(__debug_warning_nullptr)
+	#define __debug_warning_nullptr(var_str) IGNORE()
+#endif
+
+#if !defined(__debug_warning_out_of_range)
+	#define __debug_warning_out_of_range(var, var_str, len) IGNORE()
+#endif
+
+#pragma endregion
+
+
+
+/*
+#pragma region Error
+
+// Nullptr
 #if !defined(__debug_error_nullptr_str)
 	#define __debug_error_nullptr_str(var, var_str) IGNORE()
-#endif
-
-#if !defined(__debug_error_not_nullptr)
-	#define __debug_error_not_nullptr(var) IGNORE()
-#endif
-
-#if !defined(__debug_error_not_nullptr_str)
-	#define __debug_error_not_nullptr_str(var, var_str) IGNORE()
 #endif
 
 // Ranges
@@ -83,9 +102,6 @@
 	#define __debug_error_out_of_range(var, len) IGNORE()
 #endif
 
-#if !defined(__debug_error_out_of_range_str)
-	#define __debug_error_out_of_range_str(var, var_str, len) IGNORE()
-#endif
 
 // Other
 #if !defined(__debug_error_zero_value_str)
@@ -96,14 +112,6 @@
 #pragma region Warning
 
 // Nullptr
-#if !defined(__debug_warning_nullptr)
-	#define __debug_warning_nullptr(var) IGNORE()
-#endif
-
-#if !defined(__debug_warning_nullptr_str)
-	#define __debug_warning_nullptr_str(var, var_str) IGNORE()
-#endif
-
 #if !defined(__debug_warning_not_nullptr)
 	#define __debug_warning_not_nullptr(var) IGNORE()
 #endif
@@ -117,16 +125,18 @@
 	#define __debug_warning_out_of_range(var, len) IGNORE()
 #endif
 
-#if !defined(__debug_warning_out_of_range_str)
-	#define __debug_warning_out_of_range_str(var, var_str, len) IGNORE()
-#endif
-
 // Other
 #if !defined(__debug_warning_zero_value_str)
 	#define __debug_warning_zero_value_str(var_str) IGNORE()
 #endif
 
+#if !defined(__debug_warning_invalidation_in_reset_str)
+	#define __debug_warning_invalidation_in_reset_str(var_str) IGNORE()
+#endif
+
 #pragma endregion
+
+*/
 
 #endif // LLANYLIB_DEFINITIONS_HPP_
 

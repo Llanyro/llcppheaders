@@ -79,6 +79,10 @@ template<
 	class _T,
 	class _U = _T,
 	ll_bool_t _IS_NOEXCEPTION	= ::llcpp::TRUE,
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER_T =
+		::llcpp::meta::attributes::checker::IGNORE_PA,
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER_U =
+		::llcpp::meta::attributes::checker::IGNORE_PA,
 	class _Boolean				= ll_bool_t,
 	class _ExtraFunctions		= ::llcpp::Emptyclass
 >
@@ -136,6 +140,8 @@ class IsComparable
 	#pragma endregion
 	#pragma region Expresions
 	public:
+		static constexpr ::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER_T = _TYPE_CHECKER_T;
+		static constexpr ::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER_U = _TYPE_CHECKER_U;
 		static constexpr ll_bool_t IS_NOEXCEPTION	= _IS_NOEXCEPTION;
 		static constexpr ll_bool_t HAS_OPERATOR_EQ	= OperatorEQCheck::IS_VALID;
 		static constexpr ll_bool_t HAS_OPERATOR_NEQ	= OperatorNEQCheck::IS_VALID;
@@ -156,9 +162,9 @@ class IsComparable
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T>,
+		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T, TYPE_CHECKER_T>,
 			"type_checker<T> detected an invalid type!");
-		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<U>,
+		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<U, TYPE_CHECKER_U>,
 			"type_checker<U> detected an invalid type!");
 
 		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<ExtraFunctions>,
@@ -250,6 +256,10 @@ template<
 	class _T,
 	class _U = _T,
 	ll_bool_t _IS_NOEXCEPTION	= ::llcpp::TRUE,
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER_T =
+		::llcpp::meta::attributes::checker::IGNORE_PA,
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER_U =
+		::llcpp::meta::attributes::checker::IGNORE_PA,
 	class _Orderning			= ::llcpp::meta::StandardComparation,
 	class _ExtraFunctions		= ::llcpp::Emptyclass
 >
@@ -311,6 +321,8 @@ class IsDifferenciable
 	#pragma endregion
 	#pragma region Expresions
 	public:
+		static constexpr ::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER_T = _TYPE_CHECKER_T;
+		static constexpr ::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER_U = _TYPE_CHECKER_U;
 		static constexpr ll_bool_t IS_NOEXCEPTION			= _IS_NOEXCEPTION;
 		static constexpr ll_bool_t HAS_OPERATOR_COMPARE		= OperatorCompareCheck::IS_VALID;
 		static constexpr ll_bool_t HAS_FUNCTION_COMPARE_T	= FunctionCompareCheck_T::IS_VALID;
@@ -339,9 +351,9 @@ class IsDifferenciable
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T>,
+		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T, TYPE_CHECKER_T>,
 			"type_checker<T> detected an invalid type!");
-		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<U>,
+		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<U, TYPE_CHECKER_U>,
 			"type_checker<U> detected an invalid type!");
 
 		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<ExtraFunctions>,

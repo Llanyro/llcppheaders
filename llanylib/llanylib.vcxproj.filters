@@ -198,7 +198,7 @@
     <ClInclude Include="utils_base\common_functions.hpp">
       <Filter>Source Files\v11\4 utils_base</Filter>
     </ClInclude>
-    <ClInclude Include="utils_base\algorithm.hpp">
+    <ClInclude Include="utils_base\algorithm2.hpp">
       <Filter>Source Files\v11\4 utils_base</Filter>
     </ClInclude>
     <ClInclude Include="utils_base\NodePrev.hpp">
@@ -215,6 +215,15 @@
     </ClInclude>
     <ClInclude Include="traits_base\checker\traits_validate_checker.hpp">
       <Filter>Source Files\v11\3 traits_base\checker</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\ArrayBuffer.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\Compressor.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\algorithm.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

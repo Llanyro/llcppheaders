@@ -139,9 +139,6 @@ class HalfClusterTag {
 		#define LLANYLIB_TYPESBASEEXTRA_EXTRA_MINOR_ 0
 
 namespace llcpp {
-
-using Void					= ::llcpp::Emptyclass;
-
 namespace meta {
 
 using StandardComparation	= ::std::strong_ordering;
@@ -181,8 +178,8 @@ template<class>			__LL_INLINE__ constexpr void IGNORE()			{}
 namespace meta {
 namespace algorithm {
 
-__LL_VAR_INLINE__ constexpr u64 MAX_LIST_SIZE	= static_cast<u64>(-1);
-__LL_VAR_INLINE__ constexpr u64 npos			= ::llcpp::meta::algorithm::MAX_LIST_SIZE;
+__LL_VAR_INLINE__ constexpr usize MAX_LIST_SIZE	= static_cast<usize>(-1);
+__LL_VAR_INLINE__ constexpr usize npos			= ::llcpp::meta::algorithm::MAX_LIST_SIZE;
 
 } // namespace algorithm
 } // namespace meta

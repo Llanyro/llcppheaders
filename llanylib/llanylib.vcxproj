@@ -70,6 +70,8 @@
     <ClInclude Include="utils_base\NodeDouble.hpp" />
     <ClInclude Include="utils_base\NodeNext.hpp" />
     <ClInclude Include="utils_base\NodePrev.hpp" />
+    <ClInclude Include="utils_base\IteratorUtils.hpp" />
+    <ClInclude Include="utils_base\Vector.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

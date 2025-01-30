@@ -73,11 +73,13 @@ template<class _T, class... _Args>
 class FirstType {
 	public:
 		// Class related
-		using _MyType	= FirstType;
+		using _MyType		= FirstType;
 
 		// Types and enums
-		using T			= _T;
-		using Next		= ::llcpp::meta::traits::__traits__::FirstType<_Args...>;
+		using T				= _T;
+		using type			= T;
+		using value_type	= T;
+		using Next			= ::llcpp::meta::traits::__traits__::FirstType<_Args...>;
 };
 template<class _T>
 class FirstType<_T> {
@@ -86,8 +88,10 @@ class FirstType<_T> {
 		using _MyType	= FirstType;
 
 		// Types and enums
-		using T			= _T;
-		using Next		= ::llcpp::Emptyclass;
+		using T				= _T;
+		using type			= T;
+		using value_type	= T;
+		using Next			= ::llcpp::Emptyclass;
 };
 
 } // namespace __traits__
@@ -96,11 +100,13 @@ template<class... _Args>
 class ParameterPackOperations {
 	public:
 		// Class related
-		using _MyType			= ParameterPackOperations;
+		using _MyType		= ParameterPackOperations;
 
 		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<_Args...>;
 		using PackFirst		= FirstType;
 		using pack_first_t	= PackFirst::T;
+		using type			= pack_first_t;
+		using value_type	= pack_first_t;
 
 	public:
 		// Expresions
@@ -113,12 +119,14 @@ template<class T>
 class ParameterPackOperations<T> {
 	public:
 		// Class related
-		using _MyType			= ParameterPackOperations;
+		using _MyType		= ParameterPackOperations;
 
 		// Types and enums
-		using FirstType			= ::llcpp::meta::traits::__traits__::FirstType<T>;
-		using PackFirst			= FirstType;
-		using get_first_type	= PackFirst::T;
+		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<T>;
+		using PackFirst		= FirstType;
+		using pack_first_t	= PackFirst::T;
+		using type			= pack_first_t;
+		using value_type	= pack_first_t;
 
 	public:
 		// Expresions
@@ -137,6 +145,8 @@ class ParameterPackOperations<> {
 		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<void>;
 		using PackFirst		= FirstType;
 		using pack_first_t	= PackFirst::T;
+		using type			= pack_first_t;
+		using value_type	= pack_first_t;
 
 	public:
 		// Expresions

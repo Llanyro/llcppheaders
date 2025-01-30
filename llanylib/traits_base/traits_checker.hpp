@@ -69,10 +69,12 @@ template<class _T, ::llcpp::meta::attributes::checker_attributes_t _ATTRIBUTES>
 class TypeChecker {
 	public:
 		// Class related
-		using _MyType	= TypeChecker;
+		using _MyType		= TypeChecker;
 
 		// Types and enums
-		using T			= _T;
+		using T				= _T;
+		using type			= T;
+		using value_type	= T;
 
 	public:
 		// Expresions
@@ -86,11 +88,11 @@ class TypeChecker {
 
 	public:
 		// Asserts
-		static_assert(!::std::is_reference_v<T>,	"Reference type is forbidden!");
-		static_assert(!::std::is_const_v<T>,		"Const type is forbidden!");
-		static_assert(POINTER,						"Pointer type is forbidden!");
-		static_assert(ARRAY,						"Array type is forbidden!");
-		static_assert(VOLATILE,						"Volatile type is forbidden!");
+		static_assert(REFERENCE,"Reference type is forbidden!");
+		static_assert(CONST,	"Const type is forbidden!");
+		static_assert(POINTER,	"Pointer type is forbidden!");
+		static_assert(ARRAY,	"Array type is forbidden!");
+		static_assert(VOLATILE,	"Volatile type is forbidden!");
 };
 
 template<
@@ -109,10 +111,12 @@ template<class _T, ::llcpp::meta::attributes::checker_attributes_t _ATTRIBUTES>
 class ConstructorChecker {
 	public:
 		// Class related
-		using _MyType	= ConstructorChecker;
+		using _MyType		= ConstructorChecker;
 
 		// Types and enums
-		using T			= _T;
+		using T				= _T;
+		using type			= T;
+		using value_type	= T;
 
 	public:
 		// Expresions

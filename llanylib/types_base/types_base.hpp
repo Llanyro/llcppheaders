@@ -70,6 +70,7 @@ using ll_longdouble_t	= long double;
 /// Other
 using ll_wchar_t		= wchar_t;
 using ll_bool_t			= bool;
+enum class LoopResult { Conntinue, Error, Ok, BeginError };
 
 // Simplified Signed
 using i8				= ll_char_t;
@@ -103,18 +104,24 @@ using ll_lib_t			= void*;				// Handle for dynamic library linked/shared objects
 
 // System size 64/32/16/8 bits
 // [TOCHECK]
-#if __LL_WORD == 64u
-	using isize				= i64;
-	using usize				= u64;
-#elif __LL_WORD == 32u
-	using isize				= i32;
-	using usize				= u32;
+#if __LL_WORD == 8u
+	using isize				= i8;
+	using usize				= u8;
 #elif __LL_WORD == 16u
 	using isize				= i16;
 	using usize				= u16;
-#elif __LL_WORD == 8u
-	using isize				= i8;
-	using usize				= u8;
+#elif __LL_WORD == 32u
+	using isize				= i32;
+	using usize				= u32;
+#elif __LL_WORD == 64u
+	using isize				= i64;
+	using usize				= u64;
+#elif __LL_WORD == 128u
+	using isize				= i128;
+	using usize				= u128;
+#elif __LL_WORD == 256u
+	using isize				= i256;
+	using usize				= u256;
 #else
 	#error "Invalid wordsize"
 #endif // __LL_WORD

@@ -105,6 +105,8 @@ class ConstArray {
 
 		// Types
 		using T					= _T;
+		using type				= T;
+		using value_type		= T;
 		using const_reference	= ::llcpp::meta::traits::cinput<T>;
 		using const_pointer		= const T*;
 		using const_iterator	= const_pointer;
@@ -372,6 +374,8 @@ class Array {
 
 		// Types
 		using T					= _T;
+		using type				= T;
+		using value_type		= T;
 		using reference			= ::llcpp::meta::traits::input<T>;
 		using const_reference	= ::llcpp::meta::traits::cinput<T>;
 		using pointer			= T*;

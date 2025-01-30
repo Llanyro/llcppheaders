@@ -225,5 +225,11 @@
     <ClInclude Include="utils_base\algorithm.hpp">
       <Filter>Source Files\v11\4 utils_base</Filter>
     </ClInclude>
+    <ClInclude Include="utils_base\Vector.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\IteratorUtils.hpp">
+      <Filter>Source Files\v11\4 utils_base</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

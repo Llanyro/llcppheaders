@@ -94,10 +94,12 @@ template<class _T>
 class TypeContainer {
 	public:
 		// Class related
-		using _MyType	= TypeContainer;
+		using _MyType		= TypeContainer;
 
 		// Types and enums
-		using T			= _T;
+		using T				= _T;
+		using type			= T;
+		using value_type	= T;
 };
 template<class _T>
 using type_container_t = ::llcpp::meta::traits::TypeContainer<_T>::T;
@@ -106,11 +108,13 @@ template<class _T, class _U>
 class DoubleTypeContainer {
 	public:
 		// Class related
-		using _MyType	= DoubleTypeContainer;
+		using _MyType		= DoubleTypeContainer;
 
 		// Types and enums
-		using T			= _T;
-		using U			= _U;
+		using T				= _T;
+		using U				= _U;
+		using type			= T;
+		using value_type	= T;
 };
 template<class _T, class _U>
 using double_type_container_t = ::llcpp::meta::traits::DoubleTypeContainer<_T, _U>::T;
@@ -118,15 +122,17 @@ template<class _T, class _U>
 using double_type_container_u = ::llcpp::meta::traits::DoubleTypeContainer<_T, _U>::U;
 
 // Can contain 2 types an one constant
-template<class _T, _T _VALUE, class _U>
+template<class _T, _T _VALUE, class _U = ::llcpp::Emptyclass>
 class IntegralConstantContainer {
 	public:
 		// Class related
-		using _MyType			= IntegralConstantContainer;
+		using _MyType		= IntegralConstantContainer;
 
 		// Types and enums
-		using T					= _T;
-		using U					= _U;
+		using T				= _T;
+		using U				= _U;
+		using type			= T;
+		using value_type	= T;
 
 	public:
 		// Expresions
@@ -134,11 +140,11 @@ class IntegralConstantContainer {
 		static constexpr T value = _VALUE;	// used in standard
 };
 
-template<class _T, _T _VALUE, class _U>
+template<class _T, _T _VALUE, class _U = ::llcpp::Emptyclass>
 using integral_constant_container_t = ::llcpp::meta::traits::IntegralConstantContainer<_T, _VALUE, _U>::T;
-template<class _T, _T _VALUE, class _U>
+template<class _T, _T _VALUE, class _U = ::llcpp::Emptyclass>
 using integral_constant_container_u = ::llcpp::meta::traits::IntegralConstantContainer<_T, _VALUE, _U>::U;
-template<class _T, _T _VALUE, class _U>
+template<class _T, _T _VALUE, class _U = ::llcpp::Emptyclass>
 __LL_VAR_INLINE__ constexpr _T integral_constant_container_v =
 	::llcpp::meta::traits::IntegralConstantContainer<_T, _VALUE, _U>::VALUE;
 
@@ -146,11 +152,13 @@ template<class _T, class _U, _T _FIRST, _U _SECOND>
 class DoubleConstantContainer {
 	public:
 		// Class related
-		using _MyType				= DoubleConstantContainer;
+		using _MyType		= DoubleConstantContainer;
 
 		// Types and enums
-		using T						= _T;
-		using U						= _U;
+		using T				= _T;
+		using U				= _U;
+		using type			= T;
+		using value_type	= T;
 
 	public:
 		// Expresions
@@ -183,18 +191,24 @@ using IsNotSameTypeContainer = ::llcpp::meta::traits::BoolConstantContainer<!::s
 using TrueContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::TRUE, ::llcpp::Emptyclass>;
 using FalseContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::FALSE, ::llcpp::Emptyclass>;
 
+template<class U, class T, T EXP1, T EXP2>
+using IsSameTypeExpresion = ::llcpp::meta::traits::BoolConstantContainer<EXP1 == EXP2, U>;
+template<class U, class T, T EXP1, T EXP2>
+using IsNotSameTypeExpresion = ::llcpp::meta::traits::BoolConstantContainer<EXP1 != EXP2, U>;
+
 #pragma endregion
 #pragma region Conditional
 template<ll_bool_t _CONDITION, class _T, class _U>
 class Conditional {
 	public:
 		// Class related
-		using _MyType	= Conditional;
+		using _MyType		= Conditional;
 
 		// Types and enums
-		using type		= _T;
-		using T			= _T;
-		using U			= _U;
+		using T				= _T;
+		using U				= _U;
+		using type			= T;
+		using value_type	= T;
 
 	public:
 		// Expresions
@@ -204,12 +218,13 @@ template<class _T, class _U>
 class Conditional<::llcpp::FALSE, _T, _U> {
 	public:
 		// Class related
-		using _MyType	= Conditional;
+		using _MyType		= Conditional;
 
 		// Types and enums
-		using type		= _U;
-		using T			= _T;
-		using U			= _U;
+		using T				= _T;
+		using U				= _U;
+		using type			= U;
+		using value_type	= U;
 
 	public:
 		// Expresions
@@ -222,12 +237,13 @@ template<ll_bool_t _CONDITION, class _T, class _U, _T _ELEM_1, _U _ELEM_2>
 class ConditionalValue {
 	public:
 		// Class related
-		using _MyType	= ConditionalValue;
+		using _MyType		= ConditionalValue;
 
 		// Types and enums
-		using type		= _T;
-		using T			= _T;
-		using U			= _U;
+		using T				= _T;
+		using U				= _U;
+		using type			= T;
+		using value_type	= T;
 
 	public:
 		// Expresions
@@ -240,12 +256,13 @@ template<class _T, class _U, _T _ELEM_1, _U _ELEM_2>
 class ConditionalValue<llcpp::FALSE, _T, _U, _ELEM_1, _ELEM_2> {
 	public:
 		// Class related
-		using _MyType	= ConditionalValue;
+		using _MyType		= ConditionalValue;
 
 		// Types and enums
-		using type		= _U;
-		using T			= _T;
-		using U			= _U;
+		using T				= _T;
+		using U				= _U;
+		using type			= U;
+		using value_type	= U;
 
 	public:
 		// Expresions
@@ -299,7 +316,7 @@ using type_smaller_of_two_t = ::llcpp::meta::traits::CompareConditional<T, U, On
 #pragma endregion
 #pragma region Disjunction
 template<class T, class... Args>
-using GetFirstCoincidence = std::disjunction<
+using GetFirstCoincidence = ::std::disjunction<
 	::llcpp::meta::traits::IsSameTypeContainer<T, typename Args::T, typename Args::U>...,
 	::llcpp::meta::traits::TrueContainerEmptyClass
 >;
@@ -319,7 +336,7 @@ using get_by_char_type_u = ::llcpp::meta::traits::GetByCharType<T, TypeChar, Typ
 #pragma endregion
 #pragma region Conjunction
 template<class T, class... Args>
-using GetFirstDifference = std::conjunction<
+using GetFirstDifference = ::std::conjunction<
 	::llcpp::meta::traits::IsSameTypeContainer<T, typename Args::T, typename Args::U>...,
 	::llcpp::meta::traits::TrueContainerEmptyClass
 >;
@@ -393,10 +410,12 @@ template<class _T>
 class RangeChecker {
 	public:
 		// Class related
-		using _MyType	= RangeChecker;
+		using _MyType		= RangeChecker;
 
 		// Types and enums
-		using T			= _T;
+		using T				= _T;
+		using type			= T;
+		using value_type	= T;
 
 	public:
 		// Expresions
@@ -417,6 +436,30 @@ class RangeChecker {
 };
 
 #pragma endregion
+#pragma region SystemSize
+// Type getter by size
+template<ll_bool_t SIGNED, u8 P_SIZE = sizeof(void*)>
+using TypeBySize = ::std::disjunction<
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i8, u8>, u8, P_SIZE, sizeof(u8)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i16, u16>, u8, P_SIZE, sizeof(u16)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i32, u32>, u8, P_SIZE, sizeof(u32)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i64, u64>, u8, P_SIZE, sizeof(u64)>,
+	//::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i128, u128>, u8, P_SIZE, sizeof(u128)>,
+	//::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i256, u256>, u8, P_SIZE, sizeof(u256)>,
+	::llcpp::meta::traits::TrueContainerEmptyClass
+>::U;
+
+using uSize = ::llcpp::meta::traits::TypeBySize<false>;
+using iSize = ::llcpp::meta::traits::TypeBySize<true>;
+
+static_assert(!::std::is_same_v<uSize, ::llcpp::Emptyclass>, "Unknown size type");
+static_assert(!::std::is_same_v<iSize, ::llcpp::Emptyclass>, "Unknown size type");
+
+static_assert(::std::is_same_v<uSize, usize>, "Missmatch system size");
+static_assert(::std::is_same_v<iSize, isize>, "Missmatch system size");
+
+#pragma endregion
+
 
 // [TOFIX]
 namespace dev {
@@ -428,17 +471,20 @@ class Testing {
 
 template<class _T>
 class test_a {
-	// Class related
-	using _MyType	= test_a;
+	public:
+		// Class related
+		using _MyType	= test_a;
 
-	// Types and enums
-	using T			= _T;
+		// Types and enums
+		using T			= _T;
+		using type			= T;
+		using value_type	= T;
 
-	// Expresions
-	static constexpr ll_bool_t IS_VIRTUAL	= ::std::has_virtual_destructor_v<T>;
-	static constexpr u64 SIZEOF				= sizeof(T);
-	static constexpr u64 SIZEOF_OFFSET		= (IS_VIRTUAL ? sizeof(void*) : 0);
-	static constexpr u64 REAL_SIZEOF		= SIZEOF - SIZEOF_OFFSET;
+		// Expresions
+		static constexpr ll_bool_t IS_VIRTUAL	= ::std::has_virtual_destructor_v<T>;
+		static constexpr u64 SIZEOF				= sizeof(T);
+		static constexpr u64 SIZEOF_OFFSET		= (IS_VIRTUAL ? sizeof(void*) : 0);
+		static constexpr u64 REAL_SIZEOF		= SIZEOF - SIZEOF_OFFSET;
 };
 
 } // namespace dev

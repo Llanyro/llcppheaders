@@ -46,13 +46,13 @@ namespace meta {
 namespace traits {
 
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_empty_object_v = ::std::_Is_any_of_v<T, ::llcpp::Emptyclass, ::llcpp::Void>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_empty_object_v = ::std::_Is_any_of_v<T, ::llcpp::Emptyclass>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_empty_type_v = ::std::is_same_v<T, void> || ::llcpp::meta::traits::is_empty_object_v<T>;
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_type_v = ::std::is_arithmetic_v<T>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_primitive_v = ::std::is_arithmetic_v<T>;
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_basic_bigger_type_v = ::std::_Is_any_of_v<T, i128, i256, u128, u256>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_primitive_big_v = ::std::_Is_any_of_v<T, i128, i256, u128, u256>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_type_v = ::std::is_floating_point_v<T>;
 template<class T>
@@ -62,10 +62,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = ::std::_Is_any_of_v<T, ll
 
 template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_a_basic_type_v =
-	(::llcpp::meta::traits::is_basic_type_v<Args> || ...);
+	(::llcpp::meta::traits::is_primitive_v<Args> || ...);
 template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_all_of_a_basic_type_v =
-	(::llcpp::meta::traits::is_basic_type_v<Args> && ...);
+	(::llcpp::meta::traits::is_primitive_v<Args> && ...);
 
 template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_a_floating_type_v =
@@ -76,7 +76,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_all_of_a_floating_type_v =
 
 template<class _T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_raw_type =
-	::llcpp::meta::traits::is_basic_type_v<_T>
+	::llcpp::meta::traits::is_primitive_v<_T>
 	|| ::std::is_class_v<_T>;
 
 // [TOFIX]
@@ -87,9 +87,14 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_raw_type =
 template<class T>
 using array_type_t = ::std::remove_extent_t<T>;
 template<class T>
-using input = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T>, T&, T>;
+using input = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T> && ::std::is_pointer_v<T>, T&, T>;
 template<class T>
-using cinput = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T>, const T&, const T>;
+using cinput = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T> && !::std::is_pointer_v<T>, const T&, const T>;
+
+template<class T>
+using pointer_t			= T*;
+template<class T>
+using const_pointer_t	= T*;
 
 } // namespace traits
 } // namespace meta

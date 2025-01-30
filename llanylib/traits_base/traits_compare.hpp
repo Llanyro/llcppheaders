@@ -79,23 +79,25 @@ template<
 	class _T,
 	class _U = _T,
 	ll_bool_t _IS_NOEXCEPTION	= ::llcpp::TRUE,
+	class _Boolean				= ll_bool_t,
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER_T =
 		::llcpp::meta::attributes::checker::IGNORE_PA,
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER_U =
 		::llcpp::meta::attributes::checker::IGNORE_PA,
-	class _Boolean				= ll_bool_t,
 	class _ExtraFunctions		= ::llcpp::Emptyclass
 >
 class IsComparable
 	: public ::llcpp::ClusterTag
 	, public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>
-	, public _ExtraFunctions {
+	, public _ExtraFunctions
+{
 	#pragma region Types
 	public:
 		// Class related
 		using _MyType				= IsComparable;				// This class with template
 		using ExtraFunctions		= _ExtraFunctions;			// Type of inherited class with extra function
 		using ClusterTag			= ::llcpp::ClusterTag;		// This is a cluster type class
+		using ValidTag				= ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>;
 
 		// Types and enums
 		using T						= _T;											// Element to compare by
@@ -104,6 +106,8 @@ class IsComparable
 		using Boolean				= _Boolean;										// Boolean user type
 		using t_cinput				= ::llcpp::meta::traits::cinput<T>;				// T type as const type reference
 		using u_cinput				= ::llcpp::meta::traits::cinput<U>;				// U type as const type reference
+		using type					= Boolean;
+		using value_type			= Boolean;
 
 		// Signature types prep
 		template<class Signature, class Function>
@@ -180,11 +184,13 @@ class IsComparable
 	public:
 		constexpr IsComparable() noexcept
 			: ClusterTag()
+			, ValidTag()
 			, ExtraFunctions()
 		{}
 		template<class... Args>
 		constexpr IsComparable(Args&&... args) noexcept
 			: ClusterTag()
+			, ValidTag()
 			, ExtraFunctions(::std::forward<Args>(args)...)
 		{}
 		constexpr ~IsComparable() noexcept {}
@@ -194,6 +200,7 @@ class IsComparable
 	public:
 		constexpr IsComparable(const IsComparable& other) noexcept
 			: ClusterTag()
+			, ValidTag()
 			, ExtraFunctions(::std::forward<const ExtraFunctions&>(other))
 		{}
 		constexpr IsComparable& operator=(const IsComparable& other) noexcept {
@@ -202,6 +209,7 @@ class IsComparable
 		}
 		constexpr IsComparable(IsComparable&& other) noexcept
 			: ClusterTag()
+			, ValidTag()
 			, ExtraFunctions(::std::forward<ExtraFunctions&&>(other))
 		{}
 		constexpr IsComparable& operator=(IsComparable&& other) noexcept {
@@ -222,7 +230,7 @@ class IsComparable
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr Boolean isSameValue(t_cinput t, u_cinput u) const noexcept(IS_NOEXCEPTION) {
+		__LL_NODISCARD__ constexpr Boolean isSame(t_cinput t, u_cinput u) const noexcept(IS_NOEXCEPTION) {
 			static_assert(IS_COMPARABLE_EQ,
 				"Types are not comparables!");
 
@@ -234,7 +242,7 @@ class IsComparable
 				return ExtraFunctions::compareEQ(t, u);
 			else return ::llcpp::ZERO_VALUE<Boolean>;
 		}
-		__LL_NODISCARD__ constexpr Boolean isNotSameValue(t_cinput t, u_cinput u) const noexcept(IS_NOEXCEPTION) {
+		__LL_NODISCARD__ constexpr Boolean isNotSame(t_cinput t, u_cinput u) const noexcept(IS_NOEXCEPTION) {
 			static_assert(IS_COMPARABLE_NEQ,
 				"Types are not comparables!");
 
@@ -247,6 +255,11 @@ class IsComparable
 			else return ::llcpp::ZERO_VALUE<Boolean>;
 		}
 
+		// Standard name
+		__LL_NODISCARD__ constexpr Boolean compare(t_cinput t, u_cinput u) const noexcept(IS_NOEXCEPTION) {
+			return this->isSame(t, u);
+		}
+
 		#pragma endregion
 
 	#pragma endregion
@@ -256,23 +269,25 @@ template<
 	class _T,
 	class _U = _T,
 	ll_bool_t _IS_NOEXCEPTION	= ::llcpp::TRUE,
+	class _Orderning			= ::llcpp::meta::StandardComparation,
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER_T =
 		::llcpp::meta::attributes::checker::IGNORE_PA,
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER_U =
 		::llcpp::meta::attributes::checker::IGNORE_PA,
-	class _Orderning			= ::llcpp::meta::StandardComparation,
 	class _ExtraFunctions		= ::llcpp::Emptyclass
 >
 class IsDifferenciable
 	: public ::llcpp::ClusterTag
 	, public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>
-	, public _ExtraFunctions {
+	, public _ExtraFunctions
+{
 	#pragma region Types
 	public:
 		// Class related
 		using _MyType				= IsDifferenciable;			// This class with template
 		using ExtraFunctions		= _ExtraFunctions;			// Type of inherited class with extra function
 		using ClusterTag			= ::llcpp::ClusterTag;		// This is a cluster type class
+		using ValidTag				= ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>;
 
 		// Types and enums
 		using T						= _T;											// Element to compare by
@@ -281,6 +296,8 @@ class IsDifferenciable
 		using Orderning				= _Orderning;
 		using t_cinput				= ::llcpp::meta::traits::cinput<T>;				// T type as const type
 		using u_cinput				= ::llcpp::meta::traits::cinput<U>;				// U type as const type
+		using type					= Orderning;
+		using value_type			= Orderning;
 		
 		// Signature types prep
 		template<class Signature, class Function>
@@ -369,11 +386,13 @@ class IsDifferenciable
 	public:
 		constexpr IsDifferenciable() noexcept
 			: ClusterTag()
+			, ValidTag()
 			, ExtraFunctions()
 		{}
 		template<class... Args>
 		constexpr IsDifferenciable(Args&&... args) noexcept
 			: ClusterTag()
+			, ValidTag()
 			, ExtraFunctions(::std::forward<Args>(args)...)
 		{}
 		constexpr ~IsDifferenciable() noexcept {}
@@ -383,6 +402,7 @@ class IsDifferenciable
 	public:
 		constexpr IsDifferenciable(const IsDifferenciable& other) noexcept
 			: ClusterTag()
+			, ValidTag()
 			, ExtraFunctions(::std::forward<const ExtraFunctions&>(other))
 		{}
 		constexpr IsDifferenciable& operator=(const IsDifferenciable& other) noexcept {
@@ -391,6 +411,7 @@ class IsDifferenciable
 		}
 		constexpr IsDifferenciable(IsDifferenciable&& other) noexcept
 			: ClusterTag()
+			, ValidTag()
 			, ExtraFunctions(::std::forward<ExtraFunctions&&>(other))
 		{}
 		constexpr IsDifferenciable& operator=(IsDifferenciable&& other) noexcept {

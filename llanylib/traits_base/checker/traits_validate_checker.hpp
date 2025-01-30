@@ -80,12 +80,12 @@ class ValidationChecker {
 		template<class T>
 		__LL_NODISCARD__ static constexpr _MyType::ValidType getValidType() noexcept {
 			using WrappedT					= ::llcpp::meta::traits::PrimitiveWrapper<T>;
-			constexpr ll_bool_t IS_VALID	= ::std::is_base_of_v<::llcpp::AlwaysValid, WrappedT>;
-			constexpr ll_bool_t IS_INVALID	= ::std::is_base_of_v<::llcpp::AlwaysInvalid, WrappedT>;
+			constexpr ll_bool_t IS_VALID	= ::std::is_base_of_v<::llcpp::AlwaysValidTag, WrappedT>;
+			constexpr ll_bool_t IS_INVALID	= ::std::is_base_of_v<::llcpp::AlwaysInvalidTag, WrappedT>;
 
 			if constexpr (IS_VALID && IS_INVALID) {
 				static_assert(IS_VALID && IS_INVALID,
-					"A class has AlwaysValid and AlwaysInvalid attributes!");
+					"A class has AlwaysValidTag and AlwaysInvalidTag attributes!");
 				return _MyType::ValidType::Error;
 			}
 			else if constexpr (IS_VALID)

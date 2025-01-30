@@ -70,10 +70,12 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType	= PrimitiveBase;
+		using _MyType		= PrimitiveBase;
 
 		// Types and enums
-		using T			= _T;
+		using T				= _T;
+		using type			= T;
+		using value_type	= T;
 
 		template<class U>
 		using TBig		= ::llcpp::meta::traits::type_bigger_of_two_t<T, U, T>;
@@ -101,7 +103,7 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(::llcpp::meta::traits::is_basic_type_v<T>,
+		static_assert(::llcpp::meta::traits::is_primitive_v<T>,
 			"Type must be a basic/primitive type");
 		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T>,
 			"type_checker<T> detected an invalid type!");
@@ -439,7 +441,9 @@ class PrimitiveFloating : public PrimitiveBase<_T> {
 		using PrimitiveBase	= PrimitiveBase<_T>;
 
 		// Types and enums
-		using T					= _T;
+		using T				= _T;
+		using type			= T;
+		using value_type	= T;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -514,6 +518,8 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 
 		// Types and enums
 		using T				= _T;
+		using type			= T;
+		using value_type	= T;
 		using T_Signed		= traits::type_signed<T, llcpp::TRUE>;
 
 		using Big_u8		= PrimitiveBase::Big_u8;

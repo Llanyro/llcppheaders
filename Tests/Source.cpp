@@ -122,7 +122,7 @@ class NodeFunctions : public llcpp::meta::containers::Container<_T> {
 			, search(std::forward<const SearchContainer&>(other.search)) {}
 		constexpr NodeFunctions& operator=(const NodeFunctions& other) noexcept {
 			Container::operator=(std::forward<const Container&>(other));
-			this->search = std::forward<const SearchContainer&>(other.search);
+			this->search = ::std::forward<const SearchContainer&>(other.search);
 			return *this;
 		}
 		constexpr NodeFunctions(NodeFunctions&& other) noexcept
@@ -130,7 +130,7 @@ class NodeFunctions : public llcpp::meta::containers::Container<_T> {
 			, search(std::forward<SearchContainer&&>(other.search)) {}
 		constexpr NodeFunctions& operator=(NodeFunctions&& other) noexcept {
 			Container::operator=(std::forward<Container&&>(other));
-			this->search = std::forward<SearchContainer&&>(other.search);
+			this->search = ::std::forward<SearchContainer&&>(other.search);
 			return *this;
 		}
 
@@ -161,7 +161,7 @@ class NodeFunctions : public llcpp::meta::containers::Container<_T> {
 template<class T>
 using FuncNode = llcpp::meta::linked::Node<NodeFunctions<T>, llcpp::TRUE>;
 template<class T, len_t N>
-using ArrayTypeFuncNode = std::array<FuncNode<T>, N>;
+using ArrayTypeFuncNode = ::std::array<FuncNode<T>, N>;
 
 template<class T, len_t N>
 constexpr void fix_node_array(ArrayTypeFuncNode<T, N>& nodes) {
@@ -275,7 +275,7 @@ int main() {
 	std::array<Base, 5> asdf{};
 	print_arr(a);
 	print_arr(asdf);
-	asdf = std::forward<std::array<Base, 5>&&>(a);
+	asdf = ::std::forward<std::array<Base, 5>&&>(a);
 	print_arr(a);
 	print_arr(asdf);
 
@@ -283,7 +283,7 @@ int main() {
 	//ARR asdf{};
 	//print_arr(a);
 	//print_arr(asdf);
-	//asdf = std::forward<ARR&&>(a);
+	//asdf = ::std::forward<ARR&&>(a);
 	//print_arr(a);
 	//print_arr(asdf);
 

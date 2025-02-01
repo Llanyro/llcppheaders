@@ -125,8 +125,11 @@ __LL_VAR_INLINE__ constexpr bool DLL = __LL_DLL_BUILD;
 
 __LL_VAR_INLINE__ constexpr bool DEBUG = __LL_DEBUG;
 
-//template<class T>
-//__LL_VAR_INLINE__ constexpr T* NULLPTR = LL_NULLPTR;
+#if defined(__LL_EXCEPTIONS__)
+	__LL_VAR_INLINE__ constexpr bool EXCEPTIONS = true;
+#else
+	__LL_VAR_INLINE__ constexpr bool EXCEPTIONS = false;
+#endif // __LL_EXCEPTIONS__
 
 } // namespace llcpp
 

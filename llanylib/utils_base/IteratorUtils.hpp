@@ -22,10 +22,18 @@
 	#define LLANYLIB_ITERATORUTILS_INCOMPLETE_MAYOR_ 11
 	#define LLANYLIB_ITERATORUTILS_INCOMPLETE_MINOR_ 0
 
-#include "../traits_base/traits_signature.hpp"
+#include "../traits_base/checker/traits_validate_checker.hpp"
 
-template<class Iterator, class IteratorEnd>
-__LL_NODISCARD__ constexpr ll_bool_t isEnd(const Iterator& it, const IteratorEnd& end) noexcept;
+namespace llcpp {
+namespace meta {
+namespace utils {
+
+template<class _ExtraFunctions, class _Iterator, class _IteratorEnd = _Iterator>
+class IteratorUtils;
+
+} // namespace utils
+} // namespace meta
+} // namespace llcpp
 
 #elif defined(LLANYLIB_ITERATORUTILS_HPP_)
 	#if LLANYLIB_ITERATORUTILS_MAYOR_ != 11 || LLANYLIB_ITERATORUTILS_MINOR_ < 0
@@ -42,7 +50,6 @@ __LL_NODISCARD__ constexpr ll_bool_t isEnd(const Iterator& it, const IteratorEnd
 	#define LLANYLIB_ITERATORUTILS_MAYOR_ 11
 	#define LLANYLIB_ITERATORUTILS_MINOR_ 0
 
-#include "../traits_base/traits_signature.hpp"
 #include "../traits_base/checker/traits_validate_checker.hpp"
 
 #include "Array.hpp"

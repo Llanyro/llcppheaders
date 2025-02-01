@@ -107,6 +107,8 @@ class ParameterPackOperations {
 		using pack_first_t	= PackFirst::T;
 		using type			= pack_first_t;
 		using value_type	= pack_first_t;
+		template<class Object>
+		using FillWithArgs	= Object<Args...>;
 
 	public:
 		// Expresions
@@ -127,6 +129,8 @@ class ParameterPackOperations<T> {
 		using pack_first_t	= PackFirst::T;
 		using type			= pack_first_t;
 		using value_type	= pack_first_t;
+		template<class Object>
+		using FillWithArgs	= Object<T>;
 
 	public:
 		// Expresions
@@ -147,6 +151,8 @@ class ParameterPackOperations<> {
 		using pack_first_t	= PackFirst::T;
 		using type			= pack_first_t;
 		using value_type	= pack_first_t;
+		template<class Object>
+		using FillWithArgs	= Object<>;
 
 	public:
 		// Expresions

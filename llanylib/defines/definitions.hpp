@@ -48,7 +48,7 @@
 #define LL_NULLPTR nullptr
 // Undef this to activate deprecated functionality in any header
 #define __LL_DEPRECATED__
-//#define __LL_EXCEPT___ noexcept(true)
+//#define __LL_EXCEPTIONS__
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 
 #define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, "[" var_str "] cannot be 0. " __FUNCSIG__)

@@ -29,7 +29,7 @@ namespace meta {
 namespace traits {
 namespace __traits__ {
 
-template<class _T, class... uArgs>
+template<class _T, class... _Args>
 class FirstType;
 template<class _T>
 class FirstType<_T>;
@@ -77,8 +77,8 @@ class FirstType {
 
 		// Types and enums
 		using T				= _T;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 		using Next			= ::llcpp::meta::traits::__traits__::FirstType<_Args...>;
 };
 template<class _T>
@@ -89,8 +89,8 @@ class FirstType<_T> {
 
 		// Types and enums
 		using T				= _T;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 		using Next			= ::llcpp::Emptyclass;
 };
 
@@ -105,8 +105,8 @@ class ParameterPackOperations {
 		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<_Args...>;
 		using PackFirst		= FirstType;
 		using pack_first_t	= PackFirst::T;
-		using type			= pack_first_t;
-		using value_type	= pack_first_t;
+		using type			= pack_first_t;	// standard
+		using value_type	= pack_first_t;	// standard
 		template<class Object>
 		using FillWithArgs	= Object<Args...>;
 
@@ -117,18 +117,18 @@ class ParameterPackOperations {
 		static constexpr ll_bool_t HAS_A_POINTER	= (::std::is_pointer_v<_Args> || ...);
 		static constexpr ll_bool_t HAS_AN_ARRAY		= (::std::is_array_v<_Args> || ...);
 };
-template<class T>
-class ParameterPackOperations<T> {
+template<class _T>
+class ParameterPackOperations<_T> {
 	public:
 		// Class related
 		using _MyType		= ParameterPackOperations;
 
 		// Types and enums
-		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<T>;
+		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<_T>;
 		using PackFirst		= FirstType;
 		using pack_first_t	= PackFirst::T;
-		using type			= pack_first_t;
-		using value_type	= pack_first_t;
+		using type			= pack_first_t;	// standard
+		using value_type	= pack_first_t;	// standard
 		template<class Object>
 		using FillWithArgs	= Object<T>;
 
@@ -149,8 +149,8 @@ class ParameterPackOperations<> {
 		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<void>;
 		using PackFirst		= FirstType;
 		using pack_first_t	= PackFirst::T;
-		using type			= pack_first_t;
-		using value_type	= pack_first_t;
+		using type			= pack_first_t;	// standard
+		using value_type	= pack_first_t;	// standard
 		template<class Object>
 		using FillWithArgs	= Object<>;
 

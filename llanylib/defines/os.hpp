@@ -104,10 +104,8 @@
 	#if defined(_DEBUG)
 		#include <assert.h>
 		#define __LL_ASSERT(condition, message) assert(condition && message)
-		#define __LL_DEBUG 1
 	#else
 		#define __LL_ASSERT(condition, message)
-		#define __LL_DEBUG 0
 
 		// Windows does not load _NODISCARD in release...
 		#if !defined(_NODISCARD)

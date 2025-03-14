@@ -48,7 +48,37 @@
 #define LL_NULLPTR nullptr
 // Undef this to activate deprecated functionality in any header
 #define __LL_DEPRECATED__
-//#define __LL_EXCEPTIONS__
+
+#if !defined(__LL_IGNORE_WARNING_STATIC_ASSERTS__)
+	#define __LL_IGNORE_WARNING_STATIC_ASSERTS__ 0
+#elif __LL_IGNORE_WARNING_STATIC_ASSERTS__ != 1
+	#undef __LL_IGNORE_WARNING_STATIC_ASSERTS__
+	#define __LL_IGNORE_WARNING_STATIC_ASSERTS__ 1
+#endif // __LL_IGNORE_WARNING_STATIC_ASSERTS__
+
+#if !defined(__LL_EXCEPTIONS__)
+	#define __LL_EXCEPTIONS__ 0
+#elif __LL_EXCEPTIONS__ != 1
+	#undef __LL_EXCEPTIONS__
+	#define __LL_EXCEPTIONS__ 1
+#endif // __LL_EXCEPTIONS__
+
+#if !defined(__LL_SIGNATURE_HELPER__)
+	#define __LL_SIGNATURE_HELPER__ 0
+#elif __LL_SIGNATURE_HELPER__ != 1 || __LL_SIGNATURE_HELPER__ != 0
+	#define __LL_SIGNATURE_HELPER__ 1
+#endif // __LL_EXCEPTIONS__
+
+
+#define __LL_DEBUG_ERROR__ 0
+#define __LL_DEBUG_WARNING__ __LL_DEBUG_ERROR__ + 1
+#define __LL_DEBUG_INFO__ __LL_DEBUG_WARNING__ + 1
+#define __LL_DEBUG_COMMNET__ __LL_DEBUG_INFO__ + 1
+
+#if !defined(__LL_DEBUG__)
+	#define __LL_DEBUG__ __LL_DEBUG_ERROR__
+#endif __LL_DEBUG__
+
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 
 #define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, "[" var_str "] cannot be 0. " __FUNCSIG__)

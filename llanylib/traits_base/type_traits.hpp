@@ -94,88 +94,88 @@ template<class _T>
 class TypeContainer {
 	public:
 		// Class related
-		using _MyType		= TypeContainer;
+		using _MyType		= TypeContainer;	// standard
 
 		// Types and enums
 		using T				= _T;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 };
-template<class _T>
-using type_container_t = ::llcpp::meta::traits::TypeContainer<_T>::T;
+template<class T>
+using type_container_t = ::llcpp::meta::traits::TypeContainer<T>::T;
 
 template<class _T, class _U>
 class DoubleTypeContainer {
 	public:
 		// Class related
-		using _MyType		= DoubleTypeContainer;
+		using _MyType		= DoubleTypeContainer;	// standard
 
 		// Types and enums
 		using T				= _T;
 		using U				= _U;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 };
-template<class _T, class _U>
-using double_type_container_t = ::llcpp::meta::traits::DoubleTypeContainer<_T, _U>::T;
-template<class _T, class _U>
-using double_type_container_u = ::llcpp::meta::traits::DoubleTypeContainer<_T, _U>::U;
+template<class T, class U>
+using double_type_container_t = ::llcpp::meta::traits::DoubleTypeContainer<T, U>::T;
+template<class T, class U>
+using double_type_container_u = ::llcpp::meta::traits::DoubleTypeContainer<T, U>::U;
 
 // Can contain 2 types an one constant
 template<class _T, _T _VALUE, class _U = ::llcpp::Emptyclass>
 class IntegralConstantContainer {
 	public:
 		// Class related
-		using _MyType		= IntegralConstantContainer;
+		using _MyType		= IntegralConstantContainer;	// standard
 
 		// Types and enums
 		using T				= _T;
 		using U				= _U;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 
 	public:
 		// Expresions
-		static constexpr T VALUE = _VALUE;
-		static constexpr T value = _VALUE;	// used in standard
+		static constexpr value_type VALUE = _VALUE;
+		static constexpr value_type value = _VALUE;	// standard
 };
 
-template<class _T, _T _VALUE, class _U = ::llcpp::Emptyclass>
-using integral_constant_container_t = ::llcpp::meta::traits::IntegralConstantContainer<_T, _VALUE, _U>::T;
-template<class _T, _T _VALUE, class _U = ::llcpp::Emptyclass>
-using integral_constant_container_u = ::llcpp::meta::traits::IntegralConstantContainer<_T, _VALUE, _U>::U;
-template<class _T, _T _VALUE, class _U = ::llcpp::Emptyclass>
-__LL_VAR_INLINE__ constexpr _T integral_constant_container_v =
-	::llcpp::meta::traits::IntegralConstantContainer<_T, _VALUE, _U>::VALUE;
+template<class T, T VALUE, class U = ::llcpp::Emptyclass>
+using integral_constant_container_t = ::llcpp::meta::traits::IntegralConstantContainer<T, VALUE, U>::T;
+template<class T, T VALUE, class U = ::llcpp::Emptyclass>
+using integral_constant_container_u = ::llcpp::meta::traits::IntegralConstantContainer<T, VALUE, U>::U;
+template<class T, T VALUE, class U = ::llcpp::Emptyclass>
+__LL_VAR_INLINE__ constexpr T integral_constant_container_v =
+	::llcpp::meta::traits::IntegralConstantContainer<T, VALUE, U>::VALUE;
 
 template<class _T, class _U, _T _FIRST, _U _SECOND>
 class DoubleConstantContainer {
 	public:
 		// Class related
-		using _MyType		= DoubleConstantContainer;
+		using _MyType		= DoubleConstantContainer;	// standard
 
 		// Types and enums
 		using T				= _T;
 		using U				= _U;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 
 	public:
 		// Expresions
 		static constexpr T FIRST	= _FIRST;
-		static constexpr T SECOND	= _SECOND;
+		static constexpr U SECOND	= _SECOND;
 };
 
-template<class _T, class _U, _T _FIRST, _U _SECOND>
-using double_constant_container_t = ::llcpp::meta::traits::DoubleConstantContainer<_T, _U, _FIRST, _SECOND>::T;
-template<class _T, class _U, _T _FIRST, _U _SECOND>
-using double_constant_container_u = ::llcpp::meta::traits::DoubleConstantContainer<_T, _U, _FIRST, _SECOND>::U;
-template<class _T, class _U, _T _FIRST, _U _SECOND>
-__LL_VAR_INLINE__ constexpr _T double_constant_container_first =
-	::llcpp::meta::traits::DoubleConstantContainer<_T, _U, _FIRST, _SECOND>::FIRST;
-template<class _T, class _U, _T _FIRST, _U _SECOND>
-__LL_VAR_INLINE__ constexpr _T double_constant_container_second =
-	::llcpp::meta::traits::DoubleConstantContainer<_T, _U, _FIRST, _SECOND>::SECOND;
+template<class T, class U, T FIRST, U SECOND>
+using double_constant_container_t = ::llcpp::meta::traits::DoubleConstantContainer<T, U, FIRST, SECOND>::T;
+template<class T, class U, T FIRST, U SECOND>
+using double_constant_container_u = ::llcpp::meta::traits::DoubleConstantContainer<T, U, FIRST, SECOND>::U;
+template<class T, class U, T FIRST, U SECOND>
+__LL_VAR_INLINE__ constexpr T double_constant_container_first =
+	::llcpp::meta::traits::DoubleConstantContainer<T, U, FIRST, SECOND>::FIRST;
+template<class T, class U, T FIRST, U SECOND>
+__LL_VAR_INLINE__ constexpr T double_constant_container_second =
+	::llcpp::meta::traits::DoubleConstantContainer<T, U, FIRST, SECOND>::SECOND;
 
 #pragma endregion
 #pragma region LogicContainers
@@ -202,13 +202,13 @@ template<ll_bool_t _CONDITION, class _T, class _U>
 class Conditional {
 	public:
 		// Class related
-		using _MyType		= Conditional;
+		using _MyType		= Conditional;	// standard
 
 		// Types and enums
 		using T				= _T;
 		using U				= _U;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 
 	public:
 		// Expresions
@@ -218,18 +218,19 @@ template<class _T, class _U>
 class Conditional<::llcpp::FALSE, _T, _U> {
 	public:
 		// Class related
-		using _MyType		= Conditional;
+		using _MyType		= Conditional;	// standard
 
 		// Types and enums
 		using T				= _T;
 		using U				= _U;
-		using type			= U;
-		using value_type	= U;
+		using type			= U;	// standard
+		using value_type	= U;	// standard
 
 	public:
 		// Expresions
 		static constexpr ll_bool_t CONDITION	= llcpp::FALSE;
 };
+
 template<ll_bool_t CONDITION, class T, class U>
 using conditional_t = ::llcpp::meta::traits::Conditional<CONDITION, T, U>::type;
 
@@ -237,50 +238,56 @@ template<ll_bool_t _CONDITION, class _T, class _U, _T _ELEM_1, _U _ELEM_2>
 class ConditionalValue {
 	public:
 		// Class related
-		using _MyType		= ConditionalValue;
+		using _MyType		= ConditionalValue;	// standard
 
 		// Types and enums
 		using T				= _T;
 		using U				= _U;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 
 	public:
 		// Expresions
 		static constexpr ll_bool_t CONDITION 	= _CONDITION;
-		static constexpr _T VALUE				= _ELEM_1;
 		static constexpr _T ELEM_1				= _ELEM_1;
 		static constexpr _U ELEM_2				= _ELEM_2;
+
+		static constexpr value_type VALUE		= _ELEM_1;
+		static constexpr value_type value		= VALUE;	// standard
+
 };
 template<class _T, class _U, _T _ELEM_1, _U _ELEM_2>
 class ConditionalValue<llcpp::FALSE, _T, _U, _ELEM_1, _ELEM_2> {
 	public:
 		// Class related
-		using _MyType		= ConditionalValue;
+		using _MyType		= ConditionalValue;	// standard
 
 		// Types and enums
 		using T				= _T;
 		using U				= _U;
-		using type			= U;
-		using value_type	= U;
+		using type			= U;	// standard
+		using value_type	= U;	// standard
 
 	public:
 		// Expresions
 		static constexpr ll_bool_t CONDITION	= llcpp::FALSE;
-		static constexpr _U VALUE				= _ELEM_2;
 		static constexpr _T ELEM_1				= _ELEM_1;
 		static constexpr _U ELEM_2				= _ELEM_2;
+
+		static constexpr value_type VALUE		= _ELEM_2;
+		static constexpr value_type value		= VALUE;	// standard
 };
-template<ll_bool_t CONDITION, class _T, class _U, _T _ELEM_1, _U _ELEM_2>
-__LL_VAR_INLINE__ constexpr auto conditional_value_v = ConditionalValue<CONDITION, _T, _U, _ELEM_1, _ELEM_2>::VALUE;
-template<ll_bool_t CONDITION, class _T, _T _ELEM_1, _T _ELEM_2>
-__LL_VAR_INLINE__ constexpr auto conditional_value_simple_v = ConditionalValue<CONDITION, _T, _T, _ELEM_1, _ELEM_2>::VALUE;
+
+template<ll_bool_t CONDITION, class T, class U, T ELEM_1, U ELEM_2>
+__LL_VAR_INLINE__ constexpr auto conditional_value_v = ConditionalValue<CONDITION, T, U, ELEM_1, ELEM_2>::VALUE;
+template<ll_bool_t CONDITION, class T, T ELEM_1, T ELEM_2>
+__LL_VAR_INLINE__ constexpr auto conditional_value_simple_v = ConditionalValue<CONDITION, T, T, ELEM_1, ELEM_2>::VALUE;
 
 template<class _T, class _U, class _OnEqual = ::llcpp::Emptyclass>
 class CompareConditional {
 	public:
 		// Class related
-		using _MyType	= CompareConditional;
+		using _MyType	= CompareConditional;	// standard
 
 		// Types and enums
 		using T			= _T;
@@ -293,7 +300,7 @@ class CompareConditional {
 		static constexpr ll_bool_t BIGGER_EQ_COMPARE	= sizeof(T) >= sizeof(U);
 		static constexpr ll_bool_t SMALLER_COMPARE		= sizeof(T) < sizeof(U);
 		static constexpr ll_bool_t SMALLER_EQ_COMPARE	= sizeof(T) <= sizeof(U);
-		static constexpr ll_bool_t EQ_COMPARE			= sizeof(T) < sizeof(U);
+		static constexpr ll_bool_t EQ_COMPARE			= sizeof(T) == sizeof(U);
 
 	private:
 		using __bigger	= ::llcpp::meta::traits::conditional_t<_MyType::BIGGER_COMPARE, T, U>;
@@ -308,6 +315,7 @@ class CompareConditional {
 		// Returrns first type on smaller or equal
 		using smaller_eq	= ::llcpp::meta::traits::conditional_t<_MyType::SMALLER_EQ_COMPARE, T, U>;
 };
+
 template<class T, class U, class OnEqual = ::llcpp::Emptyclass>
 using type_bigger_of_two_t = ::llcpp::meta::traits::CompareConditional<T, U, OnEqual>::bigger;
 template<class T, class U, class OnEqual = llcpp::Emptyclass>
@@ -410,7 +418,7 @@ template<class _T>
 class RangeChecker {
 	public:
 		// Class related
-		using _MyType		= RangeChecker;
+		using _MyType		= RangeChecker;	// standard
 
 		// Types and enums
 		using T				= _T;
@@ -473,12 +481,12 @@ template<class _T>
 class test_a {
 	public:
 		// Class related
-		using _MyType	= test_a;
+		using _MyType	= test_a;	// standard
 
 		// Types and enums
 		using T			= _T;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 
 		// Expresions
 		static constexpr ll_bool_t IS_VIRTUAL	= ::std::has_virtual_destructor_v<T>;
@@ -495,16 +503,16 @@ class test_a {
 #pragma region LimitsPt2
 // Proxy of MAX_VALUE in ::llcpp::meta::traits
 template<class T>
-__LL_VAR_INLINE__ constexpr T MAX_VALUE			= ::llcpp::meta::traits::RangeChecker<T>::MAX_VALUE;
+__LL_VAR_INLINE__ constexpr T	MAX_VALUE		= ::llcpp::meta::traits::RangeChecker<T>::MAX_VALUE;
 template<class T>
-__LL_VAR_INLINE__ constexpr T MIN_VALUE			= ::llcpp::meta::traits::RangeChecker<T>::MIN_VALUE;
+__LL_VAR_INLINE__ constexpr T	MIN_VALUE		= ::llcpp::meta::traits::RangeChecker<T>::MIN_VALUE;
 // Zero value or default value returns a base type (default contructor)
 template<class T>
-__LL_VAR_INLINE__ constexpr T ZERO_VALUE		= T{};
+__LL_VAR_INLINE__ constexpr T	ZERO_VALUE		= T{};
 template<class T>
-__LL_VAR_INLINE__ constexpr T* ZERO_VALUE<T*>	= LL_NULLPTR;
+__LL_VAR_INLINE__ constexpr T*	ZERO_VALUE<T*>	= LL_NULLPTR;
 template<class T>
-__LL_VAR_INLINE__ constexpr T NULL_VALUE		= ::llcpp::ZERO_VALUE<T>;
+__LL_VAR_INLINE__ constexpr T	NULL_VALUE		= ::llcpp::ZERO_VALUE<T>;
 
 #pragma endregion
 

@@ -43,6 +43,9 @@ namespace llcpp {
 __LL_VAR_INLINE__ constexpr bool REAL_CXX17 = __LL_REAL_CXX17;
 __LL_VAR_INLINE__ constexpr bool REAL_CXX23 = __LL_REAL_CXX23;
 
+#undef __LL_REAL_CXX17
+#undef __LL_REAL_CXX23
+
 //////////////////////////////////////////// OS check ////////////////////////////////////////////
 
 #pragma region MacrosRemove
@@ -97,6 +100,8 @@ __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_32			= BITS_SYSTEM == 32u;
 __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_16			= BITS_SYSTEM == 16u;
 __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_8			= BITS_SYSTEM == 8u;
 
+//#undef __LL_WORD
+
 ///////////////////////////////////////// DLL deinitions /////////////////////////////////////////
 
 #pragma region MacrosRemove
@@ -109,6 +114,8 @@ __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_8			= BITS_SYSTEM == 8u;
 
 __LL_VAR_INLINE__ constexpr bool DLL = __LL_DLL_BUILD;
 
+#undef __LL_DLL_BUILD
+
 ///////////////////////////////////////////// Assert /////////////////////////////////////////////
 
 #pragma region MacrosRemove
@@ -117,19 +124,38 @@ __LL_VAR_INLINE__ constexpr bool DLL = __LL_DLL_BUILD;
 	#undef DEBUG
 #endif // DEBUG
 
+#if defined(DEBUG_WARNING)
+	#undef DEBUG_WARNING
+#endif // DEBUG_WARNING
+
+#if defined(DEBUG_INFO)
+	#undef DEBUG_INFO
+#endif // DEBUG_INFO
+
+#if defined(DEBUG_COMMNET)
+	#undef DEBUG_COMMNET
+#endif // DEBUG_COMMNET
+
 #if defined(NULLPTR)
 	#undef NULLPTR
 #endif // NULLPTR
 
+#if defined(IGNORE_WARNING_STATIC_ASSERTS)
+	#undef IGNORE_WARNING_STATIC_ASSERTS
+#endif // IGNORE_WARNING_STATIC_ASSERTS
+
 #pragma endregion
 
-__LL_VAR_INLINE__ constexpr bool DEBUG = __LL_DEBUG;
+__LL_VAR_INLINE__ constexpr unsigned char DEBUG = __LL_DEBUG__;
+__LL_VAR_INLINE__ constexpr unsigned char DEBUG_WARNING = __LL_DEBUG_WARNING__;
+__LL_VAR_INLINE__ constexpr unsigned char DEBUG_INFO = __LL_DEBUG_INFO__;
+__LL_VAR_INLINE__ constexpr unsigned char DEBUG_COMMNET = __LL_DEBUG_COMMNET__;
+__LL_VAR_INLINE__ constexpr bool EXCEPTIONS = __LL_EXCEPTIONS__;
+__LL_VAR_INLINE__ constexpr bool IGNORE_WARNING_STATIC_ASSERTS = __LL_IGNORE_WARNING_STATIC_ASSERTS__;
 
-#if defined(__LL_EXCEPTIONS__)
-	__LL_VAR_INLINE__ constexpr bool EXCEPTIONS = true;
-#else
-	__LL_VAR_INLINE__ constexpr bool EXCEPTIONS = false;
-#endif // __LL_EXCEPTIONS__
+#undef __LL_DEBUG
+#undef __LL_EXCEPTIONS__
+#undef __LL_IGNORE_WARNING_STATIC_ASSERTS__
 
 } // namespace llcpp
 

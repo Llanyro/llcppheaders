@@ -402,24 +402,67 @@ class SignatureCheckerBySignature : public _SignatureContainer::template GetSign
 namespace signature_easy {
 
 template<class ReturnType, class... FunctionArguments>
-using Sig = ::llcpp::meta::traits::SignatureContainer<
+using cSig = ::llcpp::meta::traits::SignatureContainer<
 	::llcpp::meta::attributes::functional::CONSTNOEXCEPTION,
 	ReturnType,
 	FunctionArguments...
 >;
 
+template<class ReturnType, class... FunctionArguments>
+using Sig = ::llcpp::meta::traits::SignatureContainer<
+	::llcpp::meta::attributes::functional::NOEXCEPTION,
+	ReturnType,
+	FunctionArguments...
+>;
+
+
+template<class T, class ReturnType, class... Args>
+using GetValidationType = ::llcpp::meta::traits::SignatureCheckerBySignature<
+	T,
+	::llcpp::meta::traits::signature_easy::cSig<ReturnType, Args...>,
+	::llcpp::meta::traits::signatures::GetValidationType
+>;
+
 template<class T, class ReturnType, class... Args>
 using OperatorEQ = ::llcpp::meta::traits::SignatureCheckerBySignature<
 	T,
-	::llcpp::meta::traits::signature_easy::Sig<ReturnType, Args...>,
+	::llcpp::meta::traits::signature_easy::cSig<ReturnType, Args...>,
 	::llcpp::meta::traits::signatures::GetOperatorEQ
+>;
+
+template<class T, class ReturnType, class... Args>
+using OperatorNEQ = ::llcpp::meta::traits::SignatureCheckerBySignature<
+	T,
+	::llcpp::meta::traits::signature_easy::cSig<ReturnType, Args...>,
+	::llcpp::meta::traits::signatures::GetOperatorNEQ
 >;
 
 template<class T, class ReturnType, class... Args>
 using OperatorGEQ = ::llcpp::meta::traits::SignatureCheckerBySignature<
 	T,
-	::llcpp::meta::traits::signature_easy::Sig<ReturnType, Args...>,
+	::llcpp::meta::traits::signature_easy::cSig<ReturnType, Args...>,
 	::llcpp::meta::traits::signatures::GetOperatorGEQ
+>;
+
+template<class T, class ReturnType, class... Args>
+using OperatorLEQ = ::llcpp::meta::traits::SignatureCheckerBySignature<
+	T,
+	::llcpp::meta::traits::signature_easy::cSig<ReturnType, Args...>,
+	::llcpp::meta::traits::signatures::GetOperatorLEQ
+>;
+
+template<class T, class ReturnType, class... Args>
+using GetClear = ::llcpp::meta::traits::SignatureCheckerBySignature<
+	T,
+	::llcpp::meta::traits::signature_easy::Sig<ReturnType, Args...>,
+	::llcpp::meta::traits::signatures::GetClear
+>;
+
+template<class T, class ReturnType, class... Args>
+using GetForeachOperation = ::llcpp::meta::traits::SignatureCheckerBySignature<
+	T,
+	::llcpp::meta::traits::signature_easy::Sig<ReturnType, Args...>,
+	::llcpp::meta::traits::signatures::GetForeachOperation
 >;
 
 template<class T, class U>

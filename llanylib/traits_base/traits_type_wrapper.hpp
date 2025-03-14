@@ -65,6 +65,7 @@ namespace traits {
 
 // Empty dummy class to use with primitive types
 // Its usefull to use in function checkers with primitive types
+// This is the true container for primitives
 template<class _T, _T _INVALID_VALUE = ::llcpp::ZERO_VALUE<_T>>
 class PrimitiveBase : ::llcpp::AlwaysValidTag {
 	#pragma region Types
@@ -74,11 +75,11 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 
 		// Types and enums
 		using T				= _T;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 
 		template<class U>
-		using TBig		= ::llcpp::meta::traits::type_bigger_of_two_t<T, U, T>;
+		using TBig		= ::llcpp::meta::traits::type_bigger_of_two_t<T, U, U>;
 
 		using Big_u8	= TBig<u8>;
 		using Big_u16	= TBig<u16>;
@@ -111,7 +112,8 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 	#pragma endregion
 	#pragma region Expresions
 	public:
-		static constexpr T INVALID_VALUE = _INVALID_VALUE;
+		static constexpr T INVALID_VALUE			= _INVALID_VALUE;
+		static constexpr ll_bool_t IS_GET_SET_MODE	= ::llcpp::FALSE;
 
 	#pragma endregion
 	#pragma region Attributes
@@ -124,7 +126,7 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 	public:
 		constexpr PrimitiveBase() noexcept
 			: AlwaysValidTag()
-			, primitive(INVALID_VALUE)
+			, primitive(_MyType::INVALID_VALUE)
 		{}
 		constexpr ~PrimitiveBase() noexcept {}
 
@@ -156,10 +158,10 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 		}
 		constexpr PrimitiveBase(T&& primitive) noexcept
 			: primitive(::std::forward<T&&>(primitive))
-		{ primitive = INVALID_VALUE; }
+		{ primitive = _MyType::INVALID_VALUE; }
 		constexpr PrimitiveBase& operator=(T&& primitive) noexcept {
 			this->primitive = ::std::forward<T&&>(primitive);
-			primitive = INVALID_VALUE;
+			primitive = _MyType::INVALID_VALUE;
 			return *this;
 		}
 
@@ -260,44 +262,44 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const f128 v) const noexcept { return this->primitive <= v; }
 		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const ll_bool_t v) const noexcept { return this->primitive <= v; }
 
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const u8) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const u16) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const u32) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const u64) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const i8) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const i16) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const i32) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const i64) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const f32) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const f64) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const f128) const noexcept { return (this->primitive <=> v)._Value; }
-		__LL_NODISCARD__ constexpr c_cmp_t compare(const ll_bool_t) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const u8 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const u16 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const u32 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const u64 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const i8 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const i16 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const i32 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const i64 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const f32 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const f64 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const f128 v) const noexcept { return (this->primitive <=> v)._Value; }
+		__LL_NODISCARD__ constexpr c_cmp_t c_compare(const ll_bool_t v) const noexcept { return (this->primitive <=> v)._Value; }
 
-		__LL_NODISCARD__ constexpr OrdeningByType compare(const u8) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr OrdeningByType compare(const u16) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr OrdeningByType compare(const u32) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr OrdeningByType compare(const u64) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr OrdeningByType compare(const i8) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr OrdeningByType compare(const i16) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr OrdeningByType compare(const i32) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr OrdeningByType compare(const i64) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr OrdeningByType compare(const ll_bool_t) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr ::std::partial_ordering compare(const f32) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr ::std::partial_ordering compare(const f64) const noexcept { return (this->primitive <=> v); }
-		__LL_NODISCARD__ constexpr ::std::partial_ordering compare(const f128) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const u8 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const u16 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const u32 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const u64 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const i8 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const i16 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const i32 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const i64 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr OrdeningByType compare(const ll_bool_t v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering compare(const  f32 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering compare(const  f64 v) const noexcept { return (this->primitive <=> v); }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering compare(const  f128 v) const noexcept { return (this->primitive <=> v); }
 
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u8) const noexcept { return  this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u16) const noexcept { return  this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u32) const noexcept { return  this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u64) const noexcept { return  this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i8) const noexcept { return  this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i16) const noexcept { return  this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i32) const noexcept { return  this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i64) const noexcept { return  this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const ll_bool_t) const noexcept { return  this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr ::std::partial_ordering operator<=>(const f32) const noexcept { return this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr ::std::partial_ordering operator<=>(const f64) const noexcept { return this->primitive <=> v; }
-		__LL_NODISCARD__ constexpr ::std::partial_ordering operator<=>(const f128) const noexcept { return this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u8 v) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u16 v) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u32 v) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const u64 v) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i8 v) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i16 v) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i32 v) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const i64 v) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr OrdeningByType operator<=>(const ll_bool_t v) const noexcept { return  this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering operator<=>(const f32 v) const noexcept { return this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering operator<=>(const f64 v) const noexcept { return this->primitive <=> v; }
+		__LL_NODISCARD__ constexpr ::std::partial_ordering operator<=>(const f128 v) const noexcept { return this->primitive <=> v; }
 
 		#pragma endregion
 		#pragma region Operations
@@ -423,9 +425,12 @@ class PrimitiveBase : ::llcpp::AlwaysValidTag {
 		#pragma endregion
 
 	public:
-		constexpr void clear() noexcept { this->primitive = INVALID_VALUE; }
+		constexpr void clear() noexcept { this->primitive = _MyType::INVALID_VALUE; }
 		__LL_NODISCARD__ constexpr T& getPrimitive() noexcept { return this->primitive; }
 		__LL_NODISCARD__ constexpr const T& getPrimitive() const noexcept { return this->primitive; }
+
+		__LL_NODISCARD__ constexpr operator T&() noexcept { return this->content; }
+		__LL_NODISCARD__ constexpr operator const T&()  const noexcept { return this->content; }
 
 		#pragma endregion
 
@@ -518,9 +523,9 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 
 		// Types and enums
 		using T				= _T;
-		using type			= T;
-		using value_type	= T;
-		using T_Signed		= traits::type_signed<T, llcpp::TRUE>;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
+		using T_Signed		= ::llcpp::meta::traits::type_promote_u<T>;
 
 		using Big_u8		= PrimitiveBase::Big_u8;
 		using Big_u16		= PrimitiveBase::Big_u16;
@@ -535,18 +540,18 @@ class PrimitiveInteger : public PrimitiveBase<_T> {
 		using Big_f128		= PrimitiveBase::Big_f128;
 		using Big_bool		= PrimitiveBase::Big_bool;
 
-		using Small_u8		= traits::type_smaller_of_two_t<T, u8>;
-		using Small_u16		= traits::type_smaller_of_two_t<T, u16>;
-		using Small_u32		= traits::type_smaller_of_two_t<T, u32>;
-		using Small_u64		= traits::type_smaller_of_two_t<T, u64>;
-		using Small_i8		= traits::type_smaller_of_two_t<T, i8>;
-		using Small_i16		= traits::type_smaller_of_two_t<T, i16>;
-		using Small_i32		= traits::type_smaller_of_two_t<T, i32>;
-		using Small_i64		= traits::type_smaller_of_two_t<T, i64>;
-		using Small_f32		= traits::type_smaller_of_two_t<T, f32>;
-		using Small_f64		= traits::type_smaller_of_two_t<T, f64>;
-		using Small_f128	= traits::type_smaller_of_two_t<T, f128>;
-		using Small_bool	= traits::type_smaller_of_two_t<T, ll_bool_t>;
+		using Small_u8		= traits::type_smaller_of_two_t<T, u8, u8>;
+		using Small_u16		= traits::type_smaller_of_two_t<T, u16, u16>;
+		using Small_u32		= traits::type_smaller_of_two_t<T, u32, u32>;
+		using Small_u64		= traits::type_smaller_of_two_t<T, u64, u64>;
+		using Small_i8		= traits::type_smaller_of_two_t<T, i8, i8>;
+		using Small_i16		= traits::type_smaller_of_two_t<T, i16, i16>;
+		using Small_i32		= traits::type_smaller_of_two_t<T, i32, i32>;
+		using Small_i64		= traits::type_smaller_of_two_t<T, i64, i64>;
+		using Small_f32		= traits::type_smaller_of_two_t<T, f32, f32>;
+		using Small_f64		= traits::type_smaller_of_two_t<T, f64, f64>;
+		using Small_f128	= traits::type_smaller_of_two_t<T, f128, f128>;
+		using Small_bool	= traits::type_smaller_of_two_t<T, ll_bool_t, ll_bool_t>;
 
 	#pragma endregion
 	#pragma region Asserts

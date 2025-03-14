@@ -54,9 +54,13 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_primitive_v = ::std::is_arithmetic_v<T>
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_primitive_big_v = ::std::_Is_any_of_v<T, i128, i256, u128, u256>;
 template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_any_primitive_v = ::llcpp::meta::traits::is_primitive_v<T> || ::llcpp::meta::traits::is_primitive_big_v<T>;
+template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_type_v = ::std::is_floating_point_v<T>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_floating_bigger_type_v = ::std::_Is_any_of_v<T, f128>;
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_any_floating_v = ::llcpp::meta::traits::is_floating_type_v<T> || ::llcpp::meta::traits::is_floating_bigger_type_v<T>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = ::std::_Is_any_of_v<T, ll_char_t, ll_wchar_t>;
 
@@ -79,15 +83,12 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_raw_type =
 	::llcpp::meta::traits::is_primitive_v<_T>
 	|| ::std::is_class_v<_T>;
 
-// [TOFIX]
-//template<class T>
-//__LL_VAR_INLINE__ constexpr ll_bool_t is_hash_type_v =
-//	std::_Is_any_of_v<T, meta::hash::Hash32, meta::hash::Hash64, meta::hash::Hash128>;
-
 template<class T>
 using array_type_t = ::std::remove_extent_t<T>;
 template<class T>
-using input = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T> && ::std::is_pointer_v<T>, T&, T>;
+using input = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T> && !::std::is_pointer_v<T>, T&, T>;
+//template<class T>
+//using input = ::llcpp::meta::traits::conditional_t<::std::is_pointer_v<T>, T, T&>;
 template<class T>
 using cinput = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T> && !::std::is_pointer_v<T>, const T&, const T>;
 

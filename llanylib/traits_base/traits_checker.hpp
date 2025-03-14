@@ -73,8 +73,8 @@ class TypeChecker {
 
 		// Types and enums
 		using T				= _T;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 
 	public:
 		// Expresions
@@ -115,8 +115,8 @@ class ConstructorChecker {
 
 		// Types and enums
 		using T				= _T;
-		using type			= T;
-		using value_type	= T;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
 
 	public:
 		// Expresions

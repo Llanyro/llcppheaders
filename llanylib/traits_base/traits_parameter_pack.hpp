@@ -80,6 +80,7 @@ class FirstType {
 		using type			= T;	// standard
 		using value_type	= T;	// standard
 		using Next			= ::llcpp::meta::traits::__traits__::FirstType<_Args...>;
+		using U				= Next;
 };
 template<class _T>
 class FirstType<_T> {
@@ -92,6 +93,7 @@ class FirstType<_T> {
 		using type			= T;	// standard
 		using value_type	= T;	// standard
 		using Next			= ::llcpp::Emptyclass;
+		using U				= Next;
 };
 
 } // namespace __traits__
@@ -105,10 +107,9 @@ class ParameterPackOperations {
 		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<_Args...>;
 		using PackFirst		= FirstType;
 		using pack_first_t	= PackFirst::T;
+		using T				= pack_first_t;
 		using type			= pack_first_t;	// standard
 		using value_type	= pack_first_t;	// standard
-		template<class Object>
-		using FillWithArgs	= Object<Args...>;
 
 	public:
 		// Expresions
@@ -127,10 +128,9 @@ class ParameterPackOperations<_T> {
 		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<_T>;
 		using PackFirst		= FirstType;
 		using pack_first_t	= PackFirst::T;
+		using T				= pack_first_t;
 		using type			= pack_first_t;	// standard
 		using value_type	= pack_first_t;	// standard
-		template<class Object>
-		using FillWithArgs	= Object<T>;
 
 	public:
 		// Expresions
@@ -146,13 +146,12 @@ class ParameterPackOperations<> {
 		using _MyType		= ParameterPackOperations;
 
 		// Types and enums
-		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<void>;
+		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<::llcpp::Emptyclass>;
 		using PackFirst		= FirstType;
 		using pack_first_t	= PackFirst::T;
+		using T				= pack_first_t;
 		using type			= pack_first_t;	// standard
 		using value_type	= pack_first_t;	// standard
-		template<class Object>
-		using FillWithArgs	= Object<>;
 
 	public:
 		// Expresions

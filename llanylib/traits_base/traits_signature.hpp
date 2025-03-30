@@ -175,14 +175,15 @@ namespace signatures {
 			using _MyType = __Get##name##;																\
 		public:																							\
 			template<class, class...>																	\
-			static constexpr auto get_return_type(...) noexcept			-> llcpp::Emptyclass;			\
+			__LL_NODISCARD__ static constexpr auto get_return_type(...) noexcept ->						\
+				llcpp::Emptyclass;																		\
 			template<class T, class... FunctionArguments>												\
-			static constexpr auto get_return_type(T* c) noexcept		->								\
+			__LL_NODISCARD__ static constexpr auto get_return_type(T* c) noexcept ->					\
 				decltype(c->##function##(::std::declval<FunctionArguments>()...));						\
 			template<class, class...>																	\
-			static constexpr auto get_noexcept(...) noexcept			-> std::false_type;				\
+			__LL_NODISCARD__ static constexpr auto get_noexcept(...) noexcept -> std::false_type;		\
 			template<class T, class... FunctionArguments>												\
-			static constexpr auto get_noexcept(T* c) noexcept			->								\
+			__LL_NODISCARD__ static constexpr auto get_noexcept(T* c) noexcept ->						\
 				std::bool_constant<noexcept(c->##function##(::std::declval<FunctionArguments>()...))>;	\
 	};																									\
 	using Get##name## =																					\
@@ -234,7 +235,7 @@ class SignatureContainer {
 	private:
 		// Private functional
 		template<class T>
-		static constexpr auto get_signature(T*) noexcept {
+		__LL_NODISCARD__ static constexpr auto get_signature(T*) noexcept {
 			if constexpr (ATTRIBUTES.CONST && ATTRIBUTES.NOEXCEPTION)
 				return traits::TypeContainer<ReturnType(T::*)(_FunctionArguments...) const noexcept>{};
 			else if constexpr (!ATTRIBUTES.CONST && ATTRIBUTES.NOEXCEPTION)
@@ -245,7 +246,7 @@ class SignatureContainer {
 				return traits::TypeContainer<ReturnType(T::*)(_FunctionArguments...)>{};
 		}
 		template<>
-		static constexpr auto get_signature<void>(void*) noexcept {
+		__LL_NODISCARD__ static constexpr auto get_signature<void>(void*) noexcept {
 			if constexpr (ATTRIBUTES.NOEXCEPTION)
 				return traits::TypeContainer<ReturnType(*)(_FunctionArguments...) noexcept>{};
 			else //if constexpr (!ATTRIBUTES.CONST && !ATTRIBUTES.NOEXCEPTION)

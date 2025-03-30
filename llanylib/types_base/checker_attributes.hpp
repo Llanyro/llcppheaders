@@ -26,11 +26,11 @@
 
 namespace llcpp {
 namespace meta {
-namespace traits {
+namespace attributes {
 
 struct checker_attributes_t;
 
-} // namespace traits
+} // namespace attributes
 } // namespace meta
 } // namespace llcpp
 

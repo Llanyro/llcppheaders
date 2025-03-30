@@ -143,6 +143,21 @@ namespace meta {
 
 using StandardComparation	= ::std::strong_ordering;
 
+template<class T>
+struct simplest_container { T value; };
+
+template<class T, class U>
+struct pair {
+	T first;
+	U second;
+};
+
+template<class T>
+struct pair<T, T> {
+	T first;
+	T second;
+};
+
 } // namespace meta
 } // namespace llcpp
 

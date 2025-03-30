@@ -59,10 +59,10 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 
 		// Types and enums
 		enum class enum_bool : u8 {
-			FALSE	= false,
-			TRUE	= true,
-			UNKNOWN,
-			INVALID
+			False	= ::llcpp::FALSE,
+			True	= ::llcpp::TRUE,
+			Invalid,
+			Unknown
 		};
 
 	#pragma endregion
@@ -74,7 +74,7 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 	#pragma region Functions
 		#pragma region Constructor
 	public:
-		constexpr Boolean() noexcept : value(_MyType::enum_bool::UNKNOWN) {}
+		constexpr Boolean() noexcept : value(_MyType::enum_bool::Unknown) {}
 		constexpr ~Boolean() noexcept {}
 
 		#pragma endregion
@@ -124,18 +124,14 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 		#pragma region ClassFunctions
 	public:
 		__LL_NODISCARD__ static constexpr ll_bool_t convert(const enum_bool value) noexcept {
-			return value == enum_bool::TRUE;
+			return value == enum_bool::True;
 		}
 		__LL_NODISCARD__ static constexpr enum_bool convert(const ll_bool_t value) noexcept {
 			return static_cast<enum_bool>(value);
 		}
 
-		constexpr void set(const ll_bool_t value) noexcept {
-			this->value = _MyType::convert(value);
-		}
-		constexpr void set(const enum_bool value) noexcept {
-			this->value = value;
-		}
+		constexpr void set(const ll_bool_t value) noexcept { this->value = _MyType::convert(value); }
+		constexpr void set(const enum_bool value) noexcept { this->value = value; }
 
 		__LL_NODISCARD__ constexpr explicit operator ll_bool_t() const noexcept {
 			return _MyType::convert(value);
@@ -165,7 +161,7 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 			return this->value != _MyType::convert(value);
 		}
 
-		constexpr void clear() noexcept { this->value = _MyType::enum_bool::UNKNOWN; }
+		constexpr void clear() noexcept { this->set(_MyType::enum_bool::Unknown); }
 
 		#pragma endregion
 
@@ -178,8 +174,8 @@ using _MyType = ::llcpp::Boolean::_MyType;
 
 __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_FALSE	= ::llcpp::FALSE;
 __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_TRUE	= ::llcpp::TRUE;
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_INVALID	= _MyType::enum_bool::INVALID;
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_UNKNOWN	= _MyType::enum_bool::UNKNOWN;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_INVALID	= _MyType::enum_bool::Invalid;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_UNKNOWN	= _MyType::enum_bool::Unknown;
 
 } // namespace boolean
 

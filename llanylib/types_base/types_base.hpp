@@ -70,7 +70,7 @@ using ll_longdouble_t	= long double;
 /// Other
 using ll_wchar_t		= wchar_t;
 using ll_bool_t			= bool;
-enum class LoopResult { Conntinue, Error, Ok, BeginError };
+enum class LoopResult { Conntinue, Error, Ok, BeginError, Unknown };
 
 // Simplified Signed
 using i8				= ll_char_t;

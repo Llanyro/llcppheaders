@@ -22,9 +22,11 @@
 	#define LLANYLIB_TRAITSVALIDATECHECKER_INCOMPLETE_MAYOR_ 11
 	#define LLANYLIB_TRAITSVALIDATECHECKER_INCOMPLETE_MINOR_ 0
 
+#if __LL_SIGNATURE_HELPER__ == 1
+	#include "../traits_signature.hpp"
+#endif // __LL_SIGNATURE_HELPER__
 
-#include "../traits_signature.hpp"
-#include "../traits_type_wrapper.hpp"
+#include "../traits_valid_type.hpp"
 
 class ValidationChecker;
 
@@ -43,8 +45,11 @@ class ValidationChecker;
 	#define LLANYLIB_TRAITSVALIDATECHECKER_MAYOR_ 11
 	#define LLANYLIB_TRAITSVALIDATECHECKER_MINOR_ 0
 
-#include "../traits_signature.hpp"
-#include "../traits_type_wrapper.hpp"
+#if __LL_SIGNATURE_HELPER__ == 1
+	#include "../traits_signature.hpp"
+#endif // __LL_SIGNATURE_HELPER__
+
+#include "../traits_valid_type.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -64,54 +69,65 @@ class ValidationChecker {
 		using _MyType	= ValidationChecker;
 
 		// Types and enums
-		/// Do not change order
-		enum class ValidType : u8 { Valid, Invalid, ToCheck, Unknown, Error };
 		template<ll_bool_t _VALUE, class U>
-		using ValidTypeContainer = ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, _TYPE, U>;
+		using ValidTypeContainer = ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, _VALUE, U>;
 
 	private:
+#if __LL_SIGNATURE_HELPER__ == 1
 		template<class WrappedT, class SignatureIsValid, class Signature>
 		using SignatureCheck = ::llcpp::meta::traits::SignatureCheckerBySignature<WrappedT, SignatureIsValid, Signature>;
+#endif // __LL_SIGNATURE_HELPER__
 
 	#pragma endregion
 	#pragma region Functions
-	public:
+	private:
 		// Process type to get if is a always valid class or other
 		template<class T>
-		__LL_NODISCARD__ static constexpr _MyType::ValidType getValidType() noexcept {
-			using WrappedT					= ::llcpp::meta::traits::PrimitiveWrapper<T>;
-			constexpr ll_bool_t IS_VALID	= ::std::is_base_of_v<::llcpp::AlwaysValidTag, WrappedT>;
-			constexpr ll_bool_t IS_INVALID	= ::std::is_base_of_v<::llcpp::AlwaysInvalidTag, WrappedT>;
+		__LL_NODISCARD__ static constexpr ::llcpp::meta::ValidType getValidType() noexcept {
+			constexpr ll_bool_t IS_VALID = ::std::is_base_of_v<::llcpp::AlwaysValidTag, T>;
+			constexpr ll_bool_t IS_INVALID = ::std::is_base_of_v<::llcpp::AlwaysInvalidTag, T>;
 
-			if constexpr (IS_VALID && IS_INVALID) {
+			if constexpr (::llcpp::meta::traits::is_primitive_v<T>)
+				return ::llcpp::meta::ValidType::Primitive;
+			else if constexpr (::std::is_array_v<T>)
+				return ::llcpp::meta::ValidType::Array;
+			else if constexpr (::std::is_pointer_v<T>)
+				return ::llcpp::meta::ValidType::Pointer;
+			else if constexpr (IS_VALID && IS_INVALID) {
 				static_assert(IS_VALID && IS_INVALID,
 					"A class has AlwaysValidTag and AlwaysInvalidTag attributes!");
-				return _MyType::ValidType::Error;
+				return ::llcpp::meta::ValidType::Error;
 			}
 			else if constexpr (IS_VALID)
-				return _MyType::ValidType::Valid;
+				return ::llcpp::meta::ValidType::Valid;
 			else if constexpr (IS_INVALID)
-				return _MyType::ValidType::Invalid;
+				return ::llcpp::meta::ValidType::Invalid;
+#if __LL_SIGNATURE_HELPER__ == 1
 			else {
-				using Signature = ::llcpp::meta::traits::SigCN<_MyType::ValidType>;
+				using Signature = ::llcpp::meta::traits::SigCN<::llcpp::meta::ValidType>;
 				using SignatureIsValid = ::llcpp::meta::traits::signatures::GetIsValid;
-
-				if constexpr (SignatureCheck<WrappedT, Signature, SignatureIsValid>::IS_VALID)
-					return _MyType::ValidType::ToCheck;
-				else return _MyType::ValidType::Unknown;
+				if constexpr (SignatureCheck<T, Signature, SignatureIsValid>::IS_VALID)
+					return ::llcpp::meta::ValidType::ToCheck;
+				else return ::llcpp::meta::ValidType::Unknown;
 			}
+#else
+			else return ::llcpp::meta::ValidType::Unknown;
+#endif // __LL_SIGNATURE_HELPER__
 		}
+		// Checks if valid attriute is out of bounds
 		template<class T>
 		__LL_NODISCARD__ static constexpr ll_bool_t hasValidAttribute() noexcept {
 			constexpr u8 result = static_cast<u8>(_MyType::getValidType<T>());
-			constexpr u8 MIN = static_cast<u8>(_MyType::ValidType::Valid);
-			constexpr u8 MAX = static_cast<u8>(_MyType::ValidType::ToCheck);
-			return result >= MIN && result <= MAX;
+			//constexpr u8 MIN = static_cast<u8>(::llcpp::meta::ValidType::Valid);
+			constexpr u8 MAX = static_cast<u8>(::llcpp::meta::ValidType::ToCheck);
+			return result <= MAX;
+			//return result >= MIN && result <= MAX;
 		}
+		// Returns true if T inherits from AlwaysValid/AlwaysInvalid
 		template<class T>
 		__LL_NODISCARD__ static constexpr ll_bool_t isValid() noexcept {
-			constexpr _MyType::ValidType t = _MyType::getValidType<T>();
-			return t == _MyType::ValidType::Invalid || t == _MyType::ValidType::Valid;
+			constexpr ::llcpp::meta::ValidType t = _MyType::getValidType<T>();
+			return t == ::llcpp::meta::ValidType::Invalid || t == ::llcpp::meta::ValidType::Valid;
 		}
 
 	#pragma endregion
@@ -120,26 +136,9 @@ class ValidationChecker {
 		template<class T>
 		static constexpr ll_bool_t has_valid_attribute_v = _MyType::hasValidAttribute<T>();
 		template<class T>
-		static constexpr _MyType::ValidType valid_type_v = _MyType::getValidType<T>();
-		template<class T, _MyType::ValidType _TYPE>
+		static constexpr ::llcpp::meta::ValidType valid_type_v = _MyType::getValidType<T>();
+		template<class T, ::llcpp::meta::ValidType _TYPE>
 		static constexpr ll_bool_t is_valid_type_v = _MyType::getValidType<T>() == _TYPE;
-
-		template<
-			_MyType::ValidType _TYPE,
-			class OnValidAttr,
-			class OnInvalidAttr,
-			class OnToCheck,
-			class OnUnknown,
-			class OnError
-		>
-		using type_by_valid_type_t = ::std::disjunction<
-			::llcpp::meta::traits::BoolConstantContainer<_TYPE == _MyType::ValidType::Valid, OnValidAttr>,
-			::llcpp::meta::traits::BoolConstantContainer<_TYPE == _MyType::ValidType::Invalid, OnInvalidAttr>,
-			::llcpp::meta::traits::BoolConstantContainer<_TYPE == _MyType::ValidType::ToCheck, OnToCheck>,
-			::llcpp::meta::traits::BoolConstantContainer<_TYPE == _MyType::ValidType::Unknown, OnUnknown>,
-			::llcpp::meta::traits::BoolConstantContainer<_TYPE == _MyType::ValidType::Error, OnError>,
-			::llcpp::meta::traits::TrueContainerEmptyClass
-		>::U;
 
 		template<
 			class ClassToCheck,
@@ -149,7 +148,7 @@ class ValidationChecker {
 			class OnUnknown,
 			class OnError
 		>
-		using conditional_valid_t = type_by_valid_type_t<
+		using conditional_valid_t = ::llcpp::meta::traits::type_by_valid_type_t<
 			_MyType::valid_type_v<ClassToCheck>,
 			OnValidAttr,
 			OnInvalidAttr,
@@ -161,39 +160,19 @@ class ValidationChecker {
 };
 
 // if ValidType is not included by functions or inheritance, we use user type providded
-template<class ClassToCheck, class InhertiExtra>
-using ValidationWrapper = 
-	::llcpp::meta::traits::conditional_t<
-		::llcpp::meta::traits::ValidationChecker::is_valid_type_v<
-			ClassToCheck,
-			::llcpp::meta::traits::ValidationChecker::ValidType::Unknown
-		>,
-		InhertiExtra,
-		::llcpp::DummyClass
-	>;
+//template<class ClassToCheck, class InhertiExtra>
+//using ValidationWrapper = 
+//	::llcpp::meta::traits::conditional_t<
+//		::llcpp::meta::traits::ValidationChecker::is_valid_type_v<
+//			ClassToCheck,
+//			::llcpp::meta::traits::ValidationChecker::ValidType::Unknown
+//		>,
+//		InhertiExtra,
+//		::llcpp::DummyClass
+//	>;
 
 } // namespace traits
 } // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_TRAITSVALIDATECHECKER_HPP_
-
-#if !defined(LLANYLIB_ERROR_HPP_)
-	#if defined(LLANYLIB_TRAITSVALIDATECHECKER_EXTRA_HPP_)
-		#if LLANYLIB_TRAITSVALIDATECHECKER_EXTRA_MAYOR_ != 11 || LLANYLIB_TRAITSVALIDATECHECKER_EXTRA_MINOR_ < 0
-			#if defined(__LL_REAL_CXX23)
-				#warning "traits_validate_checker.hpp(extra) version error!"
-			#else
-				#error "traits_validate_checker.hpp(extra) version error!"
-			#endif // __LL_REAL_CXX23
-		#endif // LLANYLIB_TRAITSVALIDATECHECKER_EXTRA_MAYOR_ || LLANYLIB_TRAITSVALIDATECHECKER_EXTRA_MINOR_
-
-	#else
-		#define LLANYLIB_TRAITSVALIDATECHECKER_EXTRA_HPP_
-		#define LLANYLIB_TRAITSVALIDATECHECKER_EXTRA_MAYOR_ 11
-		#define LLANYLIB_TRAITSVALIDATECHECKER_EXTRA_MINOR_ 0
-
-	#endif // LLANYLIB_TRAITSVALIDATECHECKER_EXTRA_HPP_
-#else
-	#undef LLANYLIB_ERROR_HPP_
-#endif // LLANYLIB_ERROR_HPP_

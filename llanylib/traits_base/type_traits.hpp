@@ -89,6 +89,27 @@ using u256 = ::std::pair<u128, u128>;
 namespace meta {
 namespace traits {
 
+#pragma region StandardChecker
+
+template <class T, class = void>
+struct has_value_type : ::std::false_type {};
+template<class T>
+struct has_value_type<T, ::std::void_t<typename T::value_type>> : ::std::true_type {};
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_value_type_v = ::llcpp::meta::traits::has_value_type<T>::value;
+
+template <class T, class = void>
+struct has_value_constant : ::std::false_type {};
+template<class T>
+struct has_value_constant<T, ::std::void_t<decltype(T::value)>> : ::std::true_type {};
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_value_constant_v = ::llcpp::meta::traits::has_value_constant<T>::value;
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_integral_constant_container_v =
+	::llcpp::meta::traits::has_value_type_v<T> && ::llcpp::meta::traits::has_value_constant_v<T>;
+
+#pragma endregion
 #pragma region Containers
 template<class _T>
 class TypeContainer {

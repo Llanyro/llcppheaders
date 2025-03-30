@@ -71,6 +71,8 @@ namespace __traits__ {
 struct attribute_counter_t {
 	// Class related
 	using _MyType		= attribute_counter_t;
+
+	// Types and enums
 	using AttributeType	= u8;
 
 	// Attributes
@@ -79,8 +81,6 @@ struct attribute_counter_t {
 	AttributeType REMOVE_VOLATILE	: 1;
 	AttributeType REMOVE_ARRAY		: 1;
 	AttributeType REMOVE_REFERENCE	: 1;
-
-
 
 	static constexpr void reduceIfNotMax(AttributeType& v) noexcept {
 		if (v != ::llcpp::MAX_VALUE<AttributeType>)

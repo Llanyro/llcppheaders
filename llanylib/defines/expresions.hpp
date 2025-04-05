@@ -34,6 +34,10 @@ namespace llcpp {
 	#undef REAL_CXX17
 #endif // REAL_CXX17
 
+#if defined(REAL_CXX20)
+	#undef REAL_CXX20
+#endif // REAL_CXX20
+
 #if defined(REAL_CXX23)
 	#undef REAL_CXX23
 #endif // REAL_CXX23
@@ -41,10 +45,8 @@ namespace llcpp {
 #pragma endregion
 
 __LL_VAR_INLINE__ constexpr bool REAL_CXX17 = __LL_REAL_CXX17;
+__LL_VAR_INLINE__ constexpr bool REAL_CXX20 = __LL_REAL_CXX20;
 __LL_VAR_INLINE__ constexpr bool REAL_CXX23 = __LL_REAL_CXX23;
-
-#undef __LL_REAL_CXX17
-#undef __LL_REAL_CXX23
 
 //////////////////////////////////////////// OS check ////////////////////////////////////////////
 
@@ -56,7 +58,7 @@ __LL_VAR_INLINE__ constexpr bool REAL_CXX23 = __LL_REAL_CXX23;
 
 #pragma endregion
 
-enum class OSEnum { Windows, Posix, Unix, Unknown };
+enum class OSEnum { Windows, Posix, Unix, STM32, ESP32, Unknown };
 
 #if defined(__LL_WINDOWS_SYSTEM)
 	__LL_VAR_INLINE__ constexpr llcpp::OSEnum OS_SYSTEM = llcpp::OSEnum::Windows;
@@ -64,6 +66,8 @@ enum class OSEnum { Windows, Posix, Unix, Unknown };
 	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Posix;
 #elif defined(__LL_UNIX_SYSTEM)
 	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Unix;
+#elif defined(__LL_STM32_SYSTEM)
+	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::STM32;
 #else
 	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Unknown;
 #endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
@@ -100,8 +104,6 @@ __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_32			= BITS_SYSTEM == 32u;
 __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_16			= BITS_SYSTEM == 16u;
 __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_8			= BITS_SYSTEM == 8u;
 
-//#undef __LL_WORD
-
 ///////////////////////////////////////// DLL deinitions /////////////////////////////////////////
 
 #pragma region MacrosRemove
@@ -113,8 +115,6 @@ __LL_VAR_INLINE__ constexpr bool BITS_SYSTEM_8			= BITS_SYSTEM == 8u;
 #pragma endregion
 
 __LL_VAR_INLINE__ constexpr bool DLL = __LL_DLL_BUILD;
-
-#undef __LL_DLL_BUILD
 
 ///////////////////////////////////////////// Assert /////////////////////////////////////////////
 
@@ -146,16 +146,12 @@ __LL_VAR_INLINE__ constexpr bool DLL = __LL_DLL_BUILD;
 
 #pragma endregion
 
-__LL_VAR_INLINE__ constexpr unsigned char DEBUG = __LL_DEBUG__;
-__LL_VAR_INLINE__ constexpr unsigned char DEBUG_WARNING = __LL_DEBUG_WARNING__;
-__LL_VAR_INLINE__ constexpr unsigned char DEBUG_INFO = __LL_DEBUG_INFO__;
-__LL_VAR_INLINE__ constexpr unsigned char DEBUG_COMMNET = __LL_DEBUG_COMMNET__;
-__LL_VAR_INLINE__ constexpr bool EXCEPTIONS = __LL_EXCEPTIONS__;
-__LL_VAR_INLINE__ constexpr bool IGNORE_WARNING_STATIC_ASSERTS = __LL_IGNORE_WARNING_STATIC_ASSERTS__;
-
-#undef __LL_DEBUG
-#undef __LL_EXCEPTIONS__
-#undef __LL_IGNORE_WARNING_STATIC_ASSERTS__
+__LL_VAR_INLINE__ constexpr unsigned char DEBUG					= __LL_DEBUG__;
+__LL_VAR_INLINE__ constexpr unsigned char DEBUG_WARNING			= __LL_DEBUG_WARNING__;
+__LL_VAR_INLINE__ constexpr unsigned char DEBUG_INFO			= __LL_DEBUG_INFO__;
+__LL_VAR_INLINE__ constexpr unsigned char DEBUG_COMMNET			= __LL_DEBUG_COMMNET__;
+__LL_VAR_INLINE__ constexpr bool EXCEPTIONS						= __LL_EXCEPTIONS__;
+__LL_VAR_INLINE__ constexpr bool IGNORE_WARNING_STATIC_ASSERTS	= __LL_IGNORE_WARNING_STATIC_ASSERTS__;
 
 } // namespace llcpp
 

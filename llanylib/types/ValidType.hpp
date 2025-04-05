@@ -60,9 +60,7 @@ enum class ValidType : u8 {
 	Primitive,		// Its a primitive (floating or not)
 	Array,			// Its an array
 	Pointer,		// Its a pointer
-	// Could not determine validation type.
-	// If __LL_SIGNATURE_HELPER__ is off, this will be returnted instead of ToCheck
-	Unknown,
+	Unknown,		// Could not determine validation type.
 	Error
 };
 

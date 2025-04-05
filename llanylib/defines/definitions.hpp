@@ -28,6 +28,7 @@
 #if defined(__LL_WINDOWS_SYSTEM)
 	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ _NODISCARD
+	#define __LL_NORETURN__ [[noreturn]]
 	#define __LL_UNSECURE_FUNCTIONS__
 	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_INLINE__ __forceinline
@@ -35,11 +36,13 @@
 #elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
 	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ NODISCARD
+	#define __LL_NORETURN__ [[noreturn]]
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline
 #else
 	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ [[nodiscard]]
+	#define __LL_NORETURN__ [[noreturn]]
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline
 #endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
@@ -116,8 +119,6 @@
 #endif
 
 #pragma endregion
-
-
 
 /*
 #pragma region Error

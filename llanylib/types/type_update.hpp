@@ -49,7 +49,7 @@ struct type_update_t;
 	#define LLANYLIB_TYPEUPDATE_MAYOR_ 11
 	#define LLANYLIB_TYPEUPDATE_MINOR_ 0
 
-#include "../types_base/types_base_extra.hpp"
+#include "types_base_extra.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -87,6 +87,7 @@ using _MyType = ::llcpp::meta::attributes::type_update_t::_MyType;
 __LL_VAR_INLINE__ constexpr _MyType REMOVE_CONSTS	= { ::llcpp::FALSE, ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
 __LL_VAR_INLINE__ constexpr _MyType REMOVE_POINTERS	= { ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
 __LL_VAR_INLINE__ constexpr _MyType REMOVE_ARRAYS	= { ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::TRUE,  ::llcpp::FALSE };
+__LL_VAR_INLINE__ constexpr _MyType REMOVE_VOLATILE	= { ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE };
 __LL_VAR_INLINE__ constexpr _MyType RAW_TYPE		= { ::llcpp::TRUE,  ::llcpp::TRUE,  ::llcpp::TRUE,  ::llcpp::TRUE,  ::llcpp::TRUE  };
 
 } // namespace update

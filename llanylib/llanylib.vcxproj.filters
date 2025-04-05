@@ -16,23 +16,23 @@
     <Filter Include="Source Files\1 defines">
       <UniqueIdentifier>{711544b3-5ea4-4fa0-a686-7844bbcefdb5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\2 types_base">
-      <UniqueIdentifier>{1729c745-6348-4491-a7d4-08217ee13b22}</UniqueIdentifier>
+    <Filter Include="Source Files\7 utils_extra">
+      <UniqueIdentifier>{bd47e75e-487f-445f-88d4-63427150ee30}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\3 traits_base">
       <UniqueIdentifier>{6fe6ff50-b789-4e67-aa73-097dbdfedf2b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\3 traits_base\checker">
-      <UniqueIdentifier>{bab08c34-2426-4749-a23c-d183f01ca696}</UniqueIdentifier>
+    <Filter Include="Source Files\4 concepts">
+      <UniqueIdentifier>{11286b8c-5660-44f5-88cb-96d2d08214f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\4 utils_base">
+    <Filter Include="Source Files\5 traits">
+      <UniqueIdentifier>{dc2e18bf-28d1-4deb-b1be-e385cfd83ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\6 utils_base">
       <UniqueIdentifier>{69b24f81-34fc-487c-a707-1bf41a70da8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\5 traits_extra">
-      <UniqueIdentifier>{bee7d5cf-00f1-4e3e-9e1f-ddd924789c16}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\6 utils_extra">
-      <UniqueIdentifier>{bd47e75e-487f-445f-88d4-63427150ee30}</UniqueIdentifier>
+    <Filter Include="Source Files\2 types">
+      <UniqueIdentifier>{1729c745-6348-4491-a7d4-08217ee13b22}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,89 +48,38 @@
     <ClInclude Include="types_simple.hpp">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="defines\os.hpp">
-      <Filter>Source Files\1 defines</Filter>
-    </ClInclude>
     <ClInclude Include="defines\definitions.hpp">
       <Filter>Source Files\1 defines</Filter>
     </ClInclude>
     <ClInclude Include="defines\expresions.hpp">
       <Filter>Source Files\1 defines</Filter>
     </ClInclude>
-    <ClInclude Include="types_base\types_base.hpp">
-      <Filter>Source Files\2 types_base</Filter>
+    <ClInclude Include="defines\os.hpp">
+      <Filter>Source Files\1 defines</Filter>
     </ClInclude>
-    <ClInclude Include="types_base\Boolean.hpp">
-      <Filter>Source Files\2 types_base</Filter>
+    <ClInclude Include="types\Boolean.hpp">
+      <Filter>Source Files\2 types</Filter>
     </ClInclude>
-    <ClInclude Include="types_base\ostypes.hpp">
-      <Filter>Source Files\2 types_base</Filter>
+    <ClInclude Include="types\checker_attributes.hpp">
+      <Filter>Source Files\2 types</Filter>
     </ClInclude>
-    <ClInclude Include="types_base\types_base_extra.hpp">
-      <Filter>Source Files\2 types_base</Filter>
+    <ClInclude Include="types\functional_attributes.hpp">
+      <Filter>Source Files\2 types</Filter>
     </ClInclude>
-    <ClInclude Include="traits_base\traits_base.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
+    <ClInclude Include="types\ostypes.hpp">
+      <Filter>Source Files\2 types</Filter>
     </ClInclude>
-    <ClInclude Include="traits_base\traits_checker.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
+    <ClInclude Include="types\Position.hpp">
+      <Filter>Source Files\2 types</Filter>
     </ClInclude>
-    <ClInclude Include="traits_base\traits_parameter_pack.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
+    <ClInclude Include="types\type_update.hpp">
+      <Filter>Source Files\2 types</Filter>
     </ClInclude>
-    <ClInclude Include="traits_base\traits_selection.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
+    <ClInclude Include="types\types.hpp">
+      <Filter>Source Files\2 types</Filter>
     </ClInclude>
-    <ClInclude Include="traits_base\traits_signature.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
-    </ClInclude>
-    <ClInclude Include="traits_base\traits_type_modifier.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
-    </ClInclude>
-    <ClInclude Include="traits_base\type_traits.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
-    </ClInclude>
-    <ClInclude Include="utils_base\Array.hpp">
-      <Filter>Source Files\4 utils_base</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\functional_attributes.hpp">
-      <Filter>Source Files\2 types_base</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\Position.hpp">
-      <Filter>Source Files\2 types_base</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\checker_attributes.hpp">
-      <Filter>Source Files\2 types_base</Filter>
-    </ClInclude>
-    <ClInclude Include="types_base\type_update.hpp">
-      <Filter>Source Files\2 types_base</Filter>
-    </ClInclude>
-    <ClInclude Include="traits_base\traits_type_wrapper.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
-    </ClInclude>
-    <ClInclude Include="traits_base\traits_compare.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
-    </ClInclude>
-    <ClInclude Include="traits_base\traits_signature_pre.hpp">
-      <Filter>Source Files\3 traits_base</Filter>
-    </ClInclude>
-    <ClInclude Include="traits_base\checker\traits_validate_checker.hpp">
-      <Filter>Source Files\3 traits_base\checker</Filter>
-    </ClInclude>
-    <ClInclude Include="utils_base\ArrayBuffer.hpp">
-      <Filter>Source Files\4 utils_base</Filter>
-    </ClInclude>
-    <ClInclude Include="utils_base\Vector.hpp">
-      <Filter>Source Files\4 utils_base</Filter>
-    </ClInclude>
-    <ClInclude Include="utils_base\IteratorUtils.hpp">
-      <Filter>Source Files\4 utils_base</Filter>
-    </ClInclude>
-    <ClInclude Include="utils_base\Tuple.hpp">
-      <Filter>Source Files\4 utils_base</Filter>
-    </ClInclude>
-    <ClInclude Include="utils_base\Container.hpp">
-      <Filter>Source Files\4 utils_base</Filter>
+    <ClInclude Include="types\ValidType.hpp">
+      <Filter>Source Files\2 types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

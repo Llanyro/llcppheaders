@@ -25,23 +25,40 @@
 /////////////////////////////////////////// C++ Version ///////////////////////////////////////////
 
 #if defined(__cplusplus)
+    #if defined(_MSVC_LANG) && _MSVC_LANG > __cplusplus
+        #define __LL_STL_LANG _MSVC_LANG
+    #else  // ^^^ language mode is _MSVC_LANG / language mode is __cplusplus vvv
+        #define __LL_STL_LANG __cplusplus
+    #endif // ^^^ language mode is larger of _MSVC_LANG and __cplusplus ^^^
+
 	#if __STDC_HOSTED__ != 1
 		#error "Not a hosted implementation"
 	#endif // __STDC_HOSTED__
 
-	#if __cplusplus >= 199711L
+	#if __LL_STL_LANG > 201402L
 		#define __LL_REAL_CXX17 1
 	#else
 		#define __LL_REAL_CXX17 0
-	#endif // __cplusplus >= 199711L
+	#endif // __LL_STL_LANG > 201402L
 
-	#if __cplusplus >= 202302L
-		#define __LL_DIRECTIVE_WARNING 1
+	#if __LL_STL_LANG > 201703L
+		#define __LL_REAL_CXX20 1
+	#else
+		#define __LL_REAL_CXX20 0
+	#endif // __LL_REAL_CXX17 && __LL_STL_LANG > 201703L
+
+	#if __LL_STL_LANG > 202002L
 		#define __LL_REAL_CXX23 1
 	#else
-		#define __LL_DIRECTIVE_WARNING 0
 		#define __LL_REAL_CXX23 0
-	#endif // __cplusplus >= 202302L
+	#endif // __LL_REAL_CXX20 && __LL_STL_LANG > 202002L
+
+	#if __LL_STL_LANG > 202302L
+		#define __LL_DIRECTIVE_WARNING 1
+	#else
+		#define __LL_DIRECTIVE_WARNING 0
+	#endif // __LL_REAL_CXX20 && __LL_STL_LANG > 202002L
+
 #else
 	#error "This library requires C++ (its made for it)"
 #endif // __cplusplus
@@ -57,6 +74,8 @@
 	#else
 		#define __LL_UNIX_SYSTEM
 	#endif // __linux__
+#elif defined(_STM32)
+	#define __LL_STM32_SYSTEM
 #else
 	#define __LL_UNKNOWN_SYSTEM
 
@@ -112,6 +131,8 @@
 			#include <vcruntime.h>
 		#endif // _NODISCARD
 	#endif // _DEBUG
+#elif decined(STM32_SYSTEM)
+
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 
 #else

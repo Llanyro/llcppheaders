@@ -61,7 +61,8 @@ enum class ValidType : u8 {
 	Array,			// Its an array
 	Pointer,		// Its a pointer
 	Unknown,		// Could not determine validation type.
-	Error
+
+	Error			// This one must be always last one
 };
 
 } // namespace meta

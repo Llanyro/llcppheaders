@@ -78,5 +78,32 @@
     <ClInclude Include="types\ValidType.hpp">
       <Filter>Source Files\2 types</Filter>
     </ClInclude>
+    <ClInclude Include="traits_base\type_traits_extended.hpp">
+      <Filter>Source Files\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\type_traits.hpp">
+      <Filter>Source Files\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\checker.hpp">
+      <Filter>Source Files\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\parameter_pack.hpp">
+      <Filter>Source Files\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\type_modifier.hpp">
+      <Filter>Source Files\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="traits_base\valid_type.hpp">
+      <Filter>Source Files\3 traits_base</Filter>
+    </ClInclude>
+    <ClInclude Include="concepts\concepts.hpp">
+      <Filter>Source Files\4 concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="concepts\valid_type.hpp">
+      <Filter>Source Files\4 concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="traits\ValidationChecker.hpp">
+      <Filter>Source Files\5 traits</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

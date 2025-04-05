@@ -21,10 +21,19 @@
   <ItemGroup>
     <ClInclude Include="..\llanylib.hpp" />
     <ClInclude Include="..\llanylibsimple.hpp" />
+    <ClInclude Include="concepts\concepts.hpp" />
+    <ClInclude Include="concepts\valid_type.hpp" />
     <ClInclude Include="defines.hpp" />
     <ClInclude Include="defines\definitions.hpp" />
     <ClInclude Include="defines\expresions.hpp" />
     <ClInclude Include="defines\os.hpp" />
+    <ClInclude Include="traits\ValidationChecker.hpp" />
+    <ClInclude Include="traits_base\type_traits_extended.hpp" />
+    <ClInclude Include="traits_base\checker.hpp" />
+    <ClInclude Include="traits_base\parameter_pack.hpp" />
+    <ClInclude Include="traits_base\type_modifier.hpp" />
+    <ClInclude Include="traits_base\valid_type.hpp" />
+    <ClInclude Include="traits_base\type_traits.hpp" />
     <ClInclude Include="types\Boolean.hpp" />
     <ClInclude Include="types\checker_attributes.hpp" />
     <ClInclude Include="types\ostypes.hpp" />

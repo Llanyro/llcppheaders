@@ -22,7 +22,7 @@
 	#define LLANYLIB_CONCEPTS_MAYOR_ 11
 	#define LLANYLIB_CONCEPTS_MINOR_ 0
 
-#include "../traits_base/traits_base.hpp"
+#include "../traits_base/type_traits_extended.hpp"
 
 #include <concepts>
 
@@ -59,6 +59,11 @@ concept ZeroValue = ::llcpp::meta::concepts::base::IsValidConcept<VALUE == ::llc
 //template<class Unit, Unit VALUE>
 //concept NonMinValue = requires { { VALUE != ::llcpp::MIN_VALUE<Unit> } noexcept; };
 
+template<class T>
+concept IsAlwaysValid = ::std::is_base_of_v<::llcpp::AlwaysValidTag, T>;
+template<class T>
+concept IsAlwaysInvalid = ::std::is_base_of_v<::llcpp::AlwaysInvalidTag, T>;
+
 } // namespace base
 namespace signature {
 
@@ -87,6 +92,8 @@ concept HasSize = requires (T t) { { t.size() } noexcept -> ::llcpp::meta::conce
 template<class T, class U = ::llcpp::usize>
 concept HasMaxSize = requires (T t) { { t.max_size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
 
+// [TOCHECK]
+// Some objects uses this operator and expects a throw if parameter is invalid
 template<class T, class U = ::llcpp::Emptyclass>
 concept HasOperatorArray = requires (T t) { { t[0] } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
 
@@ -124,7 +131,6 @@ concept IsArrayObject = requires (T arr) {
 };
 
 } // namespace is_object
-
 } // namespace concepts
 } // namespace meta
 } // namespace llcpp

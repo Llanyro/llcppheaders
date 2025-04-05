@@ -28,11 +28,11 @@
     <Filter Include="Source Files\5 traits">
       <UniqueIdentifier>{dc2e18bf-28d1-4deb-b1be-e385cfd83ef2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\6 utils_base">
-      <UniqueIdentifier>{69b24f81-34fc-487c-a707-1bf41a70da8c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\2 types">
       <UniqueIdentifier>{1729c745-6348-4491-a7d4-08217ee13b22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\6 utils_base">
+      <UniqueIdentifier>{69b24f81-34fc-487c-a707-1bf41a70da8c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +104,15 @@
     </ClInclude>
     <ClInclude Include="traits\ValidationChecker.hpp">
       <Filter>Source Files\5 traits</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\Array.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\CityHash.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\IteratorUtils.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

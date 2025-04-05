@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_HPP_)
-	#if LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "valid_type.hpp(incomplete) version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_HPP_)
 	#define LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_HPP_
-	#define LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MINOR_ 0
 
 namespace llcpp {
@@ -30,7 +30,7 @@ namespace traits {
 } // namespace llcpp
 
 #elif defined(LLANYLIB_TRAITSVALIDTYPE_HPP_)
-	#if LLANYLIB_TRAITSVALIDTYPE_MAYOR_ != 11 || LLANYLIB_TRAITSVALIDTYPE_MINOR_ < 0
+	#if LLANYLIB_TRAITSVALIDTYPE_MAYOR_ != 12 || LLANYLIB_TRAITSVALIDTYPE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "valid_type.hpp version error!"
 		#else
@@ -41,7 +41,7 @@ namespace traits {
 
 #else
 	#define LLANYLIB_TRAITSVALIDTYPE_HPP_
-	#define LLANYLIB_TRAITSVALIDTYPE_MAYOR_ 11
+	#define LLANYLIB_TRAITSVALIDTYPE_MAYOR_ 12
 	#define LLANYLIB_TRAITSVALIDTYPE_MINOR_ 0
 
 #include "type_traits.hpp"

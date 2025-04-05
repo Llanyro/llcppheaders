@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_TYPESBASE_HPP_) // Guard && version protector
-	#if LLANYLIB_TYPESBASE_MAYOR_ != 11 || LLANYLIB_TYPESBASE_MINOR_ < 0
+	#if LLANYLIB_TYPESBASE_MAYOR_ != 12 || LLANYLIB_TYPESBASE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "types_base.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #else !defined(LLANYLIB_TYPESBASE_HPP_)
 	#define LLANYLIB_TYPESBASE_HPP_
-	#define LLANYLIB_TYPESBASE_MAYOR_ 11
+	#define LLANYLIB_TYPESBASE_MAYOR_ 12
 	#define LLANYLIB_TYPESBASE_MINOR_ 0
 
 #include "../defines.hpp"

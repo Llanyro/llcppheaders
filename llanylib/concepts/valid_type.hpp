@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_VALID_TYPE_HPP_) // Guard && version protector
-	#if LLANYLIB_VALID_TYPE_MAYOR_ != 11 || LLANYLIB_VALID_TYPE_MINOR_ < 0
+	#if LLANYLIB_VALID_TYPE_MAYOR_ != 12 || LLANYLIB_VALID_TYPE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "valid_type.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #else
 	#define LLANYLIB_VALID_TYPE_HPP_
-	#define LLANYLIB_VALID_TYPE_MAYOR_ 11
+	#define LLANYLIB_VALID_TYPE_MAYOR_ 12
 	#define LLANYLIB_VALID_TYPE_MINOR_ 0
 
 #include "concepts.hpp"

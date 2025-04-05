@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSBASE_INCOMPLETE_HPP_)
-	#if LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSBASE_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSBASE_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "traits_base.hpp(incomplete) version error!"
 		#else
@@ -19,13 +19,13 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSBASE_INCOMPLETE_HPP_)
 	#define LLANYLIB_TRAITSBASE_INCOMPLETE_HPP_
-	#define LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSBASE_INCOMPLETE_MINOR_ 0
 
 #include "type_traits.hpp"
 
 #elif defined(LLANYLIB_TRAITSBASE_HPP_)
-	#if LLANYLIB_TRAITSBASE_MAYOR_ != 11 || LLANYLIB_TRAITSBASE_MINOR_ < 0
+	#if LLANYLIB_TRAITSBASE_MAYOR_ != 12 || LLANYLIB_TRAITSBASE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "traits_base.hpp version error!"
 		#else
@@ -36,7 +36,7 @@
 
 #else
 	#define LLANYLIB_TRAITSBASE_HPP_
-	#define LLANYLIB_TRAITSBASE_MAYOR_ 11
+	#define LLANYLIB_TRAITSBASE_MAYOR_ 12
 	#define LLANYLIB_TRAITSBASE_MINOR_ 0
 
 #include "type_traits.hpp"

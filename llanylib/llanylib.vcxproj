@@ -42,6 +42,9 @@
     <ClInclude Include="types\type_update.hpp" />
     <ClInclude Include="types\ValidType.hpp" />
     <ClInclude Include="types_simple.hpp" />
+    <ClInclude Include="utils_base\Array.hpp" />
+    <ClInclude Include="utils_base\CityHash.hpp" />
+    <ClInclude Include="utils_base\IteratorUtils.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

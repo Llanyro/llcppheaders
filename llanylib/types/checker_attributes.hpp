@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_HPP_)
-	#if LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "checker_attributes.hpp(incomplete) version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_HPP_)
 	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_HPP_
-	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MINOR_ 0
 
 #include "types.hpp"
@@ -36,7 +36,7 @@ struct checker_attributes_t;
 
 
 #elif defined(LLANYLIB_CHECKERATTRIBUTES_HPP_)
-	#if LLANYLIB_CHECKERATTRIBUTES_MAYOR_ != 11 || LLANYLIB_CHECKERATTRIBUTES_MINOR_ < 0
+	#if LLANYLIB_CHECKERATTRIBUTES_MAYOR_ != 12 || LLANYLIB_CHECKERATTRIBUTES_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "checker_attributes.hpp version error!"
 		#else
@@ -47,7 +47,7 @@ struct checker_attributes_t;
 
 #else
 	#define LLANYLIB_CHECKERATTRIBUTES_HPP_
-	#define LLANYLIB_CHECKERATTRIBUTES_MAYOR_ 11
+	#define LLANYLIB_CHECKERATTRIBUTES_MAYOR_ 12
 	#define LLANYLIB_CHECKERATTRIBUTES_MINOR_ 0
 
 #include "types.hpp"

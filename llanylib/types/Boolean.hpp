@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_BOOLEAN_INCOMPLETE_HPP_)
-	#if LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_BOOLEAN_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_BOOLEAN_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "Boolean.hpp(incomplete) version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_BOOLEAN_INCOMPLETE_HPP_)
 	#define LLANYLIB_BOOLEAN_INCOMPLETE_HPP_
-	#define LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_BOOLEAN_INCOMPLETE_MINOR_ 0
 
 #include "types.hpp"
@@ -33,7 +33,7 @@ class Boolean;
 } // namespace llcpp
 
 #elif defined(LLANYLIB_BOOLEAN_HPP_)
-	#if LLANYLIB_BOOLEAN_MAYOR_ != 11 || LLANYLIB_BOOLEAN_MINOR_ < 0
+	#if LLANYLIB_BOOLEAN_MAYOR_ != 12 || LLANYLIB_BOOLEAN_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "Boolean.hpp version error!"
 		#else
@@ -44,7 +44,7 @@ class Boolean;
 
 #else
 	#define LLANYLIB_BOOLEAN_HPP_
-	#define LLANYLIB_BOOLEAN_MAYOR_ 11
+	#define LLANYLIB_BOOLEAN_MAYOR_ 12
 	#define LLANYLIB_BOOLEAN_MINOR_ 0
 
 #include "types.hpp"

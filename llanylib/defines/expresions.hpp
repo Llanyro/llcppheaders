@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_DEFINITIONSEXPRESIONS_HPP_) // Guard && version protector
-	#if LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ != 11 || LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_ < 0
+	#if LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ != 12 || LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "expresions.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #else !defined(LLANYLIB_DEFINITIONSEXPRESIONS_HPP_)
 	#define LLANYLIB_DEFINITIONSEXPRESIONS_HPP_
-	#define LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ 11
+	#define LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ 12
 	#define LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_ 0
 
 #include "definitions.hpp"
@@ -152,6 +152,13 @@ __LL_VAR_INLINE__ constexpr unsigned char DEBUG_INFO			= __LL_DEBUG_INFO__;
 __LL_VAR_INLINE__ constexpr unsigned char DEBUG_COMMNET			= __LL_DEBUG_COMMNET__;
 __LL_VAR_INLINE__ constexpr bool EXCEPTIONS						= __LL_EXCEPTIONS__;
 __LL_VAR_INLINE__ constexpr bool IGNORE_WARNING_STATIC_ASSERTS	= __LL_IGNORE_WARNING_STATIC_ASSERTS__;
+
+///////////////////////////////////////////// Behabiour /////////////////////////////////////////////
+
+__LL_VAR_INLINE__ constexpr bool CLEAR_POINTERS_ON_DESTRUCTION = __LL_CLEAR_POINTERS_ON_DESTRUCTION;
+
+#undef __LL_CLEAR_POINTERS_ON_DESTRUCTION
+
 
 } // namespace llcpp
 

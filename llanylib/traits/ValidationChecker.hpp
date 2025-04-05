@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_HPP_)
-	#if LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "ValidationChecker.hpp(incomplete) version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_HPP_)
 	#define LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_HPP_
-	#define LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MINOR_ 0
 
 #include "../concepts/valid_type.hpp"
@@ -34,7 +34,7 @@ class ValidationChecker;
 
 
 #elif defined(LLANYLIB_VALIDATIONCHECKER_HPP_)
-	#if LLANYLIB_VALIDATIONCHECKER_MAYOR_ != 11 || LLANYLIB_VALIDATIONCHECKER_MINOR_ < 0
+	#if LLANYLIB_VALIDATIONCHECKER_MAYOR_ != 12 || LLANYLIB_VALIDATIONCHECKER_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "ValidationChecker.hpp version error!"
 		#else
@@ -45,7 +45,7 @@ class ValidationChecker;
 
 #else
 	#define LLANYLIB_VALIDATIONCHECKER_HPP_
-	#define LLANYLIB_VALIDATIONCHECKER_MAYOR_ 11
+	#define LLANYLIB_VALIDATIONCHECKER_MAYOR_ 12
 	#define LLANYLIB_VALIDATIONCHECKER_MINOR_ 0
 
 #include "../concepts/valid_type.hpp"

@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSCHECKER_INCOMPLETE_HPP_)
-	#if LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "checker.hpp(incomplete) version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSCHECKER_INCOMPLETE_HPP_)
 	#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_HPP_
-	#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_ 0
 
 #include "type_traits.hpp"
@@ -42,7 +42,7 @@ class ConstructorChecker;
 } // namespace llcpp
 
 #elif defined(LLANYLIB_TRAITSCHECKER_HPP_)
-	#if LLANYLIB_TRAITSCHECKER_MAYOR_ != 11 || LLANYLIB_TRAITSCHECKER_MINOR_ < 0
+	#if LLANYLIB_TRAITSCHECKER_MAYOR_ != 12 || LLANYLIB_TRAITSCHECKER_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "checker.hpp version error!"
 		#else
@@ -53,7 +53,7 @@ class ConstructorChecker;
 
 #else
 	#define LLANYLIB_TRAITSCHECKER_HPP_
-	#define LLANYLIB_TRAITSCHECKER_MAYOR_ 11
+	#define LLANYLIB_TRAITSCHECKER_MAYOR_ 12
 	#define LLANYLIB_TRAITSCHECKER_MINOR_ 0
 
 #include "type_traits.hpp"

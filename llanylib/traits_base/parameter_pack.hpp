@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_HPP_)
-	#if LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "parameter_pack.hpp(incomplete) version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_HPP_)
 	#define LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_HPP_
-	#define LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_ 0
 
 #include "type_traits.hpp"
@@ -48,7 +48,7 @@ class ParameterPackOperations<>;
 } // namespace llcpp
 
 #elif defined(LLANYLIB_TRAITSPARAMETERPACK_HPP_)
-	#if LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ != 11 || LLANYLIB_TRAITSPARAMETERPACK_MINOR_ < 0
+	#if LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ != 12 || LLANYLIB_TRAITSPARAMETERPACK_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "parameter_pack.hpp version error!"
 		#else
@@ -59,7 +59,7 @@ class ParameterPackOperations<>;
 
 #else
 	#define LLANYLIB_TRAITSPARAMETERPACK_HPP_
-	#define LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ 11
+	#define LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ 12
 	#define LLANYLIB_TRAITSPARAMETERPACK_MINOR_ 0
 
 #include "type_traits.hpp"

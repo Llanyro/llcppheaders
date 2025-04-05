@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_DEFINITIONS_HPP_) // Guard && version protector
-	#if LLANYLIB_DEFINITIONS_MAYOR_ != 11 || LLANYLIB_DEFINITIONS_MINOR_ < 0
+	#if LLANYLIB_DEFINITIONS_MAYOR_ != 12 || LLANYLIB_DEFINITIONS_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "definitions.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #else !defined(LLANYLIB_DEFINITIONS_HPP_)
 	#define LLANYLIB_DEFINITIONS_HPP_
-	#define LLANYLIB_DEFINITIONS_MAYOR_ 11
+	#define LLANYLIB_DEFINITIONS_MAYOR_ 12
 	#define LLANYLIB_DEFINITIONS_MINOR_ 0
 
 #include "os.hpp"
@@ -54,23 +54,32 @@
 
 #if !defined(__LL_IGNORE_WARNING_STATIC_ASSERTS__)
 	#define __LL_IGNORE_WARNING_STATIC_ASSERTS__ 0
-#elif __LL_IGNORE_WARNING_STATIC_ASSERTS__ != 1
+#elif __LL_IGNORE_WARNING_STATIC_ASSERTS__ != 1 && __LL_IGNORE_WARNING_STATIC_ASSERTS__ != 0
 	#undef __LL_IGNORE_WARNING_STATIC_ASSERTS__
 	#define __LL_IGNORE_WARNING_STATIC_ASSERTS__ 1
 #endif // __LL_IGNORE_WARNING_STATIC_ASSERTS__
 
 #if !defined(__LL_EXCEPTIONS__)
 	#define __LL_EXCEPTIONS__ 0
-#elif __LL_EXCEPTIONS__ != 1
+#elif __LL_EXCEPTIONS__ != 1 && __LL_EXCEPTIONS__ != 0
 	#undef __LL_EXCEPTIONS__
 	#define __LL_EXCEPTIONS__ 1
 #endif // __LL_EXCEPTIONS__
 
 #if !defined(__LL_SIGNATURE_HELPER__)
 	#define __LL_SIGNATURE_HELPER__ 0
-#elif __LL_SIGNATURE_HELPER__ != 1 || __LL_SIGNATURE_HELPER__ != 0
+#elif __LL_SIGNATURE_HELPER__ != 1 && __LL_SIGNATURE_HELPER__ != 0
+	#undef __LL_SIGNATURE_HELPER__
 	#define __LL_SIGNATURE_HELPER__ 1
-#endif // __LL_EXCEPTIONS__
+#endif // __LL_SIGNATURE_HELPER__
+
+
+#if !defined(__LL_CLEAR_POINTERS_ON_DESTRUCTION)
+	#define __LL_CLEAR_POINTERS_ON_DESTRUCTION 0
+#elif __LL_CLEAR_POINTERS_ON_DESTRUCTION != 1 && __LL_CLEAR_POINTERS_ON_DESTRUCTION != 0
+	#undef __LL_CLEAR_POINTERS_ON_DESTRUCTION
+	#define __LL_CLEAR_POINTERS_ON_DESTRUCTION 1
+#endif // __LL_CLEAR_POINTERS_ON_DESTRUCTION
 
 
 #define __LL_DEBUG_ERROR__ 0

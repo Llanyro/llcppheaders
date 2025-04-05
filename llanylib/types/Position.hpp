@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_POSITION_INCOMPLETE_HPP_)
-	#if LLANYLIB_POSITION_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_POSITION_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_POSITION_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_POSITION_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "Position.hpp(incomplete) version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_POSITION_INCOMPLETE_HPP_)
 	#define LLANYLIB_POSITION_INCOMPLETE_HPP_
-	#define LLANYLIB_POSITION_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_POSITION_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_POSITION_INCOMPLETE_MINOR_ 0
 
 #include "types.hpp"
@@ -33,7 +33,7 @@ enum class Position : u8;
 } // namespace llcpp
 
 #elif defined(LLANYLIB_POSITION_HPP_)
-	#if LLANYLIB_POSITION_MAYOR_ != 11 || LLANYLIB_POSITION_MINOR_ < 0
+	#if LLANYLIB_POSITION_MAYOR_ != 12 || LLANYLIB_POSITION_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "Position.hpp version error!"
 		#else
@@ -44,7 +44,7 @@ enum class Position : u8;
 
 #else
 	#define LLANYLIB_POSITION_HPP_
-	#define LLANYLIB_POSITION_MAYOR_ 11
+	#define LLANYLIB_POSITION_MAYOR_ 12
 	#define LLANYLIB_POSITION_MINOR_ 0
 
 #include "types.hpp"

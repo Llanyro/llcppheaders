@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TYPETRAITS_INCOMPLETE_HPP_)
-	#if LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "type_traits.hpp(incomplete) version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_TYPETRAITS_INCOMPLETE_HPP_)
 	#define LLANYLIB_TYPETRAITS_INCOMPLETE_HPP_
-	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ 0
 
 #include "../types/types.hpp"
@@ -83,7 +83,7 @@ class RangeChecker;
 } // namespace llcpp
 
 #elif defined(LLANYLIB_TYPETRAITS_HPP_)
-	#if LLANYLIB_TYPETRAITS_MAYOR_ != 11 || LLANYLIB_TYPETRAITS_MINOR_ < 0
+	#if LLANYLIB_TYPETRAITS_MAYOR_ != 12 || LLANYLIB_TYPETRAITS_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "type_traits.hpp version error!"
 		#else
@@ -94,7 +94,7 @@ class RangeChecker;
 
 #else
 	#define LLANYLIB_TYPETRAITS_HPP_
-	#define LLANYLIB_TYPETRAITS_MAYOR_ 11
+	#define LLANYLIB_TYPETRAITS_MAYOR_ 12
 	#define LLANYLIB_TYPETRAITS_MINOR_ 0
 
 #include "../types/types.hpp"
@@ -598,7 +598,7 @@ constexpr auto asdf = is_zero_value_v<int, 0>;
 
 #if !defined(LLANYLIB_ERROR_HPP_)
 	#if defined(LLANYLIB_TYPETRAITS_EXTRA_HPP_)
-		#if LLANYLIB_TYPETRAITS_EXTRA_MAYOR_ != 11 || LLANYLIB_TYPETRAITS_EXTRA_MINOR_ < 0
+		#if LLANYLIB_TYPETRAITS_EXTRA_MAYOR_ != 12 || LLANYLIB_TYPETRAITS_EXTRA_MINOR_ < 0
 			#if defined(__LL_REAL_CXX23)
 				#warning "type_traits.hpp(extra) version error!"
 			#else
@@ -608,7 +608,7 @@ constexpr auto asdf = is_zero_value_v<int, 0>;
 
 	#else
 		#define LLANYLIB_TYPETRAITS_EXTRA_HPP_
-		#define LLANYLIB_TYPETRAITS_EXTRA_MAYOR_ 11
+		#define LLANYLIB_TYPETRAITS_EXTRA_MAYOR_ 12
 		#define LLANYLIB_TYPETRAITS_EXTRA_MINOR_ 0
 
 namespace llcpp {

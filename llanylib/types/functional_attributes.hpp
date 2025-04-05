@@ -7,6 +7,11 @@
 //	Version: 11.0							//
 //////////////////////////////////////////////
 
+#include "../defines/definitions.hpp"
+
+// Prob no longer needed with cocepts
+#if !defined(__LL_DEPRECATED__)
+
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_HPP_)
 	#if LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
@@ -22,7 +27,7 @@
 	#define LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MAYOR_ 11
 	#define LLANYLIB_FUNCTIONALATTRIBUTES_INCOMPLETE_MINOR_ 0
 
-#include "types_base_extra.hpp"
+#include "types.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -47,7 +52,7 @@ struct function_attributes_t;
 	#define LLANYLIB_FUNCTIONALATTRIBUTES_MAYOR_ 11
 	#define LLANYLIB_FUNCTIONALATTRIBUTES_MINOR_ 0
 
-#include "types_base_extra.hpp"
+#include "types.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -79,7 +84,7 @@ static constexpr _MyType CUSTOM = { IS_CONST, IS_NOEXCEPT };
 //															const				noexception
 __LL_VAR_INLINE__ constexpr _MyType CLASSIC				= { ::llcpp::FALSE, ::llcpp::FALSE };
 __LL_VAR_INLINE__ constexpr _MyType CONST				= { ::llcpp::TRUE,  ::llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType NOEXCEPTION			= { ::llcpp::FALSE, ::llcpp::TRUE };
+__LL_VAR_INLINE__ constexpr _MyType NOEXCEPTION			= { ::llcpp::FALSE, ::llcpp::TRUE  };
 __LL_VAR_INLINE__ constexpr _MyType CONSTNOEXCEPTION	= { ::llcpp::TRUE,  ::llcpp::TRUE  };
 
 } // namespace functional
@@ -93,3 +98,5 @@ __LL_VAR_INLINE__ constexpr _MyType CONSTNOEXCEPTION	= { ::llcpp::TRUE,  ::llcpp
 #if defined(LLANYLIB_ERROR_HPP_)
 	#undef LLANYLIB_ERROR_HPP_
 #endif // LLANYLIB_ERROR_HPP_
+
+#endif // __LL_DEPRECATED__

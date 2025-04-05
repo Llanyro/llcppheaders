@@ -22,7 +22,7 @@
 	#define LLANYLIB_POSITION_INCOMPLETE_MAYOR_ 11
 	#define LLANYLIB_POSITION_INCOMPLETE_MINOR_ 0
 
-#include "types_base.hpp"
+#include "types.hpp"
 
 namespace llcpp {
 namespace misc {
@@ -47,7 +47,7 @@ enum class Position : u8;
 	#define LLANYLIB_POSITION_MAYOR_ 11
 	#define LLANYLIB_POSITION_MINOR_ 0
 
-#include "types_base.hpp"
+#include "types.hpp"
 
 namespace llcpp {
 namespace misc {

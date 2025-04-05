@@ -22,7 +22,7 @@
 	#define LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ 11
 	#define LLANYLIB_BOOLEAN_INCOMPLETE_MINOR_ 0
 
-#include "types_base_extra.hpp"
+#include "types.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -47,7 +47,7 @@ class Boolean;
 	#define LLANYLIB_BOOLEAN_MAYOR_ 11
 	#define LLANYLIB_BOOLEAN_MINOR_ 0
 
-#include "types_base_extra.hpp"
+#include "types.hpp"
 
 namespace llcpp {
 

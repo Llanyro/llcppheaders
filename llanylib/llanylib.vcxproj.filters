@@ -63,9 +63,6 @@
     <ClInclude Include="types\checker_attributes.hpp">
       <Filter>Source Files\2 types</Filter>
     </ClInclude>
-    <ClInclude Include="types\functional_attributes.hpp">
-      <Filter>Source Files\2 types</Filter>
-    </ClInclude>
     <ClInclude Include="types\ostypes.hpp">
       <Filter>Source Files\2 types</Filter>
     </ClInclude>

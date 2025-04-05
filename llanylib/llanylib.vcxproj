@@ -27,7 +27,6 @@
     <ClInclude Include="defines\os.hpp" />
     <ClInclude Include="types\Boolean.hpp" />
     <ClInclude Include="types\checker_attributes.hpp" />
-    <ClInclude Include="types\functional_attributes.hpp" />
     <ClInclude Include="types\ostypes.hpp" />
     <ClInclude Include="types\Position.hpp" />
     <ClInclude Include="types\types.hpp" />

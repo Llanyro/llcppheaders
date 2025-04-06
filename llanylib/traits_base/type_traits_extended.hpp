@@ -50,7 +50,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_v =
 #if defined(__LL_REAL_CXX17)
 	(::std::is_same_v<T, Args> || ...);
 #else
-	::std::disjunction_v<is_same<T, Args>...>;
+	::std::disjunction_v<::std::is_same_v<T, Args>...>;
 #endif // __LL_REAL_CXX17
 
 template<class T>

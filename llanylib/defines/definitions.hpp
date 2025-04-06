@@ -59,20 +59,12 @@
 	#define __LL_IGNORE_WARNING_STATIC_ASSERTS__ 1
 #endif // __LL_IGNORE_WARNING_STATIC_ASSERTS__
 
-#if !defined(__LL_EXCEPTIONS__)
-	#define __LL_EXCEPTIONS__ 0
-#elif __LL_EXCEPTIONS__ != 1 && __LL_EXCEPTIONS__ != 0
-	#undef __LL_EXCEPTIONS__
-	#define __LL_EXCEPTIONS__ 1
-#endif // __LL_EXCEPTIONS__
-
-#if !defined(__LL_SIGNATURE_HELPER__)
-	#define __LL_SIGNATURE_HELPER__ 0
-#elif __LL_SIGNATURE_HELPER__ != 1 && __LL_SIGNATURE_HELPER__ != 0
-	#undef __LL_SIGNATURE_HELPER__
-	#define __LL_SIGNATURE_HELPER__ 1
-#endif // __LL_SIGNATURE_HELPER__
-
+#if !defined(__LL_EXCEPTIONS)
+	#define __LL_EXCEPTIONS 0
+#elif __LL_EXCEPTIONS != 1 && __LL_EXCEPTIONS != 0
+	#undef __LL_EXCEPTIONS
+	#define __LL_EXCEPTIONS 1
+#endif // __LL_EXCEPTIONS
 
 #if !defined(__LL_CLEAR_POINTERS_ON_DESTRUCTION)
 	#define __LL_CLEAR_POINTERS_ON_DESTRUCTION 0
@@ -80,6 +72,20 @@
 	#undef __LL_CLEAR_POINTERS_ON_DESTRUCTION
 	#define __LL_CLEAR_POINTERS_ON_DESTRUCTION 1
 #endif // __LL_CLEAR_POINTERS_ON_DESTRUCTION
+
+#if !defined(__LL_CLEAR_SECURE)
+	#define __LL_CLEAR_SECURE 0
+#elif __LL_CLEAR_SECURE != 1 && __LL_CLEAR_SECURE != 0
+	#undef __LL_CLEAR_SECURE
+	#define __LL_CLEAR_SECURE 1
+#endif // __LL_CLEAR_SECURE
+
+#if !defined(__LL_USE_WIDE_CHAR)
+	#define __LL_USE_WIDE_CHAR 0
+#elif __LL_USE_WIDE_CHAR != 1 && __LL_USE_WIDE_CHAR != 0
+	#undef __LL_USE_WIDE_CHAR
+	#define __LL_USE_WIDE_CHAR 1
+#endif // __LL_USE_WIDE_CHAR
 
 
 #define __LL_DEBUG_ERROR__ 0
@@ -102,6 +108,10 @@
 // Defines for logging
 
 #pragma region Error
+
+#if !defined(__debug_error_exceptions_full)
+	#define __debug_error_exceptions_full(str) IGNORE()
+#endif
 
 #if !defined(__debug_error_not_nullptr_str)
 	#define __debug_error_not_nullptr_str(var_str) IGNORE()

@@ -67,35 +67,57 @@ concept IsAlwaysInvalid = ::std::is_base_of_v<::llcpp::AlwaysInvalidTag, T>;
 } // namespace base
 namespace signature {
 
-template<class T, class U = ::llcpp::Emptyclass>
-concept HasPointerOperator = requires (T t) { { *t } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
-template<class T, class U = T>
-concept HasPreIncrement = requires (T t) { { ++t } noexcept -> ::std::same_as<T>; };
-template<class T, class U = T>
-concept HasPosIncrement = requires (T t) { { t++ } noexcept -> ::std::same_as<T>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasPointerOperator = requires (T t) { { *t } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = T&>
+concept HasPreIncrement = requires (T t) { { ++t } noexcept -> ::std::same_as<ReturnType>; };
+template<class T, class ReturnType = T>
+concept HasPosIncrement = requires (T t) { { t++ } noexcept -> ::std::same_as<ReturnType>; };
 
-template<class T, class U = ::llcpp::Emptyclass>
-concept HasBegin = requires (T t) { { t.begin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
-template<class T, class U = ::llcpp::Emptyclass>
-concept HasConstBegin = requires (T t) { { t.cbegin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
-template<class T, class U = ::llcpp::Emptyclass>
-concept HasReverseBegin = requires (T t) { { t.rbegin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
-template<class T, class U = ::llcpp::Emptyclass>
-concept HasEnd = requires (T t) { { t.end() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
-template<class T, class U = ::llcpp::Emptyclass>
-concept HasConstEnd = requires (T t) { { t.cend() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
-template<class T, class U = ::llcpp::Emptyclass>
-concept HasReverseEnd = requires (T t) { { t.rend() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasBegin = requires (T t) { { t.begin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasConstBegin = requires (T t) { { t.cbegin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasReverseBegin = requires (T t) { { t.rbegin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasEnd = requires (T t) { { t.end() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasConstEnd = requires (T t) { { t.cend() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasReverseEnd = requires (T t) { { t.rend() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 
-template<class T, class U = ::llcpp::usize>
-concept HasSize = requires (T t) { { t.size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
-template<class T, class U = ::llcpp::usize>
-concept HasMaxSize = requires (T t) { { t.max_size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
+template<class T, class ReturnType = ::llcpp::usize>
+concept HasSize = requires (T t) { { t.size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = ::llcpp::usize>
+concept HasMaxSize = requires (T t) { { t.max_size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 
 // [TOCHECK]
 // Some objects uses this operator and expects a throw if parameter is invalid
-template<class T, class U = ::llcpp::Emptyclass>
-concept HasOperatorArray = requires (T t) { { t[0] } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<U>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorArray = requires (T t) { { t[0] } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+
+template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
+concept HasForeachOperation = requires (T t, U u) {
+	{ t.foreachOperation(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+
+#pragma region Comparations
+
+template<class T, class U = T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorEqual = requires (T t, U u) { { t == u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class U = T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorNonEqual = requires (T t, U u) { { t != u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class U = T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorGreaterEqual = requires (T t, U u) { { t >= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class U = T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorGreater = requires (T t, U u) { { t > u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class U = T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorLowerEqual = requires (T t, U u) { { t <= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class U = T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorLower = requires (T t, U u) { { t < u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+
+#pragma endregion
 
 } // namespace signature
 namespace is_object {
@@ -109,8 +131,8 @@ concept IsConstantContainer = requires {
 template<class Iterator, class Content = ::llcpp::Emptyclass>
 concept IsIterator = requires (Iterator it) {
 	requires ::llcpp::meta::concepts::signature::HasPointerOperator<Iterator, Content>;
-	requires ::llcpp::meta::concepts::signature::HasPreIncrement<Iterator, Content>;
-	requires ::llcpp::meta::concepts::signature::HasPosIncrement<Iterator, Content>;
+	requires ::llcpp::meta::concepts::signature::HasPreIncrement<Iterator>;
+	requires ::llcpp::meta::concepts::signature::HasPosIncrement<Iterator>;
 };
 
 template<class Array, class Content = ::llcpp::Emptyclass>

@@ -131,7 +131,7 @@
 			#include <vcruntime.h>
 		#endif // _NODISCARD
 	#endif // _DEBUG
-#elif decined(STM32_SYSTEM)
+#elif defined(STM32_SYSTEM)
 
 #elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
 

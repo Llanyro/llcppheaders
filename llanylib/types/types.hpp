@@ -22,8 +22,7 @@
 	#define LLANYLIB_TYPESBASE_MAYOR_ 12
 	#define LLANYLIB_TYPESBASE_MINOR_ 0
 
-#include "../defines.hpp"
-
+#include "../defines/expresions.hpp"
 
 #pragma region StandardIncompleteTypes
 
@@ -149,6 +148,13 @@ using ll_string_t			= const ll_char_t*;		// Used to point to non editable string
 using ll_wstring_t			= const ll_wchar_t*;	// Used to point to non editable strings
 /// [DEPRECATED] Unsigned char sometimes crashes Visual Studio IntelliSense using traits
 using ll_ustring_t			= const ll_uchar_t*;	// Used to point to non editable unsigned strings 
+
+#if defined(__LL_USE_WIDE_CHAR)
+using string = ll_wstring_t;
+#else
+using string = ll_string_t;
+#endif
+
 
 using ll_lib_t				= void*;				// Handle for dynamic library linked/shared objects
 

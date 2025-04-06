@@ -136,13 +136,21 @@ __LL_VAR_INLINE__ constexpr bool DLL = __LL_DLL_BUILD;
 	#undef DEBUG_COMMNET
 #endif // DEBUG_COMMNET
 
-#if defined(NULLPTR)
-	#undef NULLPTR
-#endif // NULLPTR
+#if defined(EXCEPTIONS)
+	#undef EXCEPTIONS
+#endif // EXCEPTIONS
+
+#if defined(USE_WIDE_CHAR)
+	#undef USE_WIDE_CHAR
+#endif // USE_WIDE_CHAR
 
 #if defined(IGNORE_WARNING_STATIC_ASSERTS)
 	#undef IGNORE_WARNING_STATIC_ASSERTS
 #endif // IGNORE_WARNING_STATIC_ASSERTS
+
+#if defined(CLEAR_POINTERS_ON_DESTRUCTION)
+	#undef CLEAR_POINTERS_ON_DESTRUCTION
+#endif // CLEAR_POINTERS_ON_DESTRUCTION
 
 #pragma endregion
 
@@ -150,15 +158,18 @@ __LL_VAR_INLINE__ constexpr unsigned char DEBUG					= __LL_DEBUG__;
 __LL_VAR_INLINE__ constexpr unsigned char DEBUG_WARNING			= __LL_DEBUG_WARNING__;
 __LL_VAR_INLINE__ constexpr unsigned char DEBUG_INFO			= __LL_DEBUG_INFO__;
 __LL_VAR_INLINE__ constexpr unsigned char DEBUG_COMMNET			= __LL_DEBUG_COMMNET__;
-__LL_VAR_INLINE__ constexpr bool EXCEPTIONS						= __LL_EXCEPTIONS__;
+__LL_VAR_INLINE__ constexpr bool EXCEPTIONS						= __LL_EXCEPTIONS;
+__LL_VAR_INLINE__ constexpr bool USE_WIDE_CHAR					= __LL_USE_WIDE_CHAR;
 __LL_VAR_INLINE__ constexpr bool IGNORE_WARNING_STATIC_ASSERTS	= __LL_IGNORE_WARNING_STATIC_ASSERTS__;
 
 ///////////////////////////////////////////// Behabiour /////////////////////////////////////////////
 
-__LL_VAR_INLINE__ constexpr bool CLEAR_POINTERS_ON_DESTRUCTION = __LL_CLEAR_POINTERS_ON_DESTRUCTION;
+// Sets pointer to nullptr
+__LL_VAR_INLINE__ constexpr bool CLEAR_POINTERS_ON_DESTRUCTION	= __LL_CLEAR_POINTERS_ON_DESTRUCTION;
+// Clears all data in object to null/random values
+__LL_VAR_INLINE__ constexpr bool CLEAR_SECURE					= __LL_CLEAR_SECURE;
 
 #undef __LL_CLEAR_POINTERS_ON_DESTRUCTION
-
 
 } // namespace llcpp
 

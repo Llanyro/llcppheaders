@@ -155,6 +155,18 @@ class ValidationChecker {
 	#pragma endregion
 };
 
+// if ValidType is not included by functions or inheritance, we use user type providded
+template<class ClassToCheck, class InhertiExtra>
+using ValidationWrapper = 
+	::llcpp::meta::traits::conditional_t<
+		::llcpp::meta::traits::ValidationChecker::is_same_valid_type_v<
+			ClassToCheck,
+			::llcpp::meta::ValidType::Unknown
+		>,
+		InhertiExtra,
+		::llcpp::DummyClass
+	>;
+
 } // namespace traits
 } // namespace meta
 } // namespace llcpp

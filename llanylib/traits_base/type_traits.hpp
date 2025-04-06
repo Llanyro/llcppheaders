@@ -114,7 +114,6 @@ namespace meta {
 namespace traits {
 
 #pragma region StandardChecker
-
 template <class T, class = void>
 class HasValueType : public ::std::false_type {};
 template<class T>
@@ -133,7 +132,8 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_integral_constant_container_v =
 	::llcpp::meta::traits::has_value_type_v<T> && ::llcpp::meta::traits::has_value_constant_v<T>;
 
-
+#pragma endregion
+#pragma region LlanylibChecker
 template <class T, class = void>
 class HasLLCPPValueType : public ::std::false_type {};
 template<class T>

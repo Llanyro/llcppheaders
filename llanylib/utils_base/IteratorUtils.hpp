@@ -241,6 +241,39 @@ class IteratorUtils
 			else return res;
 		}
 
+#if defined(LLANYLIB_TUPLE_HPP_)
+		template<ll_bool_t GET_DATA = ::llcpp::FALSE, class... OtherIterators>
+			requires ::llcpp::meta::concepts::signature::HasForeachOperationExtra<ExtraFunctions, value_type, ::llcpp::meta::utils::Tuple<OtherIterators...>&, LoopResult>
+		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreach(input_it begin, input_itend end, OtherIterators... other) const noexcept {
+			if constexpr (::llcpp::DEBUG) {
+				if (this->isEnd(begin, end)) {
+					if constexpr (GET_DATA) return ResultPair{ LoopResult::BeginError, begin };
+					else return LoopResult::BeginError;
+				}
+			}
+
+			// Include all other iterators in a tuple
+			::llcpp::meta::utils::Tuple<OtherIterators...> tuple(other...);
+		
+			LoopResult res = LoopResult::BeginError;
+			Iterator it = begin;
+			for (; !this->isEnd(it, end); ++it, ++tuple) {
+				res = ExtraFunctions::foreachOperation(*it, tuple);
+				if (res != LoopResult::Conntinue) {
+					if constexpr (GET_DATA)
+						return ResultPair{ res, it };
+					else return res;
+				}
+			}
+		
+			if (res == LoopResult::Conntinue) res = LoopResult::Ok;
+			if constexpr (GET_DATA)
+				return ResultPair{ res , end };
+			else return res;
+		}
+#endif // LLANYLIB_TUPLE_HPP_
+
+
 		#pragma endregion
 
 	#pragma endregion

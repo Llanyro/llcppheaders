@@ -101,6 +101,10 @@ template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasForeachOperation = requires (T t, U u) {
 	{ t.foreachOperation(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
+template<class T, class U, class W, class ReturnType = ::llcpp::Emptyclass>
+concept HasForeachOperationExtra = requires (T t, U u, W w) {
+	{ t.foreachOperation(u, w) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
 
 #pragma region Comparations
 

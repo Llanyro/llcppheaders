@@ -100,11 +100,11 @@ namespace llcpp {
 //
 
 /// Signed
-using ll_char_t			= signed char;
-using ll_short_t		= signed short;
-using ll_int_t			= signed int;
-using ll_long_t			= signed long;
-using ll_longlong_t		= signed long long;
+using ll_char_t			= char;
+using ll_short_t		= short;
+using ll_int_t			= int;
+using ll_long_t			= long;
+using ll_longlong_t		= long long;
 
 /// Unsigned
 using ll_uchar_t		= unsigned char;

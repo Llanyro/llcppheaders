@@ -113,6 +113,10 @@
 	#define __debug_error_exceptions_full(str) IGNORE()
 #endif
 
+#if !defined(__debug_error_exceptions_empty)
+	#define __debug_error_exceptions_full(str) IGNORE()
+#endif
+
 #if !defined(__debug_error_not_nullptr_str)
 	#define __debug_error_not_nullptr_str(var_str) IGNORE()
 #endif

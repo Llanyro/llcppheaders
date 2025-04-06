@@ -116,12 +116,8 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 				__debug_error_exceptions_full("Exceptions list is full! You may fix some error or increase ExceptionBuffer");
 				return ::llcpp::FALSE;
 			}
-			*this->lifo_names_last = s;
-			*this->lifo_errors_last = e;
-			++this->lifo_names_last;
-			++this->lifo_errors_last;
-			//*(this->lifo_names_last++) = s;
-			//*(this->lifo_errors_last++) = e;
+			*(this->lifo_names_last++) = s;
+			*(this->lifo_errors_last++) = e;
 			return ::llcpp::TRUE;
 		}
 		__LL_NODISCARD__ ll_bool_t pop(PopData& data) noexcept {
@@ -129,9 +125,7 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 				__debug_error_exceptions_empty("Exceptions list is empty! Do not pop with empty stack!");
 				return ::llcpp::FALSE;
 			}
-			data = { *this->lifo_names_last, *this->lifo_errors_last };
-			--this->lifo_names_last;
-			--this->lifo_errors_last;
+			data = { *(--this->lifo_names_last), *(--this->lifo_errors_last) };
 			return ::llcpp::TRUE;
 		}
 
@@ -144,6 +138,7 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 
 #define ll_exceptions ::llcpp::exceptions::ex
 #define LOG_EXCEPTION(err) ll_exceptions.push(__FUNCSIG__, err)
+//#define LOG_EXCEPTION(err) ll_exceptions.push(__PRETTY_FUNCTION__, err)
 //#define LOG_EXCEPTION(err) ll_exceptions.push(L"" __FUNCSIG__, err)
 
 } // namespace exceptions

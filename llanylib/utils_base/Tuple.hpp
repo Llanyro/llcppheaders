@@ -188,7 +188,7 @@ class Tuple {
 			else return this->second.template get<POSITION - 1>();
 		}
 
-		__LL_NODISCARD__ constexpr void operator++() noexcept {
+		constexpr void operator++() noexcept {
 			++this->first;
 			this->second.operator++();
 		}
@@ -308,7 +308,7 @@ class Tuple<_T> {
 				"Error, POSITION its still not 0 at last element in tuple");
 		}
 
-		__LL_NODISCARD__ constexpr void operator++() noexcept { ++this->first; }
+		constexpr void operator++() noexcept { ++this->first; }
 
 		#pragma endregion
 

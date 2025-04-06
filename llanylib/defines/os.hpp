@@ -17,7 +17,7 @@
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_OS_MAYOR_ || LLANYLIB_OS_MINOR_
 
-#else !defined(LLANYLIB_OS_HPP_)
+#elif !defined(LLANYLIB_OS_HPP_)
 	#define LLANYLIB_OS_HPP_
 	#define LLANYLIB_OS_MAYOR_ 12
 	#define LLANYLIB_OS_MINOR_ 0

@@ -114,5 +114,16 @@
     <ClInclude Include="utils_base\IteratorUtils.hpp">
       <Filter>Source Files\6 utils_base</Filter>
     </ClInclude>
+    <ClInclude Include="utils_base\Tuple.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\Exceptions.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FileName.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -16,11 +16,11 @@
 		#endif // __LL_REAL_CXX23
 	#endif // LLANYLIB_DEFINES_MAYOR_ || LLANYLIB_DEFINES_MINOR_
 
-#else !defined(LLANYLIB_DEFINES_HPP_)
-#define LLANYLIB_DEFINES_HPP_
-#define LLANYLIB_DEFINES_MAYOR_ 10
-#define LLANYLIB_DEFINES_MINOR_ 0
+#elif !defined(LLANYLIB_DEFINES_HPP_)
+	#define LLANYLIB_DEFINES_HPP_
+	#define LLANYLIB_DEFINES_MAYOR_ 10
+	#define LLANYLIB_DEFINES_MINOR_ 0
 
-#include "defines/expresions.hpp"
+	#include "defines/expresions.hpp"
 
 #endif // LLANYLIB_DEFINES_HPP_

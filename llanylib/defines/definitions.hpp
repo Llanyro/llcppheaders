@@ -17,7 +17,7 @@
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_DEFINITIONS_MAYOR_ || LLANYLIB_DEFINITIONS_MINOR_
 
-#else !defined(LLANYLIB_DEFINITIONS_HPP_)
+#elif !defined(LLANYLIB_DEFINITIONS_HPP_)
 	#define LLANYLIB_DEFINITIONS_HPP_
 	#define LLANYLIB_DEFINITIONS_MAYOR_ 12
 	#define LLANYLIB_DEFINITIONS_MINOR_ 0
@@ -35,7 +35,7 @@
 	#define __LL_VAR_INLINE__ inline
 #elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
 	#define __LL_FALLTHROUGH__ [[fallthrough]]
-	#define __LL_NODISCARD__ NODISCARD
+	#define __LL_NODISCARD__ [[nodiscard]]
 	#define __LL_NORETURN__ [[noreturn]]
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline
@@ -95,7 +95,7 @@
 
 #if !defined(__LL_DEBUG__)
 	#define __LL_DEBUG__ __LL_DEBUG_ERROR__
-#endif __LL_DEBUG__
+#endif // __LL_DEBUG__
 
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 

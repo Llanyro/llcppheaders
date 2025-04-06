@@ -33,12 +33,14 @@
 	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_INLINE__ __forceinline
 	#define __LL_VAR_INLINE__ inline
+	#define __LL_FUNCNAME__ __FUNCSIG__
 #elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
 	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ [[nodiscard]]
 	#define __LL_NORETURN__ [[noreturn]]
 	#define __LL_INLINE__ inline
 	#define __LL_VAR_INLINE__ inline
+	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
 #else
 	#define __LL_FALLTHROUGH__ [[fallthrough]]
 	#define __LL_NODISCARD__ [[nodiscard]]

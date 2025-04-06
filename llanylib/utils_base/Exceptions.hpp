@@ -23,6 +23,10 @@
 	#define LLANYLIB_EXCEPTIONS_MINOR_ 0
 
 #include "../types/types.hpp"
+
+#if defined(__LL_EXCEPTIONS)
+
+#include "../types/Errors.hpp"
 #include "Tuple.hpp"
 #include "IteratorUtils.hpp"
 
@@ -120,6 +124,9 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 			*(this->lifo_errors_last++) = e;
 			return ::llcpp::TRUE;
 		}
+		__LL_NODISCARD__ ll_bool_t push(StringType s, ::llcpp::misc::Errors e) noexcept {
+			return this->push(s, static_cast<ErrorType>(e));
+		}
 		__LL_NODISCARD__ ll_bool_t pop(PopData& data) noexcept {
 			if (this->empty()) {
 				__debug_error_exceptions_empty("Exceptions list is empty! Do not pop with empty stack!");
@@ -134,15 +141,21 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 	#pragma endregion
 };
 
-::llcpp::exceptions::ExceptionBuffer<10, ll_string_t, i32> ex;
-
+::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #define ll_exceptions ::llcpp::exceptions::ex
-#define LOG_EXCEPTION(err) ll_exceptions.push(__FUNCSIG__, err)
-//#define LOG_EXCEPTION(err) ll_exceptions.push(__PRETTY_FUNCTION__, err)
-//#define LOG_EXCEPTION(err) ll_exceptions.push(L"" __FUNCSIG__, err)
+
+#if defined(__LL_USE_WIDE_CHAR)
+	#define LOG_EXCEPTION(err) ll_exceptions.push(L"" __LL_FUNCNAME__, err)
+#else
+	#define LOG_EXCEPTION(err) ll_exceptions.push(__LL_FUNCNAME__, err)
+#endif // __LL_USE_WIDE_CHAR
 
 } // namespace exceptions
 } // namespace llcpp
+
+#else
+	#define LOG_EXCEPTION(err) ::llcpp::IGNORE(err)
+#endif // __LL_EXCEPTIONS
 
 #endif // LLANYLIB_EXCEPTIONS_HPP_
 

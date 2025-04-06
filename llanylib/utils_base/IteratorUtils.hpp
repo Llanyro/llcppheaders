@@ -121,10 +121,6 @@ class IteratorUtils
 			::llcpp::meta::concepts::signature::HasOperatorEqual<IteratorEnd, Iterator, ll_bool_t>;
 
 	#pragma endregion
-	#pragma region Asserts
-	public:
-
-	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructors
 	public:

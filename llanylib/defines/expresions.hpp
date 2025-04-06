@@ -48,6 +48,14 @@ __LL_VAR_INLINE__ constexpr bool REAL_CXX17 = __LL_REAL_CXX17;
 __LL_VAR_INLINE__ constexpr bool REAL_CXX20 = __LL_REAL_CXX20;
 __LL_VAR_INLINE__ constexpr bool REAL_CXX23 = __LL_REAL_CXX23;
 
+//////////////////////////////////////////// Endian check ////////////////////////////////////////////
+
+#if defined(BIGENDIAN)
+	#undef BIGENDIAN
+#endif // BIGENDIAN
+
+__LL_VAR_INLINE__ constexpr bool BIGENDIAN	= __LL_BIGENDIAN;
+
 //////////////////////////////////////////// OS check ////////////////////////////////////////////
 
 #pragma region MacrosRemove

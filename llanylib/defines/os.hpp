@@ -63,6 +63,15 @@
 	#error "This library requires C++ (its made for it)"
 #endif // __cplusplus
 
+//////////////////////////////////////////// Endian check ///////////////////////////////////////
+
+#if !defined(__LL_BIGENDIAN)
+	#define __LL_BIGENDIAN 0
+#elif __LL_BIGENDIAN != 1 && __LL_BIGENDIAN != 0
+	#undef __LL_BIGENDIAN
+	#define __LL_BIGENDIAN 1
+#endif // __LL_BIGENDIAN
+
 //////////////////////////////////////////// OS check ////////////////////////////////////////////
 
 // Setting env by OS

@@ -102,8 +102,8 @@ class IteratorUtils
 		using Iterator		= _Iterator;
 		using IteratorEnd	= _IteratorEnd;
 		using value_type	= decltype(*::std::declval<Iterator>());
-		using input_it		= ::llcpp::meta::traits::input<Iterator>;
-		using input_itend	= ::llcpp::meta::traits::input<IteratorEnd>;
+		using input_it		= ::llcpp::meta::traits::conditional_t<::std::is_class_v<Iterator>, Iterator&&, Iterator>;
+		using input_itend	= ::llcpp::meta::traits::conditional_t<::std::is_class_v<IteratorEnd>, IteratorEnd&&, Iterator>;
 		using ResultPair	= ::llcpp::meta::pair<LoopResult, Iterator>;
 		template<ll_bool_t GET_DATA>
 		using ForeachResult = ::llcpp::meta::traits::conditional_t<GET_DATA, ResultPair, LoopResult>;
@@ -175,7 +175,7 @@ class IteratorUtils
 	public:
 		// Checks if iterator is end or overflows it
 		// By standard iterators (objects) will point to end/begin if operator++/operator-- is used
-		__LL_NODISCARD__ constexpr ll_bool_t isEnd(input_it it, input_itend end) const noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t isEnd(Iterator& it, IteratorEnd& end) const noexcept {
 			if constexpr (::std::is_pointer_v<Iterator> && ::std::is_pointer_v<IteratorEnd>)
 				return it >= end;
 			else if constexpr (::std::is_pointer_v<IteratorEnd>) {
@@ -240,7 +240,7 @@ class IteratorUtils
 #if defined(LLANYLIB_TUPLE_HPP_)
 		template<ll_bool_t GET_DATA = ::llcpp::FALSE, class... OtherIterators>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperationExtra<ExtraFunctions, value_type, ::llcpp::meta::utils::Tuple<OtherIterators...>&, LoopResult>
-		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreach(input_it begin, input_itend end, OtherIterators... other) const noexcept {
+		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreachEx(input_it begin, input_itend end, OtherIterators... other) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
 				if (this->isEnd(begin, end)) {
 					if constexpr (GET_DATA) return ResultPair{ LoopResult::BeginError, begin };
@@ -267,8 +267,8 @@ class IteratorUtils
 				return ResultPair{ res , end };
 			else return res;
 		}
-#endif // LLANYLIB_TUPLE_HPP_
 
+#endif // LLANYLIB_TUPLE_HPP_
 
 		#pragma endregion
 

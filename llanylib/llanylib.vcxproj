@@ -36,6 +36,7 @@
     <ClInclude Include="traits_base\type_traits.hpp" />
     <ClInclude Include="types\Boolean.hpp" />
     <ClInclude Include="types\checker_attributes.hpp" />
+    <ClInclude Include="types\Errors.hpp" />
     <ClInclude Include="types\ostypes.hpp" />
     <ClInclude Include="types\Position.hpp" />
     <ClInclude Include="types\types.hpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="utils_base\CityHash.hpp" />
     <ClInclude Include="utils_base\Exceptions.hpp" />
     <ClInclude Include="utils_base\IteratorUtils.hpp" />
+    <ClInclude Include="utils_base\PointerIterator.hpp" />
     <ClInclude Include="utils_base\Tuple.hpp" />
   </ItemGroup>
   <ItemGroup>

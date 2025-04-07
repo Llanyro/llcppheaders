@@ -146,8 +146,12 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 
 #if defined(__LL_USE_WIDE_CHAR)
 	#define LOG_EXCEPTION(err) ll_exceptions.push(L"" __LL_FUNCNAME__, err)
+	// Tag must be a literal string
+	#define LOG_EXCEPTION_TAG(tag, err) ll_exceptions.push(L"" __LL_FUNCNAME__ " [ " tag " ]", err)
 #else
 	#define LOG_EXCEPTION(err) ll_exceptions.push(__LL_FUNCNAME__, err)
+	// Tag must be a literal string
+	#define LOG_EXCEPTION_TAG(tag, err) ll_exceptions.push(__LL_FUNCNAME__ " [ " tag " ]", err)
 #endif // __LL_USE_WIDE_CHAR
 
 } // namespace exceptions
@@ -155,6 +159,7 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 
 #else
 	#define LOG_EXCEPTION(err) ::llcpp::IGNORE(err)
+	#define LOG_EXCEPTION_TAG(tag, err) ::llcpp::IGNORE(tag, err)
 #endif // __LL_EXCEPTIONS
 
 #endif // LLANYLIB_EXCEPTIONS_HPP_

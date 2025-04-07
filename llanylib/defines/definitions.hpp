@@ -124,7 +124,7 @@
 #endif
 
 #if !defined(__debug_error_begin_smaller)
-	#define __debug_error_begin_smaller(begin, end) IGNORE()
+	#define __debug_error_begin_smaller(str, begin, end) IGNORE()
 #endif
 
 #if !defined(__debug_error_out_of_range)

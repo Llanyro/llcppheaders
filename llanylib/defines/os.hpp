@@ -77,6 +77,8 @@
 // Setting env by OS
 #if defined(_WIN32) || defined(_WIN64)
 	#define __LL_WINDOWS_SYSTEM
+	#undef __LL_REAL_CXX23
+	#define __LL_REAL_CXX23 0
 #elif defined(__unix__)
 	#if defined(__linux__)
 		#define __LL_POSIX_SYSTEM

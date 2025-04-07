@@ -73,6 +73,15 @@ template<class T, class ReturnType = T&>
 concept HasPreIncrement = requires (T t) { { ++t } noexcept -> ::std::same_as<ReturnType>; };
 template<class T, class ReturnType = T>
 concept HasPosIncrement = requires (T t) { { t++ } noexcept -> ::std::same_as<ReturnType>; };
+template<class T, class U, class ReturnType = T>
+concept HasOperatorSum = requires (T t, U u) { { t + u } noexcept -> ::std::same_as<ReturnType>; };
+template<class T, class U, class ReturnType = T>
+concept HasOperatorSub = requires (T t, U u) { { t - u } noexcept -> ::std::same_as<ReturnType>; };
+template<class T, class U, class ReturnType = T&>
+concept HasOperatorSumSelf = requires (T t, U u) { { t += u } noexcept -> ::std::same_as<ReturnType>; };
+template<class T, class U, class ReturnType = T&>
+concept HasOperatorSubSelf = requires (T t, U u) { { t -= u } noexcept -> ::std::same_as<ReturnType>; };
+
 
 template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasBegin = requires (T t) { { t.begin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
@@ -137,6 +146,10 @@ concept IsIterator = requires (Iterator it) {
 	requires ::llcpp::meta::concepts::signature::HasPointerOperator<Iterator, Content>;
 	requires ::llcpp::meta::concepts::signature::HasPreIncrement<Iterator>;
 	requires ::llcpp::meta::concepts::signature::HasPosIncrement<Iterator>;
+	requires ::llcpp::meta::concepts::signature::HasOperatorSum<Iterator, isize>;
+	requires ::llcpp::meta::concepts::signature::HasOperatorSub<Iterator, isize>;
+	requires ::llcpp::meta::concepts::signature::HasOperatorSumSelf<Iterator, isize>;
+	requires ::llcpp::meta::concepts::signature::HasOperatorSubSelf<Iterator, isize>;
 };
 
 template<class Array, class Content = ::llcpp::Emptyclass>

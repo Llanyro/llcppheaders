@@ -120,6 +120,12 @@
     <ClInclude Include="utils_base\Exceptions.hpp">
       <Filter>Source Files\6 utils_base</Filter>
     </ClInclude>
+    <ClInclude Include="types\Errors.hpp">
+      <Filter>Source Files\2 types</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\PointerIterator.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileName.cpp">

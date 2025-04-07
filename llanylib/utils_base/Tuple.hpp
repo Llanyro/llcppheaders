@@ -53,7 +53,7 @@ class Tuple<_T>;
 	#define LLANYLIB_TUPLE_MAYOR_ 12
 	#define LLANYLIB_TUPLE_MINOR_ 0
 
-#include "../traits_base/type_traits_extended.hpp"
+#include "../concepts/concepts.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -189,7 +189,8 @@ class Tuple {
 		}
 
 		constexpr void operator++() noexcept {
-			++this->first;
+			if constexpr (::llcpp::meta::concepts::signature::HasPreIncrement)
+				++this->first;
 			this->second.operator++();
 		}
 
@@ -308,7 +309,10 @@ class Tuple<_T> {
 				"Error, POSITION its still not 0 at last element in tuple");
 		}
 
-		constexpr void operator++() noexcept { ++this->first; }
+		constexpr void operator++() noexcept {
+			if constexpr (::llcpp::meta::concepts::signature::HasPreIncrement)
+				++this->first;
+		}
 
 		#pragma endregion
 

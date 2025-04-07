@@ -38,7 +38,7 @@
 	#define LLANYLIB_CITYHASH_MAYOR_ 12
 	#define LLANYLIB_CITYHASH_MINOR_ 0
 
-#include "Exceptions.hpp"
+#include "Array.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -307,7 +307,8 @@ class CityHash
 					ExtraFunctions::hash16bytes(v.first, w.first) + x
 				);
 		}
-		/*__LL_NODISCARD__ constexpr Hash64 cityHash64(const meta::StrPair& s) noexcept {
+		// [TODO] [TOFIX]
+		/*__LL_NODISCARD__ constexpr Hash64 cityHash64(const ::llcpp::meta::Str& s) noexcept {
 			if (s.empty()) return ::llcpp::meta::hash::INVALID_HASH<Hash64>;
 			else return city::CityHash::cityHash64(s.begin(), s.lenght());
 		}
@@ -337,28 +338,8 @@ class CityHash
 
 constexpr auto a = CityHash<CityHashFunctions>().cityHash64("Hola", 4);
 
-} // namespace traits
+} // namespace utils
 } // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_CITYHASH_HPP_
-
-#if !defined(LLANYLIB_ERROR_HPP_)
-	#if defined(LLANYLIB_CITYHASH_EXTRA_HPP_)
-		#if LLANYLIB_CITYHASH_EXTRA_MAYOR_ != 12 || LLANYLIB_CITYHASH_EXTRA_MINOR_ < 0
-			#if defined(__LL_REAL_CXX23)
-				#warning "CityHash.hpp(extra) version error!"
-			#else
-				#error "CityHash.hpp(extra) version error!"
-			#endif // __LL_REAL_CXX23
-		#endif // LLANYLIB_CITYHASH_EXTRA_MAYOR_ || LLANYLIB_CITYHASH_EXTRA_MINOR_
-
-	#else
-		#define LLANYLIB_CITYHASH_EXTRA_HPP_
-		#define LLANYLIB_CITYHASH_EXTRA_MAYOR_ 12
-		#define LLANYLIB_CITYHASH_EXTRA_MINOR_ 0
-
-	#endif // LLANYLIB_CITYHASH_EXTRA_HPP_
-#else
-	#undef LLANYLIB_ERROR_HPP_
-#endif // LLANYLIB_ERROR_HPP_

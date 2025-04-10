@@ -89,7 +89,8 @@ class TypeChecker {
 	public:
 		// Asserts
 		static_assert(REFERENCE,"Reference type is forbidden!");
-		static_assert(CONST,	"Const type is forbidden!");
+		// [TODO] [TOCHECK]
+		//static_assert(CONST,	"Const type is forbidden!");
 		static_assert(POINTER,	"Pointer type is forbidden!");
 		static_assert(ARRAY,	"Array type is forbidden!");
 		static_assert(VOLATILE,	"Volatile type is forbidden!");
@@ -126,6 +127,7 @@ class ConstructorChecker {
 		static constexpr ll_bool_t COPY_ASSIGNABLE		= (ATTRIBUTES.IGNORE_COPY_ASSIGNABLE	|| ::std::is_nothrow_copy_assignable_v<T>);
 		static constexpr ll_bool_t MOVE_CONSTRUCTIBLE	= (ATTRIBUTES.IGNORE_MOVE_CONSTRUCTIBLE	|| ::std::is_nothrow_move_constructible_v<T>);
 		static constexpr ll_bool_t MOVE_ASSIGNABLE		= (ATTRIBUTES.IGNORE_MOVE_ASSIGNABLE	|| ::std::is_nothrow_move_assignable_v<T>);
+		static constexpr ll_bool_t ASSIGNABLE			= (ATTRIBUTES.IGNORE_MOVE_ASSIGNABLE	|| ::std::is_nothrow_assignable_v<T, T>);
 		static constexpr ll_bool_t NOEXCEPT_DESTRUCT	= (ATTRIBUTES.IGNORE_NOEXCEPT_DESTRUCT	|| ::std::is_nothrow_destructible_v<T>);
 
 		static constexpr ll_bool_t is_valid_v =
@@ -134,6 +136,7 @@ class ConstructorChecker {
 			&& COPY_CONSTRUCTIBLE
 			&& COPY_ASSIGNABLE
 			&& MOVE_CONSTRUCTIBLE
+			&& ASSIGNABLE
 			&& MOVE_ASSIGNABLE;
 
 	public:
@@ -143,6 +146,7 @@ class ConstructorChecker {
 		static_assert(COPY_CONSTRUCTIBLE,					"T needs a noexcept copy constructor!");
 		static_assert(COPY_ASSIGNABLE,						"T needs a noexcept copy asignable!");
 		static_assert(MOVE_CONSTRUCTIBLE,					"T needs a noexcept move constructor!");
+		static_assert(ASSIGNABLE,							"T needs a noexcept assignale self!");
 		static_assert(MOVE_ASSIGNABLE,						"T needs a noexcept move asignable!");
 };
 

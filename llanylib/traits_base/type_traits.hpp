@@ -356,6 +356,8 @@ template<ll_bool_t CONDITION, class T, class U, T ELEM_1, U ELEM_2>
 __LL_VAR_INLINE__ constexpr auto conditional_value_v = ConditionalValue<CONDITION, T, U, ELEM_1, ELEM_2>::VALUE;
 template<ll_bool_t CONDITION, class T, T ELEM_1, T ELEM_2>
 __LL_VAR_INLINE__ constexpr auto conditional_value_simple_v = ConditionalValue<CONDITION, T, T, ELEM_1, ELEM_2>::VALUE;
+template<ll_bool_t CONDITION, ll_bool_t ELEM_1, ll_bool_t ELEM_2>
+__LL_VAR_INLINE__ constexpr auto conditional_value_bool_v = ConditionalValue<CONDITION, ll_bool_t, ll_bool_t, ELEM_1, ELEM_2>::VALUE;
 
 template<class _T, class _U, class _OnEqual = ::llcpp::Emptyclass>
 class CompareConditional {
@@ -488,7 +490,6 @@ using type_unsignalize_u =	::llcpp::meta::traits::TypeSigned<T, ::llcpp::FALSE>;
 
 #pragma endregion
 #pragma region Limits
-// [TOCHECK]
 template<class _T>
 class RangeChecker {
 	public:
@@ -501,20 +502,33 @@ class RangeChecker {
 		using value_type	= T;
 		using T_unsigned	= ::llcpp::meta::traits::type_unsignalize_u<T>;
 
+	protected:
+		template<class U>
+		static constexpr T protector() noexcept {
+			if constexpr (::std::is_same_v<T, U>)
+				return T(-1);
+			else {
+				using TT = ::llcpp::meta::traits::RangeChecker<U>;
+				return TT::MAX_VALUE >> 1;
+			}
+		}
+
 	public:
 		// Expresions
 		static constexpr T MAX_VALUE =
 			::llcpp::meta::traits::conditional_value_simple_v<
 				::std::is_unsigned_v<T>,
 				T,
-				T(-1),
-				(::llcpp::meta::traits::RangeChecker<T_unsigned>::MAX_VALUE >> 1)
+				_MyType::protector<T>(),
+				_MyType::protector<T_unsigned>()
 			>;
 
 		static constexpr T MIN_VALUE = _MyType::MAX_VALUE + 1;
 
 	public:
 		// Asserts
+		static_assert(::std::is_integral_v<T>,
+			"Integral type only!");
 		static_assert(!::std::is_floating_point_v<T>,
 			"Type cannot be floating point! Results are valid but not correct!");
 };

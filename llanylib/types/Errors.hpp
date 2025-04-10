@@ -58,6 +58,7 @@ enum class Errors : i32 {
 	OutOfRange,			// Same as out of bounds
 	BeginSmallerEnd,	// Begin is smaller than end of array
 	NullptrProvided,	// Parameter nullptr provided by user
+	EmptyString,		// String object is empty
 
 };
 

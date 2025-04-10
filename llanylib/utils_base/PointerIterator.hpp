@@ -49,12 +49,12 @@ class PointerIterator {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType	= PointerIterator;
+		using _MyType		= PointerIterator;
 
 		// Types
-		using T					= _T;
-		using type				= T;
-		using value_type		= T;
+		using T				= _T;
+		using type			= T;
+		using value_type	= T;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -90,17 +90,21 @@ class PointerIterator {
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr PointerIterator(const PointerIterator& other) noexcept
+		template<ll_bool_t _IS_REVERSED_>
+		constexpr PointerIterator(const PointerIterator<_T, _IS_REVERSED_>& other) noexcept
 			: PointerIterator(other.mem)
 		{}
-		constexpr PointerIterator& operator=(const PointerIterator& other) noexcept {
+		template<ll_bool_t _IS_REVERSED_>
+		constexpr PointerIterator& operator=(const PointerIterator<_T, _IS_REVERSED_>& other) noexcept {
 			this->setMem(other.mem);
 			return *this;
 		}
-		constexpr PointerIterator(PointerIterator&& other) noexcept
+		template<ll_bool_t _IS_REVERSED_>
+		constexpr PointerIterator(PointerIterator<_T, _IS_REVERSED_>&& other) noexcept
 			: PointerIterator(other.mem)
 		{ other.simpleClear(); }
-		constexpr PointerIterator& operator=(PointerIterator&& other) noexcept {
+		template<ll_bool_t _IS_REVERSED_>
+		constexpr PointerIterator& operator=(PointerIterator<_T, _IS_REVERSED_>&& other) noexcept {
 			this->setMem(other.mem);
 			other.simpleClear();
 			return *this;
@@ -157,19 +161,35 @@ class PointerIterator {
 			return *this;
 		}
 
-		__LL_NODISCARD__ constexpr PointerIterator operator+(const isize pos) noexcept {
+		__LL_NODISCARD__ constexpr PointerIterator operator+(const isize pos) const noexcept {
 			if constexpr (_MyType::IS_REVERSED)
 				return this->mem - pos;
 			else return this->mem + pos;
 		}
-		__LL_NODISCARD__ constexpr PointerIterator operator-(const isize pos) noexcept {
+		__LL_NODISCARD__ constexpr PointerIterator operator-(const isize pos) const noexcept {
 			if constexpr (_MyType::IS_REVERSED)
 				return this->mem + pos;
 			else return this->mem - pos;
 		}
 
+		__LL_NODISCARD__ constexpr isize distance(T* mem) const noexcept {
+			return this->mem - mem;
+		}
+		template<ll_bool_t _IS_REVERSED_>
+		__LL_NODISCARD__ constexpr isize distance(const PointerIterator<_T, _IS_REVERSED_>& it) const noexcept {
+			return this->mem - it.mem;
+		}
+		__LL_NODISCARD__ constexpr isize operator-(T* mem) const noexcept {
+			return this->mem - mem;
+		}
+		template<ll_bool_t _IS_REVERSED_>
+		__LL_NODISCARD__ constexpr isize operator-(const PointerIterator<_T, _IS_REVERSED_>& it) const noexcept {
+			return this->mem - it.mem;
+		}
+
 		__LL_NODISCARD__ constexpr T& operator*() noexcept { return *this->mem; }
 		__LL_NODISCARD__ constexpr T* operator->() noexcept { return ::std::addressof(*this->mem); }
+		__LL_NODISCARD__ constexpr operator _T*() noexcept { return this->mem; }
 
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const T* other) const noexcept {
 			return this->mem == other;
@@ -194,6 +214,9 @@ class PointerIterator {
 
 	#pragma endregion
 };
+
+template<class T, ll_bool_t IS_REVERSED = ::llcpp::FALSE>
+using ConstPointerIterator = ::llcpp::meta::utils::PointerIterator<const T, IS_REVERSED>;
 
 } // namespace utils
 } // namespace meta

@@ -45,19 +45,25 @@
 		#define __LL_REAL_CXX20 1
 	#else
 		#define __LL_REAL_CXX20 0
-	#endif // __LL_REAL_CXX17 && __LL_STL_LANG > 201703L
+	#endif // __LL_STL_LANG > 201703L
 
 	#if __LL_STL_LANG > 202002L
 		#define __LL_REAL_CXX23 1
 	#else
 		#define __LL_REAL_CXX23 0
-	#endif // __LL_REAL_CXX20 && __LL_STL_LANG > 202002L
+	#endif // __LL_STL_LANG > 202002L
+
+	#if __LL_STL_LANG > 202600L
+		#define __LL_REAL_CXX26 1
+	#else
+		#define __LL_REAL_CXX26 0
+	#endif // __LL_STL_LANG > 202600L
 
 	#if __LL_STL_LANG > 202302L
 		#define __LL_DIRECTIVE_WARNING 1
 	#else
 		#define __LL_DIRECTIVE_WARNING 0
-	#endif // __LL_REAL_CXX20 && __LL_STL_LANG > 202002L
+	#endif // __LL_STL_LANG > 202302L
 
 #else
 	#error "This library requires C++ (its made for it)"

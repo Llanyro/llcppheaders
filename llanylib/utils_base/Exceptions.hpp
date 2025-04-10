@@ -115,7 +115,7 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const noexcept { return this->lifo_names_last == this->lifo_names; }
 		__LL_NODISCARD__ constexpr ll_bool_t full() const noexcept { return this->lifo_names_last >= this->lifo_names + N; }
 
-		__LL_NODISCARD__ ll_bool_t push(StringType s, ErrorType e) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t push(StringType s, ErrorType e) noexcept {
 			if (this->full()) {
 				__debug_error_exceptions_full("Exceptions list is full! You may fix some error or increase ExceptionBuffer");
 				return ::llcpp::FALSE;
@@ -124,10 +124,10 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 			*(this->lifo_errors_last++) = e;
 			return ::llcpp::TRUE;
 		}
-		__LL_NODISCARD__ ll_bool_t push(StringType s, ::llcpp::misc::Errors e) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t push(StringType s, ::llcpp::misc::Errors e) noexcept {
 			return this->push(s, static_cast<ErrorType>(e));
 		}
-		__LL_NODISCARD__ ll_bool_t pop(PopData& data) noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t pop(PopData& data) noexcept {
 			if (this->empty()) {
 				__debug_error_exceptions_empty("Exceptions list is empty! Do not pop with empty stack!");
 				return ::llcpp::FALSE;
@@ -141,7 +141,7 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 	#pragma endregion
 };
 
-::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
+constinit ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #define ll_exceptions ::llcpp::exceptions::ex
 
 #if defined(__LL_USE_WIDE_CHAR)

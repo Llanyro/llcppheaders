@@ -123,7 +123,7 @@
 	#define __LL_DLL_BUILD 1
 
 	#if defined(__LL_WINDOWS_SYSTEM)
-		#define __LL_SHARED_LIB __declspec(dllexport
+		#define __LL_SHARED_LIB __declspec(dllexport)
 	#else
 		#define __LL_SHARED_LIB
 	#endif // __LL_WINDOWS_SYSTEM

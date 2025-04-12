@@ -292,6 +292,14 @@ __LL_VAR_INLINE__ constexpr usize npos			= ::llcpp::meta::algorithm::MAX_LIST_SI
 
 } // namespace algorithm
 } // namespace meta
+
+// [TOFIX]
+// Update types to Integer
+using i128 = ::llcpp::meta::pair<i64, i64>;
+using i256 = ::llcpp::meta::pair<i128, i128>;
+using u128 = ::llcpp::meta::pair<u64, u64>;
+using u256 = ::llcpp::meta::pair<u128, u128>;
+
 } // namespace llcpp
 
 #endif // LLANYLIB_TYPESBASE_HPP_

@@ -17,6 +17,6 @@
 #include "llanylib/types.hpp"
 
 // Traits
-#include "llanylib/traits.hpp"
+//#include "llanylib/traits.hpp"
 
 #endif // LLANYLIBSIMPLE_HPP_

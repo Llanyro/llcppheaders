@@ -22,7 +22,7 @@
 	#define LLANYLIB_ITERATORUTILS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_ITERATORUTILS_INCOMPLETE_MINOR_ 0
 
-#include "../traits_base/checker/traits_validate_checker.hpp"
+#include "../traits/ValidationChecker.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -54,28 +54,6 @@ class IteratorUtils;
 
 namespace llcpp {
 namespace meta {
-namespace traits {
-
-namespace __traits__ {
-
-template<class _Iterator>
-constexpr auto getIteratorType() noexcept {
-	if constexpr (::std::is_class_v<_Iterator>)
-		return ::llcpp::meta::traits::TypeContainer<typename _Iterator::value_type&>{};
-	else if constexpr (::std::is_pointer_v<_Iterator>)
-		return ::llcpp::meta::traits::TypeContainer<::std::remove_pointer_t<_Iterator>&>{};
-	else {
-		static_assert(::std::is_class_v<_Iterator> || ::std::is_pointer_v<_Iterator>,
-			"Iterator must be a class or a pointer!");
-	}
-}
-
-} // namespace __traits__
-
-template<class _Iterator>
-using iterator_t = decltype(::llcpp::meta::traits::__traits__::getIteratorType<_Iterator>())::T;
-
-} // namespace trits
 namespace utils {
 
 template<
@@ -274,25 +252,6 @@ class IteratorUtils
 
 	#pragma endregion
 };
-
-template<class T>
-class ZeroSetter {
-	public:
-		constexpr LoopResult foreachOperation(T& t) const noexcept {
-			t = ::llcpp::ZERO_VALUE<T>;
-			return LoopResult::Conntinue;
-		}
-};
-
-template<class Iterator, class IteratorEnd = Iterator>
-	requires ::llcpp::meta::concepts::is_object::IsIterator<Iterator>
-		&& ::llcpp::meta::concepts::is_object::IsIterator<IteratorEnd>
-using IteratorCleaner =
-	::llcpp::meta::utils::IteratorUtils<
-		Iterator,
-		IteratorEnd,
-		::llcpp::meta::utils::ZeroSetter<::std::remove_reference_t<decltype(*::std::declval<Iterator>())>>
-	>;
 
 } // namespace utils
 } // namespace meta

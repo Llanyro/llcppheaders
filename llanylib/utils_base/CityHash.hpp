@@ -39,7 +39,6 @@
 	#define LLANYLIB_CITYHASH_MINOR_ 0
 
 #include "Exceptions.hpp"
-//#include "Array.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -161,6 +160,12 @@ class CityHash
 		#pragma endregion
 		#pragma region ClassFunctions
 	protected:
+		__LL_INLINE__ static constexpr void swap(u64& x, u64& y) noexcept {
+			u64 tmp = x;
+			x = y;
+			y = tmp;
+		}
+
 		template<class T>
 		__LL_NODISCARD__ constexpr T unalignedLoad(bytearray p) const noexcept {
 			T result{};
@@ -307,7 +312,7 @@ class CityHash
 				z = this->rotate(z + w.second, 33) * k1;
 				v = this->weakHashLen32WithSeeds(s, v.first * k1, x + w.second);
 				w = this->weakHashLen32WithSeeds(s + 32, z + w.first, y + this->fetch64(s + 16));
-				::std::swap(z, x);
+				_MyType::swap(z, x);
 				s += 64;
 				len -= 64;
 			} while (len != ::llcpp::ZERO_VALUE<decltype(len)>);
@@ -318,7 +323,7 @@ class CityHash
 					ExtraFunctions::hash16bytes(v.first, w.first) + x
 				);
 		}
-		/*template<class T>
+		template<class T>
 			requires ::llcpp::meta::concepts::is_object::IsArrayObject<T>
 		__LL_NODISCARD__ constexpr u64 cityHash64(const T& s) const noexcept {
 			if (s.empty()) {
@@ -336,7 +341,7 @@ class CityHash
 				return ::llcpp::ZERO_VALUE<u64>;
 			}
 			return this->cityHash64(s, N);
-		}*/
+		}
 
 		/*// Only admits hash::basic_type_hash::is_convertible_v<>
 		// Returns hash::INVALID_HASH64 if invalid type or hash error
@@ -352,10 +357,6 @@ class CityHash
 
 	#pragma endregion
 };
-
-//constexpr ::llcpp::meta::utils::ConstStr s = ::llcpp::meta::utils::ConstStr("Holo", 4);
-//constexpr auto a1 = CityHash<CityHashFunctions>().cityHash64(s);
-//constexpr auto a2 = CityHash<CityHashFunctions>().cityHash64("Holo");
 
 } // namespace utils
 } // namespace meta

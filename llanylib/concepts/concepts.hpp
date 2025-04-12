@@ -142,6 +142,8 @@ concept HasReverseEnd = requires (T t) { { t.rend() } noexcept -> ::llcpp::meta:
 
 #pragma endregion
 
+template<class T, class ReturnType = void>
+concept HasClear = requires (T t) { { t.clear() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = usize>
 concept HasSize = requires (T t) { { t.size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = usize>

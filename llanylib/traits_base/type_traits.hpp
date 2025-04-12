@@ -542,13 +542,13 @@ using TypeBySize = ::std::disjunction<
 	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i16, u16>, u8, P_SIZE, sizeof(u16)>,
 	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i32, u32>, u8, P_SIZE, sizeof(u32)>,
 	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i64, u64>, u8, P_SIZE, sizeof(u64)>,
-	//::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i128, u128>, u8, P_SIZE, sizeof(u128)>,
-	//::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i256, u256>, u8, P_SIZE, sizeof(u256)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i128, u128>, u8, P_SIZE, sizeof(u128)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i256, u256>, u8, P_SIZE, sizeof(u256)>,
 	::llcpp::meta::traits::TrueContainerEmptyClass
 >::U;
 
-using uSize = ::llcpp::meta::traits::TypeBySize<false>;
-using iSize = ::llcpp::meta::traits::TypeBySize<true>;
+using uSize = ::llcpp::meta::traits::TypeBySize<::llcpp::FALSE>;
+using iSize = ::llcpp::meta::traits::TypeBySize<::llcpp::TRUE>;
 
 static_assert(!::std::is_same_v<uSize, ::llcpp::Emptyclass>, "Unknown size type");
 static_assert(!::std::is_same_v<iSize, ::llcpp::Emptyclass>, "Unknown size type");
@@ -557,7 +557,6 @@ static_assert(::std::is_same_v<uSize, usize>, "Missmatch system size");
 static_assert(::std::is_same_v<iSize, isize>, "Missmatch system size");
 
 #pragma endregion
-
 
 // [TOFIX]
 namespace dev {
@@ -610,8 +609,6 @@ namespace traits {
 
 template<class T, T VALUE>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_zero_value_v = (::llcpp::ZERO_VALUE<T> == VALUE);
-
-constexpr auto asdf = is_zero_value_v<int, 0>;
 
 } // namespace traits
 } // namespace meta

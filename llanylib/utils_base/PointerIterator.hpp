@@ -189,7 +189,8 @@ class PointerIterator {
 
 		__LL_NODISCARD__ constexpr T& operator*() noexcept { return *this->mem; }
 		__LL_NODISCARD__ constexpr T* operator->() noexcept { return ::std::addressof(*this->mem); }
-		__LL_NODISCARD__ constexpr operator _T*() noexcept { return this->mem; }
+		__LL_NODISCARD__ constexpr operator T* () noexcept { return this->mem; }
+		__LL_NODISCARD__ constexpr operator const T* () const noexcept { return this->mem; }
 
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const T* other) const noexcept {
 			return this->mem == other;

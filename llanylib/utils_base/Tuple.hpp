@@ -75,7 +75,9 @@ class Tuple {
 	protected:
 		template<class _U, class... _uArgs>
 		__LL_NODISCARD__ static constexpr auto generateTuple() noexcept {
-			using EmptyTuple = ::llcpp::meta::traits::TypeContainer<::llcpp::meta::utils::Tuple<::llcpp::Emptyclass>>;
+			using EmptyTuple = ::llcpp::meta::traits::TypeContainer<
+				::llcpp::meta::utils::Tuple<::llcpp::Emptyclass>
+			>;
 			if constexpr (::llcpp::meta::traits::is_empty_type_v<_U>) {
 				if constexpr (sizeof...(_uArgs) == 0)
 					return EmptyTuple{};
@@ -173,25 +175,30 @@ class Tuple {
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		template<class U, const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
-		__LL_NODISCARD__ constexpr U& getType() noexcept {
-			if constexpr (::std::is_same_v<T, U>) {
-				if constexpr (POSITION == 0) return this->first;
-				else return this->second.template getType<U, POSITION - 1>();
+		__LL_NODISCARD__ constexpr T& getFirst() noexcept { return this->first; }
+		__LL_NODISCARD__ constexpr const T& getFirst() const noexcept { return this->first; }
+		__LL_NODISCARD__ constexpr U& getSecond() noexcept { return this->second; }
+		__LL_NODISCARD__ constexpr const U& getSecond() const noexcept { return this->second; }
+
+		template<class W, const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
+		__LL_NODISCARD__ constexpr W& getType() noexcept {
+			if constexpr (::std::is_same_v<T, W>) {
+				if constexpr (POSITION == 0) return this->getFirst();
+				else return this->getSecond().template getType<W, POSITION - 1>();
 			}
-			else return this->second.template getType<U, POSITION>();
+			else return this->getSecond().template getType<W, POSITION>();
 		}
 
 		template<const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
 		__LL_NODISCARD__ constexpr auto& get() noexcept {
-			if constexpr (POSITION == 0) return this->first;
-			else return this->second.template get<POSITION - 1>();
+			if constexpr (POSITION == 0) return this->getFirst();
+			else return this->getSecond().template get<POSITION - 1>();
 		}
 
 		constexpr void operator++() noexcept {
 			if constexpr (::llcpp::meta::concepts::signature::HasPreIncrement)
-				++this->first;
-			this->second.operator++();
+				++this->getFirst();
+			this->getSecond().operator++();
 		}
 
 		#pragma endregion
@@ -291,11 +298,14 @@ class Tuple<_T> {
 		//	this->first = ::std::forward<T&&>(value);
 		//}
 
-		template<class U, const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
-		__LL_NODISCARD__ constexpr U& getType() noexcept {
-			if constexpr (::std::is_same_v<T, U> && POSITION == ::llcpp::ZERO_VALUE<usize>)
-				return this->first;
-			static_assert(::std::is_same_v<T, U>,
+		__LL_NODISCARD__ constexpr T& getFirst() noexcept { return this->first; }
+		__LL_NODISCARD__ constexpr const T& getFirst() const noexcept { return this->first; }
+
+		template<class W, const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
+		__LL_NODISCARD__ constexpr W& getType() noexcept {
+			if constexpr (::std::is_same_v<T, W> && POSITION == ::llcpp::ZERO_VALUE<usize>)
+				return this->getFirst();
+			static_assert(::std::is_same_v<T, W>,
 				"Error, last element in tuple is not type user was looking for!");
 			static_assert(POSITION == ::llcpp::ZERO_VALUE<usize>,
 				"Error, POSITION its still not 0 at last element in tuple");
@@ -304,14 +314,14 @@ class Tuple<_T> {
 		template<const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
 		__LL_NODISCARD__ constexpr auto& get() noexcept {
 			if constexpr (POSITION == ::llcpp::ZERO_VALUE<usize>)
-				return this->first;
+				return this->getFirst();
 			static_assert(POSITION == ::llcpp::ZERO_VALUE<usize>,
 				"Error, POSITION its still not 0 at last element in tuple");
 		}
 
 		constexpr void operator++() noexcept {
 			if constexpr (::llcpp::meta::concepts::signature::HasPreIncrement)
-				++this->first;
+				++this->getFirst();
 		}
 
 		#pragma endregion

@@ -105,7 +105,7 @@
     <ClInclude Include="traits\ValidationChecker.hpp">
       <Filter>Source Files\5 traits</Filter>
     </ClInclude>
-    <ClInclude Include="utils_base\Array.hpp">
+    <ClInclude Include="utils_base\ArrayBase.hpp">
       <Filter>Source Files\6 utils_base</Filter>
     </ClInclude>
     <ClInclude Include="utils_base\CityHash.hpp">
@@ -124,6 +124,12 @@
       <Filter>Source Files\2 types</Filter>
     </ClInclude>
     <ClInclude Include="utils_base\PointerIterator.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\ListBody.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\IteratorCommon.hpp">
       <Filter>Source Files\6 utils_base</Filter>
     </ClInclude>
   </ItemGroup>

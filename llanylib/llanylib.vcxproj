@@ -43,10 +43,12 @@
     <ClInclude Include="types\type_update.hpp" />
     <ClInclude Include="types\ValidType.hpp" />
     <ClInclude Include="types_simple.hpp" />
-    <ClInclude Include="utils_base\Array.hpp" />
+    <ClInclude Include="utils_base\ArrayBase.hpp" />
     <ClInclude Include="utils_base\CityHash.hpp" />
     <ClInclude Include="utils_base\Exceptions.hpp" />
+    <ClInclude Include="utils_base\IteratorCommon.hpp" />
     <ClInclude Include="utils_base\IteratorUtils.hpp" />
+    <ClInclude Include="utils_base\ListBody.hpp" />
     <ClInclude Include="utils_base\PointerIterator.hpp" />
     <ClInclude Include="utils_base\Tuple.hpp" />
   </ItemGroup>

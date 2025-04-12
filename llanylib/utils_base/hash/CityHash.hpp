@@ -38,14 +38,38 @@
 	#define LLANYLIB_CITYHASH_MAYOR_ 12
 	#define LLANYLIB_CITYHASH_MINOR_ 0
 
-#include "Exceptions.hpp"
+#include "../Exceptions.hpp"
+#include "Algorithm.hpp"
 
 namespace llcpp {
 namespace meta {
+namespace concepts {
+namespace hash {
+namespace city {
+
+template<class T>
+concept IsValidCityHashExtra = requires (const T t, const u64 u6, const u32 u3) {
+	{ t.bytes_swap_64(u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
+	{ t.bytes_swap_32(u3) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u32>;
+	{ t.u64_in_expected_order(u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
+	{ t.u32_in_expected_order(u3) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u32>;
+	{ t.hash16bytes(u6, u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
+};
+
+} // namespace city
+} // namespace hash
+} // namespace concepts
 namespace utils {
+namespace hash {
 
 class CityHashFunctions : public ::llcpp::AlwaysValidTag {
-	protected:
+	public:
+		using Algorithm = ::llcpp::meta::utils::hash::Algorithm<
+			u64,
+			::llcpp::meta::utils::hash::AlgorithmMode::Murmur
+		>;
+
+	public:
 		__LL_NODISCARD__ constexpr u64 bytes_swap_64(const u64 value) const noexcept {
 			return
 				((value & 0x00000000000000ffull) << 56)
@@ -77,12 +101,12 @@ class CityHashFunctions : public ::llcpp::AlwaysValidTag {
 		}
 
 		__LL_NODISCARD__ constexpr u64 hash16bytes(const u64 v1, const u64 v2) const noexcept {
-			return v1;
+			return Algorithm().process(v1, v2);
 		}
 };
 
-template<class _ExtraFunctions = ::llcpp::meta::utils::CityHashFunctions>
-//	requires ::llcpp::meta::concepts::is_object::
+template<class _ExtraFunctions = ::llcpp::meta::utils::hash::CityHashFunctions>
+	requires ::llcpp::meta::concepts::hash::city::IsValidCityHashExtra<_ExtraFunctions>
 class CityHash
 	: public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>
 	, public _ExtraFunctions
@@ -98,33 +122,19 @@ class CityHash
 		using byte				= char;
 		using bytearray			= const byte*;
 		using Hash128p			= ::llcpp::meta::pair<u64, u64>;	// Simple struct hash 128
-
-	#pragma endregion
-	#pragma region Expressions
-	public:
-		// Some primes between 2^63 and 2^64 for various uses.
-		static constexpr u64 k0 = 0xc3a5c85c97cb3127ull;
-		static constexpr u64 k1 = 0xb492b66fbe98f273ull;
-		static constexpr u64 k2 = 0x9ae16a3b2f90404full;
-
-		// Magic numbers for 32-bit hashing.  Copied from Murmur3.
-		static constexpr u32 c1 = 0xcc9e2d51;
-		static constexpr u32 c2 = 0x1b873593;
+		using CityHashMagic		= ::llcpp::meta::utils::hash::magic::CityHash;
 
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr CityHash() noexcept
-			: ValidTag()
-			, ExtraFunctions()
-		{}
+		constexpr CityHash() noexcept = default;
 		template<class... Args>
 		constexpr CityHash(Args&&... args) noexcept
 			: ValidTag()
 			, ExtraFunctions(::std::forward<Args>(args)...)
 		{}
-		constexpr ~CityHash() noexcept {}
+		constexpr ~CityHash() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove
@@ -200,15 +210,15 @@ class CityHash
 		}
 		__LL_NODISCARD__ constexpr u64 hashLen0to16(bytearray s, const usize len) const noexcept {
 			if (len >= 8) {
-				u64 mul = k2 + (len << 1);
-				u64 a = this->fetch64(s) + k2;
+				u64 mul = CityHashMagic::k2 + (len << 1);
+				u64 a = this->fetch64(s) + CityHashMagic::k2;
 				u64 b = this->fetch64(s + len - 8);
 				u64 c = this->rotate(b, 37) * mul + a;
 				u64 d = (this->rotate(a, 25) + b) * mul;
 				return this->hashLen16(c, d, mul);
 			}
 			if (len >= 4) {
-				u64 mul = k2 + (len << 1);
+				u64 mul = CityHashMagic::k2 + (len << 1);
 				u64 a = this->fetch32(s);
 				return this->hashLen16(len + (a << 3), this->fetch32(s + len - 4), mul);
 			}
@@ -218,31 +228,31 @@ class CityHash
 				u8 c = static_cast<u8>(s[len - 1]);
 				u32 y = static_cast<u32>(a) + (static_cast<u32>(b) << 8);
 				u32 z = static_cast<u32>(len) + (static_cast<u32>(c) << 2);
-				return this->shiftMix(y * k2 ^ z * k0) * k2;
+				return this->shiftMix(y * CityHashMagic::k2 ^ z * CityHashMagic::k0) * CityHashMagic::k2;
 			}
-			return k2;
+			return CityHashMagic::k2;
 		}
 		// This probably works well for 16-byte strings as well, but it may be overkill
 		// in that case.
 		__LL_NODISCARD__ constexpr u64 hashLen17to32(bytearray s, const usize len) const noexcept {
-			u64 mul = k2 + (len << 1);
-			u64 a = this->fetch64(s) * k1;
+			u64 mul = CityHashMagic::k2 + (len << 1);
+			u64 a = this->fetch64(s) * CityHashMagic::k1;
 			u64 b = this->fetch64(s + 8);
 			u64 c = this->fetch64(s + len - 8) * mul;
-			u64 d = this->fetch64(s + len - 16) * k2;
+			u64 d = this->fetch64(s + len - 16) * CityHashMagic::k2;
 			return this->hashLen16(
 				this->rotate(a + b, 43) + this->rotate(c, 30) + d,
-				a + this->rotate(b + k2, 18) + c,
+				a + this->rotate(b + CityHashMagic::k2, 18) + c,
 				mul);
 		}
 		// Return an 8-byte hash for 33 to 64 bytes.
 		__LL_NODISCARD__ constexpr u64 hashLen33to64(bytearray s, const usize len) const noexcept {
-			u64 mul = k2 + (len << 1);
-			u64 a = this->fetch64(s) * k2;
+			u64 mul = CityHashMagic::k2 + (len << 1);
+			u64 a = this->fetch64(s) * CityHashMagic::k2;
 			u64 b = this->fetch64(s + 8);
 			u64 c = this->fetch64(s + len - 24);
 			u64 d = this->fetch64(s + len - 32);
-			u64 e = this->fetch64(s + 16) * k2;
+			u64 e = this->fetch64(s + 16) * CityHashMagic::k2;
 			u64 f = this->fetch64(s + 24) * 9;
 			u64 g = this->fetch64(s + len - 8);
 			u64 h = this->fetch64(s + len - 16) * mul;
@@ -299,18 +309,18 @@ class CityHash
 				this->fetch64(s + len - 24)
 			);
 			_MyType::Hash128p v = this->weakHashLen32WithSeeds(s + len - 64, len, z);
-			_MyType::Hash128p w = this->weakHashLen32WithSeeds(s + len - 32, y + k1, x);
-			x = x * k1 + this->fetch64(s);
+			_MyType::Hash128p w = this->weakHashLen32WithSeeds(s + len - 32, y + CityHashMagic::k1, x);
+			x = x * CityHashMagic::k1 + this->fetch64(s);
 
 			// Decrease len to the nearest multiple of 64, and operate on 64-byte chunks.
 			len = (len - 1) & ~static_cast<usize>(63);
 			do {
-				x = this->rotate(x + y + v.second + this->fetch64(s + 8), 37) * k1;
-				y = this->rotate(y + v.first + this->fetch64(s + 48), 42) * k1;
+				x = this->rotate(x + y + v.second + this->fetch64(s + 8), 37) * CityHashMagic::k1;
+				y = this->rotate(y + v.first + this->fetch64(s + 48), 42) * CityHashMagic::k1;
 				x ^= w.first;
 				y += v.second + this->fetch64(s + 40);
-				z = this->rotate(z + w.second, 33) * k1;
-				v = this->weakHashLen32WithSeeds(s, v.first * k1, x + w.second);
+				z = this->rotate(z + w.second, 33) * CityHashMagic::k1;
+				v = this->weakHashLen32WithSeeds(s, v.first * CityHashMagic::k1, x + w.second);
 				w = this->weakHashLen32WithSeeds(s + 32, z + w.first, y + this->fetch64(s + 16));
 				_MyType::swap(z, x);
 				s += 64;
@@ -319,8 +329,10 @@ class CityHash
 
 			return
 				ExtraFunctions::hash16bytes(
-					ExtraFunctions::hash16bytes(v.second, w.second) + this->shiftMix(y) * k1 + z,
-					ExtraFunctions::hash16bytes(v.first, w.first) + x
+					ExtraFunctions::hash16bytes(v.second, w.second)
+						+ this->shiftMix(y) * CityHashMagic::k1 + z,
+					ExtraFunctions::hash16bytes(v.first, w.first)
+						+ x
 				);
 		}
 		template<class T>
@@ -343,6 +355,7 @@ class CityHash
 			return this->cityHash64(s, N);
 		}
 
+		// [TODO] [TOFIX]
 		/*// Only admits hash::basic_type_hash::is_convertible_v<>
 		// Returns hash::INVALID_HASH64 if invalid type or hash error
 		template<class U, class W = traits::cinput<U>>
@@ -358,6 +371,7 @@ class CityHash
 	#pragma endregion
 };
 
+} // namespace hash
 } // namespace utils
 } // namespace meta
 } // namespace llcpp

@@ -34,6 +34,9 @@
     <Filter Include="Source Files\6 utils_base">
       <UniqueIdentifier>{69b24f81-34fc-487c-a707-1bf41a70da8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\6 utils_base\hash">
+      <UniqueIdentifier>{10e736d2-de98-4b9e-bcf5-3e645cd79c07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\llanylib.hpp">
@@ -108,9 +111,6 @@
     <ClInclude Include="utils_base\ArrayBase.hpp">
       <Filter>Source Files\6 utils_base</Filter>
     </ClInclude>
-    <ClInclude Include="utils_base\CityHash.hpp">
-      <Filter>Source Files\6 utils_base</Filter>
-    </ClInclude>
     <ClInclude Include="utils_base\IteratorUtils.hpp">
       <Filter>Source Files\6 utils_base</Filter>
     </ClInclude>
@@ -131,6 +131,18 @@
     </ClInclude>
     <ClInclude Include="utils_base\IteratorCommon.hpp">
       <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\hash\hash_magic.hpp">
+      <Filter>Source Files\6 utils_base\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\hash\LlanyHash.hpp">
+      <Filter>Source Files\6 utils_base\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\hash\CityHash.hpp">
+      <Filter>Source Files\6 utils_base\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\hash\Algorithm.hpp">
+      <Filter>Source Files\6 utils_base\hash</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

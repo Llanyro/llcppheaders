@@ -22,16 +22,21 @@
 	#define LLANYLIB_ARRAYBASE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_ARRAYBASE_INCOMPLETE_MINOR_ 0
 
-#include "../types_base/ValidType.hpp"
-#undef LLANYLIB_INCOMPLETE_HPP_
-#include "../traits_base/traits_checker.hpp"
-#define LLANYLIB_INCOMPLETE_HPP_
+#include "../types/ValidType.hpp"
+#include "../traits_base/checker.hpp"
+#include "PointerIterator.hpp"
+#include "Exceptions.hpp"
 
 namespace llcpp {
 namespace meta {
 namespace utils {
 
-template<class _T, ::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER>
+template<
+	class _T,
+	ll_bool_t _ENABLE_NO_CONST = ::llcpp::TRUE,
+	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::FALSE,
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER
+>
 class ArrayBase;
 
 } // namespace utils
@@ -53,8 +58,32 @@ class ArrayBase;
 	#define LLANYLIB_ARRAYBASE_MAYOR_ 12
 	#define LLANYLIB_ARRAYBASE_MINOR_ 0
 
+#include "../types/ValidType.hpp"
 #include "../traits_base/checker.hpp"
 #include "PointerIterator.hpp"
+#include "Exceptions.hpp"
+
+#define CHECK_RESET_VALIDATION																		\
+	if constexpr (::llcpp::DEBUG || ::llcpp::EXCEPTIONS) {											\
+		if (!mem) {																					\
+			if constexpr (::llcpp::DEBUG)															\
+				__debug_error_not_nullptr_str("mem");												\
+			if constexpr (::llcpp::EXCEPTIONS)														\
+				(void)LOG_EXCEPTION_TAG("mem", ::llcpp::misc::Errors::NullptrProvided);				\
+		}																							\
+		if (!mem_end) {																				\
+			if constexpr (::llcpp::DEBUG)															\
+				__debug_error_not_nullptr_str("mem_end");											\
+			if constexpr (::llcpp::EXCEPTIONS)														\
+				(void)LOG_EXCEPTION_TAG("mem_end", ::llcpp::misc::Errors::NullptrProvided);			\
+		}																							\
+		if (mem > mem_end) {																		\
+			if constexpr (::llcpp::DEBUG)															\
+				__debug_error_begin_smaller("mem > mem_end", mem, mem_end);							\
+			if constexpr (::llcpp::EXCEPTIONS)														\
+				(void)LOG_EXCEPTION_TAG("mem > mem_end", ::llcpp::misc::Errors::NullptrProvided);	\
+		}																							\
+	}
 
 namespace llcpp {
 namespace meta {
@@ -78,7 +107,7 @@ class ArrayBase {
 		using type				= T;
 		using value_type		= T;
 
-		using reference			= ::llcpp::meta::traits::input<T>;
+		//using reference			= ::llcpp::meta::traits::input<T>;
 		using iterator			= ::llcpp::meta::traits::conditional_t<
 			_USE_OBJECT_ITERATOR,
 			::llcpp::meta::utils::PointerIterator<T, ::llcpp::FALSE>,
@@ -86,7 +115,7 @@ class ArrayBase {
 		>;
 		using riterator			= ::llcpp::meta::utils::PointerIterator<T, ::llcpp::TRUE>;
 
-		using const_reference	= ::llcpp::meta::traits::cinput<T>;
+		//using const_reference	= ::llcpp::meta::traits::cinput<T>;
 		using const_iterator = ::llcpp::meta::traits::conditional_t<
 			_USE_OBJECT_ITERATOR,
 			::llcpp::meta::utils::ConstPointerIterator<T, ::llcpp::FALSE>,
@@ -151,7 +180,7 @@ class ArrayBase {
 		{}
 		template<usize N, class U>
 			requires ::std::is_same_v<T, U>
-		explicit constexpr ArrayBase(T (&v)[N]) noexcept
+		explicit constexpr ArrayBase(default_iterator (&v)[N]) noexcept
 			: ArrayBase(v, v + N)
 		{}
 		constexpr ~ArrayBase() noexcept {
@@ -248,5 +277,7 @@ using wStr = ::llcpp::meta::utils::ArrayBase<ll_wchar_t, ENABLE_NO_CONST, USE_OB
 } // namespace utils
 } // namespace meta
 } // namespace llcpp
+
+#undef CHECK_RESET_VALIDATION
 
 #endif // LLANYLIB_ARRAYBASE_HPP_

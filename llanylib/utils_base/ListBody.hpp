@@ -80,28 +80,6 @@ class ListBody;
 		}																							\
 	}
 
-#define CHECK_RESET_VALIDATION																		\
-	if constexpr (::llcpp::DEBUG || ::llcpp::EXCEPTIONS) {											\
-		if (!mem) {																					\
-			if constexpr (::llcpp::DEBUG)															\
-				__debug_error_not_nullptr_str("mem");												\
-			if constexpr (::llcpp::EXCEPTIONS)														\
-				(void)LOG_EXCEPTION_TAG("mem", ::llcpp::misc::Errors::NullptrProvided);				\
-		}																							\
-		if (!mem_end) {																				\
-			if constexpr (::llcpp::DEBUG)															\
-				__debug_error_not_nullptr_str("mem_end");											\
-			if constexpr (::llcpp::EXCEPTIONS)														\
-				(void)LOG_EXCEPTION_TAG("mem_end", ::llcpp::misc::Errors::NullptrProvided);			\
-		}																							\
-		if (mem > mem_end) {																		\
-			if constexpr (::llcpp::DEBUG)															\
-				__debug_error_begin_smaller("mem > mem_end", mem, mem_end);							\
-			if constexpr (::llcpp::EXCEPTIONS)														\
-				(void)LOG_EXCEPTION_TAG("mem > mem_end", ::llcpp::misc::Errors::NullptrProvided);	\
-		}																							\
-	}
-
 #pragma endregion
 
 namespace llcpp {
@@ -370,6 +348,5 @@ class ListBody : public _ArrayBase {
 
 #undef CHECK_POSITION_DEBUG_EXCEPTION
 #undef CHECK_POSITIONS_DEBUG_EXCEPTION
-#undef CHECK_RESET_VALIDATION
 
 #endif // LLANYLIB_LISTBODY_HPP_

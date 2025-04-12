@@ -44,8 +44,11 @@
     <ClInclude Include="types\ValidType.hpp" />
     <ClInclude Include="types_simple.hpp" />
     <ClInclude Include="utils_base\ArrayBase.hpp" />
-    <ClInclude Include="utils_base\CityHash.hpp" />
     <ClInclude Include="utils_base\Exceptions.hpp" />
+    <ClInclude Include="utils_base\hash\Algorithm.hpp" />
+    <ClInclude Include="utils_base\hash\CityHash.hpp" />
+    <ClInclude Include="utils_base\hash\hash_magic.hpp" />
+    <ClInclude Include="utils_base\hash\LlanyHash.hpp" />
     <ClInclude Include="utils_base\IteratorCommon.hpp" />
     <ClInclude Include="utils_base\IteratorUtils.hpp" />
     <ClInclude Include="utils_base\ListBody.hpp" />

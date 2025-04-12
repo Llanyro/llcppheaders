@@ -83,10 +83,8 @@ class IteratorCommon : public ::llcpp::AlwaysValidTag {
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr IteratorCommon() noexcept
-			: ValidTag()
-		{}
-		constexpr ~IteratorCommon() noexcept {}
+		constexpr IteratorCommon() noexcept = default;
+		constexpr ~IteratorCommon() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove

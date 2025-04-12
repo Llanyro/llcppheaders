@@ -141,7 +141,7 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 	#pragma endregion
 };
 
-constinit ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
+static ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #define ll_exceptions ::llcpp::exceptions::ex
 
 #if defined(__LL_USE_WIDE_CHAR)

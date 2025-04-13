@@ -15,7 +15,7 @@
 
 #include "../llanylib/utils_base/CityHash.hpp"
 //#include "../llanylib/utils_base/PointerIterator.hpp"
-#include "../llanylib/utils_base/Array.hpp"
+#include "../llanylib/utils_base/ArrayBase.hpp"
 #include <iostream>
 
 namespace llcpp {

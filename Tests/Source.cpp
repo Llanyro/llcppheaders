@@ -160,12 +160,12 @@ class NodeFunctions : public llcpp::meta::containers::Container<_T> {
 
 template<class T>
 using FuncNode = llcpp::meta::linked::Node<NodeFunctions<T>, ::llcpp::LL_TRUE>;
-template<class T, len_t N>
+template<class T, usize N>
 using ArrayTypeFuncNode = ::std::array<FuncNode<T>, N>;
 
-template<class T, len_t N>
+template<class T, usize N>
 constexpr void fix_node_array(ArrayTypeFuncNode<T, N>& nodes) {
-	for (len_t i{}; i < N - 1; ++i) {
+	for (usize i{}; i < N - 1; ++i) {
 		nodes[i].set(nodes[i + 1]);
 		nodes[i] = i;
 	}
@@ -173,13 +173,13 @@ constexpr void fix_node_array(ArrayTypeFuncNode<T, N>& nodes) {
 	nodes[N - 1] = N - 1;
 }
 
-template<len_t N, len_t POS>
-len_t merge_sort() noexcept {
-	using arr = ArrayTypeFuncNode<len_t, N>;
+template<usize N, usize POS>
+usize merge_sort() noexcept {
+	using arr = ArrayTypeFuncNode<usize, N>;
 	arr nodes;
 	//arr nodes = llcpp::meta::algorithm::make_constructed_array<arr, int, N>(99);
-	fix_node_array<len_t, N>(nodes);
-	len_t val = 59;
+	fix_node_array<usize, N>(nodes);
+	usize val = 59;
 	for (auto& i : nodes) {
 		i = val;
 		val = (val + ((val > 0) ? 2 : -2)) * -1;

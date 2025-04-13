@@ -131,15 +131,15 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 			if constexpr (LEFT_SHIFT) return static_cast<T>(value1 ^ static_cast<T>(value2 << SHIFT));
 			else return static_cast<T>(value1 ^ static_cast<T>(value2 >> SHIFT));
 		}
-		template<u8 SHIFT = _MyType::Murmur::llshift64, ll_bool_t LEFT_SHIFT = ::llcpp::TRUE>
+		template<u8 SHIFT = _MyType::Murmur::llshift64, ll_bool_t LEFT_SHIFT = ::llcpp::LL_TRUE>
 		__LL_NODISCARD__ constexpr u64 process(const u64 value1, const u64 value2) const noexcept requires(MODE == Mode::SimplestCombine && ::std::is_same_v<T, u64>) {
 			return this->__simplest_combine_process<SHIFT, LEFT_SHIFT>(value1, value2);
 		}
-		template<u8 SHIFT = _MyType::Murmur::llshift32, ll_bool_t LEFT_SHIFT = ::llcpp::TRUE>
+		template<u8 SHIFT = _MyType::Murmur::llshift32, ll_bool_t LEFT_SHIFT = ::llcpp::LL_TRUE>
 		__LL_NODISCARD__ constexpr u32 process(const u32 value1, const u32 value2) const noexcept requires(MODE == Mode::SimplestCombine && ::std::is_same_v<T, u32>) {
 			return this->__simplest_combine_process<SHIFT, LEFT_SHIFT>(value1, value2);
 		}
-		template<u8 SHIFT = _MyType::Murmur::llshift8, ll_bool_t LEFT_SHIFT = ::llcpp::TRUE>
+		template<u8 SHIFT = _MyType::Murmur::llshift8, ll_bool_t LEFT_SHIFT = ::llcpp::LL_TRUE>
 		__LL_NODISCARD__ constexpr u8 process(const u8 value1, const u8 value2) const noexcept requires(MODE == Mode::SimplestCombine && ::std::is_same_v<T, u8>) {
 			return this->__simplest_combine_process<SHIFT, LEFT_SHIFT>(value1, value2);
 		}

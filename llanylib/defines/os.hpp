@@ -81,7 +81,9 @@
 //////////////////////////////////////////// OS check ////////////////////////////////////////////
 
 // Setting env by OS
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(__MINGW32__) || defined(__MINGW64__)
+	#define __LL_MINGW
+#elif (defined(_WIN32) || defined(_WIN64))
 	#define __LL_WINDOWS_SYSTEM
 	#undef __LL_REAL_CXX23
 	#define __LL_REAL_CXX23 0
@@ -102,7 +104,7 @@
 		#error "Unknown system: Someme features may not work well or not work at all!"
 		#error "This error can be commented to compile!"
 	#endif // DIRECTIVE_WARNING
-#endif // _WIN32 || _WIN64 || __unix__
+#endif // OS
 
 ////////////////////////////////////////// System Based //////////////////////////////////////////
 
@@ -148,9 +150,17 @@
 			#include <vcruntime.h>
 		#endif // _NODISCARD
 	#endif // _DEBUG
-#elif defined(STM32_SYSTEM)
+#elif defined(__LL_MINGW)
+	// Creates a definition to use assert by condition and message
+	#if defined(_DEBUG)
+		#include <assert.h>
+		#define __LL_ASSERT(condition, message) assert(condition && message)
+	#else
+		#define __LL_ASSERT(condition, message)
+	#endif // _DEBUG
+#elif defined(__LL_STM32_SYSTEM)
 
-#elif defined(POSIX_SYSTEM) || defined(UNIX_SYSTEM)
+#elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
 
 #else
 

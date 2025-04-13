@@ -159,7 +159,7 @@ class NodeFunctions : public llcpp::meta::containers::Container<_T> {
 };
 
 template<class T>
-using FuncNode = llcpp::meta::linked::Node<NodeFunctions<T>, llcpp::TRUE>;
+using FuncNode = llcpp::meta::linked::Node<NodeFunctions<T>, ::llcpp::LL_TRUE>;
 template<class T, len_t N>
 using ArrayTypeFuncNode = ::std::array<FuncNode<T>, N>;
 

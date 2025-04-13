@@ -72,7 +72,7 @@ using Checker = llcpp::meta::traits::SignatureCheckerBySignature<int, Signature>
 //template<class T, class Signature>
 //struct Cont { static constexpr llcpp::ll_bool_t has = (&T::dummy) != nullptr; };
 //template<>
-//struct Cont<void, void> { static constexpr llcpp::ll_bool_t has = llcpp::FALSE; };
+//struct Cont<void, void> { static constexpr llcpp::ll_bool_t has = ::llcpp::LL_FALSE; };
 //
 //template<class T, class Signature>
 //struct Check {

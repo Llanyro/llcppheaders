@@ -25,28 +25,27 @@
 #include "os.hpp"
 
 // Sets more env definitions by OS
+#define __LL_FALLTHROUGH__ [[fallthrough]]
+#define __LL_NODISCARD__ [[nodiscard]]
+#define __LL_NORETURN__ [[noreturn]]
+#define __LL_VAR_INLINE__ inline
+
 #if defined(__LL_WINDOWS_SYSTEM)
-	#define __LL_FALLTHROUGH__ [[fallthrough]]
-	#define __LL_NODISCARD__ _NODISCARD
-	#define __LL_NORETURN__ [[noreturn]]
 	#define __LL_UNSECURE_FUNCTIONS__
 	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_INLINE__ __forceinline
-	#define __LL_VAR_INLINE__ inline
 	#define __LL_FUNCNAME__ __FUNCSIG__
-#elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
-	#define __LL_FALLTHROUGH__ [[fallthrough]]
-	#define __LL_NODISCARD__ [[nodiscard]]
-	#define __LL_NORETURN__ [[noreturn]]
+#elif defined(__LL_MINGW)
+	#define __LL_UNSECURE_FUNCTIONS__
+	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_INLINE__ inline
-	#define __LL_VAR_INLINE__ inline
+// [TODO] [TOFIX]
+	#define __LL_FUNCNAME__ ""
+#elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
+	#define __LL_INLINE__ inline
 	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
 #else
-	#define __LL_FALLTHROUGH__ [[fallthrough]]
-	#define __LL_NODISCARD__ [[nodiscard]]
-	#define __LL_NORETURN__ [[noreturn]]
 	#define __LL_INLINE__ inline
-	#define __LL_VAR_INLINE__ inline
 #endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
 
 // Definitions
@@ -89,6 +88,12 @@
 	#define __LL_USE_WIDE_CHAR 1
 #endif // __LL_USE_WIDE_CHAR
 
+#if __LL_USE_WIDE_CHAR == 1
+	#define __LL_L L""
+#else
+	#define __LL_L ""
+#endif // __LL_USE_WIDE_CHAR
+
 
 #define __LL_DEBUG_ERROR__ 0
 #define __LL_DEBUG_WARNING__ __LL_DEBUG_ERROR__ + 1
@@ -101,11 +106,12 @@
 
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 
-#define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, "[" var_str "] cannot be 0. " __FUNCSIG__)
-#define __LL_ASSERT_VAR_NULL__(var, var_str) LL_ASSERT(var, "[" var_str "] cannot be nullptr." __FUNCSIG__)
-#define __LL_ASSERT_LIST_EMPTY__(var, var_str) LL_ASSERT(!var.empty(), "[" var_str "] cannot be empty." __FUNCSIG__)
+#define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, __LL_L "[" var_str __LL_L "] cannot be 0. " __LL_FUNCNAME__)
+#define __LL_ASSERT_VAR_NULL__(var, var_str) LL_ASSERT(var, __LL_L "[" var_str __LL_L "] cannot be nullptr." __LL_FUNCNAME__)
+#define __LL_ASSERT_LIST_EMPTY__(var, var_str) LL_ASSERT(!var.empty(), __LL_L "[" var_str __LL_L "] cannot be empty." __LL_FUNCNAME__)
 #define __LL_ASSERT_B_LOWER_THAN_A__(var_a, var_b, var_a_str, var_b_str) \
-	LL_ASSERT(var_a < var_b, "[" var_a_str " < " var_b_str "] " var_a_str " cannot be lower or equal to " var_b_str "." __FUNCSIG__)
+	LL_ASSERT(var_a < var_b, __LL_L "[" var_a_str __LL_L " < " var_b_str __LL_L "] " var_a_str __LL_L " cannot be lower or equal to " \
+		var_b_str __LL_L "." __LL_FUNCNAME__)
 
 // Defines for logging
 
@@ -116,7 +122,7 @@
 #endif
 
 #if !defined(__debug_error_exceptions_empty)
-	#define __debug_error_exceptions_full(str) IGNORE()
+	#define __debug_error_exceptions_empty(str) IGNORE()
 #endif
 
 #if !defined(__debug_error_not_nullptr_str)

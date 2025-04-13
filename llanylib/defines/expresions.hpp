@@ -66,18 +66,20 @@ __LL_VAR_INLINE__ constexpr bool BIGENDIAN	= __LL_BIGENDIAN;
 
 #pragma endregion
 
-enum class OSEnum { Windows, Posix, Unix, STM32, ESP32, Unknown };
+enum class OSEnum { Windows, Posix, Unix, STM32, ESP32, MinGW, Unknown };
 
 #if defined(__LL_WINDOWS_SYSTEM)
-	__LL_VAR_INLINE__ constexpr llcpp::OSEnum OS_SYSTEM = llcpp::OSEnum::Windows;
+	__LL_VAR_INLINE__ constexpr ::llcpp::OSEnum OS_SYSTEM = ::llcpp::OSEnum::Windows;
+#elif defined(__LL_MINGW)
+	__LL_VAR_INLINE__ constexpr ::llcpp::OSEnum OS_SYSTEM = ::llcpp::OSEnum::MinGW;
 #elif defined(__LL_POSIX_SYSTEM)
-	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Posix;
+	__LL_VAR_INLINE__ constexpr ::llcpp::OSEnum OS_SYSTEM = ::llcpp::OSEnum::Posix;
 #elif defined(__LL_UNIX_SYSTEM)
-	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Unix;
+	__LL_VAR_INLINE__ constexpr ::llcpp::OSEnum OS_SYSTEM = ::llcpp::OSEnum::Unix;
 #elif defined(__LL_STM32_SYSTEM)
-	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::STM32;
+	__LL_VAR_INLINE__ constexpr ::llcpp::OSEnum OS_SYSTEM = ::llcpp::OSEnum::STM32;
 #else
-	__LL_VAR_INLINE__ constexpr OSEnum OS_SYSTEM = llcpp::OSEnum::Unknown;
+	__LL_VAR_INLINE__ constexpr ::llcpp::OSEnum OS_SYSTEM = ::llcpp::OSEnum::Unknown;
 #endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
 
 ////////////////////////////////////////// System Based //////////////////////////////////////////

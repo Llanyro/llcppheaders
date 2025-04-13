@@ -40,11 +40,15 @@
 
 #include "../traits_base/type_traits.hpp"
 
+#if defined(__LL_MINGW)
+	#include <memory>
+#endif // __LL_MINGW
+
 namespace llcpp {
 namespace meta {
 namespace utils {
 
-template<class _T, ll_bool_t _IS_REVERSED = ::llcpp::FALSE>
+template<class _T, ll_bool_t _IS_REVERSED = ::llcpp::LL_FALSE>
 class PointerIterator {
 	#pragma region Types
 	public:
@@ -216,7 +220,7 @@ class PointerIterator {
 	#pragma endregion
 };
 
-template<class T, ll_bool_t IS_REVERSED = ::llcpp::FALSE>
+template<class T, ll_bool_t IS_REVERSED = ::llcpp::LL_FALSE>
 using ConstPointerIterator = ::llcpp::meta::utils::PointerIterator<const T, IS_REVERSED>;
 
 } // namespace utils

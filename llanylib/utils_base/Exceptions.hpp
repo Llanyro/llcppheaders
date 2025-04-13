@@ -118,11 +118,11 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 		__LL_NODISCARD__ constexpr ll_bool_t push(StringType s, ErrorType e) noexcept {
 			if (this->full()) {
 				__debug_error_exceptions_full("Exceptions list is full! You may fix some error or increase ExceptionBuffer");
-				return ::llcpp::FALSE;
+				return ::llcpp::LL_FALSE;
 			}
 			*(this->lifo_names_last++) = s;
 			*(this->lifo_errors_last++) = e;
-			return ::llcpp::TRUE;
+			return ::llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t push(StringType s, ::llcpp::misc::Errors e) noexcept {
 			return this->push(s, static_cast<ErrorType>(e));
@@ -130,10 +130,10 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 		__LL_NODISCARD__ constexpr ll_bool_t pop(PopData& data) noexcept {
 			if (this->empty()) {
 				__debug_error_exceptions_empty("Exceptions list is empty! Do not pop with empty stack!");
-				return ::llcpp::FALSE;
+				return ::llcpp::LL_FALSE;
 			}
 			data = { *(--this->lifo_names_last), *(--this->lifo_errors_last) };
-			return ::llcpp::TRUE;
+			return ::llcpp::LL_TRUE;
 		}
 
 		#pragma endregion
@@ -144,15 +144,8 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 static ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #define ll_exceptions ::llcpp::exceptions::ex
 
-#if defined(__LL_USE_WIDE_CHAR)
-	#define LOG_EXCEPTION(err) ll_exceptions.push(L"" __LL_FUNCNAME__, err)
-	// Tag must be a literal string
-	#define LOG_EXCEPTION_TAG(tag, err) ll_exceptions.push(L"" __LL_FUNCNAME__ " [ " tag " ]", err)
-#else
-	#define LOG_EXCEPTION(err) ll_exceptions.push(__LL_FUNCNAME__, err)
-	// Tag must be a literal string
-	#define LOG_EXCEPTION_TAG(tag, err) ll_exceptions.push(__LL_FUNCNAME__ " [ " tag " ]", err)
-#endif // __LL_USE_WIDE_CHAR
+#define LOG_EXCEPTION(err) ll_exceptions.push(__LL_L __LL_FUNCNAME__, err)
+#define LOG_EXCEPTION_TAG(tag, err) ll_exceptions.push(__LL_L __LL_FUNCNAME__ " [ " tag " ]", err)
 
 } // namespace exceptions
 } // namespace llcpp

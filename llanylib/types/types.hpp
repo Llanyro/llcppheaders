@@ -36,19 +36,23 @@ struct strong_ordering;
 struct partial_ordering;
 struct weak_ordering;
 
-template <class _Ty>
-class allocator;
-template <class _Elem>
-struct char_traits;
-template <class _Elem, class _Traits, class _Alloc>
-class basic_string;
-template <class _Elem, class _Traits>
-class basic_string_view;
+//template <class _Ty>
+//class allocator;
+//template <class _Elem>
+//struct char_traits;
+//template <
+//	class _Elem,
+//	class _Traits = ::std::char_traits<_Elem>,
+//	class _Alloc = ::std::allocator<_Elem>
+//>
+//class basic_string;
+//template <class _Elem, class _Traits>
+//class basic_string_view;
 
-using string		= basic_string<char, char_traits<char>, allocator<char>>;
-using wstring		= basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t>>;
-using string_view	= basic_string_view<char, char_traits<char>>;
-using wstring_view	= basic_string_view<wchar_t, char_traits<wchar_t>>;
+//typedef ::std::basic_string<char>										string;
+//typedef ::std::basic_string<wchar_t>									wstring;
+//typedef ::std::basic_string_view<char, ::std::char_traits<char>>		string_view;
+//typedef ::std::basic_string_view<wchar_t, ::std::char_traits<wchar_t>>	wstring_view;
 
 template <class _Fty>
 class function;
@@ -149,10 +153,12 @@ using ll_wstring_t			= const ll_wchar_t*;	// Used to point to non editable strin
 /// [DEPRECATED] Unsigned char sometimes crashes Visual Studio IntelliSense using traits
 using ll_ustring_t			= const ll_uchar_t*;	// Used to point to non editable unsigned strings 
 
-#if defined(__LL_USE_WIDE_CHAR)
+#if __LL_USE_WIDE_CHAR == 1
 using string = ll_wstring_t;
+using char_type	= ll_wchar_t;
 #else
 using string = ll_string_t;
+using char_type	= ll_char_t;
 #endif
 
 
@@ -268,8 +274,8 @@ class HalfClusterTag {
 
 #pragma endregion
 
-__LL_VAR_INLINE__ constexpr ll_bool_t FALSE = false;
-__LL_VAR_INLINE__ constexpr ll_bool_t TRUE	= true;
+__LL_VAR_INLINE__ constexpr ll_bool_t LL_FALSE = false;
+__LL_VAR_INLINE__ constexpr ll_bool_t LL_TRUE	= true;
 
 #if defined(__LL_REAL_CXX20)
 __LL_INLINE__ constexpr void IGNORE(auto...) {}

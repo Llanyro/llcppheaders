@@ -162,7 +162,7 @@ class IteratorUtils
 				else {
 					static_assert(_MyType::HAS_OPERATOR_GEQ,
 						"Iterator must be comparables with a pointer");
-					return ::llcpp::FALSE;
+					return ::llcpp::LL_FALSE;
 				}
 			}
 			else if constexpr (::std::is_pointer_v<Iterator>) {
@@ -171,7 +171,7 @@ class IteratorUtils
 				else {
 					static_assert(_MyType::HAS_OPERATOR_LEQ,
 						"Iterator must be comparables with a pointer");
-					return ::llcpp::FALSE;
+					return ::llcpp::LL_FALSE;
 				}
 			}
 			else {
@@ -182,13 +182,13 @@ class IteratorUtils
 				else {
 					static_assert(_MyType::HAS_OPERATOR_EQ_End,
 						"Iterators must be comparables");
-					return ::llcpp::FALSE;
+					return ::llcpp::LL_FALSE;
 				}
 			}
 		}
 
 		// 
-		template<ll_bool_t GET_DATA = ::llcpp::FALSE>
+		template<ll_bool_t GET_DATA = ::llcpp::LL_FALSE>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperation<ExtraFunctions, value_type, LoopResult>
 		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreach(input_it begin, input_itend end) const noexcept {
 			if constexpr (::llcpp::DEBUG) {
@@ -216,7 +216,7 @@ class IteratorUtils
 		}
 
 #if defined(LLANYLIB_TUPLE_HPP_)
-		template<ll_bool_t GET_DATA = ::llcpp::FALSE, class... OtherIterators>
+		template<ll_bool_t GET_DATA = ::llcpp::LL_FALSE, class... OtherIterators>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperationExtra<ExtraFunctions, value_type, ::llcpp::meta::utils::Tuple<OtherIterators...>&, LoopResult>
 		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreachEx(input_it begin, input_itend end, OtherIterators... other) const noexcept {
 			if constexpr (::llcpp::DEBUG) {

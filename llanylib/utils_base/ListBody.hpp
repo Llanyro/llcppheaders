@@ -26,7 +26,7 @@ namespace llcpp {
 namespace meta {
 namespace utils {
 
-template<class _ArrayBase, ll_bool_t _ENABLE_NO_CONST = ::llcpp::TRUE, ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::FALSE>
+template<class _ArrayBase, ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 class ListBody;
 
 } // namespace utils
@@ -86,17 +86,17 @@ namespace llcpp {
 namespace meta {
 namespace utils {
 
-template<class _ArrayBase, ll_bool_t _ENABLE_NO_CONST = ::llcpp::TRUE, ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::FALSE>
+template<class _ArrayBase, ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 	requires
 		::llcpp::meta::concepts::base::HasValueType<_ArrayBase>
 		&& ::llcpp::meta::concepts::signature::HasConstBegin<_ArrayBase>
 		&& ::llcpp::meta::concepts::signature::HasConstEnd<_ArrayBase>
 		&& ::llcpp::meta::traits::is_valid_constructor_checker_v<_ArrayBase>
 		&& ::llcpp::meta::traits::conditional_value_bool_v<_ENABLE_NO_CONST,
-			::llcpp::TRUE,
+			::llcpp::LL_TRUE,
 			::llcpp::meta::concepts::signature::HasBegin<_ArrayBase>>
 		&& ::llcpp::meta::traits::conditional_value_bool_v<_ENABLE_NO_CONST,
-			::llcpp::TRUE,
+			::llcpp::LL_TRUE,
 			::llcpp::meta::concepts::signature::HasEnd<_ArrayBase>>
 class ListBody : public _ArrayBase {
 	#pragma region Types
@@ -113,15 +113,15 @@ class ListBody : public _ArrayBase {
 		using reference			= ::llcpp::meta::traits::input<T>;
 		using iterator			= ::llcpp::meta::traits::conditional_t<
 			_USE_OBJECT_ITERATOR,
-			::llcpp::meta::utils::PointerIterator<T, ::llcpp::FALSE>,
+			::llcpp::meta::utils::PointerIterator<T, ::llcpp::LL_FALSE>,
 			T*
 		>;
-		using riterator			= ::llcpp::meta::utils::PointerIterator<T, ::llcpp::TRUE>;
+		using riterator			= ::llcpp::meta::utils::PointerIterator<T, ::llcpp::LL_TRUE>;
 
 		using const_reference	= ::llcpp::meta::traits::cinput<T>;
 		using const_iterator = ::llcpp::meta::traits::conditional_t<
 			_USE_OBJECT_ITERATOR,
-			::llcpp::meta::utils::ConstPointerIterator<T, ::llcpp::FALSE>,
+			::llcpp::meta::utils::ConstPointerIterator<T, ::llcpp::LL_FALSE>,
 			const T*
 		>;
 		using reference_const_iterator = ::llcpp::meta::traits::conditional_t<
@@ -129,7 +129,7 @@ class ListBody : public _ArrayBase {
 			const_iterator&,
 			const_iterator
 		>;
-		using const_riterator	= ::llcpp::meta::utils::ConstPointerIterator<T, ::llcpp::TRUE>;
+		using const_riterator	= ::llcpp::meta::utils::ConstPointerIterator<T, ::llcpp::LL_TRUE>;
 
 	#pragma endregion
 	#pragma region Expresions

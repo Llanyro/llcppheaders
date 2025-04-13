@@ -84,11 +84,11 @@ namespace update {
 using _MyType = ::llcpp::meta::attributes::type_update_t::_MyType;
 
 //														Pointer				Const			Volatile		Array			Reference
-__LL_VAR_INLINE__ constexpr _MyType REMOVE_CONSTS	= { ::llcpp::FALSE, ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType REMOVE_POINTERS	= { ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType REMOVE_ARRAYS	= { ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::TRUE,  ::llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType REMOVE_VOLATILE	= { ::llcpp::FALSE, ::llcpp::FALSE, ::llcpp::TRUE,  ::llcpp::FALSE, ::llcpp::FALSE };
-__LL_VAR_INLINE__ constexpr _MyType RAW_TYPE		= { ::llcpp::TRUE,  ::llcpp::TRUE,  ::llcpp::TRUE,  ::llcpp::TRUE,  ::llcpp::TRUE  };
+__LL_VAR_INLINE__ constexpr _MyType REMOVE_CONSTS	= { ::llcpp::LL_FALSE, ::llcpp::LL_TRUE,  ::llcpp::LL_FALSE, ::llcpp::LL_FALSE, ::llcpp::LL_FALSE };
+__LL_VAR_INLINE__ constexpr _MyType REMOVE_POINTERS	= { ::llcpp::LL_TRUE,  ::llcpp::LL_FALSE, ::llcpp::LL_FALSE, ::llcpp::LL_FALSE, ::llcpp::LL_FALSE };
+__LL_VAR_INLINE__ constexpr _MyType REMOVE_ARRAYS	= { ::llcpp::LL_FALSE, ::llcpp::LL_FALSE, ::llcpp::LL_FALSE, ::llcpp::LL_TRUE,  ::llcpp::LL_FALSE };
+__LL_VAR_INLINE__ constexpr _MyType REMOVE_VOLATILE	= { ::llcpp::LL_FALSE, ::llcpp::LL_FALSE, ::llcpp::LL_TRUE,  ::llcpp::LL_FALSE, ::llcpp::LL_FALSE };
+__LL_VAR_INLINE__ constexpr _MyType RAW_TYPE		= { ::llcpp::LL_TRUE,  ::llcpp::LL_TRUE,  ::llcpp::LL_TRUE,  ::llcpp::LL_TRUE,  ::llcpp::LL_TRUE  };
 
 } // namespace update
 

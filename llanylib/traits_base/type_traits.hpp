@@ -66,12 +66,12 @@ class DoubleConstantContainer;
 template<ll_bool_t _CONDITION, class _T, class _U>
 class Conditional;
 template<class _T, class _U>
-class Conditional<llcpp::FALSE, _T, _U>;
+class Conditional<::llcpp::LL_FALSE, _T, _U>;
 
 template<ll_bool_t _CONDITION, class _T, class _U, _T _ELEM_1, _U _ELEM_2>
 class ConditionalValue;
 template<class _T, class _U, _T _ELEM_1, _U _ELEM_2>
-class ConditionalValue<llcpp::FALSE, _T, _U, _ELEM_1, _ELEM_2>;
+class ConditionalValue<::llcpp::LL_FALSE, _T, _U, _ELEM_1, _ELEM_2>;
 template<class _T, class _U, class _OnEqual = llcpp::Emptyclass>
 class CompareConditional;
 
@@ -254,8 +254,8 @@ using IsSameTypeContainer = ::llcpp::meta::traits::BoolConstantContainer<::std::
 template<class T, class U, class W>
 using IsNotSameTypeContainer = ::llcpp::meta::traits::BoolConstantContainer<!::std::is_same_v<T, U>, W>;
 
-using TrueContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::TRUE, ::llcpp::Emptyclass>;
-using FalseContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::FALSE, ::llcpp::Emptyclass>;
+using TrueContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::LL_TRUE, ::llcpp::Emptyclass>;
+using FalseContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::LL_FALSE, ::llcpp::Emptyclass>;
 
 template<class U, class T, T EXP1, T EXP2>
 using IsSameTypeExpresion = ::llcpp::meta::traits::BoolConstantContainer<EXP1 == EXP2, U>;
@@ -281,7 +281,7 @@ class Conditional {
 		static constexpr ll_bool_t CONDITION	= _CONDITION;
 };
 template<class _T, class _U>
-class Conditional<::llcpp::FALSE, _T, _U> {
+class Conditional<::llcpp::LL_FALSE, _T, _U> {
 	public:
 		// Class related
 		using _MyType		= Conditional;	// standard
@@ -294,7 +294,7 @@ class Conditional<::llcpp::FALSE, _T, _U> {
 
 	public:
 		// Expresions
-		static constexpr ll_bool_t CONDITION	= llcpp::FALSE;
+		static constexpr ll_bool_t CONDITION	= ::llcpp::LL_FALSE;
 };
 
 template<ll_bool_t CONDITION, class T, class U>
@@ -323,7 +323,7 @@ class ConditionalValue {
 
 };
 template<class _T, class _U, _T _ELEM_1, _U _ELEM_2>
-class ConditionalValue<llcpp::FALSE, _T, _U, _ELEM_1, _ELEM_2> {
+class ConditionalValue<::llcpp::LL_FALSE, _T, _U, _ELEM_1, _ELEM_2> {
 	public:
 		// Class related
 		using _MyType		= ConditionalValue;	// standard
@@ -336,7 +336,7 @@ class ConditionalValue<llcpp::FALSE, _T, _U, _ELEM_1, _ELEM_2> {
 
 	public:
 		// Expresions
-		static constexpr ll_bool_t CONDITION	= llcpp::FALSE;
+		static constexpr ll_bool_t CONDITION	= ::llcpp::LL_FALSE;
 		static constexpr _T ELEM_1				= _ELEM_1;
 		static constexpr _U ELEM_2				= _ELEM_2;
 
@@ -422,7 +422,7 @@ using get_first_difference_u = GetFirstCoincidence<T, Args...>::U;
 
 #pragma endregion
 #pragma region PrimitiveUpdate
-template<class T, ll_bool_t PROMOTE = ::llcpp::TRUE>
+template<class T, ll_bool_t PROMOTE = ::llcpp::LL_TRUE>
 using TypePromotion = ::llcpp::meta::traits::GetFirstCoincidence<
 	T,
 	::llcpp::meta::traits::DoubleTypeContainer<i8,		::llcpp::meta::traits::conditional_t<PROMOTE, i16, i8>>,
@@ -444,7 +444,7 @@ using TypePromotion = ::llcpp::meta::traits::GetFirstCoincidence<
 	::llcpp::meta::traits::DoubleTypeContainer<f128,	::llcpp::meta::traits::conditional_t<PROMOTE, f128, f64>>
 >::U;
 
-template<class T, ll_bool_t SIGNALIZE = ::llcpp::TRUE>
+template<class T, ll_bool_t SIGNALIZE = ::llcpp::LL_TRUE>
 using TypeSigned = ::llcpp::meta::traits::GetFirstCoincidence<
 	T,
 	::llcpp::meta::traits::DoubleTypeContainer<i8,		::llcpp::meta::traits::conditional_t<SIGNALIZE, i8, u8>>,
@@ -462,19 +462,19 @@ using TypeSigned = ::llcpp::meta::traits::GetFirstCoincidence<
 	::llcpp::meta::traits::DoubleTypeContainer<u256,	::llcpp::meta::traits::conditional_t<SIGNALIZE, i256, u256>>
 >::U;
 
-template<class T, ll_bool_t PROMOTE = ::llcpp::TRUE>
+template<class T, ll_bool_t PROMOTE = ::llcpp::LL_TRUE>
 using type_promotion_u =	::llcpp::meta::traits::TypePromotion<T, PROMOTE>;
 template<class T>
-using type_promote_u =		::llcpp::meta::traits::TypePromotion<T, ::llcpp::TRUE>;
+using type_promote_u =		::llcpp::meta::traits::TypePromotion<T, ::llcpp::LL_TRUE>;
 template<class T>
-using type_demote_u =		::llcpp::meta::traits::TypePromotion<T, ::llcpp::FALSE>;
+using type_demote_u =		::llcpp::meta::traits::TypePromotion<T, ::llcpp::LL_FALSE>;
 
-template<class T, ll_bool_t SIGNALIZE = ::llcpp::TRUE>
+template<class T, ll_bool_t SIGNALIZE = ::llcpp::LL_TRUE>
 using type_signed_u =		::llcpp::meta::traits::TypeSigned<T, SIGNALIZE>;
 template<class T>
-using type_signalize_u =	::llcpp::meta::traits::TypeSigned<T, ::llcpp::TRUE>;
+using type_signalize_u =	::llcpp::meta::traits::TypeSigned<T, ::llcpp::LL_TRUE>;
 template<class T>
-using type_unsignalize_u =	::llcpp::meta::traits::TypeSigned<T, ::llcpp::FALSE>;
+using type_unsignalize_u =	::llcpp::meta::traits::TypeSigned<T, ::llcpp::LL_FALSE>;
 
 #pragma endregion
 #pragma region ConstChecker
@@ -539,8 +539,8 @@ using TypeBySize = ::std::disjunction<
 	::llcpp::meta::traits::TrueContainerEmptyClass
 >::U;
 
-using uSize = ::llcpp::meta::traits::TypeBySize<::llcpp::FALSE>;
-using iSize = ::llcpp::meta::traits::TypeBySize<::llcpp::TRUE>;
+using uSize = ::llcpp::meta::traits::TypeBySize<::llcpp::LL_FALSE>;
+using iSize = ::llcpp::meta::traits::TypeBySize<::llcpp::LL_TRUE>;
 
 static_assert(!::std::is_same_v<uSize, ::llcpp::Emptyclass>, "Unknown size type");
 static_assert(!::std::is_same_v<iSize, ::llcpp::Emptyclass>, "Unknown size type");
@@ -631,13 +631,13 @@ namespace traits {
 template<ll_bool_t _VALUE, class _U>
 using BoolConstant		= ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, _VALUE, _U>;
 template<class _U>
-using BoolTrueConstant	= ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, ::llcpp::TRUE, _U>;
+using BoolTrueConstant	= ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, ::llcpp::LL_TRUE, _U>;
 template<class _U>
-using BoolFalseConstant = ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, ::llcpp::FALSE, _U>;
+using BoolFalseConstant = ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, ::llcpp::LL_FALSE, _U>;
 template<class _U>
-using TrueType			= ::llcpp::meta::traits::BoolConstant<llcpp::TRUE, _U>;
+using TrueType			= ::llcpp::meta::traits::BoolConstant<::llcpp::LL_TRUE, _U>;
 template<class _U>
-using FalseType			= ::llcpp::meta::traits::BoolConstant<llcpp::FALSE, _U>;
+using FalseType			= ::llcpp::meta::traits::BoolConstant<::llcpp::LL_FALSE, _U>;
 
 } // namespace traits
 } // namespace meta

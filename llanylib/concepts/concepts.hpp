@@ -41,7 +41,7 @@ template<class U, class T>
 concept IsSameOrVoid = ::llcpp::meta::traits::conditional_value_simple_v<
 	::llcpp::meta::traits::is_empty_object_v<T>,
 	ll_bool_t,
-	::llcpp::TRUE,
+	::llcpp::LL_TRUE,
 	::std::is_same_v<T, U> && ::std::is_same_v<U, T>
 >;
 	

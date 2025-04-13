@@ -135,7 +135,7 @@ class ParameterPackOperations<_T> {
 	public:
 		// Expresions
 		static constexpr u64 SIZE					= 1ull;
-		static constexpr ll_bool_t EMPTY			= ::llcpp::FALSE;
+		static constexpr ll_bool_t EMPTY			= ::llcpp::LL_FALSE;
 		static constexpr ll_bool_t HAS_A_POINTER	= ::std::is_pointer_v<T>;
 		static constexpr ll_bool_t HAS_AN_ARRAY		= ::std::is_array_v<T>;
 };
@@ -156,9 +156,9 @@ class ParameterPackOperations<> {
 	public:
 		// Expresions
 		static constexpr u64 SIZE					= ::llcpp::ZERO_VALUE<u64>;
-		static constexpr ll_bool_t EMPTY			= ::llcpp::TRUE;
-		static constexpr ll_bool_t HAS_A_POINTER	= ::llcpp::FALSE;
-		static constexpr ll_bool_t HAS_AN_ARRAY		= ::llcpp::FALSE;
+		static constexpr ll_bool_t EMPTY			= ::llcpp::LL_TRUE;
+		static constexpr ll_bool_t HAS_A_POINTER	= ::llcpp::LL_FALSE;
+		static constexpr ll_bool_t HAS_AN_ARRAY		= ::llcpp::LL_FALSE;
 };
 
 } // namespace traits

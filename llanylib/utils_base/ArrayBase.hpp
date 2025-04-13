@@ -33,8 +33,8 @@ namespace utils {
 
 template<
 	class _T,
-	ll_bool_t _ENABLE_NO_CONST = ::llcpp::TRUE,
-	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::FALSE,
+	ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE,
+	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE,
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER
 >
 class ArrayBase;
@@ -91,8 +91,8 @@ namespace utils {
 
 template<
 	class _T,
-	ll_bool_t _ENABLE_NO_CONST = ::llcpp::TRUE,
-	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::FALSE,
+	ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE,
+	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE,
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
 		::llcpp::meta::attributes::checker::IGNORE_CPAV
 >
@@ -110,15 +110,15 @@ class ArrayBase {
 		//using reference			= ::llcpp::meta::traits::input<T>;
 		using iterator			= ::llcpp::meta::traits::conditional_t<
 			_USE_OBJECT_ITERATOR,
-			::llcpp::meta::utils::PointerIterator<T, ::llcpp::FALSE>,
+			::llcpp::meta::utils::PointerIterator<T, ::llcpp::LL_FALSE>,
 			T*
 		>;
-		using riterator			= ::llcpp::meta::utils::PointerIterator<T, ::llcpp::TRUE>;
+		using riterator			= ::llcpp::meta::utils::PointerIterator<T, ::llcpp::LL_TRUE>;
 
 		//using const_reference	= ::llcpp::meta::traits::cinput<T>;
 		using const_iterator = ::llcpp::meta::traits::conditional_t<
 			_USE_OBJECT_ITERATOR,
-			::llcpp::meta::utils::ConstPointerIterator<T, ::llcpp::FALSE>,
+			::llcpp::meta::utils::ConstPointerIterator<T, ::llcpp::LL_FALSE>,
 			const T*
 		>;
 		using reference_const_iterator = ::llcpp::meta::traits::conditional_t<
@@ -126,7 +126,7 @@ class ArrayBase {
 			const_iterator&,
 			const_iterator
 		>;
-		using const_riterator	= ::llcpp::meta::utils::ConstPointerIterator<T, ::llcpp::TRUE>;
+		using const_riterator	= ::llcpp::meta::utils::ConstPointerIterator<T, ::llcpp::LL_TRUE>;
 
 		using default_iterator = ::llcpp::meta::traits::conditional_t<
 			_ENABLE_NO_CONST,
@@ -260,6 +260,19 @@ class ArrayBase {
 			CHECK_RESET_VALIDATION;
 			this->setMem(mem);
 			this->setMemEnd(mem_end);
+			return ::llcpp::LL_TRUE;
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t inRange(const usize position) const noexcept {
+			return position < this->size();
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t inRange(reference_const_iterator data) const noexcept {
+			return this->begin() <= data && data <= this->end();
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t isValidPosition(const usize position) const noexcept {
+			return this->inRange(position);
+		}
+		__LL_NODISCARD__ constexpr ll_bool_t isValidPosition(reference_const_iterator data) const noexcept {
+			return this->inRange(data);
 		}
 
 		#pragma endregion
@@ -269,9 +282,9 @@ class ArrayBase {
 	#pragma endregion
 };
 
-template<ll_bool_t ENABLE_NO_CONST = ::llcpp::TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::FALSE>
+template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 using Str = ::llcpp::meta::utils::ArrayBase<ll_char_t, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
-template<ll_bool_t ENABLE_NO_CONST = ::llcpp::TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::FALSE>
+template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 using wStr = ::llcpp::meta::utils::ArrayBase<ll_wchar_t, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
 
 } // namespace utils

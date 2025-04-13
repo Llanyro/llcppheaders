@@ -79,7 +79,7 @@ class Message {
 		__LL_NODISCARD__ static constexpr ll_bool_t checkError() noexcept {
 			if constexpr (ENABLED)
 				return ::llcpp::meta::traits::is_valid_type_checker_v<T::value_type>;
-			else return ::llcpp::TRUE;
+			else return ::llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ static constexpr ll_bool_t checkContentError() noexcept {
 			if constexpr (IS_CONTENT_ENABLED)
@@ -87,7 +87,7 @@ class Message {
 					Content,
 					::llcpp::meta::attributes::checker::IGNORE_ARRAY
 				>;
-			else return ::llcpp::TRUE;
+			else return ::llcpp::LL_TRUE;
 		}
 
 	#pragma endregion
@@ -142,7 +142,7 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_This_type_v = ::llcpp::has_This_type<T>::value;
 
 template<class... Args>
-using MyTyple = ::pack::FirstType<::llcpp::TRUE, Args...>;
+using MyTyple = ::pack::FirstType<::llcpp::LL_TRUE, Args...>;
 
 template<class T, class... Args, ll_bool_t IS_CONTAINER>
 constexpr ll_bool_t getFromTuple(
@@ -156,27 +156,27 @@ constexpr ll_bool_t getFromTuple(
 	constexpr ll_bool_t IS_EMPTY = ::std::is_same_v<Type, ::llcpp::Emptyclass>;
 	constexpr ll_bool_t IS_NEXT_EMPTY = ::std::is_same_v<Next, ::llcpp::Emptyclass>;
 
-	if constexpr (IS_EMPTY) return ::llcpp::FALSE;
+	if constexpr (IS_EMPTY) return ::llcpp::LL_FALSE;
 	else if constexpr (SAME_TYPE && IS_NEXT_EMPTY) {
 		if (position == 0)
 			return static_cast<ll_bool_t>(data = &tuple.first);
-		else return ::llcpp::FALSE;
+		else return ::llcpp::LL_FALSE;
 	}
 	else if constexpr (SAME_TYPE && !IS_NEXT_EMPTY) {
 		if (position == 0)
 			return static_cast<ll_bool_t>(data = &tuple.first);
 		else if (tuple.getNext())
 			return ::llcpp::getFromTuple<T>(*tuple.getNext(), data, position);
-		else return ::llcpp::FALSE;
+		else return ::llcpp::LL_FALSE;
 	}
 	else if constexpr (!SAME_TYPE && IS_NEXT_EMPTY)
-		return ::llcpp::FALSE;
+		return ::llcpp::LL_FALSE;
 	else if constexpr (!SAME_TYPE && !IS_NEXT_EMPTY) {
 		if (tuple.getNext())
 			return ::llcpp::getFromTuple<T>(*tuple.getNext(), data, position);
-		else return ::llcpp::FALSE;
+		else return ::llcpp::LL_FALSE;
 	}
-	else return ::llcpp::FALSE;
+	else return ::llcpp::LL_FALSE;
 }
 template<class T, ll_bool_t IS_CONTAINER>
 constexpr ll_bool_t getFromTuple(
@@ -184,7 +184,7 @@ constexpr ll_bool_t getFromTuple(
 	T*& data,
 	usize position = ::llcpp::ZERO_VALUE<usize>
 ) noexcept {
-	return ::llcpp::FALSE;
+	return ::llcpp::LL_FALSE;
 }
 */
 

@@ -59,8 +59,8 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 
 		// Types and enums
 		enum class enum_bool : u8 {
-			False	= ::llcpp::FALSE,
-			True	= ::llcpp::TRUE,
+			False	= ::llcpp::LL_FALSE,
+			True	= ::llcpp::LL_TRUE,
 			Invalid,
 			Unknown
 		};
@@ -172,8 +172,8 @@ namespace boolean {
 
 using _MyType = ::llcpp::Boolean::_MyType;
 
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_FALSE	= ::llcpp::FALSE;
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_TRUE	= ::llcpp::TRUE;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_FALSE	= ::llcpp::LL_FALSE;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_TRUE	= ::llcpp::LL_TRUE;
 __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_INVALID	= _MyType::enum_bool::Invalid;
 __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_UNKNOWN	= _MyType::enum_bool::Unknown;
 

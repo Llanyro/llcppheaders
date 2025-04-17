@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_ALGORITHM_INCOMPLETE_HPP_)
-	#if LLANYLIB_ALGORITHM_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_ALGORITHM_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_ALGORITHM_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_ALGORITHM_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "Algorithm.hpp(incomplete) version error!"
 		#else
@@ -19,12 +19,12 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_ALGORITHM_INCOMPLETE_HPP_)
 	#define LLANYLIB_ALGORITHM_INCOMPLETE_HPP_
-	#define LLANYLIB_ALGORITHM_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_ALGORITHM_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_ALGORITHM_INCOMPLETE_MINOR_ 0
 
 
 #elif defined(LLANYLIB_ALGORITHM_HPP_)
-	#if LLANYLIB_ALGORITHM_MAYOR_ != 11 || LLANYLIB_ALGORITHM_MINOR_ < 0
+	#if LLANYLIB_ALGORITHM_MAYOR_ != 12 || LLANYLIB_ALGORITHM_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "Algorithm.hpp version error!"
 		#else
@@ -35,15 +35,32 @@
 
 #else
 	#define LLANYLIB_ALGORITHM_HPP_
-	#define LLANYLIB_ALGORITHM_MAYOR_ 11
+	#define LLANYLIB_ALGORITHM_MAYOR_ 12
 	#define LLANYLIB_ALGORITHM_MINOR_ 0
 
 #include "hash_magic.hpp"
 
-#include <type_traits>
+#include "../../concepts/concepts.hpp"
 
 namespace llcpp {
 namespace meta {
+namespace traits {
+template <class T, class = void>
+class HasHashType : public ::std::false_type {};
+template<class T>
+struct HasHashType<T, ::std::void_t<typename T::Hash>> : public ::std::true_type {};
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_type_v = ::llcpp::meta::traits::HasHashType<T>::value;
+
+} // namespace traits
+namespace concepts {
+namespace base {
+template<class T>
+concept HasHashType = ::llcpp::meta::traits::has_hash_type_v<T>;
+
+} // namespace base
+} // namespace concepts
+
 namespace utils {
 namespace hash {
 
@@ -150,6 +167,48 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 
 	#pragma endregion
 };
+
+#if defined(LLANYLIB_BITS_HPP_)
+
+template<class T, usize N, class HashAlgorithm>
+	requires
+		::llcpp::meta::traits::is_primitive_v<T>
+		&& ::llcpp::meta::concepts::base::HasHashType<HashAlgorithm>
+		&& ::llcpp::meta::concepts::signature::HasHash<HashAlgorithm>
+__LL_NODISCARD__ constexpr HashAlgorithm::Hash hash_primitive_array(const T(&value)[N]) noexcept {
+	ll_char_t bytearray[sizeof(T) * N]{};
+	
+	// Iterators
+	ll_char_t* b	= bytearray;
+	T* p			= value;
+
+	for (usize i{}; i < N; ++i, ++p)
+		b = ::llcpp::meta::utils::bits::primitive_to_bytearray_unchecked(*p, b);
+
+	return HashAlgorithm().hash(bytearray, sizeof(bytearray));
+}
+template<class T, usize N, class HashAlgorithm>
+	requires
+		::llcpp::meta::traits::is_primitive_v<T>
+		&& ::llcpp::meta::concepts::base::HasHashType<HashAlgorithm>
+		&& ::llcpp::meta::concepts::signature::HasHash<HashAlgorithm>
+__LL_NODISCARD__ constexpr HashAlgorithm::Hash hash_primitive_array(
+	const T(&value)[N],
+	const HashAlgorithm& h) noexcept
+{
+	ll_char_t bytearray[sizeof(T) * N]{};
+	
+	// Iterators
+	ll_char_t* b	= bytearray;
+	T* p			= value;
+
+	for (usize i{}; i < N; ++i, ++p)
+		b = ::llcpp::meta::utils::bits::primitive_to_bytearray_unchecked(*p, b);
+
+	return h.hash(bytearray, sizeof(bytearray));
+}
+
+#endif // LLANYLIB_BITS_HPP_
 
 } // namespace hash
 } // namespace utils

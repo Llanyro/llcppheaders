@@ -100,15 +100,15 @@ class RangeChecker;
 #include "../types/types.hpp"
 
 #if defined(__LL_WINDOWS_SYSTEM)
-    #include <type_traits>
+	#include <type_traits>
 #elif defined(__LL_POSIX_SYSTEM)
-    #include <type_traits>
-    #include <utility>
+	#include <type_traits>
+	#include <utility>
 #elif defined(__LL_UNIX_SYSTEM)
-    #include <type_traits>
-    #include <utility>
+	#include <type_traits>
+	#include <utility>
 #else
-    #include <type_traits>
+	#include <type_traits>
 #endif //
 
 namespace llcpp {
@@ -475,6 +475,11 @@ template<class T>
 using type_signalize_u =	::llcpp::meta::traits::TypeSigned<T, ::llcpp::LL_TRUE>;
 template<class T>
 using type_unsignalize_u =	::llcpp::meta::traits::TypeSigned<T, ::llcpp::LL_FALSE>;
+
+template<class CompareType, class BaseTypeSigned>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_same_su_v =
+	::std::is_same_v<CompareType, ::llcpp::meta::traits::type_signalize_u<BaseTypeSigned>> ||
+	::std::is_same_v<CompareType, ::llcpp::meta::traits::type_unsignalize_u<BaseTypeSigned>>;
 
 #pragma endregion
 #pragma region ConstChecker

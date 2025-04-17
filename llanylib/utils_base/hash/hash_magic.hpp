@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_HASHMAGIC_HPP_) // Guard && version protector
-	#if LLANYLIB_HASHMAGIC_MAYOR_ != 11 || LLANYLIB_HASHMAGIC_MINOR_ < 0
+	#if LLANYLIB_HASHMAGIC_MAYOR_ != 12 || LLANYLIB_HASHMAGIC_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "hash_magic.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #else
 	#define LLANYLIB_HASHMAGIC_HPP_
-	#define LLANYLIB_HASHMAGIC_MAYOR_ 11
+	#define LLANYLIB_HASHMAGIC_MAYOR_ 12
 	#define LLANYLIB_HASHMAGIC_MINOR_ 0
 
 #include "../../types/types.hpp"

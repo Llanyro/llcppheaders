@@ -35,17 +35,23 @@
 	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_INLINE__ __forceinline
 	#define __LL_FUNCNAME__ __FUNCSIG__
+	#define __MSVC_CDECL __cdecl
+	#define __STD_SIZE_T unsigned long long
 #elif defined(__LL_MINGW)
 	#define __LL_UNSECURE_FUNCTIONS__
 	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_INLINE__ inline
-// [TODO] [TOFIX]
-	#define __LL_FUNCNAME__ ""
+	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
+	#define __MSVC_CDECL
+	#define __STD_SIZE_T unsigned long
 #elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
 	#define __LL_INLINE__ inline
 	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
+	#define __MSVC_CDECL
 #else
 	#define __LL_INLINE__ inline
+	#define __MSVC_CDECL
+	#define __STD_SIZE_T unsigned long
 #endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
 
 // Definitions
@@ -103,6 +109,8 @@
 #if !defined(__LL_DEBUG__)
 	#define __LL_DEBUG__ __LL_DEBUG_ERROR__
 #endif // __LL_DEBUG__
+
+#define EXTERN_C_FUNC extern "C"
 
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 

@@ -79,7 +79,9 @@ namespace signature {
 // [TOCHECK]
 // Some objects uses this operator and expects a throw if parameter is invalid
 template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorArray = requires (T t) { { t[0] } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorArray = requires (T t) {
+	{ t[0] } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
 
 template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasPointerOperator = requires (T t) { { *t } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
@@ -95,6 +97,32 @@ template<class T, class U, class ReturnType = T&>
 concept HasOperatorSumSelf = requires (T t, U u) { { t += u } noexcept -> ::std::same_as<ReturnType>; };
 template<class T, class U, class ReturnType = T&>
 concept HasOperatorSubSelf = requires (T t, U u) { { t -= u } noexcept -> ::std::same_as<ReturnType>; };
+
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorBitwiseLeft = requires(const T t, u8 u) {
+	{ t << u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorBitwiseRight = requires(const T t, u8 u) {
+	{ t >> u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorBitwiseAnd = requires(const T t, U u) {
+	{ t & u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorBitwiseLeftEq = requires(const T t, u8 u) {
+	{ t <<= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorBitwiseRightEq = requires(const T t, u8 u) {
+	{ t >>= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorBitwiseAndEq = requires(const T t, U u) {
+	{ t &= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
 
 #pragma endregion
 #pragma region Comparations
@@ -141,6 +169,11 @@ template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasReverseEnd = requires (T t) { { t.rend() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 
 #pragma endregion
+
+template<class T, class ReturnType = void>
+concept HasHash = requires (const T t, ll_string_t arr, const usize s) {
+	{ t.hash(arr, s) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
 
 template<class T, class ReturnType = void>
 concept HasClear = requires (T t) { { t.clear() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };

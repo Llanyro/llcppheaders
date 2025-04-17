@@ -144,6 +144,15 @@
     <ClInclude Include="utils_base\hash\Algorithm.hpp">
       <Filter>Source Files\6 utils_base\hash</Filter>
     </ClInclude>
+    <ClInclude Include="utils_base\TypeID.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\bits.hpp">
+      <Filter>Source Files\6 utils_base</Filter>
+    </ClInclude>
+    <ClInclude Include="utils_base\hash\HashFunctions.hpp">
+      <Filter>Source Files\6 utils_base\hash</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileName.cpp">

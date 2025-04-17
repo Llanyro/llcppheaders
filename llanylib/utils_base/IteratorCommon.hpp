@@ -4,23 +4,23 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_QWERTY_INCOMPLETE_HPP_)
-	#if LLANYLIB_QWERTY_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_QWERTY_INCOMPLETE_MINOR_ < 0
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_ITERATORCOMMON_INCOMPLETE_HPP_)
+	#if LLANYLIB_ITERATORCOMMON_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_ITERATORCOMMON_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "IteratorCommon.hpp(incomplete) version error!"
 		#else
 			#error "IteratorCommon.hpp(incomplete) version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
-	#endif // LLANYLIB_QWERTY_INCOMPLETE_MAYOR_ || LLANYLIB_QWERTY_INCOMPLETE_MINOR_
+	#endif // LLANYLIB_ITERATORCOMMON_INCOMPLETE_MAYOR_ || LLANYLIB_ITERATORCOMMON_INCOMPLETE_MINOR_
 
-#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_QWERTY_INCOMPLETE_HPP_)
-	#define LLANYLIB_QWERTY_INCOMPLETE_HPP_
-	#define LLANYLIB_QWERTY_INCOMPLETE_MAYOR_ 11
-	#define LLANYLIB_QWERTY_INCOMPLETE_MINOR_ 0
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_ITERATORCOMMON_INCOMPLETE_HPP_)
+	#define LLANYLIB_ITERATORCOMMON_INCOMPLETE_HPP_
+	#define LLANYLIB_ITERATORCOMMON_INCOMPLETE_MAYOR_ 12
+	#define LLANYLIB_ITERATORCOMMON_INCOMPLETE_MINOR_ 0
 
 #include "../concepts/concepts.hpp"
 
@@ -37,20 +37,20 @@ class IteratorCommon;
 } // namespace meta
 } // namespace llcpp
 
-#elif defined(LLANYLIB_QWERTY_HPP_)
-	#if LLANYLIB_QWERTY_MAYOR_ != 11 || LLANYLIB_QWERTY_MINOR_ < 0
+#elif defined(LLANYLIB_ITERATORCOMMON_HPP_)
+	#if LLANYLIB_ITERATORCOMMON_MAYOR_ != 12 || LLANYLIB_ITERATORCOMMON_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "IteratorCommon.hpp version error!"
 		#else
 			#error "IteratorCommon.hpp version error!"
 		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
-	#endif // LLANYLIB_QWERTY_MAYOR_ || LLANYLIB_QWERTY_MINOR_
+	#endif // LLANYLIB_ITERATORCOMMON_MAYOR_ || LLANYLIB_ITERATORCOMMON_MINOR_
 
 #else
-	#define LLANYLIB_QWERTY_HPP_
-	#define LLANYLIB_QWERTY_MAYOR_ 11
-	#define LLANYLIB_QWERTY_MINOR_ 0
+	#define LLANYLIB_ITERATORCOMMON_HPP_
+	#define LLANYLIB_ITERATORCOMMON_MAYOR_ 12
+	#define LLANYLIB_ITERATORCOMMON_MINOR_ 0
 
 #include "../concepts/concepts.hpp"
 
@@ -157,4 +157,4 @@ using IteratorCleaner =
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_QWERTY_HPP_
+#endif // LLANYLIB_ITERATORCOMMON_HPP_

@@ -104,6 +104,11 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_all_of_a_floating_type_v =
 	::std::disjunction_v<::llcpp::meta::traits::is_any_floating_v<Args>...>;
 #endif // __LL_REAL_CXX17
 
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_trivial_v =
+	::llcpp::meta::traits::is_any_primitive_v<T>
+	|| ::llcpp::meta::traits::is_any_floating_v<T>;
+
 // [TOCHECK] [TODO]
 //template<class _T>
 //__LL_VAR_INLINE__ constexpr ll_bool_t is_raw_type =

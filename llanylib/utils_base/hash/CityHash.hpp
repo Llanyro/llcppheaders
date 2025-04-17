@@ -39,6 +39,8 @@
 	#define LLANYLIB_CITYHASH_MINOR_ 0
 
 #include "../Exceptions.hpp"
+#include "../bits.hpp"
+
 #include "Algorithm.hpp"
 
 namespace llcpp {
@@ -49,8 +51,6 @@ namespace city {
 
 template<class T>
 concept IsValidCityHashExtra = requires (const T t, const u64 u6, const u32 u3) {
-	{ t.bytes_swap_64(u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
-	{ t.bytes_swap_32(u3) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u32>;
 	{ t.u64_in_expected_order(u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
 	{ t.u32_in_expected_order(u3) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u32>;
 	{ t.hash16bytes(u6, u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
@@ -70,36 +70,12 @@ class CityHashFunctions : public ::llcpp::AlwaysValidTag {
 		>;
 
 	public:
-		__LL_NODISCARD__ constexpr u64 bytes_swap_64(const u64 value) const noexcept {
-			return
-				((value & 0x00000000000000ffull) << 56)
-				| ((value & 0x000000000000ff00ull) << 40)
-				| ((value & 0x0000000000ff0000ull) << 24)
-				| ((value & 0x00000000ff000000ull) << 8)
-				| ((value & 0x000000ff00000000ull) >> 8)
-				| ((value & 0x0000ff0000000000ull) >> 24)
-				| ((value & 0x00ff000000000000ull) >> 40)
-				| ((value & 0xff00000000000000ull) >> 56);
-		}
-		__LL_NODISCARD__ constexpr u32 bytes_swap_32(const u32 value) const noexcept {
-			return
-				((value & 0xff) << 24)
-				| ((value & 0xff00) << 8)
-				| ((value & 0xff0000) >> 8)
-				| ((value & 0xff000000) >> 24);
-		}
-
 		__LL_NODISCARD__ constexpr u64 u64_in_expected_order(const u64 v) const noexcept {
-			if constexpr (::llcpp::BIGENDIAN)
-				return this->bytes_swap_64(v);
-			else return v;
+			return ::llcpp::meta::utils::bits::in_expected_order(v);
 		}
 		__LL_NODISCARD__ constexpr u32 u32_in_expected_order(const u32 v) const noexcept {
-			if constexpr (::llcpp::BIGENDIAN)
-				return this->bytes_swap_32(v);
-			else return v;
+			return ::llcpp::meta::utils::bits::in_expected_order(v);
 		}
-
 		__LL_NODISCARD__ constexpr u64 hash16bytes(const u64 v1, const u64 v2) const noexcept {
 			return Algorithm().process(v1, v2);
 		}
@@ -121,6 +97,7 @@ class CityHash
 		// Types and enums
 		using byte				= char;
 		using bytearray			= const byte*;
+		using Hash				= u64;
 		using Hash128p			= ::llcpp::meta::pair<u64, u64>;	// Simple struct hash 128
 		using CityHashMagic		= ::llcpp::meta::utils::hash::magic::CityHash;
 
@@ -175,19 +152,11 @@ class CityHash
 			x = y;
 			y = tmp;
 		}
-
-		template<class T>
-		__LL_NODISCARD__ constexpr T unalignedLoad(bytearray p) const noexcept {
-			T result{};
-			for (u8 i{}; i < sizeof(T); ++i)
-				result |= static_cast<T>(p[i]) << (i << 3);
-			return result;
-		}
 		__LL_NODISCARD__ constexpr u64 fetch64(bytearray p) const noexcept {
-			return ExtraFunctions::u64_in_expected_order(this->unalignedLoad<u64>(p));
+			return ExtraFunctions::u64_in_expected_order(::llcpp::meta::utils::bits::unaligned_load<u64>(p));
 		}
 		__LL_NODISCARD__ constexpr u32 fetch32(bytearray p) const noexcept {
-			return ExtraFunctions::u32_in_expected_order(this->unalignedLoad<u32>(p));
+			return ExtraFunctions::u32_in_expected_order(::llcpp::meta::utils::bits::unaligned_load<u32>(p));
 		}
 		// Bitwise right rotate.  Normally this will compile to a single
 		// instruction, especially if the shift is a manifest constant.
@@ -336,7 +305,7 @@ class CityHash
 				);
 		}
 		template<class T>
-			requires ::llcpp::meta::concepts::is_object::IsArrayObject<T>
+			requires ::llcpp::meta::concepts::is_object::IsArrayObject<T, byte>
 		__LL_NODISCARD__ constexpr u64 cityHash64(const T& s) const noexcept {
 			if (s.empty()) {
 				if constexpr (::llcpp::EXCEPTIONS)
@@ -364,6 +333,22 @@ class CityHash
 		}
 		__LL_NODISCARD__ constexpr hash::OptionalHash64 cityHash64(const hash::Hash64& hash) const noexcept {
 			return hash::basic_type_hash::hashValue<u64>(hash.get(), city::CityHash::cityHash64);
+		}*/
+		/*__LL_NODISCARD__ u64 _hash(const u64 value) noexcept {
+			return this->cityHash64(reinterpret_cast<const i8*>(&value), sizeof(u64));
+		}
+		__LL_NODISCARD__ constexpr u64 __hash(const u64 value) noexcept {
+			ll_char_t b[sizeof(value)]{};
+			(void)::llcpp::meta::utils::hash::Algorithm<u8>().b2a(value, b);
+			return this->cityHash64(b, sizeof(b));
+		}
+		__LL_NODISCARD__ constexpr u64 __hash2(const u64 value) noexcept {
+			ll_char_t b[sizeof(value)]{};
+			(void)::llcpp::meta::utils::hash::Algorithm<u8>().b2a(value, b, sizeof(b));
+			return this->cityHash64(b, sizeof(b));
+		}
+		__LL_NODISCARD__ constexpr u64 hash(const u64 value) noexcept {
+			return this->__hash(value);
 		}*/
 
 		#pragma endregion

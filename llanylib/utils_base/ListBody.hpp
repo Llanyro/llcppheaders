@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_LISTBODY_INCOMPLETE_HPP_)
-	#if LLANYLIB_LISTBODY_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_LISTBODY_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_LISTBODY_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_LISTBODY_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "ListBody.hpp(incomplete) version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_LISTBODY_INCOMPLETE_HPP_)
 	#define LLANYLIB_LISTBODY_INCOMPLETE_HPP_
-	#define LLANYLIB_LISTBODY_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_LISTBODY_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_LISTBODY_INCOMPLETE_MINOR_ 0
 
 namespace llcpp {
@@ -34,7 +34,7 @@ class ListBody;
 } // namespace llcpp
 
 #elif defined(LLANYLIB_LISTBODY_HPP_)
-	#if LLANYLIB_LISTBODY_MAYOR_ != 11 || LLANYLIB_LISTBODY_MINOR_ < 0
+	#if LLANYLIB_LISTBODY_MAYOR_ != 12 || LLANYLIB_LISTBODY_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "ListBody.hpp version error!"
 		#else
@@ -45,7 +45,7 @@ class ListBody;
 
 #else
 	#define LLANYLIB_LISTBODY_HPP_
-	#define LLANYLIB_LISTBODY_MAYOR_ 11
+	#define LLANYLIB_LISTBODY_MAYOR_ 12
 	#define LLANYLIB_LISTBODY_MINOR_ 0
 
 #include "../traits_base/checker.hpp"

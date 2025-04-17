@@ -25,11 +25,11 @@
 /////////////////////////////////////////// C++ Version ///////////////////////////////////////////
 
 #if defined(__cplusplus)
-    #if defined(_MSVC_LANG) && _MSVC_LANG > __cplusplus
-        #define __LL_STL_LANG _MSVC_LANG
-    #else  // ^^^ language mode is _MSVC_LANG / language mode is __cplusplus vvv
-        #define __LL_STL_LANG __cplusplus
-    #endif // ^^^ language mode is larger of _MSVC_LANG and __cplusplus ^^^
+	#if defined(_MSVC_LANG) && _MSVC_LANG > __cplusplus
+		#define __LL_STL_LANG _MSVC_LANG
+	#else  // ^^^ language mode is _MSVC_LANG / language mode is __cplusplus vvv
+		#define __LL_STL_LANG __cplusplus
+	#endif // ^^^ language mode is larger of _MSVC_LANG and __cplusplus ^^^
 
 	#if __STDC_HOSTED__ != 1
 		#error "Not a hosted implementation"
@@ -65,11 +65,21 @@
 		#define __LL_DIRECTIVE_WARNING 0
 	#endif // __LL_STL_LANG > 202302L
 
+	#if __LL_STL_LANG < 202106L
+		#if __LL_DIRECTIVE_WARNING == 1
+			#warning "This library requires c++23 to use consteval"
+		#else
+			#error "This library requires c++23 to use consteval"
+		#endif // __LL_DIRECTIVE_WARNING == 1
+	#endif // __LL_STL_LANG < 202106L
+
 #else
 	#error "This library requires C++ (its made for it)"
 #endif // __cplusplus
 
 //////////////////////////////////////////// Endian check ///////////////////////////////////////
+
+// This macro can be setted by user input, so do not trust this value
 
 #if !defined(__LL_BIGENDIAN)
 	#define __LL_BIGENDIAN 0

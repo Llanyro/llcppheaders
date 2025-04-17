@@ -44,9 +44,11 @@
     <ClInclude Include="types\ValidType.hpp" />
     <ClInclude Include="types_simple.hpp" />
     <ClInclude Include="utils_base\ArrayBase.hpp" />
+    <ClInclude Include="utils_base\bits.hpp" />
     <ClInclude Include="utils_base\Exceptions.hpp" />
     <ClInclude Include="utils_base\hash\Algorithm.hpp" />
     <ClInclude Include="utils_base\hash\CityHash.hpp" />
+    <ClInclude Include="utils_base\hash\HashFunctions.hpp" />
     <ClInclude Include="utils_base\hash\hash_magic.hpp" />
     <ClInclude Include="utils_base\hash\LlanyHash.hpp" />
     <ClInclude Include="utils_base\IteratorCommon.hpp" />
@@ -54,6 +56,7 @@
     <ClInclude Include="utils_base\ListBody.hpp" />
     <ClInclude Include="utils_base\PointerIterator.hpp" />
     <ClInclude Include="utils_base\Tuple.hpp" />
+    <ClInclude Include="utils_base\TypeID.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileName.cpp" />

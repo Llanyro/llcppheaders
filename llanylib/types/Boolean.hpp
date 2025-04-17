@@ -172,8 +172,8 @@ namespace boolean {
 
 using _MyType = ::llcpp::Boolean::_MyType;
 
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_FALSE	= ::llcpp::LL_FALSE;
-__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_TRUE	= ::llcpp::LL_TRUE;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_FALSE	= _MyType::enum_bool::True;
+__LL_VAR_INLINE__ constexpr _MyType BOOLEAN_TRUE	= _MyType::enum_bool::True;
 __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_INVALID	= _MyType::enum_bool::Invalid;
 __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_UNKNOWN	= _MyType::enum_bool::Unknown;
 

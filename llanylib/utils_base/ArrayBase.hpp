@@ -179,10 +179,14 @@ class ArrayBase {
 			: ArrayBase(mem, mem + len)
 		{}
 		template<usize N, class U>
-			requires ::std::is_same_v<T, U>
-		explicit constexpr ArrayBase(default_iterator (&v)[N]) noexcept
+		explicit constexpr ArrayBase(default_iterator (&v)[N]) noexcept requires(::std::is_same_v<T, U>)
 			: ArrayBase(v, v + N)
 		{}
+		template<usize N, class U>
+		explicit constexpr ArrayBase& operator=(default_iterator (&v)[N]) noexcept requires(::std::is_same_v<T, U>) {
+			this->resetValidation(v, N);
+			return *this;
+		}
 		constexpr ~ArrayBase() noexcept {
 			if constexpr (::llcpp::CLEAR_POINTERS_ON_DESTRUCTION)
 				this->simpleClear();

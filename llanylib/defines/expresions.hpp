@@ -54,7 +54,16 @@ __LL_VAR_INLINE__ constexpr bool REAL_CXX23 = __LL_REAL_CXX23;
 	#undef BIGENDIAN
 #endif // BIGENDIAN
 
-__LL_VAR_INLINE__ constexpr bool BIGENDIAN	= __LL_BIGENDIAN;
+constexpr bool isLittleEndian() {
+	#if __LL_REAL_CXX26 == 1
+		int v = 1;
+		return *reinterpret_cast<char*>(&v) == 0x1;
+	#else
+		return __LL_BIGENDIAN;
+	#endif //
+}
+
+__LL_VAR_INLINE__ constexpr bool BIGENDIAN	= isLittleEndian();
 
 //////////////////////////////////////////// OS check ////////////////////////////////////////////
 

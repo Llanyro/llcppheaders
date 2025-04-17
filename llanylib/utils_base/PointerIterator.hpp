@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_POINTERITERATOR_INCOMPLETE_HPP_)
-	#if LLANYLIB_POINTERITERATOR_INCOMPLETE_MAYOR_ != 11 || LLANYLIB_POINTERITERATOR_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_POINTERITERATOR_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_POINTERITERATOR_INCOMPLETE_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "PointerIterator.hpp(incomplete) version error!"
 		#else
@@ -19,12 +19,12 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_POINTERITERATOR_INCOMPLETE_HPP_)
 	#define LLANYLIB_POINTERITERATOR_INCOMPLETE_HPP_
-	#define LLANYLIB_POINTERITERATOR_INCOMPLETE_MAYOR_ 11
+	#define LLANYLIB_POINTERITERATOR_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_POINTERITERATOR_INCOMPLETE_MINOR_ 0
 
 
 #elif defined(LLANYLIB_POINTERITERATOR_HPP_)
-	#if LLANYLIB_POINTERITERATOR_MAYOR_ != 11 || LLANYLIB_POINTERITERATOR_MINOR_ < 0
+	#if LLANYLIB_POINTERITERATOR_MAYOR_ != 12 || LLANYLIB_POINTERITERATOR_MINOR_ < 0
 		#if defined(__LL_REAL_CXX23)
 			#warning "PointerIterator.hpp version error!"
 		#else
@@ -35,7 +35,7 @@
 
 #else
 	#define LLANYLIB_POINTERITERATOR_HPP_
-	#define LLANYLIB_POINTERITERATOR_MAYOR_ 11
+	#define LLANYLIB_POINTERITERATOR_MAYOR_ 12
 	#define LLANYLIB_POINTERITERATOR_MINOR_ 0
 
 #include "../traits_base/type_traits.hpp"

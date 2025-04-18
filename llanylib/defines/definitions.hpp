@@ -24,41 +24,6 @@
 
 #include "os.hpp"
 
-// Sets more env definitions by OS
-#define __LL_FALLTHROUGH__ [[fallthrough]]
-#define __LL_NODISCARD__ [[nodiscard]]
-#define __LL_NORETURN__ [[noreturn]]
-#define __LL_VAR_INLINE__ inline
-
-#if defined(__LL_WINDOWS_SYSTEM)
-	#define __LL_UNSECURE_FUNCTIONS__
-	#define __LL_SPECTRE_FUNCTIONS__
-	#define __LL_INLINE__ __forceinline
-	#define __LL_FUNCNAME__ __FUNCSIG__
-	#define __MSVC_CDECL __cdecl
-	#define __STD_SIZE_T unsigned long long
-#elif defined(__LL_MINGW)
-	#define __LL_UNSECURE_FUNCTIONS__
-	#define __LL_SPECTRE_FUNCTIONS__
-	#define __LL_INLINE__ inline
-	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
-	#define __MSVC_CDECL
-	#define __STD_SIZE_T unsigned long
-#elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
-	#define __LL_INLINE__ inline
-	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
-	#define __MSVC_CDECL
-#else
-	#define __LL_INLINE__ inline
-	#define __MSVC_CDECL
-	#define __STD_SIZE_T unsigned long
-#endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
-
-// Definitions
-#define LL_NULLPTR nullptr
-// Undef this to activate deprecated functionality in any header
-#define __LL_DEPRECATED__
-
 #if !defined(__LL_IGNORE_WARNING_STATIC_ASSERTS__)
 	#define __LL_IGNORE_WARNING_STATIC_ASSERTS__ 0
 #elif __LL_IGNORE_WARNING_STATIC_ASSERTS__ != 1 && __LL_IGNORE_WARNING_STATIC_ASSERTS__ != 0
@@ -100,6 +65,44 @@
 	#define __LL_L ""
 #endif // __LL_USE_WIDE_CHAR
 
+
+// Sets more env definitions by OS
+#define __LL_FALLTHROUGH__ [[fallthrough]]
+#define __LL_NODISCARD__ [[nodiscard]]
+#define __LL_NORETURN__ [[noreturn]]
+#define __LL_VAR_INLINE__ inline
+
+#if defined(__LL_WINDOWS_SYSTEM)
+	#define __LL_UNSECURE_FUNCTIONS__
+	#define __LL_SPECTRE_FUNCTIONS__
+	#define __LL_INLINE__ __forceinline
+	#define __LL_FUNCNAME__ __LL_L __FUNCSIG__
+	#define __MSVC_CDECL __cdecl
+	#define __STD_SIZE_T unsigned long long
+#elif defined(__LL_MINGW)
+	#define __LL_UNSECURE_FUNCTIONS__
+	#define __LL_SPECTRE_FUNCTIONS__
+	#define __LL_INLINE__ inline
+	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
+	#if __LL_USE_WIDE_CHAR == 1
+		#warning "Pretty function cannot be transformed to wide char in mingw"
+	#endif // __LL_USE_WIDE_CHAR
+	#define __MSVC_CDECL
+	#define __STD_SIZE_T unsigned long long
+#elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
+	#define __LL_INLINE__ inline
+	#define __LL_FUNCNAME__ __LL_L __PRETTY_FUNCTION__
+	#define __MSVC_CDECL
+#else
+	#define __LL_INLINE__ inline
+	#define __MSVC_CDECL
+	#define __STD_SIZE_T unsigned long
+#endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
+
+// Definitions
+#define LL_NULLPTR nullptr
+// Undef this to activate deprecated functionality in any header
+#define __LL_DEPRECATED__
 
 #define __LL_DEBUG_ERROR__ 0
 #define __LL_DEBUG_WARNING__ __LL_DEBUG_ERROR__ + 1

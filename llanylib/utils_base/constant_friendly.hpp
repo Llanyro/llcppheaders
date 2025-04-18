@@ -50,6 +50,7 @@ EXTERN_C_FUNC void* __MSVC_CDECL memcpy(void* dst, const void* src, __STD_SIZE_T
 namespace llcpp {
 namespace meta {
 namespace utils {
+namespace bits {
 
 __LL_NODISCARD__ constexpr u16 bytes_swap_16(const u16 x)  noexcept {
 	if consteval {
@@ -87,6 +88,7 @@ __LL_NODISCARD__ constexpr u64 bytes_swap_64(const u64 x) noexcept {
 	}
 }
 
+} // namespace bits
 } // namespace utils
 } // namespace meta
 } // namespace llcpp

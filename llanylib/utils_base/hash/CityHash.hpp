@@ -70,6 +70,12 @@ class CityHashFunctions : public ::llcpp::AlwaysValidTag {
 		>;
 
 	public:
+		__LL_NODISCARD__ constexpr u64 bytes_swap_64(const u64 v) const noexcept {
+			return ::llcpp::meta::utils::bits::in_expected_order(v);
+		}
+		__LL_NODISCARD__ constexpr u32 bytes_swap_32(const u32 v) const noexcept {
+			return ::llcpp::meta::utils::bits::in_expected_order(v);
+		}
 		__LL_NODISCARD__ constexpr u64 u64_in_expected_order(const u64 v) const noexcept {
 			return ::llcpp::meta::utils::bits::in_expected_order(v);
 		}

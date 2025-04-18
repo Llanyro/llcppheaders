@@ -38,6 +38,7 @@
 	#define LLANYLIB_BITS_MINOR_ 0
 
 #include "../concepts/concepts.hpp"
+#include "constant_friendly.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -55,17 +56,16 @@ __LL_NODISCARD__ constexpr u8* __primitive_to_bytearray(T& value, u8* buffer) no
 				"Type needs operator>>=");
 		}
 
-		ll_string_t buffer_end = buffer + sizeof(T);
-		while (buffer <= buffer_end) {
-			if constexpr (::llcpp::meta::traits::is_primitive_v<T>) {
+		ll_ustring_t buffer_end = buffer + sizeof(T);
+
+		if constexpr (::llcpp::meta::traits::is_primitive_v<T>) {
+			for(u8 byte = sizeof(T) * 8; buffer <= buffer_end; ++buffer, byte -= 8)
 				*buffer = static_cast<u8>(value >> byte) & 0xff;
-				byte -= 8;
-			}
-			else {
-				*buffer = static_cast<u8>(val) & 0xff;
-				val >>= 8;
-			}
-			++buffer;
+		}
+		else {
+			T tmp = value;
+			for(; buffer <= buffer_end; ++buffer, tmp >>= 8)
+				*buffer = static_cast<u8>(tmp) & 0xff;
 		}
 	}
 	else {
@@ -82,11 +82,11 @@ template<class T>
 __LL_NODISCARD__ constexpr T in_expected_order(const T v) noexcept {
 	if constexpr (::llcpp::BIGENDIAN) {
 		if constexpr (::std::is_same_v<T, u64>)
-			return ::llcpp::meta::utils::bytes_swap_64(v);
+			return ::llcpp::meta::utils::bits::bytes_swap_64(v);
 		else if constexpr (::std::is_same_v<T, u32>)
-			return ::llcpp::meta::utils::bytes_swap_32(v);
+			return ::llcpp::meta::utils::bits::bytes_swap_32(v);
 		else if constexpr (::std::is_same_v<T, u16>)
-			return ::llcpp::meta::utils::bytes_swap_16(v);
+			return ::llcpp::meta::utils::bits::bytes_swap_16(v);
 		else {
 			static_assert(::std::is_same_v<T, u16>,
 				"This function only accepts u64, u32, u16");
@@ -97,7 +97,7 @@ __LL_NODISCARD__ constexpr T in_expected_order(const T v) noexcept {
 }
 template<class T, class U>
 	requires ::llcpp::meta::traits::is_same_su_v<U, u8>
-__LL_NODISCARD__ constexpr T unaligned_load(const U p) noexcept {
+__LL_NODISCARD__ constexpr T unaligned_load(const U* p) noexcept {
 	if consteval {
 		T result{};
 		for (u8 i{}; i < sizeof(T); ++i)

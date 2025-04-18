@@ -59,44 +59,44 @@ class HashFunctions : _HashAlgorithm {
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr CityHash() noexcept = default;
+		constexpr HashFunctions() noexcept = default;
 		template<class... Args>
-		constexpr CityHash(Args&&... args) noexcept
+		constexpr HashFunctions(Args&&... args) noexcept
 			: ValidTag()
 			, ExtraFunctions(::std::forward<Args>(args)...)
 		{}
-		constexpr ~CityHash() noexcept = default;
+		constexpr ~HashFunctions() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr CityHash(const CityHash& other) noexcept
+		constexpr HashFunctions(const HashFunctions& other) noexcept
 			: ValidTag()
 			, ExtraFunctions(::std::forward<const ExtraFunctions&>(other))
 		{}
-		constexpr CityHash& operator=(const CityHash& other) noexcept {
+		constexpr HashFunctions& operator=(const HashFunctions& other) noexcept {
 			ExtraFunctions::operator=(::std::forward<const ExtraFunctions&>(other));
 			return *this;
 		}
-		constexpr CityHash(CityHash&& other) noexcept
+		constexpr HashFunctions(HashFunctions&& other) noexcept
 			: ValidTag()
 			, ExtraFunctions(::std::forward<ExtraFunctions&&>(other))
 		{}
-		constexpr CityHash& operator=(CityHash&& other) noexcept {
+		constexpr HashFunctions& operator=(HashFunctions&& other) noexcept {
 			ExtraFunctions::operator=(::std::forward<ExtraFunctions&&>(other));
 			return *this;
 		}
 
-		constexpr CityHash(const volatile CityHash&) noexcept = delete;
-		constexpr CityHash& operator=(const volatile CityHash&) noexcept = delete;
-		constexpr CityHash(volatile CityHash&&) noexcept = delete;
-		constexpr CityHash& operator=(volatile CityHash&&) noexcept = delete;
+		constexpr HashFunctions(const volatile HashFunctions&) noexcept = delete;
+		constexpr HashFunctions& operator=(const volatile HashFunctions&) noexcept = delete;
+		constexpr HashFunctions(volatile HashFunctions&&) noexcept = delete;
+		constexpr HashFunctions& operator=(volatile HashFunctions&&) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr explicit operator const CityHash*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator CityHash*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const HashFunctions*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator HashFunctions*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions

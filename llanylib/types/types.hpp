@@ -291,6 +291,11 @@ struct simplest_container { T value; };
 template<class T, class U = T>
 struct pair { T first; U second; };
 
+namespace utils {
+template<class ArrayType, class HashType = u64>
+using TypeID = ::llcpp::meta::pair<ArrayType, HashType>;
+} // namespace utils
+
 namespace algorithm {
 
 __LL_VAR_INLINE__ constexpr usize MAX_LIST_SIZE	= static_cast<usize>(-1);

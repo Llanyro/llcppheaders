@@ -101,6 +101,9 @@ class RangeChecker;
 
 #if defined(__LL_WINDOWS_SYSTEM)
 	#include <type_traits>
+#elif defined(__LL_MINGW)
+	#include <type_traits>
+	#include <utility>
 #elif defined(__LL_POSIX_SYSTEM)
 	#include <type_traits>
 	#include <utility>

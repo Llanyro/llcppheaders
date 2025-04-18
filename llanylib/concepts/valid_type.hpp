@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_VALID_TYPE_HPP_) // Guard && version protector
 	#if LLANYLIB_VALID_TYPE_MAYOR_ != 12 || LLANYLIB_VALID_TYPE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "valid_type.hpp version error!"
 		#else
 			#error "valid_type.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_VALID_TYPE_MAYOR_ || LLANYLIB_VALID_TYPE_MINOR_
 

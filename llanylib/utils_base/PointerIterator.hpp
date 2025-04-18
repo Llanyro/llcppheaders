@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_POINTERITERATOR_INCOMPLETE_HPP_)
 	#if LLANYLIB_POINTERITERATOR_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_POINTERITERATOR_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "PointerIterator.hpp(incomplete) version error!"
 		#else
 			#error "PointerIterator.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_POINTERITERATOR_INCOMPLETE_MAYOR_ || LLANYLIB_POINTERITERATOR_INCOMPLETE_MINOR_
 
@@ -25,11 +25,11 @@
 
 #elif defined(LLANYLIB_POINTERITERATOR_HPP_)
 	#if LLANYLIB_POINTERITERATOR_MAYOR_ != 12 || LLANYLIB_POINTERITERATOR_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "PointerIterator.hpp version error!"
 		#else
 			#error "PointerIterator.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_POINTERITERATOR_MAYOR_ || LLANYLIB_POINTERITERATOR_MINOR_
 
@@ -41,7 +41,7 @@
 #include "../traits_base/type_traits.hpp"
 
 #if defined(__LL_MINGW)
-	#include <memory>
+	#include <memory>	// To use ::std::addressof
 #endif // __LL_MINGW
 
 namespace llcpp {

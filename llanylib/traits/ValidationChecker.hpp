@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_HPP_)
 	#if LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "ValidationChecker.hpp(incomplete) version error!"
 		#else
 			#error "ValidationChecker.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MAYOR_ || LLANYLIB_VALIDATIONCHECKER_INCOMPLETE_MINOR_
 
@@ -35,11 +35,11 @@ class ValidationChecker;
 
 #elif defined(LLANYLIB_VALIDATIONCHECKER_HPP_)
 	#if LLANYLIB_VALIDATIONCHECKER_MAYOR_ != 12 || LLANYLIB_VALIDATIONCHECKER_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "ValidationChecker.hpp version error!"
 		#else
 			#error "ValidationChecker.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_VALIDATIONCHECKER_MAYOR_ || LLANYLIB_VALIDATIONCHECKER_MINOR_
 

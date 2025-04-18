@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSBASE_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSBASE_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "traits_base.hpp(incomplete) version error!"
 		#else
 			#error "traits_base.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSBASE_INCOMPLETE_MINOR_
 
@@ -26,11 +26,11 @@
 
 #elif defined(LLANYLIB_TRAITSBASE_HPP_)
 	#if LLANYLIB_TRAITSBASE_MAYOR_ != 12 || LLANYLIB_TRAITSBASE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "traits_base.hpp version error!"
 		#else
 			#error "traits_base.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSBASE_MAYOR_ || LLANYLIB_TRAITSBASE_MINOR_
 
@@ -47,11 +47,11 @@ namespace traits {
 
 template<class T, class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_v =
-#if defined(__LL_REAL_CXX17)
+#if __LL_REAL_CXX17 == 1
 	(::std::is_same_v<T, Args> || ...);
 #else
 	::std::disjunction_v<::std::is_same_v<T, Args>...>;
-#endif // __LL_REAL_CXX17
+#endif // __LL_REAL_CXX17 == 1
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_empty_object_v = ::llcpp::meta::traits::is_any_of_v<T, ::llcpp::Emptyclass>;
@@ -74,35 +74,35 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_char_type_v = ::llcpp::meta::traits::is
 
 template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_a_basic_type_v =
-#if defined(__LL_REAL_CXX17)
+#if __LL_REAL_CXX17 == 1
 	(::llcpp::meta::traits::is_primitive_v<Args> || ...);
 #else
 	::std::disjunction_v<::llcpp::meta::traits::is_primitive_v<Args>...>;
-#endif // __LL_REAL_CXX17
+#endif // __LL_REAL_CXX17 == 1
 
 template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_all_of_a_basic_type_v =
-#if defined(__LL_REAL_CXX17)
+#if __LL_REAL_CXX17 == 1
 	(::llcpp::meta::traits::is_any_primitive_v<Args> || ...);
 #else
 	::std::disjunction_v<::llcpp::meta::traits::is_any_primitive_v<Args>...>;
-#endif // __LL_REAL_CXX17
+#endif // __LL_REAL_CXX17 == 1
 
 template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_any_of_a_floating_type_v =
-#if defined(__LL_REAL_CXX17)
+#if __LL_REAL_CXX17 == 1
 	(::llcpp::meta::traits::is_floating_type_v<Args> || ...);
 #else
 	::std::disjunction_v<::llcpp::meta::traits::is_floating_type_v<Args>...>;
-#endif // __LL_REAL_CXX17
+#endif // __LL_REAL_CXX17 == 1
 
 template<class... Args>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_all_of_a_floating_type_v =
-#if defined(__LL_REAL_CXX17)
+#if __LL_REAL_CXX17 == 1
 	(::llcpp::meta::traits::is_any_floating_v<Args> || ...);
 #else
 	::std::disjunction_v<::llcpp::meta::traits::is_any_floating_v<Args>...>;
-#endif // __LL_REAL_CXX17
+#endif // __LL_REAL_CXX17 == 1
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_trivial_v =

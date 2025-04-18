@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_HASHMAGIC_HPP_) // Guard && version protector
 	#if LLANYLIB_HASHMAGIC_MAYOR_ != 12 || LLANYLIB_HASHMAGIC_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "hash_magic.hpp version error!"
 		#else
 			#error "hash_magic.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_HASHMAGIC_MAYOR_ || LLANYLIB_HASHMAGIC_MINOR_
 

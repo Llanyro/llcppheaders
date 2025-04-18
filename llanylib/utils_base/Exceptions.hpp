@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_EXCEPTIONS_HPP_) // Guard && version protector
 	#if LLANYLIB_EXCEPTIONS_MAYOR_ != 12 || LLANYLIB_EXCEPTIONS_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "Exceptions.hpp version error!"
 		#else
 			#error "Exceptions.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_EXCEPTIONS_MAYOR_ || LLANYLIB_EXCEPTIONS_MINOR_
 
@@ -23,10 +23,10 @@
 	#define LLANYLIB_EXCEPTIONS_MINOR_ 0
 
 #include "../types/types.hpp"
-
-#if defined(__LL_EXCEPTIONS)
-
 #include "../types/Errors.hpp"
+
+#if __LL_EXCEPTIONS == 1
+
 #include "IteratorUtils.hpp"
 #include "IteratorCommon.hpp"
 
@@ -153,7 +153,7 @@ static ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #else
 	#define LOG_EXCEPTION(err) ::llcpp::IGNORE(err)
 	#define LOG_EXCEPTION_TAG(tag, err) ::llcpp::IGNORE(tag, err)
-#endif // __LL_EXCEPTIONS
+#endif // __LL_EXCEPTIONS == 1
 
 #endif // LLANYLIB_EXCEPTIONS_HPP_
 

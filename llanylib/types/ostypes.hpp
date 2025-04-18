@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_OSTYPES_HPP_) // Guard && version protector
 	#if LLANYLIB_OSTYPES_MAYOR_ != 12 || LLANYLIB_OSTYPES_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "ostypes.hpp version error!"
 		#else
 			#error "ostypes.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_OSTYPES_MAYOR_ || LLANYLIB_OSTYPES_MINOR_
 

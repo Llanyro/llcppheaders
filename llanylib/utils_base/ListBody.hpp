@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_LISTBODY_INCOMPLETE_HPP_)
 	#if LLANYLIB_LISTBODY_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_LISTBODY_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "ListBody.hpp(incomplete) version error!"
 		#else
 			#error "ListBody.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_LISTBODY_INCOMPLETE_MAYOR_ || LLANYLIB_LISTBODY_INCOMPLETE_MINOR_
 
@@ -35,11 +35,11 @@ class ListBody;
 
 #elif defined(LLANYLIB_LISTBODY_HPP_)
 	#if LLANYLIB_LISTBODY_MAYOR_ != 12 || LLANYLIB_LISTBODY_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "ListBody.hpp version error!"
 		#else
 			#error "ListBody.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_LISTBODY_MAYOR_ || LLANYLIB_LISTBODY_MINOR_
 
@@ -49,6 +49,7 @@ class ListBody;
 	#define LLANYLIB_LISTBODY_MINOR_ 0
 
 #include "../traits_base/checker.hpp"
+#include "../concepts/concepts.hpp"
 #include "PointerIterator.hpp"
 #include "Exceptions.hpp"
 
@@ -270,7 +271,7 @@ class ListBody : public _ArrayBase {
 			return this->substr(first, last);
 		}
 
-#endif // __LL_REAL_CXX23
+#endif // __LL_REAL_CXX23 == 1
 
 		#pragma endregion
 		#pragma region Countable

@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CITYHASH_INCOMPLETE_HPP_)
 	#if LLANYLIB_CITYHASH_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_CITYHASH_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "CityHash.hpp(incomplete) version error!"
 		#else
 			#error "CityHash.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CITYHASH_INCOMPLETE_MAYOR_ || LLANYLIB_CITYHASH_INCOMPLETE_MINOR_
 
@@ -25,11 +25,11 @@
 
 #elif defined(LLANYLIB_CITYHASH_HPP_)
 	#if LLANYLIB_CITYHASH_MAYOR_ != 12 || LLANYLIB_CITYHASH_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "CityHash.hpp version error!"
 		#else
 			#error "CityHash.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CITYHASH_MAYOR_ || LLANYLIB_CITYHASH_MINOR_
 
@@ -38,7 +38,9 @@
 	#define LLANYLIB_CITYHASH_MAYOR_ 12
 	#define LLANYLIB_CITYHASH_MINOR_ 0
 
-#include "../Exceptions.hpp"
+#include "../../traits/ValidationChecker.hpp"
+
+#include "../Exceptions.hpp"	// Could be disabled
 #include "../bits.hpp"
 
 #include "Algorithm.hpp"
@@ -321,7 +323,7 @@ class CityHash
 			return this->cityHash64(s.begin(), s.lenght());
 		}
 		template<usize N>
-		__LL_NODISCARD__ constexpr u64 cityHash64(const ll_char_t(&s)[N]) const noexcept {
+		__LL_NODISCARD__ constexpr u64 cityHash64(const byte(&s)[N]) const noexcept {
 			if (!s) {
 				if constexpr (::llcpp::EXCEPTIONS)
 					(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);

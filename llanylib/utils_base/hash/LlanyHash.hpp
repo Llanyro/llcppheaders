@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_LLANYHASH_INCOMPLETE_HPP_)
 	#if LLANYLIB_LLANYHASH_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_LLANYHASH_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "CityHash.hpp(incomplete) version error!"
 		#else
 			#error "CityHash.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_LLANYHASH_INCOMPLETE_MAYOR_ || LLANYLIB_LLANYHASH_INCOMPLETE_MINOR_
 
@@ -25,11 +25,11 @@
 
 #elif defined(LLANYLIB_LLANYHASH_HPP_)
 	#if LLANYLIB_LLANYHASH_MAYOR_ != 12 || LLANYLIB_LLANYHASH_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "CityHash.hpp version error!"
 		#else
 			#error "CityHash.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_LLANYHASH_MAYOR_ || LLANYLIB_LLANYHASH_MINOR_
 
@@ -51,11 +51,11 @@ namespace llcpp {
 
 template<class T>
 concept IsValidLlanyHashAlgorithm = requires (const T t, const u64 u6) {
-	{ t.process(u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
+	{ t.process(u6, u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
 };
 
-template<class T>
-concept HasMemcopy = requires (const T t, u8 * dst, const u8 * src, u8 bytes) {
+template<class T, class byte>
+concept HasMemcopy = requires (const T t, byte* dst, const byte* src, u8 bytes) {
 	{ t.memcopy(dst, src, bytes) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<void>;
 };
 
@@ -72,9 +72,14 @@ namespace hash {
 		return ::llcpp::ZERO_VALUE<u64>; \
 	}
 
-template<class _Algorithm = ::llcpp::meta::utils::hash::Algorithm<u64, ::llcpp::meta::utils::hash::AlgorithmMode::SimplestCombine>>
-	requires ::llcpp::meta::concepts::hash::llcpp::IsValidLlanyHashAlgorithm<_Algorithm>
-class LlanyHash :
+template<
+	class T = i8,
+	class _Algorithm = ::llcpp::meta::utils::hash::Algorithm<u64, ::llcpp::meta::utils::hash::AlgorithmMode::SimplestCombine>
+>
+	requires
+			::llcpp::meta::concepts::hash::llcpp::IsValidLlanyHashAlgorithm<_Algorithm>
+			&& ::llcpp::meta::traits::is_same_su_v<T, u8>
+class LlanyHash
 	: public ::llcpp::meta::traits::ValidationWrapper<_Algorithm, ::llcpp::AlwaysValidTag>
 	, public _Algorithm
 {
@@ -86,8 +91,8 @@ class LlanyHash :
 		using Algorithm			= _Algorithm;
 
 		// Types and enums
-		using u8				= u8;
-		using bytearray			= const u8*;
+		using byte				= T;
+		using bytearray			= const byte*;
 		using CityHashMagic		= ::llcpp::meta::utils::hash::magic::Murmur;
 
 	#pragma endregion
@@ -124,13 +129,13 @@ class LlanyHash :
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr u64 llanyHash64_v1(const T* s, const usize len) const noexcept requires(::llcpp::meta::traits::is_same_su_v<T, u8>) {
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v1(bytearray s, const usize len) const noexcept {
 			__LL_PRECHECK__;
 
 			constexpr _MyType::Algorithm algo{};
 			u64 result = CityHashMagic::kMul64;
 			u8 pos{};
-			for (const T* end = s + len; s < end; ++s, ++pos) {
+			for (bytearray end = s + len; s < end; ++s, ++pos) {
 				if (pos >= 8) pos = ::llcpp::ZERO_VALUE<decltype(pos)>;
 				u8 bit_position = static_cast<u8>(pos << 3);
 				u8 result_8b_part = (result >> bit_position) && u8(-1);
@@ -140,13 +145,13 @@ class LlanyHash :
 
 			return result;
 		}
-		__LL_NODISCARD__ constexpr u64 llanyHash64_v2(const T* s, const usize len) const noexcept requires(::llcpp::meta::traits::is_same_su_v<T, u8>) {
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v2(bytearray s, const usize len) const noexcept {
 			__LL_PRECHECK__;
 
 			constexpr _MyType::Algorithm algo{};
 			u64 result = CityHashMagic::kMul64;
 			u8 pos{};
-			for (const T* end = s + len; s < end; ++s, ++pos) {
+			for (bytearray end = s + len; s < end; ++s, ++pos) {
 				if (pos >= 8) pos = ::llcpp::ZERO_VALUE<decltype(pos)>;
 				u8 bit_position = static_cast<u8>(pos << 3);
 				u8 result_8b_part = (result >> bit_position) && u8(-1);
@@ -156,13 +161,13 @@ class LlanyHash :
 
 			return result;
 		}
-		__LL_NODISCARD__ constexpr u64 llanyHash64_v3(const T* s, const usize len) const noexcept requires(::llcpp::meta::traits::is_same_su_v<T, u8>) {
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v3(bytearray s, const usize len) const noexcept {
 			__LL_PRECHECK__;
 
 			constexpr _MyType::Algorithm algo{};
 			u64 result = CityHashMagic::kMul64;
 			u8 pos{};
-			for (const T* end = s + len; s < end; ++s, ++pos) {
+			for (bytearray end = s + len; s < end; ++s, ++pos) {
 				u8 buffer = (result >> 56);
 				u8 result_new = algo.process(buffer, static_cast<u8>(*s));
 				result = (result << 8) | result_new;
@@ -175,7 +180,7 @@ class LlanyHash :
 		// Right not, those cast are not valid (-std=c++20)
 		// Prob valid constexpr before -std=c++26
 		template<class CopyCat = _MyType>
-		__LL_NODISCARD__ u64 llanyHash64CombineImplementation(const u8* s, const usize len) noexcept requires(::llcpp::meta::concepts::hash::llcpp::HasMemcopy<CopyCat>) {
+		__LL_NODISCARD__ u64 llanyHash64CombineImplementation(bytearray s, const usize len) noexcept requires(::llcpp::meta::concepts::hash::llcpp::HasMemcopy<CopyCat, byte>) {
 			__LL_PRECHECK__;
 
 			// Algorithm to use
@@ -198,12 +203,12 @@ class LlanyHash :
 			if (leftovers > ::llcpp::ZERO_VALUE<decltype(leftovers)>) {
 				u64 extra{};
 				// Bytearray of temporal buffer of 64 bits
-				u8* c = reinterpret_cast<u8*>(&extra);
+				byte* c = reinterpret_cast<byte*>(&extra);
 
 				// Begin of bytes unprocessed
 				bytearray s_ = s + len - leftovers;
 
-				if constexpr (::std::is_same_v<CopyCat, ::llcpp::meta::utils::hash::LlanyHash>)
+				if constexpr (::std::is_same_v<CopyCat, _MyType>)
 					this->memcopy(c, s_, leftovers);
 				else {
 					constexpr CopyCat copy{};
@@ -216,10 +221,10 @@ class LlanyHash :
 			return result;
 		}
 
-		constexpr void memcopy(u8* dst, const u8* src, u8 bytes) const noexcept {
+		constexpr void memcopy(byte* dst, bytearray src, u8 bytes) const noexcept {
 			if consteval {
 				// Loop copy
-				for (const u8* c_end = src + bytes; src < c_end; ++src, ++dst)
+				for (bytearray c_end = src + bytes; src < c_end; ++src, ++dst)
 					*dst = *src;
 			}
 			else {

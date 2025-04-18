@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TYPETRAITS_INCOMPLETE_HPP_)
 	#if LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "type_traits.hpp(incomplete) version error!"
 		#else
 			#error "type_traits.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ || LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_
 
@@ -84,11 +84,11 @@ class RangeChecker;
 
 #elif defined(LLANYLIB_TYPETRAITS_HPP_)
 	#if LLANYLIB_TYPETRAITS_MAYOR_ != 12 || LLANYLIB_TYPETRAITS_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "type_traits.hpp version error!"
 		#else
 			#error "type_traits.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TYPETRAITS_MAYOR_ || LLANYLIB_TYPETRAITS_MINOR_
 
@@ -620,11 +620,11 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_zero_value_v = (::llcpp::ZERO_VALUE<T> 
 #if !defined(LLANYLIB_ERROR_HPP_)
 	#if defined(LLANYLIB_TYPETRAITS_EXTRA_HPP_)
 		#if LLANYLIB_TYPETRAITS_EXTRA_MAYOR_ != 12 || LLANYLIB_TYPETRAITS_EXTRA_MINOR_ < 0
-			#if defined(__LL_REAL_CXX23)
+			#if __LL_REAL_CXX23 == 1
 				#warning "type_traits.hpp(extra) version error!"
 			#else
 				#error "type_traits.hpp(extra) version error!"
-			#endif // __LL_REAL_CXX23
+			#endif // __LL_REAL_CXX23 == 1
 		#endif // LLANYLIB_TYPETRAITS_EXTRA_MAYOR_ || LLANYLIB_TYPETRAITS_EXTRA_MINOR_
 
 	#else

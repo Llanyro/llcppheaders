@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_CONSTANTFRIENDLY_HPP_) // Guard && version protector
 	#if LLANYLIB_CONSTANTFRIENDLY_MAYOR_ != 11 || LLANYLIB_CONSTANTFRIENDLY_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "constant_friendly.hpp version error!"
 		#else
 			#error "constant_friendly.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CONSTANTFRIENDLY_MAYOR_ || LLANYLIB_CONSTANTFRIENDLY_MINOR_
 

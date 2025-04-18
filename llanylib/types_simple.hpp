@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_TYPESSIMPLE_HPP_) // Guard && version protector
 	#if LLANYLIB_TYPESSIMPLE_MAYOR_ != 10 || LLANYLIB_TYPESSIMPLE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "types_simple.hpp version error!"
 		#else
 			#error "types_simple.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 	#endif // LLANYLIB_TYPESSIMPLE_MAYOR_ || LLANYLIB_TYPESSIMPLE_MINOR_
 
 #elif !defined(LLANYLIB_TYPESSIMPLE_HPP_)

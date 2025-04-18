@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_ITERATORUTILS_INCOMPLETE_HPP_)
 	#if LLANYLIB_ITERATORUTILS_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_ITERATORUTILS_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "IteratorUtils.hpp(incomplete) version error!"
 		#else
 			#error "IteratorUtils.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ITERATORUTILS_INCOMPLETE_MAYOR_ || LLANYLIB_ITERATORUTILS_INCOMPLETE_MINOR_
 
@@ -37,11 +37,11 @@ class IteratorUtils;
 
 #elif defined(LLANYLIB_ITERATORUTILS_HPP_)
 	#if LLANYLIB_ITERATORUTILS_MAYOR_ != 12 || LLANYLIB_ITERATORUTILS_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "IteratorUtils.hpp version error!"
 		#else
 			#error "IteratorUtils.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ITERATORUTILS_MAYOR_ || LLANYLIB_ITERATORUTILS_MINOR_
 

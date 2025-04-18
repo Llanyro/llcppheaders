@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "valid_type.hpp(incomplete) version error!"
 		#else
 			#error "valid_type.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MINOR_
 
@@ -31,11 +31,11 @@ namespace traits {
 
 #elif defined(LLANYLIB_TRAITSVALIDTYPE_HPP_)
 	#if LLANYLIB_TRAITSVALIDTYPE_MAYOR_ != 12 || LLANYLIB_TRAITSVALIDTYPE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "valid_type.hpp version error!"
 		#else
 			#error "valid_type.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSVALIDTYPE_MAYOR_ || LLANYLIB_TRAITSVALIDTYPE_MINOR_
 

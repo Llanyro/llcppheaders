@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_ERRORS_INCOMPLETE_HPP_)
 	#if LLANYLIB_ERRORS_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_ERRORS_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "Errors.hpp(incomplete) version error!"
 		#else
 			#error "Errors.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ERRORS_INCOMPLETE_MAYOR_ || LLANYLIB_ERRORS_INCOMPLETE_MINOR_
 
@@ -34,11 +34,11 @@ enum class Errors : u8;
 
 #elif defined(LLANYLIB_ERRORS_HPP_)
 	#if LLANYLIB_ERRORS_MAYOR_ != 12 || LLANYLIB_ERRORS_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "Errors.hpp version error!"
 		#else
 			#error "Errors.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ERRORS_MAYOR_ || LLANYLIB_ERRORS_MINOR_
 

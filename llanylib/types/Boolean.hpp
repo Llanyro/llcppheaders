@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_BOOLEAN_INCOMPLETE_HPP_)
 	#if LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_BOOLEAN_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "Boolean.hpp(incomplete) version error!"
 		#else
 			#error "Boolean.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_BOOLEAN_INCOMPLETE_MAYOR_ || LLANYLIB_BOOLEAN_INCOMPLETE_MINOR_
 
@@ -34,11 +34,11 @@ class Boolean;
 
 #elif defined(LLANYLIB_BOOLEAN_HPP_)
 	#if LLANYLIB_BOOLEAN_MAYOR_ != 12 || LLANYLIB_BOOLEAN_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "Boolean.hpp version error!"
 		#else
 			#error "Boolean.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_BOOLEAN_MAYOR_ || LLANYLIB_BOOLEAN_MINOR_
 

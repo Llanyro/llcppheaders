@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_ALGORITHM_INCOMPLETE_HPP_)
 	#if LLANYLIB_ALGORITHM_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_ALGORITHM_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "Algorithm.hpp(incomplete) version error!"
 		#else
 			#error "Algorithm.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ALGORITHM_INCOMPLETE_MAYOR_ || LLANYLIB_ALGORITHM_INCOMPLETE_MINOR_
 
@@ -25,11 +25,11 @@
 
 #elif defined(LLANYLIB_ALGORITHM_HPP_)
 	#if LLANYLIB_ALGORITHM_MAYOR_ != 12 || LLANYLIB_ALGORITHM_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_REAL_CXX23 == 1
 			#warning "Algorithm.hpp version error!"
 		#else
 			#error "Algorithm.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ALGORITHM_MAYOR_ || LLANYLIB_ALGORITHM_MINOR_
 
@@ -87,6 +87,12 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 	#pragma region Expresions
 	public:
 		static constexpr Mode MODE			= _MODE;
+		static constexpr ll_bool_t IS_64	= ::std::is_same_v<T, u64>;
+		static constexpr ll_bool_t IS_32	= ::std::is_same_v<T, u32>;
+		static constexpr ll_bool_t IS_8		= ::std::is_same_v<T, u8>;
+
+		static constexpr ll_bool_t IS_MUR	= MODE == Mode::Murmur;
+		static constexpr ll_bool_t IS_SIMP	= MODE == Mode::SimplestCombine;
 
 	#pragma endregion
 	#pragma region Functions
@@ -119,7 +125,7 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 		#pragma region Murmur
 	public:
 		template<T MUL, u8 SHIFT>
-		__LL_NODISCARD__ constexpr T __mur_process(const T value1, const T value2) const noexcept requires(MODE == Mode::Murmur) {
+		__LL_NODISCARD__ constexpr T __mur_process(const T value1, const T value2) const noexcept requires(IS_MUR) {
 			T a = static_cast<T>((value1 ^ value2) * MUL);
 			a ^= (a >> SHIFT);
 			T b = static_cast<T>((value2 ^ a) * MUL);
@@ -128,15 +134,15 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 			return b * MUL;
 		}
 		template<u64 MUL = _MyType::Murmur::kMul64, u8 SHIFT = _MyType::Murmur::llshift64>
-		__LL_NODISCARD__ constexpr u64 process(const u64 value1, const u64 value2) const noexcept requires(MODE == Mode::Murmur && ::std::is_same_v<T, u64>) {
+		__LL_NODISCARD__ constexpr u64 process(const u64 value1, const u64 value2) const noexcept requires(IS_MUR && IS_64) {
 			return this->__mur_process<MUL, SHIFT>(value1, value2);
 		}
 		template<u32 MUL = _MyType::Murmur::kMul32, u8 SHIFT = _MyType::Murmur::llshift32>
-		__LL_NODISCARD__ constexpr u32 process(const u32 value1, const u32 value2) const noexcept requires(MODE == Mode::Murmur && ::std::is_same_v<T, u32>) {
+		__LL_NODISCARD__ constexpr u32 process(const u32 value1, const u32 value2) const noexcept requires(IS_MUR && IS_32) {
 			return this->__mur_process<MUL, SHIFT>(value1, value2);
 		}
 		template<u8 MUL = _MyType::Murmur::kMul8, u8 SHIFT = _MyType::Murmur::llshift8>
-		__LL_NODISCARD__ constexpr u8 process(const u8 value1, const u8 value2) const noexcept requires(MODE == Mode::Murmur && ::std::is_same_v<T, u8>) {
+		__LL_NODISCARD__ constexpr u8 process(const u8 value1, const u8 value2) const noexcept requires(IS_MUR && IS_8) {
 			return this->__mur_process<MUL, SHIFT>(value1, value2);
 		}
 
@@ -144,20 +150,20 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 		#pragma region SimplestCombine
 	public:
 		template<u8 SHIFT, ll_bool_t LEFT_SHIFT>
-		__LL_NODISCARD__ constexpr T __simplest_combine_process(const T value1, const T value2) const noexcept requires(MODE == Mode::SimplestCombine) {
+		__LL_NODISCARD__ constexpr T __simplest_combine_process(const T value1, const T value2) const noexcept requires(IS_SIMP) {
 			if constexpr (LEFT_SHIFT) return static_cast<T>(value1 ^ static_cast<T>(value2 << SHIFT));
 			else return static_cast<T>(value1 ^ static_cast<T>(value2 >> SHIFT));
 		}
 		template<u8 SHIFT = _MyType::Murmur::llshift64, ll_bool_t LEFT_SHIFT = ::llcpp::LL_TRUE>
-		__LL_NODISCARD__ constexpr u64 process(const u64 value1, const u64 value2) const noexcept requires(MODE == Mode::SimplestCombine && ::std::is_same_v<T, u64>) {
+		__LL_NODISCARD__ constexpr u64 process(const u64 value1, const u64 value2) const noexcept requires(IS_SIMP && IS_64) {
 			return this->__simplest_combine_process<SHIFT, LEFT_SHIFT>(value1, value2);
 		}
 		template<u8 SHIFT = _MyType::Murmur::llshift32, ll_bool_t LEFT_SHIFT = ::llcpp::LL_TRUE>
-		__LL_NODISCARD__ constexpr u32 process(const u32 value1, const u32 value2) const noexcept requires(MODE == Mode::SimplestCombine && ::std::is_same_v<T, u32>) {
+		__LL_NODISCARD__ constexpr u32 process(const u32 value1, const u32 value2) const noexcept requires(IS_SIMP && IS_32) {
 			return this->__simplest_combine_process<SHIFT, LEFT_SHIFT>(value1, value2);
 		}
 		template<u8 SHIFT = _MyType::Murmur::llshift8, ll_bool_t LEFT_SHIFT = ::llcpp::LL_TRUE>
-		__LL_NODISCARD__ constexpr u8 process(const u8 value1, const u8 value2) const noexcept requires(MODE == Mode::SimplestCombine && ::std::is_same_v<T, u8>) {
+		__LL_NODISCARD__ constexpr u8 process(const u8 value1, const u8 value2) const noexcept requires(IS_SIMP && IS_8) {
 			return this->__simplest_combine_process<SHIFT, LEFT_SHIFT>(value1, value2);
 		}
 

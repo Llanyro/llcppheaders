@@ -51,6 +51,7 @@ class IteratorUtils;
 	#define LLANYLIB_ITERATORUTILS_MINOR_ 0
 
 #include "../traits/ValidationChecker.hpp"
+#include "../traits_base/checker.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -61,8 +62,10 @@ template<
 	class _IteratorEnd = _Iterator,
 	class _ExtraFunctions = ::llcpp::DummyClass
 >
-	requires ::llcpp::meta::concepts::is_object::IsIterator<_Iterator>
+	requires
+		::llcpp::meta::concepts::is_object::IsIterator<_Iterator>
 		&& ::llcpp::meta::concepts::is_object::IsIterator<_IteratorEnd>
+		&&::llcpp::meta::traits::is_valid_constructor_checker_v<_ExtraFunctions>
 class IteratorUtils
 	: public ::llcpp::ClusterTag
 	, public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>
@@ -102,18 +105,14 @@ class IteratorUtils
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr IteratorUtils() noexcept
-			: ClusterTag()
-			, ValidTag()
-			, ExtraFunctions()
-		{}
+		constexpr IteratorUtils() noexcept = default;
 		template<class... Args>
-		constexpr IteratorUtils(Args&&... args) noexcept
+		constexpr IteratorUtils(Args&&... args) noexcept requires(::std::is_nothrow_constructible_v<ExtraFunctions, Args...>)
 			: ClusterTag()
 			, ValidTag()
 			, ExtraFunctions(::std::forward<Args>(args)...)
 		{}
-		constexpr ~IteratorUtils() noexcept {}
+		constexpr ~IteratorUtils() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove
@@ -258,3 +257,7 @@ class IteratorUtils
 } // namespace llcpp
 
 #endif // LLANYLIB_ITERATORUTILS_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

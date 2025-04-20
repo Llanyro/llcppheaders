@@ -39,6 +39,7 @@
 	#define LLANYLIB_HASHFUNCTIONS_MINOR_ 0
 
 #include "../bits.hpp"
+#include "../../traits_base/checker.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -46,6 +47,7 @@ namespace utils {
 namespace hash {
 
 template<class _HashAlgorithm>
+	requires ::llcpp::meta::traits::is_valid_constructor_checker_v<_HashAlgorithm>
 class HashFunctions : _HashAlgorithm {
 	#pragma region Types
 	public:
@@ -61,9 +63,9 @@ class HashFunctions : _HashAlgorithm {
 	public:
 		constexpr HashFunctions() noexcept = default;
 		template<class... Args>
-		constexpr HashFunctions(Args&&... args) noexcept
+		constexpr HashFunctions(Args&&... args) noexcept requires(::std::is_nothrow_constructible_v<HashAlgorithm, Args...>)
 			: ValidTag()
-			, ExtraFunctions(::std::forward<Args>(args)...)
+			, HashAlgorithm(::std::forward<Args>(args)...)
 		{}
 		constexpr ~HashFunctions() noexcept = default;
 
@@ -72,18 +74,18 @@ class HashFunctions : _HashAlgorithm {
 	public:
 		constexpr HashFunctions(const HashFunctions& other) noexcept
 			: ValidTag()
-			, ExtraFunctions(::std::forward<const ExtraFunctions&>(other))
+			, HashAlgorithm(::std::forward<const HashAlgorithm&>(other))
 		{}
 		constexpr HashFunctions& operator=(const HashFunctions& other) noexcept {
-			ExtraFunctions::operator=(::std::forward<const ExtraFunctions&>(other));
+			HashAlgorithm::operator=(::std::forward<const HashAlgorithm&>(other));
 			return *this;
 		}
 		constexpr HashFunctions(HashFunctions&& other) noexcept
 			: ValidTag()
-			, ExtraFunctions(::std::forward<ExtraFunctions&&>(other))
+			, HashAlgorithm(::std::forward<HashAlgorithm&&>(other))
 		{}
 		constexpr HashFunctions& operator=(HashFunctions&& other) noexcept {
-			ExtraFunctions::operator=(::std::forward<ExtraFunctions&&>(other));
+			HashAlgorithm::operator=(::std::forward<HashAlgorithm&&>(other));
 			return *this;
 		}
 
@@ -114,3 +116,7 @@ class HashFunctions : _HashAlgorithm {
 } // namespace llcpp
 
 #endif // LLANYLIB_HASHFUNCTIONS_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

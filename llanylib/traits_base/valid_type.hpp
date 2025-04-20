@@ -79,3 +79,7 @@ using type_by_valid_type_t = ::std::disjunction<
 } // namespace llcpp
 
 #endif // LLANYLIB_TRAITSVALIDTYPE_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

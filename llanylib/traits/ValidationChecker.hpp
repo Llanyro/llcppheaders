@@ -172,3 +172,7 @@ using ValidationWrapper =
 } // namespace llcpp
 
 #endif // LLANYLIB_VALIDATIONCHECKER_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

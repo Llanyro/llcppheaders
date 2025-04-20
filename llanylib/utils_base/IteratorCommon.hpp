@@ -60,15 +60,20 @@ namespace utils {
 
 enum class IteratorCommonMode : u8 {
 	Zeroize,
+	Fill,
 };
 
 template<class _T, ::llcpp::meta::utils::IteratorCommonMode _MODE>
-class IteratorCommon : public ::llcpp::AlwaysValidTag {
+class IteratorCommon
+	: public ::llcpp::AlwaysValidTag
+	, public ::llcpp::meta::traits::conditional_t<_MODE == decltype(_MODE)::Fill, ::llcpp::meta::simplest_container<_T>, ::llcpp::DummyClass>
+{
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType	= IteratorCommon;		// This class with template
-		using ValidTag	= ::llcpp::AlwaysValidTag;
+		using _MyType		= IteratorCommon;		// This class with template
+		using ValidTag		= ::llcpp::AlwaysValidTag;
+		using FillContainer = ::llcpp::meta::traits::conditional_t<_MODE == decltype(_MODE)::Fill, ::llcpp::meta::simplest_container<_T>, ::llcpp::DummyClass>;
 
 		// Types and enums
 		using T			= _T;
@@ -114,16 +119,20 @@ class IteratorCommon : public ::llcpp::AlwaysValidTag {
 			else t = ::llcpp::ZERO_VALUE<T>;
 			return LoopResult::Conntinue;
 		}
+		__LL_NODISCARD__ constexpr LoopResult foreachOperation(T& t) const noexcept requires(MODE == Mode::Fill) {
+			t = ::std::forward<const T&>(FillContainer::value);
+			return LoopResult::Conntinue;
+		}
 
 #if defined(LLANYLIB_TUPLE_HPP_)
 		template<class... OtherIterators>
-		constexpr void foreachTuple(::llcpp::meta::utils::Tuple<OtherIterators...>& tuple) const noexcept requires(MODE == Mode::Zeroize) {
+		constexpr void foreachTuple(::llcpp::meta::utils::Tuple<OtherIterators...>& tuple) const noexcept {
 			(void)this->foreachOperation(tuple.getFirst());
-			if constexpr (!::std::is_same_v<decltype(tuple)::Next, ::llcpp::Emptyclass>)
+			if constexpr (!::std::is_same_v<typename decltype(tuple)::Next, ::llcpp::Emptyclass>)
 				(void)this->foreachTuple(tuple.getSecond());
 		}
 		template<class... OtherIterators>
-		__LL_NODISCARD__ constexpr LoopResult foreachOperation(T& t, ::llcpp::meta::utils::Tuple<OtherIterators...>& tuple) const noexcept requires(MODE == Mode::Zeroize) {
+		__LL_NODISCARD__ constexpr LoopResult foreachOperation(T& t, ::llcpp::meta::utils::Tuple<OtherIterators...>& tuple) const noexcept {
 			(void)this->foreachOperation(t);
 			this->foreachTuple(tuple);
 			return LoopResult::Conntinue;
@@ -151,6 +160,19 @@ using IteratorCleaner =
 		>
 	>;
 
+template<class Iterator, class IteratorEnd = Iterator>
+	requires ::llcpp::meta::concepts::is_object::IsIterator<Iterator>
+		&& ::llcpp::meta::concepts::is_object::IsIterator<IteratorEnd>
+using IteratorFill =
+	::llcpp::meta::utils::IteratorUtils<
+		Iterator,
+		IteratorEnd,
+		::llcpp::meta::utils::IteratorCommon<
+			::std::remove_reference_t<decltype(*::std::declval<Iterator>())>,
+			::llcpp::meta::utils::IteratorCommonMode::Fill
+		>
+	>;
+
 #endif // LLANYLIB_ITERATORUTILS_HPP_
 
 } // namespace utils
@@ -158,3 +180,7 @@ using IteratorCleaner =
 } // namespace llcpp
 
 #endif // LLANYLIB_ITERATORCOMMON_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

@@ -228,3 +228,7 @@ using ConstPointerIterator = ::llcpp::meta::utils::PointerIterator<const T, IS_R
 } // namespace llcpp
 
 #endif // LLANYLIB_POINTERITERATOR_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

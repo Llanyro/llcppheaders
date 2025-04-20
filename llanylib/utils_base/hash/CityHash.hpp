@@ -39,6 +39,7 @@
 	#define LLANYLIB_CITYHASH_MINOR_ 0
 
 #include "../../traits/ValidationChecker.hpp"
+#include "../../traits_base/checker.hpp"
 
 #include "../Exceptions.hpp"	// Could be disabled
 #include "../bits.hpp"
@@ -51,8 +52,8 @@ namespace concepts {
 namespace hash {
 namespace city {
 
-template<class T>
-concept IsValidCityHashExtra = requires (const T t, const u64 u6, const u32 u3) {
+template<class Base>
+concept IsValidCityHashExtra = requires (const Base t, const u64 u6, const u32 u3) {
 	{ t.u64_in_expected_order(u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
 	{ t.u32_in_expected_order(u3) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u32>;
 	{ t.hash16bytes(u6, u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
@@ -90,7 +91,9 @@ class CityHashFunctions : public ::llcpp::AlwaysValidTag {
 };
 
 template<class _ExtraFunctions = ::llcpp::meta::utils::hash::CityHashFunctions>
-	requires ::llcpp::meta::concepts::hash::city::IsValidCityHashExtra<_ExtraFunctions>
+	requires
+		::llcpp::meta::concepts::hash::city::IsValidCityHashExtra<_ExtraFunctions>
+		&& ::llcpp::meta::traits::is_valid_constructor_checker_v<_ExtraFunctions>
 class CityHash
 	: public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>
 	, public _ExtraFunctions
@@ -115,7 +118,7 @@ class CityHash
 	public:
 		constexpr CityHash() noexcept = default;
 		template<class... Args>
-		constexpr CityHash(Args&&... args) noexcept
+		constexpr CityHash(Args&&... args) noexcept requires(::std::is_nothrow_constructible_v<ExtraFunctions, Args...>)
 			: ValidTag()
 			, ExtraFunctions(::std::forward<Args>(args)...)
 		{}
@@ -370,3 +373,7 @@ class CityHash
 } // namespace llcpp
 
 #endif // LLANYLIB_CITYHASH_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

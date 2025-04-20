@@ -28,11 +28,11 @@ namespace llcpp {
 namespace meta {
 namespace utils {
 
-template<class _T, class... _Args>
-class Tuple;
+template<ll_bool_t _IS_REFERENCE, class _T, class... _Args>
+class TupleBase;
 
-template<class _T>
-class Tuple<_T>;
+template<ll_bool_t _IS_REFERENCE, class _T>
+class TupleBase<_IS_REFERENCE, _T>;
 
 } // namespace utils
 } // namespace meta
@@ -59,42 +59,52 @@ namespace llcpp {
 namespace meta {
 namespace utils {
 
-template<class _T, class... _Args>
-class Tuple {
+template<ll_bool_t _IS_REFERENCE, class _T, class... _Args>
+class TupleBase;
+
+template<ll_bool_t _IS_REFERENCE, class _T>
+class TupleBase<_IS_REFERENCE, _T>;
+
+namespace __utils__ {
+
+template<ll_bool_t IS_REFERENCE, class T, class... Args>
+__LL_NODISCARD__ constexpr auto generate_tuple() noexcept {
+	if constexpr (::llcpp::meta::traits::is_empty_type_v<T>) {
+		if constexpr (sizeof...(Args) == 0)
+			return ::llcpp::meta::traits::TypeContainer<::llcpp::meta::utils::TupleBase<IS_REFERENCE, ::llcpp::Emptyclass>>{};
+		else return ::llcpp::meta::utils::__utils__::generate_tuple<IS_REFERENCE, Args...>();
+	}
+	else {
+		if constexpr (sizeof...(Args) == 0)
+			return ::llcpp::meta::traits::TypeContainer<::llcpp::meta::utils::TupleBase<IS_REFERENCE, T>>{};
+		else return ::llcpp::meta::traits::TypeContainer<::llcpp::meta::utils::TupleBase<IS_REFERENCE, T, Args...>>{};
+	}
+}
+
+template<ll_bool_t IS_REFERENCE, class... Args>
+using tuple_base_t = decltype(::llcpp::meta::utils::__utils__::generate_tuple<IS_REFERENCE, Args...>())::value_type;
+
+} // namespace __utils__
+
+template<ll_bool_t _IS_REFERENCE, class _T, class... _Args>
+class TupleBase {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType		= Tuple;
+		using _MyType		= TupleBase;
 
 		// Types and enums
-		using T				= _T;
+		using T				= ::llcpp::meta::traits::conditional_t<_IS_REFERENCE, _T&, _T>;
 		using type			= T;	// standard
 		using value_type	= T;	// standard
-
-		// Type functions
-	protected:
-		template<class _U, class... _uArgs>
-		__LL_NODISCARD__ static constexpr auto generateTuple() noexcept {
-			using EmptyTuple = ::llcpp::meta::traits::TypeContainer<
-				::llcpp::meta::utils::Tuple<::llcpp::Emptyclass>
-			>;
-			if constexpr (::llcpp::meta::traits::is_empty_type_v<_U>) {
-				if constexpr (sizeof...(_uArgs) == 0)
-					return EmptyTuple{};
-				else return _MyType::generateTuple<_uArgs...>();
-			}
-			else {
-				if constexpr (sizeof...(_uArgs) == 0)
-					return ::llcpp::meta::traits::TypeContainer<::llcpp::meta::utils::Tuple<_U>>{};
-				else return ::llcpp::meta::traits::TypeContainer<::llcpp::meta::utils::Tuple<_U, _uArgs...>>{};
-			}
-		}
-
-	public:
-		template<class... _uArgs>
-		using NextTuple		= decltype(_MyType::generateTuple<_uArgs...>())::T;
-		using Next			= NextTuple<_Args...>;
+		using reference		= ::std::remove_reference_t<T>&;
+		using Next			= ::llcpp::meta::utils::__utils__::tuple_base_t<_IS_REFERENCE, _Args...>;
 		using U				= Next;
+
+	#pragma endregion
+	#pragma region Expresions
+	public:
+		static constexpr ll_bool_t IS_REFERENCE	= _IS_REFERENCE;
 
 	#pragma endregion
 	#pragma region Attributes
@@ -106,77 +116,74 @@ class Tuple {
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr Tuple() noexcept
-			: first()
-			, second()
-		{}
+		constexpr TupleBase() noexcept = default;
 		template<class... uArgs>
-		constexpr Tuple(const T& value, uArgs&&... args) noexcept
+		constexpr TupleBase(const T& value, uArgs&&... args) noexcept
 			: first(::std::forward<const T&>(value))
 			, second(::std::forward<uArgs&&>(args)...)
 		{}
 		template<class... uArgs>
-		constexpr Tuple(T&& value, uArgs&&... args) noexcept
+		constexpr TupleBase(T&& value, uArgs&&... args) noexcept
 			: first(::std::forward<T&&>(value))
 			, second(::std::forward<uArgs&&>(args)...)
 		{}
-		constexpr ~Tuple() noexcept {}
+		constexpr ~TupleBase() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr Tuple(const Tuple& other) noexcept
+		constexpr TupleBase(const TupleBase& other) noexcept
 			: first(::std::forward<const T&>(other.first))
 			, second(::std::forward<const Next&>(other.second))
 		{}
-		constexpr Tuple& operator=(const Tuple& other) noexcept {
+		constexpr TupleBase& operator=(const TupleBase& other) noexcept {
 			this->first = ::std::forward<const T&>(other.first);
 			this->second = ::std::forward<const Next&>(other.second);
 			return *this;
 		}
-		constexpr Tuple(Tuple&& other) noexcept
+		constexpr TupleBase(TupleBase&& other) noexcept
 			: first(::std::forward<T&&>(other.first))
 			, second(::std::forward<Next&&>(other.second))
 		{}
-		constexpr Tuple& operator=(Tuple&& other) noexcept {
+		constexpr TupleBase& operator=(TupleBase&& other) noexcept {
 			this->first = ::std::forward<T&&>(other.first);
 			this->second = ::std::forward<Next&&>(other.second);
 			return *this;
 		}
 
-		constexpr Tuple(const T& value) noexcept
+		constexpr TupleBase(const T& value) noexcept
 			: first(::std::forward<const T&>(value))
 			, second()
 		{}
-		constexpr Tuple& operator=(const T& value) noexcept {
+		constexpr TupleBase& operator=(const T& value) noexcept {
 			this->first = ::std::forward<const T&>(value);
 			return *this;
 		}
-		constexpr Tuple(T&& value) noexcept
+		constexpr TupleBase(T&& value) noexcept
 			: first(::std::forward<T&&>(value))
 			, second()
 		{}
-		constexpr Tuple& operator=(T&& value) noexcept {
+		constexpr TupleBase& operator=(T&& value) noexcept {
 			this->first = ::std::forward<T&&>(value);
 			return *this;
 		}
 
-		constexpr Tuple(volatile const Tuple& other) noexcept = delete;
-		constexpr Tuple& operator=(volatile const Tuple& other) noexcept = delete;
-		constexpr Tuple(volatile Tuple&& other) noexcept = delete;
-		constexpr Tuple& operator=(volatile Tuple&& other) noexcept = delete;
+		constexpr TupleBase(volatile const TupleBase& other) noexcept = delete;
+		constexpr TupleBase& operator=(volatile const TupleBase& other) noexcept = delete;
+		constexpr TupleBase(volatile TupleBase&& other) noexcept = delete;
+		constexpr TupleBase& operator=(volatile TupleBase&& other) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr explicit operator const Tuple*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator Tuple*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const TupleBase*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator TupleBase*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
-		__LL_NODISCARD__ constexpr T& getFirst() noexcept { return this->first; }
-		__LL_NODISCARD__ constexpr const T& getFirst() const noexcept { return this->first; }
+		__LL_NODISCARD__ constexpr reference getFirst() noexcept { return this->first; }
+		__LL_NODISCARD__ constexpr const reference getFirst() const noexcept { return this->first; }
 		__LL_NODISCARD__ constexpr U& getSecond() noexcept { return this->second; }
 		__LL_NODISCARD__ constexpr const U& getSecond() const noexcept { return this->second; }
 
@@ -196,7 +203,7 @@ class Tuple {
 		}
 
 		constexpr void operator++() noexcept {
-			if constexpr (::llcpp::meta::concepts::signature::HasPreIncrement)
+			if constexpr (::llcpp::meta::concepts::signature::HasPreIncrement<T>)
 				++this->getFirst();
 			this->getSecond().operator++();
 		}
@@ -206,19 +213,18 @@ class Tuple {
 	#pragma endregion
 };
 
-template<class _T>
-class Tuple<_T> {
+template<ll_bool_t _IS_REFERENCE, class _T>
+class TupleBase<_IS_REFERENCE, _T> {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType		= Tuple;
+		using _MyType		= TupleBase;
 
 		// Types and enums
-		using T				= _T;
+		using T				= ::llcpp::meta::traits::conditional_t<_IS_REFERENCE, _T&, _T>;
 		using type			= T;	// standard
 		using value_type	= T;	// standard
-		//template<class... _uArgs>
-		//using NextTuple		= Tuple<i8, u8>::template NextTuple<_uArgs...>;
+		using reference		= ::std::remove_reference_t<T>&;
 		using Next			= ::llcpp::Emptyclass;
 		using U				= Next;
 
@@ -231,59 +237,57 @@ class Tuple<_T> {
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr Tuple() noexcept
-			: first()
-		{}
-		constexpr ~Tuple() noexcept {}
+		constexpr TupleBase() noexcept = default;
+		constexpr ~TupleBase() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr Tuple(const Tuple& other) noexcept
+		constexpr TupleBase(const TupleBase& other) noexcept
 			: first(::std::forward<const T&>(other.first))
 		{}
-		constexpr Tuple& operator=(const Tuple& other) noexcept {
+		constexpr TupleBase& operator=(const TupleBase& other) noexcept {
 			this->first = ::std::forward<const T&>(other.first);
 			return *this;
 		}
-		constexpr Tuple(Tuple&& other) noexcept
+		constexpr TupleBase(TupleBase&& other) noexcept
 			: first(::std::forward<T&&>(other.first))
 		{}
-		constexpr Tuple& operator=(Tuple&& other) noexcept {
+		constexpr TupleBase& operator=(TupleBase&& other) noexcept {
 			this->first = ::std::forward<T&&>(other.first);
 			return *this;
 		}
 
-		constexpr Tuple(const T& value) noexcept
+		constexpr TupleBase(const T& value) noexcept
 			: first(::std::forward<const T&>(value))
 		{}
-		constexpr Tuple& operator=(const T& value) noexcept {
+		constexpr TupleBase& operator=(const T& value) noexcept {
 			this->first = ::std::forward<const T&>(value);
 			return *this;
 		}
-		constexpr Tuple(T&& value) noexcept
+		constexpr TupleBase(T&& value) noexcept
 			: first(::std::forward<T&&>(value))
 		{}
-		constexpr Tuple& operator=(T&& value) noexcept {
+		constexpr TupleBase& operator=(T&& value) noexcept {
 			this->first = ::std::forward<T&&>(value);
 			return *this;
 		}
 
-		constexpr Tuple(volatile const Tuple&) noexcept = delete;
-		constexpr Tuple& operator=(volatile const Tuple&) noexcept = delete;
-		constexpr Tuple(volatile Tuple&&) noexcept = delete;
-		constexpr Tuple& operator=(volatile Tuple&&) noexcept = delete;
+		constexpr TupleBase(volatile const TupleBase&) noexcept = delete;
+		constexpr TupleBase& operator=(volatile const TupleBase&) noexcept = delete;
+		constexpr TupleBase(volatile TupleBase&&) noexcept = delete;
+		constexpr TupleBase& operator=(volatile TupleBase&&) noexcept = delete;
 
-		constexpr Tuple(volatile const T&) noexcept = delete;
-		constexpr Tuple& operator=(volatile const T&) noexcept = delete;
-		constexpr Tuple(volatile T&&) noexcept = delete;
-		constexpr Tuple& operator=(volatile T&&) noexcept = delete;
+		constexpr TupleBase(volatile const T&) noexcept = delete;
+		constexpr TupleBase& operator=(volatile const T&) noexcept = delete;
+		constexpr TupleBase(volatile T&&) noexcept = delete;
+		constexpr TupleBase& operator=(volatile T&&) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr explicit operator const Tuple*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator Tuple*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const TupleBase*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator TupleBase*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -298,8 +302,8 @@ class Tuple<_T> {
 		//	this->first = ::std::forward<T&&>(value);
 		//}
 
-		__LL_NODISCARD__ constexpr T& getFirst() noexcept { return this->first; }
-		__LL_NODISCARD__ constexpr const T& getFirst() const noexcept { return this->first; }
+		__LL_NODISCARD__ constexpr reference getFirst() noexcept { return this->first; }
+		__LL_NODISCARD__ constexpr const reference getFirst() const noexcept { return this->first; }
 
 		template<class W, const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
 		__LL_NODISCARD__ constexpr W& getType() noexcept {
@@ -320,7 +324,7 @@ class Tuple<_T> {
 		}
 
 		constexpr void operator++() noexcept {
-			if constexpr (::llcpp::meta::concepts::signature::HasPreIncrement)
+			if constexpr (::llcpp::meta::concepts::signature::HasPreIncrement<T>)
 				++this->getFirst();
 		}
 
@@ -329,8 +333,17 @@ class Tuple<_T> {
 	#pragma endregion
 };
 
+template<class... Args>
+using Tuple = ::llcpp::meta::utils::__utils__::tuple_base_t<::llcpp::LL_FALSE, Args...>;
+template<class... Args>
+using TupleRef = ::llcpp::meta::utils::__utils__::tuple_base_t<::llcpp::LL_TRUE, Args...>;
+
 } // namespace utils
 } // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_TUPLE_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

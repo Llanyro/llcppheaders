@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	bitss.hpp								//
+//	bits.hpp								//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -10,9 +10,9 @@
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_BITS_INCOMPLETE_HPP_)
 	#if LLANYLIB_BITS_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_BITS_INCOMPLETE_MINOR_ < 0
 		#if __LL_REAL_CXX23 == 1
-			#warning "bitss.hpp(incomplete) version error!"
+			#warning "bits.hpp(incomplete) version error!"
 		#else
-			#error "bitss.hpp(incomplete) version error!"
+			#error "bits.hpp(incomplete) version error!"
 		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_BITS_INCOMPLETE_MAYOR_ || LLANYLIB_BITS_INCOMPLETE_MINOR_
@@ -25,9 +25,9 @@
 #elif defined(LLANYLIB_BITS_HPP_)
 	#if LLANYLIB_BITS_MAYOR_ != 12 || LLANYLIB_BITS_MINOR_ < 0
 		#if __LL_REAL_CXX23 == 1
-			#warning "bitss.hpp version error!"
+			#warning "bits.hpp version error!"
 		#else
-			#error "bitss.hpp version error!"
+			#error "bits.hpp version error!"
 		#endif // __LL_REAL_CXX23 == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_BITS_MAYOR_ || LLANYLIB_BITS_MINOR_
@@ -146,3 +146,7 @@ __LL_NODISCARD__ constexpr u8* primitive_to_bytearray(T& value, u8 (&buffer)[N])
 } // namespace llcpp
 
 #endif // LLANYLIB_BITS_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

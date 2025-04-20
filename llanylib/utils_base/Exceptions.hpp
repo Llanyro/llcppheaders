@@ -22,11 +22,7 @@
 	#define LLANYLIB_EXCEPTIONS_MAYOR_ 12
 	#define LLANYLIB_EXCEPTIONS_MINOR_ 0
 
-#include "../types/types.hpp"
 #include "../types/Errors.hpp"
-
-#if __LL_EXCEPTIONS == 1
-
 #include "IteratorUtils.hpp"
 #include "IteratorCommon.hpp"
 
@@ -120,8 +116,8 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 				__debug_error_exceptions_full("Exceptions list is full! You may fix some error or increase ExceptionBuffer");
 				return ::llcpp::LL_FALSE;
 			}
-			*(this->lifo_names_last++) = s;
-			*(this->lifo_errors_last++) = e;
+			//*(this->lifo_names_last++) = s;
+			//*(this->lifo_errors_last++) = e;
 			return ::llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t push(StringType s, ::llcpp::misc::Errors e) noexcept {
@@ -141,19 +137,21 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 	#pragma endregion
 };
 
+#if __LL_EXCEPTIONS == 1
+
 static ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #define ll_exceptions ::llcpp::exceptions::ex
 
 #define LOG_EXCEPTION(err) ll_exceptions.push(__LL_FUNCNAME__, err)
 #define LOG_EXCEPTION_TAG(tag, err) ll_exceptions.push(__LL_FUNCNAME__ " [ " tag " ]", err)
 
-} // namespace exceptions
-} // namespace llcpp
-
 #else
 	#define LOG_EXCEPTION(err) ::llcpp::IGNORE(err)
 	#define LOG_EXCEPTION_TAG(tag, err) ::llcpp::IGNORE(tag, err)
 #endif // __LL_EXCEPTIONS == 1
+
+} // namespace exceptions
+} // namespace llcpp
 
 #endif // LLANYLIB_EXCEPTIONS_HPP_
 

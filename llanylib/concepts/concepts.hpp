@@ -44,7 +44,7 @@ concept IsSameOrVoid = ::llcpp::meta::traits::conditional_value_simple_v<
 	::llcpp::LL_TRUE,
 	::std::is_same_v<T, U> && ::std::is_same_v<U, T>
 >;
-	
+
 template<class T, class U>
 concept FristBiggerSize		= sizeof(T) > sizeof(U);
 template<class T, class U>

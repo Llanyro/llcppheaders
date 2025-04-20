@@ -142,15 +142,12 @@ class ListBody : public _ArrayBase {
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr ListBody() noexcept
-			: ArrayBase()
-		{}
+		constexpr ListBody() noexcept = default;
 		template<class... Args>
-			requires ::std::is_nothrow_constructible_v<ArrayBase, Args...>
-		constexpr ListBody(Args&&... args) noexcept
+		constexpr ListBody(Args&&... args) noexcept requires(::std::is_nothrow_constructible_v<ArrayBase, Args...>)
 			: ArrayBase(::std::forward<Args>(args)...)
 		{}
-		constexpr ~ListBody() noexcept {}
+		constexpr ~ListBody() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove
@@ -351,3 +348,7 @@ class ListBody : public _ArrayBase {
 #undef CHECK_POSITIONS_DEBUG_EXCEPTION
 
 #endif // LLANYLIB_LISTBODY_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

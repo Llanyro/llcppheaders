@@ -178,12 +178,12 @@ class ArrayBase {
 		constexpr ArrayBase(default_iterator mem, const usize len) noexcept
 			: ArrayBase(mem, mem + len)
 		{}
-		template<usize N, class U>
-		explicit constexpr ArrayBase(default_iterator (&v)[N]) noexcept requires(::std::is_same_v<T, U>)
+		template<usize N>
+		constexpr ArrayBase(default_iterator (&v)[N]) noexcept
 			: ArrayBase(v, v + N)
 		{}
-		template<usize N, class U>
-		explicit constexpr ArrayBase& operator=(default_iterator (&v)[N]) noexcept requires(::std::is_same_v<T, U>) {
+		template<usize N>
+		constexpr ArrayBase& operator=(default_iterator (&v)[N]) noexcept {
 			this->resetValidation(v, N);
 			return *this;
 		}
@@ -291,6 +291,8 @@ using Str = ::llcpp::meta::utils::ArrayBase<ll_char_t, ENABLE_NO_CONST, USE_OBJE
 template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 using wStr = ::llcpp::meta::utils::ArrayBase<ll_wchar_t, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
 
+#define ARR_PREP(arr) (arr, arr + ::llcpp::meta::traits::array_size<decltype(arr)>)
+
 } // namespace utils
 } // namespace meta
 } // namespace llcpp
@@ -298,3 +300,7 @@ using wStr = ::llcpp::meta::utils::ArrayBase<ll_wchar_t, ENABLE_NO_CONST, USE_OB
 #undef CHECK_RESET_VALIDATION
 
 #endif // LLANYLIB_ARRAYBASE_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

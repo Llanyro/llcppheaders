@@ -222,3 +222,7 @@ __LL_NODISCARD__ constexpr HashAlgorithm::Hash hash_primitive_array(
 } // namespace llcpp
 
 #endif // LLANYLIB_ALGORITHM_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

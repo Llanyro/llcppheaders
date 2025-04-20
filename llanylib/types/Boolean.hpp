@@ -75,7 +75,7 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 		#pragma region Constructor
 	public:
 		constexpr Boolean() noexcept : value(_MyType::enum_bool::Unknown) {}
-		constexpr ~Boolean() noexcept {}
+		constexpr ~Boolean() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove

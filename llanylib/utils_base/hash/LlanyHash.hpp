@@ -38,6 +38,8 @@
 	#define LLANYLIB_LLANYHASH_MAYOR_ 12
 	#define LLANYLIB_LLANYHASH_MINOR_ 0
 
+#include "../../traits_base/checker.hpp"
+
 #include "../Exceptions.hpp"
 #include "../bits.hpp"
 
@@ -77,8 +79,9 @@ template<
 	class _Algorithm = ::llcpp::meta::utils::hash::Algorithm<u64, ::llcpp::meta::utils::hash::AlgorithmMode::SimplestCombine>
 >
 	requires
-			::llcpp::meta::concepts::hash::llcpp::IsValidLlanyHashAlgorithm<_Algorithm>
-			&& ::llcpp::meta::traits::is_same_su_v<T, u8>
+		::llcpp::meta::concepts::hash::llcpp::IsValidLlanyHashAlgorithm<_Algorithm>
+		&& ::llcpp::meta::traits::is_same_su_v<T, u8>
+		&&::llcpp::meta::traits::is_valid_constructor_checker_v<_Algorithm>
 class LlanyHash
 	: public ::llcpp::meta::traits::ValidationWrapper<_Algorithm, ::llcpp::AlwaysValidTag>
 	, public _Algorithm
@@ -101,7 +104,7 @@ class LlanyHash
 	public:
 		constexpr LlanyHash() noexcept = default;
 		template<class... Args>
-		constexpr LlanyHash(Args&&... args) noexcept
+		constexpr LlanyHash(Args&&... args) noexcept requires(::std::is_nothrow_constructible_v<Algorithm, Args...>)
 			: ValidTag()
 			, Algorithm(::std::forward<Args>(args)...)
 		{}
@@ -243,3 +246,7 @@ class LlanyHash
 } // namespace llcpp
 
 #endif // LLANYLIB_LLANYHASH_HPP_
+
+#if defined(LLANYLIB_ERROR_HPP_)
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_

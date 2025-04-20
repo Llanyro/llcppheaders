@@ -89,8 +89,7 @@ class TypeChecker {
 	public:
 		// Asserts
 		static_assert(REFERENCE,"Reference type is forbidden!");
-		// [TODO] [TOCHECK]
-		//static_assert(CONST,	"Const type is forbidden!");
+		static_assert(CONST,	"Const type is forbidden!");
 		static_assert(POINTER,	"Pointer type is forbidden!");
 		static_assert(ARRAY,	"Array type is forbidden!");
 		static_assert(VOLATILE,	"Volatile type is forbidden!");

@@ -93,6 +93,7 @@
 	#define __LL_INLINE__ inline
 	#define __LL_FUNCNAME__ __LL_L __PRETTY_FUNCTION__
 	#define __MSVC_CDECL
+	#define __STD_SIZE_T long unsigned int
 #else
 	#define __LL_INLINE__ inline
 	#define __MSVC_CDECL

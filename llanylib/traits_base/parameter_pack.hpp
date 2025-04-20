@@ -36,10 +36,10 @@ class FirstType<_T>;
 
 } // namespace __traits__
 
-template <class... Args>
+template <class... _Args>
 class ParameterPackOperations;
-template <class T>
-class ParameterPackOperations<T>;
+template <class _T>
+class ParameterPackOperations<_T>;
 template <>
 class ParameterPackOperations<>;
 

@@ -22,13 +22,9 @@
 	#define LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MINOR_ 0
 
-namespace llcpp {
-namespace meta {
-namespace traits {
-} // namespace traits
-} // namespace meta
-} // namespace llcpp
-
+#include "type_traits.hpp"
+#include "../types/ValidType.hpp"
+	
 #elif defined(LLANYLIB_TRAITSVALIDTYPE_HPP_)
 	#if LLANYLIB_TRAITSVALIDTYPE_MAYOR_ != 12 || LLANYLIB_TRAITSVALIDTYPE_MINOR_ < 0
 		#if __LL_REAL_CXX23 == 1

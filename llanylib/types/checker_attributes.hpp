@@ -34,7 +34,6 @@ struct checker_attributes_t;
 } // namespace meta
 } // namespace llcpp
 
-
 #elif defined(LLANYLIB_CHECKERATTRIBUTES_HPP_)
 	#if LLANYLIB_CHECKERATTRIBUTES_MAYOR_ != 12 || LLANYLIB_CHECKERATTRIBUTES_MINOR_ < 0
 		#if __LL_REAL_CXX23 == 1

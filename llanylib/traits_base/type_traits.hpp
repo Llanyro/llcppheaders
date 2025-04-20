@@ -25,14 +25,6 @@
 #include "../types/types.hpp"
 
 namespace llcpp {
-
-// [TOFIX]
-// Update types to Integer
-using i128 = ::llcpp::meta::pair<i64, i64>;
-using i256 = ::llcpp::meta::pair<i128, i128>;
-using u128 = ::llcpp::meta::pair<u64, u64>;
-using u256 = ::llcpp::meta::pair<u128, u128>;
-
 namespace meta {
 namespace traits {
 
@@ -62,6 +54,18 @@ class IntegralConstantContainer;
 
 template<class _T, class _U, _T _FIRST, _U _SECOND>
 class DoubleConstantContainer;
+
+template<ll_bool_t VALUE, class U>
+using BoolConstantContainer = ::llcpp::meta::traits::IntegralConstantContainer<ll_bool_t, VALUE, U>;
+
+using TrueContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::LL_TRUE, ::llcpp::Emptyclass>;
+using FalseContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::llcpp::LL_FALSE, ::llcpp::Emptyclass>;
+
+template<class U, class T, T EXP1, T EXP2>
+using IsSameTypeExpresion = ::llcpp::meta::traits::BoolConstantContainer<EXP1 == EXP2, U>;
+template<class U, class T, T EXP1, T EXP2>
+using IsNotSameTypeExpresion = ::llcpp::meta::traits::BoolConstantContainer<EXP1 != EXP2, U>;
+
 
 template<ll_bool_t _CONDITION, class _T, class _U>
 class Conditional;
@@ -136,26 +140,6 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_value_constant_v = ::llcpp::meta::trai
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_integral_constant_container_v =
 	::llcpp::meta::traits::has_value_type_v<T> && ::llcpp::meta::traits::has_value_constant_v<T>;
-
-#pragma endregion
-#pragma region LlanylibChecker
-template <class T, class = void>
-class HasLLCPPValueType : public ::std::false_type {};
-template<class T>
-struct HasLLCPPValueType<T, ::std::void_t<typename T::T>> : public ::std::true_type {};
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_llcpp_value_type_v = ::llcpp::meta::traits::HasLLCPPValueType<T>::value;
-
-template <class T, class = void>
-struct HasLLCPPValueConstant : public ::std::false_type {};
-template<class T>
-struct HasLLCPPValueConstant<T, ::std::void_t<decltype(T::value)>> : public ::std::true_type {};
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_llcpp_value_constant_v = ::llcpp::meta::traits::HasLLCPPValueConstant<T>::value;
-
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_llcpp_valid_integral_constant_container_v =
-	::llcpp::meta::traits::has_llcpp_value_type_v<T> && ::llcpp::meta::traits::has_llcpp_value_constant_v<T>;
 
 #pragma endregion
 #pragma region Containers
@@ -483,10 +467,6 @@ template<class CompareType, class BaseTypeSigned>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_same_su_v =
 	::std::is_same_v<CompareType, ::llcpp::meta::traits::type_signalize_u<BaseTypeSigned>> ||
 	::std::is_same_v<CompareType, ::llcpp::meta::traits::type_unsignalize_u<BaseTypeSigned>>;
-
-#pragma endregion
-#pragma region ConstChecker
-
 
 #pragma endregion
 #pragma region Limits

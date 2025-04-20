@@ -35,38 +35,10 @@ namespace std {
 struct strong_ordering;
 struct partial_ordering;
 struct weak_ordering;
-
-//template <class _Ty>
-//class allocator;
-//template <class _Elem>
-//struct char_traits;
-//template <
-//	class _Elem,
-//	class _Traits = ::std::char_traits<_Elem>,
-//	class _Alloc = ::std::allocator<_Elem>
-//>
-//class basic_string;
-//template <class _Elem, class _Traits>
-//class basic_string_view;
-
-//typedef ::std::basic_string<char>										string;
-//typedef ::std::basic_string<wchar_t>									wstring;
-//typedef ::std::basic_string_view<char, ::std::char_traits<char>>		string_view;
-//typedef ::std::basic_string_view<wchar_t, ::std::char_traits<wchar_t>>	wstring_view;
-
 template <class _Fty>
 class function;
-//template <class _Ty, class _Alloc = allocator<_Ty>>
-//class vector;
-//template <class _Ty, class _Alloc = allocator<_Ty>>
-//class list;
-
 template <class T1, class T2>
 struct pair;
-
-//template <class _Ty>
-//class optional;
-
 namespace filesystem {
 class directory_entry;
 } // namespace filesystem

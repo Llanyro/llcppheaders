@@ -7,13 +7,50 @@
 //	Version: 12.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_CONCEPTS_HPP_) // Guard && version protector
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CONCEPTS_INCOMPLETE_HPP_)
+	#if LLANYLIB_CONCEPTS_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_CONCEPTS_INCOMPLETE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "concepts.hpp(incomplete) version error!"
+		#else
+			#error "concepts.hpp(incomplete) version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_CONCEPTS_INCOMPLETE_MAYOR_ || LLANYLIB_CONCEPTS_INCOMPLETE_MINOR_
+
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_CONCEPTS_INCOMPLETE_HPP_)
+	#define LLANYLIB_CONCEPTS_INCOMPLETE_HPP_
+	#define LLANYLIB_CONCEPTS_INCOMPLETE_MAYOR_ 12
+	#define LLANYLIB_CONCEPTS_INCOMPLETE_MINOR_ 0
+
+#include "../traits_base/type_traits_extended.hpp"
+
+namespace llcpp {
+namespace meta {
+namespace concepts {
+namespace base {
+
+template<ll_bool_t VALUE>
+concept IsValidConcept = VALUE;
+
+template<class T, class U>
+concept FristBiggerSize		= sizeof(T) > sizeof(U);
+template<class T, class U>
+concept FristSmallerSize	= sizeof(T) < sizeof(U);
+template<class T, class U>
+concept EqualSize			= sizeof(T) == sizeof(U);
+
+} // namespace base
+} // namespace concepts
+} // namespace meta
+} // namespace llcpp
+
+#elif defined(LLANYLIB_CONCEPTS_HPP_)
 	#if LLANYLIB_CONCEPTS_MAYOR_ != 12 || LLANYLIB_CONCEPTS_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if defined(__LL_REAL_CXX23)
 			#warning "concepts.hpp version error!"
 		#else
 			#error "concepts.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CONCEPTS_MAYOR_ || LLANYLIB_CONCEPTS_MINOR_
 

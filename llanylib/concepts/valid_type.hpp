@@ -7,6 +7,71 @@
 //	Version: 12.0							//
 //////////////////////////////////////////////
 
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_VALIDTYPE_INCOMPLETE_HPP_)
+	#if LLANYLIB_VALIDTYPE_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_VALIDTYPE_INCOMPLETE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "valid_type.hpp(incomplete) version error!"
+		#else
+			#error "valid_type.hpp(incomplete) version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_VALIDTYPE_INCOMPLETE_MAYOR_ || LLANYLIB_VALIDTYPE_INCOMPLETE_MINOR_
+
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_VALIDTYPE_INCOMPLETE_HPP_)
+	#define LLANYLIB_VALIDTYPE_INCOMPLETE_HPP_
+	#define LLANYLIB_VALIDTYPE_INCOMPLETE_MAYOR_ 12
+	#define LLANYLIB_VALIDTYPE_INCOMPLETE_MINOR_ 0
+
+
+#elif defined(LLANYLIB_VALIDTYPE_HPP_)
+	#if LLANYLIB_VALIDTYPE_MAYOR_ != 12 || LLANYLIB_VALIDTYPE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "valid_type.hpp version error!"
+		#else
+			#error "valid_type.hpp version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_VALIDTYPE_MAYOR_ || LLANYLIB_VALIDTYPE_MINOR_
+
+#else
+	#define LLANYLIB_VALIDTYPE_HPP_
+	#define LLANYLIB_VALIDTYPE_MAYOR_ 12
+	#define LLANYLIB_VALIDTYPE_MINOR_ 0
+
+#endif // LLANYLIB_VALIDTYPE_HPP_
+
+#if !defined(LLANYLIB_ERROR_HPP_)
+	#if defined(LLANYLIB_VALIDTYPE_EXTRA_HPP_)
+		#if LLANYLIB_VALIDTYPE_EXTRA_MAYOR_ != 12 || LLANYLIB_VALIDTYPE_EXTRA_MINOR_ < 0
+			#if defined(__LL_REAL_CXX23)
+				#warning "valid_type.hpp(extra) version error!"
+			#else
+				#error "valid_type.hpp(extra) version error!"
+			#endif // __LL_REAL_CXX23
+		#endif // LLANYLIB_VALIDTYPE_EXTRA_MAYOR_ || LLANYLIB_VALIDTYPE_EXTRA_MINOR_
+
+	#else
+		#define LLANYLIB_VALIDTYPE_EXTRA_HPP_
+		#define LLANYLIB_VALIDTYPE_EXTRA_MAYOR_ 12
+		#define LLANYLIB_VALIDTYPE_EXTRA_MINOR_ 0
+
+	#endif // LLANYLIB_VALIDTYPE_EXTRA_HPP_
+#else
+	#undef LLANYLIB_ERROR_HPP_
+#endif // LLANYLIB_ERROR_HPP_
+
+
+
+
+//////////////////////////////////////////////
+//	valid_type.hpp							//
+//											//
+//	Author: Francisco Julio Ruiz Fernandez	//
+//	Author: llanyro							//
+//											//
+//	Version: 12.0							//
+//////////////////////////////////////////////
+
 #if defined(LLANYLIB_VALID_TYPE_HPP_) // Guard && version protector
 	#if LLANYLIB_VALID_TYPE_MAYOR_ != 12 || LLANYLIB_VALID_TYPE_MINOR_ < 0
 		#if __LL_REAL_CXX23 == 1

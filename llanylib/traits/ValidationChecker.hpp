@@ -75,36 +75,36 @@ class ValidationChecker {
 	private:
 		// Process type to get if is a always valid class or other
 		template<class T>
-		__LL_NODISCARD__ static constexpr ::llcpp::meta::ValidType getValidType() noexcept {
+		__LL_NODISCARD__ static constexpr ::llcpp::misc::ValidType getValidType() noexcept {
 			constexpr ll_bool_t IS_VALID = ::llcpp::meta::concepts::base::IsAlwaysValid<T>;
 			constexpr ll_bool_t IS_INVALID = ::llcpp::meta::concepts::base::IsAlwaysInvalid<T>;
 
 			if constexpr (::llcpp::meta::traits::is_primitive_v<T>)
-				return ::llcpp::meta::ValidType::Primitive;
+				return ::llcpp::misc::ValidType::Primitive;
 			else if constexpr (::std::is_array_v<T>)
-				return ::llcpp::meta::ValidType::Array;
+				return ::llcpp::misc::ValidType::Array;
 			else if constexpr (::std::is_pointer_v<T>)
-				return ::llcpp::meta::ValidType::Pointer;
+				return ::llcpp::misc::ValidType::Pointer;
 			else if constexpr (IS_VALID && IS_INVALID) {
 				static_assert(IS_VALID && IS_INVALID,
 					"A class has AlwaysValidTag and AlwaysInvalidTag attributes!");
-				return ::llcpp::meta::ValidType::Error;
+				return ::llcpp::misc::ValidType::Error;
 			}
 			else if constexpr (IS_VALID)
-				return ::llcpp::meta::ValidType::Valid;
+				return ::llcpp::misc::ValidType::Valid;
 			else if constexpr (IS_INVALID)
-				return ::llcpp::meta::ValidType::Invalid;
+				return ::llcpp::misc::ValidType::Invalid;
 			else if constexpr (::llcpp::meta::concepts::signature::HasValidationType<T>)
-				return ::llcpp::meta::ValidType::ToCheck;
-			else return ::llcpp::meta::ValidType::Unknown;
+				return ::llcpp::misc::ValidType::ToCheck;
+			else return ::llcpp::misc::ValidType::Unknown;
 		}
 
 		// Checks if valid attriute is out of bounds
 		template<class T>
 		__LL_NODISCARD__ static constexpr ll_bool_t hasValidAttribute() noexcept {
 			constexpr u8 result = static_cast<u8>(_MyType::getValidType<T>());
-			//constexpr u8 MIN = static_cast<u8>(::llcpp::meta::ValidType::Valid);
-			constexpr u8 MAX = static_cast<u8>(::llcpp::meta::ValidType::Error);
+			//constexpr u8 MIN = static_cast<u8>(::llcpp::misc::ValidType::Valid);
+			constexpr u8 MAX = static_cast<u8>(::llcpp::misc::ValidType::Error);
 			return result <= MAX;
 			//return result >= MIN && result <= MAX;
 		}
@@ -112,8 +112,8 @@ class ValidationChecker {
 		template<class T>
 		__LL_NODISCARD__ static constexpr ll_bool_t isValid() noexcept {
 			switch (_MyType::getValidType<T>()) {
-				case ::llcpp::meta::ValidType::Invalid:
-				case ::llcpp::meta::ValidType::Valid:
+				case ::llcpp::misc::ValidType::Invalid:
+				case ::llcpp::misc::ValidType::Valid:
 					return true;
 				default:
 					return false;
@@ -126,8 +126,8 @@ class ValidationChecker {
 		template<class T>
 		static constexpr ll_bool_t has_valid_attribute_v = _MyType::hasValidAttribute<T>();
 		template<class T>
-		static constexpr ::llcpp::meta::ValidType valid_type_v = _MyType::getValidType<T>();
-		template<class T, ::llcpp::meta::ValidType _TYPE>
+		static constexpr ::llcpp::misc::ValidType valid_type_v = _MyType::getValidType<T>();
+		template<class T, ::llcpp::misc::ValidType _TYPE>
 		static constexpr ll_bool_t is_same_valid_type_v = _MyType::getValidType<T>() == _TYPE;
 
 		template<
@@ -161,7 +161,7 @@ using ValidationWrapper =
 	::llcpp::meta::traits::conditional_t<
 		::llcpp::meta::traits::ValidationChecker::is_same_valid_type_v<
 			ClassToCheck,
-			::llcpp::meta::ValidType::Unknown
+			::llcpp::misc::ValidType::Unknown
 		>,
 		InhertiExtra,
 		::llcpp::DummyClass

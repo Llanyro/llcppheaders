@@ -323,13 +323,13 @@ class ListBody : public _ArrayBase {
 		#pragma endregion
 		#pragma region Other
 	public:
-		__LL_NODISCARD__ constexpr ::llcpp::meta::ValidType validationType() const noexcept {
+		__LL_NODISCARD__ constexpr ::llcpp::misc::ValidType validationType() const noexcept {
 			if constexpr (::llcpp::meta::concepts::signature::HasValidationType<ArrayBase>)
 				return ArrayBase::validationType();
 			else return
 				this->begin() <= this->end()
-				? ::llcpp::meta::ValidType::Valid
-				: ::llcpp::meta::ValidType::Invalid;
+				? ::llcpp::misc::ValidType::Valid
+				: ::llcpp::misc::ValidType::Invalid;
 		}
 		//constexpr void makeInvalid() noexcept { this->clear(); }
 		//__LL_NODISCARD__ constexpr ll_bool_t resetValidation(const_pointer mem, const_pointer mem_end) noexcept {

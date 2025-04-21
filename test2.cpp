@@ -14,9 +14,18 @@ int main() {
 		printf("%i, ", i);
 	putchar('\n');
 
-	for(auto& i : values)		++i;
-	for(auto& i : char_values)	i = 'a';
-	for(auto& i : short_values) i = 88;
+	char* cha = char_values.data();
+	short* sh = short_values.data();
+	int* in = values.data();
+	for(int* end = values.data() + values.size(); in < end; ++in, ++sh, ++cha) {
+		++(*in);
+		cha[0] = 'a';
+		sh[0] = 88;
+	}
+
+	//for(auto& i : values)		++i;
+	//for(auto& i : char_values)	i = 'a';
+	//for(auto& i : short_values) i = 88;
 
 	for(const auto& i : values) printf("%i, ", i);
 	putchar('\n');

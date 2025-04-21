@@ -204,7 +204,7 @@ int main() {
 
 	/*int vecc[17]{};
 	auto arr = ::llcpp::meta::make_Array(vecc);
-	if (arr.validationType() != ::llcpp::meta::ValidType::Valid) {
+	if (arr.validationType() != ::llcpp::misc::ValidType::Valid) {
 		::std::cout << "Error: " << ::magic_enum::enum_name(arr.validationType()) << std::endl;
 		return -1;
 	}*/

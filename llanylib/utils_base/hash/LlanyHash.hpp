@@ -67,11 +67,28 @@ concept HasMemcopy = requires (const T t, byte* dst, const byte* src, u8 bytes) 
 namespace utils {
 namespace hash {
 
-#define __LL_PRECHECK__ \
-	if (!s) { \
-		if constexpr (::llcpp::EXCEPTIONS) \
-			(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided); \
-		return ::llcpp::ZERO_VALUE<u64>; \
+#define LL_STRING_EXCEPTION_CHECK											\
+	if (s.begin() == 0) {													\
+		if constexpr (::llcpp::EXCEPTIONS)									\
+			(void)LOG_EXCEPTION(::llcpp::misc::Errors::EmptyString);		\
+		return ::llcpp::ZERO_VALUE<u64>;									\
+	}																		\
+	else if (s.size() == 0) {												\
+		if constexpr (::llcpp::EXCEPTIONS)									\
+			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
+		return ::llcpp::ZERO_VALUE<u64>;									\
+	}
+
+#define LL_NULL_STRING_EXCEPTION_CHECK(s, len)								\
+	if (!s) {																\
+		if constexpr (::llcpp::EXCEPTIONS)									\
+			(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);	\
+		return ::llcpp::ZERO_VALUE<u64>;									\
+	}																		\
+	else if (len) {															\
+		if constexpr (::llcpp::EXCEPTIONS)									\
+			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
+		return ::llcpp::ZERO_VALUE<u64>;									\
 	}
 
 template<
@@ -133,7 +150,7 @@ class LlanyHash
 		#pragma region ClassFunctions
 	public:
 		__LL_NODISCARD__ constexpr u64 llanyHash64_v1(bytearray s, const usize len) const noexcept {
-			__LL_PRECHECK__;
+			LL_NULL_STRING_EXCEPTION_CHECK(s, len);
 
 			constexpr _MyType::Algorithm algo{};
 			u64 result = CityHashMagic::kMul64;
@@ -149,7 +166,7 @@ class LlanyHash
 			return result;
 		}
 		__LL_NODISCARD__ constexpr u64 llanyHash64_v2(bytearray s, const usize len) const noexcept {
-			__LL_PRECHECK__;
+			LL_NULL_STRING_EXCEPTION_CHECK(s, len);
 
 			constexpr _MyType::Algorithm algo{};
 			u64 result = CityHashMagic::kMul64;
@@ -165,7 +182,7 @@ class LlanyHash
 			return result;
 		}
 		__LL_NODISCARD__ constexpr u64 llanyHash64_v3(bytearray s, const usize len) const noexcept {
-			__LL_PRECHECK__;
+			LL_NULL_STRING_EXCEPTION_CHECK(s, len);
 
 			constexpr _MyType::Algorithm algo{};
 			u64 result = CityHashMagic::kMul64;
@@ -183,8 +200,8 @@ class LlanyHash
 		// Right not, those cast are not valid (-std=c++20)
 		// Prob valid constexpr before -std=c++26
 		template<class CopyCat = _MyType>
-		__LL_NODISCARD__ u64 llanyHash64CombineImplementation(bytearray s, const usize len) noexcept requires(::llcpp::meta::concepts::hash::llcpp::HasMemcopy<CopyCat, byte>) {
-			__LL_PRECHECK__;
+		__LL_NODISCARD__ u64 llanyHash64Combine(bytearray s, const usize len) noexcept requires(::llcpp::meta::concepts::hash::llcpp::HasMemcopy<CopyCat, byte>) {
+			LL_NULL_STRING_EXCEPTION_CHECK(s, len);
 
 			// Algorithm to use
 			constexpr _MyType::Algorithm algo{};
@@ -236,27 +253,49 @@ class LlanyHash
 		}
 
 
-		template<class T>
-			requires ::llcpp::meta::concepts::hash::IsValidArray<T, byte>
-		__LL_NODISCARD__ constexpr u64 llanyHash64_v1(const T& s) const noexcept {
-			if (!s.begin()) {
-				if constexpr (::llcpp::EXCEPTIONS)
-					(void)LOG_EXCEPTION(::llcpp::misc::Errors::EmptyString);
-				return ::llcpp::ZERO_VALUE<u64>;
-			}
+		template<class U>
+			requires ::llcpp::meta::concepts::hash::IsValidArray<U, byte>
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v1(const U& s) const noexcept {
+			LL_STRING_EXCEPTION_CHECK;
 			return this->llanyHash64_v1(s.begin(), s.size());
 		}
 		template<usize N>
 		__LL_NODISCARD__ constexpr u64 llanyHash64_v1(const byte(&s)[N]) const noexcept {
-			if (!s) {
-				if constexpr (::llcpp::EXCEPTIONS)
-					(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);
-				return ::llcpp::ZERO_VALUE<u64>;
-			}
 			return this->llanyHash64_v1(s, N);
 		}
 
+		template<class U>
+			requires ::llcpp::meta::concepts::hash::IsValidArray<T, byte>
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v2(const U& s) const noexcept {
+			LL_STRING_EXCEPTION_CHECK;
+			return this->llanyHash64_v2(s.begin(), s.size());
+		}
+		template<usize N>
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v2(const byte(&s)[N]) const noexcept {
+			return this->llanyHash64_v2(s, N);
+		}
 
+		template<class U>
+			requires ::llcpp::meta::concepts::hash::IsValidArray<T, byte>
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v3(const U& s) const noexcept {
+			LL_STRING_EXCEPTION_CHECK;
+			return this->llanyHash64_v3(s.begin(), s.size());
+		}
+		template<usize N>
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v3(const byte(&s)[N]) const noexcept {
+			return this->llanyHash64_v3(s, N);
+		}
+
+		template<class U>
+			requires ::llcpp::meta::concepts::hash::IsValidArray<T, byte>
+		__LL_NODISCARD__ u64 llanyHash64Combine(const U& s) const noexcept {
+			LL_STRING_EXCEPTION_CHECK;
+			return this->llanyHash64Combine(s.begin(), s.size());
+		}
+		template<usize N>
+		__LL_NODISCARD__ u64 llanyHash64Combine(const byte(&s)[N]) const noexcept {
+			return this->llanyHash64Combine(s, N);
+		}
 
 		#pragma endregion
 
@@ -267,6 +306,9 @@ class LlanyHash
 } // namespace utils
 } // namespace meta
 } // namespace llcpp
+
+#undef LL_STRING_EXCEPTION_CHECK
+#undef LL_NULL_STRING_EXCEPTION_CHECK
 
 #endif // LLANYLIB_LLANYHASH_HPP_
 

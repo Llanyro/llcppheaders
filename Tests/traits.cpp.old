@@ -22,8 +22,8 @@ namespace llcpp {
 
 class Test : public ::llcpp::AlwaysInvalidTag, public ::llcpp::AlwaysValidTag {
 	public:
-		constexpr ::llcpp::meta::ValidType validationType() const noexcept {
-			return ::llcpp::meta::ValidType::Valid;
+		constexpr ::llcpp::misc::ValidType validationType() const noexcept {
+			return ::llcpp::misc::ValidType::Valid;
 		}
 };
 

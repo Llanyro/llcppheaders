@@ -59,6 +59,7 @@ enum class Errors : i32 {
 	BeginSmallerEnd,	// Begin is smaller than end of array
 	NullptrProvided,	// Parameter nullptr provided by user
 	EmptyString,		// String object is empty
+	StringSizeZero,		// String object is empty
 
 };
 

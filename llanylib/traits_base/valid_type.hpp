@@ -48,7 +48,7 @@ namespace meta {
 namespace traits {
 
 template<
-	::llcpp::meta::ValidType _TYPE,
+	::llcpp::misc::ValidType _TYPE,
 	class OnValidAttr,
 	class OnInvalidAttr,
 	class OnToCheck,
@@ -59,14 +59,14 @@ template<
 	class OnError
 >
 using type_by_valid_type_t = ::std::disjunction<
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::meta::ValidType::Valid,		OnValidAttr>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::meta::ValidType::Invalid,	OnInvalidAttr>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::meta::ValidType::ToCheck,	OnToCheck>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::meta::ValidType::Primitive,	OnPrimitive>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::meta::ValidType::Array,		OnArray>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::meta::ValidType::Pointer,	OnPointer>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::meta::ValidType::Unknown,	OnUnknown>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::meta::ValidType::Error,		OnError>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Valid,		OnValidAttr>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Invalid,	OnInvalidAttr>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::ToCheck,	OnToCheck>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Primitive,	OnPrimitive>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Array,		OnArray>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Pointer,	OnPointer>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Unknown,	OnUnknown>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Error,		OnError>,
 	::llcpp::meta::traits::TrueContainerEmptyClass
 >::U;
 

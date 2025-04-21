@@ -110,6 +110,10 @@ __LL_NODISCARD__ constexpr u64 bytes_swap_64(const u64 x) noexcept {
 } // namespace meta
 } // namespace llcpp
 
+#undef __LL_BWAP16
+#undef __LL_BWAP32
+#undef __LL_BWAP64
+
 #endif // LLANYLIB_CONSTANTFRIENDLY_HPP_
 
 #if defined(LLANYLIB_ERROR_HPP_)

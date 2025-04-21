@@ -46,6 +46,31 @@
 
 #include "Algorithm.hpp"
 
+#define LL_STRING_EXCEPTION_CHECK											\
+	if (s.begin() == 0) {													\
+		if constexpr (::llcpp::EXCEPTIONS)									\
+			(void)LOG_EXCEPTION(::llcpp::misc::Errors::EmptyString);		\
+		return ::llcpp::ZERO_VALUE<u64>;									\
+	}																		\
+	else if (s.size() == 0) {												\
+		if constexpr (::llcpp::EXCEPTIONS)									\
+			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
+		return ::llcpp::ZERO_VALUE<u64>;									\
+	}
+
+#define LL_NULL_STRING_EXCEPTION_CHECK(s, len)								\
+	if (!s) {																\
+		if constexpr (::llcpp::EXCEPTIONS)									\
+			(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);	\
+		return ::llcpp::ZERO_VALUE<u64>;									\
+	}																		\
+	else if (len) {															\
+		if constexpr (::llcpp::EXCEPTIONS)									\
+			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
+		return ::llcpp::ZERO_VALUE<u64>;									\
+	}
+
+
 namespace llcpp {
 namespace meta {
 namespace concepts {
@@ -266,11 +291,7 @@ class CityHash
 
 	public:
 		__LL_NODISCARD__ constexpr u64 cityHash64(bytearray s, usize len) const noexcept {
-			if (!s) {
-				if constexpr (::llcpp::EXCEPTIONS)
-					(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);
-				return ::llcpp::ZERO_VALUE<u64>;
-			}
+			LL_NULL_STRING_EXCEPTION_CHECK(s, len);
 
 			if (len <= 32) {
 				if (len <= 16) return this->hashLen0to16(s, len);
@@ -316,49 +337,13 @@ class CityHash
 		template<class T>
 			requires ::llcpp::meta::concepts::hash::IsValidArray<T, byte>
 		__LL_NODISCARD__ constexpr u64 cityHash64(const T& s) const noexcept {
-			if (!s.begin()) {
-				if constexpr (::llcpp::EXCEPTIONS)
-					(void)LOG_EXCEPTION(::llcpp::misc::Errors::EmptyString);
-				return ::llcpp::ZERO_VALUE<u64>;
-			}
+			LL_STRING_EXCEPTION_CHECK;
 			return this->cityHash64(s.begin(), s.size());
 		}
 		template<usize N>
 		__LL_NODISCARD__ constexpr u64 cityHash64(const byte(&s)[N]) const noexcept {
-			if (!s) {
-				if constexpr (::llcpp::EXCEPTIONS)
-					(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);
-				return ::llcpp::ZERO_VALUE<u64>;
-			}
 			return this->cityHash64(s, N);
 		}
-
-		// [TODO] [TOFIX]
-		/*// Only admits hash::basic_type_hash::is_convertible_v<>
-		// Returns hash::INVALID_HASH64 if invalid type or hash error
-		template<class U, class W = traits::cinput<U>>
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 cityHash64(W value) const noexcept {
-			return hash::basic_type_hash::hashValue<U, W>(value, city::CityHash::cityHash64);
-		}
-		__LL_NODISCARD__ constexpr hash::OptionalHash64 cityHash64(const hash::Hash64& hash) const noexcept {
-			return hash::basic_type_hash::hashValue<u64>(hash.get(), city::CityHash::cityHash64);
-		}*/
-		/*__LL_NODISCARD__ u64 _hash(const u64 value) noexcept {
-			return this->cityHash64(reinterpret_cast<const i8*>(&value), sizeof(u64));
-		}
-		__LL_NODISCARD__ constexpr u64 __hash(const u64 value) noexcept {
-			ll_char_t b[sizeof(value)]{};
-			(void)::llcpp::meta::utils::hash::Algorithm<u8>().b2a(value, b);
-			return this->cityHash64(b, sizeof(b));
-		}
-		__LL_NODISCARD__ constexpr u64 __hash2(const u64 value) noexcept {
-			ll_char_t b[sizeof(value)]{};
-			(void)::llcpp::meta::utils::hash::Algorithm<u8>().b2a(value, b, sizeof(b));
-			return this->cityHash64(b, sizeof(b));
-		}
-		__LL_NODISCARD__ constexpr u64 hash(const u64 value) noexcept {
-			return this->__hash(value);
-		}*/
 
 		#pragma endregion
 
@@ -369,6 +354,9 @@ class CityHash
 } // namespace utils
 } // namespace meta
 } // namespace llcpp
+
+#undef LL_STRING_EXCEPTION_CHECK
+#undef LL_NULL_STRING_EXCEPTION_CHECK
 
 #endif // LLANYLIB_CITYHASH_HPP_
 

@@ -256,8 +256,8 @@ class ArrayBase {
 		#pragma endregion
 		#pragma region Other
 	public:
-		__LL_NODISCARD__ constexpr ::llcpp::meta::ValidType validationType() const noexcept {
-			return this->begin() <= this->end() ? ::llcpp::meta::ValidType::Valid : ::llcpp::meta::ValidType::Invalid;
+		__LL_NODISCARD__ constexpr ::llcpp::misc::ValidType validationType() const noexcept {
+			return this->begin() <= this->end() ? ::llcpp::misc::ValidType::Valid : ::llcpp::misc::ValidType::Invalid;
 		}
 		constexpr void makeInvalid() noexcept { this->simpleClear(); }
 		constexpr void clear() noexcept { this->makeInvalid(); }

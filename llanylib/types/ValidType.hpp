@@ -42,10 +42,15 @@ enum class ValidType : u8;
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_VALIDTYPE_MAYOR_ || LLANYLIB_VALIDTYPE_MINOR_
 
+#else
+	#define LLANYLIB_VALIDTYPE_HPP_
+	#define LLANYLIB_VALIDTYPE_MAYOR_ 12
+	#define LLANYLIB_VALIDTYPE_MINOR_ 0
+
 #include "types.hpp"
 
 namespace llcpp {
-namespace meta {
+namespace misc {
 
 /// Do not change order
 enum class ValidType : u8 {
@@ -60,13 +65,8 @@ enum class ValidType : u8 {
 	Error			// This one must be always last one
 };
 
-} // namespace meta
+} // namespace misc
 } // namespace llcpp
-
-#else
-	#define LLANYLIB_VALIDTYPE_HPP_
-	#define LLANYLIB_VALIDTYPE_MAYOR_ 12
-	#define LLANYLIB_VALIDTYPE_MINOR_ 0
 
 #endif // LLANYLIB_VALIDTYPE_HPP_
 

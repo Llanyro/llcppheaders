@@ -23,12 +23,17 @@
 	#define LLANYLIB_ITERATORUTILS_INCOMPLETE_MINOR_ 0
 
 #include "../traits/ValidationChecker.hpp"
-
+#include "../traits_base/checker.hpp"
+	
 namespace llcpp {
 namespace meta {
 namespace utils {
 
-template<class _ExtraFunctions, class _Iterator, class _IteratorEnd = _Iterator>
+template<
+	class _Iterator,
+	class _IteratorEnd = _Iterator,
+	class _ExtraFunctions = ::llcpp::DummyClass
+>
 class IteratorUtils;
 
 } // namespace utils

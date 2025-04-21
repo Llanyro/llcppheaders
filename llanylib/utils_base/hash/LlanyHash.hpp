@@ -235,6 +235,29 @@ class LlanyHash
 			}
 		}
 
+
+		template<class T>
+			requires ::llcpp::meta::concepts::hash::IsValidArray<T, byte>
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v1(const T& s) const noexcept {
+			if (!s.begin()) {
+				if constexpr (::llcpp::EXCEPTIONS)
+					(void)LOG_EXCEPTION(::llcpp::misc::Errors::EmptyString);
+				return ::llcpp::ZERO_VALUE<u64>;
+			}
+			return this->llanyHash64_v1(s.begin(), s.size());
+		}
+		template<usize N>
+		__LL_NODISCARD__ constexpr u64 llanyHash64_v1(const byte(&s)[N]) const noexcept {
+			if (!s) {
+				if constexpr (::llcpp::EXCEPTIONS)
+					(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);
+				return ::llcpp::ZERO_VALUE<u64>;
+			}
+			return this->llanyHash64_v1(s, N);
+		}
+
+
+
 		#pragma endregion
 
 	#pragma endregion

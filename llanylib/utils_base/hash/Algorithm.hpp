@@ -44,6 +44,22 @@
 
 namespace llcpp {
 namespace meta {
+namespace concepts {
+namespace hash {
+
+template<class Array, class byte>
+concept IsValidArray = requires (Array arr) {
+	requires
+		::llcpp::meta::concepts::signature::HasBegin<Array, byte*>
+		|| ::llcpp::meta::concepts::signature::HasBegin<Array, const byte*>;
+	requires
+		::llcpp::meta::concepts::signature::HasSize<Array, usize>
+		|| ::llcpp::meta::concepts::signature::HasSize<Array, usize>;
+};
+
+} // namespace hash
+} // namespace concepts
+
 namespace traits {
 template <class T, class = void>
 class HasHashType : public ::std::false_type {};

@@ -4,22 +4,39 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 11.0							//
+//	Version: 12.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_CONSTANTFRIENDLY_HPP_) // Guard && version protector
-	#if LLANYLIB_CONSTANTFRIENDLY_MAYOR_ != 11 || LLANYLIB_CONSTANTFRIENDLY_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+#if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_HPP_)
+	#if LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
+			#warning "constant_friendly.hpp(incomplete) version error!"
+		#else
+			#error "constant_friendly.hpp(incomplete) version error!"
+		#endif // __LL_REAL_CXX23
+		#define LLANYLIB_ERROR_HPP_
+	#endif // LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MAYOR_ || LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MINOR_
+
+#elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_HPP_)
+	#define LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_HPP_
+	#define LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MAYOR_ 12
+	#define LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MINOR_ 0
+
+#include "../types/types.hpp"
+
+#elif defined(LLANYLIB_CONSTANTFRIENDLY_HPP_)
+	#if LLANYLIB_CONSTANTFRIENDLY_MAYOR_ != 12 || LLANYLIB_CONSTANTFRIENDLY_MINOR_ < 0
+		#if defined(__LL_REAL_CXX23)
 			#warning "constant_friendly.hpp version error!"
 		#else
 			#error "constant_friendly.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_REAL_CXX23
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CONSTANTFRIENDLY_MAYOR_ || LLANYLIB_CONSTANTFRIENDLY_MINOR_
 
 #else
 	#define LLANYLIB_CONSTANTFRIENDLY_HPP_
-	#define LLANYLIB_CONSTANTFRIENDLY_MAYOR_ 11
+	#define LLANYLIB_CONSTANTFRIENDLY_MAYOR_ 12
 	#define LLANYLIB_CONSTANTFRIENDLY_MINOR_ 0
 
 #include "../types/types.hpp"

@@ -22,6 +22,18 @@
 	#define LLANYLIB_POINTERITERATOR_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_POINTERITERATOR_INCOMPLETE_MINOR_ 0
 
+#include "../traits_base/type_traits.hpp"
+
+namespace llcpp {
+namespace meta {
+namespace utils {
+
+template<class _T, ll_bool_t _IS_REVERSED = ::llcpp::LL_FALSE>
+class PointerIterator;
+
+} // namespace utils
+} // namespace meta
+} // namespace llcpp
 
 #elif defined(LLANYLIB_POINTERITERATOR_HPP_)
 	#if LLANYLIB_POINTERITERATOR_MAYOR_ != 12 || LLANYLIB_POINTERITERATOR_MINOR_ < 0
@@ -220,6 +232,31 @@ class PointerIterator {
 	#pragma endregion
 };
 
+} // namespace utils
+} // namespace meta
+} // namespace llcpp
+
+#endif // LLANYLIB_POINTERITERATOR_HPP_
+
+#if !defined(LLANYLIB_ERROR_HPP_)
+	#if defined(LLANYLIB_QWERTY_EXTRA_HPP_)
+		#if LLANYLIB_QWERTY_EXTRA_MAYOR_ != 12 || LLANYLIB_QWERTY_EXTRA_MINOR_ < 0
+			#if defined(__LL_REAL_CXX23)
+				#warning "qwerty.hpp(extra) version error!"
+			#else
+				#error "qwerty.hpp(extra) version error!"
+			#endif // __LL_REAL_CXX23
+		#endif // LLANYLIB_QWERTY_EXTRA_MAYOR_ || LLANYLIB_QWERTY_EXTRA_MINOR_
+
+	#else
+		#define LLANYLIB_QWERTY_EXTRA_HPP_
+		#define LLANYLIB_QWERTY_EXTRA_MAYOR_ 12
+		#define LLANYLIB_QWERTY_EXTRA_MINOR_ 0
+
+namespace llcpp {
+namespace meta {
+namespace utils {
+
 template<class T, ll_bool_t IS_REVERSED = ::llcpp::LL_FALSE>
 using ConstPointerIterator = ::llcpp::meta::utils::PointerIterator<const T, IS_REVERSED>;
 
@@ -227,8 +264,7 @@ using ConstPointerIterator = ::llcpp::meta::utils::PointerIterator<const T, IS_R
 } // namespace meta
 } // namespace llcpp
 
-#endif // LLANYLIB_POINTERITERATOR_HPP_
-
-#if defined(LLANYLIB_ERROR_HPP_)
+	#endif // LLANYLIB_QWERTY_EXTRA_HPP_
+#else
 	#undef LLANYLIB_ERROR_HPP_
 #endif // LLANYLIB_ERROR_HPP_

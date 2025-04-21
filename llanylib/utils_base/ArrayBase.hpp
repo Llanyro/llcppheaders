@@ -34,7 +34,9 @@ namespace utils {
 template<
 	class _T,
 	ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE,
-	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE
+	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE,
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+		::llcpp::meta::attributes::checker::IGNORE_CPAV
 >
 class ArrayBase;
 
@@ -58,6 +60,7 @@ class ArrayBase;
 	#define LLANYLIB_ARRAYBASE_MINOR_ 0
 
 #include "../types/ValidType.hpp"
+#include "../traits_base/checker.hpp"
 #include "PointerIterator.hpp"
 #include "Exceptions.hpp"
 
@@ -90,7 +93,9 @@ namespace utils {
 template<
 	class _T,
 	ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE,
-	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE
+	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE,
+	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
+		::llcpp::meta::attributes::checker::IGNORE_CPAV
 >
 class ArrayBase {
 	#pragma region Types
@@ -136,6 +141,12 @@ class ArrayBase {
 		static constexpr ::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER = _TYPE_CHECKER;
 		static constexpr ll_bool_t USE_OBJECT_ITERATOR	= _USE_OBJECT_ITERATOR;
 		static constexpr ll_bool_t ENABLE_NO_CONST		= _ENABLE_NO_CONST;
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(::llcpp::meta::traits::is_valid_type_checker_v<T, TYPE_CHECKER>,
+			"type_checker<T> detected an invalid type!");
 
 	#pragma endregion
 	#pragma region Attributes
@@ -287,34 +298,40 @@ class ArrayBase {
 #endif // LLANYLIB_ARRAYBASE_HPP_
 
 #if !defined(LLANYLIB_ERROR_HPP_)
-	#if defined(LLANYLIB_QWERTY_EXTRA_HPP_)
-		#if LLANYLIB_QWERTY_EXTRA_MAYOR_ != 12 || LLANYLIB_QWERTY_EXTRA_MINOR_ < 0
+	#if defined(LLANYLIB_ARRAYBASE_EXTRA_HPP_)
+		#if LLANYLIB_ARRAYBASE_EXTRA_MAYOR_ != 12 || LLANYLIB_ARRAYBASE_EXTRA_MINOR_ < 0
 			#if defined(__LL_REAL_CXX23)
 				#warning "qwerty.hpp(extra) version error!"
 			#else
 				#error "qwerty.hpp(extra) version error!"
 			#endif // __LL_REAL_CXX23
-		#endif // LLANYLIB_QWERTY_EXTRA_MAYOR_ || LLANYLIB_QWERTY_EXTRA_MINOR_
+		#endif // LLANYLIB_ARRAYBASE_EXTRA_MAYOR_ || LLANYLIB_ARRAYBASE_EXTRA_MINOR_
 
 	#else
-		#define LLANYLIB_QWERTY_EXTRA_HPP_
-		#define LLANYLIB_QWERTY_EXTRA_MAYOR_ 12
-		#define LLANYLIB_QWERTY_EXTRA_MINOR_ 0
+		#define LLANYLIB_ARRAYBASE_EXTRA_HPP_
+		#define LLANYLIB_ARRAYBASE_EXTRA_MAYOR_ 12
+		#define LLANYLIB_ARRAYBASE_EXTRA_MINOR_ 0
 
 namespace llcpp {
 namespace meta {
 namespace utils {
 			
+// Ascii char string
 template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 using Str = ::llcpp::meta::utils::ArrayBase<ll_char_t, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
+// Wide char string
 template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 using wStr = ::llcpp::meta::utils::ArrayBase<ll_wchar_t, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
+
+// Ascii/Wide char defined by macros and OS
+template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
+using String = ::llcpp::meta::utils::ArrayBase<::llcpp::char_type, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
 
 } // namespace utils
 } // namespace meta
 } // namespace llcpp
 
-	#endif // LLANYLIB_QWERTY_EXTRA_HPP_
+	#endif // LLANYLIB_ARRAYBASE_EXTRA_HPP_
 #else
 	#undef LLANYLIB_ERROR_HPP_
 #endif // LLANYLIB_ERROR_HPP_

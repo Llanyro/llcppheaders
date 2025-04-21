@@ -50,7 +50,6 @@ namespace llcpp {
 namespace meta {
 namespace concepts {
 namespace hash {
-namespace city {
 
 template<class Base>
 concept IsValidCityHashExtra = requires (const Base t, const u64 u6, const u32 u3) {
@@ -59,7 +58,6 @@ concept IsValidCityHashExtra = requires (const Base t, const u64 u6, const u32 u
 	{ t.hash16bytes(u6, u6) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<u64>;
 };
 
-} // namespace city
 } // namespace hash
 } // namespace concepts
 namespace utils {
@@ -92,7 +90,7 @@ class CityHashFunctions : public ::llcpp::AlwaysValidTag {
 
 template<class _ExtraFunctions = ::llcpp::meta::utils::hash::CityHashFunctions>
 	requires
-		::llcpp::meta::concepts::hash::city::IsValidCityHashExtra<_ExtraFunctions>
+		::llcpp::meta::concepts::hash::IsValidCityHashExtra<_ExtraFunctions>
 		&& ::llcpp::meta::traits::is_valid_constructor_checker_v<_ExtraFunctions>
 class CityHash
 	: public ::llcpp::meta::traits::ValidationWrapper<_ExtraFunctions, ::llcpp::AlwaysValidTag>
@@ -316,14 +314,14 @@ class CityHash
 				);
 		}
 		template<class T>
-			requires ::llcpp::meta::concepts::is_object::IsArrayObject<T, byte>
+			requires ::llcpp::meta::concepts::hash::IsValidArray<T, byte>
 		__LL_NODISCARD__ constexpr u64 cityHash64(const T& s) const noexcept {
-			if (s.empty()) {
+			if (!s.begin()) {
 				if constexpr (::llcpp::EXCEPTIONS)
 					(void)LOG_EXCEPTION(::llcpp::misc::Errors::EmptyString);
 				return ::llcpp::ZERO_VALUE<u64>;
 			}
-			return this->cityHash64(s.begin(), s.lenght());
+			return this->cityHash64(s.begin(), s.size());
 		}
 		template<usize N>
 		__LL_NODISCARD__ constexpr u64 cityHash64(const byte(&s)[N]) const noexcept {

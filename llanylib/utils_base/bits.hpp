@@ -22,6 +22,9 @@
 	#define LLANYLIB_BITS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_BITS_INCOMPLETE_MINOR_ 0
 
+#include "../concepts/concepts.hpp"
+#include "constant_friendly.hpp"
+
 #elif defined(LLANYLIB_BITS_HPP_)
 	#if LLANYLIB_BITS_MAYOR_ != 12 || LLANYLIB_BITS_MINOR_ < 0
 		#if __LL_REAL_CXX23 == 1

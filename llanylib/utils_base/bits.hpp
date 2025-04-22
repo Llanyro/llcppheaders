@@ -52,7 +52,7 @@ namespace __bits__ {
 template<class T>
 __LL_NODISCARD__ constexpr u8* __primitive_to_bytearray(T& value, u8* buffer) noexcept {
 	if consteval {
-		if constexpr (!::llcpp::meta::traits::is_primitive_v<T>) {
+		if constexpr (!::std::is_integral_v<T>) {
 			static_assert(::std::is_convertible_v<T, u8>,
 				"Type must be casteable to u8");
 			static_assert(::llcpp::meta::concepts::signature::HasOperatorBitwiseRightEq<T, T>,
@@ -61,7 +61,7 @@ __LL_NODISCARD__ constexpr u8* __primitive_to_bytearray(T& value, u8* buffer) no
 
 		ll_ustring_t buffer_end = buffer + sizeof(T);
 
-		if constexpr (::llcpp::meta::traits::is_primitive_v<T>) {
+		if constexpr (::llcpp::meta::traits::is_integral_v<T>) {
 			for(u8 byte = sizeof(T) * 8; buffer <= buffer_end; ++buffer, byte -= 8)
 				*buffer = static_cast<u8>(value >> byte) & 0xff;
 		}

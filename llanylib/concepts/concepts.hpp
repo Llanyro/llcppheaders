@@ -109,6 +109,13 @@ concept IsAlwaysValid = ::std::is_base_of_v<::llcpp::AlwaysValidTag, T>;
 template<class T>
 concept IsAlwaysInvalid = ::std::is_base_of_v<::llcpp::AlwaysInvalidTag, T>;
 
+template<class T, ll_bool_t IGNORE_SIGNED = ::llcpp::LL_FALSE, ll_bool_t IGNORE_UNSIGNED = ::llcpp::LL_FALSE>
+concept IsAritmeticNoChar = requires {
+	requires ::std::is_arithmetic_v<T>;
+	requires IGNORE_SIGNED || ::llcpp::meta::traits::is_any_of_v<T, ll_char_t, ll_wchar_t, char16_t, char32_t>;
+	requires IGNORE_UNSIGNED || ::llcpp::meta::traits::is_any_of_v<T, ll_uchar_t>;
+};
+
 } // namespace base
 namespace signature {
 

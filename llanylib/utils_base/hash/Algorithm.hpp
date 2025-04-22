@@ -194,7 +194,7 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 
 template<class T, usize N, class HashAlgorithm>
 	requires
-		::llcpp::meta::traits::is_primitive_v<T>
+		::std::is_arithmetic_v<T>
 		&& ::llcpp::meta::concepts::base::HasHashType<HashAlgorithm>
 		&& ::llcpp::meta::concepts::signature::HasHash<HashAlgorithm>
 __LL_NODISCARD__ constexpr HashAlgorithm::Hash hash_primitive_array(const T(&value)[N]) noexcept {
@@ -211,7 +211,7 @@ __LL_NODISCARD__ constexpr HashAlgorithm::Hash hash_primitive_array(const T(&val
 }
 template<class T, usize N, class HashAlgorithm>
 	requires
-		::llcpp::meta::traits::is_primitive_v<T>
+		::std::is_arithmetic_v<T>
 		&& ::llcpp::meta::concepts::base::HasHashType<HashAlgorithm>
 		&& ::llcpp::meta::concepts::signature::HasHash<HashAlgorithm>
 __LL_NODISCARD__ constexpr HashAlgorithm::Hash hash_primitive_array(

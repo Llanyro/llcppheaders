@@ -195,15 +195,6 @@ class IteratorUtils
 		template<ll_bool_t GET_DATA = ::llcpp::LL_FALSE>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperation<ExtraFunctions, value_type, LoopResult>
 		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreach(input_it begin, input_itend end) const noexcept {
-			// Can be this removed (?)
-			// [TOCHECK]
-			/*if constexpr (::llcpp::DEBUG) {
-				if (this->isEnd(begin, end)) {
-					if constexpr (GET_DATA) return ResultPair{ LoopResult::BeginError, begin };
-					else return LoopResult::BeginError;
-				}
-			}*/
-		
 			LoopResult res = LoopResult::BeginError;
 			Iterator it = begin;
 			for (; !this->isEnd(it, end); ++it) {
@@ -220,15 +211,14 @@ class IteratorUtils
 				return ResultPair{ res , it };
 			else return res;
 		}
-		// [TOCHECK]
 		// Iterate over a list with provided class
 		template<class IteratorFunctionObject, ll_bool_t GET_DATA = ::llcpp::LL_FALSE>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperation<const IteratorFunctionObject, value_type, LoopResult>
-		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreach(const IteratorFunctionObject& function, input_it begin, input_itend end) const noexcept {
+		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreach(const IteratorFunctionObject& obj, input_it begin, input_itend end) const noexcept {
 			LoopResult res = LoopResult::BeginError;
 			Iterator it = begin;
 			for (; !this->isEnd(it, end); ++it) {
-				res = function.foreachOperation(*it);
+				res = obj.foreachOperation(*it);
 				if (res != LoopResult::Conntinue) {
 					if constexpr (GET_DATA)
 						return ResultPair{ res, it };
@@ -261,6 +251,30 @@ class IteratorUtils
 			else return res;
 		}
 
+		template<class IteratorFunctionObject>
+		using Func = ::llcpp::LoopResult (IteratorFunctionObject::*)(value_type&) const noexcept;
+
+		template<class IteratorFunctionObject, Func<IteratorFunctionObject> FUNC, ll_bool_t GET_DATA = ::llcpp::LL_FALSE>
+		//	requires ::llcpp::meta::concepts::signature::HasForeachOperation<const IteratorFunctionObject, value_type, LoopResult>
+		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreach(input_it begin, input_itend end) const noexcept {
+			LoopResult res = LoopResult::BeginError;
+			Iterator it = begin;
+			for (; !this->isEnd(it, end); ++it) {
+				res = (IteratorFunctionObject().*FUNC)(*it);
+				if (res != LoopResult::Conntinue) {
+					if constexpr (GET_DATA)
+						return ResultPair{ res, it };
+					else return res;
+				}
+			}
+		
+			if (res == LoopResult::Conntinue) res = LoopResult::Ok;
+			if constexpr (GET_DATA)
+				return ResultPair{ res , it };
+			else return res;
+		}
+
+
 #if defined(LLANYLIB_TUPLE_HPP_)
 		template<ll_bool_t GET_DATA = ::llcpp::LL_FALSE, class... OtherIterators>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperationExtra<ExtraFunctions, value_type, ::llcpp::meta::utils::Tuple<OtherIterators...>&, LoopResult>
@@ -272,6 +286,50 @@ class IteratorUtils
 			Iterator it = begin;
 			for (; !this->isEnd(it, end); ++it, ++tuple) {
 				res = ExtraFunctions::foreachOperation(*it, tuple);
+				if (res != LoopResult::Conntinue) {
+					if constexpr (GET_DATA)
+						return ResultPair{ res, it };
+					else return res;
+				}
+			}
+		
+			if (res == LoopResult::Conntinue) res = LoopResult::Ok;
+			if constexpr (GET_DATA)
+				return ResultPair{ res , it };
+			else return res;
+		}
+		template<class IteratorFunctionObject, ll_bool_t GET_DATA = ::llcpp::LL_FALSE, class... OtherIterators>
+			requires ::llcpp::meta::concepts::signature::HasForeachOperationExtra<IteratorFunctionObject, value_type, ::llcpp::meta::utils::Tuple<OtherIterators...>&, LoopResult>
+		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreachEx(input_it begin, input_itend end, OtherIterators... other) const noexcept {
+			// Include all other iterators in a tuple
+			::llcpp::meta::utils::Tuple<OtherIterators...> tuple(other...);
+		
+			LoopResult res = LoopResult::BeginError;
+			Iterator it = begin;
+			for (; !this->isEnd(it, end); ++it, ++tuple) {
+				res = IteratorFunctionObject::foreachOperation(*it, tuple);
+				if (res != LoopResult::Conntinue) {
+					if constexpr (GET_DATA)
+						return ResultPair{ res, it };
+					else return res;
+				}
+			}
+		
+			if (res == LoopResult::Conntinue) res = LoopResult::Ok;
+			if constexpr (GET_DATA)
+				return ResultPair{ res , it };
+			else return res;
+		}
+		template<class IteratorFunctionObject, ll_bool_t GET_DATA = ::llcpp::LL_FALSE, class... OtherIterators>
+			requires ::llcpp::meta::concepts::signature::HasForeachOperationExtra<IteratorFunctionObject, value_type, ::llcpp::meta::utils::Tuple<OtherIterators...>&, LoopResult>
+		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreachEx(const IteratorFunctionObject& obj, input_it begin, input_itend end, OtherIterators... other) const noexcept {
+			// Include all other iterators in a tuple
+			::llcpp::meta::utils::Tuple<OtherIterators...> tuple(other...);
+		
+			LoopResult res = LoopResult::BeginError;
+			Iterator it = begin;
+			for (; !this->isEnd(it, end); ++it, ++tuple) {
+				res = obj.foreachOperation(*it, tuple);
 				if (res != LoopResult::Conntinue) {
 					if constexpr (GET_DATA)
 						return ResultPair{ res, it };

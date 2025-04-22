@@ -125,10 +125,8 @@ int main() {
 	
 	::llcpp::meta::utils::IteratorUtils<int*, int*, Test2> fill;
 	//fill.value = 99;
-	Test2 t;
-	(void)fill.foreach(t, values.begin(), values.end());
 	//(void)fill.foreach<Test2>(values.begin(), values.end());
-	//(void)fill.foreach<Test2, &Test2::foreachOperation>(values.begin(), values.end());
+	(void)fill.foreach<Test2, &Test2::foreachOperation>(values.begin(), values.end());
 
 	(void)printer.foreach(values.begin(), values.end());
 	putchar('\n');

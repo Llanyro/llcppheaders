@@ -61,7 +61,7 @@ __LL_NODISCARD__ constexpr u8* __primitive_to_bytearray(T& value, u8* buffer) no
 
 		ll_ustring_t buffer_end = buffer + sizeof(T);
 
-		if constexpr (::llcpp::meta::traits::is_integral_v<T>) {
+		if constexpr (::std::is_integral_v<T>) {
 			for(u8 byte = sizeof(T) * 8; buffer <= buffer_end; ++buffer, byte -= 8)
 				*buffer = static_cast<u8>(value >> byte) & 0xff;
 		}

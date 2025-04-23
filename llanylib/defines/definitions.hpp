@@ -149,6 +149,10 @@
 	#define __debug_error_out_of_range(var, var_str, len) IGNORE()
 #endif
 
+#if !defined(__debug_error_parser)
+	#define __debug_error_parser(str) IGNORE()
+#endif
+
 
 #pragma endregion
 #pragma region Warning

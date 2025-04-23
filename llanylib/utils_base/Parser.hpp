@@ -84,20 +84,143 @@ namespace utils {
 		constexpr void writewTm(const wParseTime&) noexcept {}
 };*/
 
+
+template<
+	class _ParserFunctions,
+	::llcpp::meta::traits::ValidationWrapper<_ParserFunctions, ::llcpp::AlwaysValidTag>
+>
+class Parser : public _ParserFunctions {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType			= Parser;
+		using ValidTag			= ::llcpp::meta::traits::ValidationWrapper<_ParserFunctions, ::llcpp::AlwaysValidTag>;
+		using ParserFunctions	= _ParserFunctions;
+
+		using TypeID			= ::llcpp::meta::utils::TypeID<::llcpp::meta::utils::Str<::llcpp::LL_FALSE>, u64>;
+		using Printable			= ::llcpp::DummyClass;
+
+	#pragma endregion
+	#pragma region Expressions
+	public:
+		static constexpr ll_bool_t MULTICHAR_MODE = ::llcpp::LL_FALSE;
+		// Only selects primitives aritmetics and unsigned char (ignores char, wchar, and other printeable chars)
+		template<class T>
+		static constexpr ll_bool_t PARSEABLE_NUMBER =
+			::std::is_arithmetic_v<T>
+			&& !::llcpp::meta::concepts::base::IsCharType<T, ::llcpp::LL_FALSE, ::llcpp::LL_TRUE>;
+		template<class T>
+		static constexpr ll_bool_t PRINTABLE_CHAR =
+			::llcpp::meta::concepts::base::IsCharType<T, ::llcpp::LL_FALSE, ::llcpp::LL_TRUE>;
+
+	#pragma endregion
+	#pragma region Functions
+
+	public:
+		template<class T, class... Args>
+		__LL_INLINE__ constexpr void write(const T& data, const Args&... args) noexcept {
+			this->write(data);
+			this->write(::std::forward<const Args>(args)...);
+		}
+		template<class... Args>
+		__LL_INLINE__ constexpr void writeln(const Args&... args) noexcept {
+			this->write(::std::forward<const Args>(args)...);
+			this->ln();
+		}
+		template<class T>
+		__LL_INLINE__ constexpr void write(const T& data) noexcept {
+			//constexpr meta::StrTypeid __type__ = meta::STANDARD_TYPEID<T>();
+			constexpr TypeID TYPE_ID{};
+			if constexpr (::std::is_pointer_v<T>) {
+				using __noptr = ::std::remove_pointer_t<T>;
+
+				if constexpr (::std::is_same_v<__noptr, ::std::nullptr_t>)
+					this->writeNull();
+				else if constexpr (_MyType::PRINTABLE_CHAR<T>)
+					this->writeString(data);
+				else {
+					this->write('<', TYPE_ID.first, Parser::PTR_INIT_STR);
+					this->writePointer(data);
+					this->writeChar('>');
+				}
+			}
+			else if constexpr (::std::is_base_of_v<Printable, T>) {
+				if (!this->writePrintable(data))
+					this->write('<', __type__.getName(), Parser::PRINTABLE_BAD_INITED_STR);
+			}
+			else {
+				if (!this->parserExtra(__type__, &data)) {
+					this->write('<', __type__.getName(), Parser::PTR_INIT_STR);
+					this->writePointer(&data);
+					this->writeChar('>');
+				}
+			}
+		}
+
+		// Convert all numbers to ascii string
+		template<class T>
+		constexpr void write(const T& v) const noexcept requires(_MyType::PARSEABLE_NUMBER<T>) {
+			// jeaii to text
+			// [TODO] [TOFIX]
+			// Edit jeaii to use wchar too
+		}
+		// Write nullptr
+		template<class T>
+		constexpr void write(const T& v) const noexcept requires(::std::is_same_v<T, ::std::nullptr_t>) {
+			this->writeNull();
+		}
+		// Print chars by its type
+		template<class T>
+		constexpr void write(const T& v) const noexcept requires(_MyType::PRINTABLE_CHAR<T>) {
+			if constexpr (::std::is_same_v<T, ::llcpp::char_type> || MULTICHAR_MODE)
+				ParserFunctions::writeChar(v);
+#if defined(__cpp_char8_t)
+			else if constexpr (::std::is_same_v<T, char8_t>)
+				__debug_error_parser("'char8_t' is not a valid printeable character with this parser!");
+#endif // __cpp_char8_t
+			else if constexpr (::std::is_same_v<T, ll_char_t>)
+				__debug_error_parser("'char' is not a valid printeable character with this parser!");
+			else if constexpr (::std::is_same_v<T, ll_wchar_t>)
+				__debug_error_parser("'wchar_t' is not a valid printeable character with this parser!");
+			else if constexpr (::std::is_same_v<T, char16_t>)
+				__debug_error_parser("'char16_t' is not a valid printeable character with this parser!");
+			else if constexpr (::std::is_same_v<T, char32_t>)
+				__debug_error_parser("'char32_t' is not a valid printeable character with this parser!");
+			else {
+				static_assert(::std::is_same_v<T, ::llcpp::char_type> || MULTICHAR_MODE,
+					"Unknown non char type in char only function!");
+			}
+		}
+		template<class T>
+		constexpr void write(const T& v) const noexcept requires(::std::is_pointer_v<T>) {
+			using __noptr = ::std::remove_pointer_t<T>;
+
+			if constexpr (::std::is_same_v<__noptr, ::std::nullptr_t>)
+				this->writeNull();
+			else if constexpr (_MyType::PRINTABLE_CHAR<T>) {
+
+			}
+			else {
+				this->write('<', TYPE_ID.first, Parser::PTR_INIT_STR);
+				this->writePointer(data);
+				this->writeChar('>');
+			}
+		}
+
+	#pragma endregion
+};
+
+
+
+
+
+
 template<
 	class _ParserFunctions,
 	::llcpp::meta::traits::ValidationWrapper<_ParserFunctions, ::llcpp::AlwaysValidTag>
 >
 // requires
 class Parser : public _ParserFunctions {
-	#pragma region Types
-	public:
-		// Class related
-		using _MyType			= ArrayBase;
-		using ValidTag			= ::llcpp::meta::traits::ValidationWrapper<_ParserFunctions, ::llcpp::AlwaysValidTag>;
-		using ParserFunctions	= Parser;
-
-	#pragma endregion
 	#pragma region Functions
 		#pragma region Private
 	private:
@@ -176,10 +299,8 @@ class Parser : public _ParserFunctions {
 		#pragma region Templates
 		#pragma region TemplatesBase
 	public:
-		template<class T>
-		constexpr void write(const T v) const noexcept requires(::std::is_arithmetic_v<T>) {
 
-		}
+
 		template<class Iterator, class IteratorEnd>
 		constexpr void write() const noexcept {
 
@@ -227,16 +348,6 @@ class Parser : public _ParserFunctions {
 					this->writeChar('>');
 				}
 			}
-		}
-		template<class T, class... Args>
-		__LL_INLINE__ constexpr void write(const T& data, const Args&... args) noexcept {
-			this->write(data);
-			this->write(std::forward<const Args>(args)...);
-		}
-		template<class... Args>
-		__LL_INLINE__ constexpr void writeln(const Args&... args) noexcept {
-			this->write(std::forward<const Args>(args)...);
-			this->ln();
 		}
 		template<class... Args>
 		__LL_INLINE__ constexpr void writewln(const Args&... args) noexcept {

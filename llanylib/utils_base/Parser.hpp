@@ -38,7 +38,8 @@
 	#define LLANYLIB_PARSER_MAYOR_ 12
 	#define LLANYLIB_PARSER_MINOR_ 0
 
-#include "../../traits/ValidationChecker.hpp"
+#include "../traits/ValidationChecker.hpp"
+#include "../traits_base/type_modifier.hpp"
 
 #include "IteratorUtils.hpp"
 
@@ -84,6 +85,10 @@ namespace utils {
 		constexpr void writewTm(const wParseTime&) noexcept {}
 };*/
 
+template<class ParserFunctions>
+concept HasParserFunctions = requires (const ParserFunctions p) {
+	{ p.ln() } noexcept -> ::std::same_as<void>;
+};
 
 template<
 	class _ParserFunctions,
@@ -125,13 +130,24 @@ class Parser : public _ParserFunctions {
 		template<class... Args>
 		__LL_INLINE__ constexpr void writeln(const Args&... args) noexcept {
 			this->write(::std::forward<const Args>(args)...);
-			this->ln();
+			ParserFunctions::ln();
 		}
 		template<class T>
 		__LL_INLINE__ constexpr void write(const T& data) noexcept {
-			//constexpr meta::StrTypeid __type__ = meta::STANDARD_TYPEID<T>();
-			constexpr TypeID TYPE_ID{};
-			if constexpr (::std::is_pointer_v<T>) {
+			using raw_type_t = ::llcpp::meta::traits::raw_type_t<T>;
+
+			if constexpr (::std::is_same_v<raw_type_t, ::std::nullptr_t>)
+				ParserFunctions::writeNull();
+			
+
+
+
+
+
+			if constexpr (::std::is_array_v<T>) {
+				using array_type = ::llcpp::meta::traits::array_type_t<T>;
+			}
+			else if constexpr (::std::is_pointer_v<T>) {
 				using __noptr = ::std::remove_pointer_t<T>;
 
 				if constexpr (::std::is_same_v<__noptr, ::std::nullptr_t>)
@@ -139,6 +155,8 @@ class Parser : public _ParserFunctions {
 				else if constexpr (_MyType::PRINTABLE_CHAR<T>)
 					this->writeString(data);
 				else {
+					//constexpr meta::StrTypeid __type__ = meta::STANDARD_TYPEID<T>();
+					constexpr TypeID TYPE_ID{};
 					this->write('<', TYPE_ID.first, Parser::PTR_INIT_STR);
 					this->writePointer(data);
 					this->writeChar('>');

@@ -184,7 +184,7 @@ constexpr auto type_modifier() {
 		// Remove array from type
 		using type_edited = traits_func::array_type_t<_T>;
 		using packed_type = decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::T;
+		using unpacked_type = typename packed_type::value_type;
 		if constexpr (_ATTRIBUTES.REMOVE_ARRAY)
 			return traits_func::TypeContainer<unpacked_type>{};
 		else return traits_func::TypeContainer<unpacked_type[traits_func::array_size<_T>]>{};
@@ -193,7 +193,7 @@ constexpr auto type_modifier() {
 		// Remove reference from type
 		using type_edited	= ::std::remove_reference_t<_T>;
 		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::T;
+		using unpacked_type = typename packed_type::value_type;
 		if constexpr (_ATTRIBUTES.REMOVE_REFERENCE)
 			return traits_func::TypeContainer<unpacked_type>{};
 		else return traits_func::TypeContainer<unpacked_type&>{};
@@ -202,7 +202,7 @@ constexpr auto type_modifier() {
 		// Remove pointer from type
 		using type_edited	= ::std::remove_pointer_t<_T>;
 		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::T;
+		using unpacked_type = typename packed_type::value_type;
 		if constexpr (_ATTRIBUTES.REMOVE_POINTER)
 			return traits_func::TypeContainer<unpacked_type>{};
 		else return traits_func::TypeContainer<unpacked_type*>{};
@@ -211,7 +211,7 @@ constexpr auto type_modifier() {
 		// Remove const from type
 		using type_edited	= ::std::remove_const_t<_T>;
 		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::T;
+		using unpacked_type = typename packed_type::value_type;
 		if constexpr (_ATTRIBUTES.REMOVE_CONST)
 			return traits_func::TypeContainer<unpacked_type>{};
 		else return traits_func::TypeContainer<const unpacked_type>{};
@@ -220,10 +220,19 @@ constexpr auto type_modifier() {
 		// Remove const from type
 		using type_edited	= ::std::remove_volatile_t<_T>;
 		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::T;
+		using unpacked_type = typename packed_type::value_type;
 		if constexpr (_ATTRIBUTES.REMOVE_CONST)
 			return traits_func::TypeContainer<unpacked_type>{};
 		else return traits_func::TypeContainer<volatile unpacked_type>{};
+	}
+	else if constexpr (::llcpp::meta::traits::has_value_type_v<_T> && _ATTRIBUTES.REMOVE_CONTAINER) {
+		// Remove const from type
+		using type_edited	= typename _T::value_type;
+		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
+		using unpacked_type = typename packed_type::value_type;
+		if constexpr (_ATTRIBUTES.REMOVE_CONTAINER)
+			return traits_func::TypeContainer<unpacked_type>{};
+		else return traits_func::TypeContainer<>{};
 	}
 	else return traits_func::TypeContainer<_T>{};
 }
@@ -234,7 +243,7 @@ template<class T, ::llcpp::meta::attributes::type_update_t ATTRIBUTES>
 using type_modifier_t = decltype(::llcpp::meta::traits::__traits__::type_modifier<T, ATTRIBUTES>())::T;
 
 template<class T>
-using raw_type_t = type_modifier_t<T, ::llcpp::meta::attributes::update::RAW_TYPE>;
+using raw_type_t = ::llcpp::meta::traits::type_modifier_t<T, ::llcpp::meta::attributes::update::RAW_TYPE>;
 
 //using t = type_modifier_t<const char**, ::llcpp::meta::attributes::update::RAW_TYPE>;
 

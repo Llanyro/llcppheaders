@@ -43,9 +43,7 @@
 
 #include "IteratorUtils.hpp"
 
-#define LLANYLIB_INCOMPLETE_HPP_
 #include "ArrayBase.hpp"
-#undef LLANYLIB_INCOMPLETE_HPP_
 
 namespace llcpp {
 namespace meta {
@@ -88,6 +86,7 @@ namespace utils {
 template<class ParserFunctions>
 concept HasParserFunctions = requires (const ParserFunctions p) {
 	{ p.ln() } noexcept -> ::std::same_as<void>;
+	{ p.writeNull() } noexcept -> ::std::same_as<void>;
 };
 
 template<
@@ -102,7 +101,7 @@ class Parser : public _ParserFunctions {
 		using ValidTag			= ::llcpp::meta::traits::ValidationWrapper<_ParserFunctions, ::llcpp::AlwaysValidTag>;
 		using ParserFunctions	= _ParserFunctions;
 
-		using TypeID			= ::llcpp::meta::utils::TypeID<::llcpp::meta::utils::Str<::llcpp::LL_FALSE>, u64>;
+		using TypeID			= ::llcpp::meta::utils::TypeID<::llcpp::meta::utils::cString<>, u64>;
 		using Printable			= ::llcpp::DummyClass;
 
 	#pragma endregion
@@ -132,39 +131,88 @@ class Parser : public _ParserFunctions {
 			this->write(::std::forward<const Args>(args)...);
 			ParserFunctions::ln();
 		}
+
 		template<class T>
 		__LL_INLINE__ constexpr void write(const T& data) noexcept {
 			using raw_type_t = ::llcpp::meta::traits::raw_type_t<T>;
+			constexpr ll_bool_t IS_ARRAY_TYPE;
 
-			if constexpr (::std::is_same_v<raw_type_t, ::std::nullptr_t>)
-				ParserFunctions::writeNull();
-			
-
-
-
-
-
-			if constexpr (::std::is_array_v<T>) {
-				using array_type = ::llcpp::meta::traits::array_type_t<T>;
-			}
-			else if constexpr (::std::is_pointer_v<T>) {
-				using __noptr = ::std::remove_pointer_t<T>;
-
-				if constexpr (::std::is_same_v<__noptr, ::std::nullptr_t>)
-					this->writeNull();
-				else if constexpr (_MyType::PRINTABLE_CHAR<T>)
-					this->writeString(data);
-				else {
-					//constexpr meta::StrTypeid __type__ = meta::STANDARD_TYPEID<T>();
-					constexpr TypeID TYPE_ID{};
-					this->write('<', TYPE_ID.first, Parser::PTR_INIT_STR);
+			if constexpr (::std::is_same_v<raw_type_t, ::std::nullptr_t>) {
+				if constexpr (::std::is_pointer_v<T>)
 					this->writePointer(data);
-					this->writeChar('>');
+				else if constexpr (::std::is_array_v<T>) {
+					this->write("[ ... ", ::llcpp::meta::traits::array_size<T>);
+					this->writeNull();
+					this->write(" ]");
+				}
+				else if (::std::is_same_v<raw_type_t, T>)
+					this->writeNull();
+				else {
+					this->write("Undefined case 1");
+					constexpr TypeID TYPE_ID{};
+					this->write('<', TYPE_ID.first, '>');
 				}
 			}
-			else if constexpr (::std::is_base_of_v<Printable, T>) {
-				if (!this->writePrintable(data))
-					this->write('<', __type__.getName(), Parser::PRINTABLE_BAD_INITED_STR);
+			else if constexpr (::std::is_base_of_v<Printable, raw_type_t>) {
+				if constexpr (::std::is_pointer_v<T>)
+					this->writePointer(data);
+				else if constexpr (::std::is_array_v<T>)
+					this->writeArray(data);
+				else if (::std::is_same_v<raw_type_t, T>) {
+					if (!this->writePrintable(data)) {
+						constexpr TypeID TYPE_ID{};
+						this->write('<', TYPE_ID.first, Parser::PRINTABLE_BAD_INITED_STR);
+					}
+				}
+				else {
+					this->write("Undefined case 2");
+					constexpr TypeID TYPE_ID{};
+					this->write('<', TYPE_ID.first, '>');
+				}
+			}
+			else if constexpr (_MyType::PARSEABLE_NUMBER<raw_type_t>) {
+				if constexpr (::std::is_pointer_v<T>)
+					this->writePointer(data);
+				else if constexpr (::std::is_array_v<T>)
+					this->writeArray(data);
+				else if (::std::is_same_v<raw_type_t, T>)
+					this->writeNumber(data);
+				else {
+					this->write("Undefined case 3");
+					constexpr TypeID TYPE_ID{};
+					this->write('<', TYPE_ID.first, '>');
+				}
+			}
+			else if constexpr (_MyType::PRINTABLE_CHAR<raw_type_t>) {
+				if constexpr (::std::is_same_v<raw_type_t, ::llcpp::char_type> || MULTICHAR_MODE) {
+					if constexpr (::std::is_pointer_v<T>)
+						this->writePointer(data);
+					else if constexpr (::std::is_array_v<T>)
+						ParserFunctions::writeString(data, ::llcpp::meta::traits::array_size<T>);
+					else if (::std::is_same_v<raw_type_t, T>)
+						ParserFunctions::writeChar(data);
+					else {
+						this->write("Undefined case 3");
+						constexpr TypeID TYPE_ID{};
+						this->write('<', TYPE_ID.first, '>');
+					}
+				}
+#if defined(__cpp_char8_t)
+				else if constexpr (::std::is_same_v<raw_type_t, char8_t>)
+					__debug_error_parser("'char8_t' is not a valid printeable character with this parser!");
+#endif // __cpp_char8_t
+				else if constexpr (::std::is_same_v<raw_type_t, ll_char_t>)
+					__debug_error_parser("'char' is not a valid printeable character with this parser!");
+				else if constexpr (::std::is_same_v<raw_type_t, ll_wchar_t>)
+					__debug_error_parser("'wchar_t' is not a valid printeable character with this parser!");
+				else if constexpr (::std::is_same_v<raw_type_t, char16_t>)
+					__debug_error_parser("'char16_t' is not a valid printeable character with this parser!");
+				else if constexpr (::std::is_same_v<raw_type_t, char32_t>)
+					__debug_error_parser("'char32_t' is not a valid printeable character with this parser!");
+				else {
+					static_assert(::std::is_same_v<raw_type_t, ::llcpp::char_type> || MULTICHAR_MODE,
+						"Unknown non char type in char only function!");
+				}
 			}
 			else {
 				if (!this->parserExtra(__type__, &data)) {
@@ -177,11 +225,20 @@ class Parser : public _ParserFunctions {
 
 		// Convert all numbers to ascii string
 		template<class T>
-		constexpr void write(const T& v) const noexcept requires(_MyType::PARSEABLE_NUMBER<T>) {
+		constexpr void writeNumber(const T& v) const noexcept requires(_MyType::PARSEABLE_NUMBER<T>) {
 			// jeaii to text
 			// [TODO] [TOFIX]
 			// Edit jeaii to use wchar too
 		}
+
+
+
+
+
+
+
+
+
 		// Write nullptr
 		template<class T>
 		constexpr void write(const T& v) const noexcept requires(::std::is_same_v<T, ::std::nullptr_t>) {
@@ -190,24 +247,6 @@ class Parser : public _ParserFunctions {
 		// Print chars by its type
 		template<class T>
 		constexpr void write(const T& v) const noexcept requires(_MyType::PRINTABLE_CHAR<T>) {
-			if constexpr (::std::is_same_v<T, ::llcpp::char_type> || MULTICHAR_MODE)
-				ParserFunctions::writeChar(v);
-#if defined(__cpp_char8_t)
-			else if constexpr (::std::is_same_v<T, char8_t>)
-				__debug_error_parser("'char8_t' is not a valid printeable character with this parser!");
-#endif // __cpp_char8_t
-			else if constexpr (::std::is_same_v<T, ll_char_t>)
-				__debug_error_parser("'char' is not a valid printeable character with this parser!");
-			else if constexpr (::std::is_same_v<T, ll_wchar_t>)
-				__debug_error_parser("'wchar_t' is not a valid printeable character with this parser!");
-			else if constexpr (::std::is_same_v<T, char16_t>)
-				__debug_error_parser("'char16_t' is not a valid printeable character with this parser!");
-			else if constexpr (::std::is_same_v<T, char32_t>)
-				__debug_error_parser("'char32_t' is not a valid printeable character with this parser!");
-			else {
-				static_assert(::std::is_same_v<T, ::llcpp::char_type> || MULTICHAR_MODE,
-					"Unknown non char type in char only function!");
-			}
 		}
 		template<class T>
 		constexpr void write(const T& v) const noexcept requires(::std::is_pointer_v<T>) {

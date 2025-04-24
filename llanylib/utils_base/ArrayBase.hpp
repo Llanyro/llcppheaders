@@ -323,9 +323,19 @@ using Str = ::llcpp::meta::utils::ArrayBase<ll_char_t, ENABLE_NO_CONST, USE_OBJE
 template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 using wStr = ::llcpp::meta::utils::ArrayBase<ll_wchar_t, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
 
+// Ascii char string
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
+using cStr = ::llcpp::meta::utils::ArrayBase<ll_char_t, ::llcpp::LL_FALSE, USE_OBJECT_ITERATOR>;
+// Wide char string
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
+using cwStr = ::llcpp::meta::utils::ArrayBase<ll_wchar_t, ::llcpp::LL_FALSE, USE_OBJECT_ITERATOR>;
+
 // Ascii/Wide char defined by macros and OS
 template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 using String = ::llcpp::meta::utils::ArrayBase<::llcpp::char_type, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
+
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
+using cString = ::llcpp::meta::utils::ArrayBase<::llcpp::char_type, ::llcpp::LL_FALSE, USE_OBJECT_ITERATOR>;
 
 } // namespace utils
 } // namespace meta

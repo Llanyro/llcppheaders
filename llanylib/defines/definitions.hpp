@@ -114,6 +114,14 @@
 	#define __LL_DEBUG__ __LL_DEBUG_ERROR__
 #endif // __LL_DEBUG__
 
+#define DEFAULT_RULE_OF_6(classname)									\
+		constexpr classname () noexcept {}								\
+		constexpr ~classname () noexcept {}								\
+		constexpr classname (const classname&) noexcept {}				\
+		constexpr classname& operator=(const classname&) noexcept {}	\
+		constexpr classname (classname&&) noexcept {}					\
+		constexpr classname& operator=(classname&&) noexcept {}
+
 #define EXTERN_C_FUNC extern "C"
 
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB

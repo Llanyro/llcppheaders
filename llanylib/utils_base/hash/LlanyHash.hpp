@@ -57,8 +57,8 @@ concept IsValidLlanyHashAlgorithm = requires (const T t, const u64 u6) {
 };
 
 template<class T, class byte>
-concept HasMemcopy = requires (const T t, byte* dst, const byte* src, u8 bytes) {
-	{ t.memcopy(dst, src, bytes) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<void>;
+concept HasMemcopy = requires (const T t, byte* dst, const byte* src, const u8 bytes) {
+	{ t.memcopy(dst, src, bytes) } noexcept -> ::std::same_as<void>;
 };
 
 } // namespace llcpp
@@ -200,7 +200,7 @@ class LlanyHash
 		// Right not, those cast are not valid (-std=c++20)
 		// Prob valid constexpr before -std=c++26
 		template<class CopyCat = _MyType>
-		__LL_NODISCARD__ u64 llanyHash64Combine(bytearray s, const usize len) noexcept requires(::llcpp::meta::concepts::hash::llcpp::HasMemcopy<CopyCat, byte>) {
+		__LL_NODISCARD__ u64 llanyHash64Combine(bytearray s, const usize len) const noexcept requires(::llcpp::meta::concepts::hash::llcpp::HasMemcopy<CopyCat, byte>) {
 			LL_NULL_STRING_EXCEPTION_CHECK(s, len);
 
 			// Algorithm to use
@@ -230,10 +230,7 @@ class LlanyHash
 
 				if constexpr (::std::is_same_v<CopyCat, _MyType>)
 					this->memcopy(c, s_, leftovers);
-				else {
-					constexpr CopyCat copy{};
-					copy.memcopy(c, s_, leftovers);
-				}
+				else CopyCat().memcopy(c, s_, leftovers);
 
 				result = algo.process(result, extra);
 			}
@@ -241,7 +238,7 @@ class LlanyHash
 			return result;
 		}
 
-		constexpr void memcopy(byte* dst, bytearray src, u8 bytes) const noexcept {
+		constexpr void memcopy(byte* dst, const byte* src, const u8 bytes) const noexcept {
 			if consteval {
 				// Loop copy
 				for (bytearray c_end = src + bytes; src < c_end; ++src, ++dst)
@@ -286,16 +283,16 @@ class LlanyHash
 			return this->llanyHash64_v3(s, N);
 		}
 
-		template<class U>
+		/*template<class U, class CopyCat = _MyType>
 			requires ::llcpp::meta::concepts::hash::IsValidArray<T, byte>
 		__LL_NODISCARD__ u64 llanyHash64Combine(const U& s) const noexcept {
 			LL_STRING_EXCEPTION_CHECK;
-			return this->llanyHash64Combine(s.begin(), s.size());
+			return this->llanyHash64Combine<CopyCat>(s.begin(), s.size());
 		}
-		template<usize N>
+		template<usize N, class CopyCat = _MyType>
 		__LL_NODISCARD__ u64 llanyHash64Combine(const byte(&s)[N]) const noexcept {
-			return this->llanyHash64Combine(s, N);
-		}
+			return this->llanyHash64Combine<CopyCat>(s, N);
+		}*/
 
 		#pragma endregion
 

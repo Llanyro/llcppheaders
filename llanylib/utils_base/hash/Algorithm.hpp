@@ -83,6 +83,7 @@ namespace hash {
 enum class AlgorithmMode : u8 {
 	Murmur,
 	SimplestCombine,
+	CRC
 };
 
 template<class _T, ::llcpp::meta::utils::hash::AlgorithmMode _MODE = ::llcpp::meta::utils::hash::AlgorithmMode::Murmur>
@@ -109,6 +110,7 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 
 		static constexpr ll_bool_t IS_MUR	= MODE == Mode::Murmur;
 		static constexpr ll_bool_t IS_SIMP	= MODE == Mode::SimplestCombine;
+		static constexpr ll_bool_t IS_CRC	= MODE == Mode::CRC;
 
 	#pragma endregion
 	#pragma region Functions
@@ -181,6 +183,13 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 		template<u8 SHIFT = _MyType::Murmur::llshift8, ll_bool_t LEFT_SHIFT = ::llcpp::LL_TRUE>
 		__LL_NODISCARD__ constexpr u8 process(const u8 value1, const u8 value2) const noexcept requires(IS_SIMP && IS_8) {
 			return this->__simplest_combine_process<SHIFT, LEFT_SHIFT>(value1, value2);
+		}
+
+		#pragma endregion
+		#pragma region CRC
+	public:
+		__LL_NODISCARD__ constexpr T process(const T value1, const T value2) const noexcept requires(IS_CRC) {
+			return value1 ^ value2;
 		}
 
 		#pragma endregion

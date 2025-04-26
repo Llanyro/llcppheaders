@@ -85,7 +85,7 @@ namespace hash {
 			(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);	\
 		return ::llcpp::ZERO_VALUE<u64>;									\
 	}																		\
-	else if (len) {															\
+	else if (len == 0) {													\
 		if constexpr (::llcpp::EXCEPTIONS)									\
 			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
 		return ::llcpp::ZERO_VALUE<u64>;									\
@@ -97,7 +97,7 @@ template<
 >
 	requires
 		::llcpp::meta::concepts::hash::llcpp::IsValidLlanyHashAlgorithm<_Algorithm>
-		&& ::llcpp::meta::traits::is_same_su_v<T, u8>
+		//&& ::llcpp::meta::traits::is_same_su_v<T, u8>
 		&&::llcpp::meta::traits::is_valid_constructor_checker_v<_Algorithm>
 class LlanyHash
 	: public ::llcpp::meta::traits::ValidationWrapper<_Algorithm, ::llcpp::AlwaysValidTag>

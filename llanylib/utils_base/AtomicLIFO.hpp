@@ -39,7 +39,7 @@ template<
 	_SizeType _NUMBER_OF_OBJECTS	= ::llcpp::MAX_VALUE<i8>,
 	_SizeType _NUMBER_USERS			= ::llcpp::ZERO_VALUE<_SizeType>
 >
-class AtomitLIFO;
+class AtomicLIFO;
 
 } // namespace atomic
 } // namespace utils
@@ -63,7 +63,7 @@ class AtomitLIFO;
 
 #include "../traits_base/type_traits.hpp"
 
-#define __LL_ATOMIC_MODE 2
+#define __LL_ATOMIC_MODE 0
 
 #if __LL_ATOMIC_MODE == 0 || __LL_ATOMIC_MODE == 1
 	#include <atomic>
@@ -84,13 +84,14 @@ template<
 	class _ObjectType				= void*,
 	class _SizeType					= i8,
 	_SizeType _NUMBER_OF_OBJECTS	= ::llcpp::MAX_VALUE<_SizeType>,
-	_SizeType _NUMBER_USERS			= ::llcpp::ZERO_VALUE<_SizeType>
+	_SizeType _NUMBER_USERS			= ::llcpp::ZERO_VALUE<_SizeType>,
+	class _ExtraCheck				= ::llcpp::Emptyclass
 >
-class AtomitLIFO {
+class AtomicLIFO {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType		= AtomitLIFO;
+		using _MyType		= AtomicLIFO;
 
 		// Types and enums
 		using ObjectType	= _ObjectType;
@@ -98,7 +99,6 @@ class AtomitLIFO {
 		using type			= T;			// standard
 		using value_type	= T;			// standard
 		using SizeType		= _SizeType;	// 
-		using ObjectTypeMove= ::llcpp::meta::traits::conditional_t<::std::is_pointer_v<ObjectType>, ObjectType, ObjectType&&>;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -110,6 +110,8 @@ class AtomitLIFO {
 	#pragma endregion
 	#pragma region Asserts
 	public:
+		static_assert(::std::is_pointer_v<ObjectType>,
+			"Object type needs to be a pointer");
 		static_assert(NUMBER_OF_OBJECTS > 0,
 			"Number of objects needs to be a positive number");
 		// This class requires a signed type
@@ -136,52 +138,60 @@ class AtomitLIFO {
 		#pragma region Constructors
 	public:
 		// If type contained is an object, this will call the default constructor of all objects
-		constexpr AtomitLIFO() noexcept = default;
-		constexpr ~AtomitLIFO() noexcept = default;
+		constexpr AtomicLIFO() noexcept = default;
+		constexpr ~AtomicLIFO() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr AtomitLIFO(const AtomitLIFO& other) noexcept = delete;
-		constexpr AtomitLIFO& operator=(const AtomitLIFO& other) noexcept = delete;
-		constexpr AtomitLIFO(AtomitLIFO&& other) noexcept = delete;
-		constexpr AtomitLIFO& operator=(AtomitLIFO&& other) noexcept = delete;
+		constexpr AtomicLIFO(const AtomicLIFO& other) noexcept = delete;
+		constexpr AtomicLIFO& operator=(const AtomicLIFO& other) noexcept = delete;
+		constexpr AtomicLIFO(AtomicLIFO&& other) noexcept = delete;
+		constexpr AtomicLIFO& operator=(AtomicLIFO&& other) noexcept = delete;
 
-		constexpr AtomitLIFO(volatile const AtomitLIFO& other) noexcept = delete;
-		constexpr AtomitLIFO& operator=(volatile const AtomitLIFO& other) noexcept = delete;
-		constexpr AtomitLIFO(volatile AtomitLIFO&& other) noexcept = delete;
-		constexpr AtomitLIFO& operator=(volatile AtomitLIFO&& other) noexcept = delete;
+		constexpr AtomicLIFO(volatile const AtomicLIFO& other) noexcept = delete;
+		constexpr AtomicLIFO& operator=(volatile const AtomicLIFO& other) noexcept = delete;
+		constexpr AtomicLIFO(volatile AtomicLIFO&& other) noexcept = delete;
+		constexpr AtomicLIFO& operator=(volatile AtomicLIFO&& other) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr explicit operator const AtomitLIFO*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator AtomitLIFO*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const AtomicLIFO*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator AtomicLIFO*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
 		private:
 			__LL_NODISCARD__ constexpr ll_bool_t pop_commom(_MyType::ObjectType& extracted, const _MyType::SizeType pos, const ll_bool_t is_out_of_bounds) noexcept {
+				// If its nullptr or out-of-bounds
 				if (is_out_of_bounds) {
 					++this->idx;				// Restore index
 					return ::llcpp::LL_FALSE;	// Notify user fail pop()
 				}
+				// This index is a valid one
+				// We extract the object, and exits the function with good result
 				else {
-					// This index is a valid one
-					// We extract the object, and exits the function with good result
-					extracted = ::std::forward<_MyType::ObjectType&&>(this->lifo_objects[pos]);
+					extracted = this->lifo_objects[pos];
+					this->lifo_objects[pos] = ::llcpp::NULL_VALUE<_MyType::ObjectType>;
+					// If pointer is already nullptr
+					if(!extracted) {
+						++this->idx;				// Restore index
+						return ::llcpp::LL_FALSE;	// Notify user fail pop()	
+					}
 					return ::llcpp::LL_TRUE;
 				}
 			}
-			__LL_NODISCARD__ constexpr ll_bool_t push_commom(_MyType::ObjectTypeMove object, const _MyType::SizeType pos, const ll_bool_t is_out_of_bounds) noexcept {
-				if (is_out_of_bounds) {
+			__LL_NODISCARD__ constexpr ll_bool_t push_commom(_MyType::ObjectType object, const _MyType::SizeType pos, const ll_bool_t is_out_of_bounds) noexcept {
+				// If its not nullptr or is out-of-bounds
+				if (this->lifo_objects[pos] || is_out_of_bounds) {
 					--this->idx;				// Restore index
-					return ::llcpp::LL_FALSE;	// Notify user fail push()
+					return ::llcpp::LL_FALSE;	// Notify user fail pop()
 				}
+				// This index is a valid one
+				// We move external object to this class
 				else {
-					// This index is a valid one
-					// We move external object to this class
-					this->lifo_objects[pos] = ::std::forward<_MyType::ObjectTypeMove>(object);
+					this->lifo_objects[pos] = object;
 					return ::llcpp::LL_TRUE;
 				}
 			}
@@ -190,10 +200,9 @@ class AtomitLIFO {
 			__LL_NODISCARD__ constexpr ll_bool_t pop(_MyType::ObjectType& extracted) noexcept {
 				// Decrement index of object in lifo
 	#if __LL_ATOMIC_MODE == 0
-				_MyType::SizeType pos = this->idx--;
+				_MyType::SizeType pos = --this->idx;
 	#elif __LL_ATOMIC_MODE == 1 || __LL_ATOMIC_MODE == 2
 				_MyType::SizeType pos = --this->idx;
-				++pos; // Fix position
 	#endif // __LL_ATOMIC_MODE
 
 				// Now we have the object index
@@ -203,7 +212,7 @@ class AtomitLIFO {
 					return this->pop_commom(
 						extracted,
 						pos,
-						pos < ::llcpp::ZERO_VALUE<_MyType::SizeType> || pos > _MyType::NUMBER_OF_OBJECTS
+						pos < ::llcpp::ZERO_VALUE<_MyType::SizeType> || pos >= _MyType::NUMBER_OF_OBJECTS
 					);
 				}
 				else {
@@ -217,13 +226,12 @@ class AtomitLIFO {
 					);
 				}
 			}
-			__LL_NODISCARD__ constexpr ll_bool_t push(_MyType::ObjectTypeMove object) noexcept {
+			__LL_NODISCARD__ constexpr ll_bool_t push(_MyType::ObjectType object) noexcept {
 				// Increment index of object in lifo
 	#if __LL_ATOMIC_MODE == 0
 				_MyType::SizeType pos = this->idx++;
 	#elif __LL_ATOMIC_MODE == 1 || __LL_ATOMIC_MODE == 2
-				_MyType::SizeType pos = ++this->idx;
-				--pos; // Fix position
+				_MyType::SizeType pos = this->idx++;
 	#endif // __LL_ATOMIC_MODE
 
 				// Now we have the object index
@@ -231,9 +239,9 @@ class AtomitLIFO {
 					// If size type is signed, invalid index are negative numbers
 					// Prob is good to tell thread go to sleep or something
 					return this->push_commom(
-						::std::forward<_MyType::ObjectTypeMove>(object),
+						object,
 						pos,
-						pos < ::llcpp::ZERO_VALUE<_MyType::SizeType> || pos > _MyType::NUMBER_OF_OBJECTS
+						pos < ::llcpp::ZERO_VALUE<_MyType::SizeType> || pos >= _MyType::NUMBER_OF_OBJECTS
 					);
 				}
 				else {
@@ -241,12 +249,15 @@ class AtomitLIFO {
 					// If size type is unsigned, invalid index are positive numbers between NUMBER_OF_OBJECTS and MAX_VALUE sub NUMBER_USERS
 					// Prob is good to tell thread go to sleep or something
 					return this->push_commom(
-						::std::forward<_MyType::ObjectTypeMove>(object),
+						object,
 						pos,
-						pos > OUT_OF_BOUNDS || pos > _MyType::NUMBER_OF_OBJECTS
+						pos > OUT_OF_BOUNDS || pos >= _MyType::NUMBER_OF_OBJECTS
 					);
 				}
 			}
+
+			__LL_NODISCARD__ constexpr _MyType::SizeType getIdx() const noexcept { return this->idx; }
+			__LL_NODISCARD__ constexpr ::llcpp::ll_bool_t empty() const noexcept { return this->idx == ::llcpp::ZERO_VALUE<_MyType::SizeType>; }
 
 		#pragma endregion
 

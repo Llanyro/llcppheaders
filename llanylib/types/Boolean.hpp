@@ -104,10 +104,10 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 			return *this;
 		}
 
-		constexpr Boolean(const volatile enum_bool value) noexcept = delete;
-		constexpr Boolean operator=(const volatile enum_bool value) noexcept = delete;
-		constexpr Boolean(const volatile ll_bool_t value) noexcept = delete;
-		constexpr Boolean operator=(const volatile ll_bool_t value) noexcept = delete;
+		//constexpr Boolean(const volatile enum_bool value) noexcept = delete;
+		//constexpr Boolean operator=(const volatile enum_bool value) noexcept = delete;
+		//constexpr Boolean(const volatile ll_bool_t value) noexcept = delete;
+		//constexpr Boolean operator=(const volatile ll_bool_t value) noexcept = delete;
 
 		constexpr Boolean(const volatile Boolean&) = delete;
 		constexpr Boolean& operator=(const volatile Boolean&) = delete;

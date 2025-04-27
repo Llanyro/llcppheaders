@@ -250,9 +250,9 @@ __LL_VAR_INLINE__ constexpr ll_bool_t LL_FALSE = false;
 __LL_VAR_INLINE__ constexpr ll_bool_t LL_TRUE	= true;
 
 #if defined(__LL_REAL_CXX20)
-__LL_INLINE__ constexpr void IGNORE(auto...) {}
+__LL_INLINE__ constexpr void LL_IGNORE(auto...) {}
 #else
-template<class... Args> __LL_INLINE__ constexpr void IGNORE(Args&&...) {}
+template<class... Args> __LL_INLINE__ constexpr void LL_IGNORE(Args&&...) {}
 #endif
 
 namespace meta {

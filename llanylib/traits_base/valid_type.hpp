@@ -58,7 +58,7 @@ template<
 	class OnUnknown,
 	class OnError
 >
-using type_by_valid_type_t = ::std::disjunction<
+using type_by_valid_type_t = typename ::std::disjunction<
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Valid,		OnValidAttr>,
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Invalid,	OnInvalidAttr>,
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::ToCheck,	OnToCheck>,

@@ -63,7 +63,7 @@ class AtomicLIFO;
 
 #include "../traits_base/type_traits.hpp"
 
-#define __LL_ATOMIC_MODE 0
+//#define __LL_ATOMIC_MODE 2
 
 #if __LL_ATOMIC_MODE == 0 || __LL_ATOMIC_MODE == 1
 	#include <atomic>
@@ -84,8 +84,7 @@ template<
 	class _ObjectType				= void*,
 	class _SizeType					= i8,
 	_SizeType _NUMBER_OF_OBJECTS	= ::llcpp::MAX_VALUE<_SizeType>,
-	_SizeType _NUMBER_USERS			= ::llcpp::ZERO_VALUE<_SizeType>,
-	class _ExtraCheck				= ::llcpp::Emptyclass
+	_SizeType _NUMBER_USERS			= ::llcpp::ZERO_VALUE<_SizeType>
 >
 class AtomicLIFO {
 	#pragma region Types
@@ -138,7 +137,7 @@ class AtomicLIFO {
 		#pragma region Constructors
 	public:
 		// If type contained is an object, this will call the default constructor of all objects
-		constexpr AtomicLIFO() noexcept = default;
+		constexpr AtomicLIFO() noexcept : lifo_objects(), idx() {}
 		constexpr ~AtomicLIFO() noexcept = default;
 
 		#pragma endregion
@@ -173,7 +172,7 @@ class AtomicLIFO {
 				// We extract the object, and exits the function with good result
 				else {
 					extracted = this->lifo_objects[pos];
-					this->lifo_objects[pos] = ::llcpp::NULL_VALUE<_MyType::ObjectType>;
+					this->lifo_objects[pos] = ::llcpp::ZERO_VALUE<_MyType::ObjectType>;
 					// If pointer is already nullptr
 					if(!extracted) {
 						++this->idx;				// Restore index
@@ -231,7 +230,8 @@ class AtomicLIFO {
 	#if __LL_ATOMIC_MODE == 0
 				_MyType::SizeType pos = this->idx++;
 	#elif __LL_ATOMIC_MODE == 1 || __LL_ATOMIC_MODE == 2
-				_MyType::SizeType pos = this->idx++;
+				_MyType::SizeType pos = ++this->idx;
+				--pos;
 	#endif // __LL_ATOMIC_MODE
 
 				// Now we have the object index

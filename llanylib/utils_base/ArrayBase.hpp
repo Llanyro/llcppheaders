@@ -159,8 +159,8 @@ class ArrayBase {
 		#pragma region Functions
 	private:
 		constexpr void simpleClear() noexcept {
-			this->setMem(::llcpp::NULL_VALUE<decltype(this->mem)>);
-			this->setMemEnd(::llcpp::NULL_VALUE<decltype(this->mem_end)>);
+			this->setMem(::llcpp::ZERO_VALUE<default_iterator>);
+			this->setMemEnd(::llcpp::ZERO_VALUE<default_iterator>);
 		}
 		constexpr void setMem(default_iterator mem) noexcept { this->mem = mem; }
 		constexpr void setMemEnd(default_iterator mem_end) noexcept { this->mem_end = mem_end; }
@@ -169,8 +169,8 @@ class ArrayBase {
 		#pragma region Constructors
 	public:
 		constexpr ArrayBase() noexcept
-			: mem(::llcpp::NULL_VALUE<decltype(mem)>)
-			, mem_end(::llcpp::NULL_VALUE<decltype(mem_end)>)
+			: mem(::llcpp::ZERO_VALUE<default_iterator>)
+			, mem_end(::llcpp::ZERO_VALUE<default_iterator>)
 		{}
 		constexpr ArrayBase(default_iterator mem, default_iterator mem_end) noexcept
 			: mem(mem)

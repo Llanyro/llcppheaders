@@ -86,14 +86,14 @@ class PointerIterator {
 	#pragma region Functions
 		#pragma region Private
 	private:
-		constexpr void simpleClear() noexcept { this->setMem(::llcpp::NULL_VALUE<decltype(this->mem)>); }
+		constexpr void simpleClear() noexcept { this->setMem(::llcpp::NULL_VALUE<T>); }
 		constexpr void setMem(T* mem) noexcept { this->mem = mem; }
 
 		#pragma endregion
 		#pragma region Constructors
 	public:
 		constexpr PointerIterator() noexcept
-			: PointerIterator(::llcpp::NULL_VALUE<decltype(this->mem)>)
+			: PointerIterator(::llcpp::NULL_VALUE<T>)
 		{}
 		constexpr PointerIterator(T* mem) noexcept
 			: mem(mem)

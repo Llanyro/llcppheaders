@@ -90,8 +90,8 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 	public:
 		constexpr ExceptionBuffer() noexcept
 			: lifo_names()
-			, lifo_names_last(::llcpp::NULL_VALUE<StringType*>)
-			, lifo_errors_last(::llcpp::NULL_VALUE<ErrorType*>)
+			, lifo_names_last(::llcpp::NULL_VALUE<StringType>)
+			, lifo_errors_last(::llcpp::NULL_VALUE<ErrorType>)
 			, lifo_errors()
 		{ this->simpleClear(); }
 		constexpr ~ExceptionBuffer() noexcept {
@@ -174,8 +174,8 @@ static ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #define LOG_EXCEPTION_TAG(tag, err) ll_exceptions.push(__LL_FUNCNAME__ " [ " tag " ]", err)
 
 #else
-	#define LOG_EXCEPTION(err) ::llcpp::IGNORE(err)
-	#define LOG_EXCEPTION_TAG(tag, err) ::llcpp::IGNORE(tag, err)
+	#define LOG_EXCEPTION(err) ::llcpp::LL_IGNORE(err)
+	#define LOG_EXCEPTION_TAG(tag, err) ::llcpp::LL_IGNORE(tag, err)
 #endif // __LL_EXCEPTIONS == 1
 
 } // namespace exceptions

@@ -155,7 +155,7 @@ class TypeContainer {
 		using value_type	= T;	// standard
 };
 template<class T>
-using type_container_t = ::llcpp::meta::traits::TypeContainer<T>::T;
+using type_container_t = typename ::llcpp::meta::traits::TypeContainer<T>::value_type;
 
 template<class _T, class _U>
 class DoubleTypeContainer {
@@ -170,9 +170,9 @@ class DoubleTypeContainer {
 		using value_type	= T;	// standard
 };
 template<class T, class U>
-using double_type_container_t = ::llcpp::meta::traits::DoubleTypeContainer<T, U>::T;
+using double_type_container_t = typename ::llcpp::meta::traits::DoubleTypeContainer<T, U>::T;
 template<class T, class U>
-using double_type_container_u = ::llcpp::meta::traits::DoubleTypeContainer<T, U>::U;
+using double_type_container_u = typename ::llcpp::meta::traits::DoubleTypeContainer<T, U>::U;
 
 // Can contain 2 types an one constant
 template<class _T, _T _VALUE, class _U = ::llcpp::Emptyclass>
@@ -194,9 +194,9 @@ class IntegralConstantContainer {
 };
 
 template<class T, T VALUE, class U = ::llcpp::Emptyclass>
-using integral_constant_container_t = ::llcpp::meta::traits::IntegralConstantContainer<T, VALUE, U>::T;
+using integral_constant_container_t = typename ::llcpp::meta::traits::IntegralConstantContainer<T, VALUE, U>::T;
 template<class T, T VALUE, class U = ::llcpp::Emptyclass>
-using integral_constant_container_u = ::llcpp::meta::traits::IntegralConstantContainer<T, VALUE, U>::U;
+using integral_constant_container_u = typename ::llcpp::meta::traits::IntegralConstantContainer<T, VALUE, U>::U;
 template<class T, T VALUE, class U = ::llcpp::Emptyclass>
 __LL_VAR_INLINE__ constexpr T integral_constant_container_v =
 	::llcpp::meta::traits::IntegralConstantContainer<T, VALUE, U>::VALUE;
@@ -220,9 +220,9 @@ class DoubleConstantContainer {
 };
 
 template<class T, class U, T FIRST, U SECOND>
-using double_constant_container_t = ::llcpp::meta::traits::DoubleConstantContainer<T, U, FIRST, SECOND>::T;
+using double_constant_container_t = typename ::llcpp::meta::traits::DoubleConstantContainer<T, U, FIRST, SECOND>::T;
 template<class T, class U, T FIRST, U SECOND>
-using double_constant_container_u = ::llcpp::meta::traits::DoubleConstantContainer<T, U, FIRST, SECOND>::U;
+using double_constant_container_u = typename ::llcpp::meta::traits::DoubleConstantContainer<T, U, FIRST, SECOND>::U;
 template<class T, class U, T FIRST, U SECOND>
 __LL_VAR_INLINE__ constexpr T double_constant_container_first =
 	::llcpp::meta::traits::DoubleConstantContainer<T, U, FIRST, SECOND>::FIRST;
@@ -285,7 +285,7 @@ class Conditional<::llcpp::LL_FALSE, _T, _U> {
 };
 
 template<ll_bool_t CONDITION, class T, class U>
-using conditional_t = ::llcpp::meta::traits::Conditional<CONDITION, T, U>::type;
+using conditional_t = typename ::llcpp::meta::traits::Conditional<CONDITION, T, U>::type;
 
 template<ll_bool_t _CONDITION, class _T, class _U, _T _ELEM_1, _U _ELEM_2>
 class ConditionalValue {
@@ -372,9 +372,9 @@ class CompareConditional {
 };
 
 template<class T, class U, class OnEqual = ::llcpp::Emptyclass>
-using type_bigger_of_two_t = ::llcpp::meta::traits::CompareConditional<T, U, OnEqual>::bigger;
+using type_bigger_of_two_t = typename ::llcpp::meta::traits::CompareConditional<T, U, OnEqual>::bigger;
 template<class T, class U, class OnEqual = llcpp::Emptyclass>
-using type_smaller_of_two_t = ::llcpp::meta::traits::CompareConditional<T, U, OnEqual>::smaller;
+using type_smaller_of_two_t = typename ::llcpp::meta::traits::CompareConditional<T, U, OnEqual>::smaller;
 
 #pragma endregion
 #pragma region Disjunction
@@ -391,10 +391,10 @@ using GetByCharType = GetFirstCoincidence<
 >;
 
 template<class T, class... Args>
-using get_first_coincidence_u = ::llcpp::meta::traits::GetFirstCoincidence<T, Args...>::U;
+using get_first_coincidence_u = typename ::llcpp::meta::traits::GetFirstCoincidence<T, Args...>::U;
 
 template<class T, class TypeChar, class TypeWChar>
-using get_by_char_type_u = ::llcpp::meta::traits::GetByCharType<T, TypeChar, TypeWChar>::U;
+using get_by_char_type_u = typename ::llcpp::meta::traits::GetByCharType<T, TypeChar, TypeWChar>::U;
 
 #pragma endregion
 #pragma region Conjunction
@@ -410,7 +410,7 @@ using get_first_difference_u = GetFirstCoincidence<T, Args...>::U;
 #pragma endregion
 #pragma region PrimitiveUpdate
 template<class T, ll_bool_t PROMOTE = ::llcpp::LL_TRUE>
-using TypePromotion = ::llcpp::meta::traits::GetFirstCoincidence<
+using TypePromotion = typename ::llcpp::meta::traits::GetFirstCoincidence<
 	T,
 	::llcpp::meta::traits::DoubleTypeContainer<i8,		::llcpp::meta::traits::conditional_t<PROMOTE, i16, i8>>,
 	::llcpp::meta::traits::DoubleTypeContainer<i16,		::llcpp::meta::traits::conditional_t<PROMOTE, i32, i8>>,
@@ -432,7 +432,7 @@ using TypePromotion = ::llcpp::meta::traits::GetFirstCoincidence<
 >::U;
 
 template<class T, ll_bool_t SIGNALIZE = ::llcpp::LL_TRUE>
-using TypeSigned = ::llcpp::meta::traits::GetFirstCoincidence<
+using TypeSigned = typename ::llcpp::meta::traits::GetFirstCoincidence<
 	T,
 	::llcpp::meta::traits::DoubleTypeContainer<i8,		::llcpp::meta::traits::conditional_t<SIGNALIZE, i8, u8>>,
 	::llcpp::meta::traits::DoubleTypeContainer<i16,		::llcpp::meta::traits::conditional_t<SIGNALIZE, i16, u16>>,
@@ -517,7 +517,7 @@ class RangeChecker {
 #pragma region SystemSize
 // Type getter by size
 template<ll_bool_t SIGNED, u8 P_SIZE = sizeof(void*)>
-using TypeBySize = ::std::disjunction<
+using TypeBySize = typename ::std::disjunction<
 	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i8, u8>, u8, P_SIZE, sizeof(u8)>,
 	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i16, u16>, u8, P_SIZE, sizeof(u16)>,
 	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i32, u32>, u8, P_SIZE, sizeof(u32)>,
@@ -580,7 +580,7 @@ __LL_VAR_INLINE__ constexpr T	ZERO_VALUE		= T{};
 template<class T>
 __LL_VAR_INLINE__ constexpr T*	ZERO_VALUE<T*>	= LL_NULLPTR;
 template<class T>
-__LL_VAR_INLINE__ constexpr T	NULL_VALUE		= ::llcpp::ZERO_VALUE<T>;
+__LL_VAR_INLINE__ constexpr T*	NULL_VALUE		= nullptr;
 
 #pragma endregion
 

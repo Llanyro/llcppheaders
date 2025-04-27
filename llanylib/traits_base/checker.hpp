@@ -63,6 +63,12 @@ namespace llcpp {
 namespace meta {
 namespace traits {
 
+#undef CONST
+#undef REFERENCE
+#undef POINTER
+#undef ARRAY
+#undef VOLATILE
+
 #pragma region TypeChecker
 // Standard checker for types in this lib
 template<class _T, ::llcpp::meta::attributes::checker_attributes_t _ATTRIBUTES>

@@ -61,13 +61,9 @@ class AtomicLIFO;
 	#define LLANYLIB_ATOMICLIFO_MAYOR_ 12
 	#define LLANYLIB_ATOMICLIFO_MINOR_ 0
 
-#include "../traits_base/type_traits.hpp"
+#include "ArrayBase.hpp"
 
-//#define __LL_ATOMIC_MODE 2
-
-#if __LL_ATOMIC_MODE == 0 || __LL_ATOMIC_MODE == 1
-	#include <atomic>
-#elif __LL_ATOMIC_MODE == 2
+#include <atomic>
 
 #endif // __LL_ATOMIC_MODE
 
@@ -86,6 +82,7 @@ template<
 	_SizeType _NUMBER_OF_OBJECTS	= ::llcpp::MAX_VALUE<_SizeType>,
 	_SizeType _NUMBER_USERS			= ::llcpp::ZERO_VALUE<_SizeType>
 >
+	requires ::std::is_unsigned_v<_SizeType>
 class AtomicLIFO {
 	#pragma region Types
 	public:
@@ -97,47 +94,43 @@ class AtomicLIFO {
 		using T				= ObjectType;
 		using type			= T;			// standard
 		using value_type	= T;			// standard
-		using SizeType		= _SizeType;	// 
+		using SizeType		= _SizeType;	// Type of sizes in this object
+		using LIFOStorage	= ::llcpp::meta::utils::ArrayBase<T>;
+		using LIFOIterator	= LIFOStorage::iterator;
 
 	#pragma endregion
 	#pragma region Expresions
 	public:
 		static constexpr _MyType::SizeType NUMBER_OF_OBJECTS	= _NUMBER_OF_OBJECTS;	// 
 		static constexpr _MyType::SizeType NUMBER_USERS			= _NUMBER_USERS;		// 
-		static constexpr ll_bool_t IS_SIGNED_SIZE				= ::std::is_signed_v<_MyType::SizeType>;
-
-	#pragma endregion
-	#pragma region Asserts
-	public:
-		static_assert(::std::is_pointer_v<ObjectType>,
-			"Object type needs to be a pointer");
-		static_assert(NUMBER_OF_OBJECTS > 0,
-			"Number of objects needs to be a positive number");
-		// This class requires a signed type
-		// Or unsigned and:
-		//		Number ob objects be lower than max number posibble of objects sub number of users
-		static_assert(
-			IS_SIGNED_SIZE
-			|| (NUMBER_OF_OBJECTS < ::llcpp::MAX_VALUE<_MyType::SizeType> - NUMBER_USERS),
-			"Use a signed type or a number ob objects lower than the max number possible in type sub number of users"
-		);
 
 	#pragma endregion
 	#pragma region Attributes
 	private:
-		T lifo_objects[_MyType::NUMBER_OF_OBJECTS];	// All objects
-#if __LL_ATOMIC_MODE == 0 || __LL_ATOMIC_MODE == 1
-		::std::atomic<_MyType::SizeType> idx;		// Index of lifo
-#elif __LL_ATOMIC_MODE == 2
-		_MyType::SizeType idx;
-#endif // __LL_ATOMIC_MODE
+		LIFOStorage lifo_storage; 			// Pointer to all objects
+		::std::atomic<LIFOIterator> last;	// Index of lifo
 	
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		// If type contained is an object, this will call the default constructor of all objects
-		constexpr AtomicLIFO() noexcept : lifo_objects(), idx() {}
+		constexpr AtomicLIFO(LIFOIterator objects, LIFOIterator objects_end) noexcept
+			: lifo_objects(objects, objects_end)
+			, last(objects)
+		{}
+		template<_MyType::SizeType N>
+		constexpr AtomicLIFO(LIFOStorage (&objects)[N]) noexcept
+			: lifo_objects(objects)
+			, last(objects)
+		{}
+		constexpr AtomicLIFO(const LIFOStorage& objects) noexcept
+			: lifo_objects(::std::forward<const LIFOStorage&>(objects))
+			, last(this->lifo_objects.begin())
+		{}
+		constexpr AtomicLIFO(LIFOStorage&& objects) noexcept
+			: lifo_objects(::std::forward<LIFOStorage&&>(objects))
+			, last(this->lifo_objects.begin())
+		{}
 		constexpr ~AtomicLIFO() noexcept = default;
 
 		#pragma endregion
@@ -197,6 +190,10 @@ class AtomicLIFO {
 
 		public:
 			__LL_NODISCARD__ constexpr ll_bool_t pop(_MyType::ObjectType& extracted) noexcept {
+				
+				this->idx.compare_exchange_weak()
+				//::std::atomic::
+
 				// Decrement index of object in lifo
 	#if __LL_ATOMIC_MODE == 0
 				_MyType::SizeType pos = --this->idx;

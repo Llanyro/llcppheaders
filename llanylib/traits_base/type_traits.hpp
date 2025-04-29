@@ -141,6 +141,22 @@ template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_integral_constant_container_v =
 	::llcpp::meta::traits::has_value_type_v<T> && ::llcpp::meta::traits::has_value_constant_v<T>;
 
+template <class T, class U, class = void>
+class HasContainerType : public ::std::false_type {};
+template<class T, class U>
+struct HasContainerType<T, U, ::std::void_t<typename T::contain_value_type<U>>> : public ::std::true_type {};
+
+template<class T, class U>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_contain_value_type_v = ::llcpp::meta::traits::HasContainerType<T, U>::value;
+
+template <class T, class U, class = void>
+class HasContainerTypeU : public ::std::false_type {};
+template<class T, class U>
+struct HasContainerTypeU<T, U, ::std::void_t<typename T::contain_value_type_u<U>>> : public ::std::true_type {};
+
+template<class T, class u>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_contain_value_type_u_v = ::llcpp::meta::traits::HasContainerTypeU<T, U>::value;
+
 #pragma endregion
 #pragma region Containers
 template<class _T>
@@ -148,6 +164,8 @@ class TypeContainer {
 	public:
 		// Class related
 		using _MyType		= TypeContainer;	// standard
+		template<class U = _T>	// Contains new type in this container
+		using contain_value_type = typename TypeContainer<U>;
 
 		// Types and enums
 		using T				= _T;
@@ -162,6 +180,8 @@ class DoubleTypeContainer {
 	public:
 		// Class related
 		using _MyType		= DoubleTypeContainer;	// standard
+		template<class U = _T>	// Contains new type in this container
+		using contain_value_type = typename TypeContainer<U, _U>;
 
 		// Types and enums
 		using T				= _T;

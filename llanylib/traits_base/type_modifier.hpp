@@ -176,7 +176,7 @@ constexpr auto asdf = asdafa();
 // Removes type attributes by a given struct
 // If value is max value, value will not be reduced
 template<class _T, ::llcpp::meta::attributes::type_update_t _ATTRIBUTES>
-constexpr auto type_modifier() {
+constexpr auto type_modifier() noexcept {
 	namespace traits_func = ::llcpp::meta::traits;
 	namespace traits_priv = ::llcpp::meta::traits::__traits__;
 
@@ -225,16 +225,34 @@ constexpr auto type_modifier() {
 			return traits_func::TypeContainer<unpacked_type>{};
 		else return traits_func::TypeContainer<volatile unpacked_type>{};
 	}
-	else if constexpr (::llcpp::meta::traits::has_value_type_v<_T> && _ATTRIBUTES.REMOVE_CONTAINER) {
+	else if constexpr (::llcpp::meta::traits::has_contain_value_type_v<_T, _T> && ::llcpp::meta::traits::has_value_type_v<_T>) {
 		// Remove const from type
 		using type_edited	= typename _T::value_type;
 		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
 		using unpacked_type = typename packed_type::value_type;
 		if constexpr (_ATTRIBUTES.REMOVE_CONTAINER)
 			return traits_func::TypeContainer<unpacked_type>{};
-		else return traits_func::TypeContainer<>{};
+		else return traits_func::TypeContainer<typename _T::contain_value_type<unpacked_type>>{};
 	}
 	else return traits_func::TypeContainer<_T>{};
+}
+
+template<class _T, u8 LEVEL = ::llcpp::MAX_VALUE<u8>>
+constexpr auto remove_container_absolute() noexcept {
+	if constexpr (LEVEL == ::llcpp::ZERO_VALUE<decltype(LEVEL)>)
+		return traits_func::TypeContainer<_T>{};
+	else {
+		namespace traits_func = ::llcpp::meta::traits;
+		namespace traits_priv = ::llcpp::meta::traits::__traits__;
+	
+		if constexpr (::llcpp::meta::traits::has_value_type_v<_T>) {
+			// Remove const from type
+			using type_edited	= typename _T::value_type;
+			using packed_type	= decltype(traits_priv::remove_container_absolute<type_edited, LEVEL - 1>());
+			return traits_func::TypeContainer<typename packed_type::value_type>{};
+		}
+		else return traits_func::TypeContainer<_T>{};
+	}
 }
 
 } // namespace __traits__

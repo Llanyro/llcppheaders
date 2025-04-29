@@ -79,8 +79,7 @@ namespace atomic {
 template<
 	class _ObjectType				= void*,
 	class _SizeType					= i8,
-	_SizeType _NUMBER_OF_OBJECTS	= ::llcpp::MAX_VALUE<_SizeType>,
-	_SizeType _NUMBER_USERS			= ::llcpp::ZERO_VALUE<_SizeType>
+	_SizeType _NUMBER_OF_OBJECTS	= ::llcpp::MAX_VALUE<_SizeType>
 >
 	requires ::std::is_unsigned_v<_SizeType>
 class AtomicLIFO {
@@ -102,13 +101,18 @@ class AtomicLIFO {
 	#pragma region Expresions
 	public:
 		static constexpr _MyType::SizeType NUMBER_OF_OBJECTS	= _NUMBER_OF_OBJECTS;	// 
-		static constexpr _MyType::SizeType NUMBER_USERS			= _NUMBER_USERS;		// 
+
+	#pragma endregion
+	#pragma region Asserts
+	public:
+		static_assert(::std::is_pointer_v<ObjectType>,
+			"Object type needs to be a pointer");
 
 	#pragma endregion
 	#pragma region Attributes
 	private:
-		LIFOStorage lifo_storage; 			// Pointer to all objects
-		::std::atomic<LIFOIterator> last;	// Index of lifo
+		ObjectType lifo_storage[NUMBER_OF_OBJECTS];	// Pointer to all objects
+		::std::atomic<_MyType::SizeType> idx;		// Index of lifo
 	
 	#pragma endregion
 	#pragma region Functions
@@ -154,103 +158,25 @@ class AtomicLIFO {
 
 		#pragma endregion
 		#pragma region ClassFunctions
-		private:
-			__LL_NODISCARD__ constexpr ll_bool_t pop_commom(_MyType::ObjectType& extracted, const _MyType::SizeType pos, const ll_bool_t is_out_of_bounds) noexcept {
-				// If its nullptr or out-of-bounds
-				if (is_out_of_bounds) {
-					++this->idx;				// Restore index
-					return ::llcpp::LL_FALSE;	// Notify user fail pop()
-				}
-				// This index is a valid one
-				// We extract the object, and exits the function with good result
-				else {
-					extracted = this->lifo_objects[pos];
-					this->lifo_objects[pos] = ::llcpp::ZERO_VALUE<_MyType::ObjectType>;
-					// If pointer is already nullptr
-					if(!extracted) {
-						++this->idx;				// Restore index
-						return ::llcpp::LL_FALSE;	// Notify user fail pop()	
-					}
-					return ::llcpp::LL_TRUE;
-				}
-			}
-			__LL_NODISCARD__ constexpr ll_bool_t push_commom(_MyType::ObjectType object, const _MyType::SizeType pos, const ll_bool_t is_out_of_bounds) noexcept {
-				// If its not nullptr or is out-of-bounds
-				if (this->lifo_objects[pos] || is_out_of_bounds) {
-					--this->idx;				// Restore index
-					return ::llcpp::LL_FALSE;	// Notify user fail pop()
-				}
-				// This index is a valid one
-				// We move external object to this class
-				else {
-					this->lifo_objects[pos] = object;
-					return ::llcpp::LL_TRUE;
-				}
-			}
-
 		public:
-			__LL_NODISCARD__ constexpr ll_bool_t pop(_MyType::ObjectType& extracted) noexcept {
-				
-				this->idx.compare_exchange_weak()
-				//::std::atomic::
-
-				// Decrement index of object in lifo
-	#if __LL_ATOMIC_MODE == 0
-				_MyType::SizeType pos = --this->idx;
-	#elif __LL_ATOMIC_MODE == 1 || __LL_ATOMIC_MODE == 2
-				_MyType::SizeType pos = --this->idx;
-	#endif // __LL_ATOMIC_MODE
-
-				// Now we have the object index
-				if constexpr (_MyType::IS_SIGNED_SIZE) {
-					// If size type is signed, invalid index are negative numbers or out-of-bounds (positive number)
-					// Prob is good to tell thread go to sleep or something
-					return this->pop_commom(
-						extracted,
-						pos,
-						pos < ::llcpp::ZERO_VALUE<_MyType::SizeType> || pos >= _MyType::NUMBER_OF_OBJECTS
-					);
-				}
-				else {
-					constexpr _MyType::SizeType OUT_OF_BOUNDS = ::llcpp::MAX_VALUE<_MyType::SizeType> - _MyType::NUMBER_USERS;
-					// If size type is unsigned, invalid index are positive numbers between NUMBER_OF_OBJECTS and MAX_VALUE sub NUMBER_USERS
-					// Prob is good to tell thread go to sleep or something
-					return this->pop_commom(
-						extracted,
-						pos,
-						pos > OUT_OF_BOUNDS || pos > _MyType::NUMBER_OF_OBJECTS
-					);
-				}
+			__LL_NODISCARD__ constexpr ll_bool_t pop(_MyType::ObjectType& extracted) noexcept {	
+				//this->last.compare_exchange_weak();
 			}
 			__LL_NODISCARD__ constexpr ll_bool_t push(_MyType::ObjectType object) noexcept {
-				// Increment index of object in lifo
-	#if __LL_ATOMIC_MODE == 0
-				_MyType::SizeType pos = this->idx++;
-	#elif __LL_ATOMIC_MODE == 1 || __LL_ATOMIC_MODE == 2
-				_MyType::SizeType pos = ++this->idx;
-				--pos;
-	#endif // __LL_ATOMIC_MODE
+				// put the current value of head into new_node->next
+				_MyType::SizeType expected = this->idx.load(std::memory_order_relaxed);
 
-				// Now we have the object index
-				if constexpr (_MyType::IS_SIGNED_SIZE) {
-					// If size type is signed, invalid index are negative numbers
-					// Prob is good to tell thread go to sleep or something
-					return this->push_commom(
-						object,
-						pos,
-						pos < ::llcpp::ZERO_VALUE<_MyType::SizeType> || pos >= _MyType::NUMBER_OF_OBJECTS
-					);
-				}
-				else {
-					constexpr _MyType::SizeType OUT_OF_BOUNDS = ::llcpp::MAX_VALUE<_MyType::SizeType> - _MyType::NUMBER_USERS;
-					// If size type is unsigned, invalid index are positive numbers between NUMBER_OF_OBJECTS and MAX_VALUE sub NUMBER_USERS
-					// Prob is good to tell thread go to sleep or something
-					return this->push_commom(
-						object,
-						pos,
-						pos > OUT_OF_BOUNDS || pos >= _MyType::NUMBER_OF_OBJECTS
-					);
-				}
+				// now make new_node the new head, but if the head
+				// is no longer what's stored in new_node->next
+				// (some other thread must have inserted a node just now)
+				// then put that new head into new_node->next and try again
+				while (!this->idx.compare_exchange_weak(
+					expected,
+					expected + 1,
+					std::memory_order_release,
+					std::memory_order_relaxed)
+				) continue; // the body of the loop is empty
+				//this->
 			}
 
 			__LL_NODISCARD__ constexpr _MyType::SizeType getIdx() const noexcept { return this->idx; }

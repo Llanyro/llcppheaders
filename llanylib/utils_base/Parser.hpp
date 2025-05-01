@@ -48,6 +48,7 @@
 namespace llcpp {
 namespace meta {
 namespace utils {
+namespace parser {
 
 /*class ParserFunctionDummy {
 	public:
@@ -89,11 +90,39 @@ concept HasParserFunctions = requires (const ParserFunctions p) {
 	{ p.writeNull() } noexcept -> ::std::same_as<void>;
 };
 
-enum class ParserProps {
-	CharDebug,	// Writes character as number and as a char to debug its value printf-like: "(%ll) '%c'"
-	ByteAsNumber,
-	BytesAsHex,
+template<class ParserFunctions, class ParseType>
+concept HasWriteExtraFunction = requires (const ParserFunctions p, const ParseType t) {
+	{ p.writeExtra(t) } noexcept -> ::std::same_as<::llcpp::ll_bool_t>;
+
 };
+template<class ParserFunctions, class T>
+concept HasWriteNullptrTypeFunction = requires (const ParserFunctions p, const T data) {
+	{ p.writeNullptrType(data) } noexcept -> ::std::same_as<::llcpp::ll_bool_t>;
+};
+template<class ParserFunctions, class T>
+concept HasWritePrinteableTypeFunction = requires (const ParserFunctions p, const T data) {
+	{ p.writePrintableType(data) } noexcept -> ::std::same_as<::llcpp::ll_bool_t>;
+};
+template<class ParserFunctions, class T>
+concept HasWriteNumberTypeFunction = requires (const ParserFunctions p, const T data) {
+	{ p.writeNumberType(data) } noexcept -> ::std::same_as<::llcpp::ll_bool_t>;
+};
+template<class ParserFunctions, class T>
+concept HasWriteCharTypeFunction = requires (const ParserFunctions p, const T data) {
+	{ p.writeCharType(data) } noexcept -> ::std::same_as<::llcpp::ll_bool_t>;
+};
+
+enum class ParserProps {
+	CharDebug,					// Writes character as number and as a char to debug its value printf-like: "(%ll) '%c'"
+	ByteAsNumber,				// Writes char as a number
+	BytesAsHex,					// Writes all data as hexadecimal
+	Hexdump,					// Writes all data as a hexdump
+	IgnoreLastArrayElement,		// Writes array ignoring last element
+	IgnoreFirstArrayElement,	// Writes array ignoring first element
+	CompressedArray,			// Writes only first and last value in array
+};
+
+} // namespace parser
 
 template<
 	class _ParserFunctions,
@@ -128,7 +157,6 @@ class Parser : public _ParserFunctions {
 
 	#pragma endregion
 	#pragma region Functions
-
 	public:
 		template<class T, class... Args>
 		__LL_INLINE__ constexpr void write(const T& data, const Args&... args) const noexcept {
@@ -140,33 +168,50 @@ class Parser : public _ParserFunctions {
 			this->write(::std::forward<const Args>(args)...);
 			ParserFunctions::ln();
 		}
-
 		template<class T>
 		__LL_INLINE__ constexpr void write(const T& data) const noexcept {
 			// Remove all containers, ger raw type
 			using raw_type_t = ::llcpp::meta::traits::raw_type_t<T>;
-			constexpr ll_bool_t IS_ARRAY_TYPE;
 
-			if constexpr (::std::is_same_v<raw_type_t, ::std::nullptr_t>)
-				this->writeNullptrType<T, raw_type_t>(data);
-			else if constexpr (::std::is_base_of_v<Printable, raw_type_t>)
-				this->writePrintableType<T, raw_type_t>(data);
-			else if constexpr (_MyType::PARSEABLE_NUMBER<raw_type_t>)
-				this->writeNumberType<T, raw_type_t>(data);
-			else if constexpr (_MyType::PRINTABLE_CHAR<raw_type_t>)
-				this->writeCharType<T, raw_type_t>(data);
-			else {
-				if (!this->parserExtra(__type__, &data)) {
-					this->write('<', Parser::TYPE_ID<T>.first, Parser::PTR_INIT_STR);
-					this->writePointer(&data);
-					this->writeChar('>');
-				}
+			if constexpr (::std::is_same_v<raw_type_t, ::std::nullptr_t>) {
+				if constexpr (::llcpp::meta::utils::parser::HasWriteNullptrTypeFunction<ParserFunctions, T, raw_type_t>)
+					ParserFunctions::writeNullptrType<T>(data);
+				else this->writeNullptrType<T, raw_type_t>(data);
 			}
+			else if constexpr (::std::is_base_of_v<Printable, raw_type_t>) {
+				if constexpr (::llcpp::meta::utils::parser::HasWritePrinteableTypeFunction<ParserFunctions, T, raw_type_t>)
+					ParserFunctions::writePrintableType<T>(data);
+				else this->writePrintableType<T, raw_type_t>(data);
+			}
+			else if constexpr (_MyType::PARSEABLE_NUMBER<raw_type_t>) {
+				if constexpr (::llcpp::meta::utils::parser::HasWriteNumberTypeFunction<ParserFunctions, T, raw_type_t>)
+					ParserFunctions::writeNumberType<T>(data);
+				else this->writeNumberType<T, raw_type_t>(data);
+			}
+			else if constexpr (_MyType::PRINTABLE_CHAR<raw_type_t>) {
+				if constexpr (::llcpp::meta::utils::parser::HasWriteCharTypeFunction<ParserFunctions, T, raw_type_t>)
+					ParserFunctions::writeCharType<T>(data);
+				else this->writeCharType<T, raw_type_t>(data);
+			}
+			else if constexpr (::llcpp::meta::utils::parser::HasWriteExtraFunction<ParserFunctions, T>) {
+				if(!ParserFunctions::writeExtra(data))
+					this->writeGenericErrorUnknownType(data);
+			}
+			else this->writeGenericErrorUnknownType(data);
 		}
 
+		// Print chars by its type
+		template<class T, usize N>
+		constexpr void write(const T (&data)[N]) const noexcept {
+			this->write("[ ... ", ::llcpp::meta::traits::array_size<T>);
+			
+			this->write(" ]");
+		}
 		template<class T>
-		__LL_VAR_INLINE__ constexpr void writeGenericErrorUnknownType() const noexcept {
-			this->write('<', Parser::TYPE_ID<T>.first, '>');
+		__LL_VAR_INLINE__ constexpr void writeGenericErrorUnknownType(const T& data) const noexcept {
+			this->write('<', Parser::TYPE_ID<T>.first, Parser::PTR_INIT_STR);
+			this->writePointer(&data);
+			this->writeChar('>');
 		}
 
 		template<class T, class raw_type_t, class Props = ::llcpp::Emptyclass>
@@ -182,23 +227,27 @@ class Parser : public _ParserFunctions {
 				this->writeNull();
 			else {
 				__debug_error_parser("Unknown type");
-				this->writeGenericErrorUnknownType<T>();
+				this->writeGenericErrorUnknownType(data);
 			}
 		}
 		template<class T, class raw_type_t, class Props = ::llcpp::Emptyclass>
 		__LL_VAR_INLINE__ constexpr void writePrintableType(const T& data) const noexcept {
 			if constexpr (::std::is_pointer_v<T>)
 				this->writePointer(data);
-			else if constexpr (::std::is_array_v<T>)
-				this->writeArray(data);
-			else if (::std::is_same_v<raw_type_t, T>) {
-				if (!this->writePrintable(data)) {
-					this->write('<', TYPE_ID.first, Parser::PRINTABLE_BAD_INITED_STR);
+			else if constexpr (::std::is_array_v<T>) {
+				//If we can compute in compile time the array, we try to do it
+				if consteval {
+	
 				}
+				else this->writeArray(data);
+			}
+			else if (::std::is_same_v<raw_type_t, T>) {
+				if (!this->writePrintable(data))
+					this->write('<', TYPE_ID.first, Parser::PRINTABLE_BAD_INITED_STR);
 			}
 			else {
 				__debug_error_parser("Unknown type");
-				this->writeGenericErrorUnknownType<T>();
+				this->writeGenericErrorUnknownType(data);
 			}
 		}
 		template<class T, class raw_type_t, class Props = ::llcpp::Emptyclass>
@@ -211,7 +260,7 @@ class Parser : public _ParserFunctions {
 				this->writeNumber(data);
 			else {
 				__debug_error_parser("Unknown type");
-				this->writeGenericErrorUnknownType<T>();
+				this->writeGenericErrorUnknownType(data);
 			}
 		}
 		template<class T, class raw_type_t, class Props = ::llcpp::Emptyclass>
@@ -225,7 +274,7 @@ class Parser : public _ParserFunctions {
 					ParserFunctions::writeChar(data);
 				else {
 					__debug_error_parser("Unknown type");
-					this->writeGenericErrorUnknownType<T>();
+					this->writeGenericErrorUnknownType(data);
 				}
 			}
 #if defined(__cpp_char8_t)

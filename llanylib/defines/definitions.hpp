@@ -85,11 +85,14 @@
 #define __LL_FALLTHROUGH__ [[fallthrough]]
 #define __LL_NODISCARD__ [[nodiscard]]
 #define __LL_NORETURN__ [[noreturn]]
+#define __LL_LIKELY__ [[likely]]
+#define __LL_UNLIKELY__ [[unlikely]]
 #define __LL_VAR_INLINE__ inline
 
 #if defined(__LL_WINDOWS_SYSTEM)
 	#define __LL_UNSECURE_FUNCTIONS__
 	#define __LL_SPECTRE_FUNCTIONS__
+	#define __LL_NO_UNIQUE_ADDRESS__ [[msvc::no_unique_address]]
 	#define __LL_INLINE__ __forceinline
 	#define __LL_FUNCNAME__ __LL_L __FUNCSIG__
 	#define __MSVC_CDECL __cdecl
@@ -97,6 +100,7 @@
 #elif defined(__LL_MINGW)
 	#define __LL_UNSECURE_FUNCTIONS__
 	#define __LL_SPECTRE_FUNCTIONS__
+	#define __LL_NO_UNIQUE_ADDRESS__ [[msvc::no_unique_address]]
 	#define __LL_INLINE__ inline
 	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
 	#if __LL_USE_WIDE_CHAR == 1
@@ -105,11 +109,13 @@
 	#define __MSVC_CDECL
 	#define __STD_SIZE_T unsigned long long
 #elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
+	#define __LL_NO_UNIQUE_ADDRESS__ [[no_unique_address]]
 	#define __LL_INLINE__ inline
 	#define __LL_FUNCNAME__ __LL_L __PRETTY_FUNCTION__
 	#define __MSVC_CDECL
 	#define __STD_SIZE_T long unsigned int
 #else
+	#define __LL_NO_UNIQUE_ADDRESS__ [[no_unique_address]]
 	#define __LL_INLINE__ inline
 	#define __MSVC_CDECL
 	#define __STD_SIZE_T unsigned long

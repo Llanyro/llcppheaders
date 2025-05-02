@@ -51,7 +51,9 @@ namespace __bits__ {
 
 template<class T>
 __LL_NODISCARD__ constexpr u8* __primitive_to_bytearray(T& value, u8* buffer) noexcept {
+#if __LL_CONSTEVAL_ENABLED == 1
 	if consteval {
+#endif // __LL_CONSTEVAL_ENABLED
 		if constexpr (!::std::is_integral_v<T>) {
 			static_assert(::std::is_convertible_v<T, u8>,
 				"Type must be casteable to u8");
@@ -70,6 +72,7 @@ __LL_NODISCARD__ constexpr u8* __primitive_to_bytearray(T& value, u8* buffer) no
 			for(; buffer <= buffer_end; ++buffer, tmp >>= 8)
 				*buffer = static_cast<u8>(tmp) & 0xff;
 		}
+#if __LL_CONSTEVAL_ENABLED == 1
 	}
 	else {
 		if constexpr (::std::is_const_v<T>)
@@ -77,6 +80,7 @@ __LL_NODISCARD__ constexpr u8* __primitive_to_bytearray(T& value, u8* buffer) no
 		else *reinterpret_cast<T*>(buffer) = ::std::forward<T&&>(value);
 		return reinterpret_cast<u8*>(buffer + sizeof(T));
 	}
+#endif // __LL_CONSTEVAL_ENABLED
 }
 
 } // namespace __bits__
@@ -101,17 +105,21 @@ __LL_NODISCARD__ constexpr T in_expected_order(const T v) noexcept {
 template<class T, class U>
 	requires ::llcpp::meta::traits::is_same_su_v<U, u8>
 __LL_NODISCARD__ constexpr T unaligned_load(const U* p) noexcept {
+#if __LL_CONSTEVAL_ENABLED == 1
 	if consteval {
+#endif // __LL_CONSTEVAL_ENABLED
 		T result{};
 		for (u8 i{}; i < sizeof(T); ++i)
 			result |= static_cast<T>(p[i]) << (i << 3);
 		return result;
+#if __LL_CONSTEVAL_ENABLED == 1
 	}
 	else {
 		T result;
 		::std::memcpy(&result, p, sizeof(result));
 		return result;
 	}
+#endif // __LL_CONSTEVAL_ENABLED
 }
 
 // Uses bitwise operators: [ ">>", "&" ]

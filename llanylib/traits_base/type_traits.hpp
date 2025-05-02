@@ -154,7 +154,7 @@ class HasContainerTypeU : public ::std::false_type {};
 template<class T, class U>
 struct HasContainerTypeU<T, U, ::std::void_t<typename T::contain_value_type_u<U>>> : public ::std::true_type {};
 
-template<class T, class u>
+template<class T, class U>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_contain_value_type_u_v = ::llcpp::meta::traits::HasContainerTypeU<T, U>::value;
 
 #pragma endregion
@@ -164,8 +164,8 @@ class TypeContainer {
 	public:
 		// Class related
 		using _MyType		= TypeContainer;	// standard
-		template<class U = _T>	// Contains new type in this container
-		using contain_value_type = typename TypeContainer<U>;
+		template<class W = _T>	// Contains new type in this container
+		using contain_value_type = typename ::llcpp::meta::traits::TypeContainer<W>;
 
 		// Types and enums
 		using T				= _T;
@@ -180,8 +180,8 @@ class DoubleTypeContainer {
 	public:
 		// Class related
 		using _MyType		= DoubleTypeContainer;	// standard
-		template<class U = _T>	// Contains new type in this container
-		using contain_value_type = typename TypeContainer<U, _U>;
+		template<class W = _T>	// Contains new type in this container
+		using contain_value_type = typename ::llcpp::meta::traits::DoubleTypeContainer<W, _U>;
 
 		// Types and enums
 		using T				= _T;
@@ -267,25 +267,25 @@ using FalseContainerEmptyClass = ::llcpp::meta::traits::BoolConstantContainer<::
 template<class U, class T, T EXP1, T EXP2>
 using IsSameTypeExpresion = ::llcpp::meta::traits::BoolConstantContainer<EXP1 == EXP2, U>;
 template<class U, class T, T EXP1, T EXP2>
-using IsNotSameTypeExpresion = ::llcpp::meta::traits::BoolConstantContainer<EXP1 != EXP2, U>;
+using IsNotSameTypeExpresion				= ::llcpp::meta::traits::BoolConstantContainer<EXP1 != EXP2, U>;
 
 #pragma endregion
 #pragma region DoubleContainers
 template<ll_bool_t VALUE, class U, U VALUE2>
-using BoolDoubleConstantContainer	= ::llcpp::meta::traits::DoubleConstantContainer<ll_bool_t, U, VALUE, VALUE2>;
+using BoolDoubleConstantContainer			= ::llcpp::meta::traits::DoubleConstantContainer<ll_bool_t, U, VALUE, VALUE2>;
 
 template<class T, class U, class W, W VALUE2>
-using IsSameDoubleTypeContainer		= ::llcpp::meta::traits::BoolDoubleConstantContainer<::std::is_same_v<T, U>, W, VALUE2>;
+using IsSameDoubleTypeContainer				= ::llcpp::meta::traits::BoolDoubleConstantContainer<::std::is_same_v<T, U>, W, VALUE2>;
 template<class T, class U, class W, W VALUE2>
-using IsNotSameDoubleTypeContainer	= ::llcpp::meta::traits::BoolDoubleConstantContainer<!::std::is_same_v<T, U>, W, VALUE2>;
+using IsNotSameDoubleTypeContainer			= ::llcpp::meta::traits::BoolDoubleConstantContainer<!::std::is_same_v<T, U>, W, VALUE2>;
 
-using TrueContainerEmptyClass		= ::llcpp::meta::traits::BoolDoubleConstantContainer<::llcpp::LL_TRUE, ::llcpp::Emptyclass, ::llcpp::Emptyclass{}>;
-using FalseContainerEmptyClass		= ::llcpp::meta::traits::BoolDoubleConstantContainer<::llcpp::LL_FALSE, ::llcpp::Emptyclass, ::llcpp::Emptyclass{}>;
+using TrueConstantContainerEmptyClass		= ::llcpp::meta::traits::BoolDoubleConstantContainer<::llcpp::LL_TRUE, ::llcpp::Emptyclass, ::llcpp::Emptyclass{}>;
+using FalseConstantContainerEmptyClass		= ::llcpp::meta::traits::BoolDoubleConstantContainer<::llcpp::LL_FALSE, ::llcpp::Emptyclass, ::llcpp::Emptyclass{}>;
 
 template<class U, class T, T EXP1, T EXP2, U VALUE2>
-using IsSameDoubleTypeExpresion		= ::llcpp::meta::traits::BoolDoubleConstantContainer<EXP1 == EXP2, U, VALUE2>;
+using IsSameDoubleTypeExpresion				= ::llcpp::meta::traits::BoolDoubleConstantContainer<EXP1 == EXP2, U, VALUE2>;
 template<class U, class T, T EXP1, T EXP2, U VALUE2>
-using IsNotSameDoubleTypeExpresion	= ::llcpp::meta::traits::BoolDoubleConstantContainer<EXP1 != EXP2, U, VALUE2>;
+using IsNotSameDoubleTypeExpresion			= ::llcpp::meta::traits::BoolDoubleConstantContainer<EXP1 != EXP2, U, VALUE2>;
 
 #pragma endregion
 #pragma endregion
@@ -423,19 +423,19 @@ using GetFirstCoincidence = ::std::disjunction<
 	::llcpp::meta::traits::TrueContainerEmptyClass
 >;
 
-template<class T, class TypeChar, class TypeWChar, class TypeChar16, class TypeChar32>
+/*template<class T, class TypeChar, class TypeWChar, class TypeChar16, class TypeChar32>
 using GetByCharType = typename ::llcpp::meta::traits::GetFirstCoincidence<
 	::llcpp::meta::traits::DoubleTypeContainer<ll_char_t, TypeChar>,
-	::llcpp::meta::traits::DoubleTypeContainer<ll_wchar_t, TypeWChar>,
-	::llcpp::meta::traits::DoubleTypeContainer<char16_t, TypeChar16>,
-	::llcpp::meta::traits::DoubleTypeContainer<char32_t, TypeChar32>
+	::llcpp::meta::traits::DoubleTypeContainer<ll_wchar_t, TypeWChar>
+	//::llcpp::meta::traits::DoubleTypeContainer<char16_t, TypeChar16>,
+	//::llcpp::meta::traits::DoubleTypeContainer<char32_t, TypeChar32>
 >;
 
 template<class T, class... Args>
 using get_first_coincidence_u = typename ::llcpp::meta::traits::GetFirstCoincidence<T, Args...>::U;
 
 template<class T, class TypeChar, class TypeWChar>
-using get_by_char_type_u = typename ::llcpp::meta::traits::GetByCharType<T, TypeChar, TypeWChar>::U;
+using get_by_char_type_u = typename ::llcpp::meta::traits::GetByCharType<T, TypeChar, TypeWChar>::U;*/
 
 #pragma endregion
 #pragma region Conjunction

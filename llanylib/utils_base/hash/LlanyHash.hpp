@@ -239,14 +239,18 @@ class LlanyHash
 		}
 
 		constexpr void memcopy(byte* dst, const byte* src, const u8 bytes) const noexcept {
+#if __LL_CONSTEVAL_ENABLED == 1
 			if consteval {
+#endif // __LL_CONSTEVAL_ENABLED
 				// Loop copy
 				for (bytearray c_end = src + bytes; src < c_end; ++src, ++dst)
 					*dst = *src;
+#if __LL_CONSTEVAL_ENABLED == 1
 			}
 			else {
 				::std::memcpy(dst, src, bytes);
 			}
+#endif // __LL_CONSTEVAL_ENABLED
 		}
 
 

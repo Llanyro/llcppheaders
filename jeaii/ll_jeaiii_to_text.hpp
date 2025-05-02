@@ -34,11 +34,8 @@
 #ifndef JEAIII_TO_TEXT_H_
 #define JEAIII_TO_TEXT_H_
 
-#include "llanylib/traits_base/type_traits_extended.hpp"
-#include "llanylib/utils_base/strings.hpp"
-
-
-
+#include "../llanylib/traits_base/type_traits_extended.hpp"
+#include "../llanylib/utils_base/strings.hpp"
 
 #if defined(__LL_WINDOWS_SYSTEM)
 	#pragma warning(push)
@@ -61,11 +58,133 @@ constexpr u8 GET_RECOMMENDED_ARRAY_SIZE = typename ::std::disjunction<
 	::llcpp::meta::traits::TrueContainerEmptyClass
 >::SECOND;
 
-template<class CharType, CharType>
+template<class _CharType>
 class Data {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType		= Data;
 
+		// Types and enums
+		using CharType		= _CharType;
+		using T				= CharType;
+		using type			= T;	// standard
+		using value_type	= T;	// standard
+
+	#pragma endregion
+	#pragma region Attributes
+	private:
+		CharType first;
+		CharType second;
+
+	#pragma endregion
+	#pragma region Functions
+		#pragma region Constructors
+	public:
+		constexpr Data() noexcept = default;
+		constexpr Data(const _MyType::CharType c) noexcept
+			: first(c)
+			, second(::llcpp::ZERO_VALUE<_MyType::CharType>)
+		{}
+		constexpr Data(const u32 n) noexcept
+			: first(_MyType::getChar(n / 10))
+			, second(_MyType::getChar(n % 10))
+		{}
+		constexpr ~Data() noexcept = default;
+
+		#pragma endregion
+		#pragma region CopyMove
+	public:
+		constexpr Data(const Data& other) noexcept
+			: first(::std::forward<const _MyType::CharType&>(other.first))
+			, second(::std::forward<const _MyType::CharType&>(other.second))
+		{}
+		constexpr Data& operator=(const Data& other) noexcept {
+			this->first = ::std::forward<const _MyType::CharType&>(other.first);
+			this->second = ::std::forward<const _MyType::CharType&>(other.second);
+			return *this;
+		}
+		constexpr Data(Data&& other) noexcept
+			: first(::std::forward<_MyType::CharType&&>(other.first))
+			, second(::std::forward<_MyType::CharType&&>(other.second))
+		{}
+		constexpr Data& operator=(Data&& other) noexcept {
+			this->first = ::std::forward<_MyType::CharType&&>(other.first);
+			this->second = ::std::forward<_MyType::CharType&&>(other.second);
+			return *this;
+		}
+
+		constexpr Data(volatile const Data& other) noexcept = delete;
+		constexpr Data& operator=(volatile const Data& other) noexcept = delete;
+		constexpr Data(volatile Data&& other) noexcept = delete;
+		constexpr Data& operator=(volatile Data&& other) noexcept = delete;
+
+		#pragma endregion
+		#pragma region ClassReferenceOperators
+	public:
+		__LL_NODISCARD__ constexpr explicit operator const Data*() const noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator Data*() noexcept { return this; }
+
+		#pragma endregion
+		#pragma region ClassFunctions
+	private:
+		__LL_NODISCARD__ static constexpr getChar(const u32 n) noexcept {
+			return ::llcpp::meta::arrays::NUMBERS<_MyType::CharType>.begin()[n];
+		}
+
+	public:
+		constexpr _MyType::CharType& getFirst() noexcept { return this->first; }
+		constexpr _MyType::CharType& getSecond() noexcept { return this->second; }
+
+		constexpr const _MyType::CharType& getFirst() const noexcept { return this->first; }
+		constexpr const _MyType::CharType& getSecond() const noexcept { return this->second; }
+
+		constexpr void reset(const _MyType::CharType c) noexcept {
+			this->first = c;
+			this->second = ::llcpp::ZERO_VALUE<CharType>;
+		}
+		constexpr void reset(const i32 n) noexcept {
+			this->first = _MyType::getChar(n / 10);
+			this->second = _MyType::getChar(n % 10);
+		}
+
+		#pragma endregion
+
+	#pragma endregion
 };
 
+template<class CharType>
+struct LowDataMap {
+	Data<CharType> low[100];
+	constexpr LowDataMap() noexcept : low() {
+		for(u8 i = 0; i < 10)
+			this->low[i].reset('0' + i);
+		for(u8 i = 10; i < sizeof(this->low))
+			this->low[i].reset(i);
+	}
+	constexpr ~LowDataMap() noexcept = default;
+};
+template<class CharType>
+struct HighDataMap {
+	::llcpp::meta::jeaiii::Data<CharType> high[100];
+	constexpr HighDataMap() noexcept : high() {
+		for(u8 i{}; i < sizeof(this->high))
+			this->high[i].reset(i);
+	}
+	constexpr ~HighDataMap() noexcept = default;
+};
+template<class CharType>
+struct DataMap : public HighDataMap<CharType>, public LowDataMap<CharType> {
+	using Data			= ::llcpp::meta::jeaiii::Data;
+	using HighDataMap	= ::llcpp::meta::jeaiii::HighDataMap<CharType>;
+	using LowDataMap	= ::llcpp::meta::jeaiii::LowDataMap<CharType>;
+
+	constexpr DataMap() noexcept = default;
+	constexpr ~DataMap() noexcept = default;
+};
+
+template<class CharType>
+__LL_VAR_INLINE__ constexpr DataMap<CharType> MAP;
 
 template<class T, class CharType, class U>
 __LL_INLINE__ constexpr U pre_process(::llcpp::meta::traits::cinput<T> value, CharType* buffer) noexcept {
@@ -87,20 +206,19 @@ __LL_INLINE__ constexpr auto integral_to_text(::llcpp::meta::traits::cinput<T> v
 	using U = ::llcpp::meta::traits::type_unsignalize_u<T>;
 
 	// Transform value to unsigned and add a '-' into buffer if needed
-	const U VALUE = ::llcpp::meta::jeaiii::pre_process<T, CharType, U>(value, buffer);
+	const U value = ::llcpp::meta::jeaiii::pre_process<T, CharType, U>(value, buffer);
 
-	if (VALUE < u32(1e2)) {
-
-		*reinterpret_cast<::llcpp::meta::jeaiii::pair*>(buffer++) = digits.fd[VALUE];
+	if (value < 100u) {
+		*buffer++ = ::llcpp::meta::jeaiii::MAP<CharType>.low[value].getFirst();
+		*buffer++ = ::llcpp::meta::jeaiii::MAP<CharType>.low[value].getSecond();
 		return n < 10 ? buffer : ++buffer;
 	}
-
-
 
 	return N;
 }
 
 
+/*
 
 template<class CharType = i8>
 struct pair {
@@ -303,6 +421,8 @@ constexpr u64 mask57 = (u64(1) << 57) - 1;
 		*reinterpret_cast<pair*>(b + 6) = digits.dd[f6 >> 32];
 		return b + 8;
 	}
+
+*/
 
 } // namespace jeaiii
 } // namespace meta

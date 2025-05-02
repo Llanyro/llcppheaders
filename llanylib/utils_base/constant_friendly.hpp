@@ -70,26 +70,36 @@ namespace utils {
 namespace bits {
 
 __LL_NODISCARD__ constexpr u16 bytes_swap_16(const u16 x)  noexcept {
+#if __LL_CONSTEVAL_ENABLED == 1
 	if consteval {
+#endif // __LL_CONSTEVAL_ENABLED
 		// Source from glibc
 		return ((u16) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)));
+#if __LL_CONSTEVAL_ENABLED == 1
 	}
 	else {
 		return __LL_BWAP16(x);
 	}
+#endif // __LL_CONSTEVAL_ENABLED
 }
 __LL_NODISCARD__ constexpr u32 bytes_swap_32(const u32 x)  noexcept {
+#if __LL_CONSTEVAL_ENABLED == 1
 	if consteval {
+#endif // __LL_CONSTEVAL_ENABLED
 		// Source from glibc
 		return ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8) |
 				(((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24));
+#if __LL_CONSTEVAL_ENABLED == 1
 	}
 	else {
 		return __LL_BWAP32(x);
 	}
+#endif // __LL_CONSTEVAL_ENABLED
 }
 __LL_NODISCARD__ constexpr u64 bytes_swap_64(const u64 x) noexcept {
+#if __LL_CONSTEVAL_ENABLED == 1
 	if consteval {
+#endif // __LL_CONSTEVAL_ENABLED
 		// Source from glibc
 		return ((((x) & 0xff00000000000000ull) >> 56)
 			| (((x) & 0x00ff000000000000ull) >> 40)
@@ -99,10 +109,12 @@ __LL_NODISCARD__ constexpr u64 bytes_swap_64(const u64 x) noexcept {
 			| (((x) & 0x0000000000ff0000ull) << 24)
 			| (((x) & 0x000000000000ff00ull) << 40)
 			| (((x) & 0x00000000000000ffull) << 56));
+#if __LL_CONSTEVAL_ENABLED == 1
 	}
 	else {
 		return __LL_BWAP64(x);
 	}
+#endif // __LL_CONSTEVAL_ENABLED
 }
 
 } // namespace bits

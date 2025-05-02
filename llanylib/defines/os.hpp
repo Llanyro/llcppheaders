@@ -65,13 +65,16 @@
 		#define __LL_DIRECTIVE_WARNING 0
 	#endif // __LL_STL_LANG > 202302L
 
-	//#if __LL_STL_LANG < 202106L
-	//	#if __LL_DIRECTIVE_WARNING == 1
-	//		#warning "This library requires c++23 to use consteval"
-	//	#else
-	//		#error "This library requires c++23 to use consteval"
-	//	#endif // __LL_DIRECTIVE_WARNING == 1
-	//#endif // __LL_STL_LANG < 202106L
+	#if __LL_STL_LANG < 202106L
+		#if __LL_DIRECTIVE_WARNING == 1
+			#warning "Is recommended to use this lib with c++23 to get the best performance. This error can be ignored"
+		#else
+			#error "Is recommended to use this lib with c++23 to get the best performance. This error can be ignored"
+		#endif // __LL_DIRECTIVE_WARNING == 1
+		#define __LL_CONSTEVAL_ENABLED 0
+	#else
+		#define __LL_CONSTEVAL_ENABLED 1
+	#endif // __LL_STL_LANG < 202106L
 
 #else
 	#error "This library requires C++ (its made for it)"

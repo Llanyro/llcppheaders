@@ -58,7 +58,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_empty_object_v = ::llcpp::meta::traits:
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_empty_type_v = ::std::is_same_v<T, void> || ::llcpp::meta::traits::is_empty_object_v<T>;
 template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_primitive_v = ::std::is_arithmetic_v<T>;
+__LL_VAR_INLINE__ constexpr ll_bool_t is_primitive_v = ::std::is_integral_v<T>;
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_primitive_big_v = ::llcpp::meta::traits::is_any_of_v<T, i128, i256, u128, u256>;
 template<class T>

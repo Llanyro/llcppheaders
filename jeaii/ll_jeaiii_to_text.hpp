@@ -49,14 +49,19 @@ namespace llcpp {
 namespace meta {
 namespace jeaiii {
 
-template<class T>
-constexpr u8 GET_RECOMMENDED_ARRAY_SIZE = typename ::std::disjunction<
-	::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u8, u8, 3u + ::std::is_signed_v<T>>,
-	::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u16, u8, 5u + ::std::is_signed_v<T>>,
-	::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u32, u8, 10 + ::std::is_signed_v<T>>,
-	::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u64, u8, 20 + ::std::is_signed_v<T>>,
+template<
+	class T,
+	// Adds an space ofr sign (positive or negative).
+	//	If negative, this is always included
+	ll_bool_t INCLUDE_SIGNESS = ::llcpp::LL_FALSE
+>
+constexpr u8 GET_RECOMMENDED_ARRAY_SIZE = ::std::disjunction<
+	::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u8, 	u8, 3u>,
+	::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u16, u8, 5u>,
+	::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u32, u8, 10>,
+	::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u64, u8, 20>,
 	::llcpp::meta::traits::TrueContainerEmptyClass
->::SECOND;
+>::SECOND + (INCLUDE_SIGNESS || ::std::is_signed_v<T>); // Add space for signess
 
 template<class _CharType>
 class Data {
@@ -143,9 +148,10 @@ class Data {
 			this->first = c;
 			this->second = ::llcpp::ZERO_VALUE<CharType>;
 		}
-		constexpr void reset(const i32 n) noexcept {
-			this->first = _MyType::getChar(n / 10);
-			this->second = _MyType::getChar(n % 10);
+		constexpr void reset(const u32 n) noexcept {
+			__LL_ASSERT(n >= 100, "Value cannot be greater or equal than 100");
+			this->first		= _MyType::getChar(n / 10);
+			this->second	= _MyType::getChar(n % 10);
 		}
 
 		#pragma endregion
@@ -156,10 +162,10 @@ class Data {
 template<class CharType>
 struct LowDataMap {
 	Data<CharType> low[100];
-	constexpr LowDataMap() noexcept : low() {
-		for(u8 i = 0; i < 10)
+	constexpr LowDataMap() noexcept {
+		for(u32 i = 0; i < 10; ++i)
 			this->low[i].reset('0' + i);
-		for(u8 i = 10; i < sizeof(this->low))
+		for(u32 i = 10; i < ::llcpp::meta::traits::array_size<decltype(this->low)>; ++i)
 			this->low[i].reset(i);
 	}
 	constexpr ~LowDataMap() noexcept = default;
@@ -167,15 +173,15 @@ struct LowDataMap {
 template<class CharType>
 struct HighDataMap {
 	::llcpp::meta::jeaiii::Data<CharType> high[100];
-	constexpr HighDataMap() noexcept : high() {
-		for(u8 i{}; i < sizeof(this->high))
+	constexpr HighDataMap() noexcept {
+		for(u32 i{}; i < ::llcpp::meta::traits::array_size<decltype(this->high)>; ++i)
 			this->high[i].reset(i);
 	}
 	constexpr ~HighDataMap() noexcept = default;
 };
 template<class CharType>
 struct DataMap : public HighDataMap<CharType>, public LowDataMap<CharType> {
-	using Data			= ::llcpp::meta::jeaiii::Data;
+	using Data			= ::llcpp::meta::jeaiii::Data<CharType>;
 	using HighDataMap	= ::llcpp::meta::jeaiii::HighDataMap<CharType>;
 	using LowDataMap	= ::llcpp::meta::jeaiii::LowDataMap<CharType>;
 
@@ -185,36 +191,91 @@ struct DataMap : public HighDataMap<CharType>, public LowDataMap<CharType> {
 
 template<class CharType>
 __LL_VAR_INLINE__ constexpr DataMap<CharType> MAP;
+__LL_VAR_INLINE__ constexpr u64 MASK24 = (u64(1) << 24) - 1;
+__LL_VAR_INLINE__ constexpr u64 MASK32 = (u64(1) << 32) - 1;
+__LL_VAR_INLINE__ constexpr u64 MASK57 = (u64(1) << 57) - 1;
 
-template<class T, class CharType, class U>
-__LL_INLINE__ constexpr U pre_process(::llcpp::meta::traits::cinput<T> value, CharType* buffer) noexcept {
-	if constexpr (::std::is_unsigned_v<T>)
+template<class T, class U, class CharType, ll_bool_t INCLUDE_SIGNESS>
+__LL_INLINE__ constexpr U pre_process(::llcpp::meta::traits::cinput<T> value, CharType*& buffer) noexcept {
+	if constexpr (::std::is_unsigned_v<T>) {
+		if constexpr (INCLUDE_SIGNESS)
+			*buffer++ = ::llcpp::meta::characters::PLUS<CharType>;
 		return static_cast<U>(value);
+	}
 	else {
-		if (value > 0) {
+		if (value < 0) {
 			*buffer++ = ::llcpp::meta::characters::MINUS<CharType>;
 			return ::llcpp::ZERO_VALUE<U> - static_cast<U>(value);
 		}
-		else return static_cast<U>(value);
+		else {
+			if constexpr (INCLUDE_SIGNESS)
+				*buffer++ = ::llcpp::meta::characters::PLUS<CharType>;
+			return static_cast<U>(value);
+		}
 	}
 }
 
-template<class T, class CharType = i8>
+template<class T, class CharType = i8, ll_bool_t INCLUDE_SIGNESS = ::llcpp::LL_FALSE>
 	requires ::llcpp::meta::traits::is_primitive_v<T>
-__LL_INLINE__ constexpr auto integral_to_text(::llcpp::meta::traits::cinput<T> value, CharType* buffer) noexcept {
+__LL_INLINE__ constexpr CharType* integral_to_text(::llcpp::meta::traits::cinput<T> number, CharType* buffer) noexcept {
 	// Promote type to unsigned
 	using U = ::llcpp::meta::traits::type_unsignalize_u<T>;
 
 	// Transform value to unsigned and add a '-' into buffer if needed
-	const U value = ::llcpp::meta::jeaiii::pre_process<T, CharType, U>(value, buffer);
+	const U value = ::llcpp::meta::jeaiii::pre_process<T, U, CharType, INCLUDE_SIGNESS>(number, buffer);
+	constexpr auto& MAP = ::llcpp::meta::jeaiii::MAP<CharType>;
 
-	if (value < 100u) {
+	// 0-99
+	if (value < 100ull) {
+		//const auto& LOW = MAP.low[value];
 		*buffer++ = ::llcpp::meta::jeaiii::MAP<CharType>.low[value].getFirst();
-		*buffer++ = ::llcpp::meta::jeaiii::MAP<CharType>.low[value].getSecond();
-		return n < 10 ? buffer : ++buffer;
+		if(value > 10ull)
+			*buffer++ = ::llcpp::meta::jeaiii::MAP<CharType>.low[value].getSecond();
+		return buffer;
+	}
+	else if (value < 1000000ull) {
+		if (value < 10000ull) {
+			constexpr auto F0_PRE_VALUE	= u32(10ull * (1ull << 24ull) / 1e3 + 1ull);
+			const auto f0				= F0_PRE_VALUE * value;
+			const auto f2				= (f0 & ::llcpp::meta::jeaiii::MASK24) * 100ull;
+			const auto f0_shift			= (f0 >> 24ull);
+			const auto f2_shift			= (f2 >> 24ull);
+
+			const auto& LOW				= MAP.low[f0_shift];
+			const auto& HIGH			= MAP.high[f2_shift];
+
+			*buffer++ = LOW.getFirst();
+			if(value > 1000ull)
+				*buffer++ = LOW.getSecond();
+			*buffer++ = HIGH.getFirst();
+			*buffer++ = HIGH.getSecond();
+			return buffer;
+		}
+		else {
+			constexpr auto F0_PRE_VALUE	= u64(10 * (1ull << 32ull) / 1e5 + 1ull);
+			const auto f0				= F0_PRE_VALUE * value;
+			const auto f2				= (f0 & ::llcpp::meta::jeaiii::MASK32) * 100ull;
+			const auto f4				= (f2 & ::llcpp::meta::jeaiii::MASK32) * 100ull;
+			const auto f0_shift			= (f0 >> 32ull);
+			const auto f2_shift			= (f2 >> 32ull);
+			const auto f4_shift			= (f4 >> 32ull);
+
+			const auto& LOW				= MAP.low[f0_shift];
+			const auto& HIGH_1			= MAP.high[f2_shift];
+			const auto& HIGH_2			= MAP.high[f4_shift];
+
+			*buffer++ = LOW.getFirst();
+			if(value > 100000ull)
+				*buffer++ = LOW.getSecond();
+			*buffer++ = HIGH_1.getFirst();
+			*buffer++ = HIGH_1.getSecond();
+			*buffer++ = HIGH_2.getFirst();
+			*buffer++ = HIGH_2.getSecond();
+			return buffer;
+		}
 	}
 
-	return N;
+	return buffer;
 }
 
 
@@ -270,11 +331,6 @@ struct Digits {
 };
 
 __LL_VAR_INLINE__ constexpr ::llcpp::meta::jeaiii::Digits<char> DIGITS;
-
-constexpr u64 mask24 = (u64(1) << 24) - 1;
-constexpr u64 mask32 = (u64(1) << 32) - 1;
-constexpr u64 mask57 = (u64(1) << 57) - 1;
-
 	template<class T, class U>
 	__LL_INLINE__ constexpr T* to_text_from_integer(T* b, U i) noexcept {
 		if (n < u32(1e2)) {

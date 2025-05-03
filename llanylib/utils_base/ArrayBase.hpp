@@ -103,7 +103,8 @@ class ArrayBase {
 		// Class related
 		using _MyType	= ArrayBase;
 		template<class U>
-		using contain_value_type = typename ArrayBase<U, _ENABLE_NO_CONST, _TYPE_CHECKER>;
+		using contain_value_type =
+			typename ::llcpp::meta::utils::ArrayBase<U, _ENABLE_NO_CONST, _USE_OBJECT_ITERATOR, _TYPE_CHECKER>;
 
 		// Types
 		using T					= _T;

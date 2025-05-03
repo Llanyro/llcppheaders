@@ -45,6 +45,7 @@ namespace characters {
 __LL_GENERIC_CHAR_GENERATOR(A, 'A');
 __LL_GENERIC_CHAR_GENERATOR(B, 'B');
 __LL_GENERIC_CHAR_GENERATOR(MINUS, '-');
+__LL_GENERIC_CHAR_GENERATOR(PLUS, '+');
 
 } // namespace strings
 namespace strings {

@@ -32,7 +32,7 @@
 			(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);	\
 		return ::llcpp::ZERO_VALUE<u64>;									\
 	}																		\
-	else if (len) {															\
+	else if (len == 0) {													\
 		if constexpr (::llcpp::EXCEPTIONS)									\
 			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
 		return ::llcpp::ZERO_VALUE<u64>;									\

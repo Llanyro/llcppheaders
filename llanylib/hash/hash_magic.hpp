@@ -22,7 +22,7 @@
 	#define LLANYLIB_HASHMAGIC_MAYOR_ 12
 	#define LLANYLIB_HASHMAGIC_MINOR_ 0
 
-#include "../../types/types.hpp"
+#include "../types/types.hpp"
 
 namespace llcpp {
 namespace meta {

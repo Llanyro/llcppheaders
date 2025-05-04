@@ -40,7 +40,7 @@
 
 #include "hash_magic.hpp"
 
-#include "../../concepts/concepts.hpp"
+#include "../concepts/concepts.hpp"
 
 namespace llcpp {
 namespace meta {

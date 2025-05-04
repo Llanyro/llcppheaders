@@ -38,8 +38,8 @@
 	#define LLANYLIB_HASHFUNCTIONS_MAYOR_ 12
 	#define LLANYLIB_HASHFUNCTIONS_MINOR_ 0
 
-#include "../bits.hpp"
-#include "../../traits_base/checker.hpp"
+#include "../utils_base/bits.hpp"
+#include "../traits_base/checker.hpp"
 
 namespace llcpp {
 namespace meta {

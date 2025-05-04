@@ -38,16 +38,13 @@
 	#define LLANYLIB_CITYHASH_MAYOR_ 12
 	#define LLANYLIB_CITYHASH_MINOR_ 0
 
-#include "../../traits/ValidationChecker.hpp"
-#include "../../traits_base/checker.hpp"
+#include "../traits/ValidationChecker.hpp"
+#include "../traits_base/checker.hpp"
 
-#include "../../concepts/hash.hpp"
+#include "../concepts/hash.hpp"
 
-#include "../bits.hpp"
-
-#if __LL_EXCEPTIONS == 1
-	#include "../Exceptions.hpp"	// Could be disabled
-#endif // __LL_EXCEPTIONS == 1
+#include "../utils_base/bits.hpp"
+#include "../utils_base/Exceptions.hpp"
 
 #include "Algorithm.hpp"
 #include "hash_macros.hpp"

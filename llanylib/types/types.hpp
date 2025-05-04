@@ -127,10 +127,10 @@ using ll_ustring_t			= const ll_uchar_t*;	// Used to point to non editable unsig
 
 #if __LL_USE_WIDE_CHAR == 1
 using string = ll_wstring_t;
-using char_type	= ll_wchar_t;
+using char_type	= ll_wchar_t;	// Default char type by program propiedies (char, wchar, ...)
 #else
 using string = ll_string_t;
-using char_type	= ll_char_t;
+using char_type	= ll_char_t;	// Default char type by program propiedies (char, wchar, ...)
 #endif
 
 

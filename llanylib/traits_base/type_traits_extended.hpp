@@ -143,14 +143,14 @@ namespace meta {
 namespace traits {
 
 template<class>
-__LL_VAR_INLINE__ constexpr u64 array_size = ::llcpp::ZERO_VALUE<u64>;
-template<class T, u64 N>
-__LL_VAR_INLINE__ constexpr u64 array_size<T[N]> = N;
+__LL_VAR_INLINE__ constexpr usize array_size = ::llcpp::ZERO_VALUE<u64>;
+template<class T, usize N>
+__LL_VAR_INLINE__ constexpr usize array_size<T[N]> = N;
 
 template<class>
-__LL_VAR_INLINE__ constexpr u64 type_or_array_size = 1ull;
-template<class T, u64 N>
-__LL_VAR_INLINE__ constexpr u64 type_or_array_size<T[N]> = N;
+__LL_VAR_INLINE__ constexpr usize type_or_array_size = 1ull;
+template<class T, usize N>
+__LL_VAR_INLINE__ constexpr usize type_or_array_size<T[N]> = N;
 
 } // namespace traits
 } // namespace meta

@@ -24,7 +24,7 @@
 
 #include "../traits_base/type_traits.hpp"
 
-#include "ArrayBase.hpp"
+#include "../utils_base/ArrayBase.hpp"
 
 #define __LL_GENERIC_CHAR_GENERATOR(name, character)						\
 	template <class T>														\
@@ -78,7 +78,6 @@ __LL_GENERIC_STRING_GENERATOR(ALPHABET_MAYUS_MINUS_NUMBERS_SPECIAL, "abcdefghijk
 	__LL_VAR_INLINE__ constexpr auto name<ll_char_t>	= ::llcpp::meta::utils::cStr<>  ARR_PREP(::llcpp::meta::strings::CHAR_##name);	\
 	template<>																															\
 	__LL_VAR_INLINE__ constexpr auto name<ll_wchar_t>	= ::llcpp::meta::utils::cwStr<> ARR_PREP(::llcpp::meta::strings::WCHAR_##name)
-
 
 namespace llcpp {
 namespace meta {

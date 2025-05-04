@@ -95,7 +95,7 @@ namespace jeaiii
             *reinterpret_cast<pair*>(b) = digits.fd[n];
             return n < 10 ? b + 1 : b + 2;
         }
-        /*if (n < u32(1e6))
+        if (n < u32(1e6))
         {
             if (n < u32(1e4))
             {
@@ -245,7 +245,7 @@ namespace jeaiii
         *reinterpret_cast<pair*>(b + 4) = digits.dd[f4 >> 32];
         auto f6 = (f4 & mask32) * 100;
         *reinterpret_cast<pair*>(b + 6) = digits.dd[f6 >> 32];
-        return b + 8;*/
+        return b + 8;
 
         return b;
     }

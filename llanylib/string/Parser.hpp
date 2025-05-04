@@ -41,13 +41,13 @@
 #include "../traits/ValidationChecker.hpp"
 #include "../traits_base/type_modifier.hpp"
 
-#include "IteratorUtils.hpp"
+#include "../utils_base/IteratorUtils.hpp"
 
-#include "ArrayBase.hpp"
+#include "../utils_base/ArrayBase.hpp"
 
 namespace llcpp {
 namespace meta {
-namespace utils {
+namespace string {
 namespace parser {
 
 /*class ParserFunctionDummy {
@@ -630,7 +630,7 @@ class Parser : public _ParserFunctions {
 };
 */
 
-} // namespace utils
+} // namespace string
 } // namespace meta
 } // namespace llcpp
 

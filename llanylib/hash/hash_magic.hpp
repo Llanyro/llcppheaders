@@ -26,7 +26,6 @@
 
 namespace llcpp {
 namespace meta {
-namespace utils {
 namespace hash {
 namespace magic {
 
@@ -60,7 +59,6 @@ struct Murmur {
 
 } // namespace magic
 } // namespace hash
-} // namespace utils
 } // namespace meta
 } // namespace llcpp
 

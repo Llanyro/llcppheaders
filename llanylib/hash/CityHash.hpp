@@ -63,14 +63,13 @@ concept IsValidCityHashExtra = requires (const Base t, const u64 u6, const u32 u
 
 } // namespace hash
 } // namespace concepts
-namespace utils {
 namespace hash {
 
 class CityHashFunctions : public ::llcpp::AlwaysValidTag {
 	public:
-		using Algorithm = ::llcpp::meta::utils::hash::Algorithm<
+		using Algorithm = ::llcpp::meta::hash::Algorithm<
 			u64,
-			::llcpp::meta::utils::hash::AlgorithmMode::Murmur
+			::llcpp::meta::hash::AlgorithmMode::Murmur
 		>;
 
 	public:
@@ -91,7 +90,7 @@ class CityHashFunctions : public ::llcpp::AlwaysValidTag {
 		}
 };
 
-template<class _ExtraFunctions = ::llcpp::meta::utils::hash::CityHashFunctions>
+template<class _ExtraFunctions = ::llcpp::meta::hash::CityHashFunctions>
 	requires
 		::llcpp::meta::concepts::hash::IsValidCityHashExtra<_ExtraFunctions>
 		&& ::llcpp::meta::traits::is_valid_constructor_checker_v<_ExtraFunctions>
@@ -111,7 +110,7 @@ class CityHash
 		using bytearray			= const byte*;
 		using Hash				= u64;
 		using Hash128p			= ::llcpp::meta::pair<u64, u64>;	// Simple struct hash 128
-		using CityHashMagic		= ::llcpp::meta::utils::hash::magic::CityHash;
+		using CityHashMagic		= ::llcpp::meta::hash::magic::CityHash;
 
 	#pragma endregion
 	#pragma region Functions
@@ -329,7 +328,6 @@ class CityHash
 };
 
 } // namespace hash
-} // namespace utils
 } // namespace meta
 } // namespace llcpp
 

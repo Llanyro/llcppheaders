@@ -43,7 +43,6 @@
 
 namespace llcpp {
 namespace meta {
-namespace utils {
 namespace hash {
 
 template<class _HashAlgorithm>
@@ -111,7 +110,6 @@ class HashFunctions : _HashAlgorithm {
 };
 
 } // namespace hash
-} // namespace utils
 } // namespace meta
 } // namespace llcpp
 

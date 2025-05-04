@@ -44,7 +44,6 @@
 
 namespace llcpp {
 namespace meta {
-namespace utils {
 namespace hash {
 
 enum class AlgorithmMode : u8 {
@@ -53,7 +52,7 @@ enum class AlgorithmMode : u8 {
 	CRC
 };
 
-template<class _T, ::llcpp::meta::utils::hash::AlgorithmMode _MODE = ::llcpp::meta::utils::hash::AlgorithmMode::Murmur>
+template<class _T, ::llcpp::meta::hash::AlgorithmMode _MODE = ::llcpp::meta::hash::AlgorithmMode::Murmur>
 class Algorithm : ::llcpp::AlwaysValidTag {
 	#pragma region Types
 	public:
@@ -64,8 +63,8 @@ class Algorithm : ::llcpp::AlwaysValidTag {
 		// Types and enums
 		using T			= _T;
 		using Mode		= decltype(_MODE);
-		using Murmur	= ::llcpp::meta::utils::hash::magic::Murmur;
-		using CityHash	= ::llcpp::meta::utils::hash::magic::CityHash;
+		using Murmur	= ::llcpp::meta::hash::magic::Murmur;
+		using CityHash	= ::llcpp::meta::hash::magic::CityHash;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -209,7 +208,6 @@ __LL_NODISCARD__ constexpr HashAlgorithm::Hash hash_primitive_array(
 #endif // LLANYLIB_BITS_HPP_
 
 } // namespace hash
-} // namespace utils
 } // namespace meta
 } // namespace llcpp
 

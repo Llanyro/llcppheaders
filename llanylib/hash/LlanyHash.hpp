@@ -68,12 +68,11 @@ concept HasMemcopy = requires (const T t, byte* dst, const byte* src, const u8 b
 } // namespace llcpp
 } // namespace hash
 } // namespace concepts
-namespace utils {
 namespace hash {
 
 template<
 	class T = i8,
-	class _Algorithm = ::llcpp::meta::utils::hash::Algorithm<u64, ::llcpp::meta::utils::hash::AlgorithmMode::SimplestCombine>
+	class _Algorithm = ::llcpp::meta::hash::Algorithm<u64, ::llcpp::meta::hash::AlgorithmMode::SimplestCombine>
 >
 	requires
 		::llcpp::meta::concepts::hash::llcpp::IsValidLlanyHashAlgorithm<_Algorithm>
@@ -93,7 +92,7 @@ class LlanyHash
 		// Types and enums
 		using byte				= T;
 		using bytearray			= const byte*;
-		using CityHashMagic		= ::llcpp::meta::utils::hash::magic::Murmur;
+		using CityHashMagic		= ::llcpp::meta::hash::magic::Murmur;
 
 	#pragma endregion
 	#pragma region Functions
@@ -272,7 +271,6 @@ class LlanyHash
 };
 
 } // namespace hash
-} // namespace utils
 } // namespace meta
 } // namespace llcpp
 

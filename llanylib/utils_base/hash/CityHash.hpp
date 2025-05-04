@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CITYHASH_INCOMPLETE_HPP_)
 	#if LLANYLIB_CITYHASH_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_CITYHASH_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "CityHash.hpp(incomplete) version error!"
 		#else
 			#error "CityHash.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CITYHASH_INCOMPLETE_MAYOR_ || LLANYLIB_CITYHASH_INCOMPLETE_MINOR_
 
@@ -25,11 +25,11 @@
 
 #elif defined(LLANYLIB_CITYHASH_HPP_)
 	#if LLANYLIB_CITYHASH_MAYOR_ != 12 || LLANYLIB_CITYHASH_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "CityHash.hpp version error!"
 		#else
 			#error "CityHash.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CITYHASH_MAYOR_ || LLANYLIB_CITYHASH_MINOR_
 
@@ -41,35 +41,16 @@
 #include "../../traits/ValidationChecker.hpp"
 #include "../../traits_base/checker.hpp"
 
-#include "../Exceptions.hpp"	// Could be disabled
+#include "../../concepts/hash.hpp"
+
 #include "../bits.hpp"
 
+#if __LL_EXCEPTIONS == 1
+	#include "../Exceptions.hpp"	// Could be disabled
+#endif // __LL_EXCEPTIONS == 1
+
 #include "Algorithm.hpp"
-
-#define LL_STRING_EXCEPTION_CHECK											\
-	if (s.begin() == 0) {													\
-		if constexpr (::llcpp::EXCEPTIONS)									\
-			(void)LOG_EXCEPTION(::llcpp::misc::Errors::EmptyString);		\
-		return ::llcpp::ZERO_VALUE<u64>;									\
-	}																		\
-	else if (s.size() == 0) {												\
-		if constexpr (::llcpp::EXCEPTIONS)									\
-			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
-		return ::llcpp::ZERO_VALUE<u64>;									\
-	}
-
-#define LL_NULL_STRING_EXCEPTION_CHECK(s, len)								\
-	if (!s) {																\
-		if constexpr (::llcpp::EXCEPTIONS)									\
-			(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);	\
-		return ::llcpp::ZERO_VALUE<u64>;									\
-	}																		\
-	else if (len) {															\
-		if constexpr (::llcpp::EXCEPTIONS)									\
-			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
-		return ::llcpp::ZERO_VALUE<u64>;									\
-	}
-
+#include "hash_macros.hpp"
 
 namespace llcpp {
 namespace meta {

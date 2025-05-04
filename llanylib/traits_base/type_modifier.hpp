@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSTYPEMODIFIER_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSTYPEMODIFIER_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSTYPEMODIFIER_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "type_modifier.hpp(incomplete) version error!"
 		#else
 			#error "type_modifier.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSTYPEMODIFIER_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSTYPEMODIFIER_INCOMPLETE_MINOR_
 
@@ -43,11 +43,11 @@ constexpr auto type_modifier();
 
 #elif defined(LLANYLIB_TRAITSTYPEMODIFIER_HPP_)
 	#if LLANYLIB_TRAITSTYPEMODIFIER_MAYOR_ != 12 || LLANYLIB_TRAITSTYPEMODIFIER_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "type_modifier.hpp version error!"
 		#else
 			#error "type_modifier.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSTYPEMODIFIER_MAYOR_ || LLANYLIB_TRAITSTYPEMODIFIER_MINOR_
 

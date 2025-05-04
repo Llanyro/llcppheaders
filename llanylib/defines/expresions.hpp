@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_DEFINITIONSEXPRESIONS_HPP_) // Guard && version protector
 	#if LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ != 12 || LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "expresions.hpp version error!"
 		#else
 			#error "expresions.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ || LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_
 

@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_LLANYHASH_INCOMPLETE_HPP_)
 	#if LLANYLIB_LLANYHASH_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_LLANYHASH_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "CityHash.hpp(incomplete) version error!"
 		#else
 			#error "CityHash.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_LLANYHASH_INCOMPLETE_MAYOR_ || LLANYLIB_LLANYHASH_INCOMPLETE_MINOR_
 
@@ -25,11 +25,11 @@
 
 #elif defined(LLANYLIB_LLANYHASH_HPP_)
 	#if LLANYLIB_LLANYHASH_MAYOR_ != 12 || LLANYLIB_LLANYHASH_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "CityHash.hpp version error!"
 		#else
 			#error "CityHash.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_LLANYHASH_MAYOR_ || LLANYLIB_LLANYHASH_MINOR_
 
@@ -38,12 +38,19 @@
 	#define LLANYLIB_LLANYHASH_MAYOR_ 12
 	#define LLANYLIB_LLANYHASH_MINOR_ 0
 
+#include "../../traits/ValidationChecker.hpp"
 #include "../../traits_base/checker.hpp"
 
-#include "../Exceptions.hpp"
+#include "../../concepts/hash.hpp"
+
 #include "../bits.hpp"
 
+#if __LL_EXCEPTIONS == 1
+	#include "../Exceptions.hpp"	// Could be disabled
+#endif // __LL_EXCEPTIONS == 1
+
 #include "Algorithm.hpp"
+#include "hash_macros.hpp"
 
 namespace llcpp {
 namespace meta {
@@ -67,37 +74,13 @@ concept HasMemcopy = requires (const T t, byte* dst, const byte* src, const u8 b
 namespace utils {
 namespace hash {
 
-#define LL_STRING_EXCEPTION_CHECK											\
-	if (s.begin() == 0) {													\
-		if constexpr (::llcpp::EXCEPTIONS)									\
-			(void)LOG_EXCEPTION(::llcpp::misc::Errors::EmptyString);		\
-		return ::llcpp::ZERO_VALUE<u64>;									\
-	}																		\
-	else if (s.size() == 0) {												\
-		if constexpr (::llcpp::EXCEPTIONS)									\
-			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
-		return ::llcpp::ZERO_VALUE<u64>;									\
-	}
-
-#define LL_NULL_STRING_EXCEPTION_CHECK(s, len)								\
-	if (!s) {																\
-		if constexpr (::llcpp::EXCEPTIONS)									\
-			(void)LOG_EXCEPTION(::llcpp::misc::Errors::NullptrProvided);	\
-		return ::llcpp::ZERO_VALUE<u64>;									\
-	}																		\
-	else if (len == 0) {													\
-		if constexpr (::llcpp::EXCEPTIONS)									\
-			(void)LOG_EXCEPTION(::llcpp::misc::Errors::StringSizeZero);		\
-		return ::llcpp::ZERO_VALUE<u64>;									\
-	}
-
 template<
 	class T = i8,
 	class _Algorithm = ::llcpp::meta::utils::hash::Algorithm<u64, ::llcpp::meta::utils::hash::AlgorithmMode::SimplestCombine>
 >
 	requires
 		::llcpp::meta::concepts::hash::llcpp::IsValidLlanyHashAlgorithm<_Algorithm>
-		//&& ::llcpp::meta::traits::is_same_su_v<T, u8>
+		&& ::llcpp::meta::traits::is_same_su_v<T, u8>
 		&&::llcpp::meta::traits::is_valid_constructor_checker_v<_Algorithm>
 class LlanyHash
 	: public ::llcpp::meta::traits::ValidationWrapper<_Algorithm, ::llcpp::AlwaysValidTag>
@@ -239,20 +222,8 @@ class LlanyHash
 		}
 
 		constexpr void memcopy(byte* dst, const byte* src, const u8 bytes) const noexcept {
-#if __LL_CONSTEVAL_ENABLED == 1
-			if consteval {
-#endif // __LL_CONSTEVAL_ENABLED
-				// Loop copy
-				for (bytearray c_end = src + bytes; src < c_end; ++src, ++dst)
-					*dst = *src;
-#if __LL_CONSTEVAL_ENABLED == 1
-			}
-			else {
-				::std::memcpy(dst, src, bytes);
-			}
-#endif // __LL_CONSTEVAL_ENABLED
+			::llcpp::meta::utils::string::memcopy<byte>(dst, src, src + bytes);
 		}
-
 
 		template<class U>
 			requires ::llcpp::meta::concepts::hash::IsValidArray<U, byte>

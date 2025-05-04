@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CONCEPTS_INCOMPLETE_HPP_)
 	#if LLANYLIB_CONCEPTS_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_CONCEPTS_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "concepts.hpp(incomplete) version error!"
 		#else
 			#error "concepts.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CONCEPTS_INCOMPLETE_MAYOR_ || LLANYLIB_CONCEPTS_INCOMPLETE_MINOR_
 
@@ -46,11 +46,11 @@ concept EqualSize			= sizeof(T) == sizeof(U);
 
 #elif defined(LLANYLIB_CONCEPTS_HPP_)
 	#if LLANYLIB_CONCEPTS_MAYOR_ != 12 || LLANYLIB_CONCEPTS_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "concepts.hpp version error!"
 		#else
 			#error "concepts.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CONCEPTS_MAYOR_ || LLANYLIB_CONCEPTS_MINOR_
 
@@ -95,6 +95,9 @@ template<class T>
 concept HasValueType = ::llcpp::meta::traits::has_value_type_v<T>;
 template<class T>
 concept HasValueConstant = ::llcpp::meta::traits::has_value_constant_v<T>;
+template<class T>
+concept HasHashType = ::llcpp::meta::traits::has_hash_type_v<T>;
+
 template<class Unit, Unit VALUE>
 concept NonZeroValue = ::llcpp::meta::concepts::base::IsValidConcept<VALUE != ::llcpp::ZERO_VALUE<Unit>>;
 template<class Unit, Unit VALUE>
@@ -112,7 +115,8 @@ concept IsAlwaysInvalid = ::std::is_base_of_v<::llcpp::AlwaysInvalidTag, T>;
 template<class T, ll_bool_t IGNORE_SIGNED = ::llcpp::LL_FALSE, ll_bool_t IGNORE_UNSIGNED = ::llcpp::LL_FALSE>
 concept IsCharType = requires {
 	requires IGNORE_SIGNED ||
-		::llcpp::meta::traits::is_any_of_v<T, ll_char_t, ll_wchar_t, char16_t, char32_t
+		::llcpp::meta::traits::is_any_of_v<T, ll_char_t, ll_wchar_t,
+//		char16_t, char32_t
 //#if defined(__cpp_char8_t)
 //		char8_t,
 //#endif // __cpp_char8_t

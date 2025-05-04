@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_ITERATORCOMMON_INCOMPLETE_HPP_)
 	#if LLANYLIB_ITERATORCOMMON_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_ITERATORCOMMON_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "IteratorCommon.hpp(incomplete) version error!"
 		#else
 			#error "IteratorCommon.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ITERATORCOMMON_INCOMPLETE_MAYOR_ || LLANYLIB_ITERATORCOMMON_INCOMPLETE_MINOR_
 
@@ -39,11 +39,11 @@ class IteratorCommon;
 
 #elif defined(LLANYLIB_ITERATORCOMMON_HPP_)
 	#if LLANYLIB_ITERATORCOMMON_MAYOR_ != 12 || LLANYLIB_ITERATORCOMMON_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "IteratorCommon.hpp version error!"
 		#else
 			#error "IteratorCommon.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ITERATORCOMMON_MAYOR_ || LLANYLIB_ITERATORCOMMON_MINOR_
 

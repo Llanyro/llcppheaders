@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_HPP_)
 	#if LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "checker_attributes.hpp(incomplete) version error!"
 		#else
 			#error "checker_attributes.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ || LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MINOR_
 
@@ -36,11 +36,11 @@ struct checker_attributes_t;
 
 #elif defined(LLANYLIB_CHECKERATTRIBUTES_HPP_)
 	#if LLANYLIB_CHECKERATTRIBUTES_MAYOR_ != 12 || LLANYLIB_CHECKERATTRIBUTES_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "checker_attributes.hpp version error!"
 		#else
 			#error "checker_attributes.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CHECKERATTRIBUTES_MAYOR_ || LLANYLIB_CHECKERATTRIBUTES_MINOR_
 

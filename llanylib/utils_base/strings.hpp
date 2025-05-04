@@ -7,20 +7,20 @@
 //	Version: 12.0							//
 //////////////////////////////////////////////
 
-#if defined(LLANYLIB_QWERTY_HPP_) // Guard && version protector
-	#if LLANYLIB_QWERTY_MAYOR_ != 12 || LLANYLIB_QWERTY_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+#if defined(LLANYLIB_STRINGS_HPP_) // Guard && version protector
+	#if LLANYLIB_STRINGS_MAYOR_ != 12 || LLANYLIB_STRINGS_MINOR_ < 0
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "strings.hpp version error!"
 		#else
 			#error "strings.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
-	#endif // LLANYLIB_QWERTY_MAYOR_ || LLANYLIB_QWERTY_MINOR_
+	#endif // LLANYLIB_STRINGS_MAYOR_ || LLANYLIB_STRINGS_MINOR_
 
 #else
-	#define LLANYLIB_QWERTY_HPP_
-	#define LLANYLIB_QWERTY_MAYOR_ 12
-	#define LLANYLIB_QWERTY_MINOR_ 0
+	#define LLANYLIB_STRINGS_HPP_
+	#define LLANYLIB_STRINGS_MAYOR_ 12
+	#define LLANYLIB_STRINGS_MINOR_ 0
 
 #include "../traits_base/type_traits.hpp"
 
@@ -66,7 +66,7 @@ __LL_GENERIC_STRING_GENERATOR(ALPHABET_MAYUS_MINUS_NUMBERS_SPECIAL, "abcdefghijk
 #undef __LL_GENERIC_CHAR_GENERATOR
 #undef __LL_GENERIC_STRING_GENERATOR
 
-#endif // LLANYLIB_QWERTY_HPP_
+#endif // LLANYLIB_STRINGS_HPP_
 
 #if !defined(LLANYLIB_ERROR_HPP_)
 	#if defined(LLANYLIB_ARRAYBASE_HPP_)

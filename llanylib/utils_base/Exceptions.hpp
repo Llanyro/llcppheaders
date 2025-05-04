@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_EXCEPTIONS_INCOMPLETE_HPP_)
 	#if LLANYLIB_EXCEPTIONS_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_EXCEPTIONS_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "Exceptions.hpp(incomplete) version error!"
 		#else
 			#error "Exceptions.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_EXCEPTIONS_INCOMPLETE_MAYOR_ || LLANYLIB_EXCEPTIONS_INCOMPLETE_MINOR_
 
@@ -37,11 +37,11 @@ class ExceptionBuffer;
 
 #elif defined(LLANYLIB_EXCEPTIONS_HPP_)
 	#if LLANYLIB_EXCEPTIONS_MAYOR_ != 12 || LLANYLIB_EXCEPTIONS_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "Exceptions.hpp version error!"
 		#else
 			#error "Exceptions.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_EXCEPTIONS_MAYOR_ || LLANYLIB_EXCEPTIONS_MINOR_
 

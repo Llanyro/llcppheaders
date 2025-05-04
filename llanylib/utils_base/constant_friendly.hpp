@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_HPP_)
 	#if LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "constant_friendly.hpp(incomplete) version error!"
 		#else
 			#error "constant_friendly.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MAYOR_ || LLANYLIB_CONSTANTFRIENDLY_INCOMPLETE_MINOR_
 
@@ -26,11 +26,11 @@
 
 #elif defined(LLANYLIB_CONSTANTFRIENDLY_HPP_)
 	#if LLANYLIB_CONSTANTFRIENDLY_MAYOR_ != 12 || LLANYLIB_CONSTANTFRIENDLY_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "constant_friendly.hpp version error!"
 		#else
 			#error "constant_friendly.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CONSTANTFRIENDLY_MAYOR_ || LLANYLIB_CONSTANTFRIENDLY_MINOR_
 
@@ -118,6 +118,25 @@ __LL_NODISCARD__ constexpr u64 bytes_swap_64(const u64 x) noexcept {
 }
 
 } // namespace bits
+namespace string {
+template<class T>
+
+constexpr void memcopy(T* dst, const T* src, const T* src_end) noexcept {
+#if __LL_CONSTEVAL_ENABLED == 1
+	if consteval {
+#endif // __LL_CONSTEVAL_ENABLED
+		// Loop copy
+		for (; src < src_end; ++src, ++dst)
+			*dst = *src;
+#if __LL_CONSTEVAL_ENABLED == 1
+	}
+	else {
+		::std::memcpy(dst, src, src_end - src);
+	}
+#endif // __LL_CONSTEVAL_ENABLED
+}
+
+} // namespace string
 } // namespace utils
 } // namespace meta
 } // namespace llcpp

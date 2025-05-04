@@ -1,6 +1,7 @@
 
 Remove reference T templates
 
+HashFunctions
 String concat metaprogramming
 Parser
 Vector

@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CONCEPTSVALIDTYPE_INCOMPLETE_HPP_)
 	#if LLANYLIB_CONCEPTSVALIDTYPE_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_CONCEPTSVALIDTYPE_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "valid_type.hpp(incomplete) version error!"
 		#else
 			#error "valid_type.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CONCEPTSVALIDTYPE_INCOMPLETE_MAYOR_ || LLANYLIB_CONCEPTSVALIDTYPE_INCOMPLETE_MINOR_
 
@@ -28,11 +28,11 @@
 
 #elif defined(LLANYLIB_CONCEPTSVALIDTYPE_HPP_)
 	#if LLANYLIB_CONCEPTSVALIDTYPE_MAYOR_ != 12 || LLANYLIB_CONCEPTSVALIDTYPE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "valid_type.hpp version error!"
 		#else
 			#error "valid_type.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_CONCEPTSVALIDTYPE_MAYOR_ || LLANYLIB_CONCEPTSVALIDTYPE_MINOR_
 

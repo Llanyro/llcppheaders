@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_OS_HPP_) // Guard && version protector
 	#if LLANYLIB_OS_MAYOR_ != 12 || LLANYLIB_OS_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "os.hpp version error!"
 		#else
 			#error "os.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_OS_MAYOR_ || LLANYLIB_OS_MINOR_
 

@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_ATOMICLIFO_INCOMPLETE_HPP_)
 	#if LLANYLIB_ATOMICLIFO_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_ATOMICLIFO_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "AtomicLIFO.hpp(incomplete) version error!"
 		#else
 			#error "AtomicLIFO.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ATOMICLIFO_INCOMPLETE_MAYOR_ || LLANYLIB_ATOMICLIFO_INCOMPLETE_MINOR_
 
@@ -48,11 +48,11 @@ class AtomicLIFO;
 
 #elif defined(LLANYLIB_ATOMICLIFO_HPP_)
 	#if LLANYLIB_ATOMICLIFO_MAYOR_ != 12 || LLANYLIB_ATOMICLIFO_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "AtomicLIFO.hpp version error!"
 		#else
 			#error "AtomicLIFO.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ATOMICLIFO_MAYOR_ || LLANYLIB_ATOMICLIFO_MINOR_
 

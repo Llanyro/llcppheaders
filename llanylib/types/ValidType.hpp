@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_VALIDTYPE_INCOMPLETE_HPP_)
 	#if LLANYLIB_VALIDTYPE_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_VALIDTYPE_INCOMPLETE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "ValidType.hpp(incomplete) version error!"
 		#else
 			#error "ValidType.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_VALIDTYPE_INCOMPLETE_MAYOR_ || LLANYLIB_VALIDTYPE_INCOMPLETE_MINOR_
 
@@ -34,11 +34,11 @@ enum class ValidType : u8;
 
 #elif defined(LLANYLIB_VALIDTYPE_HPP_)
 	#if LLANYLIB_VALIDTYPE_MAYOR_ != 12 || LLANYLIB_VALIDTYPE_MINOR_ < 0
-		#if defined(__LL_REAL_CXX23)
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "ValidType.hpp version error!"
 		#else
 			#error "ValidType.hpp version error!"
-		#endif // __LL_REAL_CXX23
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_VALIDTYPE_MAYOR_ || LLANYLIB_VALIDTYPE_MINOR_
 

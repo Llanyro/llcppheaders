@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "parameter_pack.hpp(incomplete) version error!"
 		#else
 			#error "parameter_pack.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_
 
@@ -49,11 +49,11 @@ class ParameterPackOperations<>;
 
 #elif defined(LLANYLIB_TRAITSPARAMETERPACK_HPP_)
 	#if LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ != 12 || LLANYLIB_TRAITSPARAMETERPACK_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "parameter_pack.hpp version error!"
 		#else
 			#error "parameter_pack.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ || LLANYLIB_TRAITSPARAMETERPACK_MINOR_
 

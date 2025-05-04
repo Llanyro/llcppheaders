@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TYPEUPDATE_INCOMPLETE_HPP_)
 	#if LLANYLIB_TYPEUPDATE_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TYPEUPDATE_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "type_update.hpp(incomplete) version error!"
 		#else
 			#error "type_update.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TYPEUPDATE_INCOMPLETE_MAYOR_ || LLANYLIB_TYPEUPDATE_INCOMPLETE_MINOR_
 
@@ -36,11 +36,11 @@ struct type_update_t;
 
 #elif defined(LLANYLIB_TYPEUPDATE_HPP_)
 	#if LLANYLIB_TYPEUPDATE_MAYOR_ != 12 || LLANYLIB_TYPEUPDATE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "type_update.hpp version error!"
 		#else
 			#error "type_update.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TYPEUPDATE_MAYOR_ || LLANYLIB_TYPEUPDATE_MINOR_
 

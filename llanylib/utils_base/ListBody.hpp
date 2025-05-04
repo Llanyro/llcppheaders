@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_LISTBODY_INCOMPLETE_HPP_)
 	#if LLANYLIB_LISTBODY_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_LISTBODY_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "ListBody.hpp(incomplete) version error!"
 		#else
 			#error "ListBody.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_LISTBODY_INCOMPLETE_MAYOR_ || LLANYLIB_LISTBODY_INCOMPLETE_MINOR_
 
@@ -40,11 +40,11 @@ class ListBody;
 
 #elif defined(LLANYLIB_LISTBODY_HPP_)
 	#if LLANYLIB_LISTBODY_MAYOR_ != 12 || LLANYLIB_LISTBODY_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "ListBody.hpp version error!"
 		#else
 			#error "ListBody.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_LISTBODY_MAYOR_ || LLANYLIB_LISTBODY_MINOR_
 
@@ -259,7 +259,7 @@ class ListBody : public _ArrayBase {
 		}
 
 
-#if __LL_REAL_CXX23 == 1
+#if __LL_DIRECTIVE_WARNING == 1
 		// Use reverse iterator container
 		// Can generate an exception/log if enable
 		__LL_NODISCARD__ constexpr ListBody operator[](const usize first, const usize last) noexcept requires(ENABLE_NO_CONST) {
@@ -273,7 +273,7 @@ class ListBody : public _ArrayBase {
 			return this->substr(first, last);
 		}
 
-#endif // __LL_REAL_CXX23 == 1
+#endif // __LL_DIRECTIVE_WARNING == 1
 
 		#pragma endregion
 		#pragma region Countable

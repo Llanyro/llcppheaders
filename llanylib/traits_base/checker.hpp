@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSCHECKER_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "checker.hpp(incomplete) version error!"
 		#else
 			#error "checker.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_
 
@@ -43,11 +43,11 @@ class ConstructorChecker;
 
 #elif defined(LLANYLIB_TRAITSCHECKER_HPP_)
 	#if LLANYLIB_TRAITSCHECKER_MAYOR_ != 12 || LLANYLIB_TRAITSCHECKER_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "checker.hpp version error!"
 		#else
 			#error "checker.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSCHECKER_MAYOR_ || LLANYLIB_TRAITSCHECKER_MINOR_
 

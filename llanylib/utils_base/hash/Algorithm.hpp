@@ -9,11 +9,11 @@
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_ALGORITHM_INCOMPLETE_HPP_)
 	#if LLANYLIB_ALGORITHM_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_ALGORITHM_INCOMPLETE_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "Algorithm.hpp(incomplete) version error!"
 		#else
 			#error "Algorithm.hpp(incomplete) version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ALGORITHM_INCOMPLETE_MAYOR_ || LLANYLIB_ALGORITHM_INCOMPLETE_MINOR_
 
@@ -25,11 +25,11 @@
 
 #elif defined(LLANYLIB_ALGORITHM_HPP_)
 	#if LLANYLIB_ALGORITHM_MAYOR_ != 12 || LLANYLIB_ALGORITHM_MINOR_ < 0
-		#if __LL_REAL_CXX23 == 1
+		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "Algorithm.hpp version error!"
 		#else
 			#error "Algorithm.hpp version error!"
-		#endif // __LL_REAL_CXX23 == 1
+		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_ALGORITHM_MAYOR_ || LLANYLIB_ALGORITHM_MINOR_
 
@@ -44,39 +44,6 @@
 
 namespace llcpp {
 namespace meta {
-namespace concepts {
-namespace hash {
-
-template<class Array, class byte>
-concept IsValidArray = requires (Array arr) {
-	requires
-		::llcpp::meta::concepts::signature::HasBegin<Array, byte*>
-		|| ::llcpp::meta::concepts::signature::HasBegin<Array, const byte*>;
-	requires
-		::llcpp::meta::concepts::signature::HasSize<Array, usize>
-		|| ::llcpp::meta::concepts::signature::HasSize<Array, usize>;
-};
-
-} // namespace hash
-} // namespace concepts
-
-namespace traits {
-template <class T, class = void>
-class HasHashType : public ::std::false_type {};
-template<class T>
-struct HasHashType<T, ::std::void_t<typename T::Hash>> : public ::std::true_type {};
-template<class T>
-__LL_VAR_INLINE__ constexpr ll_bool_t has_hash_type_v = ::llcpp::meta::traits::HasHashType<T>::value;
-
-} // namespace traits
-namespace concepts {
-namespace base {
-template<class T>
-concept HasHashType = ::llcpp::meta::traits::has_hash_type_v<T>;
-
-} // namespace base
-} // namespace concepts
-
 namespace utils {
 namespace hash {
 

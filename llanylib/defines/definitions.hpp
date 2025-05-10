@@ -64,20 +64,27 @@
 	#define __LL_CLEAR_SECURE 1
 #endif // __LL_CLEAR_SECURE
 
+#define __LL_L L
+#define __LL_u u
+#define __LL_U U
+
 #if !defined(__LL_USE_WIDE_CHAR)
-	#define __LL_USE_WIDE_CHAR 0
+	#define __LL_USE_WIDE_CHAR 0		// Char
+	#define __LL_STRING_PREFIX			// No prefix Char
 #elif __LL_USE_WIDE_CHAR < 0
 	#undef __LL_USE_WIDE_CHAR
-	#define __LL_USE_WIDE_CHAR 0
-#elif __LL_USE_WIDE_CHAR > 1
+	#define __LL_USE_WIDE_CHAR 0		// Char
+	#define __LL_STRING_PREFIX			// No prefix Char
+#elif __LL_USE_WIDE_CHAR == 1
+	#define __LL_STRING_PREFIX __LL_L	// Wide char
+#elif __LL_USE_WIDE_CHAR == 2
+	#define __LL_STRING_PREFIX __LL_u	// char16_t
+#elif __LL_USE_WIDE_CHAR == 3
+	#define __LL_STRING_PREFIX __LL_U	// char32_t
+#elif __LL_USE_WIDE_CHAR > 3
 	#undef __LL_USE_WIDE_CHAR
-	#define __LL_USE_WIDE_CHAR 1
-#endif // __LL_USE_WIDE_CHAR
-
-#if __LL_USE_WIDE_CHAR == 1
-	#define __LL_L L""
-#else
-	#define __LL_L ""
+	#define __LL_USE_WIDE_CHAR 3		// char32_t
+	#define __LL_STRING_PREFIX __LL_U	// No prefix char32_t
 #endif // __LL_USE_WIDE_CHAR
 
 
@@ -94,7 +101,7 @@
 	#define __LL_SPECTRE_FUNCTIONS__
 	#define __LL_NO_UNIQUE_ADDRESS__ [[msvc::no_unique_address]]
 	#define __LL_INLINE__ __forceinline
-	#define __LL_FUNCNAME__ __LL_L __FUNCSIG__
+	#define __LL_FUNCNAME__ __FUNCSIG__
 	#define __MSVC_CDECL __cdecl
 	#define __STD_SIZE_T unsigned long long
 #elif defined(__LL_MINGW)
@@ -103,15 +110,12 @@
 	#define __LL_NO_UNIQUE_ADDRESS__ [[msvc::no_unique_address]]
 	#define __LL_INLINE__ inline
 	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
-	#if __LL_USE_WIDE_CHAR == 1
-		#warning "Pretty function cannot be transformed to wide char in mingw"
-	#endif // __LL_USE_WIDE_CHAR
 	#define __MSVC_CDECL
 	#define __STD_SIZE_T unsigned long long
 #elif defined(__LL_POSIX_SYSTEM) || defined(__LL_UNIX_SYSTEM)
 	#define __LL_NO_UNIQUE_ADDRESS__ [[no_unique_address]]
 	#define __LL_INLINE__ inline
-	#define __LL_FUNCNAME__ __LL_L __PRETTY_FUNCTION__
+	#define __LL_FUNCNAME__ __PRETTY_FUNCTION__
 	#define __MSVC_CDECL
 	#define __STD_SIZE_T long unsigned int
 #else
@@ -120,6 +124,18 @@
 	#define __MSVC_CDECL
 	#define __STD_SIZE_T unsigned long
 #endif // __LL_WINDOWS_SYSTEM || __LL_POSIX_SYSTEM || __LL_UNIX_SYSTEM
+
+#if __LL_REAL_CXX17 == 1
+	#define __LLC17_CONSTEXPR constexpr
+#else
+	#define __LLC17_CONSTEXPR
+#endif // __LL_REAL_CXX17
+
+#if __LL_REAL_CXX20 == 1
+	#define __LLC20_CONSTEXPR constexpr
+#else
+	#define __LLC20_CONSTEXPR
+#endif // __LL_REAL_CXX17
 
 // Definitions
 #define LL_NULLPTR nullptr
@@ -135,24 +151,39 @@
 	#define __LL_DEBUG__ __LL_DEBUG_ERROR__
 #endif // __LL_DEBUG__
 
-#define DEFAULT_RULE_OF_6(classname)									\
-		constexpr classname () noexcept {}								\
-		constexpr ~classname () noexcept {}								\
-		constexpr classname (const classname&) noexcept {}				\
-		constexpr classname& operator=(const classname&) noexcept {}	\
-		constexpr classname (classname&&) noexcept {}					\
-		constexpr classname& operator=(classname&&) noexcept {}
 
+#define DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)													\
+	__LL_NODISCARD__ constexpr explicit operator const classname*() const noexcept { return this; }	\
+	__LL_NODISCARD__ constexpr explicit operator classname*() noexcept { return this; }				\
+	constexpr classname (const classname&) noexcept = default;										\
+	constexpr classname& operator=(const classname&) noexcept = default;							\
+	constexpr classname (classname&&) noexcept = default;											\
+	constexpr classname& operator=(classname&&) noexcept = default;									\
+	constexpr classname(const volatile classname&) noexcept = delete;								\
+	constexpr classname& operator=(const volatile classname&) noexcept = delete;					\
+	constexpr classname(volatile classname&&) noexcept = delete;									\
+	constexpr classname& operator=(volatile classname&&) noexcept = delete;							\
+	constexpr ~classname () noexcept = default
+
+#define DEFAULT_RULE_OF_6_WITH_ERROR_DATA(classname)	\
+	constexpr classname () noexcept {}					\
+	DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)
+
+#define DEFAULT_RULE_OF_6_CLEAR(classname)				\
+	constexpr classname () noexcept = default;			\
+	DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)
+
+	
 #define EXTERN_C_FUNC extern "C"
 
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
 
-#define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, __LL_L "[" var_str __LL_L "] cannot be 0. " __LL_FUNCNAME__)
-#define __LL_ASSERT_VAR_NULL__(var, var_str) LL_ASSERT(var, __LL_L "[" var_str __LL_L "] cannot be nullptr." __LL_FUNCNAME__)
-#define __LL_ASSERT_LIST_EMPTY__(var, var_str) LL_ASSERT(!var.empty(), __LL_L "[" var_str __LL_L "] cannot be empty." __LL_FUNCNAME__)
+#define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, __LL_STRING_PREFIX "[" var_str __LL_STRING_PREFIX "] cannot be 0. " __LL_FUNCNAME__)
+#define __LL_ASSERT_VAR_NULL__(var, var_str) LL_ASSERT(var, __LL_STRING_PREFIX "[" var_str __LL_STRING_PREFIX "] cannot be nullptr." __LL_FUNCNAME__)
+#define __LL_ASSERT_LIST_EMPTY__(var, var_str) LL_ASSERT(!var.empty(), __LL_STRING_PREFIX "[" var_str __LL_STRING_PREFIX "] cannot be empty." __LL_FUNCNAME__)
 #define __LL_ASSERT_B_LOWER_THAN_A__(var_a, var_b, var_a_str, var_b_str) \
-	LL_ASSERT(var_a < var_b, __LL_L "[" var_a_str __LL_L " < " var_b_str __LL_L "] " var_a_str __LL_L " cannot be lower or equal to " \
-		var_b_str __LL_L "." __LL_FUNCNAME__)
+	LL_ASSERT(var_a < var_b, __LL_STRING_PREFIX "[" var_a_str __LL_STRING_PREFIX " < " var_b_str __LL_STRING_PREFIX "] " var_a_str __LL_STRING_PREFIX " cannot be lower or equal to " \
+		var_b_str __LL_STRING_PREFIX "." __LL_FUNCNAME__)
 
 // Defines for logging
 

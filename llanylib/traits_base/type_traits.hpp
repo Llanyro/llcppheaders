@@ -116,7 +116,7 @@ class RangeChecker;
 	#include <utility>
 #else
 	#include <type_traits>
-#endif //
+#endif // __LL_WINDOWS_SYSTEM
 
 namespace llcpp {
 namespace meta {
@@ -150,6 +150,27 @@ template<class T>
 struct HasHashType<T, ::std::void_t<typename T::Hash>> : public ::std::true_type {};
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_hash_type_v = ::llcpp::meta::traits::HasHashType<T>::value;
+
+#pragma endregion
+#pragma region Pair
+template <class T, class = void>
+struct HasPairFirst : public ::std::false_type {};
+template<class T>
+struct HasPairFirst<T, ::std::void_t<decltype(T::first)>> : public ::std::true_type {};
+template <class T, class = void>
+struct HasPairSecond : public ::std::false_type {};
+template<class T>
+struct HasPairSecond<T, ::std::void_t<decltype(T::second)>> : public ::std::true_type {};
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_pair_first_v = ::llcpp::meta::traits::HasPairFirst<T>::value;
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_pair_second_v = ::llcpp::meta::traits::HasPairSecond<T>::value;
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_pair_v =
+	::llcpp::meta::traits::has_pair_first_v<T>
+	&& ::llcpp::meta::traits::has_pair_second_v<T>;
 
 #pragma endregion
 #pragma region LlanycppCheckers
@@ -572,12 +593,12 @@ class RangeChecker {
 // Type getter by size
 template<ll_bool_t SIGNED, u8 P_SIZE = sizeof(void*)>
 using TypeBySize = typename ::std::disjunction<
-	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i8, u8>, u8, P_SIZE, sizeof(u8)>,
-	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i16, u16>, u8, P_SIZE, sizeof(u16)>,
-	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i32, u32>, u8, P_SIZE, sizeof(u32)>,
-	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i64, u64>, u8, P_SIZE, sizeof(u64)>,
-	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i128, u128>, u8, P_SIZE, sizeof(u128)>,
-	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i256, u256>, u8, P_SIZE, sizeof(u256)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i8,		u8>,	u8, P_SIZE, sizeof(u8)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i16,	u16>,	u8, P_SIZE, sizeof(u16)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i32,	u32>,	u8, P_SIZE, sizeof(u32)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i64,	u64>,	u8, P_SIZE, sizeof(u64)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i128,	u128>,	u8, P_SIZE, sizeof(u128)>,
+	::llcpp::meta::traits::IsSameTypeExpresion<::llcpp::meta::traits::conditional_t<SIGNED, i256,	u256>,	u8, P_SIZE, sizeof(u256)>,
 	::llcpp::meta::traits::TrueContainerEmptyClass
 >::U;
 
@@ -594,6 +615,49 @@ static_assert(::std::is_same_v<iSize, isize>, "Missmatch system size");
 
 // [TOFIX]
 namespace dev {
+
+template <class T, class = void>
+class HasPointerType : public ::std::false_type {};
+template<class T>
+struct HasPointerType<T, ::std::void_t<decltype(::std::declval<T>().*)>> : public ::std::true_type {};
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_pointer_type_v = ::llcpp::meta::traits::HasPointerType<T>::value;
+
+struct ASDF { int* val; };
+class QWERT {
+	public:
+		int* val;
+		constexpr QWERT() noexcept : val(new int) {}
+};
+class QWERT2 {
+	public:
+		int val;
+		constexpr QWERT2() noexcept : val() {}
+};
+class QWERT3 {
+	public:
+		int* val;
+		QWERT3() noexcept : val(new int) {}
+};
+class QWERT4 {
+	public:
+		int val;
+		QWERT4() noexcept : val() {}
+};
+
+constexpr auto asdf1 = ::std::is_trivial_v<int>;
+constexpr auto asdf2 = ::std::is_trivial_v<ASDF>;
+constexpr auto asdf3 = ::std::is_trivial_v<QWERT>;
+constexpr auto asdf4 = ::std::is_trivial_v<QWERT2>;
+constexpr auto asdf5 = ::std::is_trivial_v<QWERT3>;
+constexpr auto asdf6 = ::std::is_trivial_v<QWERT4>;
+
+constexpr auto asdf_1 = ::std::is_standard_layout_v<int>;
+constexpr auto asdf_2 = ::std::is_standard_layout_v<ASDF>;
+constexpr auto asdf_3 = ::std::is_standard_layout_v<QWERT>;
+constexpr auto asdf_4 = ::std::is_standard_layout_v<QWERT2>;
+constexpr auto asdf_5 = ::std::is_standard_layout_v<QWERT3>;
+constexpr auto asdf_6 = ::std::is_standard_layout_v<QWERT4>;
 
 class Testing {
 	int a;
@@ -642,7 +706,13 @@ namespace meta {
 namespace traits {
 
 template<class T, T VALUE>
-__LL_VAR_INLINE__ constexpr ll_bool_t is_zero_value_v = (::llcpp::ZERO_VALUE<T> == VALUE);
+__LL_VAR_INLINE__ constexpr ll_bool_t is_zero_value_v		= (VALUE == ::llcpp::ZERO_VALUE<T>);
+template<class T, T VALUE>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_non_zero_value_v	= (VALUE == ::llcpp::ZERO_VALUE<T>);
+template<class T, T VALUE>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_max_value_v		= (VALUE == ::llcpp::MAX_VALUE<T>);
+template<class T, T VALUE>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_min_value_v		= (VALUE == ::llcpp::MIN_VALUE<T>);
 
 } // namespace traits
 } // namespace meta

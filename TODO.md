@@ -1,4 +1,6 @@
 
+Add constexpr by c++ version
+
 Remove reference T templates
 
 HashFunctions

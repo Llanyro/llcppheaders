@@ -24,6 +24,9 @@
 
 #include "../defines/expresions.hpp"
 
+#include <cstdint>
+#include <cuchar>
+
 #pragma region StandardIncompleteTypes
 
 #if defined(__LL_WINDOWS_SYSTEM)
@@ -95,6 +98,12 @@ using ll_double_t		= double;
 using ll_longdouble_t	= long double;
 
 /// Other
+#undef __cpp_char8_t
+#if defined(__cpp_char8_t)
+	#define __LL_8BIT_CHAR ::std::char8_t
+#else
+	#define __LL_8BIT_CHAR
+#endif // __cpp_char8_t
 using ll_wchar_t		= wchar_t;
 using ll_bool_t			= bool;
 enum class LoopResult { Conntinue, Error, Ok, BeginError, Unknown };
@@ -116,30 +125,35 @@ using f32				= ll_float_t;
 using f64				= ll_double_t;
 using f128				= ll_longdouble_t;
 
+using ll_char16_t		= char16_t;
+using ll_char32_t		= char32_t;
+
+#define __LL_INTEGRAL_CHAR_TYPES	ll_char_t, ll_uchar_t, ll_wchar_t, ll_char16_t, ll_char32_t, __LL_8BIT_CHAR
+#define __LL_INTEGRAL_TYPES			u8, u16, u32, u64, i8, i16, i32, i64, ll_bool_t, __LL_INTEGRAL_CHAR_TYPES
+
 #pragma endregion
 #pragma region LibaryCustom
+#if __LL_USE_WIDE_CHAR == 0
+	using char_type	= ll_char_t;	// Default char type by program propiedies (char, wchar, ...)
+#elif __LL_USE_WIDE_CHAR == 1
+	using char_type	= ll_wchar_t;	// Default char type by program propiedies (char, wchar, ...)
+#elif __LL_USE_WIDE_CHAR == 2
+	using char_type	= ll_char16_t;	// Default char type by program propiedies (char, wchar, ...)
+#elif __LL_USE_WIDE_CHAR == 3
+	using char_type	= ll_char32_t;	// Default char type by program propiedies (char, wchar, ...)
+#endif // __LL_USE_WIDE_CHAR
+
+using string				= const char_type*;
 using c_cmp_t				= i32;					// Old type in comparations, compatible with C libs
 
+using ll_ustring_t			= const ll_uchar_t*;	// Used to point to non editable unsigned strings 
 using ll_string_t			= const ll_char_t*;		// Used to point to non editable strings
 using ll_wstring_t			= const ll_wchar_t*;	// Used to point to non editable strings
-/// [DEPRECATED] Unsigned char sometimes crashes Visual Studio IntelliSense using traits
-using ll_ustring_t			= const ll_uchar_t*;	// Used to point to non editable unsigned strings 
-
-#if __LL_USE_WIDE_CHAR == 1
-using string = ll_wstring_t;
-using char_type	= ll_wchar_t;	// Default char type by program propiedies (char, wchar, ...)
-#else
-using string = ll_string_t;
-using char_type	= ll_char_t;	// Default char type by program propiedies (char, wchar, ...)
-#endif
-
-
+using ll_string16_t			= const ll_char16_t*;	// Used to point to non editable strings
+using ll_string32_t			= const ll_char32_t*;	// Used to point to non editable strings
 using ll_lib_t				= void*;				// Handle for dynamic library linked/shared objects
-
 //using len_t				= void;
-
 using StandardComparation	= ::std::strong_ordering;
-
 
 // System size 64/32/16/8 bits
 // [TOCHECK]
@@ -246,13 +260,13 @@ class HalfClusterTag {
 
 #pragma endregion
 
-__LL_VAR_INLINE__ constexpr ll_bool_t LL_FALSE = false;
-__LL_VAR_INLINE__ constexpr ll_bool_t LL_TRUE	= true;
+__LL_VAR_INLINE__ constexpr ll_bool_t LL_FALSE		= false;
+__LL_VAR_INLINE__ constexpr ll_bool_t LL_TRUE		= true;
 
 #if defined(__LL_REAL_CXX20)
-__LL_INLINE__ constexpr void LL_IGNORE(auto...) {}
+	__LL_INLINE__ constexpr void LL_IGNORE(auto...) {}
 #else
-template<class... Args> __LL_INLINE__ constexpr void LL_IGNORE(Args&&...) {}
+	template<class... Args> __LL_INLINE__ constexpr void LL_IGNORE(Args&&...) {}
 #endif
 
 namespace meta {

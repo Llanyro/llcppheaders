@@ -92,8 +92,9 @@ namespace utils {
 
 template<
 	class _T,
-	ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE,
-	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE,
+	ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE,						// Enables no const functions to edit array
+	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE,					// Uses PointerIterator instead pointers
+	ll_bool_t _SIZED_ARRAY = ::llcpp::LL_TRUE,							// Store array size/store en array pointer
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
 		::llcpp::meta::attributes::checker::IGNORE_CPAV
 >
@@ -138,12 +139,15 @@ class ArrayBase {
 			const_iterator
 		>;
 
+		using mem_end_type = ::llcpp::meta::traits::conditional_t<_SIZED_ARRAY, usize, default_iterator>;
+
 	#pragma endregion
 	#pragma region Expresions
 	public:
 		static constexpr ::llcpp::meta::attributes::checker_attributes_t TYPE_CHECKER = _TYPE_CHECKER;
 		static constexpr ll_bool_t USE_OBJECT_ITERATOR	= _USE_OBJECT_ITERATOR;
 		static constexpr ll_bool_t ENABLE_NO_CONST		= _ENABLE_NO_CONST;
+		static constexpr ll_bool_t SIZED_ARRAY			= _SIZED_ARRAY;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -155,7 +159,7 @@ class ArrayBase {
 	#pragma region Attributes
 	private:
 		default_iterator mem;
-		default_iterator mem_end;
+		mem_end_type mem_end;
 
 	#pragma endregion
 	#pragma region Functions
@@ -163,29 +167,45 @@ class ArrayBase {
 	private:
 		constexpr void simpleClear() noexcept {
 			this->setMem(::llcpp::ZERO_VALUE<default_iterator>);
-			this->setMemEnd(::llcpp::ZERO_VALUE<default_iterator>);
+			this->setMemEnd(::llcpp::ZERO_VALUE<mem_end_type>);
 		}
 		constexpr void setMem(default_iterator mem) noexcept { this->mem = mem; }
-		constexpr void setMemEnd(default_iterator mem_end) noexcept { this->mem_end = mem_end; }
+		constexpr void setMemEnd(mem_end_type mem_end) noexcept { this->mem_end = mem_end; }
 
 		#pragma endregion
 		#pragma region Constructors
 	public:
 		constexpr ArrayBase() noexcept
 			: mem(::llcpp::ZERO_VALUE<default_iterator>)
-			, mem_end(::llcpp::ZERO_VALUE<default_iterator>)
+			, mem_end(::llcpp::ZERO_VALUE<mem_end_type>)
 		{}
-		constexpr ArrayBase(default_iterator mem, default_iterator mem_end) noexcept
+		constexpr ArrayBase(default_iterator mem, default_iterator mem_end) noexcept requires(SIZED_ARRAY)
+			: mem(mem)
+			, mem_end(mem_end - mem)
+		{}
+		constexpr ArrayBase(default_iterator mem, default_iterator mem_end) noexcept requires(!SIZED_ARRAY)
 			: mem(mem)
 			, mem_end(mem_end)
 		{}
-		constexpr ArrayBase(default_iterator mem, const usize len) noexcept
-			: ArrayBase(mem, mem + len)
+		constexpr ArrayBase(default_iterator mem, const usize len) noexcept requires(SIZED_ARRAY)
+			: mem(mem)
+			, mem_end(len)
+		{}
+		constexpr ArrayBase(default_iterator mem, const usize len) noexcept requires(!SIZED_ARRAY)
+			: mem(mem)
+			, mem_end(mem + len)
 		{}
 		template<usize N>
-		constexpr ArrayBase(default_iterator (&v)[N]) noexcept
-			: ArrayBase(v, v + N)
+		constexpr ArrayBase(default_iterator (&v)[N]) noexcept requires(SIZED_ARRAY)
+			: mem(v)
+			, mem_end(N)
 		{}
+		template<usize N>
+		constexpr ArrayBase(default_iterator (&v)[N]) noexcept requires(!SIZED_ARRAY)
+			: mem(v)
+			, mem_end(v + N)
+		{}
+
 		template<usize N>
 		constexpr ArrayBase& operator=(default_iterator (&v)[N]) noexcept {
 			this->resetValidation(v, N);
@@ -230,29 +250,32 @@ class ArrayBase {
 		#pragma region ClassFunctions
 		#pragma region std
 	public:
-		__LL_NODISCARD__ constexpr iterator data() noexcept requires(ENABLE_NO_CONST) {
-			return this->mem;
-		}
+		__LL_NODISCARD__ constexpr iterator data() noexcept requires(ENABLE_NO_CONST) { return this->mem; }
 		__LL_NODISCARD__ constexpr const_iterator data() const noexcept { return this->mem; }
 
-		__LL_NODISCARD__ constexpr iterator begin() noexcept requires(ENABLE_NO_CONST) {
-			return this->data();
-		}
+		__LL_NODISCARD__ constexpr iterator begin() noexcept requires(ENABLE_NO_CONST) { return this->data(); }
 		__LL_NODISCARD__ constexpr const_iterator begin() const noexcept { return this->data(); }
 
 		__LL_NODISCARD__ constexpr iterator end() noexcept requires(ENABLE_NO_CONST) {
-			return this->mem_end;
+			if constexpr (SIZED_ARRAY)
+				return this->begin() + this->size();
+			else return this->mem_end;
 		}
 		__LL_NODISCARD__ constexpr const_iterator end() const noexcept { return this->mem_end; }
 
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const noexcept {
-			return this->begin() == this->end();
+			if constexpr (SIZED_ARRAY)
+				return this->size() == ::llcpp::ZERO_VALUE<decltype(this->size())>;
+			else return this->begin() == this->end();
 		}
 
 		#pragma endregion
 		#pragma region Countable
 	public:
-		__LL_NODISCARD__ constexpr usize size() const noexcept {
+		__LL_NODISCARD__ constexpr usize size() const noexcept requires(SIZED_ARRAY) {
+			return this->mem_end;
+		}
+		__LL_NODISCARD__ constexpr usize size() const noexcept requires(!SIZED_ARRAY) {
 			return static_cast<usize>(this->end() - this->begin());
 		}
 
@@ -267,15 +290,29 @@ class ArrayBase {
 		__LL_NODISCARD__ constexpr ll_bool_t resetValidation(default_iterator mem, default_iterator mem_end) noexcept {
 			CHECK_RESET_VALIDATION;
 			this->setMem(mem);
-			this->setMemEnd(mem_end);
+			if constexpr (SIZED_ARRAY)
+				this->setMemEnd(mem_end - mem);
+			else  this->setMemEnd(mem_end);
+			return ::llcpp::LL_TRUE;
+		}
+        template<usize N>
+		__LL_NODISCARD__ constexpr ll_bool_t resetValidation(default_iterator (&v)[N]) noexcept {
+			CHECK_RESET_VALIDATION;
+			this->setMem(v);
+			if constexpr (SIZED_ARRAY)
+				this->setMemEnd(N);
+			else  this->setMemEnd(v + N);
 			return ::llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t inRange(const usize position) const noexcept {
 			return position < this->size();
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t inRange(reference_const_iterator data) const noexcept {
-			return this->begin() <= data && data <= this->end();
+			if constexpr (SIZED_ARRAY)
+				return static_cast<usize>(data - this->begin()) < this->size();
+			else return this->begin() <= data && data <= this->end();
 		}
+
 		__LL_NODISCARD__ constexpr ll_bool_t isValidPosition(const usize position) const noexcept {
 			return this->inRange(position);
 		}
@@ -318,27 +355,49 @@ class ArrayBase {
 namespace llcpp {
 namespace meta {
 namespace utils {
-			
-// Ascii char string
-template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
-using Str = ::llcpp::meta::utils::ArrayBase<ll_char_t, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
-// Wide char string
-template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
-using wStr = ::llcpp::meta::utils::ArrayBase<ll_wchar_t, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
+
+template<class T, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using Array = ::llcpp::meta::utils::ArrayBase<T, ::llcpp::LL_TRUE, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+template<class T, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using ConstArray = ::llcpp::meta::utils::ArrayBase<T, ::llcpp::LL_FALSE, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
 
 // Ascii char string
-template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
-using cStr = ::llcpp::meta::utils::ArrayBase<ll_char_t, ::llcpp::LL_FALSE, USE_OBJECT_ITERATOR>;
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using Str = ::llcpp::meta::utils::Array<ll_char_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+// uString
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using uStr = ::llcpp::meta::utils::Array<ll_uchar_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
 // Wide char string
-template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
-using cwStr = ::llcpp::meta::utils::ArrayBase<ll_wchar_t, ::llcpp::LL_FALSE, USE_OBJECT_ITERATOR>;
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using wStr = ::llcpp::meta::utils::Array<ll_wchar_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+// String 16 bit char
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using Str16 = ::llcpp::meta::utils::Array<ll_char16_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+// String 16 bit char
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using Str32 = ::llcpp::meta::utils::Array<ll_char32_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+
+// Ascii char string
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using cStr = ::llcpp::meta::utils::ConstArray<ll_char_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+// uString
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using cuStr = ::llcpp::meta::utils::ConstArray<ll_uchar_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+// Wide char string
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using cwStr = ::llcpp::meta::utils::ConstArray<ll_wchar_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+// String 16 bit char
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using cStr16 = ::llcpp::meta::utils::ConstArray<ll_char16_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+// String 16 bit char
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using cStr32 = ::llcpp::meta::utils::ConstArray<ll_char32_t, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
 
 // Ascii/Wide char defined by macros and OS
-template<ll_bool_t ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
-using String = ::llcpp::meta::utils::ArrayBase<::llcpp::char_type, ENABLE_NO_CONST, USE_OBJECT_ITERATOR>;
-
-template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
-using cString = ::llcpp::meta::utils::ArrayBase<::llcpp::char_type, ::llcpp::LL_FALSE, USE_OBJECT_ITERATOR>;
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using String = ::llcpp::meta::utils::Array<::llcpp::char_type, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
+template<ll_bool_t USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE, ll_bool_t SIZED_ARRAY = ::llcpp::LL_TRUE>
+using cString = ::llcpp::meta::utils::ConstArray<::llcpp::char_type, USE_OBJECT_ITERATOR, SIZED_ARRAY>;
 
 } // namespace utils
 } // namespace meta

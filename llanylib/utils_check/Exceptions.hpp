@@ -170,8 +170,8 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 static ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #define ll_exceptions ::llcpp::exceptions::ex
 
-#define LOG_EXCEPTION(err) ll_exceptions.push(__LL_FUNCNAME__, err)
-#define LOG_EXCEPTION_TAG(tag, err) ll_exceptions.push(__LL_FUNCNAME__ " [ " tag " ]", err)
+#define LOG_EXCEPTION(err) ll_exceptions.push(__LL_STRING_PREFIX __LL_FUNCNAME__, err)
+#define LOG_EXCEPTION_TAG(tag, err) ll_exceptions.push(__LL_STRING_PREFIX __LL_FUNCNAME__ " [ " tag " ]", err)
 
 #else
 	#define LOG_EXCEPTION(err) ::llcpp::LL_IGNORE(err)

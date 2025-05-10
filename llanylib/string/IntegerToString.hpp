@@ -224,6 +224,8 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 		static constexpr u64 F0_PRE_VALUE_3		= static_cast<u64>(10ull * (1ull << 48ull) / static_cast<u64>(1e7) + 1ull);
 		static constexpr u64 F0_PRE_VALUE_4		= static_cast<u64>(10ull * (1ull << 57ull) / static_cast<u64>(1e9) + 1ull);
 
+		static constexpr u64 F0_PRE_VALUE_5		= static_cast<u64>((1ull << 48ull) / static_cast<u64>(1e6) + 1);
+
 		template<
 			class T,
 			// Adds an space ofr sign (positive or negative).
@@ -309,27 +311,7 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr IntegerToString() noexcept = default;
-		constexpr ~IntegerToString() noexcept = default;
-
-		#pragma endregion
-		#pragma region CopyMove
-	public:
-		constexpr IntegerToString(const IntegerToString& other) noexcept = default;
-		constexpr IntegerToString& operator=(const IntegerToString& other) noexcept  = default;
-		constexpr IntegerToString(IntegerToString&& other) noexcept = default;
-		constexpr IntegerToString& operator=(IntegerToString&& other) noexcept = default;
-
-		constexpr IntegerToString(const volatile IntegerToString&) noexcept = delete;
-		constexpr IntegerToString& operator=(const volatile IntegerToString&) noexcept = delete;
-		constexpr IntegerToString(volatile IntegerToString&&) noexcept = delete;
-		constexpr IntegerToString& operator=(volatile IntegerToString&&) noexcept = delete;
-
-		#pragma endregion
-		#pragma region ClassReferenceOperators
-	public:
-		__LL_NODISCARD__ constexpr explicit operator const IntegerToString*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator IntegerToString*() noexcept { return this; }
+		DEFAULT_RULE_OF_6_CLEAR(IntegerToString);
 
 		#pragma endregion
 		#pragma region ClassFunctions
@@ -356,7 +338,124 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 			}
 		}
 
+		template<class U>
+		constexpr void integral_to_text_pt1(const U value, CharType*& buffer) const noexcept {
+			const auto f0		= _MyType::F0_PRE_VALUE_1 * value;
+			const auto f2		= (f0 & _MyType::MASK24) * static_cast<u32>(1e2);
+
+			const auto& LOW		= _MyType::MAP.low	[f0 >> 24u];
+			const auto& HIGH	= _MyType::MAP.high	[f2 >> 24u];
+
+			*buffer++ = LOW.getFirst();
+			if(this->addLowSecond<u8, 1e3>(value))
+				*buffer++ = LOW.getSecond();
+			HIGH.insert(buffer);
+		}
+		template<class U>
+		constexpr void integral_to_text_pt2(const U value, CharType*& buffer) const noexcept {
+			const auto f0		= _MyType::F0_PRE_VALUE_2 * value;
+			const auto f2		= (f0 & _MyType::MASK32) * static_cast<u32>(1e2);
+			const auto f4		= (f2 & _MyType::MASK32) * static_cast<u32>(1e2);
+
+			const auto& LOW		= _MyType::MAP.low	[f0 >> 32ull];
+			const auto& HIGH_1	= _MyType::MAP.high	[f2 >> 32ull];
+			const auto& HIGH_2	= _MyType::MAP.high	[f4 >> 32ull];
+
+			*buffer++ = LOW.getFirst();
+			if(this->addLowSecond<u8, 1e5>(value))
+				*buffer++ = LOW.getSecond();
+			HIGH_1.insert(buffer);
+			HIGH_2.insert(buffer);
+		}
+		template<class U>
+		constexpr void integral_to_text_pt3(const U value, CharType*& buffer) const noexcept {
+			const auto f0		= _MyType::F0_PRE_VALUE_3 * value >> 16ull;
+			const auto f2		= (f0 & _MyType::MASK32) * static_cast<u32>(1e2);
+			const auto f4		= (f2 & _MyType::MASK32) * static_cast<u32>(1e2);
+			const auto f6		= (f4 & _MyType::MASK32) * static_cast<u32>(1e2);
+
+			const auto& LOW		= _MyType::MAP.low	[f0 >> 32ull];
+			const auto& HIGH_1	= _MyType::MAP.high	[f2 >> 32ull];
+			const auto& HIGH_2	= _MyType::MAP.high	[f4 >> 32ull];
+			const auto& HIGH_3	= _MyType::MAP.high	[f6 >> 32ull];
+
+			*buffer++ = LOW.getFirst();
+			if(this->addLowSecond<u8, 1e7>(value))
+				*buffer++ = LOW.getSecond();
+			HIGH_1.insert(buffer);
+			HIGH_2.insert(buffer);
+			HIGH_3.insert(buffer);
+		}
+		template<class U>
+		constexpr void integral_to_text_pt4(const U value, CharType*& buffer) const noexcept {
+			const auto f0				= _MyType::F0_PRE_VALUE_4 * value;
+			const auto f2				= (f0 & _MyType::MASK57) * static_cast<u32>(1e2);
+			const auto f4				= (f2 & _MyType::MASK57) * static_cast<u32>(1e2);
+			const auto f6				= (f4 & _MyType::MASK57) * static_cast<u32>(1e2);
+			const auto f8				= (f6 & _MyType::MASK57) * static_cast<u32>(1e2);
+
+			const auto& LOW				= _MyType::MAP.low	[f0 >> 57ull];
+			const auto& HIGH_1			= _MyType::MAP.high	[f2 >> 57ull];
+			const auto& HIGH_2			= _MyType::MAP.high	[f4 >> 57ull];
+			const auto& HIGH_3			= _MyType::MAP.high	[f4 >> 57ull];
+			const auto& HIGH_4			= _MyType::MAP.high	[f8 >> 57ull];
+
+			*buffer++ = LOW.getFirst();
+			if(this->addLowSecond<u8, 1e9>(value))
+				*buffer++ = LOW.getSecond();
+			HIGH_1.insert(buffer);
+			HIGH_2.insert(buffer);
+			HIGH_3.insert(buffer);
+			HIGH_4.insert(buffer);
+		}
+		template<class U>
+		constexpr void integral_to_text_pt5(const U value, CharType*& buffer) const noexcept {
+			const auto f0		= (_MyType::F0_PRE_VALUE_5 * value >> 16ull) + 1;
+			const auto f2		= (f0 & _MyType::MASK32) * static_cast<u32>(1e2);
+			const auto f4		= (f2 & _MyType::MASK32) * static_cast<u32>(1e2);
+			const auto f6		= (f4 & _MyType::MASK32) * static_cast<u32>(1e2);
+
+			const auto& HIGH_1	= _MyType::MAP.low	[f0 >> 32ull];
+			const auto& HIGH_2	= _MyType::MAP.high	[f2 >> 32ull];
+			const auto& HIGH_3	= _MyType::MAP.high	[f4 >> 32ull];
+			const auto& HIGH_4	= _MyType::MAP.high	[f6 >> 32ull];
+
+			HIGH_1.insert(buffer);
+			HIGH_2.insert(buffer);
+			HIGH_3.insert(buffer);
+			HIGH_4.insert(buffer);
+		}
+
+		template<class U, ll_bool_t FIRST_MODE>
+		constexpr auto integral_to_text_common(U value, CharType*& buffer) const noexcept {
+			if (value < static_cast<u32>(1e6)) {
+				if (value < static_cast<u32>(1e4))
+					_MyType::integral_to_text_pt1<U>(value, buffer);
+				else _MyType::integral_to_text_pt2<U>(value, buffer);
+				if constexpr (FIRST_MODE) return ::llcpp::LL_TRUE;
+			}
+			else if (value < static_cast<u64>(1ull << 32ull)) {
+				if (value < static_cast<u32>(1e8))
+					_MyType::integral_to_text_pt3<U>(value, buffer);
+				else _MyType::integral_to_text_pt4<U>(value, buffer);
+				if constexpr (FIRST_MODE) return ::llcpp::LL_TRUE;
+			}
+			else if constexpr (!FIRST_MODE) {
+				u32 y = value % static_cast<u32>(1e8);
+				value /= static_cast<u32>(1e8);
+				
+				if (value < static_cast<u32>(1e2))
+					_MyType::MAP.high[value].insert(buffer);
+				else _MyType::integral_to_text_pt1<U>(value, buffer);
+				// do 8 digits
+				_MyType::integral_to_text_pt5<U>();
+			}
+
+			if constexpr (FIRST_MODE) return ::llcpp::LL_FALSE;
+		}
+
 		// Optimization for u8 && i8 types
+		// [TODO] [TOFIX]
 		template<class T, ll_bool_t INCLUDE_SIGNESS = ::llcpp::LL_FALSE>
 		__LL_NODISCARD__ constexpr CharType* u8_to_text(const T number, CharType* buffer) const noexcept {
 			// Promote type to unsigned
@@ -387,6 +486,7 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 			}
 		}
 		// Optimization for u16 && i16 types
+		// [TODO] [TOFIX]
 		template<class T, ll_bool_t INCLUDE_SIGNESS = ::llcpp::LL_FALSE>
 		__LL_NODISCARD__ constexpr CharType* u16_to_text(const T number, CharType* buffer) const noexcept {
 			// Promote type to unsigned
@@ -448,80 +548,17 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 					*buffer++ = LOW.getSecond();
 				return buffer;
 			}
-			else if (value < static_cast<u32>(1e6)) {
-				if (value < static_cast<u32>(1e4)) {
-					const auto f0				= _MyType::F0_PRE_VALUE_1 * value;
-					const auto f2				= (f0 & _MyType::MASK24) * static_cast<u32>(1e2);
-	
-					const auto& LOW				= _MyType::MAP.low	[f0 >> 24u];
-					const auto& HIGH			= _MyType::MAP.high	[f2 >> 24u];
+			else if (_MyType::integral_to_text_common<U, ::llcpp::LL_TRUE>(value, buffer))
+				return buffer;
+			
+			// if we get here U must be u64 but some compilers don't know that, so reassign n to a u64 to avoid warnings
+			u64 u_value = value / static_cast<u32>(1e8);
 
-					*buffer++ = LOW.getFirst();
-					if(this->addLowSecond<u8, 1e3>(value))
-						*buffer++ = LOW.getSecond();
-					HIGH.insert(buffer);
-					return buffer;
-				}
-				else {
-					const auto f0				= _MyType::F0_PRE_VALUE_2 * value;
-					const auto f2				= (f0 & _MyType::MASK32) * static_cast<u32>(1e2);
-					const auto f4				= (f2 & _MyType::MASK32) * static_cast<u32>(1e2);
-
-					const auto& LOW				= _MyType::MAP.low	[f0 >> 32ull];
-					const auto& HIGH_1			= _MyType::MAP.high	[f2 >> 32ull];
-					const auto& HIGH_2			= _MyType::MAP.high	[f4 >> 32ull];
-
-					*buffer++ = LOW.getFirst();
-					if(this->addLowSecond<u8, 1e5>(value))
-						*buffer++ = LOW.getSecond();
-					HIGH_1.insert(buffer);
-					HIGH_2.insert(buffer);
-					return buffer;
-				}
-			}
-			else if (value < static_cast<u64>(1ull << 32ull)) {
-				if (value < static_cast<u32>(1e8)) {
-					const auto f0				= _MyType::F0_PRE_VALUE_3 * value >> 16ull;
-					const auto f2				= (f0 & _MyType::MASK32) * static_cast<u32>(1e2);
-					const auto f4				= (f2 & _MyType::MASK32) * static_cast<u32>(1e2);
-					const auto f6				= (f4 & _MyType::MASK32) * static_cast<u32>(1e2);
-
-					const auto& LOW				= _MyType::MAP.low	[f0 >> 32ull];
-					const auto& HIGH_1			= _MyType::MAP.high	[f2 >> 32ull];
-					const auto& HIGH_2			= _MyType::MAP.high	[f4 >> 32ull];
-					const auto& HIGH_3			= _MyType::MAP.high	[f6 >> 32ull];
-
-					*buffer++ = LOW.getFirst();
-					if(this->addLowSecond<u8, 1e7>(value))
-						*buffer++ = LOW.getSecond();
-					HIGH_1.insert(buffer);
-					HIGH_2.insert(buffer);
-					HIGH_3.insert(buffer);
-					return buffer;
-				}
-				else {
-					const auto f0				= _MyType::F0_PRE_VALUE_4 * value;
-					const auto f2				= (f0 & _MyType::MASK57) * static_cast<u32>(1e2);
-					const auto f4				= (f2 & _MyType::MASK57) * static_cast<u32>(1e2);
-					const auto f6				= (f4 & _MyType::MASK57) * static_cast<u32>(1e2);
-					const auto f8				= (f6 & _MyType::MASK57) * static_cast<u32>(1e2);
-
-					const auto& LOW				= _MyType::MAP.low	[f0 >> 57ull];
-					const auto& HIGH_1			= _MyType::MAP.high	[f2 >> 57ull];
-					const auto& HIGH_2			= _MyType::MAP.high	[f4 >> 57ull];
-					const auto& HIGH_3			= _MyType::MAP.high	[f4 >> 57ull];
-					const auto& HIGH_4			= _MyType::MAP.high	[f8 >> 57ull];
-
-					*buffer++ = LOW.getFirst();
-					if(this->addLowSecond<u8, 1e9>(value))
-						*buffer++ = LOW.getSecond();
-					HIGH_1.insert(buffer);
-					HIGH_2.insert(buffer);
-					HIGH_3.insert(buffer);
-					HIGH_4.insert(buffer);
-					return buffer;
-				}
-			}
+			if (u_value < static_cast<u32>(1e2))
+				_MyType::MAP.high[u_value].insert(buffer);
+			else _MyType::integral_to_text_common<u64, ::llcpp::LL_FALSE>(u_value, buffer);
+			// do 8 digits
+			_MyType::integral_to_text_pt5<u64>(u_value % static_cast<u32>(1e8));
 
 			return buffer;
 		}
@@ -545,14 +582,13 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 
 		template<class T, ll_bool_t INCLUDE_SIGNESS = ::llcpp::LL_FALSE>
 			requires ::llcpp::meta::traits::is_primitive_v<T>
-			__LL_NODISCARD__ constexpr CharType* integral_to_text(::llcpp::meta::traits::cinput<T> number, IntegetView<T, INCLUDE_SIGNESS>& integer_view) const noexcept {
+		__LL_NODISCARD__ constexpr CharType* integral_to_text(::llcpp::meta::traits::cinput<T> number, IntegetView<T, INCLUDE_SIGNESS>& integer_view) const noexcept {
 			return this->integral_to_text<INCLUDE_SIGNESS>(number, integer_view.begin());
 		}
 
 		#pragma endregion
 
 	#pragma endregion
-
 };
 
 } // namespace string

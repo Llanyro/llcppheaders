@@ -58,15 +58,13 @@ class IteratorUtils;
 #include "../traits/ValidationChecker.hpp"
 #include "../traits_base/checker.hpp"
 
+#include "constant_friendly.hpp"
+
 namespace llcpp {
 namespace meta {
 namespace utils {
 
-template<
-	class _Iterator,
-	class _IteratorEnd = _Iterator,
-	class _ExtraFunctions = ::llcpp::DummyClass
->
+template<class _Iterator, class _IteratorEnd = _Iterator, class _ExtraFunctions = ::llcpp::DummyClass>
 	requires
 		::llcpp::meta::concepts::is_object::IsIterator<_Iterator>
 		&& ::llcpp::meta::concepts::is_object::IsIterator<_IteratorEnd>
@@ -85,11 +83,14 @@ class IteratorUtils
 		using ExtraFunctions	= _ExtraFunctions;
 
 		// Types and enums
+		template<class IT>
+		using FixIterator = ::llcpp::meta::traits::conditional_t<::std::is_class_v<IT>, IT&&, IT>;
+
 		using Iterator		= _Iterator;
 		using IteratorEnd	= _IteratorEnd;
 		using value_type	= decltype(*::std::declval<Iterator>());
-		using input_it		= ::llcpp::meta::traits::conditional_t<::std::is_class_v<Iterator>, Iterator&&, Iterator>;
-		using input_itend	= ::llcpp::meta::traits::conditional_t<::std::is_class_v<IteratorEnd>, IteratorEnd&&, Iterator>;
+		using input_it		= _MyType::FixIterator<Iterator>;
+		using input_itend	= _MyType::FixIterator<IteratorEnd>;
 		using ResultPair	= ::llcpp::meta::pair<LoopResult, Iterator>;
 		template<ll_bool_t GET_DATA>
 		using ForeachResult = ::llcpp::meta::traits::conditional_t<GET_DATA, ResultPair, LoopResult>;
@@ -97,14 +98,15 @@ class IteratorUtils
 	#pragma endregion
 	#pragma region Expresions
 	public:
+		template<class W, class X>
 		static constexpr ll_bool_t HAS_OPERATOR_GEQ =
-			::llcpp::meta::concepts::signature::HasOperatorGreaterEqual<Iterator, IteratorEnd, ll_bool_t>;
+			::llcpp::meta::concepts::signature::HasOperatorGreaterEqual<W, X, ll_bool_t>;
+		template<class W, class X>
 		static constexpr ll_bool_t HAS_OPERATOR_EQ =
-			::llcpp::meta::concepts::signature::HasOperatorEqual<Iterator, IteratorEnd, ll_bool_t>;
+			::llcpp::meta::concepts::signature::HasOperatorEqual<W, X, ll_bool_t>;
+		template<class W, class X>
 		static constexpr ll_bool_t HAS_OPERATOR_LEQ =
-			::llcpp::meta::concepts::signature::HasOperatorLowerEqual<IteratorEnd, Iterator, ll_bool_t>;
-		static constexpr ll_bool_t HAS_OPERATOR_EQ_End =
-			::llcpp::meta::concepts::signature::HasOperatorEqual<IteratorEnd, Iterator, ll_bool_t>;
+			::llcpp::meta::concepts::signature::HasOperatorLowerEqual<W, X, ll_bool_t>;
 
 	#pragma endregion
 	#pragma region Functions
@@ -161,36 +163,37 @@ class IteratorUtils
 			if constexpr (::std::is_pointer_v<Iterator> && ::std::is_pointer_v<IteratorEnd>)
 				return it >= end;
 			else if constexpr (::std::is_pointer_v<IteratorEnd>) {
-				if constexpr (_MyType::HAS_OPERATOR_GEQ)
+				if constexpr (_MyType::HAS_OPERATOR_GEQ<Iterator, IteratorEnd>)
 					return it >= end;
 				else {
-					static_assert(_MyType::HAS_OPERATOR_GEQ,
+					static_assert(_MyType::HAS_OPERATOR_GEQ<Iterator, IteratorEnd>,
 						"Iterator must be comparables with a pointer");
 					return ::llcpp::LL_FALSE;
 				}
 			}
 			else if constexpr (::std::is_pointer_v<Iterator>) {
-				if constexpr (_MyType::HAS_OPERATOR_LEQ)
+				if constexpr (_MyType::HAS_OPERATOR_LEQ<IteratorEnd, Iterator>)
 					return end <= it;
 				else {
-					static_assert(_MyType::HAS_OPERATOR_LEQ,
+					static_assert(_MyType::HAS_OPERATOR_LEQ<IteratorEnd, Iterator>,
 						"Iterator must be comparables with a pointer");
 					return ::llcpp::LL_FALSE;
 				}
 			}
 			else {
-				if constexpr (_MyType::HAS_OPERATOR_EQ)
+				if constexpr (_MyType::HAS_OPERATOR_EQ<Iterator, IteratorEnd>)
 					return it == end;
-				else if constexpr (_MyType::HAS_OPERATOR_EQ_End)
+				else if constexpr (_MyType::HAS_OPERATOR_EQ<IteratorEnd, Iterator>)
 					return end == it;
 				else {
-					static_assert(_MyType::HAS_OPERATOR_EQ_End,
+					static_assert(_MyType::HAS_OPERATOR_EQ<IteratorEnd, Iterator>,
 						"Iterators must be comparables");
 					return ::llcpp::LL_FALSE;
 				}
 			}
 		}
 
+		#pragma region Foreach
 		// Iterate over a list with current class
 		template<ll_bool_t GET_DATA = ::llcpp::LL_FALSE>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperation<ExtraFunctions, value_type, LoopResult>
@@ -253,7 +256,6 @@ class IteratorUtils
 
 		template<class IteratorFunctionObject>
 		using Func = ::llcpp::LoopResult (IteratorFunctionObject::*)(value_type&) const noexcept;
-
 		template<class IteratorFunctionObject, Func<IteratorFunctionObject> FUNC, ll_bool_t GET_DATA = ::llcpp::LL_FALSE>
 		//	requires ::llcpp::meta::concepts::signature::HasForeachOperation<const IteratorFunctionObject, value_type, LoopResult>
 		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreach(input_it begin, input_itend end) const noexcept {
@@ -274,11 +276,10 @@ class IteratorUtils
 			else return res;
 		}
 
-
-#if defined(LLANYLIB_TUPLE_HPP_)
 		template<ll_bool_t GET_DATA = ::llcpp::LL_FALSE, class... OtherIterators>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperationExtra<ExtraFunctions, value_type, ::llcpp::meta::utils::Tuple<OtherIterators...>&, LoopResult>
 		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreachEx(input_it begin, input_itend end, OtherIterators... other) const noexcept {
+#if defined(LLANYLIB_TUPLE_HPP_)
 			// Include all other iterators in a tuple
 			::llcpp::meta::utils::Tuple<OtherIterators...> tuple(other...);
 		
@@ -297,10 +298,15 @@ class IteratorUtils
 			if constexpr (GET_DATA)
 				return ResultPair{ res , it };
 			else return res;
+#else
+			static_assert(false, "This functionality needs to include Tuple.hpp");
+			return ForeachResult<GET_DATA>{};
+#endif // LLANYLIB_TUPLE_HPP_
 		}
 		template<class IteratorFunctionObject, ll_bool_t GET_DATA = ::llcpp::LL_FALSE, class... OtherIterators>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperationExtra<IteratorFunctionObject, value_type, ::llcpp::meta::utils::Tuple<OtherIterators...>&, LoopResult>
 		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreachEx(input_it begin, input_itend end, OtherIterators... other) const noexcept {
+#if defined(LLANYLIB_TUPLE_HPP_)
 			// Include all other iterators in a tuple
 			::llcpp::meta::utils::Tuple<OtherIterators...> tuple(other...);
 		
@@ -319,10 +325,15 @@ class IteratorUtils
 			if constexpr (GET_DATA)
 				return ResultPair{ res , it };
 			else return res;
+#else
+			static_assert(false, "This functionality needs to include Tuple.hpp");
+			return ForeachResult<GET_DATA>{};
+#endif // LLANYLIB_TUPLE_HPP_
 		}
 		template<class IteratorFunctionObject, ll_bool_t GET_DATA = ::llcpp::LL_FALSE, class... OtherIterators>
 			requires ::llcpp::meta::concepts::signature::HasForeachOperationExtra<IteratorFunctionObject, value_type, ::llcpp::meta::utils::Tuple<OtherIterators...>&, LoopResult>
 		__LL_NODISCARD__ constexpr ForeachResult<GET_DATA> foreachEx(const IteratorFunctionObject& obj, input_it begin, input_itend end, OtherIterators... other) const noexcept {
+#if defined(LLANYLIB_TUPLE_HPP_)
 			// Include all other iterators in a tuple
 			::llcpp::meta::utils::Tuple<OtherIterators...> tuple(other...);
 		
@@ -341,9 +352,75 @@ class IteratorUtils
 			if constexpr (GET_DATA)
 				return ResultPair{ res , it };
 			else return res;
+
+#else
+			static_assert(false, "This functionality needs to include Tuple.hpp");
+			return ForeachResult<GET_DATA>{};
+#endif // LLANYLIB_TUPLE_HPP_
 		}
 
-#endif // LLANYLIB_TUPLE_HPP_
+		#pragma endregion
+		#pragma region FindElement
+		// Iterate over a list with current class
+		template<class U>
+			requires _MyType::HAS_OPERATOR_EQ<value_type, U> || _MyType::HAS_OPERATOR_EQ<U, value_type>
+		__LL_NODISCARD__ constexpr input_it find(input_it begin, input_itend end, ::llcpp::meta::traits::cinput<U> obj) const noexcept {
+			
+			Iterator it = begin;
+			for (; !this->isEnd(it, end); ++it) {
+				if constexpr(_MyType::HAS_OPERATOR_EQ<value_type, U>) {
+					if(*it == obj)
+						return it;
+				}
+				else if constexpr (_MyType::HAS_OPERATOR_EQ<U, value_type>) {
+					if(obj == *it)
+						return it;
+				}
+				else {
+					static_assert(_MyType::HAS_OPERATOR_EQ<value_type, U> || _MyType::HAS_OPERATOR_EQ<U, value_type>,
+						"This function needs an operator== to compare both types!");
+				}
+			}
+
+			return it;
+		}
+
+		#pragma endregion
+		#pragma region FindSubstring
+		// Iterate over a list with current class
+		template<class U_Iterator, class U_IteratorEnd = U_Iterator>
+			requires ::llcpp::meta::concepts::is_object::IsIterator<U_Iterator>
+				&& ::llcpp::meta::concepts::is_object::IsIterator<U_IteratorEnd>
+		__LL_NODISCARD__ constexpr input_it findSubArray(input_it data, input_itend data_end, _MyType::FixIterator<U_Iterator> needle, _MyType::FixIterator<U_Iterator> needle_end) const noexcept {
+			isize data_size = data_end - data;
+			// If distance is 0 or negative
+			//	This list is invalid
+			if (data_size <= ::llcpp::ZERO_VALUE<isize>)
+				return data + data_size;
+			
+			isize needle_size = needle_end - needle;
+			// If distance is 0 or negative
+			//	Needle list is invalid
+			if (needle_size <= ::llcpp::ZERO_VALUE<decltype(needle_size>))
+				return data + data_size;
+
+			// Ensure data size is at least as long as needle size
+			if (data_size < needle_size)
+				return data + data_size;
+
+			// Try to find first coincidence
+			auto it = this->find(begin, end, *needle);
+			// If not found, exit function
+			if (this->isEnd(it, end))
+				return it;
+
+			if constexpr (::std::is_pointer_v<Iterator> && ::std::is_pointer_v<U_Iterator>) {
+				::llcpp::meta::utils::string::memcompare()
+			}
+		}
+
+
+		#pragma endregion
 
 		#pragma endregion
 

@@ -41,6 +41,21 @@
 
 #include "../types/types.hpp"
 
+#if defined(__LL_WINDOWS_SYSTEM)
+	#include <type_traits>
+#elif defined(__LL_MINGW)
+	#include <type_traits>
+//	#include <utility>
+#elif defined(__LL_POSIX_SYSTEM)
+	#include <type_traits>
+//	#include <utility>
+#elif defined(__LL_UNIX_SYSTEM)
+	#include <type_traits>
+//	#include <utility>
+#else
+	#include <type_traits>
+#endif // __LL_WINDOWS_SYSTEM
+
 namespace std {
 EXTERN_C_FUNC void* __MSVC_CDECL memcpy(void* dst, const void* src, __STD_SIZE_T bytes);
 
@@ -119,19 +134,36 @@ __LL_NODISCARD__ constexpr u64 bytes_swap_64(const u64 x) noexcept {
 
 } // namespace bits
 namespace string {
-template<class T>
 
-constexpr void memcopy(T* dst, const T* src, const T* src_end) noexcept {
+template<class T>
+constexpr void copy(T* dst, const T* src, const T* src_end) noexcept {
 #if __LL_CONSTEVAL_ENABLED == 1
 	if consteval {
 #endif // __LL_CONSTEVAL_ENABLED
 		// Loop copy
 		for (; src < src_end; ++src, ++dst)
+			*dst = ::std::forward<const T&>(*src);
+#if __LL_CONSTEVAL_ENABLED == 1
+	}
+	else {
+		//if ()
+		::std::memcpy(dst, src, src_end - src);
+	}
+#endif // __LL_CONSTEVAL_ENABLED
+}
+
+template<class T>
+constexpr void compare(const T* v1, const T* v2, usize size) noexcept {
+#if __LL_CONSTEVAL_ENABLED == 1
+	if consteval {
+#endif // __LL_CONSTEVAL_ENABLED
+		// Loop copy
+		for (; size; ++src, ++dst)
 			*dst = *src;
 #if __LL_CONSTEVAL_ENABLED == 1
 	}
 	else {
-		::std::memcpy(dst, src, src_end - src);
+		::std::memcmp(dst, src, src_end - src);
 	}
 #endif // __LL_CONSTEVAL_ENABLED
 }

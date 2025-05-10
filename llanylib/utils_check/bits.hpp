@@ -85,8 +85,33 @@ __LL_NODISCARD__ constexpr u8* __primitive_to_bytearray(T& value, u8* buffer) no
 
 } // namespace __bits__
 
+using u512 = ::llcpp::meta::pair<u256, u256>;
+using u1024 = ::llcpp::meta::pair<u512, u512>;
+using u2048 = ::llcpp::meta::pair<u1024, u1024>;
+
+template<class T, class U = T>
+consteval T sqrt(const T base, const U exp) noexcept {
+	if (base == 0) return base;
+
+	T curr = base;
+	T prev = ::llcpp::ZERO_VALUE<T>;
+	while(curr != prev) {
+		prev = curr;
+		curr = 0.5 * (curr + base / curr);
+	}
+	return curr;
+}
+
+constexpr auto asdf = sqrt(8, 2);
+
 template<class T>
-__LL_NODISCARD__ constexpr T in_expected_order(const T v) noexcept {
+consteval T bytearray_size_to_usizearray_size(const usize bytes) noexcept {
+	return bytes >> SHIFT_VALUE;
+}
+
+
+template<class T>
+__LL_NODISCARD__ consteval T in_expected_order(const T v) noexcept {
 	if constexpr (::llcpp::BIGENDIAN) {
 		if constexpr (::std::is_same_v<T, u64>)
 			return ::llcpp::meta::utils::bits::bytes_swap_64(v);
@@ -126,19 +151,19 @@ __LL_NODISCARD__ constexpr T unaligned_load(const U* p) noexcept {
 // Basic type to char array
 // If type has 7 bytes, array will be of 7
 template<class T>
-__LL_NODISCARD__ constexpr u8* primitive_to_bytearray(T& value, u8* buffer, const usize buffer_size) noexcept {
+__LL_NODISCARD__ consteval u8* primitive_to_bytearray(T& value, u8* buffer, const usize buffer_size) noexcept {
 	constexpr usize SIZEOF = sizeof(T);
 	if (buffer_size < SIZEOF)
 		return LL_NULLPTR;
 	return ::llcpp::meta::utils::bits::__bits__::__primitive_to_bytearray(value, buffer);
 }
 template<class T>
-__LL_NODISCARD__ constexpr u8* primitive_to_bytearray_unchecked(T& value, u8* buffer) noexcept {
+__LL_NODISCARD__ consteval u8* primitive_to_bytearray_unchecked(T& value, u8* buffer) noexcept {
 	return ::llcpp::meta::utils::bits::__bits__::__primitive_to_bytearray(value, buffer);
 }
 template<class T, usize N>
 //	requires ::llcpp::meta::concepts::base::IsValidConcept<N >= sizeof(T)>
-__LL_NODISCARD__ constexpr u8* primitive_to_bytearray(T& value, u8 (&buffer)[N]) noexcept requires(N >= sizeof(T)) {
+__LL_NODISCARD__ consteval u8* primitive_to_bytearray(T& value, u8 (&buffer)[N]) noexcept requires(N >= sizeof(T)) {
 	return ::llcpp::meta::utils::bits::__bits__::__primitive_to_bytearray(value, buffer);
 }
 

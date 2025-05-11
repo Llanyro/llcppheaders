@@ -40,22 +40,23 @@ struct CityHash {
 	static constexpr u32 c2 = 0x1b873593u;
 };
 
-struct Murmur {
-	// 8 bits
-	static constexpr u8 kMul8 = 0x7;
-	static constexpr u8 llshift8 = 3;
-	static constexpr u8 combine8 = 0x29;
+template<class T> __LL_VAR_INLINE__ constexpr T		kMul			= ::llcpp::ZERO_VALUE<T>;
+template<class T> __LL_VAR_INLINE__ constexpr u8	kMul<u8>		= 0x7u;
+template<class T> __LL_VAR_INLINE__ constexpr u16	kMul<u16>		= 0x3591u;
+template<class T> __LL_VAR_INLINE__ constexpr u32	kMul<u32>		= 0x1b873593u;
+template<class T> __LL_VAR_INLINE__ constexpr u64	kMul<u64>		= 0x9ddfea08eb382d69ull;
 
-	// 32 bits
-	static constexpr u32 kMul32 = 0x1b873593u; // 0x7fffffff;
-	static constexpr u8 llshift32 = 23;
-	static constexpr u32 combine32 = 0xcc9e2d51u; // 0x7fffffbb;
+template<class T> __LL_VAR_INLINE__ constexpr u8	llshift			= ::llcpp::ZERO_VALUE<u8>;
+template<class T> __LL_VAR_INLINE__ constexpr u8	llshift<u8>		= 3u;
+template<class T> __LL_VAR_INLINE__ constexpr u8	llshift<u16>	= 11u;
+template<class T> __LL_VAR_INLINE__ constexpr u8	llshift<u32>	= 23u;
+template<class T> __LL_VAR_INLINE__ constexpr u8	llshift<u64>	= 47u;
 
-	// 64 bits
-	static constexpr u64 kMul64 = 0x9ddfea08eb382d69ull;
-	static constexpr u8 llshift64 = 47;
-	static constexpr u64 combine64 = 0xc3a5c85c97cb3171ull;
-};
+template<class T> __LL_VAR_INLINE__ constexpr T		combine			= ::llcpp::ZERO_VALUE<T>;
+template<class T> __LL_VAR_INLINE__ constexpr u8	combine<u8>		= 0x29u;
+template<class T> __LL_VAR_INLINE__ constexpr u16	combine<u16>	= 0x2d51u;
+template<class T> __LL_VAR_INLINE__ constexpr u32	combine<u32>	= 0xcc9e2d51u;
+template<class T> __LL_VAR_INLINE__ constexpr u64	combine<u64>	= 0xc3a5c85c97cb3171ull;
 
 } // namespace magic
 } // namespace hash

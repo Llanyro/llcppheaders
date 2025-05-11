@@ -51,49 +51,56 @@ class ExceptionBuffer;
 	#define LLANYLIB_EXCEPTIONS_MINOR_ 0
 
 #include "../types/Errors.hpp"
-#include "IteratorUtils.hpp"
-#include "IteratorCommon.hpp"
+#include "../utils_base/array_cleaner.hpp"
 
 namespace llcpp {
 namespace exceptions {
 
-template<usize _N, class _StringType = ::llcpp::string, class _ErrorType = i32>
+template<
+	usize _N,
+	class _StringType		= ::llcpp::string,
+	class _ErrorType		= i32,
+	class _StringTypeArray	= _StringType[_N],
+	class _ErrorTypeArray	= _ErrorType[_N]
+>
 class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType	= ExceptionBuffer;
+		using _MyType			= ExceptionBuffer;
 
 		// Types
-		using StringType	= _StringType;
-		using ErrorType		= _ErrorType;
-		using NameCleaner	= ::llcpp::meta::utils::IteratorCleaner<StringType*>;
-		using ErrorCleaner	= ::llcpp::meta::utils::IteratorCleaner<ErrorType*>;
-		using PopData		= ::llcpp::meta::pair<StringType, ErrorType>;
+		using StringType		= _StringType;
+		using ErrorType			= _ErrorType;
+		using StringTypeArray	= _StringTypeArray;
+		using ErrorTypeArray	= _ErrorTypeArray;
+		using PopData			= ::llcpp::meta::pair<StringType, ErrorType>;
 
 	#pragma endregion
 	#pragma region Expresions
 	public:
-		static constexpr usize N = _N;
+		static constexpr usize N				= _N;
 
 	#pragma endregion
 	#pragma region Attributes
 	private:
-		StringType lifo_names[N];
-		StringType* lifo_names_last;
-		ErrorType* lifo_errors_last;
-		ErrorType lifo_errors[N];
+		StringType*		lifo_names_last;
+		ErrorType*		lifo_errors_last;
+		StringTypeArray	lifo_names;
+		ErrorTypeArray	lifo_errors;
 
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructors
 	public:
 		constexpr ExceptionBuffer() noexcept
-			: lifo_names()
-			, lifo_names_last(::llcpp::NULL_VALUE<StringType>)
+			: lifo_names_last(::llcpp::NULL_VALUE<StringType>)
 			, lifo_errors_last(::llcpp::NULL_VALUE<ErrorType>)
+			, lifo_names()
 			, lifo_errors()
 		{ this->simpleClear(); }
+		// Calls only classes if exists
+		ExceptionBuffer() noexcept { this->simpleClear(); }
 		constexpr ~ExceptionBuffer() noexcept {
 			if constexpr (::llcpp::CLEAR_SECURE)
 				this->clear();
@@ -128,8 +135,8 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 			this->lifo_errors_last = this->lifo_errors;
 		}
 		constexpr void clear() noexcept {
-			(void)NameCleaner().foreach(this->lifo_names, this->lifo_names + N);
-			(void)ErrorCleaner().foreach(this->lifo_errors, this->lifo_errors + N);
+			::llcpp::meta::utils::array_cleaner<::llcpp::LL_TRUE>(this->lifo_names, this->lifo_names_last);
+			::llcpp::meta::utils::array_cleaner<::llcpp::LL_TRUE>(this->lifo_errors, this->lifo_errors_last);
 			this->simpleClear();
 		}
 
@@ -144,8 +151,8 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 				__debug_error_exceptions_full("Exceptions list is full! You may fix some error or increase ExceptionBuffer");
 				return ::llcpp::LL_FALSE;
 			}
-			//*(this->lifo_names_last++) = s;
-			//*(this->lifo_errors_last++) = e;
+			*(this->lifo_names_last++) = s;
+			*(this->lifo_errors_last++) = e;
 			return ::llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t push(StringType s, ::llcpp::misc::Errors e) noexcept {
@@ -167,7 +174,7 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 
 #if __LL_EXCEPTIONS == 1
 
-static ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
+static thread_local ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #define ll_exceptions ::llcpp::exceptions::ex
 
 #define LOG_EXCEPTION(err) ll_exceptions.push(__LL_STRING_PREFIX __LL_FUNCNAME__, err)

@@ -98,69 +98,37 @@ class IteratorUtils
 	#pragma endregion
 	#pragma region Expresions
 	public:
-		template<class W, class X>
+		template<class W, class X, class ReturnType = ll_bool_t>
 		static constexpr ll_bool_t HAS_OPERATOR_GEQ =
-			::llcpp::meta::concepts::signature::HasOperatorGreaterEqual<W, X, ll_bool_t>;
-		template<class W, class X>
+			::llcpp::meta::concepts::signature::HasOperatorGreaterEqual<W, X, ReturnType>;
+		template<class W, class X, class ReturnType = ll_bool_t>
 		static constexpr ll_bool_t HAS_OPERATOR_EQ =
-			::llcpp::meta::concepts::signature::HasOperatorEqual<W, X, ll_bool_t>;
-		template<class W, class X>
+			::llcpp::meta::concepts::signature::HasOperatorEqual<W, X, ReturnType>;
+		template<class W, class X, class ReturnType = ll_bool_t>
 		static constexpr ll_bool_t HAS_OPERATOR_LEQ =
-			::llcpp::meta::concepts::signature::HasOperatorLowerEqual<W, X, ll_bool_t>;
+			::llcpp::meta::concepts::signature::HasOperatorLowerEqual<W, X, ReturnType>;
 
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		constexpr IteratorUtils() noexcept = default;
+		DEFAULT_RULE_OF_6_CLEAR(IntegerToString);
+
 		template<class... Args>
 		constexpr IteratorUtils(Args&&... args) noexcept requires(::std::is_nothrow_constructible_v<ExtraFunctions, Args...>)
 			: ClusterTag()
 			, ValidTag()
 			, ExtraFunctions(::std::forward<Args>(args)...)
 		{}
-		constexpr ~IteratorUtils() noexcept = default;
-
-		#pragma endregion
-		#pragma region CopyMove
-	public:
-		constexpr IteratorUtils(const IteratorUtils& other) noexcept
-			: ClusterTag()
-			, ValidTag()
-			, ExtraFunctions(::std::forward<const ExtraFunctions&>(other))
-		{}
-		constexpr IteratorUtils& operator=(const IteratorUtils& other) noexcept {
-			ExtraFunctions::operator=(::std::forward<const ExtraFunctions&>(other));
-			return *this;
-		}
-		constexpr IteratorUtils(IteratorUtils&& other) noexcept
-			: ClusterTag()
-			, ValidTag()
-			, ExtraFunctions(::std::forward<ExtraFunctions&&>(other))
-		{}
-		constexpr IteratorUtils& operator=(IteratorUtils&& other) noexcept {
-			ExtraFunctions::operator=(::std::forward<ExtraFunctions&&>(other));
-			return *this;
-		}
-
-		constexpr IteratorUtils(const volatile IteratorUtils&) noexcept = delete;
-		constexpr IteratorUtils& operator=(const volatile IteratorUtils&) noexcept = delete;
-		constexpr IteratorUtils(volatile IteratorUtils&&) noexcept = delete;
-		constexpr IteratorUtils& operator=(volatile IteratorUtils&&) noexcept = delete;
-
-		#pragma endregion
-		#pragma region ClassReferenceOperators
-	public:
-		__LL_NODISCARD__ constexpr explicit operator const IteratorUtils*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator IteratorUtils*() noexcept { return this; }
 
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
 		// Checks if iterator is end or overflows it
 		// By standard iterators (objects) will point to end/begin if operator++/operator-- is used
+		template<class ReturnType>
 		__LL_NODISCARD__ constexpr ll_bool_t isEnd(Iterator& it, IteratorEnd& end) const noexcept {
-			if constexpr (::std::is_pointer_v<Iterator> && ::std::is_pointer_v<IteratorEnd>)
+			if constexpr (::std::is_pointer_v<Iterator> && ::std::is_pointer_v<IteratorEnd> && ::std::is_convertible_v<ll_bool_t, ReturnType>)
 				return it >= end;
 			else if constexpr (::std::is_pointer_v<IteratorEnd>) {
 				if constexpr (_MyType::HAS_OPERATOR_GEQ<Iterator, IteratorEnd>)

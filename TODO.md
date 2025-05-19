@@ -3,12 +3,10 @@ Add constexpr by c++ version
 
 Remove reference T templates
 
-HashFunctions
-String concat metaprogramming
-Parser
-Vector
-Sha3+PermuteAlgo
-Random
+
+
+
+
 
 
 Call function of class(this):                                                                       Ok

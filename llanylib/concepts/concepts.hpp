@@ -163,6 +163,15 @@ concept HasForeachOperationExtra = requires (T t, U u, W w) {
 	{ t.foreachOperation(u, w) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 
+template<class T, class U = T, class ReturnType = T&>
+concept HasCopyAssignable = requires (T t, U u) {
+	{ t = ::std::forward<const U&>(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+template<class T, class U = T, class ReturnType = T&>
+concept HasMoveAssignable = requires (T t, U u) {
+	{ t = ::std::forward<U&&>(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+
 #pragma region EditOperators
 #pragma region SimpleMode
 template<class T, class ReturnType = T&>
@@ -397,6 +406,8 @@ concept HasEquals = requires (const T t, const U u) { { t.equals(u) } noexcept -
 #pragma endregion
 #pragma region ConstLists
 template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasConstData = requires (const T t) { { t.data() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasConstBegin = requires (const T t) { { t.begin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasConstReverseBegin = requires (const T t) { { t.rbegin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
@@ -415,6 +426,8 @@ concept HasConstListFunctions = requires {
 #pragma endregion
 #pragma region Lists
 template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasData = requires (T t) { { t.data() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasBegin = requires (T t) { { t.begin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasReverseBegin = requires (T t) { { t.rbegin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
@@ -431,9 +444,12 @@ concept HasListFunctions = requires {
 };
 
 #pragma endregion
-
 template<class T, class ReturnType = void>
 concept HasClear = requires (T t) { { t.clear() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = void>
+concept HasMakeInvalid = requires (T t) { { t.makeInvalid() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+template<class T, class ReturnType = void, class... Args>
+concept HasClearOther = requires (T t, Args... args) { { t.clear(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = ll_bool_t>
 concept HasEmpty = requires (const T t) { { t.empty() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = usize, class ReturnType = ll_bool_t>
@@ -442,12 +458,12 @@ concept HasInRange = requires (const T t, const U u) { { t.inRange(u) } noexcept
 #pragma region Size
 template<class T, class ReturnType = usize>
 concept HasSize = requires (const T t) { { t.size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
-template<class T, class ReturnType = usize, class... Args>
+template<class T, class... Args>
 concept HasSizeWith =
 #if __LL_REAL_CXX17 == 1
-	(::llcpp::meta::concepts::signature::HasSize<T, Args, ReturnType> || ...);
+	(::llcpp::meta::concepts::signature::HasSize<T, Args> || ...);
 #else
-	::std::disjunction_v<::llcpp::meta::concepts::signature::HasSize<T, Args, ReturnType>...>;
+	::std::disjunction_v<::llcpp::meta::concepts::signature::HasSize<T, Args>...>;
 #endif // __LL_REAL_CXX17 == 1
 template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasSizeWithPrimitives = ::llcpp::meta::concepts::signature::HasSizeWith<T, ReturnType, __LL_INTEGRAL_TYPES>;
@@ -459,9 +475,9 @@ concept HasMaxSize = requires (const T t) { { t.max_size() } noexcept -> ::llcpp
 template<class T, class ReturnType = usize, class... Args>
 concept HasMaxSizeWith =
 #if __LL_REAL_CXX17 == 1
-	(::llcpp::meta::concepts::signature::HasMaxSize<T, Args, ReturnType> || ...);
+	(::llcpp::meta::concepts::signature::HasMaxSize<T, Args> || ...);
 #else
-	::std::disjunction_v<::llcpp::meta::concepts::signature::HasMaxSize<T, Args, ReturnType>...>;
+	::std::disjunction_v<::llcpp::meta::concepts::signature::HasMaxSize<T, Args>...>;
 #endif // __LL_REAL_CXX17 == 1
 template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasMaxSizeWithPrimitives = ::llcpp::meta::concepts::signature::HasMaxSizeWith<T, ReturnType, __LL_INTEGRAL_TYPES>;

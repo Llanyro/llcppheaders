@@ -616,6 +616,7 @@ static_assert(::std::is_same_v<iSize, isize>, "Missmatch system size");
 // [TOFIX]
 namespace dev {
 
+/*
 template <class T, class = void>
 class HasPointerType : public ::std::false_type {};
 template<class T>
@@ -658,6 +659,7 @@ constexpr auto asdf_3 = ::std::is_standard_layout_v<QWERT>;
 constexpr auto asdf_4 = ::std::is_standard_layout_v<QWERT2>;
 constexpr auto asdf_5 = ::std::is_standard_layout_v<QWERT3>;
 constexpr auto asdf_6 = ::std::is_standard_layout_v<QWERT4>;
+*/
 
 class Testing {
 	int a;

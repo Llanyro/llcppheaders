@@ -56,6 +56,7 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 	public:
 		// Class related
 		using _MyType = Boolean;
+		using ValidTag				= ::llcpp::AlwaysValidTag;
 
 		// Types and enums
 		enum class enum_bool : u8 {

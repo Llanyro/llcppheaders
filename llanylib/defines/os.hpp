@@ -45,6 +45,7 @@
 		#define __LL_REAL_CXX20 1
 	#else
 		#define __LL_REAL_CXX20 0
+		#error "This lib requires at least C++20"
 	#endif // __LL_STL_LANG > 201703L
 
 	#if __LL_STL_LANG > 202002L

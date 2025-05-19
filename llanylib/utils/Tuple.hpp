@@ -94,12 +94,13 @@ class TupleBase {
 		using _MyType		= TupleBase;
 
 		// Types and enums
-		using T				= ::llcpp::meta::traits::conditional_t<_IS_REFERENCE, _T&, _T>;
-		using type			= T;	// standard
-		using value_type	= T;	// standard
-		using reference		= ::std::remove_reference_t<T>&;
-		using Next			= ::llcpp::meta::utils::__utils__::tuple_base_t<_IS_REFERENCE, _Args...>;
-		using U				= Next;
+		using T					= ::llcpp::meta::traits::conditional_t<_IS_REFERENCE, _T&, _T>;
+		using type				= T;	// standard
+		using value_type		= T;	// standard
+		using reference			= _T&;
+		using const_reference	= const _T&;
+		using Next				= ::llcpp::meta::utils::__utils__::tuple_base_t<_IS_REFERENCE, _Args...>;
+		using U					= Next;
 
 	#pragma endregion
 	#pragma region Expresions
@@ -183,7 +184,7 @@ class TupleBase {
 		#pragma region ClassFunctions
 	public:
 		__LL_NODISCARD__ constexpr reference getFirst() noexcept { return this->first; }
-		__LL_NODISCARD__ constexpr const reference getFirst() const noexcept { return this->first; }
+		__LL_NODISCARD__ constexpr const_reference getFirst() const noexcept { return this->first; }
 		__LL_NODISCARD__ constexpr U& getSecond() noexcept { return this->second; }
 		__LL_NODISCARD__ constexpr const U& getSecond() const noexcept { return this->second; }
 
@@ -198,6 +199,11 @@ class TupleBase {
 
 		template<const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
 		__LL_NODISCARD__ constexpr auto& get() noexcept {
+			if constexpr (POSITION == 0) return this->getFirst();
+			else return this->getSecond().template get<POSITION - 1>();
+		}
+		template<const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
+		__LL_NODISCARD__ constexpr const auto& get() const noexcept {
 			if constexpr (POSITION == 0) return this->getFirst();
 			else return this->getSecond().template get<POSITION - 1>();
 		}
@@ -221,12 +227,13 @@ class TupleBase<_IS_REFERENCE, _T> {
 		using _MyType		= TupleBase;
 
 		// Types and enums
-		using T				= ::llcpp::meta::traits::conditional_t<_IS_REFERENCE, _T&, _T>;
-		using type			= T;	// standard
-		using value_type	= T;	// standard
-		using reference		= ::std::remove_reference_t<T>&;
-		using Next			= ::llcpp::Emptyclass;
-		using U				= Next;
+		using T					= ::llcpp::meta::traits::conditional_t<_IS_REFERENCE, _T&, _T>;
+		using type				= T;	// standard
+		using value_type		= T;	// standard
+		using reference			= ::std::remove_reference_t<T>&;
+		using const_reference	= const _T&;
+		using Next				= ::llcpp::Emptyclass;
+		using U					= Next;
 
 	#pragma endregion
 	#pragma region Attributes
@@ -303,7 +310,7 @@ class TupleBase<_IS_REFERENCE, _T> {
 		//}
 
 		__LL_NODISCARD__ constexpr reference getFirst() noexcept { return this->first; }
-		__LL_NODISCARD__ constexpr const reference getFirst() const noexcept { return this->first; }
+		__LL_NODISCARD__ constexpr const_reference getFirst() const noexcept { return this->first; }
 
 		template<class W, const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
 		__LL_NODISCARD__ constexpr W& getType() noexcept {
@@ -317,6 +324,13 @@ class TupleBase<_IS_REFERENCE, _T> {
 
 		template<const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
 		__LL_NODISCARD__ constexpr auto& get() noexcept {
+			if constexpr (POSITION == ::llcpp::ZERO_VALUE<usize>)
+				return this->getFirst();
+			static_assert(POSITION == ::llcpp::ZERO_VALUE<usize>,
+				"Error, POSITION its still not 0 at last element in tuple");
+		}
+		template<const usize POSITION = ::llcpp::ZERO_VALUE<usize>>
+		__LL_NODISCARD__ constexpr const auto& get() const noexcept {
 			if constexpr (POSITION == ::llcpp::ZERO_VALUE<usize>)
 				return this->getFirst();
 			static_assert(POSITION == ::llcpp::ZERO_VALUE<usize>,

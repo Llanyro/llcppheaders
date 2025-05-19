@@ -50,7 +50,7 @@ __LL_NODISCARD__ constexpr ll_bool_t is_odd(::llcpp::meta::traits::cinput<T> val
 	#define LLANYLIB_ISODD_MAYOR_ 12
 	#define LLANYLIB_ISODD_MINOR_ 0
 
-#include "../../concepts/concepts.hpp"
+#include "../concepts/concepts.hpp"
 
 namespace llcpp {
 namespace meta {

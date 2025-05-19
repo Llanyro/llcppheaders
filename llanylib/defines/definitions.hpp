@@ -64,37 +64,52 @@
 	#define __LL_CLEAR_SECURE 1
 #endif // __LL_CLEAR_SECURE
 
+// 0: Generate a error on pointer found
+// 1: Deference pointer an call again
+#if !defined(__LL_CLEAR_POINTER_AS)
+	#define __LL_CLEAR_POINTER_AS 0
+#elif __LL_CLEAR_POINTER_AS < 0
+	#undef __LL_CLEAR_POINTER_AS
+	#define __LL_CLEAR_POINTER_AS 0
+#elif __LL_CLEAR_POINTER_AS > 1
+	#undef __LL_CLEAR_POINTER_AS
+	#define __LL_CLEAR_POINTER_AS 1
+#endif // __LL_CLEAR_POINTER_AS
+
 #define __LL_L L
 #define __LL_u u
 #define __LL_U U
 
+// 0: No prefix Char
+// 1: Wide char prefix
+// 2: char16_t prefix
+// 3: char32_t prefix
 #if !defined(__LL_USE_WIDE_CHAR)
-	#define __LL_USE_WIDE_CHAR 0		// Char
-	#define __LL_STRING_PREFIX			// No prefix Char
+	#define __LL_USE_WIDE_CHAR 0
+	#define __LL_STRING_PREFIX
 #elif __LL_USE_WIDE_CHAR < 0
 	#undef __LL_USE_WIDE_CHAR
-	#define __LL_USE_WIDE_CHAR 0		// Char
-	#define __LL_STRING_PREFIX			// No prefix Char
+	#define __LL_USE_WIDE_CHAR 0
+	#define __LL_STRING_PREFIX
 #elif __LL_USE_WIDE_CHAR == 1
-	#define __LL_STRING_PREFIX __LL_L	// Wide char
+	#define __LL_STRING_PREFIX __LL_L
 #elif __LL_USE_WIDE_CHAR == 2
-	#define __LL_STRING_PREFIX __LL_u	// char16_t
+	#define __LL_STRING_PREFIX __LL_u
 #elif __LL_USE_WIDE_CHAR == 3
-	#define __LL_STRING_PREFIX __LL_U	// char32_t
+	#define __LL_STRING_PREFIX __LL_U
 #elif __LL_USE_WIDE_CHAR > 3
 	#undef __LL_USE_WIDE_CHAR
-	#define __LL_USE_WIDE_CHAR 3		// char32_t
-	#define __LL_STRING_PREFIX __LL_U	// No prefix char32_t
+	#define __LL_USE_WIDE_CHAR 3
+	#define __LL_STRING_PREFIX __LL_U
 #endif // __LL_USE_WIDE_CHAR
 
-
 // Sets more env definitions by OS
-#define __LL_FALLTHROUGH__ [[fallthrough]]
-#define __LL_NODISCARD__ [[nodiscard]]
-#define __LL_NORETURN__ [[noreturn]]
-#define __LL_LIKELY__ [[likely]]
-#define __LL_UNLIKELY__ [[unlikely]]
-#define __LL_VAR_INLINE__ inline
+#define __LL_FALLTHROUGH__	[[fallthrough]]
+#define __LL_NODISCARD__	[[nodiscard]]
+#define __LL_NORETURN__		[[noreturn]]
+#define __LL_LIKELY__		[[likely]]
+#define __LL_UNLIKELY__		[[unlikely]]
+#define __LL_VAR_INLINE__	inline
 
 #if defined(__LL_WINDOWS_SYSTEM)
 	#define __LL_UNSECURE_FUNCTIONS__

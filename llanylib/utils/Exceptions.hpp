@@ -51,35 +51,109 @@ class ExceptionBuffer;
 	#define LLANYLIB_EXCEPTIONS_MINOR_ 0
 
 #include "../types/Errors.hpp"
-#include "../utils_base/array_cleaner.hpp"
+#include "../utils_base/GenericFunctions.hpp"
+#include "../utils_base/list_functions.hpp"
 
 namespace llcpp {
 namespace exceptions {
 
-template<
-	usize _N,
-	class _StringType		= ::llcpp::string,
-	class _ErrorType		= i32,
-	class _StringTypeArray	= _StringType[_N],
-	class _ErrorTypeArray	= _ErrorType[_N]
->
-class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
+template<class _StringType, class _ErrorType>
+class ExceptionFunctions : public ::llcpp::AlwaysValidTag {
 	#pragma region Types
 	public:
 		// Class related
-		using _MyType			= ExceptionBuffer;
+		using _MyType				= ExceptionFunctions;
 
-		// Types
-		using StringType		= _StringType;
-		using ErrorType			= _ErrorType;
-		using StringTypeArray	= _StringTypeArray;
-		using ErrorTypeArray	= _ErrorTypeArray;
-		using PopData			= ::llcpp::meta::pair<StringType, ErrorType>;
+		// Types and enums
+		using StringType			= _StringType;
+		using ErrorType				= _ErrorType;
+
+		__LL_VAR_INLINE__ static constexpr ll_bool_t IS_BOTH_VALID =
+			::llcpp::meta::utils::isValidArrayType<StringType>() &&
+			::llcpp::meta::utils::isValidArrayType<ErrorType>();
+
+		using ExceptionValidTag = ::llcpp::meta::traits::conditional_t<
+			_MyType::IS_BOTH_VALID,
+			::llcpp::AlwaysValidTag,
+			::llcpp::DummyClass
+		>; 
+	#pragma endregion
+	#pragma region CleanFunctions
+	public:
+		constexpr void __cleaner(StringType*& val) const noexcept {
+			val = ::llcpp::NULL_VALUE<StringType>;
+		}
+		constexpr void __cleaner(ErrorType*& val) const noexcept {
+			val = ::llcpp::NULL_VALUE<ErrorType>;
+		}
+
+		template<::llcpp::usize N>
+		constexpr void __cleaner(ErrorType (&val)[N]) const noexcept {
+			ErrorType* aux = val;
+			for(const ErrorType* end = aux + N; aux < end; ++aux)
+				this->__cleaner(*aux);
+		}
+		template<::llcpp::usize N>
+		constexpr void __cleaner(StringType (&val)[N]) const noexcept {
+			StringType* aux = val;
+			for(const StringType* end = aux + N; aux < end; ++aux)
+				this->__cleaner(*aux);
+		}
+
+	#pragma endregion
+	#pragma region InvalidateFunctions
+	public:
+		constexpr void __invalidate(StringType*& val) const noexcept {
+			val = ::llcpp::NULL_VALUE<StringType>;
+		}
+		constexpr void __invalidate(ErrorType*& val) const noexcept {
+			val = ::llcpp::NULL_VALUE<ErrorType>;
+		}
+
+		template<::llcpp::usize N>
+		constexpr void __invalidate(ErrorType (&val)[N]) const noexcept {
+			ErrorType* aux = val;
+			for(const ErrorType* end = aux + N; aux < end; ++aux)
+				this->__invalidate(*aux);
+		}
+		template<::llcpp::usize N>
+		constexpr void __invalidate(StringType (&val)[N]) const noexcept {
+			StringType* aux = val;
+			for(const StringType* end = aux + N; aux < end; ++aux)
+				this->__invalidate(*aux);
+		}
+
+	#pragma endregion
+};
+
+template<
+	usize _N,
+	class _StringType			= ::llcpp::string,
+	class _ErrorType			= i32,
+	class _StringTypeArray		= _StringType[_N],
+	class _ErrorTypeArray		= _ErrorType[_N],
+	class _InvalidatorCleaner	= ::llcpp::exceptions::ExceptionFunctions<_StringType, _ErrorType>
+>
+class ExceptionBuffer : public ::llcpp::exceptions::ExceptionFunctions<_StringTypeArray, _ErrorTypeArray>::ExceptionValidTag {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType				= ExceptionBuffer;
+		using ValidTag				= ::llcpp::exceptions::ExceptionFunctions<_StringTypeArray, _ErrorTypeArray>::ExceptionValidTag;
+
+		// Types and enums
+		using StringType			= _StringType;
+		using ErrorType				= _ErrorType;
+		using StringTypeArray		= _StringTypeArray;
+		using ErrorTypeArray		= _ErrorTypeArray;
+		using PopData				= ::llcpp::meta::pair<StringType, ErrorType>;
+		using InvalidatorCleaner	= _InvalidatorCleaner;
 
 	#pragma endregion
 	#pragma region Expresions
 	public:
-		static constexpr usize N				= _N;
+		static constexpr usize N						= _N;
+		static constexpr ll_bool_t VALID_CHECK_NEEDED	= ::std::is_same_v<_MyType::ValidTag, ::llcpp::DummyClass>;
 
 	#pragma endregion
 	#pragma region Attributes
@@ -98,14 +172,12 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 			, lifo_errors_last(::llcpp::NULL_VALUE<ErrorType>)
 			, lifo_names()
 			, lifo_errors()
-		{ this->simpleClear(); }
-		// Calls only classes if exists
-		ExceptionBuffer() noexcept { this->simpleClear(); }
+		{ this->reset(); }
 		constexpr ~ExceptionBuffer() noexcept {
-			if constexpr (::llcpp::CLEAR_SECURE)
-				this->clear();
-			else if constexpr (::llcpp::CLEAR_POINTERS_ON_DESTRUCTION)
-				this->simpleClear();
+			if constexpr (::llcpp::LL_CLEAR_SECURE)
+				this->makeInvalidClear();
+			else if constexpr (::llcpp::LL_CLEAR_POINTERS_ON_DESTRUCTION)
+				this->makeInvalid();
 		}
 
 		#pragma endregion
@@ -129,15 +201,77 @@ class ExceptionBuffer : public ::llcpp::AlwaysValidTag {
 
 		#pragma endregion
 		#pragma region ClassFunctions
-	public:
-		constexpr void simpleClear() noexcept {
-			this->lifo_names_last = this->lifo_names;
-			this->lifo_errors_last = this->lifo_errors;
+	protected:
+		// Does not include reset
+		template<class ExtraCleaner>
+		constexpr void clearPriv(const ExtraCleaner& extra) noexcept {
+			::llcpp::meta::utils::Cleaner cleaner;
+			(void)cleaner.process(this->lifo_names, extra);
+			(void)cleaner.process(this->lifo_errors, extra);
 		}
+
+	public:
+		// Returns ValidType of each type
+		// If any type is AlwaysValid, and other we need to ask, will return ValidType or second type
+		// If we need to ask both types, will return common ValidType or ValidType::Error if ValidType does not match
+		// This function cannot be called if both types are valid types
+		__LL_NODISCARD__ constexpr ::llcpp::misc::ValidType validationType() const noexcept requires(VALID_CHECK_NEEDED) {
+			constexpr auto IS_ERR_VALID = ::llcpp::meta::utils::isValidArrayType<ErrorTypeArray>();
+			constexpr auto IS_STR_VALID = ::llcpp::meta::utils::isValidArrayType<StringTypeArray>();
+			if constexpr (!IS_ERR_VALID && IS_STR_VALID)
+				return this->lifo_errors.validationType();
+			else if constexpr (IS_ERR_VALID && !IS_STR_VALID)
+				return this->lifo_names.validationType();
+			else {
+				auto err_val = this->lifo_errors.validationType();
+				return
+					err_val == this->lifo_names.validationType()
+					? err_val
+					: ::llcpp::misc::ValidType::Error;
+			}
+		}
+		// Reset buffers pointers
+		// Fifo will be reset to 0
+		constexpr void reset() noexcept {
+			this->lifo_names_last	= ::llcpp::meta::utils::getArrayBegin(this->lifo_names);
+			this->lifo_errors_last	= ::llcpp::meta::utils::getArrayBegin(this->lifo_errors);
+		}
+		// Clears buffers data and reset class
+		template<class ExtraCleaner = _MyType::InvalidatorCleaner>
 		constexpr void clear() noexcept {
-			::llcpp::meta::utils::array_cleaner<::llcpp::LL_TRUE>(this->lifo_names, this->lifo_names_last);
-			::llcpp::meta::utils::array_cleaner<::llcpp::LL_TRUE>(this->lifo_errors, this->lifo_errors_last);
-			this->simpleClear();
+			ExtraCleaner extra;
+			this->clear(extra);
+		}
+		// Clears buffers data and reset class with a provided class
+		template<class ExtraCleaner = _MyType::InvalidatorCleaner>
+		constexpr void clear(const ExtraCleaner& extra) noexcept {
+			this->clearPriv(extra);
+			this->reset();
+		}
+		// Invalidates iterators of fifo
+		template<class ExtraInvalidator = _MyType::InvalidatorCleaner>
+		constexpr void makeInvalid() noexcept {
+			ExtraInvalidator extra;
+			this->makeInvalid(extra);
+		}
+		// Invalidates iterators of fifo with a provided class
+		template<class ExtraInvalidator = _MyType::InvalidatorCleaner>
+		constexpr void makeInvalid(const ExtraInvalidator& extra) noexcept {
+			::llcpp::meta::utils::Invalidator invalidator;
+			(void)invalidator.process(this->lifo_errors_last, extra);
+			(void)invalidator.process(this->lifo_names_last, extra);
+		}
+		// Invalidates iterators and objects of fifo
+		template<class ExtraInvalidatorCleaner = _MyType::InvalidatorCleaner>
+		constexpr void makeInvalidClear() noexcept {
+			ExtraInvalidatorCleaner extra;
+			this->makeInvalidClear(extra);
+		}
+		// Invalidates iterators and objects of fifo
+		template<class ExtraInvalidatorCleaner = _MyType::InvalidatorCleaner>
+		constexpr void makeInvalidClear(const ExtraInvalidatorCleaner& extra) noexcept {
+			this->clearPriv(extra);
+			this->makeInvalid(extra);
 		}
 
 		__LL_NODISCARD__ constexpr usize lenght() const noexcept { return static_cast<usize>(this->lifo_names_last - this->lifo_names); }

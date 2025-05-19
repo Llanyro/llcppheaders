@@ -101,9 +101,12 @@ using ll_longdouble_t	= long double;
 #undef __cpp_char8_t
 #if defined(__cpp_char8_t)
 	#define __LL_8BIT_CHAR ::std::char8_t
+	#define __LL_8BIT_CHAR_EX , ::std::char8_t
 #else
 	#define __LL_8BIT_CHAR
+	#define __LL_8BIT_CHAR_EX
 #endif // __cpp_char8_t
+
 using ll_wchar_t		= wchar_t;
 using ll_bool_t			= bool;
 enum class LoopResult { Conntinue, Error, Ok, BeginError, Unknown };
@@ -128,7 +131,7 @@ using f128				= ll_longdouble_t;
 using ll_char16_t		= char16_t;
 using ll_char32_t		= char32_t;
 
-#define __LL_INTEGRAL_CHAR_TYPES	ll_char_t, ll_uchar_t, ll_wchar_t, ll_char16_t, ll_char32_t, __LL_8BIT_CHAR
+#define __LL_INTEGRAL_CHAR_TYPES	ll_char_t, ll_uchar_t, ll_wchar_t, ll_char16_t, ll_char32_t __LL_8BIT_CHAR_EX
 #define __LL_INTEGRAL_TYPES			u8, u16, u32, u64, i8, i16, i32, i64, ll_bool_t, __LL_INTEGRAL_CHAR_TYPES
 
 #pragma endregion

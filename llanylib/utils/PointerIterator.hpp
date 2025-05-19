@@ -51,6 +51,8 @@ class PointerIterator;
 	#define LLANYLIB_POINTERITERATOR_MINOR_ 0
 
 #include "../traits_base/type_traits.hpp"
+#include "../traits/ValidationChecker.hpp"
+#include "../utils_base/GenericFunctions.hpp"
 
 #if defined(__LL_MINGW)
 	#include <memory>	// To use ::std::addressof
@@ -67,7 +69,7 @@ class PointerIterator {
 		// Class related
 		using _MyType		= PointerIterator;
 
-		// Types
+		// Types and enums
 		using T				= _T;
 		using type			= T;
 		using value_type	= T;
@@ -86,12 +88,12 @@ class PointerIterator {
 	#pragma region Functions
 		#pragma region Private
 	private:
-		constexpr void simpleClear() noexcept { this->setMem(::llcpp::NULL_VALUE<T>); }
 		constexpr void setMem(T* mem) noexcept { this->mem = mem; }
 
 		#pragma endregion
 		#pragma region Constructors
 	public:
+		// By default is invalid class
 		constexpr PointerIterator() noexcept
 			: PointerIterator(::llcpp::NULL_VALUE<T>)
 		{}
@@ -99,30 +101,32 @@ class PointerIterator {
 			: mem(mem)
 		{}
 		constexpr ~PointerIterator() noexcept {
-			if constexpr (::llcpp::CLEAR_POINTERS_ON_DESTRUCTION)
-				this->simpleClear();
+			if constexpr (::llcpp::LL_CLEAR_POINTERS_ON_DESTRUCTION)
+				this->makeInvalid();
 		}
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		template<ll_bool_t _IS_REVERSED_>
-		constexpr PointerIterator(const PointerIterator<_T, _IS_REVERSED_>& other) noexcept
+		// [TOCHECK] [TODO] [TOFIX]
+		template<ll_bool_t __IS_REVERSED>
+		constexpr PointerIterator(const PointerIterator<T, __IS_REVERSED>& other) noexcept
 			: PointerIterator(other.mem)
 		{}
-		template<ll_bool_t _IS_REVERSED_>
-		constexpr PointerIterator& operator=(const PointerIterator<_T, _IS_REVERSED_>& other) noexcept {
-			this->setMem(other.mem);
+		// [TOCHECK] [TODO] [TOFIX]
+		template<ll_bool_t __IS_REVERSED>
+		constexpr PointerIterator& operator=(const PointerIterator<T, __IS_REVERSED>& other) noexcept {
+			this->reset(other.mem);
 			return *this;
 		}
-		template<ll_bool_t _IS_REVERSED_>
-		constexpr PointerIterator(PointerIterator<_T, _IS_REVERSED_>&& other) noexcept
-			: PointerIterator(other.mem)
-		{ other.simpleClear(); }
-		template<ll_bool_t _IS_REVERSED_>
-		constexpr PointerIterator& operator=(PointerIterator<_T, _IS_REVERSED_>&& other) noexcept {
-			this->setMem(other.mem);
-			other.simpleClear();
+		template<ll_bool_t __IS_REVERSED>
+		constexpr PointerIterator(PointerIterator<T, __IS_REVERSED>&& other) noexcept
+			: PointerIterator(other.getPointer())
+		{ other.makeInvalid(); }
+		template<ll_bool_t __IS_REVERSED>
+		constexpr PointerIterator& operator=(PointerIterator<T, __IS_REVERSED>&& other) noexcept {
+			this->reset(other.getPointer());
+			other.makeInvalid();
 			return *this;
 		}
 
@@ -140,6 +144,44 @@ class PointerIterator {
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
+		__LL_NODISCARD__ constexpr T* getPointer() noexcept { return this->mem; }
+		__LL_NODISCARD__ constexpr const T* getPointer() const noexcept { return this->mem; }
+
+		// Returns ValidType::Valid if pointer is not nullptr
+		__LL_NODISCARD__ constexpr ::llcpp::misc::ValidType validationType() const noexcept {
+			return (this->mem != ::llcpp::NULL_VALUE<T>) ? ::llcpp::misc::ValidType::Valid : ::llcpp::misc::ValidType::Invalid;
+		}
+		// Reset pointer iterator to new mem
+		constexpr void reset(T* mem) noexcept { this->setMem(mem); }
+		// Clear pointer with provided cleaner type
+		template<class ExtraCleaner = ::llcpp::meta::utils::Cleaner>
+		constexpr void clear() noexcept {
+			ExtraCleaner extra;
+			this->clear(extra);
+		}
+		// Clear pointer with provided cleaner
+		template<class ExtraCleaner = ::llcpp::meta::utils::Cleaner>
+		constexpr void clear(const ExtraCleaner& extra) noexcept {
+			::llcpp::meta::utils::Cleaner cleaner;
+			(void)cleaner.process(this->mem, extra);
+		}
+		// Sets pointer to nullptr
+		constexpr void makeInvalid() noexcept {
+			this->mem = ::llcpp::NULL_VALUE<T>;
+		}
+		// Clears mem and set it to nullptr
+		template<class ExtraCleaner = ::llcpp::meta::utils::Cleaner>
+		constexpr void makeInvalidClear() noexcept {
+			ExtraCleaner extra;
+			this->makeInvalidClear(extra);
+		}
+		// Clears mem (wtih object privided) and set it to nullptr
+		template<class ExtraCleaner = ::llcpp::meta::utils::Cleaner>
+		constexpr void makeInvalidClear(const ExtraCleaner& extra) noexcept {
+			this->clear(extra);
+			this->makeInvalid();
+		}
+
 		constexpr PointerIterator& operator++() noexcept {
 			if constexpr (_MyType::IS_REVERSED)
 				--this->mem;
@@ -191,15 +233,15 @@ class PointerIterator {
 		__LL_NODISCARD__ constexpr isize distance(T* mem) const noexcept {
 			return this->mem - mem;
 		}
-		template<ll_bool_t _IS_REVERSED_>
-		__LL_NODISCARD__ constexpr isize distance(const PointerIterator<_T, _IS_REVERSED_>& it) const noexcept {
+		template<ll_bool_t __IS_REVERSED>
+		__LL_NODISCARD__ constexpr isize distance(const PointerIterator<T, __IS_REVERSED>& it) const noexcept {
 			return this->mem - it.mem;
 		}
 		__LL_NODISCARD__ constexpr isize operator-(T* mem) const noexcept {
 			return this->mem - mem;
 		}
-		template<ll_bool_t _IS_REVERSED_>
-		__LL_NODISCARD__ constexpr isize operator-(const PointerIterator<_T, _IS_REVERSED_>& it) const noexcept {
+		template<ll_bool_t __IS_REVERSED>
+		__LL_NODISCARD__ constexpr isize operator-(const PointerIterator<_T, __IS_REVERSED>& it) const noexcept {
 			return this->mem - it.mem;
 		}
 

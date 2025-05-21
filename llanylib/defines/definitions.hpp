@@ -44,6 +44,16 @@
 	#define __LL_EXCEPTIONS 1
 #endif // __LL_EXCEPTIONS
 
+#if !defined(__LL_STATIC_KATS)
+	#define __LL_STATIC_KATS 1
+#elif __LL_STATIC_KATS < 0
+	#undef __LL_STATIC_KATS
+	#define __LL_STATIC_KATS 0
+#elif __LL_STATIC_KATS > 1
+	#undef __LL_STATIC_KATS
+	#define __LL_STATIC_KATS 1
+#endif // __LL_STATIC_KATS
+
 #if !defined(__LL_CLEAR_POINTERS_ON_DESTRUCTION)
 	#define __LL_CLEAR_POINTERS_ON_DESTRUCTION 0
 #elif __LL_CLEAR_POINTERS_ON_DESTRUCTION < 0

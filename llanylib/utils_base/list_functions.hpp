@@ -66,7 +66,7 @@ namespace utils {
 
 // Type structure needs to be an array type (memory needs to be contiguous)
 // Object returned by begin needs to be convertible to U pointer
-template<class T, class U>
+template<class U, class T>
 __LL_NODISCARD__ constexpr U* getArrayBegin(T& arr) noexcept {
 	if constexpr (::llcpp::meta::concepts::signature::HasBegin<T>) {
 		using BeginType = decltype(arr.begin());
@@ -89,7 +89,7 @@ __LL_NODISCARD__ constexpr U* getArrayBegin(T& arr) noexcept {
 
 // Type structure needs to be an array type (memory needs to be contiguous)
 // Object returned by end needs to be convertible to U pointer
-template<class T, class U>
+template<class U, class T>
 __LL_NODISCARD__ constexpr U* getArrayEnd(T& arr) noexcept {
 	if constexpr (::llcpp::meta::concepts::signature::HasBegin<T>) {
 		using BeginType = decltype(arr.end());
@@ -112,7 +112,7 @@ __LL_NODISCARD__ constexpr U* getArrayEnd(T& arr) noexcept {
 
 // Type structure needs to be an array type (memory needs to be contiguous)
 // Object returned by end needs to be convertible to usize
-template<class T, class U>
+template<class U, class T>
 __LL_NODISCARD__ constexpr usize getArraySize(T& arr) noexcept {
 	if constexpr (::llcpp::meta::concepts::signature::HasSize<T>)
 		return arr.size();

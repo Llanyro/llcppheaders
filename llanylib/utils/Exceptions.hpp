@@ -158,21 +158,21 @@ class ExceptionBuffer : public ::llcpp::exceptions::ExceptionFunctions<_StringTy
 	#pragma endregion
 	#pragma region Attributes
 	private:
-		StringType*		lifo_names_last;
-		ErrorType*		lifo_errors_last;
 		StringTypeArray	lifo_names;
 		ErrorTypeArray	lifo_errors;
+		StringType*		lifo_names_last;
+		ErrorType*		lifo_errors_last;
 
 	#pragma endregion
 	#pragma region Functions
 		#pragma region Constructors
 	public:
 		constexpr ExceptionBuffer() noexcept
-			: lifo_names_last(::llcpp::NULL_VALUE<StringType>)
-			, lifo_errors_last(::llcpp::NULL_VALUE<ErrorType>)
-			, lifo_names()
+			: lifo_names()
 			, lifo_errors()
-		{ this->reset(); }
+			, lifo_names_last(::llcpp::meta::utils::getArrayBegin<StringType>(this->lifo_names))
+			, lifo_errors_last(::llcpp::meta::utils::getArrayBegin<ErrorType>(this->lifo_errors))
+		{}
 		constexpr ~ExceptionBuffer() noexcept {
 			if constexpr (::llcpp::LL_CLEAR_SECURE)
 				this->makeInvalidClear();
@@ -305,6 +305,22 @@ class ExceptionBuffer : public ::llcpp::exceptions::ExceptionFunctions<_StringTy
 
 	#pragma endregion
 };
+
+/*template<usize N, usize _N>
+constexpr void addExceptions(::llcpp::exceptions::ExceptionBuffer<_N>& buff) noexcept {
+	using ExceptType = decltype(buff);
+	buff.push(ExceptType::StringType(), ExceptType::ErrorType());
+	if constexpr (N > 0) ::llcpp::exceptions::addExceptions<N - 1>(buff);
+}
+
+template<usize N, usize _N>
+constexpr usize getExceptions() noexcept {
+	::llcpp::exceptions::ExceptionBuffer<_N> buff;
+	::llcpp::exceptions::addExceptions<N>(buff);
+	return buff.size();
+}
+
+static_assert(::llcpp::exceptions::getExceptions<5, 10>() == 5, "Exception error");*/
 
 #if __LL_EXCEPTIONS == 1
 

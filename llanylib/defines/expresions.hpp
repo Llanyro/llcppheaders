@@ -163,6 +163,10 @@ __LL_VAR_INLINE__ constexpr bool LL_DLL = __LL_DLL_BUILD;
 	#undef LL_STATIC_KATS
 #endif // LL_STATIC_KATS
 
+#if defined(LL_INCLUDE_KATS)
+	#undef LL_INCLUDE_KATS
+#endif // LL_INCLUDE_KATS
+
 #if defined(LL_USE_WIDE_CHAR)
 	#undef LL_USE_WIDE_CHAR
 #endif // LL_USE_WIDE_CHAR
@@ -183,6 +187,7 @@ __LL_VAR_INLINE__ constexpr unsigned char LL_DEBUG_INFO				= __LL_DEBUG_INFO__;
 __LL_VAR_INLINE__ constexpr unsigned char LL_DEBUG_COMMNET			= __LL_DEBUG_COMMNET__;
 __LL_VAR_INLINE__ constexpr bool LL_EXCEPTIONS						= __LL_EXCEPTIONS;
 __LL_VAR_INLINE__ constexpr bool LL_STATIC_KATS						= __LL_STATIC_KATS;
+__LL_VAR_INLINE__ constexpr bool LL_INCLUDE_KATS					= __LL_INCLUDE_KATS;
 __LL_VAR_INLINE__ constexpr bool LL_USE_WIDE_CHAR					= __LL_USE_WIDE_CHAR;
 __LL_VAR_INLINE__ constexpr bool LL_IGNORE_WARNING_STATIC_ASSERTS	= __LL_IGNORE_WARNING_STATIC_ASSERTS__;
 

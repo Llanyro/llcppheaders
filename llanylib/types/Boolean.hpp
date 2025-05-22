@@ -181,125 +181,132 @@ __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_UNKNOWN	= _MyType::enum_bool::Unknow
 #if __LL_INCLUDE_KATS == 1
 namespace kat {
 
-#define __LL_KAT_GENERIC(VALUE, STR)				\
-	do {											\
-		if (!(VALUE)) {								\
-			if constexpr (::llcpp::LL_STATIC_KATS)	\
-				static_assert(VALUE, STR);			\
-			return STR;								\
-		}											\
-	} while(0)
+#pragma region Standard
+__LL_KAT_FUNCTION(
+	falseFalseKat,
+	::llcpp::boolean::BOOLEAN_FALSE == ::llcpp::LL_FALSE,
+	"False needs to be equal to false"
+);
+__LL_KAT_FUNCTION(
+	trueTrueKat,
+	::llcpp::boolean::BOOLEAN_TRUE == ::llcpp::LL_TRUE,
+	"True needs to be equal to true"
+);
 
+#pragma endregion
+#pragma region False
+__LL_KAT_FUNCTION(
+	falseTrueKat,
+	::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_TRUE,
+	"False cannot be equal to true"
+);
+__LL_KAT_FUNCTION(
+	falseInvalidKat,
+	::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_INVALID,
+	"False cannot be equal to invalid"
+);
+__LL_KAT_FUNCTION(
+	falseUnknonwKat,
+	::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_UNKNOWN,
+	"False cannot be equal to unknonw"
+);
 
-__LL_NODISCARD__ constexpr ::llcpp::string standardKat() noexcept {
-	#define __LL_KAT_FALSE_EQ_FALSE		__LL_STRING_PREFIX "False needs to be equal to false"
-	#define __LL_KAT_TRUE_EQ_TRUE		__LL_STRING_PREFIX "True needs to be equal to true"
+#pragma endregion
+#pragma region True
+__LL_KAT_FUNCTION(
+	trueFalseKat,
+	::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_FALSE,
+	"True cannot be equal to false"
+);
+__LL_KAT_FUNCTION(
+	trueInvalidKat,
+	::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_INVALID,
+	"True cannot be equal to invalid"
+);
+__LL_KAT_FUNCTION(
+	trueUnknonwKat,
+	::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_UNKNOWN,
+	"True cannot be equal to unknonw"
+);
 
-	constexpr ll_bool_t FALSE_EQ_FALSE	= ::llcpp::boolean::BOOLEAN_FALSE == ::llcpp::LL_FALSE;
-	constexpr ll_bool_t TRUE_EQ_TRUE	= ::llcpp::boolean::BOOLEAN_TRUE == ::llcpp::LL_TRUE;
+#pragma endregion
+#pragma region Invalid
+__LL_KAT_FUNCTION(
+	invalidFalseKat,
+	::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_FALSE,
+	"Invalid cannot be equal to false"
+);
+__LL_KAT_FUNCTION(
+	invalidTrueKat,
+	::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_TRUE,
+	"Invalid cannot be equal to true"
+);
+__LL_KAT_FUNCTION(
+	invalidUnknonwKat,
+	::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_UNKNOWN,
+	"Invalid cannot be equal to unknonw"
+);
 
-	__LL_KAT_GENERIC(FALSE_EQ_FALSE,	__LL_KAT_FALSE_EQ_FALSE);
-	__LL_KAT_GENERIC(TRUE_EQ_TRUE,		__LL_KAT_TRUE_EQ_TRUE);
+#pragma endregion
+#pragma region Invalid
+__LL_KAT_FUNCTION(
+	unknownFalseKat,
+	::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_FALSE,
+	"Unknown cannot be equal to false"
+);
+__LL_KAT_FUNCTION(
+	unknownTrueKat,
+	::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_TRUE,
+	"Unknown cannot be equal to true"
+);
+__LL_KAT_FUNCTION(
+	unknownInvalidKat,
+	::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_INVALID,
+	"Unknown cannot be equal to invalid"
+);
 
-	#undef __LL_KAT_FALSE_EQ_FALSE
-	#undef __LL_KAT_TRUE_EQ_TRUE
+#pragma endregion
 
-	return nullptr;
-}
-__LL_NODISCARD__ constexpr ::llcpp::string falseKat() noexcept {
-	#define __LL_KAT_FALSE_NEQ_TRUE			__LL_STRING_PREFIX "False cannot be equal to true"
-	#define __LL_KAT_FALSE_NEQ_INVALID		__LL_STRING_PREFIX "False cannot be equal to invalid"
-	#define __LL_KAT_FALSE_NEQ_UNKNOWN		__LL_STRING_PREFIX "False cannot be equal to unknonw"
-
-	constexpr ll_bool_t FALSE_NEQ_TRUE		= ::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_TRUE;
-	constexpr ll_bool_t FALSE_NEQ_INVALID	= ::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_INVALID;
-	constexpr ll_bool_t FALSE_NEQ_UNKNOWN	= ::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_UNKNOWN;
-
-	__LL_KAT_GENERIC(FALSE_NEQ_TRUE,		__LL_KAT_FALSE_NEQ_TRUE);
-	__LL_KAT_GENERIC(FALSE_NEQ_INVALID,		__LL_KAT_FALSE_NEQ_INVALID);
-	__LL_KAT_GENERIC(FALSE_NEQ_UNKNOWN,		__LL_KAT_FALSE_NEQ_UNKNOWN);
-
-	#undef __LL_KAT_FALSE_NEQ_TRUE
-	#undef __LL_KAT_FALSE_NEQ_INVALID
-	#undef __LL_KAT_FALSE_NEQ_UNKNOWN
-
-	return nullptr;
-}
-__LL_NODISCARD__ constexpr ::llcpp::string trueKat() noexcept {
-	#define __LL_KAT_TRUE_NEQ_FALSE			__LL_STRING_PREFIX "True cannot be equal to false"
-	#define __LL_KAT_TRUE_NEQ_INVALID		__LL_STRING_PREFIX "True cannot be equal to invalid"
-	#define __LL_KAT_TRUE_NEQ_UNKNOWN				__LL_STRING_PREFIX "True cannot be equal to unknonw"
-
-	constexpr ll_bool_t TRUE_NEQ_FALSE		= ::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_FALSE;
-	constexpr ll_bool_t TRUE_NEQ_INVALID	= ::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_INVALID;
-	constexpr ll_bool_t TRUE_NEQ_UNKNOWN	= ::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_UNKNOWN;
-
-	__LL_KAT_GENERIC(TRUE_NEQ_FALSE,		__LL_KAT_TRUE_NEQ_FALSE);
-	__LL_KAT_GENERIC(TRUE_NEQ_INVALID,		__LL_KAT_TRUE_NEQ_INVALID);
-	__LL_KAT_GENERIC(TRUE_NEQ_UNKNOWN,		__LL_KAT_TRUE_NEQ_UNKNOWN);
-
-	#undef __LL_KAT_TRUE_NEQ_FALSE
-	#undef __LL_KAT_TRUE_NEQ_INVALID
-	#undef __LL_KAT_TRUE_NEQ_UNKNOWN
-
-	return nullptr;
-}
-__LL_NODISCARD__ constexpr ::llcpp::string invalidKat() noexcept {
-	#define __LL_KAT_INVALID_NEQ_FALSE		__LL_STRING_PREFIX "Invalid cannot be equal to false"
-	#define __LL_KAT_INVALID_NEQ_TRUE		__LL_STRING_PREFIX "Invalid cannot be equal to true"
-	#define __LL_KAT_INVALID_NEQ_UNKNOWN	__LL_STRING_PREFIX "Invalid cannot be equal to unknonw"
-
-	constexpr ll_bool_t INVALID_NEQ_FALSE	= ::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_FALSE;
-	constexpr ll_bool_t INVALID_NEQ_TRUE	= ::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_TRUE;
-	constexpr ll_bool_t INVALID_NEQ_UNKNOWN	= ::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_UNKNOWN;
-
-	__LL_KAT_GENERIC(INVALID_NEQ_FALSE,		__LL_KAT_INVALID_NEQ_FALSE);
-	__LL_KAT_GENERIC(INVALID_NEQ_TRUE,		__LL_KAT_INVALID_NEQ_TRUE);
-	__LL_KAT_GENERIC(INVALID_NEQ_UNKNOWN,	__LL_KAT_INVALID_NEQ_UNKNOWN);
-
-	#undef __LL_KAT_INVALID_NEQ_FALSE
-	#undef __LL_KAT_INVALID_NEQ_TRUE
-	#undef __LL_KAT_INVALID_NEQ_UNKNOWN
-
-	return nullptr;
-}
-__LL_NODISCARD__ constexpr ::llcpp::string unknownKat() noexcept {
-	#define __LL_KAT_UNKNOWN_NEQ_FALSE		__LL_STRING_PREFIX "Unknown cannot be equal to false"
-	#define __LL_KAT_UNKNOWN_NEQ_TRUE		__LL_STRING_PREFIX "Unknown cannot be equal to true"
-	#define __LL_KAT_UNKNOWN_NEQ_UNKNOWN	__LL_STRING_PREFIX "Unknown cannot be equal to invalid"
-
-	constexpr ll_bool_t UNKNOWN_NEQ_FALSE	= ::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_FALSE;
-	constexpr ll_bool_t UNKNOWN_NEQ_TRUE	= ::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_TRUE;
-	constexpr ll_bool_t UNKNOWN_NEQ_INVALID	= ::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_INVALID;
-
-	__LL_KAT_GENERIC(UNKNOWN_NEQ_FALSE,		__LL_KAT_UNKNOWN_NEQ_FALSE);
-	__LL_KAT_GENERIC(UNKNOWN_NEQ_TRUE,		__LL_KAT_UNKNOWN_NEQ_TRUE);
-	__LL_KAT_GENERIC(UNKNOWN_NEQ_INVALID,	__LL_KAT_UNKNOWN_NEQ_UNKNOWN);
-
-	#undef __LL_KAT_UNKNOWN_NEQ_FALSE
-	#undef __LL_KAT_UNKNOWN_NEQ_TRUE
-	#undef __LL_KAT_UNKNOWN_NEQ_UNKNOWN
-
-	return nullptr;
-}
 __LL_NODISCARD__ constexpr ::llcpp::string booleanKats() noexcept {
-	::llcpp::string result = ::llcpp::boolean::kat::standardKat();
+	::llcpp::string result = ::llcpp::boolean::kat::falseFalseKat();
 	if(result) return result;
-	result = ::llcpp::boolean::kat::falseKat();
+	result = ::llcpp::boolean::kat::trueTrueKat();
 	if(result) return result;
-	result = ::llcpp::boolean::kat::trueKat();
+
+	result = ::llcpp::boolean::kat::falseTrueKat();
 	if(result) return result;
-	result = ::llcpp::boolean::kat::invalidKat();
+	result = ::llcpp::boolean::kat::falseInvalidKat();
 	if(result) return result;
-	result = ::llcpp::boolean::kat::unknownKat();
+	result = ::llcpp::boolean::kat::falseUnknonwKat();
+	if(result) return result;
+
+	result = ::llcpp::boolean::kat::trueFalseKat();
+	if(result) return result;
+	result = ::llcpp::boolean::kat::trueInvalidKat();
+	if(result) return result;
+	result = ::llcpp::boolean::kat::trueUnknonwKat();
+	if(result) return result;
+
+	result = ::llcpp::boolean::kat::invalidFalseKat();
+	if(result) return result;
+	result = ::llcpp::boolean::kat::invalidTrueKat();
+	if(result) return result;
+	result = ::llcpp::boolean::kat::invalidUnknonwKat();
+	if(result) return result;
+
+	result = ::llcpp::boolean::kat::unknownFalseKat();
+	if(result) return result;
+	result = ::llcpp::boolean::kat::unknownTrueKat();
+	if(result) return result;
+	result = ::llcpp::boolean::kat::unknownInvalidKat();
 	if(result) return result;
 
 	return nullptr;
 }
 
-static_assert(::llcpp::boolean::kat::booleanKats() == nullptr, "Boolean KAT not OK");
-
-#undef __LL_KAT_GENERIC
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::boolean::kat::booleanKats() == nullptr, "Boolean KAT not OK");
+#endif // __LL_STATIC_KATS
 
 } // namespace kat
 #endif // __LL_INCLUDE_KATS

@@ -143,7 +143,6 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_integral_constant_container_v =
 
 #pragma endregion
 #pragma region HashChecker
-
 template <class T, class = void>
 class HasHashType : public ::std::false_type {};
 template<class T>
@@ -174,7 +173,6 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_pair_v =
 
 #pragma endregion
 #pragma region LlanycppCheckers
-
 template <class T, class U, class = void>
 class HasContainerType : public ::std::false_type {};
 template<class T, class U>
@@ -716,9 +714,145 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_max_value_v		= (VALUE == ::llcpp::MAX_V
 template<class T, T VALUE>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_min_value_v		= (VALUE == ::llcpp::MIN_VALUE<T>);
 
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+template<class T, class U>
+struct KATstruct {
+	using value_type					= T;
+	using Hash							= T;
+	template<class U>
+	using contain_value_type			= KATstruct<U>;
+	template<class U>
+	using contain_value_type_u			= KATstruct<U>;
+
+	static constexpr value_type value	= value_type();
+	static constexpr value_type first	= value_type();
+	static constexpr value_type second	= value_type();
+};
+using KATExample		= ::llcpp::meta::traits::kat::KATstruct<i32, f32>;
+using SingleTypeKat		= TypeContainer<i16>;
+using DoubleTypeKat		= DoubleTypeContainer<i8, f64>;
+
+#pragma region HasTypesConstants
+__LL_KAT_FUNCTION(
+	hasValueKat,
+	::llcpp::meta::traits::has_value_type_v<KATExample>,
+	"KATExample has value type!"
+);
+__LL_KAT_FUNCTION(
+	hasValueConstantKat,
+	::llcpp::meta::traits::has_value_constant_v<KATExample>,
+	"KATExample has value constant!"
+);
+__LL_KAT_FUNCTION(
+	hasHashTypeKat,
+	::llcpp::meta::traits::has_hash_type_v<KATExample>,
+	"KATExample has hash type!"
+);
+
+#pragma endregion
+#pragma region Pair
+__LL_KAT_FUNCTION(
+	hasPairFirstKat,
+	::llcpp::meta::traits::has_pair_first_v<KATExample>,
+	"KATExample has 'first' attribute/constant!"
+);
+__LL_KAT_FUNCTION(
+	hasPairSecondKat,
+	::llcpp::meta::traits::has_pair_second_v<KATExample>,
+	"KATExample has 'second' attribute/constant!"
+);
+__LL_KAT_FUNCTION(
+	isPairKat,
+	::llcpp::meta::traits::is_pair_v<KATExample>,
+	"KATExample has pair attributes/constants!"
+);
+
+#pragma endregion
+#pragma region Container
+constexpr ll_bool_t HAS_CONTAINER_TYPE_KAT = ::llcpp::meta::traits::has_contain_value_type_v<KATExample, i32>;
+__LL_KAT_FUNCTION(
+	hasContainerTypeKat,
+	::llcpp::meta::traits::kat::HAS_CONTAINER_TYPE_KAT,
+	"KATExample has container type!"
+);
+
+constexpr ll_bool_t HAS_CONTAINER_TYPE_U_KAT = ::llcpp::meta::traits::has_contain_value_type_u_v<KATExample, f32>;
+__LL_KAT_FUNCTION(
+	hasContainerTypeUKat,
+	::llcpp::meta::traits::kat::HAS_CONTAINER_TYPE_U_KAT,
+	"KATExample has container U type!"
+);
+
+#pragma endregion
+#pragma region TypeContainer
+constexpr ll_bool_t IS_WORKING_TYPE_CONTAINER =
+	::std::is_same_v<SingleTypeKat::value_type, i16>
+	&& ::std::is_same_v<SingleTypeKat::value_type, SingleTypeKat::T>;
+__LL_KAT_FUNCTION(
+	isWorkingTypeContainerKat,
+	::llcpp::meta::traits::kat::IS_WORKING_TYPE_CONTAINER,
+	"Type container is not working properly!"
+);
+
+constexpr ll_bool_t IS_WORKING_DOUBLE_TYPE_CONTAINER =
+	::std::is_same_v<DoubleTypeKat::value_type, i8>
+	&& ::std::is_same_v<DoubleTypeKat::value_type, DoubleTypeKat::T>
+	&& ::std::is_same_v<DoubleTypeKat::U, f64>;
+__LL_KAT_FUNCTION(
+	isWorkingDoubleTypeContainerKat,
+	::llcpp::meta::traits::kat::IS_WORKING_DOUBLE_TYPE_CONTAINER,
+	"Double type container is not working properly!"
+);
+
+#pragma endregion
+
+__LL_NODISCARD__ constexpr ::llcpp::string booleanKats() noexcept {
+	#pragma region HasTypesConstants
+	::llcpp::string result = ::llcpp::meta::traits::kat::hasValueKat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::hasValueConstantKat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::hasHashTypeKat();
+	if(result) return result;
+
+	#pragma endregion
+	#pragma region Pair
+	result = ::llcpp::meta::traits::kat::hasPairFirstKat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::hasPairSecondKat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::isPairKat();
+	if(result) return result;
+
+	#pragma endregion
+	#pragma region Container
+	result = ::llcpp::meta::traits::kat::hasContainerTypeKat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::hasContainerTypeUKat();
+	if(result) return result;
+
+	#pragma endregion
+	#pragma region TypeContainer
+	result = ::llcpp::meta::traits::kat::isWorkingTypeContainerKat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::isWorkingDoubleTypeContainerKat();
+	if(result) return result;
+
+	#pragma endregion
+
+
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::boolean::kat::booleanKats() == nullptr, "Boolean KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // LLANYLIB_BOOLEAN_HPP_
 } // namespace traits
 } // namespace meta
-
 } // namespace llcpp
 
 #endif // LLANYLIB_TYPETRAITS_HPP_

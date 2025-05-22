@@ -44,26 +44,6 @@
 	#define __LL_EXCEPTIONS 1
 #endif // __LL_EXCEPTIONS
 
-#if !defined(__LL_STATIC_KATS)
-	#define __LL_STATIC_KATS 1
-#elif __LL_STATIC_KATS < 0
-	#undef __LL_STATIC_KATS
-	#define __LL_STATIC_KATS 0
-#elif __LL_STATIC_KATS > 1
-	#undef __LL_STATIC_KATS
-	#define __LL_STATIC_KATS 1
-#endif // __LL_STATIC_KATS
-
-#if !defined(__LL_INCLUDE_KATS)
-	#define __LL_INCLUDE_KATS 1
-#elif __LL_INCLUDE_KATS < 0
-	#undef __LL_INCLUDE_KATS
-	#define __LL_INCLUDE_KATS 0
-#elif __LL_INCLUDE_KATS > 1
-	#undef __LL_INCLUDE_KATS
-	#define __LL_INCLUDE_KATS 1
-#endif // __LL_INCLUDE_KATS
-
 #if !defined(__LL_CLEAR_POINTERS_ON_DESTRUCTION)
 	#define __LL_CLEAR_POINTERS_ON_DESTRUCTION 0
 #elif __LL_CLEAR_POINTERS_ON_DESTRUCTION < 0
@@ -122,6 +102,44 @@
 	#define __LL_USE_WIDE_CHAR 3
 	#define __LL_STRING_PREFIX __LL_U
 #endif // __LL_USE_WIDE_CHAR
+
+#if !defined(__LL_STATIC_KATS)
+	#define __LL_STATIC_KATS 1
+#elif __LL_STATIC_KATS < 0
+	#undef __LL_STATIC_KATS
+	#define __LL_STATIC_KATS 0
+#elif __LL_STATIC_KATS > 1
+	#undef __LL_STATIC_KATS
+	#define __LL_STATIC_KATS 1
+#endif // __LL_STATIC_KATS
+
+#if !defined(__LL_INCLUDE_KATS)
+	#define __LL_INCLUDE_KATS 1
+#elif __LL_INCLUDE_KATS < 0
+	#undef __LL_INCLUDE_KATS
+	#define __LL_INCLUDE_KATS 0
+#elif __LL_INCLUDE_KATS > 1
+	#undef __LL_INCLUDE_KATS
+	#define __LL_INCLUDE_KATS 1
+#endif // __LL_INCLUDE_KATS
+
+#if __LL_INCLUDE_KATS == 1
+#define __LL_KAT_GENERIC(VALUE, STR)							\
+	do {														\
+		if (!(VALUE)) {											\
+			if constexpr (::llcpp::LL_STATIC_KATS)				\
+				static_assert(VALUE, STR);						\
+			return __LL_STRING_PREFIX STR;						\
+		}														\
+	} while(0)
+
+#define __LL_KAT_FUNCTION(NAME, CONDITION, ERROR_STRING)			\
+	__LL_NODISCARD__ constexpr ::llcpp::string NAME() noexcept {	\
+		__LL_KAT_GENERIC(CONDITION, ERROR_STRING);					\
+		return nullptr;												\
+	}
+
+#endif // __LL_INCLUDE_KATS
 
 // Sets more env definitions by OS
 #define __LL_FALLTHROUGH__	[[fallthrough]]

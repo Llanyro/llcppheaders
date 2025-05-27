@@ -233,11 +233,13 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 			ll_bool_t INCLUDE_SIGNESS = ::llcpp::LL_FALSE
 		>
 		static constexpr u8 GET_RECOMMENDED_ARRAY_SIZE = ::std::disjunction<
-			::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u8, 	u8, 3u>,
-			::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u16, u8, 5u>,
-			::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u32, u8, 10>,
-			::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::meta::traits::type_unsignalize_u<T>, u64, u8, 20>,
-			::llcpp::meta::traits::TrueContainerEmptyClass
+			::llcpp::meta::traits::IsSameDoubleTypeContainer<T, u8,  u8, 3u>,
+			::llcpp::meta::traits::IsSameDoubleTypeContainer<T, u16, u8, 5u>,
+			::llcpp::meta::traits::IsSameDoubleTypeContainer<T, u32, u8, 10>,
+			::llcpp::meta::traits::IsSameDoubleTypeContainer<T, u64, u8, 20>,
+			///::llcpp::meta::traits::IsSameDoubleTypeContainer<::llcpp::LL_TRUE, u64, u8, 20>,
+			// Generate an error on invalid type (?)
+			::llcpp::meta::traits::TrueConstantContainerEmptyClass<::llcpp::Emptyclass, ::llcpp::Emptyclass{}>
 		>::SECOND + (INCLUDE_SIGNESS || ::std::is_signed_v<T>); // Add space for signess
 	
 	#pragma endregion
@@ -258,6 +260,7 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 				using U				= CharType;
 				using type			= T;	// standard
 				using value_type	= T;	// standard
+				using T_unsigned	= ::llcpp::meta::traits::type_unsignalize_u<T, ::llcpp::Emptyclass>;
 
 			#pragma endregion
 			#pragma region Expressions
@@ -265,9 +268,15 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 				static constexpr ll_bool_t INCLUDE_SIGNESS = _INCLUDE_SIGNESS;
 			
 			#pragma endregion
+			#pragma region Asserts
+			public:
+				static_assert(!::std::is_same_v<T_unsigned, ::llcpp::Emptyclass>,
+					"Could not unsignalize U type provided");
+			
+			#pragma endregion
 			#pragma region Attributes
 			protected:
-				CharType parsed[IntegerToString::GET_RECOMMENDED_ARRAY_SIZE<T, INCLUDE_SIGNESS>];
+				CharType parsed[IntegerToString::GET_RECOMMENDED_ARRAY_SIZE<T_unsigned, INCLUDE_SIGNESS>];
 
 			#pragma endregion
 			#pragma region Functions
@@ -459,7 +468,9 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 		template<class T, ll_bool_t INCLUDE_SIGNESS = ::llcpp::LL_FALSE>
 		__LL_NODISCARD__ constexpr CharType* u8_to_text(const T number, CharType* buffer) const noexcept {
 			// Promote type to unsigned
-			using U = ::llcpp::meta::traits::type_unsignalize_u<T>;
+			using U = ::llcpp::meta::traits::type_unsignalize_u<T, ::llcpp::Emptyclass>;
+			static_assert(!::std::is_same_v<U, ::llcpp::Emptyclass>,
+				"Could not unsignalize U type provided");
 
 			// Transform value to unsigned and add a '-' into buffer if needed
 			const U value = _MyType::pre_process<T, U, INCLUDE_SIGNESS>(number, buffer);
@@ -490,7 +501,9 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 		template<class T, ll_bool_t INCLUDE_SIGNESS = ::llcpp::LL_FALSE>
 		__LL_NODISCARD__ constexpr CharType* u16_to_text(const T number, CharType* buffer) const noexcept {
 			// Promote type to unsigned
-			using U = ::llcpp::meta::traits::type_unsignalize_u<T>;
+			using U = ::llcpp::meta::traits::type_unsignalize_u<T, ::llcpp::Emptyclass>;
+			static_assert(!::std::is_same_v<U, ::llcpp::Emptyclass>,
+				"Could not unsignalize U type provided");
 
 			// Transform value to unsigned and add a '-' into buffer if needed
 			const U value = _MyType::pre_process<T, U, INCLUDE_SIGNESS>(number, buffer);
@@ -536,7 +549,9 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 			requires ::llcpp::meta::traits::is_primitive_v<T>
 		__LL_NODISCARD__ constexpr CharType* integral_to_text(::llcpp::meta::traits::cinput<T> number, CharType* buffer) const noexcept {
 			// Promote type to unsigned
-			using U = ::llcpp::meta::traits::type_unsignalize_u<T>;
+			using U = ::llcpp::meta::traits::type_unsignalize_u<T, ::llcpp::Emptyclass>;
+			static_assert(!::std::is_same_v<U, ::llcpp::Emptyclass>,
+				"Could not unsignalize U type provided");
 
 			// Transform value to unsigned and add a '-' into buffer if needed
 			const U value = _MyType::pre_process<T, U, INCLUDE_SIGNESS>(number, buffer);

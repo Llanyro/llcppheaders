@@ -1,3 +1,5 @@
+#include "llanylib/types/Boolean.hpp"
+
 #include "llanylib/utils_base/GenericFunctions.hpp"
 #include "llanylib/utils/ArrayBase.hpp"
 

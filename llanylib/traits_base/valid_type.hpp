@@ -56,7 +56,8 @@ template<
 	class OnArray,
 	class OnPointer,
 	class OnUnknown,
-	class OnError
+	class OnError,
+	class OnNotFound = ::llcpp::Emptyclass
 >
 using type_by_valid_type_t = typename ::std::disjunction<
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Valid,		OnValidAttr>,
@@ -67,7 +68,7 @@ using type_by_valid_type_t = typename ::std::disjunction<
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Pointer,	OnPointer>,
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Unknown,	OnUnknown>,
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::misc::ValidType::Error,		OnError>,
-	::llcpp::meta::traits::TrueContainerEmptyClass
+	::llcpp::meta::traits::TrueContainerEmptyClass<OnNotFound>
 >::U;
 
 } // namespace traits

@@ -307,8 +307,8 @@ class DoubleConstantContainer {
 		static constexpr T FIRST	= _FIRST;
 		static constexpr U SECOND	= _SECOND;
 
-		static constexpr value_type VALUE = _VALUE;
-		static constexpr value_type value = _VALUE;	// standard
+		static constexpr value_type VALUE = FIRST;
+		static constexpr value_type value = FIRST;	// standard
 };
 
 template<class T, class U, T FIRST, U SECOND>
@@ -609,6 +609,10 @@ class RangeChecker {
 				return TT::MAX_VALUE >> 1;
 			}
 		}
+		static constexpr auto minProt(T max) noexcept {
+			T min = -max - 1;
+			return min;
+		}
 
 	public:
 		// Expresions
@@ -620,7 +624,7 @@ class RangeChecker {
 				_MyType::protector<T_unsigned>()
 			>;
 
-		static constexpr T MIN_VALUE = _MyType::MAX_VALUE + 1;
+		static constexpr T MIN_VALUE = _MyType::minProt(_MyType::MAX_VALUE);
 
 	public:
 		// Asserts
@@ -744,7 +748,7 @@ __LL_VAR_INLINE__ constexpr T	ZERO_VALUE		= T{};
 template<class T>
 __LL_VAR_INLINE__ constexpr T*	ZERO_VALUE<T*>	= LL_NULLPTR;
 template<class T>
-__LL_VAR_INLINE__ constexpr T*	NULL_VALUE		= nullptr;
+__LL_VAR_INLINE__ constexpr T*	NULL_VALUE		= LL_NULLPTR;
 
 #pragma endregion
 
@@ -762,24 +766,56 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_min_value_v		= (VALUE == ::llcpp::MIN_V
 
 #if __LL_INCLUDE_KATS == 1
 namespace kat {
-template<class T, class U>
+template<class _T, class _U>
 struct KATstruct {
+	using T								= _T;
 	using value_type					= T;
+	using type							= T;
 	using Hash							= T;
+	using U								= _U;
 	template<class U>
-	using contain_value_type			= KATstruct<U>;
+	using contain_value_type			= KATstruct<U, _U>;
 	template<class U>
-	using contain_value_type_u			= KATstruct<U>;
+	using contain_value_type_u			= KATstruct<U, _U>;
 
 	static constexpr value_type value	= value_type();
 	static constexpr value_type first	= value_type();
-	static constexpr value_type second	= value_type();
+	static constexpr U second			= U();
 };
+template<class _T, class _U, _T T_VALUE, _U U_VALUE>
+struct KATIntegralstruct {
+	using T								= _T;
+	using value_type					= T;
+	using type							= T;
+	using Hash							= T;
+	using U								= _U;
+
+	static constexpr value_type VALUE	= T_VALUE;
+	static constexpr value_type value	= T_VALUE;
+	static constexpr value_type first	= T_VALUE;
+	static constexpr U second			= U_VALUE;
+
+	template<class __T, class __U, __T _T_VALUE, __U _U_VALUE>
+	__LL_NODISCARD__ constexpr ll_bool_t operator==(const KATIntegralstruct<__T, __U, _T_VALUE, _U_VALUE>& otheer) const noexcept {
+		return
+			   ::std::is_same_v<_T, __T>
+			&& ::std::is_same_v<_U, __U>
+			&& T_VALUE == _T_VALUE
+			&& U_VALUE == _U_VALUE;
+	}
+};
+using KATIntegralstructDef1		= KATIntegralstruct<u8, f32, 'H', 9.99f>;
+__LL_VAR_INLINE__ constexpr KATIntegralstructDef1 kat_integral_struct_def_1 = {};
+using KATIntegralstructDef2		= KATIntegralstruct<f32, i64, 9.99f, -1>;
+__LL_VAR_INLINE__ constexpr KATIntegralstructDef2 kat_integral_struct_def_2 = {};
+
 using KATExample				= ::llcpp::meta::traits::kat::KATstruct<i32, f32>;
 using SingleTypeKat				= ::llcpp::meta::traits::TypeContainer<i16>;
 using DoubleTypeKat				= ::llcpp::meta::traits::DoubleTypeContainer<i8, f64>;
 using IntegralKat				= ::llcpp::meta::traits::IntegralConstantContainer<i8, 'H', f32>;
+using IntegralObjectKat			= ::llcpp::meta::traits::IntegralConstantContainer<KATIntegralstructDef1, kat_integral_struct_def_1, f32>;
 using DoubleIntegralKat			= ::llcpp::meta::traits::DoubleConstantContainer<i8, f32, '8', 0.0f>;
+using DoubleIntegralObjectKat	= ::llcpp::meta::traits::DoubleConstantContainer<KATIntegralstructDef1, KATIntegralstructDef2, kat_integral_struct_def_1, kat_integral_struct_def_2>;
 using CompareConditionalBigger	= ::llcpp::meta::traits::CompareConditional<u32, i8>;
 using CompareConditionalSmaller	= ::llcpp::meta::traits::CompareConditional<f32, i64>;
 using CompareConditionalEqual	= ::llcpp::meta::traits::CompareConditional<f64, i64>;
@@ -850,6 +886,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_TYPE_CONTAINER =
 	&& ::std::is_same_v<SingleTypeKat::value_type, SingleTypeKat::T>
 	&& ::std::is_same_v<SingleTypeKat::value_type, SingleTypeKat::type>
 	&& ::std::is_same_v<SingleTypeKat::value_type, i16>;
+
 __LL_KAT_FUNCTION(
 	is_working_type_container_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_TYPE_CONTAINER,
@@ -865,6 +902,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DOUBLE_TYPE_CONTAINER =
 	&& ::std::is_same_v<DoubleTypeKat::value_type, DoubleTypeKat::type>
 	&& ::std::is_same_v<DoubleTypeKat::value_type, i8>
 	&& ::std::is_same_v<DoubleTypeKat::U, f64>;
+
 __LL_KAT_FUNCTION(
 	is_working_double_type_container_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_DOUBLE_TYPE_CONTAINER,
@@ -884,6 +922,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_INTEGRAL_TYPE_CONTAINER =
 	&& ::std::is_same_v<IntegralKat::U, f32>
 	&& IntegralKat::value == 'H'
 	&& IntegralKat::value == IntegralKat::VALUE;
+	
 __LL_KAT_FUNCTION(
 	is_working_integral_type_container_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_INTEGRAL_TYPE_CONTAINER,
@@ -908,6 +947,46 @@ __LL_KAT_FUNCTION(
 	is_working_double_integral_type_container_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_DOUBLE_INTEGRAL_TYPE_CONTAINER,
 	"Double integral type container is not working properly!"
+);
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_INTEGRAL_TYPE_CONTAINER_OBJECT =
+	::llcpp::meta::traits::has_value_type_v<IntegralObjectKat>
+	&& ::llcpp::meta::traits::has_value_constant_v<IntegralObjectKat, ::llcpp::LL_FALSE>	// value
+	&& ::llcpp::meta::traits::has_value_constant_v<IntegralObjectKat, ::llcpp::LL_TRUE>	// VALUE
+	&& ::llcpp::meta::traits::has_mytype_v<IntegralObjectKat>
+	&& ::llcpp::meta::traits::has_value_type_u_v<IntegralObjectKat>
+//	&& ::llcpp::meta::traits::has_contain_value_type_v<IntegralObjectKat, i32>
+	&& ::std::is_same_v<IntegralObjectKat::value_type, IntegralObjectKat::T>
+	&& ::std::is_same_v<IntegralObjectKat::value_type, IntegralObjectKat::type>
+	&& ::std::is_same_v<IntegralObjectKat::value_type, KATIntegralstructDef1>
+	&& ::std::is_same_v<IntegralObjectKat::U, f32>
+	&& IntegralObjectKat::value == kat_integral_struct_def_1
+	&& IntegralObjectKat::value == IntegralObjectKat::VALUE;
+
+__LL_KAT_FUNCTION(
+	is_working_integral_type_container_object_kat,
+	::llcpp::meta::traits::kat::IS_WORKING_INTEGRAL_TYPE_CONTAINER_OBJECT,
+	"Integral type container object is not working properly!"
+);
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DOUBLE_INTEGRAL_TYPE_CONTAINER_OBJECT =
+	::llcpp::meta::traits::has_value_type_v<DoubleIntegralObjectKat>
+	&& ::llcpp::meta::traits::has_value_constant_v<DoubleIntegralObjectKat, ::llcpp::LL_FALSE>	// value
+	&& ::llcpp::meta::traits::has_value_constant_v<DoubleIntegralObjectKat, ::llcpp::LL_TRUE>	// VALUE
+	&& ::llcpp::meta::traits::has_mytype_v<DoubleIntegralObjectKat>
+	&& ::llcpp::meta::traits::has_value_type_u_v<DoubleIntegralObjectKat>
+//	&& ::llcpp::meta::traits::has_contain_value_type_v<DoubleIntegralObjectKat, i32>
+	&& ::std::is_same_v<DoubleIntegralObjectKat::value_type, DoubleIntegralObjectKat::T>
+	&& ::std::is_same_v<DoubleIntegralObjectKat::value_type, DoubleIntegralObjectKat::type>
+	&& ::std::is_same_v<DoubleIntegralObjectKat::value_type, KATIntegralstructDef1>
+	&& ::std::is_same_v<DoubleIntegralObjectKat::U, KATIntegralstructDef2>
+	&& DoubleIntegralObjectKat::FIRST		== kat_integral_struct_def_1
+	&& DoubleIntegralObjectKat::SECOND	== kat_integral_struct_def_2
+	&& IntegralKat::value == IntegralKat::VALUE;
+__LL_KAT_FUNCTION(
+	is_working_double_integral_type_container_object_kat,
+	::llcpp::meta::traits::kat::IS_WORKING_DOUBLE_INTEGRAL_TYPE_CONTAINER_OBJECT,
+	"Double integral type container object is not working properly!"
 );
 
 #pragma endregion
@@ -1119,6 +1198,56 @@ __LL_KAT_FUNCTION(
 );
 
 #pragma endregion
+#pragma region Range
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_MAX_VALUE =
+	   ::llcpp::MAX_VALUE<u8>	== 0xff
+	&& ::llcpp::MAX_VALUE<u16>	== 0xffff
+	&& ::llcpp::MAX_VALUE<u32>	== 0xffffffff
+	&& ::llcpp::MAX_VALUE<u64>	== 0xffffffffffffffff
+	&& ::llcpp::MAX_VALUE<i8>	== 0x7f
+	&& ::llcpp::MAX_VALUE<i16>	== 0x7fff
+	&& ::llcpp::MAX_VALUE<i32>	== 0x7fffffff
+	&& ::llcpp::MAX_VALUE<i64>	== 0x7fffffffffffffff;
+
+__LL_KAT_FUNCTION(
+	is_working_max_value_kat,
+	::llcpp::meta::traits::kat::IS_MAX_VALUE,
+	"Max value is not working properly!"
+);
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_MIN_VALUE =
+	   ::llcpp::MIN_VALUE<u8>	== 0x0
+	&& ::llcpp::MIN_VALUE<u16>	== 0x0
+	&& ::llcpp::MIN_VALUE<u32>	== 0x0
+	&& ::llcpp::MIN_VALUE<u64>	== 0x0
+	&& ::llcpp::MIN_VALUE<i8>	== -0x80
+	&& ::llcpp::MIN_VALUE<i16>	== -0x8000
+	&& ::llcpp::MIN_VALUE<i32>	== -0x80000000
+	&& ::llcpp::MIN_VALUE<i64>	== -0x8000000000000000;
+
+__LL_KAT_FUNCTION(
+	is_working_min_value_kat,
+	::llcpp::meta::traits::kat::IS_MIN_VALUE,
+	"Min value is not working properly!"
+);
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_ZERO_VALUE =
+	   ::llcpp::ZERO_VALUE<u8>	== 0x0
+	&& ::llcpp::ZERO_VALUE<u16>	== 0x0
+	&& ::llcpp::ZERO_VALUE<u32>	== 0x0
+	&& ::llcpp::ZERO_VALUE<u64>	== 0x0
+	&& ::llcpp::ZERO_VALUE<i8>	== 0x0
+	&& ::llcpp::ZERO_VALUE<i16>	== 0x0
+	&& ::llcpp::ZERO_VALUE<i32>	== 0x0
+	&& ::llcpp::ZERO_VALUE<i64>	== 0x0;
+
+__LL_KAT_FUNCTION(
+	is_working_zero_value_kat,
+	::llcpp::meta::traits::kat::IS_ZERO_VALUE,
+	"Zero value is not working properly!"
+);
+
+#pragma endregion
 
 __LL_NODISCARD__ constexpr ::llcpp::string type_traits_kats() noexcept {
 	#pragma region HasTypesConstants
@@ -1154,6 +1283,10 @@ __LL_NODISCARD__ constexpr ::llcpp::string type_traits_kats() noexcept {
 	result = ::llcpp::meta::traits::kat::is_working_integral_type_container_kat();
 	if(result) return result;
 	result = ::llcpp::meta::traits::kat::is_working_double_integral_type_container_kat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::is_working_integral_type_container_object_kat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::is_working_double_integral_type_container_object_kat();
 	if(result) return result;
 
 	#pragma endregion
@@ -1200,6 +1333,15 @@ __LL_NODISCARD__ constexpr ::llcpp::string type_traits_kats() noexcept {
 	result = ::llcpp::meta::traits::kat::is_working_signalize_kat();
 	if(result) return result;
 	result = ::llcpp::meta::traits::kat::is_working_unsignalize_kat();
+	if(result) return result;
+
+	#pragma endregion
+	#pragma region Range
+	result = ::llcpp::meta::traits::kat::is_working_max_value_kat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::is_working_min_value_kat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::is_working_zero_value_kat();
 	if(result) return result;
 
 	#pragma endregion

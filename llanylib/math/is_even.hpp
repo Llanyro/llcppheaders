@@ -61,10 +61,13 @@ __LL_NODISCARD__ constexpr ll_bool_t is_even(::llcpp::meta::traits::cinput<T> va
 	return !::llcpp::meta::math::is_odd<T>(value);
 }
 
+__LL_VAR_INLINE__ constexpr ::llcpp::meta::pair<int> V1 = { 9, 9 };
+__LL_VAR_INLINE__ constexpr ::llcpp::meta::pair<int> V2 = { 9, 2 };
+
 static_assert(is_even<int>(9)								== ::llcpp::LL_FALSE,	"This should be odd");
 static_assert(is_even<usize>(999999999ull)					== ::llcpp::LL_FALSE,	"This should be odd");
-static_assert(is_even<::llcpp::meta::pair<int>>({ 9, 9 })	== ::llcpp::LL_FALSE,	"This should be odd");
-static_assert(is_even<::llcpp::meta::pair<int>>({ 9, 2 })	== ::llcpp::LL_TRUE,	"This is not odd");
+static_assert(is_even<::llcpp::meta::pair<int>>(V1)			== ::llcpp::LL_FALSE,	"This should be odd");
+static_assert(is_even<::llcpp::meta::pair<int>>(V2)			== ::llcpp::LL_TRUE,	"This is not odd");
 
 } // namespace math
 } // namespace meta

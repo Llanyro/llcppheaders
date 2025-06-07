@@ -182,12 +182,12 @@ __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_UNKNOWN	= _MyType::enum_bool::Unknow
 namespace kat {
 
 #pragma region Standard
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	false_false_kat,
 	::llcpp::boolean::BOOLEAN_FALSE == ::llcpp::LL_FALSE,
 	"False needs to be equal to false"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	true_true_kat,
 	::llcpp::boolean::BOOLEAN_TRUE == ::llcpp::LL_TRUE,
 	"True needs to be equal to true"
@@ -195,17 +195,17 @@ __LL_KAT_FUNCTION(
 
 #pragma endregion
 #pragma region False
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	false_true_kat,
 	::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_TRUE,
 	"False cannot be equal to true"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	false_invalid_kat,
 	::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_INVALID,
 	"False cannot be equal to invalid"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	false_unknown_kat,
 	::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_UNKNOWN,
 	"False cannot be equal to unknonw"
@@ -213,17 +213,17 @@ __LL_KAT_FUNCTION(
 
 #pragma endregion
 #pragma region True
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	true_false_kat,
 	::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_FALSE,
 	"True cannot be equal to false"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	true_invalid_kat,
 	::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_INVALID,
 	"True cannot be equal to invalid"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	true_unknown_kat,
 	::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_UNKNOWN,
 	"True cannot be equal to unknonw"
@@ -231,17 +231,17 @@ __LL_KAT_FUNCTION(
 
 #pragma endregion
 #pragma region Invalid
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	invalid_false_kat,
 	::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_FALSE,
 	"Invalid cannot be equal to false"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	invalid_true_kat,
 	::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_TRUE,
 	"Invalid cannot be equal to true"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	invalid_unknown_kat,
 	::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_UNKNOWN,
 	"Invalid cannot be equal to unknonw"
@@ -249,17 +249,17 @@ __LL_KAT_FUNCTION(
 
 #pragma endregion
 #pragma region Invalid
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	unknown_false_kat,
 	::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_FALSE,
 	"Unknown cannot be equal to false"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	unknown_true_kat,
 	::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_TRUE,
 	"Unknown cannot be equal to true"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	unknown_invalid_kat,
 	::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_INVALID,
 	"Unknown cannot be equal to invalid"
@@ -305,7 +305,7 @@ __LL_NODISCARD__ constexpr ::llcpp::string boolean_kats() noexcept {
 }
 
 #if __LL_STATIC_KATS == 1
-	static_assert(::llcpp::boolean::kat::boolean_kats() == nullptr, "Boolean KAT not OK");
+	static_assert(::llcpp::boolean::kat::boolean_kats() == LL_NULLPTR, "Boolean KAT not OK");
 #endif // __LL_STATIC_KATS
 
 } // namespace kat

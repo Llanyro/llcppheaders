@@ -2,7 +2,9 @@
 
 #include "llanylib/utils_base/GenericFunctions.hpp"
 #include "llanylib/utils/ArrayBase.hpp"
+#include "llanylib/traits_base/type_modifier.hpp"
 
+#include <typeinfo>
 #include <cstdio>
 
 __LL_VAR_INLINE__ constexpr const ::llcpp::ll_char_t arr[] = "Hola mundo!";
@@ -56,6 +58,8 @@ int main() {
 	::llcpp::meta::utils::Invalidator().process<Invalidator<::llcpp::u64>>(data);
 
 	printArray(data_viewer);
+
+	printf("%s\n", typeid(::llcpp::meta::traits::kat::FixAttr).name());
 
 	//::std::fwrite(a.begin(), 1, a.size(), stdout);
 	return 0;

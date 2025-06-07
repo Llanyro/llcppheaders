@@ -533,6 +533,9 @@ concept IsConstArrayObject = requires (Array arr) {
 };
 
 } // namespace is_object
+
+
+
 } // namespace concepts
 } // namespace meta
 } // namespace llcpp

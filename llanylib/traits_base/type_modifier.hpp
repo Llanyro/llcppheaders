@@ -56,12 +56,25 @@ constexpr auto type_modifier();
 #define LLANYLIB_TRAITSTYPEMODIFIER_MAYOR_ 12
 #define LLANYLIB_TRAITSTYPEMODIFIER_MINOR_ 0
 
-#include "type_traits.hpp"
+#include "type_traits_extended.hpp"
 #include "../types/type_update.hpp"
 
 namespace llcpp {
 namespace meta {
 namespace traits {
+namespace __traits__ {
+
+template<class _T, ::llcpp::meta::attributes::type_update_t _ATTRIBUTES>
+constexpr auto type_modifier() noexcept;
+
+} // namespace __traits__
+
+template<class T, ::llcpp::meta::attributes::type_update_t ATTRIBUTES>
+using type_modifier_t = decltype(::llcpp::meta::traits::__traits__::type_modifier<T, ATTRIBUTES>())::T;
+
+template<class T>
+using raw_type_t = ::llcpp::meta::traits::type_modifier_t<T, ::llcpp::meta::attributes::update::RAW_TYPE>;
+
 namespace __traits__ {
 
 /*
@@ -177,93 +190,135 @@ constexpr auto asdf = asdafa();
 // If value is max value, value will not be reduced
 template<class _T, ::llcpp::meta::attributes::type_update_t _ATTRIBUTES>
 constexpr auto type_modifier() noexcept {
-	namespace traits_func = ::llcpp::meta::traits;
-	namespace traits_priv = ::llcpp::meta::traits::__traits__;
-
 	if constexpr (::std::is_array_v<_T>) {
+		constexpr auto sss = ::llcpp::meta::traits::array_size<_T>;
 		// Remove array from type
-		using type_edited = traits_func::array_type_t<_T>;
-		using packed_type = decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::value_type;
+		using type_edited = ::llcpp::meta::traits::array_type_t<_T>;
+		using unpacked_type = ::llcpp::meta::traits::type_modifier_t<type_edited, _ATTRIBUTES>;
 		if constexpr (_ATTRIBUTES.REMOVE_ARRAY)
-			return traits_func::TypeContainer<unpacked_type>{};
-		else return traits_func::TypeContainer<unpacked_type[traits_func::array_size<_T>]>{};
+			return ::llcpp::meta::traits::TypeContainer<unpacked_type>{};
+		else return ::llcpp::meta::traits::TypeContainer<unpacked_type[sss]>{};
 	}
 	else if constexpr (::std::is_reference_v<_T>) {
 		// Remove reference from type
 		using type_edited	= ::std::remove_reference_t<_T>;
-		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::value_type;
-		if constexpr (_ATTRIBUTES.REMOVE_REFERENCE)
-			return traits_func::TypeContainer<unpacked_type>{};
-		else return traits_func::TypeContainer<unpacked_type&>{};
+		using unpacked_type = ::llcpp::meta::traits::type_modifier_t<type_edited, _ATTRIBUTES>;
+	if constexpr (_ATTRIBUTES.REMOVE_REFERENCE)
+			return ::llcpp::meta::traits::TypeContainer<unpacked_type>{};
+		else return ::llcpp::meta::traits::TypeContainer<unpacked_type&>{};
 	}
 	else if constexpr (::std::is_pointer_v<_T>) {
 		// Remove pointer from type
 		using type_edited	= ::std::remove_pointer_t<_T>;
-		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::value_type;
+		using unpacked_type = ::llcpp::meta::traits::type_modifier_t<type_edited, _ATTRIBUTES>;
 		if constexpr (_ATTRIBUTES.REMOVE_POINTER)
-			return traits_func::TypeContainer<unpacked_type>{};
-		else return traits_func::TypeContainer<unpacked_type*>{};
+			return ::llcpp::meta::traits::TypeContainer<unpacked_type>{};
+		else return ::llcpp::meta::traits::TypeContainer<unpacked_type*>{};
 	}
 	else if constexpr (::std::is_const_v<_T>) {
 		// Remove const from type
 		using type_edited	= ::std::remove_const_t<_T>;
-		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::value_type;
+		using unpacked_type = ::llcpp::meta::traits::type_modifier_t<type_edited, _ATTRIBUTES>;
 		if constexpr (_ATTRIBUTES.REMOVE_CONST)
-			return traits_func::TypeContainer<unpacked_type>{};
-		else return traits_func::TypeContainer<const unpacked_type>{};
+			return ::llcpp::meta::traits::TypeContainer<unpacked_type>{};
+		else return ::llcpp::meta::traits::TypeContainer<const unpacked_type>{};
 	}
 	else if constexpr (::std::is_volatile_v<_T>) {
 		// Remove const from type
 		using type_edited	= ::std::remove_volatile_t<_T>;
-		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::value_type;
+		using unpacked_type = ::llcpp::meta::traits::type_modifier_t<type_edited, _ATTRIBUTES>;
 		if constexpr (_ATTRIBUTES.REMOVE_CONST)
-			return traits_func::TypeContainer<unpacked_type>{};
-		else return traits_func::TypeContainer<volatile unpacked_type>{};
+			return ::llcpp::meta::traits::TypeContainer<unpacked_type>{};
+		else return ::llcpp::meta::traits::TypeContainer<volatile unpacked_type>{};
 	}
 	else if constexpr (::llcpp::meta::traits::has_contain_value_type_v<_T, _T> && ::llcpp::meta::traits::has_value_type_v<_T>) {
 		// Remove const from type
 		using type_edited	= typename _T::value_type;
-		using packed_type	= decltype(traits_priv::type_modifier<type_edited, _ATTRIBUTES>());
-		using unpacked_type = typename packed_type::value_type;
+		using unpacked_type = ::llcpp::meta::traits::type_modifier_t<type_edited, _ATTRIBUTES>;
 		if constexpr (_ATTRIBUTES.REMOVE_CONTAINER)
-			return traits_func::TypeContainer<unpacked_type>{};
-		else return traits_func::TypeContainer<typename _T::contain_value_type<unpacked_type>>{};
+			return ::llcpp::meta::traits::TypeContainer<unpacked_type>{};
+		else return ::llcpp::meta::traits::TypeContainer<typename _T::contain_value_type<unpacked_type>>{};
 	}
-	else return traits_func::TypeContainer<_T>{};
+	else return ::llcpp::meta::traits::TypeContainer<_T>{};
 }
 
 template<class _T, u8 LEVEL = ::llcpp::MAX_VALUE<u8>>
 constexpr auto remove_container_absolute() noexcept {
-	if constexpr (LEVEL == ::llcpp::ZERO_VALUE<decltype(LEVEL)>)
-		return traits_func::TypeContainer<_T>{};
+	if constexpr (LEVEL == ::llcpp::ZERO_VALUE<decltype(LEVEL)> || ::llcpp::meta::traits::has_value_type_v<_T>)
+		return ::llcpp::meta::traits::TypeContainer<_T>{};
 	else {
-		namespace traits_func = ::llcpp::meta::traits;
 		namespace traits_priv = ::llcpp::meta::traits::__traits__;
 	
-		if constexpr (::llcpp::meta::traits::has_value_type_v<_T>) {
-			// Remove const from type
-			using type_edited	= typename _T::value_type;
-			using packed_type	= decltype(traits_priv::remove_container_absolute<type_edited, LEVEL - 1>());
-			return traits_func::TypeContainer<typename packed_type::value_type>{};
-		}
-		else return traits_func::TypeContainer<_T>{};
+		// Remove const from type
+		using type_edited	= typename _T::value_type;
+		using packed_type	= decltype(traits_priv::remove_container_absolute<type_edited, LEVEL - 1>());
+		using unpacked_type	= typename packed_type::value_type;
+		return ::llcpp::meta::traits::TypeContainer<unpacked_type>{};
 	}
 }
 
 } // namespace __traits__
 
-template<class T, ::llcpp::meta::attributes::type_update_t ATTRIBUTES>
-using type_modifier_t = decltype(::llcpp::meta::traits::__traits__::type_modifier<T, ATTRIBUTES>())::T;
-
-template<class T>
-using raw_type_t = ::llcpp::meta::traits::type_modifier_t<T, ::llcpp::meta::attributes::update::RAW_TYPE>;
-
 //using t = type_modifier_t<const char**, ::llcpp::meta::attributes::update::RAW_TYPE>;
+
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+
+using too_long_type_t = const int* const*[5];
+using raw_long_type_t = ::llcpp::meta::traits::raw_type_t<too_long_type_t>;
+using no_const_type_t = int**[5];
+using no_array_type_t = const int* const*;
+
+#pragma region Simple
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_RAW_TYPE = ::std::is_same_v<raw_long_type_t, int>;
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_raw_type_kat,
+	::llcpp::meta::traits::kat::IS_WORKING_RAW_TYPE,
+	"Type modifier raw" __LL_IS_NOT_WORKING_STR
+);
+
+__LL_VAR_INLINE__ constexpr auto NO_CONST_ATTR = ::llcpp::meta::attributes::update::REMOVE_CONSTS;
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_NO_CONST_TYPE =
+	::std::is_same_v<::llcpp::meta::traits::type_modifier_t<too_long_type_t, NO_CONST_ATTR>, no_const_type_t>;
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_remove_consts_kat,
+	::llcpp::meta::traits::kat::IS_WORKING_NO_CONST_TYPE,
+	"Type modifier no const" __LL_IS_NOT_WORKING_STR
+);
+
+// [TODO] [TOFIX] [TOCHECK]
+__LL_VAR_INLINE__ constexpr auto NO_ARRAYS_ATTR = ::llcpp::meta::attributes::update::REMOVE_ARRAYS;
+using FixAttr = ::llcpp::meta::traits::type_modifier_t<too_long_type_t, NO_ARRAYS_ATTR>;
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_NO_ARRAY_TYPE =
+	::std::is_same_v<FixAttr, no_array_type_t>;
+//__LL_KAT_FUNCTION_CONSTEXPR(
+//	is_working_remove_arrays_kat,
+//	::llcpp::meta::traits::kat::IS_WORKING_NO_ARRAY_TYPE,
+//	"Type modifier no arrays" __LL_IS_NOT_WORKING_STR
+//);
+
+#pragma endregion
+#pragma region Mixed
+
+#pragma endregion
+
+__LL_NODISCARD__ constexpr ::llcpp::string type_modifier_kats() noexcept {
+	::llcpp::string result = ::llcpp::meta::traits::kat::is_working_raw_type_kat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::is_working_remove_consts_kat();
+	if(result) return result;
+	//result = ::llcpp::meta::traits::kat::is_working_remove_arrays_kat();
+	//if(result) return result;
+
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::meta::traits::kat::type_modifier_kats() == LL_NULLPTR, "Type modifier KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // __LL_INCLUDE_KATS
 
 } // namespace traits
 } // namespace meta

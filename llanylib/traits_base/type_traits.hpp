@@ -825,17 +825,17 @@ using GetFirstDifferenceEmpty	= ::llcpp::meta::traits::GetFirstDifference<i8, ::
 using GetFirstDifferenceU8		= ::llcpp::meta::traits::GetFirstDifference<i8, ::llcpp::Emptyclass, ::llcpp::meta::traits::DoubleTypeContainer<u8, u8>>::U;
 
 #pragma region HasTypesConstants
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	has_value_kat,
 	::llcpp::meta::traits::has_value_type_v<KATExample>,
 	"KATExample has value type!"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	has_value_constant_kat,
 	::llcpp::meta::traits::has_value_constant_v<KATExample>,
 	"KATExample has value constant!"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	has_hash_type_kat,
 	::llcpp::meta::traits::has_hash_type_v<KATExample>,
 	"KATExample has hash type!"
@@ -843,17 +843,17 @@ __LL_KAT_FUNCTION(
 
 #pragma endregion
 #pragma region Pair
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	has_pair_first_kat,
 	::llcpp::meta::traits::has_pair_first_v<KATExample>,
 	"KATExample has 'first' attribute/constant!"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	has_pair_second_kat,
 	::llcpp::meta::traits::has_pair_second_v<KATExample>,
 	"KATExample has 'second' attribute/constant!"
 );
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_pair_kat,
 	::llcpp::meta::traits::is_pair_v<KATExample>,
 	"KATExample has pair attributes/constants!"
@@ -863,7 +863,7 @@ __LL_KAT_FUNCTION(
 #pragma region Container
 __LL_VAR_INLINE__ constexpr ll_bool_t HAS_CONTAINER_TYPE_KAT =
 	::llcpp::meta::traits::has_contain_value_type_v<KATExample, i32>;
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	has_container_type_kat,
 	::llcpp::meta::traits::kat::HAS_CONTAINER_TYPE_KAT,
 	"KATExample has container type!"
@@ -871,7 +871,7 @@ __LL_KAT_FUNCTION(
 
 __LL_VAR_INLINE__ constexpr ll_bool_t HAS_CONTAINER_TYPE_U_KAT =
 	::llcpp::meta::traits::has_contain_value_type_u_v<KATExample, f32>;
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	has_container_type_u_kat,
 	::llcpp::meta::traits::kat::HAS_CONTAINER_TYPE_U_KAT,
 	"KATExample has container U type!"
@@ -887,10 +887,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_TYPE_CONTAINER =
 	&& ::std::is_same_v<SingleTypeKat::value_type, SingleTypeKat::type>
 	&& ::std::is_same_v<SingleTypeKat::value_type, i16>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_type_container_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_TYPE_CONTAINER,
-	"Type container is not working properly!"
+	"Type container" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DOUBLE_TYPE_CONTAINER =
@@ -903,10 +903,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DOUBLE_TYPE_CONTAINER =
 	&& ::std::is_same_v<DoubleTypeKat::value_type, i8>
 	&& ::std::is_same_v<DoubleTypeKat::U, f64>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_double_type_container_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_DOUBLE_TYPE_CONTAINER,
-	"Double type container is not working properly!"
+	"Double type container" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_INTEGRAL_TYPE_CONTAINER =
@@ -923,10 +923,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_INTEGRAL_TYPE_CONTAINER =
 	&& IntegralKat::value == 'H'
 	&& IntegralKat::value == IntegralKat::VALUE;
 	
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_integral_type_container_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_INTEGRAL_TYPE_CONTAINER,
-	"Integral type container is not working properly!"
+	"Integral type container" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DOUBLE_INTEGRAL_TYPE_CONTAINER =
@@ -943,10 +943,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DOUBLE_INTEGRAL_TYPE_CONTAINER 
 	&& DoubleIntegralKat::FIRST		== '8'
 	&& DoubleIntegralKat::SECOND	== 0.0f
 	&& IntegralKat::value == IntegralKat::VALUE;
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_double_integral_type_container_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_DOUBLE_INTEGRAL_TYPE_CONTAINER,
-	"Double integral type container is not working properly!"
+	"Double integral type container" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_INTEGRAL_TYPE_CONTAINER_OBJECT =
@@ -963,10 +963,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_INTEGRAL_TYPE_CONTAINER_OBJECT 
 	&& IntegralObjectKat::value == kat_integral_struct_def_1
 	&& IntegralObjectKat::value == IntegralObjectKat::VALUE;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_integral_type_container_object_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_INTEGRAL_TYPE_CONTAINER_OBJECT,
-	"Integral type container object is not working properly!"
+	"Integral type container object" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DOUBLE_INTEGRAL_TYPE_CONTAINER_OBJECT =
@@ -983,10 +983,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DOUBLE_INTEGRAL_TYPE_CONTAINER_
 	&& DoubleIntegralObjectKat::FIRST		== kat_integral_struct_def_1
 	&& DoubleIntegralObjectKat::SECOND	== kat_integral_struct_def_2
 	&& IntegralKat::value == IntegralKat::VALUE;
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_double_integral_type_container_object_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_DOUBLE_INTEGRAL_TYPE_CONTAINER_OBJECT,
-	"Double integral type container object is not working properly!"
+	"Double integral type container object" __LL_IS_NOT_WORKING_STR
 );
 
 #pragma endregion
@@ -995,37 +995,37 @@ __LL_KAT_FUNCTION(
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_CONDITIONAL_TRUE =
 	::std::is_same_v<::llcpp::meta::traits::conditional_t<::llcpp::LL_TRUE, u8, i16>, u8>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_conditional_true_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_CONDITIONAL_TRUE,
-	"Conditional true is not working properly!"
+	"Conditional true" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_CONDITIONAL_FALSE =
 	::std::is_same_v<::llcpp::meta::traits::conditional_t<::llcpp::LL_FALSE, u8, i16>, i16>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_conditional_false_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_CONDITIONAL_FALSE,
-	"Conditional false is not working properly!"
+	"Conditional false" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_CONDITIONAL_VALUE_TRUE =
 	::llcpp::meta::traits::conditional_value_v<::llcpp::LL_TRUE, u8, i16, 0x8, 270> == 0x8;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_conditional_value_true_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_CONDITIONAL_VALUE_TRUE,
-	"Conditional value true is not working properly!"
+	"Conditional value true" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_CONDITIONAL_VALUE_FALSE =
 	::llcpp::meta::traits::conditional_value_v<::llcpp::LL_FALSE, u8, i16, 0x8, 270> == 270;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_conditional_value_false_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_CONDITIONAL_VALUE_FALSE,
-	"Conditional value false is not working properly!"
+	"Conditional value false" __LL_IS_NOT_WORKING_STR
 );
 
 #pragma endregion
@@ -1037,10 +1037,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_COMPARE_CONDITIONAL_BIGGER =
 	&& !CompareConditionalBigger::SMALLER_EQ_COMPARE
 	&& !CompareConditionalBigger::EQ_COMPARE;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_compare_conditional_bigger_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_COMPARE_CONDITIONAL_BIGGER,
-	"Compare conditional bigger is not working properly!"
+	"Compare conditional bigger" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_COMPARE_CONDITIONAL_SMALLER =
@@ -1050,10 +1050,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_COMPARE_CONDITIONAL_SMALLER =
 	&&  CompareConditionalSmaller::SMALLER_EQ_COMPARE
 	&& !CompareConditionalSmaller::EQ_COMPARE;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_compare_conditional_smaller_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_COMPARE_CONDITIONAL_SMALLER,
-	"Compare conditional smaller is not working properly!"
+	"Compare conditional smaller" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_COMPARE_CONDITIONAL_EQUAL =
@@ -1063,10 +1063,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_COMPARE_CONDITIONAL_EQUAL =
 	&&  CompareConditionalEqual::SMALLER_EQ_COMPARE
 	&&  CompareConditionalEqual::EQ_COMPARE;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_compare_conditional_equal_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_COMPARE_CONDITIONAL_EQUAL,
-	"Compare conditional equal is not working properly!"
+	"Compare conditional equal" __LL_IS_NOT_WORKING_STR
 );
 
 #pragma endregion
@@ -1076,37 +1076,37 @@ __LL_KAT_FUNCTION(
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_FIRST_COINCIDENCE_EMPTY =
 	::std::is_same_v<GetFirstCoincidenceEmpty, ::llcpp::Emptyclass>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_first_coincidence_empty_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_GET_FIRST_COINCIDENCE_EMPTY,
-	"Get first coincidence empty is not working properly!"
+	"Get first coincidence empty" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_FIRST_COINCIDENCE_U8 =
 	::std::is_same_v<GetFirstCoincidenceU8, ::llcpp::u8>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_first_coincidence_u8_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_GET_FIRST_COINCIDENCE_U8,
-	"Get first coincidence u8 is not working properly!"
+	"Get first coincidence u8" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_FIRST_DIFFERENCE_EMPTY =
 	::std::is_same_v<GetFirstDifferenceEmpty, ::llcpp::Emptyclass>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_first_difference_empty_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_GET_FIRST_DIFFERENCE_EMPTY,
-	"Get first difference empty is not working properly!"
+	"Get first difference empty" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_FIRST_DIFFERENCE_U8 =
 	::std::is_same_v<GetFirstDifferenceU8, ::llcpp::u8>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_first_difference_u8_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_GET_FIRST_DIFFERENCE_U8,
-	"Get first difference u8 is not working properly!"
+	"Get first difference u8" __LL_IS_NOT_WORKING_STR
 );
 
 #pragma endregion
@@ -1128,10 +1128,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_PROMOTION =
 	&& ::std::is_same_v<::llcpp::meta::traits::type_promote_u<f64>,  f128>
 	&& ::std::is_same_v<::llcpp::meta::traits::type_promote_u<f128>, f128>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_promotion_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_PROMOTION,
-	"Type promote is not working properly!"
+	"Type promote" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DEMOTION =
@@ -1151,10 +1151,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_DEMOTION =
 	&& ::std::is_same_v<::llcpp::meta::traits::type_demote_u<f64>,  f32>
 	&& ::std::is_same_v<::llcpp::meta::traits::type_demote_u<f128>, f64>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_demotion_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_DEMOTION,
-	"Type demote is not working properly!"
+	"Type demote" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_SIGNALIZE =
@@ -1171,10 +1171,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_SIGNALIZE =
 	&& ::std::is_same_v<::llcpp::meta::traits::type_signalize_u<i128>, i128>
 	&& ::std::is_same_v<::llcpp::meta::traits::type_signalize_u<i256>, i256>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_signalize_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_SIGNALIZE,
-	"Type signalize is not working properly!"
+	"Type signalize" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_UNSIGNALIZE =
@@ -1191,10 +1191,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_UNSIGNALIZE =
 	&& ::std::is_same_v<::llcpp::meta::traits::type_unsignalize_u<i128>, u128>
 	&& ::std::is_same_v<::llcpp::meta::traits::type_unsignalize_u<i256>, u256>;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_unsignalize_kat,
 	::llcpp::meta::traits::kat::IS_WORKING_UNSIGNALIZE,
-	"Type unsignalize is not working properly!"
+	"Type unsignalize" __LL_IS_NOT_WORKING_STR
 );
 
 #pragma endregion
@@ -1209,10 +1209,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_MAX_VALUE =
 	&& ::llcpp::MAX_VALUE<i32>	== 0x7fffffff
 	&& ::llcpp::MAX_VALUE<i64>	== 0x7fffffffffffffff;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_max_value_kat,
 	::llcpp::meta::traits::kat::IS_MAX_VALUE,
-	"Max value is not working properly!"
+	"Max value"
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_MIN_VALUE =
@@ -1225,10 +1225,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_MIN_VALUE =
 	&& ::llcpp::MIN_VALUE<i32>	== -0x80000000
 	&& ::llcpp::MIN_VALUE<i64>	== -0x8000000000000000;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_min_value_kat,
 	::llcpp::meta::traits::kat::IS_MIN_VALUE,
-	"Min value is not working properly!"
+	"Min value" __LL_IS_NOT_WORKING_STR
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_ZERO_VALUE =
@@ -1241,10 +1241,10 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_ZERO_VALUE =
 	&& ::llcpp::ZERO_VALUE<i32>	== 0x0
 	&& ::llcpp::ZERO_VALUE<i64>	== 0x0;
 
-__LL_KAT_FUNCTION(
+__LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_zero_value_kat,
 	::llcpp::meta::traits::kat::IS_ZERO_VALUE,
-	"Zero value is not working properly!"
+	"Zero value" __LL_IS_NOT_WORKING_STR
 );
 
 #pragma endregion
@@ -1350,7 +1350,7 @@ __LL_NODISCARD__ constexpr ::llcpp::string type_traits_kats() noexcept {
 }
 
 #if __LL_STATIC_KATS == 1
-	static_assert(::llcpp::meta::traits::kat::type_traits_kats() == nullptr, "Boolean KAT not OK");
+	static_assert(::llcpp::meta::traits::kat::type_traits_kats() == LL_NULLPTR, "type_traits KAT not OK");
 #endif // __LL_STATIC_KATS
 
 } // namespace kat

@@ -71,6 +71,51 @@ using type_by_valid_type_t = typename ::std::disjunction<
 	::llcpp::meta::traits::TrueContainerEmptyClass<OnNotFound>
 >::U;
 
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+
+template<::llcpp::misc::ValidType _TYPE>
+using ValidationKat = ::llcpp::meta::traits::type_by_valid_type_t<
+	_TYPE,
+	::llcpp::AlwaysValidTag,
+	::llcpp::AlwaysInvalidTag,
+	::llcpp::DummyClass,
+	::llcpp::i32,
+	::llcpp::string,
+	::llcpp::f128*,
+	::llcpp::ClusterTag,
+	void,
+	::llcpp::Emptyclass
+>;
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_VALID_TYPE = 
+	   ::std::is_same_v<ValidationKat<::llcpp::misc::ValidType::Valid>,		::llcpp::AlwaysValidTag>
+	&& ::std::is_same_v<ValidationKat<::llcpp::misc::ValidType::Invalid>,	::llcpp::AlwaysInvalidTag>
+	&& ::std::is_same_v<ValidationKat<::llcpp::misc::ValidType::ToCheck>,	::llcpp::DummyClass>
+	&& ::std::is_same_v<ValidationKat<::llcpp::misc::ValidType::Primitive>,	::llcpp::i32>
+	&& ::std::is_same_v<ValidationKat<::llcpp::misc::ValidType::Array>,		::llcpp::string>
+	&& ::std::is_same_v<ValidationKat<::llcpp::misc::ValidType::Pointer>,	::llcpp::f128*>
+	&& ::std::is_same_v<ValidationKat<::llcpp::misc::ValidType::Unknown>,	::llcpp::ClusterTag>
+	&& ::std::is_same_v<ValidationKat<::llcpp::misc::ValidType::Error>,		void>;
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_valid_type_kat,
+	::llcpp::meta::traits::kat::IS_WORKING_VALID_TYPE,
+	"'Is valid type'" __LL_IS_NOT_WORKING_STR
+);
+
+__LL_NODISCARD__ constexpr ::llcpp::string valid_type_kats() noexcept {
+	::llcpp::string result = ::llcpp::meta::traits::kat::is_working_valid_type_kat();
+	if(result) return result;
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::meta::traits::kat::valid_type_kats() == LL_NULLPTR, "valid_type (traits) KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // __LL_INCLUDE_KATS
+
 } // namespace traits
 } // namespace meta
 } // namespace llcpp

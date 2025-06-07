@@ -135,6 +135,33 @@ constexpr ll_bool_t isValidArrayType() noexcept {
 	}
 }
 
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+
+constexpr ::llcpp::string STR[] = __LL_STRING_PREFIX "Hola mundo!";
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_BEGIN =
+	(::llcpp::meta::utils::getArrayBegin<::llcpp::char_type>(STR) != ::llcpp::NULL_VALUE<decltype(*STR)>)
+	;
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_valid_type_kat,
+	::llcpp::meta::traits::kat::IS_WORKING_GET_ARRAY_BEGIN,
+	"'Is valid type'" __LL_IS_NOT_WORKING_STR
+);
+
+__LL_NODISCARD__ constexpr ::llcpp::string valid_type_kats() noexcept {
+	::llcpp::string result = ::llcpp::meta::traits::kat::is_working_valid_type_kat();
+	if(result) return result;
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::meta::traits::kat::valid_type_kats() == LL_NULLPTR, "list_functions KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // __LL_INCLUDE_KATS
+
 } // namespace utils
 } // namespace meta
 } // namespace llcpp

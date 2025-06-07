@@ -124,13 +124,13 @@
 #endif // __LL_INCLUDE_KATS
 
 #if __LL_INCLUDE_KATS == 1
-#define __LL_KAT_GENERIC(VALUE, STR)							\
-	do {														\
-		if (!(VALUE)) {											\
-			if constexpr (::llcpp::LL_STATIC_KATS)				\
-				static_assert(VALUE, STR);						\
-			return __LL_STRING_PREFIX STR;						\
-		}														\
+#define __LL_KAT_GENERIC(VALUE, STR)								\
+	do {															\
+		if (!(VALUE)) {												\
+			if constexpr (::llcpp::LL_STATIC_KATS)					\
+				static_assert(VALUE, STR);							\
+			return __LL_STRING_PREFIX STR;							\
+		}															\
 	} while(0)
 
 #define __LL_KAT_FUNCTION(NAME, CONDITION, ERROR_STRING)			\
@@ -138,6 +138,23 @@
 		__LL_KAT_GENERIC(CONDITION, ERROR_STRING);					\
 		return nullptr;												\
 	}
+
+#define __LL_KAT_GENERIC_CONSTEXPR(VALUE, STR)						\
+	do {															\
+		if constexpr (!(VALUE)) {									\
+			if constexpr (::llcpp::LL_STATIC_KATS)					\
+				static_assert(VALUE, STR);							\
+			return __LL_STRING_PREFIX STR;							\
+		}															\
+	} while(0)
+
+#define __LL_KAT_FUNCTION_CONSTEXPR(NAME, CONDITION, ERROR_STRING)	\
+	__LL_NODISCARD__ constexpr ::llcpp::string NAME() noexcept {	\
+		__LL_KAT_GENERIC_CONSTEXPR(CONDITION, ERROR_STRING);		\
+		return nullptr;												\
+	}
+
+#define __LL_IS_NOT_WORKING_STR " is not working properly!"
 
 #endif // __LL_INCLUDE_KATS
 

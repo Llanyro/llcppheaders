@@ -203,7 +203,7 @@ class Parser : public _ParserFunctions {
 		// Print chars by its type
 		template<class T, usize N>
 		constexpr void write(const T (&data)[N]) const noexcept {
-			this->write("[ ... ", ::llcpp::meta::traits::array_size<T>);
+			this->write("[ ... ", ::llcpp::array_size<T>);
 			
 			this->write(" ]");
 		}
@@ -219,7 +219,7 @@ class Parser : public _ParserFunctions {
 			if constexpr (::std::is_pointer_v<T>)
 				this->writePointer(data);
 			else if constexpr (::std::is_array_v<T>) {
-				this->write("[ ... ", ::llcpp::meta::traits::array_size<T>);
+				this->write("[ ... ", ::llcpp::array_size<T>);
 				this->writeNull();
 				this->write(" ]");
 			}
@@ -269,7 +269,7 @@ class Parser : public _ParserFunctions {
 				if constexpr (::std::is_pointer_v<T>)
 					this->writePointer(data);
 				else if constexpr (::std::is_array_v<T>)
-					ParserFunctions::writeString(data, ::llcpp::meta::traits::array_size<T>);
+					ParserFunctions::writeString(data, ::llcpp::array_size<T>);
 				else if (::std::is_same_v<raw_type_t, T>)
 					ParserFunctions::writeChar(data);
 				else {

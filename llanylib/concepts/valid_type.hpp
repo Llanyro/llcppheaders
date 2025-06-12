@@ -22,9 +22,8 @@
 	#define LLANYLIB_CONCEPTSVALIDTYPE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_CONCEPTSVALIDTYPE_INCOMPLETE_MINOR_ 0
 
-#include "../traits_base/valid_type.hpp"
-
-#include "concepts.hpp"
+#include <llanylib/traits_base/valid_type.hpp>
+#include <llanylib/concepts/concepts.hpp>
 
 #elif defined(LLANYLIB_CONCEPTSVALIDTYPE_HPP_)
 	#if LLANYLIB_CONCEPTSVALIDTYPE_MAYOR_ != 12 || LLANYLIB_CONCEPTSVALIDTYPE_MINOR_ < 0
@@ -41,9 +40,8 @@
 	#define LLANYLIB_CONCEPTSVALIDTYPE_MAYOR_ 12
 	#define LLANYLIB_CONCEPTSVALIDTYPE_MINOR_ 0
 
-#include "../traits_base/valid_type.hpp"
-
-#include "concepts.hpp"
+#include <llanylib/traits_base/valid_type.hpp>
+#include <llanylib/concepts/concepts.hpp>
 
 namespace llcpp {
 namespace meta {

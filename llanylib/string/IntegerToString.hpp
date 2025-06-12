@@ -189,7 +189,7 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 			constexpr LowDataMap() noexcept {
 				for(u8 i = 0; i < 10; ++i)
 					this->low[i].reset(_MyType::Data::getChar(i));
-				for(u32 i = 10; i < ::llcpp::meta::traits::array_size<decltype(this->low)>; ++i)
+				for(u32 i = 10; i < ::llcpp::array_size<decltype(this->low)>; ++i)
 					this->low[i].reset(i);
 			}
 			constexpr ~LowDataMap() noexcept = default;
@@ -197,7 +197,7 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 		struct HighDataMap {
 			_MyType::Data high[100];
 			constexpr HighDataMap() noexcept {
-				for(u32 i{}; i < ::llcpp::meta::traits::array_size<decltype(this->high)>; ++i)
+				for(u32 i{}; i < ::llcpp::array_size<decltype(this->high)>; ++i)
 					this->high[i].reset(i);
 			}
 			constexpr ~HighDataMap() noexcept = default;

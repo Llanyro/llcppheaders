@@ -22,7 +22,7 @@
 	#define LLANYLIB_TYPESBASE_MAYOR_ 12
 	#define LLANYLIB_TYPESBASE_MINOR_ 0
 
-#include "../defines/expresions.hpp"
+#include <llanylib/defines/expresions.hpp>
 
 #include <cstdint>
 #include <cuchar>
@@ -262,6 +262,24 @@ class HalfClusterTag {
 };
 
 #pragma endregion
+
+// Zero value or default value returns a base type (default contructor)
+template<class T>
+__LL_VAR_INLINE__ constexpr T	ZERO_VALUE		= T{};
+template<class T>
+__LL_VAR_INLINE__ constexpr T*	ZERO_VALUE<T*>	= LL_NULLPTR;
+template<class T>
+__LL_VAR_INLINE__ constexpr T*	NULL_VALUE		= LL_NULLPTR;
+
+template<class>
+__LL_VAR_INLINE__ constexpr usize array_size = ::llcpp::ZERO_VALUE<usize>;
+template<class T, usize N>
+__LL_VAR_INLINE__ constexpr usize array_size<T[N]> = N;
+
+template<class>
+__LL_VAR_INLINE__ constexpr usize type_or_array_size = 1ull;
+template<class T, usize N>
+__LL_VAR_INLINE__ constexpr usize type_or_array_size<T[N]> = N;
 
 __LL_VAR_INLINE__ constexpr ll_bool_t LL_FALSE		= false;
 __LL_VAR_INLINE__ constexpr ll_bool_t LL_TRUE		= true;

@@ -22,7 +22,7 @@
 	#define LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSBASE_INCOMPLETE_MINOR_ 0
 
-#include "type_traits.hpp"
+#include <llanylib/traits_base/type_traits.hpp>
 
 #elif defined(LLANYLIB_TRAITSBASE_HPP_)
 	#if LLANYLIB_TRAITSBASE_MAYOR_ != 12 || LLANYLIB_TRAITSBASE_MINOR_ < 0
@@ -39,7 +39,7 @@
 	#define LLANYLIB_TRAITSBASE_MAYOR_ 12
 	#define LLANYLIB_TRAITSBASE_MINOR_ 0
 
-#include "type_traits.hpp"
+#include <llanylib/traits_base/type_traits.hpp>
 
 namespace llcpp {
 namespace meta {
@@ -365,17 +365,7 @@ __LL_NODISCARD__ constexpr ::llcpp::string type_traits_extended_kats() noexcept 
 namespace llcpp {
 namespace meta {
 namespace traits {
-
-template<class>
-__LL_VAR_INLINE__ constexpr usize array_size = ::llcpp::ZERO_VALUE<u64>;
-template<class T, usize N>
-__LL_VAR_INLINE__ constexpr usize array_size<T[N]> = N;
-
-template<class>
-__LL_VAR_INLINE__ constexpr usize type_or_array_size = 1ull;
-template<class T, usize N>
-__LL_VAR_INLINE__ constexpr usize type_or_array_size<T[N]> = N;
-
+	
 } // namespace traits
 } // namespace meta
 } // namespace llcpp

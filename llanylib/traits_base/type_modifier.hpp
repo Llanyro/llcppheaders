@@ -22,9 +22,9 @@
 #define LLANYLIB_TRAITSTYPEMODIFIER_INCOMPLETE_MAYOR_ 12
 #define LLANYLIB_TRAITSTYPEMODIFIER_INCOMPLETE_MINOR_ 0
 
-#include "type_traits.hpp"
+#include <llanylib/traits_base/type_traits_extended.hpp>
 #undef LLANYLIB_INCOMPLETE_HPP_
-#include "../types/type_update.hpp"
+#include <llanylib/types/type_update.hpp>
 #define LLANYLIB_INCOMPLETE_HPP_
 
 namespace llcpp {
@@ -56,8 +56,8 @@ constexpr auto type_modifier();
 #define LLANYLIB_TRAITSTYPEMODIFIER_MAYOR_ 12
 #define LLANYLIB_TRAITSTYPEMODIFIER_MINOR_ 0
 
-#include "type_traits_extended.hpp"
-#include "../types/type_update.hpp"
+#include <llanylib/traits_base/type_traits_extended.hpp>
+#include <llanylib/types/type_update.hpp>
 
 namespace llcpp {
 namespace meta {
@@ -120,7 +120,7 @@ __LL_NODISCARD__ constexpr auto type_modifier_flex(::llcpp::meta::traits::__trai
 		// Unpack type returned
 		using unpacked_type = typename packed_type::T;
 		// Type with atturibute added again
-		using edited_type	= ::llcpp::meta::traits::TypeContainer<unpacked_type[::llcpp::meta::traits::array_size<_T>]>;
+		using edited_type	= ::llcpp::meta::traits::TypeContainer<unpacked_type[::llcpp::array_size<_T>]>;
 		// Choose between new type generated with this type or without by attribute
 		return ::llcpp::meta::traits::__traits__::attribute_counter_t::removeOrUpdateType<packed_type, edited_type>(modifier.REMOVE_ARRAY);
 	}
@@ -191,7 +191,7 @@ constexpr auto asdf = asdafa();
 template<class _T, ::llcpp::meta::attributes::type_update_t _ATTRIBUTES>
 constexpr auto type_modifier() noexcept {
 	if constexpr (::std::is_array_v<_T>) {
-		constexpr auto sss = ::llcpp::meta::traits::array_size<_T>;
+		constexpr auto sss = ::llcpp::array_size<_T>;
 		// Remove array from type
 		using type_edited = ::llcpp::meta::traits::array_type_t<_T>;
 		using unpacked_type = ::llcpp::meta::traits::type_modifier_t<type_edited, _ATTRIBUTES>;

@@ -22,7 +22,7 @@
 	#define LLANYLIB_TUPLE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TUPLE_INCOMPLETE_MINOR_ 0
 
-#include "../traits_base/traits_parameter_pack.hpp"
+#include <llanylib/concepts/concepts.hpp>
 
 namespace llcpp {
 namespace meta {
@@ -33,6 +33,21 @@ class TupleBase;
 
 template<ll_bool_t _IS_REFERENCE, class _T>
 class TupleBase<_IS_REFERENCE, _T>;
+
+namespace __utils__ {
+
+template<ll_bool_t IS_REFERENCE, class T, class... Args>
+__LL_NODISCARD__ constexpr auto generate_tuple() noexcept;
+
+template<ll_bool_t IS_REFERENCE, class... Args>
+using tuple_base_t = decltype(::llcpp::meta::utils::__utils__::generate_tuple<IS_REFERENCE, Args...>())::value_type;
+
+} // namespace __utils__
+
+template<class... Args>
+using Tuple = ::llcpp::meta::utils::__utils__::tuple_base_t<::llcpp::LL_FALSE, Args...>;
+template<class... Args>
+using TupleRef = ::llcpp::meta::utils::__utils__::tuple_base_t<::llcpp::LL_TRUE, Args...>;
 
 } // namespace utils
 } // namespace meta
@@ -53,7 +68,7 @@ class TupleBase<_IS_REFERENCE, _T>;
 	#define LLANYLIB_TUPLE_MAYOR_ 12
 	#define LLANYLIB_TUPLE_MINOR_ 0
 
-#include "../concepts/concepts.hpp"
+#include <llanylib/concepts/concepts.hpp>
 
 namespace llcpp {
 namespace meta {

@@ -22,7 +22,7 @@
 	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ 0
 
-#include "../types/types.hpp"
+#include <llanylib/types/types.hpp>
 
 namespace llcpp {
 namespace meta {
@@ -120,7 +120,7 @@ class RangeChecker;
 	#define LLANYLIB_TYPETRAITS_MAYOR_ 12
 	#define LLANYLIB_TYPETRAITS_MINOR_ 0
 
-#include "../types/types.hpp"
+#include <llanylib/types/types.hpp>
 
 #if defined(__LL_WINDOWS_SYSTEM)
 	#include <type_traits>
@@ -742,14 +742,6 @@ template<class T>
 __LL_VAR_INLINE__ constexpr T	MAX_VALUE		= ::llcpp::meta::traits::RangeChecker<T>::MAX_VALUE;
 template<class T>
 __LL_VAR_INLINE__ constexpr T	MIN_VALUE		= ::llcpp::meta::traits::RangeChecker<T>::MIN_VALUE;
-// Zero value or default value returns a base type (default contructor)
-template<class T>
-__LL_VAR_INLINE__ constexpr T	ZERO_VALUE		= T{};
-template<class T>
-__LL_VAR_INLINE__ constexpr T*	ZERO_VALUE<T*>	= LL_NULLPTR;
-template<class T>
-__LL_VAR_INLINE__ constexpr T*	NULL_VALUE		= LL_NULLPTR;
-
 #pragma endregion
 
 namespace meta {
@@ -1083,7 +1075,7 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_FIRST_COINCIDENCE_U8 =
-	::std::is_same_v<GetFirstCoincidenceU8, ::llcpp::u8>;
+	::std::is_same_v<GetFirstCoincidenceU8, u8>;
 
 __LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_first_coincidence_u8_kat,
@@ -1101,7 +1093,7 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_FIRST_DIFFERENCE_U8 =
-	::std::is_same_v<GetFirstDifferenceU8, ::llcpp::u8>;
+	::std::is_same_v<GetFirstDifferenceU8, u8>;
 
 __LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_first_difference_u8_kat,

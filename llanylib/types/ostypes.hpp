@@ -22,7 +22,7 @@
 	#define LLANYLIB_OSTYPES_MAYOR_ 12
 	#define LLANYLIB_OSTYPES_MINOR_ 0
 
-#include "types.hpp"
+#include <llanylib/types/types.hpp>
 
 #if defined(__LL_WINDOWS_SYSTEM)
 	using ll_pid_t = ::llcpp::u32;

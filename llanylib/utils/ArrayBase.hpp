@@ -22,10 +22,10 @@
 	#define LLANYLIB_ARRAYBASE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_ARRAYBASE_INCOMPLETE_MINOR_ 0
 
-#include "../types/ValidType.hpp"
-#include "../traits_base/checker.hpp"
-#include "PointerIterator.hpp"
-#include "Exceptions.hpp"
+#include <llanylib/traits_base/checker.hpp>
+#include <llanylib/utils/Tuple.hpp>
+#include <llanylib/utils/PointerIterator.hpp>
+#include <llanylib/utils/Exceptions.hpp>
 
 namespace llcpp {
 namespace meta {
@@ -33,9 +33,9 @@ namespace utils {
 
 template<
 	class _T,
-	ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE,						// Enables no const functions to edit array
-	ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE,					// Uses PointerIterator instead pointers
-	ll_bool_t _SIZED_ARRAY = ::llcpp::LL_TRUE,							// Store array size/store en array pointer
+	ll_bool_t _ENABLE_NO_CONST		= ::llcpp::LL_TRUE,				// Enables no const functions to edit array
+	ll_bool_t _USE_OBJECT_ITERATOR	= ::llcpp::LL_FALSE,			// Uses PointerIterator instead pointers
+	usize _N						= ::llcpp::ZERO_VALUE<usize>,	// Store array size/store en array pointer
 	::llcpp::meta::attributes::checker_attributes_t _TYPE_CHECKER =
 		::llcpp::meta::attributes::checker::IGNORE_CPAV
 >
@@ -60,10 +60,10 @@ class ArrayBase;
 	#define LLANYLIB_ARRAYBASE_MAYOR_ 12
 	#define LLANYLIB_ARRAYBASE_MINOR_ 0
 
-#include "../traits_base/checker.hpp"
-#include "Tuple.hpp"
-#include "PointerIterator.hpp"
-#include "Exceptions.hpp"
+#include <llanylib/traits_base/checker.hpp>
+#include <llanylib/utils/Tuple.hpp>
+#include <llanylib/utils/PointerIterator.hpp>
+#include <llanylib/utils/Exceptions.hpp>
 
 #define CHECK_RESET_VALIDATION_1(mem)																	\
 	if constexpr (::llcpp::LL_DEBUG || ::llcpp::LL_EXCEPTIONS) {										\
@@ -415,8 +415,8 @@ class ArrayBase {
 	#pragma endregion
 };
 
-#define ARR_PREP(arr) (arr, arr + ::llcpp::meta::traits::array_size<decltype(arr)>)
-#define ARR_PREP_SIZE(arr) (arr, ::llcpp::meta::traits::array_size<decltype(arr)>)
+#define ARR_PREP(arr) (arr, arr + ::llcpp::array_size<decltype(arr)>)
+#define ARR_PREP_SIZE(arr) (arr, ::llcpp::array_size<decltype(arr)>)
 
 } // namespace utils
 } // namespace meta

@@ -22,7 +22,7 @@
 	#define LLANYLIB_ERRORS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_ERRORS_INCOMPLETE_MINOR_ 0
 
-#include "types.hpp"
+#include <llanylib/types/types.hpp>
 
 namespace llcpp {
 namespace misc {
@@ -47,7 +47,7 @@ enum class Errors : u8;
 	#define LLANYLIB_ERRORS_MAYOR_ 12
 	#define LLANYLIB_ERRORS_MINOR_ 0
 
-#include "types.hpp"
+#include <llanylib/types/types.hpp>
 
 namespace llcpp {
 namespace misc {

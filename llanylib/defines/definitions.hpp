@@ -22,7 +22,7 @@
 	#define LLANYLIB_DEFINITIONS_MAYOR_ 12
 	#define LLANYLIB_DEFINITIONS_MINOR_ 0
 
-#include "os.hpp"
+#include <llanylib/defines/os.hpp>
 
 #if !defined(__LL_IGNORE_WARNING_STATIC_ASSERTS__)
 	#define __LL_IGNORE_WARNING_STATIC_ASSERTS__ 0

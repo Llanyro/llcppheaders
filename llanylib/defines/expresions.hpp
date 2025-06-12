@@ -22,7 +22,7 @@
 	#define LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ 12
 	#define LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_ 0
 
-#include "definitions.hpp"
+#include <llanylib/defines/definitions.hpp>
 
 namespace llcpp {
 

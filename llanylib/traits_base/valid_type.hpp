@@ -22,8 +22,8 @@
 	#define LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSVALIDTYPE_INCOMPLETE_MINOR_ 0
 
-#include "type_traits.hpp"
-#include "../types/ValidType.hpp"
+#include <llanylib/traits_base/type_traits.hpp>
+#include <llanylib/types/ValidType.hpp>
 	
 #elif defined(LLANYLIB_TRAITSVALIDTYPE_HPP_)
 	#if LLANYLIB_TRAITSVALIDTYPE_MAYOR_ != 12 || LLANYLIB_TRAITSVALIDTYPE_MINOR_ < 0
@@ -40,8 +40,8 @@
 	#define LLANYLIB_TRAITSVALIDTYPE_MAYOR_ 12
 	#define LLANYLIB_TRAITSVALIDTYPE_MINOR_ 0
 
-#include "type_traits.hpp"
-#include "../types/ValidType.hpp"
+#include <llanylib/traits_base/type_traits.hpp>
+#include <llanylib/types/ValidType.hpp>
 
 namespace llcpp {
 namespace meta {

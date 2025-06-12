@@ -22,9 +22,9 @@
 	#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_ 0
 
-#include "type_traits.hpp"
+#include <llanylib/traits_base/type_traits.hpp>
 #undef LLANYLIB_INCOMPLETE_HPP_
-#include "../types/checker_attributes.hpp"
+#include <llanylib/types/checker_attributes.hpp>
 #define LLANYLIB_INCOMPLETE_HPP_
 
 namespace llcpp {
@@ -56,8 +56,8 @@ class ConstructorChecker;
 	#define LLANYLIB_TRAITSCHECKER_MAYOR_ 12
 	#define LLANYLIB_TRAITSCHECKER_MINOR_ 0
 
-#include "type_traits.hpp"
-#include "../types/checker_attributes.hpp"
+#include <llanylib/traits_base/type_traits.hpp>
+#include <llanylib/types/checker_attributes.hpp>
 
 namespace llcpp {
 namespace meta {

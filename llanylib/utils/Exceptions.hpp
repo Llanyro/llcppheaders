@@ -22,9 +22,9 @@
 	#define LLANYLIB_EXCEPTIONS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_EXCEPTIONS_INCOMPLETE_MINOR_ 0
 
-#include "../types/Errors.hpp"
-#include "IteratorUtils.hpp"
-#include "IteratorCommon.hpp"
+#include <llanylib/types/Errors.hpp>
+#include <llanylib/utils_base/GenericFunctions.hpp>
+#include <llanylib/utils_base/list_functions.hpp>
 
 namespace llcpp {
 namespace exceptions {
@@ -50,9 +50,9 @@ class ExceptionBuffer;
 	#define LLANYLIB_EXCEPTIONS_MAYOR_ 12
 	#define LLANYLIB_EXCEPTIONS_MINOR_ 0
 
-#include "../types/Errors.hpp"
-#include "../utils_base/GenericFunctions.hpp"
-#include "../utils_base/list_functions.hpp"
+#include <llanylib/types/Errors.hpp>
+#include <llanylib/utils_base/GenericFunctions.hpp>
+#include <llanylib/utils_base/list_functions.hpp>
 
 namespace llcpp {
 namespace exceptions {

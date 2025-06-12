@@ -22,7 +22,7 @@
 	#define LLANYLIB_CONCEPTSCLEANER_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_CONCEPTSCLEANER_INCOMPLETE_MINOR_ 0
 
-#include "concepts.hpp"
+#include <llanylib/concepts/concepts.hpp>
 
 #elif defined(LLANYLIB_CONCEPTSCLEANER_HPP_)
 	#if LLANYLIB_CONCEPTSCLEANER_MAYOR_ != 12 || LLANYLIB_CONCEPTSCLEANER_MINOR_ < 0
@@ -39,7 +39,8 @@
 	#define LLANYLIB_CONCEPTSCLEANER_MAYOR_ 12
 	#define LLANYLIB_CONCEPTSCLEANER_MINOR_ 0
 
-#include "concepts.hpp"
+#include <llanylib/concepts/concepts.hpp>
+#include <llanylib/traits_base/type_traits_extended.hpp>
 
 namespace llcpp {
 namespace meta {

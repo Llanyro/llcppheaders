@@ -22,7 +22,9 @@
 	#define LLANYLIB_POINTERITERATOR_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_POINTERITERATOR_INCOMPLETE_MINOR_ 0
 
-#include "../traits_base/type_traits.hpp"
+#include <llanylib/traits_base/type_traits.hpp>
+#include <llanylib/traits/ValidationChecker.hpp>
+#include <llanylib/utils_base/GenericFunctions.hpp>
 
 namespace llcpp {
 namespace meta {
@@ -50,9 +52,9 @@ class PointerIterator;
 	#define LLANYLIB_POINTERITERATOR_MAYOR_ 12
 	#define LLANYLIB_POINTERITERATOR_MINOR_ 0
 
-#include "../traits_base/type_traits.hpp"
-#include "../traits/ValidationChecker.hpp"
-#include "../utils_base/GenericFunctions.hpp"
+#include <llanylib/traits_base/type_traits.hpp>
+#include <llanylib/traits/ValidationChecker.hpp>
+#include <llanylib/utils_base/GenericFunctions.hpp>
 
 #if defined(__LL_MINGW)
 	#include <memory>	// To use ::std::addressof

@@ -22,7 +22,7 @@
 	#define LLANYLIB_CONCEPTS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_CONCEPTS_INCOMPLETE_MINOR_ 0
 
-#include "../traits_base/type_traits_extended.hpp"
+#include <llanylib/traits_base/type_traits_extended.hpp>
 
 namespace llcpp {
 namespace meta {
@@ -59,7 +59,7 @@ concept EqualSize			= sizeof(T) == sizeof(U);
 	#define LLANYLIB_CONCEPTS_MAYOR_ 12
 	#define LLANYLIB_CONCEPTS_MINOR_ 0
 
-#include "../traits_base/type_traits_extended.hpp"
+#include <llanylib/traits_base/type_traits_extended.hpp>
 
 #include <concepts>
 
@@ -404,26 +404,6 @@ template<class T, class U = T, class ReturnType = ll_bool_t>
 concept HasEquals = requires (const T t, const U u) { { t.equals(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 
 #pragma endregion
-#pragma region ConstLists
-template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasConstData = requires (const T t) { { t.data() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
-template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasConstBegin = requires (const T t) { { t.begin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
-template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasConstReverseBegin = requires (const T t) { { t.rbegin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
-template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasConstEnd = requires (const T t) { { t.end() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
-template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasConstReverseEnd = requires (const T t) { { t.rend() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
-template<class T>
-concept HasConstListFunctions = requires {
-	requires ::llcpp::meta::concepts::signature::HasConstBegin<T>;
-	requires ::llcpp::meta::concepts::signature::HasConstReverseBegin<T>;
-	requires ::llcpp::meta::concepts::signature::HasConstEnd<T>;
-	requires ::llcpp::meta::concepts::signature::HasConstReverseEnd<T>;
-};
-
-#pragma endregion
 #pragma region Lists
 template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasData = requires (T t) { { t.data() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
@@ -533,9 +513,6 @@ concept IsConstArrayObject = requires (Array arr) {
 };
 
 } // namespace is_object
-
-
-
 } // namespace concepts
 } // namespace meta
 } // namespace llcpp

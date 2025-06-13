@@ -95,8 +95,8 @@ namespace utils {
 template<class _ArrayBase, ll_bool_t _ENABLE_NO_CONST = ::llcpp::LL_TRUE, ll_bool_t _USE_OBJECT_ITERATOR = ::llcpp::LL_FALSE>
 	requires
 		::llcpp::meta::concepts::base::HasValueType<_ArrayBase>
-		&& ::llcpp::meta::concepts::signature::HasConstBegin<_ArrayBase>
-		&& ::llcpp::meta::concepts::signature::HasConstEnd<_ArrayBase>
+		&& ::llcpp::meta::concepts::signature::HasBegin<const _ArrayBase>
+		&& ::llcpp::meta::concepts::signature::HasEnd<const _ArrayBase>
 		&& ::llcpp::meta::traits::is_valid_constructor_checker_v<_ArrayBase>
 		&& ::llcpp::meta::traits::conditional_value_bool_v<_ENABLE_NO_CONST,
 			::llcpp::LL_TRUE,

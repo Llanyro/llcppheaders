@@ -276,10 +276,10 @@ __LL_VAR_INLINE__ constexpr usize array_size = ::llcpp::ZERO_VALUE<usize>;
 template<class T, usize N>
 __LL_VAR_INLINE__ constexpr usize array_size<T[N]> = N;
 
-template<class>
-__LL_VAR_INLINE__ constexpr usize type_or_array_size = 1ull;
-template<class T, usize N>
-__LL_VAR_INLINE__ constexpr usize type_or_array_size<T[N]> = N;
+//template<class>
+//__LL_VAR_INLINE__ constexpr usize type_or_array_size = 1ull;
+//template<class T, usize N>
+//__LL_VAR_INLINE__ constexpr usize type_or_array_size<T[N]> = N;
 
 __LL_VAR_INLINE__ constexpr ll_bool_t LL_FALSE		= false;
 __LL_VAR_INLINE__ constexpr ll_bool_t LL_TRUE		= true;
@@ -317,6 +317,65 @@ using i128 = ::llcpp::meta::pair<i64, i64>;
 using i256 = ::llcpp::meta::pair<i128, i128>;
 using u128 = ::llcpp::meta::pair<u64, u64>;
 using u256 = ::llcpp::meta::pair<u128, u128>;
+
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+
+#pragma region ZeroValue
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_ZERO_VALUE = 
+	   ::llcpp::ZERO_VALUE<u8>  == 0
+	&& ::llcpp::ZERO_VALUE<u16> == 0
+	&& ::llcpp::ZERO_VALUE<u32> == 0
+	&& ::llcpp::ZERO_VALUE<u64> == 0
+	&& ::llcpp::ZERO_VALUE<i8>  == 0
+	&& ::llcpp::ZERO_VALUE<i16> == 0
+	&& ::llcpp::ZERO_VALUE<i32> == 0
+	&& ::llcpp::ZERO_VALUE<i64> == 0
+	&& ::llcpp::ZERO_VALUE<void*> == LL_NULLPTR;
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_zero_value,
+	::llcpp::kat::IS_WORKING_ZERO_VALUE,
+	"'::llcpp::ZERO_VALUE'"
+);
+
+#pragma endregion
+#pragma region ArraySize
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_ARRAY_SIZE = 
+	   ::llcpp::array_size<u8>  == 0
+	&& ::llcpp::array_size<u16> == 0
+	&& ::llcpp::array_size<u32> == 0
+	&& ::llcpp::array_size<u64> == 0
+	&& ::llcpp::array_size<i8>  == 0
+	&& ::llcpp::array_size<i16> == 0
+	&& ::llcpp::array_size<i32> == 0
+	&& ::llcpp::array_size<i64> == 0
+	&& ::llcpp::array_size<void*> == 0
+	&& ::llcpp::array_size<i32[5]> == 5;
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_array_size,
+	::llcpp::kat::IS_WORKING_ARRAY_SIZE,
+	"'::llcpp::array_size'"
+);
+
+#pragma endregion
+
+__LL_NODISCARD__ constexpr ::llcpp::string types_kats() noexcept {
+	::llcpp::string result = ::llcpp::kat::is_working_zero_value();
+	if(result) return result;
+	result = ::llcpp::kat::is_working_array_size();
+	if(result) return result;
+
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::kat::types_kats() == LL_NULLPTR, "Boolean KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // __LL_INCLUDE_KATS
 
 } // namespace llcpp
 

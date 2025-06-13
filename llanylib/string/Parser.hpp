@@ -652,7 +652,7 @@ class Parser : public _ParserFunctions {
 		#define LLANYLIB_PARSER_EXTRA_HPP_
 		#define LLANYLIB_PARSER_EXTRA_MAYOR_ 12
 		#define LLANYLIB_PARSER_EXTRA_MINOR_ 0
-    
+
 	#endif // LLANYLIB_PARSER_EXTRA_HPP_
 #else
 	#undef LLANYLIB_ERROR_HPP_

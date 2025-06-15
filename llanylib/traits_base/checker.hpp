@@ -22,10 +22,17 @@
 	#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSCHECKER_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits.hpp>
-#undef LLANYLIB_INCOMPLETE_HPP_
-#include <llanylib/types/checker_attributes.hpp>
-#define LLANYLIB_INCOMPLETE_HPP_
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/type_traits.hpp>
+	#undef LLANYLIB_INCOMPLETE_HPP_
+	#include <llanylib/types/checker_attributes.hpp>
+	#define LLANYLIB_INCOMPLETE_HPP_
+#else
+	#include "type_traits.hpp"
+	#undef LLANYLIB_INCOMPLETE_HPP_
+	#include "../types/checker_attributes.hpp"
+	#define LLANYLIB_INCOMPLETE_HPP_
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
@@ -56,8 +63,13 @@ class ConstructorChecker;
 	#define LLANYLIB_TRAITSCHECKER_MAYOR_ 12
 	#define LLANYLIB_TRAITSCHECKER_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits.hpp>
-#include <llanylib/types/checker_attributes.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/type_traits.hpp>
+	#include <llanylib/types/checker_attributes.hpp>
+#else
+	#include "type_traits.hpp"
+	#include "../types/checker_attributes.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {

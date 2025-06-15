@@ -22,7 +22,11 @@
 	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/types/types.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/types.hpp>
+#else
+	#include "types.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
@@ -49,7 +53,11 @@ struct checker_attributes_t;
 	#define LLANYLIB_CHECKERATTRIBUTES_MAYOR_ 12
 	#define LLANYLIB_CHECKERATTRIBUTES_MINOR_ 0
 
-#include <llanylib/types/types.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/types.hpp>
+#else
+	#include "types.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {

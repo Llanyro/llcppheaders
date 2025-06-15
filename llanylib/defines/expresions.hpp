@@ -22,7 +22,11 @@
 	#define LLANYLIB_DEFINITIONSEXPRESIONS_MAYOR_ 12
 	#define LLANYLIB_DEFINITIONSEXPRESIONS_MINOR_ 0
 
-#include <llanylib/defines/definitions.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/defines/definitions.hpp>
+#else
+	#include "definitions.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 

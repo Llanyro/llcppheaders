@@ -22,7 +22,11 @@
 	#define LLANYLIB_VALIDTYPE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_VALIDTYPE_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/types/types.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/types.hpp>
+#else
+	#include "types.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace misc {
@@ -47,7 +51,11 @@ enum class ValidType : u8;
 	#define LLANYLIB_VALIDTYPE_MAYOR_ 12
 	#define LLANYLIB_VALIDTYPE_MINOR_ 0
 
-#include <llanylib/types/types.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/types.hpp>
+#else
+	#include "types.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace misc {

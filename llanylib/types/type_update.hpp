@@ -22,7 +22,11 @@
 	#define LLANYLIB_TYPEUPDATE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TYPEUPDATE_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/types/types.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/types.hpp>
+#else
+	#include "types.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
@@ -49,7 +53,11 @@ struct type_update_t;
 	#define LLANYLIB_TYPEUPDATE_MAYOR_ 12
 	#define LLANYLIB_TYPEUPDATE_MINOR_ 0
 
-#include <llanylib/types/types.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/types.hpp>
+#else
+	#include "types.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {

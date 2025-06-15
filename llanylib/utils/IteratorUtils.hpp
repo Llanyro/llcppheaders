@@ -55,9 +55,12 @@ class IteratorUtils;
 	#define LLANYLIB_ITERATORUTILS_MAYOR_ 12
 	#define LLANYLIB_ITERATORUTILS_MINOR_ 0
 
+#include <llanylib/traits/ValidationChecker.hpp>
+#include <llanylib/traits_base/checker.hpp>
+#include <llanylib/utils_base/>
+
 #include "../traits/ValidationChecker.hpp"
 #include "../traits_base/checker.hpp"
-
 #include "constant_friendly.hpp"
 
 namespace llcpp {

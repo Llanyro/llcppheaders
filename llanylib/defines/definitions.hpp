@@ -22,7 +22,11 @@
 	#define LLANYLIB_DEFINITIONS_MAYOR_ 12
 	#define LLANYLIB_DEFINITIONS_MINOR_ 0
 
-#include <llanylib/defines/os.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/defines/os.hpp>
+#else
+	#include "os.hpp"
+#endif // LL_LIB_PATHS
 
 #if !defined(__LL_IGNORE_WARNING_STATIC_ASSERTS__)
 	#define __LL_IGNORE_WARNING_STATIC_ASSERTS__ 0

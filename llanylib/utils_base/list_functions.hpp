@@ -22,7 +22,8 @@
 	#define LLANYLIB_LISTFUNCTIONS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_LISTFUNCTIONS_INCOMPLETE_MINOR_ 0
 
-#include "../concepts/concepts.hpp"
+#include <llanylib/concepts/concepts.hpp>
+#include <llanylib/traits/ValidationChecker.hpp>
 
 namespace llcpp {
 namespace meta {
@@ -60,29 +61,76 @@ __LL_NODISCARD__ constexpr U* getArrayEnd(T& arr) noexcept;
 #include "../concepts/concepts.hpp"
 #include "../traits/ValidationChecker.hpp"
 
+//#include <llanylib/concepts/concepts.hpp>
+//#include <llanylib/traits/ValidationChecker.hpp>
+
+#include <utility>
+
 namespace llcpp {
 namespace meta {
 namespace utils {
+
+#pragma region ArrayConstructorFiller
+namespace __utils__ {
+
+template<class U, class T, class... Args, u64... Idx>
+__LL_NODISCARD__ constexpr auto make_constructed_array(const Args&... args, ::std::index_sequence<Idx...>) noexcept -> U {
+	return U{ (Idx, T(args...))... };
+}
+template<class T, class... Args, u64... Idx>
+__LL_NODISCARD__ constexpr auto make_constructed_new_mem(T* mem, const Args&... args, ::std::index_sequence<Idx...>) noexcept -> T* {
+	return new (mem) T[sizeof...(Idx)]{ (Idx, T(args...))... };
+}
+
+} // namespace __utils__
+
+// Constructs ALL objects in an array with the same arguments
+// Class U needs to have a constructor of  parameter pack
+template<class U, class T, u64 N, class... Args>
+__LL_NODISCARD__ constexpr U make_constructed_array(const Args&... args) noexcept {
+	return
+		::llcpp::meta::algorithm::__algorithm__::make_constructed_array<U, T, Args...>(
+			args...,
+			::std::make_index_sequence<N>{}
+		);
+}
+// Constructs ALL objects in an array memory with the same arguments
+template<class T, u64 N, class... Args>
+__LL_NODISCARD__ constexpr T* make_constructed_new_mem(T* mem, const Args&... args) noexcept {
+	return ::llcpp::meta::algorithm::__algorithm__::make_constructed_new_mem<T, Args...>(
+		mem,
+		args...,
+		::std::make_index_sequence<N>{}
+	);
+}
+
+template<class T, class U>
+__LL_NODISCARD__ constexpr U* getConvertibleType(T& t) noexcept {
+	if constexpr (::std::is_same_v<T, U*>)
+		return t;
+	else if constexpr (::std::is_convertible_v<T, U*>)
+		return static_cast<U*>(t);
+	else {
+		static_assert(::std::is_convertible_v<T, U*>,
+			"T needs to be convertible to U pointer");
+		return ::llcpp::NULL_VALUE<U>;
+	}
+}
 
 // Type structure needs to be an array type (memory needs to be contiguous)
 // Object returned by begin needs to be convertible to U pointer
 template<class U, class T>
 __LL_NODISCARD__ constexpr U* getArrayBegin(T& arr) noexcept {
-	if constexpr (::llcpp::meta::concepts::signature::HasBegin<T>) {
-		using BeginType = decltype(arr.begin());
-		if constexpr (::std::is_convertible_v<BeginType, U*>)
-			return static_cast<U*>(arr.begin());
-		else {
-			static_assert(::std::is_convertible_v<BeginType, U*>,
-				"Begin type needs to be convertible to U pointer");
-			return ::llcpp::NULL_VALUE<U>;
-		}
-	}
-	else if constexpr (::std::is_array_v<T>)
-		return arr;
+	using cvref_t = ::std::remove_cvref_t<decltype(arr)>;
+	using c_t = ::llcpp::meta::traits::conditional_t<::std::is_const_v<T>, const cref_t, cref_t>;
+
+	if constexpr (::llcpp::meta::concepts::signature::HasBegin<c_t>)
+		return ::llcpp::meta::utils::getConvertibleType<U>(arr.begin());
+	else if constexpr (::std::is_array_v<cvref_t>)
+		return ::llcpp::meta::utils::getConvertibleType<U>(arr + 0);
 	else {
-		static_assert(::std::is_array_v<T>,
-			"T has no function to get the begin!");
+		static_assert(::std::is_array_v<cvref_t>,
+			"T has no valid method to get begin of the array!");
 		return ::llcpp::NULL_VALUE<U>;
 	}
 }
@@ -91,37 +139,36 @@ __LL_NODISCARD__ constexpr U* getArrayBegin(T& arr) noexcept {
 // Object returned by end needs to be convertible to U pointer
 template<class U, class T>
 __LL_NODISCARD__ constexpr U* getArrayEnd(T& arr) noexcept {
-	if constexpr (::llcpp::meta::concepts::signature::HasBegin<T>) {
-		using BeginType = decltype(arr.end());
-		if constexpr (::std::is_convertible_v<BeginType, U*>)
-			return static_cast<U*>(arr.end());
-		else {
-			static_assert(::std::is_convertible_v<BeginType, U*>,
-				"Begin type needs to be convertible to U pointer");
-			return ::llcpp::NULL_VALUE<U>;
-		}
-	}
-	else if constexpr (::std::is_array_v<T>)
-		return arr + ::llcpp::meta::traits::array_size<T>;
+	using cvref_t = ::std::remove_cvref_t<decltype(arr)>;
+	using c_t = ::llcpp::meta::traits::conditional_t<::std::is_const_v<T>, const cref_t, cref_t>;
+
+	if constexpr (::llcpp::meta::concepts::signature::HasBegin<c_t>)
+		return ::llcpp::meta::utils::getConvertibleType<U>(arr.end());
+	else if constexpr (::std::is_array_v<cvref_t>)
+		return ::llcpp::meta::utils::getConvertibleType<U>(arr + ::llcpp::array_size<cvref_t>);
 	else {
-		static_assert(::std::is_array_v<T>,
-			"T has no function to get the end!");
+		static_assert(::std::is_array_v<cvref_t>,
+			"T has no valid method to get end of the array!");
 		return ::llcpp::NULL_VALUE<U>;
 	}
 }
 
 // Type structure needs to be an array type (memory needs to be contiguous)
 // Object returned by end needs to be convertible to usize
-template<class U, class T>
-__LL_NODISCARD__ constexpr usize getArraySize(T& arr) noexcept {
-	if constexpr (::llcpp::meta::concepts::signature::HasSize<T>)
-		return arr.size();
-	else if constexpr (::std::is_array_v<T>)
-		return ::llcpp::meta::traits::array_size<T>;
+template<class U = usize, class T>
+__LL_NODISCARD__ constexpr U getArraySize(T& arr) noexcept {
+	using cvref_t = ::std::remove_cvref_t<decltype(arr)>;
+	using c_t = ::llcpp::meta::traits::conditional_t<::std::is_const_v<T>, const cref_t, cref_t>;
+
+	// Let size() return any type
+	if constexpr (::llcpp::meta::concepts::signature::HasSize<c_t, ::llcpp::Emptyclass>)
+		return ::llcpp::meta::utils::getConvertibleType<U>(arr.size());
+	else if constexpr (::std::is_array_v<cvref_t>)
+		return ::llcpp::meta::utils::getConvertibleType<U>(::llcpp::array_size<cvref_t>);
 	else {
-		static_assert(::std::is_array_v<T>,
-			"T has no function to get the end!");
-		return ::llcpp::ZERO_VALUE<usize>;
+		static_assert(::std::is_array_v<cvref_t>,
+			"T has no valid method to get size of the array!");
+		return ::llcpp::NULL_VALUE<U>;
 	}
 }
 
@@ -138,25 +185,77 @@ constexpr ll_bool_t isValidArrayType() noexcept {
 #if __LL_INCLUDE_KATS == 1
 namespace kat {
 
-constexpr ::llcpp::string STR[] = __LL_STRING_PREFIX "Hola mundo!";
+struct KatArray {
+	::llcpp::char_type* str;
+	__LL_NODISCARD__ constexpr ::llcpp::char_type* begin() noexcept { return this->str; }
+	__LL_NODISCARD__ constexpr ::llcpp::string begin() const noexcept { return this->str; }
+};
+struct KatArrayConst {
+	::llcpp::string str;
+	__LL_NODISCARD__ constexpr ::llcpp::string begin() const noexcept { return this->str; }
+};
+
+constexpr ::llcpp::char_type STR[]	= __LL_STRING_PREFIX "Hola mundo!";
+constexpr ::llcpp::char_type STR_0	= 'H';
+constexpr ::llcpp::char_type STR_10	= '!';
+constexpr ::llcpp::char_type STR_11	= '\0';
+constexpr auto STR_END	= ::llcpp::meta::utils::getArrayEnd<const ::llcpp::char_type>(STR);
+
+#pragma region Begin
+constexpr auto STR_BEGIN	= ::llcpp::meta::utils::getArrayBegin<const ::llcpp::char_type>(STR);
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_BEGIN =
-	(::llcpp::meta::utils::getArrayBegin<::llcpp::char_type>(STR) != ::llcpp::NULL_VALUE<decltype(*STR)>)
-	;
+	(STR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	&& (*STR_BEGIN == STR_0);
+
 __LL_KAT_FUNCTION_CONSTEXPR(
-	is_working_valid_type_kat,
-	::llcpp::meta::traits::kat::IS_WORKING_GET_ARRAY_BEGIN,
-	"'Is valid type'" __LL_IS_NOT_WORKING_STR
+	is_working_get_array_begin_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_BEGIN,
+	"'Get begin'" __LL_IS_NOT_WORKING_STR
 );
 
-__LL_NODISCARD__ constexpr ::llcpp::string valid_type_kats() noexcept {
-	::llcpp::string result = ::llcpp::meta::traits::kat::is_working_valid_type_kat();
+#pragma endregion
+#pragma region End
+constexpr auto STR_END	= ::llcpp::meta::utils::getArrayEnd<const ::llcpp::char_type>(STR);
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_END =
+	(STR_END != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	&& (*(STR_END - 1) == STR_11);
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_get_array_end_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_END,
+	"'Get end'" __LL_IS_NOT_WORKING_STR
+);
+
+#pragma endregion
+#pragma region End
+constexpr auto STR_SIZE	= ::llcpp::meta::utils::getArraySize(STR);
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_END =
+	(STR_END != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	&& (*(STR_END - 1) == STR_11);
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_get_array_end_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_END,
+	"'Get end'" __LL_IS_NOT_WORKING_STR
+);
+
+#pragma endregion
+
+
+__LL_NODISCARD__ constexpr ::llcpp::string list_functions_kats() noexcept {
+	::llcpp::string result = ::llcpp::meta::utils::kat::is_working_get_array_begin_kat();
 	if(result) return result;
+	result = ::llcpp::meta::utils::kat::is_working_get_array_end_kat();
+	if(result) return result;
+
 	return nullptr;
 }
 
 #if __LL_STATIC_KATS == 1
-	static_assert(::llcpp::meta::traits::kat::valid_type_kats() == LL_NULLPTR, "list_functions KAT not OK");
+	static_assert(::llcpp::meta::utils::kat::list_functions_kats() == LL_NULLPTR, "list_functions KAT not OK");
 #endif // __LL_STATIC_KATS
 
 } // namespace kat

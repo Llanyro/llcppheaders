@@ -22,7 +22,11 @@
 	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/types/types.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/types.hpp>
+#else
+	#include "../types/types.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
@@ -120,21 +124,20 @@ class RangeChecker;
 	#define LLANYLIB_TYPETRAITS_MAYOR_ 12
 	#define LLANYLIB_TYPETRAITS_MINOR_ 0
 
-#include <llanylib/types/types.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/types.hpp>
+#else
+	#include "../types/types.hpp"
+#endif // LL_LIB_PATHS
 
 #if defined(__LL_WINDOWS_SYSTEM)
 	#include <type_traits>
 #elif defined(__LL_MINGW)
-	#include <type_traits>
-	#include <utility>
+	//#include <type_traits>
+	//#include <utility>
 #elif defined(__LL_POSIX_SYSTEM)
-	#include <type_traits>
-	#include <utility>
 #elif defined(__LL_UNIX_SYSTEM)
-	#include <type_traits>
-	#include <utility>
 #else
-	#include <type_traits>
 #endif // __LL_WINDOWS_SYSTEM
 
 namespace llcpp {

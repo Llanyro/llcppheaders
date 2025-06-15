@@ -22,7 +22,11 @@
 	#define LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSBASE_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/type_traits.hpp>
+#else
+	#include "type_traits.hpp"
+#endif // LL_LIB_PATHS
 
 #elif defined(LLANYLIB_TRAITSBASE_HPP_)
 	#if LLANYLIB_TRAITSBASE_MAYOR_ != 12 || LLANYLIB_TRAITSBASE_MINOR_ < 0
@@ -39,7 +43,11 @@
 	#define LLANYLIB_TRAITSBASE_MAYOR_ 12
 	#define LLANYLIB_TRAITSBASE_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/type_traits.hpp>
+#else
+	#include "type_traits.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {

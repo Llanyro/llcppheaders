@@ -22,10 +22,20 @@
 	#define LLANYLIB_TYPESBASE_MAYOR_ 12
 	#define LLANYLIB_TYPESBASE_MINOR_ 0
 
-#include <llanylib/defines/expresions.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/defines/expresions.hpp>
+#else
+	#include "../defines/expresions.hpp"
+#endif // LL_LIB_PATHS
 
-#include <cstdint>
-#include <cuchar>
+#if defined(__LL_WINDOWS_SYSTEM)
+	#include <cstdint>
+	#include <cuchar>
+#elif defined(__LL_MINGW)
+#elif defined(__LL_POSIX_SYSTEM)
+#elif defined(__LL_UNIX_SYSTEM)
+#else
+#endif // __LL_WINDOWS_SYSTEM
 
 #pragma region StandardIncompleteTypes
 

@@ -22,7 +22,11 @@
 	#define LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_TRAITSPARAMETERPACK_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/type_traits.hpp>
+#else
+	#include "type_traits.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
@@ -62,7 +66,11 @@ class ParameterPackOperations<>;
 	#define LLANYLIB_TRAITSPARAMETERPACK_MAYOR_ 12
 	#define LLANYLIB_TRAITSPARAMETERPACK_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/type_traits.hpp>
+#else
+	#include "type_traits.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {

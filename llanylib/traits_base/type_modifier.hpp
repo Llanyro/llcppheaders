@@ -22,10 +22,17 @@
 #define LLANYLIB_TRAITSTYPEMODIFIER_INCOMPLETE_MAYOR_ 12
 #define LLANYLIB_TRAITSTYPEMODIFIER_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits_extended.hpp>
-#undef LLANYLIB_INCOMPLETE_HPP_
-#include <llanylib/types/type_update.hpp>
-#define LLANYLIB_INCOMPLETE_HPP_
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/type_traits.hpp>
+	#undef LLANYLIB_INCOMPLETE_HPP_
+	#include <llanylib/types/type_update.hpp>
+	#define LLANYLIB_INCOMPLETE_HPP_
+#else
+	#include "type_traits.hpp"
+	#undef LLANYLIB_INCOMPLETE_HPP_
+	#include "../types/type_update.hpp"
+	#define LLANYLIB_INCOMPLETE_HPP_
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
@@ -56,8 +63,13 @@ constexpr auto type_modifier();
 #define LLANYLIB_TRAITSTYPEMODIFIER_MAYOR_ 12
 #define LLANYLIB_TRAITSTYPEMODIFIER_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits_extended.hpp>
-#include <llanylib/types/type_update.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/type_traits_extended.hpp>
+	#include <llanylib/types/type_update.hpp>
+#else
+	#include "type_traits_extended.hpp"
+	#include "../types/type_update.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {

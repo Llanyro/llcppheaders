@@ -22,7 +22,11 @@
 	#define LLANYLIB_HASH_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_HASH_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/concepts/concepts.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/concepts/concepts.hpp>
+#else
+	#include "concepts.hpp"
+#endif // LL_LIB_PATHS
 
 #elif defined(LLANYLIB_HASH_HPP_)
 	#if LLANYLIB_HASH_MAYOR_ != 12 || LLANYLIB_HASH_MINOR_ < 0
@@ -39,7 +43,11 @@
 	#define LLANYLIB_HASH_MAYOR_ 12
 	#define LLANYLIB_HASH_MINOR_ 0
 
-#include <llanylib/concepts/concepts.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/concepts/concepts.hpp>
+#else
+	#include "concepts.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {

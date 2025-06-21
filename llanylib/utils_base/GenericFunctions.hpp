@@ -22,11 +22,15 @@
 	#define LLANYLIB_GENERICFUNCTIONS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_GENERICFUNCTIONS_INCOMPLETE_MINOR_ 0
 
-#include "../concepts/concepts.hpp"
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/concepts/GenericFunctions.hpp>
+#else
+	#include "../concepts/GenericFunctions.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
-namespace utils {	
+namespace utils {
 
 class GenericFunctions;
 
@@ -49,7 +53,11 @@ class GenericFunctions;
 	#define LLANYLIB_GENERICFUNCTIONS_MAYOR_ 12
 	#define LLANYLIB_GENERICFUNCTIONS_MINOR_ 0
 
-#include "../concepts/GenericFunctions.hpp"
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/concepts/GenericFunctions.hpp>
+#else
+	#include "../concepts/GenericFunctions.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
@@ -105,7 +113,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 		template<class ExternalFunctions = _MyType, class T>
 		__LL_NODISCARD__ constexpr auto process(T& obj, const ExternalFunctions& external) const noexcept requires(IS_CLEANER) {
 			// If external has a way to clear object
-			if constexpr (::llcpp::meta::concepts::signature::HasCleaner<ExternalFunctions, void, T&>)
+			if constexpr (::llcpp::meta::concepts::signature::HasCleaner<const ExternalFunctions, void, T&>)
 				return external.__cleaner(obj);
 			else if constexpr (::std::is_pointer_v<T>) {
 #if __LL_CLEAR_POINTER_AS == 0
@@ -136,6 +144,10 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 					static_assert(false, "Not yet implemented");
 				}
 #endif
+				// [TOCHECK] [TODO]
+				// If object is list type, and we can iterate over them
+				else if constexpr (::llcpp::meta::concepts::SameTypeBeginEnd<T>)
+					return this->process(obj.begin(), obj.end(), ExternalFunctions);
 				// If we cannot use default clears, we cant do anything
 				else {
 					static_assert(::llcpp::meta::concepts::signature::HasClear<T>,
@@ -167,7 +179,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 		template<class ExternalFunctions = _MyType, class T>
 		__LL_NODISCARD__ constexpr auto process(T* begin, const T* end, const ExternalFunctions& external) const noexcept requires(IS_CLEANER) {
 			// If external has a way to clear object
-			if constexpr (::llcpp::meta::concepts::signature::HasCleaner<ExternalFunctions, void, T&>)
+			if constexpr (::llcpp::meta::concepts::signature::HasCleaner<const ExternalFunctions, void, T&>)
 				return external.__cleaner(begin, end);
 			// If there is no suitable cleaner, we use this class as default
 			else if constexpr (!::std::is_same_v<ExternalFunctions, _MyType>)
@@ -256,6 +268,136 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 
 using Cleaner = ::llcpp::meta::utils::GenericFunctions<::llcpp::meta::utils::GenericMode::Cleaner>;
 using Invalidator = ::llcpp::meta::utils::GenericFunctions<::llcpp::meta::utils::GenericMode::Invalidator>;
+
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+
+struct TestObj {
+	f32 aaa;
+
+	__LL_NODISCARD__ constexpr ll_bool_t operator==(const TestObj& other) const noexcept {
+		return this->aaa == other.aaa;
+	}
+	__LL_NODISCARD__ constexpr ll_bool_t operator!=(const TestObj& other) const noexcept {
+		return this->aaa != other.aaa;
+	}
+
+
+	template<class T, usize N>
+	constexpr void __invalidate(T (&v)[N]) const noexcept {
+		return this->__invalidate(v, v + N);
+	}
+	template<class T>
+	constexpr void __invalidate(T* begin, const T* end) const noexcept {
+		T* aux = begin;
+		for(; aux < end; ++aux)
+			this->__invalidate(*aux);
+	}
+	constexpr void __invalidate(u32& obj) const noexcept { obj = u32(-1); }
+	constexpr void __invalidate(TestObj& obj) const noexcept { obj = TestObj{ -1.0f }; }
+
+};
+__LL_VAR_INLINE__ constexpr auto DEFAULT_VALUE		= TestObj { 99.0f };
+__LL_VAR_INLINE__ constexpr auto CLEAR_VALUE		= TestObj { ::llcpp::ZERO_VALUE<f32> };
+__LL_VAR_INLINE__ constexpr auto INVALIDATE_VALUE	= TestObj { -1.0f };
+
+template<class T, usize N, class Cleaner, class CleanerExtra = Cleaner>
+constexpr bool clear_array(const T& value, const T& clearobj) noexcept {
+	T values[N];
+	for(auto& i : values) i = value;
+
+	Cleaner().process<CleanerExtra>(values);
+
+	for(const auto& i : values)
+		if(i != clearobj)
+			return ::llcpp::LL_FALSE;
+
+	return ::llcpp::LL_TRUE;
+}
+
+#pragma region ClearArray
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_CLEAR_ARRAY =
+	clear_array<
+		u32,
+		13,
+		::llcpp::meta::utils::Cleaner
+	>(88, ::llcpp::ZERO_VALUE<u32>);
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_clear_array_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_CLEAR_ARRAY,
+	"'Clear array'" __LL_IS_NOT_WORKING_STR
+);
+
+#pragma endregion
+#pragma region ClearArrayObj
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_CLEAR_ARRAY_OBJ =
+	clear_array<
+		TestObj,
+		13,
+		::llcpp::meta::utils::Cleaner
+	>(DEFAULT_VALUE, CLEAR_VALUE);
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_clear_array_obj_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_CLEAR_ARRAY_OBJ,
+	"'Clear array obj'" __LL_IS_NOT_WORKING_STR
+);
+
+#pragma endregion
+#pragma region InvalidateArray
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_INVALIDATE_ARRAY =
+	clear_array<
+		u32,
+		13,
+		::llcpp::meta::utils::Invalidator,
+		TestObj
+	>(99, u32(-1));
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_invalidate_array_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_INVALIDATE_ARRAY,
+	"'Invalidate array'" __LL_IS_NOT_WORKING_STR
+);
+
+#pragma endregion
+#pragma region InvalidateArrayObj
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_INVALIDATE_ARRAY_OBJ =
+	clear_array<
+		TestObj,
+		13,
+		::llcpp::meta::utils::Invalidator,
+		TestObj
+	>(DEFAULT_VALUE, INVALIDATE_VALUE);
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_clear_array_obj_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_INVALIDATE_ARRAY_OBJ,
+	"'Clear array obj'" __LL_IS_NOT_WORKING_STR
+);
+
+#pragma endregion
+
+__LL_NODISCARD__ constexpr ::llcpp::string generic_functions_kat() noexcept {
+	::llcpp::string result = ::llcpp::meta::utils::kat::is_working_clear_array_kat();
+	if(result) return result;
+	result = ::llcpp::meta::utils::kat::is_working_clear_array_obj_kat();
+	if(result) return result;
+
+	result = ::llcpp::meta::utils::kat::is_working_invalidate_array_kat();
+	if(result) return result;
+	result = ::llcpp::meta::utils::kat::is_working_clear_array_obj_kat();
+	if(result) return result;
+
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::meta::utils::kat::generic_functions_kat() == LL_NULLPTR, "GenericFunctions KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // __LL_INCLUDE_KATS
 
 } // namespace utils
 } // namespace meta

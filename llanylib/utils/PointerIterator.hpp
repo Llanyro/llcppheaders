@@ -132,8 +132,8 @@ class PointerIterator {
 			return *this;
 		}
 
-		constexpr PointerIterator(volatile const PointerIterator& other) noexcept = delete;
-		constexpr PointerIterator& operator=(volatile const PointerIterator& other) noexcept = delete;
+		constexpr PointerIterator(const volatile PointerIterator& other) noexcept = delete;
+		constexpr PointerIterator& operator=(const volatile PointerIterator& other) noexcept = delete;
 		constexpr PointerIterator(volatile PointerIterator&& other) noexcept = delete;
 		constexpr PointerIterator& operator=(volatile PointerIterator&& other) noexcept = delete;
 

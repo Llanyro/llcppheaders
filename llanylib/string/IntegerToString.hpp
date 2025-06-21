@@ -141,8 +141,8 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 					return *this;
 				}
 
-				constexpr Data(volatile const Data& other) noexcept = delete;
-				constexpr Data& operator=(volatile const Data& other) noexcept = delete;
+				constexpr Data(const volatile Data& other) noexcept = delete;
+				constexpr Data& operator=(const volatile Data& other) noexcept = delete;
 				constexpr Data(volatile Data&& other) noexcept = delete;
 				constexpr Data& operator=(volatile Data&& other) noexcept = delete;
 
@@ -294,8 +294,8 @@ class IntegerToString : public ::llcpp::ClusterTag, public ::llcpp::AlwaysValidT
 				constexpr IntegetView(IntegetView&& other) noexcept = delete;
 				constexpr IntegetView& operator=(IntegetView&& other) noexcept = delete;
 
-				constexpr IntegetView(volatile const IntegetView& other) noexcept = delete;
-				constexpr IntegetView& operator=(volatile const IntegetView& other) noexcept = delete;
+				constexpr IntegetView(const volatile IntegetView& other) noexcept = delete;
+				constexpr IntegetView& operator=(const volatile IntegetView& other) noexcept = delete;
 				constexpr IntegetView(volatile IntegetView&& other) noexcept = delete;
 				constexpr IntegetView& operator=(volatile IntegetView&& other) noexcept = delete;
 

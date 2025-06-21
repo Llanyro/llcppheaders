@@ -133,7 +133,7 @@ class RangeChecker;
 #if defined(__LL_WINDOWS_SYSTEM)
 	#include <type_traits>
 #elif defined(__LL_MINGW)
-	//#include <type_traits>
+	#include <type_traits>
 	//#include <utility>
 #elif defined(__LL_POSIX_SYSTEM)
 #elif defined(__LL_UNIX_SYSTEM)
@@ -180,6 +180,13 @@ template<class T>
 struct HasMyType<T, ::std::void_t<typename T::_MyType>> : public ::std::true_type {};
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_mytype_v = ::llcpp::meta::traits::HasMyType<T>::value;
+
+template <class T, class = void>
+struct HasSize : public ::std::false_type {};
+template<class T>
+struct HasSize<T, ::std::void_t<decltype(T::N)>> : public ::std::true_type {};
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_size_v = ::llcpp::meta::traits::HasSize<T>::value;
 
 #pragma endregion
 #pragma region HashChecker

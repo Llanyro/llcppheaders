@@ -26,7 +26,7 @@
 
 namespace llcpp {
 namespace meta {
-namespace math {	
+namespace math {
 
 template<class T>
 __LL_NODISCARD__ constexpr ll_bool_t is_even(::llcpp::meta::traits::cinput<T> value) noexcept;

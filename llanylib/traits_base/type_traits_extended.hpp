@@ -127,8 +127,8 @@ template<class T>
 using array_type_t = ::std::remove_extent_t<T>;
 template<class T>
 using input = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T> && !::std::is_pointer_v<T>, T&, T>;
-//template<class T>
-//using input = ::llcpp::meta::traits::conditional_t<::std::is_pointer_v<T>, T, T&>;
+template<class T>
+using ref_or_ptr = ::llcpp::meta::traits::conditional_t<::std::is_pointer_v<T> || ::llcpp::meta::traits::is_trivial_v<T>, T, T&>;
 template<class T>
 using cinput = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T> && !::std::is_pointer_v<T>, const T&, const T>;
 

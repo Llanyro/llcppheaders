@@ -59,9 +59,21 @@ concept EqualSize			= sizeof(T) == sizeof(U);
 	#define LLANYLIB_CONCEPTS_MAYOR_ 12
 	#define LLANYLIB_CONCEPTS_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits_extended.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/type_traits_extended.hpp>
+#else
+	#include "../traits_base/type_traits_extended.hpp"
+#endif // LL_LIB_PATHS
 
-#include <concepts>
+#if defined(__LL_WINDOWS_SYSTEM)
+	#include <concepts>
+#elif defined(__LL_MINGW)
+	#include <concepts>
+	#include <utility>
+#elif defined(__LL_POSIX_SYSTEM)
+#elif defined(__LL_UNIX_SYSTEM)
+#else
+#endif // __LL_WINDOWS_SYSTEM
 
 namespace llcpp {
 namespace meta {
@@ -146,11 +158,11 @@ template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasPointerOperator = requires (T t) { { *t } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 
 template<class T, class ArrayType = ll_string_t, class SizeType = usize, class ReturnType = void>
-concept HasHashArray = requires (const T t, const ArrayType arr, const SizeType s) {
+concept HasHashArray = requires (T t, ArrayType arr, SizeType s) {
 	{ t.hash(arr, s) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class ReturnType = u64>
-concept HasHash = requires (const T t) {
+concept HasHash = requires (T t) {
 	{ t.hash() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 
@@ -164,7 +176,7 @@ concept HasForeachOperationExtra = requires (T t, U u, W w) {
 };
 
 template<class T, class U = T, class ReturnType = T&>
-concept HasCopyAssignable = requires (T t, U u) {
+concept HasCopyAssignable = requires (T t, const U u) {
 	{ t = ::std::forward<const U&>(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U = T, class ReturnType = T&>
@@ -179,64 +191,64 @@ concept HasPreIncrement = requires (T t) { { ++t } noexcept -> ::std::same_as<Re
 template<class T, class ReturnType = T>
 concept HasPosIncrement = requires (T t) { { t++ } noexcept -> ::std::same_as<ReturnType>; };
 template<class T, class U, class ReturnType = T>
-concept HasOperatorSum = requires (const T t, const U u) { { t + u } noexcept -> ::std::same_as<ReturnType>; };
+concept HasOperatorSum = requires (T t, U u) { { t + u } noexcept -> ::std::same_as<ReturnType>; };
 template<class T, class U, class ReturnType = T>
-concept HasOperatorSub = requires (const T t, const U u) { { t - u } noexcept -> ::std::same_as<ReturnType>; };
+concept HasOperatorSub = requires (T t, U u) { { t - u } noexcept -> ::std::same_as<ReturnType>; };
 
 template<class T, class U = u8, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseLeft = requires(const T t, const U u) {
+concept HasOperatorBitwiseLeft = requires(T t, U u) {
 	{ t << u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U = u8, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseRight = requires(const T t, const U u) {
+concept HasOperatorBitwiseRight = requires(T t, U u) {
 	{ t >> u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseAND = requires(const T t, const U u) {
+concept HasOperatorBitwiseAND = requires(T t, U u) {
 	{ t & u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseOR = requires(const T t, const U u) {
+concept HasOperatorBitwiseOR = requires(T t, U u) {
 	{ t | u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseXOR = requires(const T t, const U u) {
+concept HasOperatorBitwiseXOR = requires(T t, U u) {
 	{ t ^ u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorModulus = requires(const T t, const U u) {
+concept HasOperatorModulus = requires(T t, U u) {
 	{ t % u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 
 #pragma endregion
 #pragma region AssignMode
 template<class T, class U, class ReturnType = T&>
-concept HasOperatorSumAssign = requires (T t, const U u) { { t += u } noexcept -> ::std::same_as<ReturnType>; };
+concept HasOperatorSumAssign = requires (T t, U u) { { t += u } noexcept -> ::std::same_as<ReturnType>; };
 template<class T, class U, class ReturnType = T&>
-concept HasOperatorSubAssign = requires (T t, const U u) { { t -= u } noexcept -> ::std::same_as<ReturnType>; };
+concept HasOperatorSubAssign = requires (T t, U u) { { t -= u } noexcept -> ::std::same_as<ReturnType>; };
 
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseLeftAssign = requires(T t, const U u) {
+concept HasOperatorBitwiseLeftAssign = requires(T t, U u) {
 	{ t <<= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseRightAssign = requires(T t, const U u) {
+concept HasOperatorBitwiseRightAssign = requires(T t, U u) {
 	{ t >>= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseANDAssign = requires(T t, const U u) {
+concept HasOperatorBitwiseANDAssign = requires(T t, U u) {
 	{ t &= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseORAssign = requires(T t, const U u) {
+concept HasOperatorBitwiseORAssign = requires(T t, U u) {
 	{ t |= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorBitwiseXORAssign = requires(T t, const U u) {
+concept HasOperatorBitwiseXORAssign = requires(T t, U u) {
 	{ t ^= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
-concept HasOperatorModulusAssign = requires(T t, const U u) {
+concept HasOperatorModulusAssign = requires(T t, U u) {
 	{ t %= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 
@@ -385,23 +397,23 @@ concept HasOperatorModulusWithPrimitives =
 #pragma endregion
 #pragma region Comparations
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorEqual = requires (const T t, const U u) { { t == u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorEqual = requires (T t, U u) { { t == u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorNonEqual = requires (const T t, const U u) { { t != u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorNonEqual = requires (T t, U u) { { t != u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorGreaterEqual = requires (const T t, const U u) { { t >= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorGreaterEqual = requires (T t, U u) { { t >= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorGreater = requires (const T t, const U u) { { t > u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorGreater = requires (T t, U u) { { t > u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorLowerEqual = requires (const T t, const U u) { { t <= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorLowerEqual = requires (T t, U u) { { t <= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorLower = requires (const T t, const U u) { { t < u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorLower = requires (T t, U u) { { t < u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorThreeWay = requires (const T t, const U u) { { t <=> u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorThreeWay = requires (T t, U u) { { t <=> u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = i32>
-concept HasCompare = requires (const T t, const U u) { { t.compare(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasCompare = requires (T t, U u) { { t.compare(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasEquals = requires (const T t, const U u) { { t.equals(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasEquals = requires (T t, U u) { { t.equals(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 
 #pragma endregion
 #pragma region Lists
@@ -422,6 +434,13 @@ concept HasListFunctions = requires {
 	requires ::llcpp::meta::concepts::signature::HasEnd<T>;
 	requires ::llcpp::meta::concepts::signature::HasReverseEnd<T>;
 };
+template<class T, ll_bool_t IS_POINTER_ITERATOR = false>
+concept SameTypeBeginEnd = requires (T t) {
+	requires ::llcpp::meta::concepts::signature::HasBegin<T>;
+	requires ::llcpp::meta::concepts::signature::HasEnd<T>;
+	requires ::std::is_same_v<decltype(t.begin()), decltype(t.end())>;
+	requires IS_POINTER_ITERATOR ||
+};
 
 #pragma endregion
 template<class T, class ReturnType = void>
@@ -431,13 +450,13 @@ concept HasMakeInvalid = requires (T t) { { t.makeInvalid() } noexcept -> ::llcp
 template<class T, class ReturnType = void, class... Args>
 concept HasClearOther = requires (T t, Args... args) { { t.clear(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = ll_bool_t>
-concept HasEmpty = requires (const T t) { { t.empty() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasEmpty = requires (T t) { { t.empty() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class U = usize, class ReturnType = ll_bool_t>
-concept HasInRange = requires (const T t, const U u) { { t.inRange(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasInRange = requires (T t, U u) { { t.inRange(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 
 #pragma region Size
 template<class T, class ReturnType = usize>
-concept HasSize = requires (const T t) { { t.size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasSize = requires (T t) { { t.size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class... Args>
 concept HasSizeWith =
 #if __LL_REAL_CXX17 == 1
@@ -451,7 +470,7 @@ concept HasSizeWithPrimitives = ::llcpp::meta::concepts::signature::HasSizeWith<
 #pragma endregion
 #pragma region MaxSize
 template<class T, class ReturnType = usize>
-concept HasMaxSize = requires (const T t) { { t.max_size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasMaxSize = requires (T t) { { t.max_size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = usize, class... Args>
 concept HasMaxSizeWith =
 #if __LL_REAL_CXX17 == 1
@@ -493,10 +512,10 @@ template<class Array, class Content = ::llcpp::Emptyclass>
 concept IsArrayObject = requires (Array arr) {
 	requires ::llcpp::meta::concepts::is_object::IsArray<Array, Content>;
 	requires ::llcpp::meta::concepts::signature::HasBegin<Array>;
-	requires ::llcpp::meta::concepts::signature::HasConstBegin<Array>;
+	requires ::llcpp::meta::concepts::signature::HasBegin<const Array>;
 	requires ::llcpp::meta::concepts::signature::HasReverseBegin<Array>;
 	requires ::llcpp::meta::concepts::signature::HasEnd<Array>;
-	requires ::llcpp::meta::concepts::signature::HasConstEnd<Array>;
+	requires ::llcpp::meta::concepts::signature::HasEnd<const Array>;
 	requires ::llcpp::meta::concepts::signature::HasReverseEnd<Array>;
 	requires ::llcpp::meta::concepts::signature::HasSize<Array>;
 	requires ::llcpp::meta::concepts::signature::HasMaxSize<Array>;
@@ -505,8 +524,8 @@ concept IsArrayObject = requires (Array arr) {
 template<class Array, class Content = ::llcpp::Emptyclass>
 concept IsConstArrayObject = requires (Array arr) {
 	requires ::llcpp::meta::concepts::is_object::IsArray<Array, Content>;
-	requires ::llcpp::meta::concepts::signature::HasConstBegin<Array>;
-	requires ::llcpp::meta::concepts::signature::HasConstEnd<Array>;
+	requires ::llcpp::meta::concepts::signature::HasBegin<const Array>;
+	requires ::llcpp::meta::concepts::signature::HasEnd<const Array>;
 	requires ::llcpp::meta::concepts::signature::HasSize<Array>;
 	requires ::llcpp::meta::concepts::signature::HasMaxSize<Array>;
 	requires ::llcpp::meta::concepts::signature::HasEmpty<Array>;

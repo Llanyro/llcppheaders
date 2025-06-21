@@ -145,8 +145,8 @@ class AtomicLIFO {
 		constexpr AtomicLIFO(AtomicLIFO&& other) noexcept = delete;
 		constexpr AtomicLIFO& operator=(AtomicLIFO&& other) noexcept = delete;
 
-		constexpr AtomicLIFO(volatile const AtomicLIFO& other) noexcept = delete;
-		constexpr AtomicLIFO& operator=(volatile const AtomicLIFO& other) noexcept = delete;
+		constexpr AtomicLIFO(const volatile AtomicLIFO& other) noexcept = delete;
+		constexpr AtomicLIFO& operator=(const volatile AtomicLIFO& other) noexcept = delete;
 		constexpr AtomicLIFO(volatile AtomicLIFO&& other) noexcept = delete;
 		constexpr AtomicLIFO& operator=(volatile AtomicLIFO&& other) noexcept = delete;
 
@@ -159,7 +159,7 @@ class AtomicLIFO {
 		#pragma endregion
 		#pragma region ClassFunctions
 		public:
-			__LL_NODISCARD__ constexpr ll_bool_t pop(_MyType::ObjectType& extracted) noexcept {	
+			__LL_NODISCARD__ constexpr ll_bool_t pop(_MyType::ObjectType& extracted) noexcept {
 				//this->last.compare_exchange_weak();
 			}
 			__LL_NODISCARD__ constexpr ll_bool_t push(_MyType::ObjectType object) noexcept {

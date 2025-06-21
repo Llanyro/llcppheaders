@@ -172,8 +172,8 @@ class ListBody : public _ArrayBase {
 			return *this;
 		}
 
-		constexpr ListBody(volatile const ListBody& other) noexcept = delete;
-		constexpr ListBody& operator=(volatile const ListBody& other) noexcept = delete;
+		constexpr ListBody(const volatile ListBody& other) noexcept = delete;
+		constexpr ListBody& operator=(const volatile ListBody& other) noexcept = delete;
 		constexpr ListBody(volatile ListBody&& other) noexcept = delete;
 		constexpr ListBody& operator=(volatile ListBody&& other) noexcept = delete;
 

@@ -22,7 +22,11 @@
 	#define LLANYLIB_CONCEPTSCLEANER_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_CONCEPTSCLEANER_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/concepts/concepts.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/concepts/concepts.hpp>
+#else
+	#include "concepts.hpp"
+#endif // LL_LIB_PATHS
 
 #elif defined(LLANYLIB_CONCEPTSCLEANER_HPP_)
 	#if LLANYLIB_CONCEPTSCLEANER_MAYOR_ != 12 || LLANYLIB_CONCEPTSCLEANER_MINOR_ < 0
@@ -39,8 +43,11 @@
 	#define LLANYLIB_CONCEPTSCLEANER_MAYOR_ 12
 	#define LLANYLIB_CONCEPTSCLEANER_MINOR_ 0
 
-#include <llanylib/concepts/concepts.hpp>
-#include <llanylib/traits_base/type_traits_extended.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/concepts/concepts.hpp>
+#else
+	#include "concepts.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
@@ -48,11 +55,11 @@ namespace concepts {
 namespace signature {
 
 template<class T, class ReturnType = void, class... Args>
-concept HasCleaner = requires (const T t, Args... args) {
+concept HasCleaner = requires (T t, Args... args) {
 	{ t.__cleaner(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class ReturnType = void, class... Args>
-concept HasInvalidator = requires (const T t, Args... args) {
+concept HasInvalidator = requires (T t, Args... args) {
 	{ t.__invalidate(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 

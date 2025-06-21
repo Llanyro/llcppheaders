@@ -280,8 +280,8 @@ class ArrayBase {
 			return *this;
 		}*/
 
-		constexpr ArrayBase(volatile const ArrayBase& other) noexcept = delete;
-		constexpr ArrayBase& operator=(volatile const ArrayBase& other) noexcept = delete;
+		constexpr ArrayBase(const volatile ArrayBase& other) noexcept = delete;
+		constexpr ArrayBase& operator=(const volatile ArrayBase& other) noexcept = delete;
 		constexpr ArrayBase(volatile ArrayBase&& other) noexcept = delete;
 		constexpr ArrayBase& operator=(volatile ArrayBase&& other) noexcept = delete;
 

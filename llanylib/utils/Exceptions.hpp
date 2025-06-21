@@ -69,8 +69,8 @@ class ExceptionFunctions : public ::llcpp::AlwaysValidTag {
 		using ErrorType				= _ErrorType;
 
 		__LL_VAR_INLINE__ static constexpr ll_bool_t IS_BOTH_VALID =
-			::llcpp::meta::utils::isValidArrayType<StringType>() &&
-			::llcpp::meta::utils::isValidArrayType<ErrorType>();
+			::llcpp::meta::utils::is_valid_array_type<StringType>() &&
+			::llcpp::meta::utils::is_valid_array_type<ErrorType>();
 
 		using ExceptionValidTag = ::llcpp::meta::traits::conditional_t<
 			_MyType::IS_BOTH_VALID,
@@ -170,8 +170,8 @@ class ExceptionBuffer : public ::llcpp::exceptions::ExceptionFunctions<_StringTy
 		constexpr ExceptionBuffer() noexcept
 			: lifo_names()
 			, lifo_errors()
-			, lifo_names_last(::llcpp::meta::utils::getArrayBegin<StringType>(this->lifo_names))
-			, lifo_errors_last(::llcpp::meta::utils::getArrayBegin<ErrorType>(this->lifo_errors))
+			, lifo_names_last(::llcpp::meta::utils::get_array_begin<StringType>(this->lifo_names))
+			, lifo_errors_last(::llcpp::meta::utils::get_array_begin<ErrorType>(this->lifo_errors))
 		{}
 		constexpr ~ExceptionBuffer() noexcept {
 			if constexpr (::llcpp::LL_CLEAR_SECURE)
@@ -188,8 +188,8 @@ class ExceptionBuffer : public ::llcpp::exceptions::ExceptionFunctions<_StringTy
 		constexpr ExceptionBuffer(ExceptionBuffer&& other) noexcept = delete;
 		constexpr ExceptionBuffer& operator=(ExceptionBuffer&& other) noexcept = delete;
 
-		constexpr ExceptionBuffer(volatile const ExceptionBuffer& other) noexcept = delete;
-		constexpr ExceptionBuffer& operator=(volatile const ExceptionBuffer& other) noexcept = delete;
+		constexpr ExceptionBuffer(const volatile ExceptionBuffer& other) noexcept = delete;
+		constexpr ExceptionBuffer& operator=(const volatile ExceptionBuffer& other) noexcept = delete;
 		constexpr ExceptionBuffer(volatile ExceptionBuffer&& other) noexcept = delete;
 		constexpr ExceptionBuffer& operator=(volatile ExceptionBuffer&& other) noexcept = delete;
 
@@ -216,8 +216,8 @@ class ExceptionBuffer : public ::llcpp::exceptions::ExceptionFunctions<_StringTy
 		// If we need to ask both types, will return common ValidType or ValidType::Error if ValidType does not match
 		// This function cannot be called if both types are valid types
 		__LL_NODISCARD__ constexpr ::llcpp::misc::ValidType validationType() const noexcept requires(VALID_CHECK_NEEDED) {
-			constexpr auto IS_ERR_VALID = ::llcpp::meta::utils::isValidArrayType<ErrorTypeArray>();
-			constexpr auto IS_STR_VALID = ::llcpp::meta::utils::isValidArrayType<StringTypeArray>();
+			constexpr auto IS_ERR_VALID = ::llcpp::meta::utils::is_valid_array_type<ErrorTypeArray>();
+			constexpr auto IS_STR_VALID = ::llcpp::meta::utils::is_valid_array_type<StringTypeArray>();
 			if constexpr (!IS_ERR_VALID && IS_STR_VALID)
 				return this->lifo_errors.validationType();
 			else if constexpr (IS_ERR_VALID && !IS_STR_VALID)
@@ -233,8 +233,8 @@ class ExceptionBuffer : public ::llcpp::exceptions::ExceptionFunctions<_StringTy
 		// Reset buffers pointers
 		// Fifo will be reset to 0
 		constexpr void reset() noexcept {
-			this->lifo_names_last	= ::llcpp::meta::utils::getArrayBegin(this->lifo_names);
-			this->lifo_errors_last	= ::llcpp::meta::utils::getArrayBegin(this->lifo_errors);
+			this->lifo_names_last	= ::llcpp::meta::utils::get_array_begin(this->lifo_names);
+			this->lifo_errors_last	= ::llcpp::meta::utils::get_array_begin(this->lifo_errors);
 		}
 		// Clears buffers data and reset class
 		template<class ExtraCleaner = _MyType::InvalidatorCleaner>

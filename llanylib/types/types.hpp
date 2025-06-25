@@ -308,6 +308,28 @@ struct simplest_container { T value; };
 template<class T, class U = T>
 struct pair { T first; U second; };
 
+template<class T, class U = T>
+struct pair_none_empty { T first; U second; };
+template<class T>
+struct pair_none_empty<T, ::llcpp::Emptyclass> { T first; };
+template<class T>
+struct pair_none_empty<T, void> { T first; };
+template<class U>
+struct pair_none_empty<::llcpp::Emptyclass, U> { U second; };
+template<class U>
+struct pair_none_empty<void, U> { U second; };
+template<>
+struct pair_none_empty<::llcpp::Emptyclass, ::llcpp::Emptyclass> {};
+template<>
+struct pair_none_empty<::llcpp::Emptyclass, void> {};
+template<>
+struct pair_none_empty<void, ::llcpp::Emptyclass> {};
+template<>
+struct pair_none_empty<void, void> {};
+
+template<class T, class U = T>
+using pair_ne = ::llcpp::meta::pair_none_empty<T, U>;
+
 namespace utils {
 template<class ArrayType, class HashType = u64>
 using TypeID = ::llcpp::meta::pair<ArrayType, HashType>;
@@ -346,7 +368,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_ZERO_VALUE =
 __LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_zero_value,
 	::llcpp::kat::IS_WORKING_ZERO_VALUE,
-	"'::llcpp::ZERO_VALUE'"
+	"'::llcpp::ZERO_VALUE'" __LL_IS_NOT_WORKING_STR
 );
 
 #pragma endregion
@@ -381,7 +403,7 @@ __LL_NODISCARD__ constexpr ::llcpp::string types_kats() noexcept {
 }
 
 #if __LL_STATIC_KATS == 1
-	static_assert(::llcpp::kat::types_kats() == LL_NULLPTR, "Boolean KAT not OK");
+	static_assert(::llcpp::kat::types_kats() == LL_NULLPTR, "types.hpp KAT not OK");
 #endif // __LL_STATIC_KATS
 
 } // namespace kat

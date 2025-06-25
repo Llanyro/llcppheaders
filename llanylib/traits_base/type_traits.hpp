@@ -35,19 +35,19 @@ namespace traits {
 template <class T, class = void>
 class HasValueType;
 template<class T>
-struct HasValueType<T, ::std::void_t<typename T::value_type>>;
+class HasValueType<T, ::std::void_t<typename T::value_type>>;
 template <class T, class = void>
-struct HasValueConstant;
+class HasValueConstant;
 template<class T>
-struct HasValueConstant<T, ::std::void_t<decltype(T::value)>>;
+class HasValueConstant<T, ::std::void_t<decltype(T::value)>>;
 template <class T, class = void>
 class HasLLCPPValueType;
 template<class T>
-struct HasLLCPPValueType<T, ::std::void_t<typename T::T>>;
+class HasLLCPPValueType<T, ::std::void_t<typename T::T>>;
 template <class T, class = void>
-struct HasLLCPPValueConstant;
+class HasLLCPPValueConstant;
 template<class T>
-struct HasLLCPPValueConstant<T, ::std::void_t<decltype(T::value)>>;
+class HasLLCPPValueConstant<T, ::std::void_t<decltype(T::value)>>;
 
 template<class _T>
 class TypeContainer;
@@ -148,16 +148,16 @@ namespace traits {
 template <class T, class = void>
 class HasValueType : public ::std::false_type {};
 template<class T>
-struct HasValueType<T, ::std::void_t<typename T::value_type>> : public ::std::true_type {};
+class HasValueType<T, ::std::void_t<typename T::value_type>> : public ::std::true_type {};
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_value_type_v = ::llcpp::meta::traits::HasValueType<T>::value;
 
 template <class T, ll_bool_t MAYUS_MODE, class = void>
-struct HasValueConstant : public ::std::false_type {};
+class HasValueConstant : public ::std::false_type {};
 template<class T, ll_bool_t MAYUS_MODE>
-struct HasValueConstant<T, MAYUS_MODE, ::std::void_t<decltype(T::value)>> : public ::std::true_type {};
+class HasValueConstant<T, MAYUS_MODE, ::std::void_t<decltype(T::value)>> : public ::std::true_type {};
 template<class T>
-struct HasValueConstant<T, ::llcpp::LL_TRUE, ::std::void_t<decltype(T::VALUE)>> : public ::std::true_type {};
+class HasValueConstant<T, ::llcpp::LL_TRUE, ::std::void_t<decltype(T::VALUE)>> : public ::std::true_type {};
 template<class T, ll_bool_t MAYUS_MODE = ::llcpp::LL_FALSE>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_value_constant_v = ::llcpp::meta::traits::HasValueConstant<T, MAYUS_MODE>::value;
 
@@ -168,23 +168,23 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_integral_constant_container_v =
 template <class T, class = void>
 class HasValueTypeU : public ::std::false_type {};
 template<class T>
-struct HasValueTypeU<T, ::std::void_t<typename T::U>> : public ::std::true_type {};
+class HasValueTypeU<T, ::std::void_t<typename T::U>> : public ::std::true_type {};
 // Non-standard functionality | Llanylib standard
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_value_type_u_v = ::llcpp::meta::traits::HasValueTypeU<T>::value;
 
 
 template <class T, class = void>
-struct HasMyType : public ::std::false_type {};
+class HasMyType : public ::std::false_type {};
 template<class T>
-struct HasMyType<T, ::std::void_t<typename T::_MyType>> : public ::std::true_type {};
+class HasMyType<T, ::std::void_t<typename T::_MyType>> : public ::std::true_type {};
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_mytype_v = ::llcpp::meta::traits::HasMyType<T>::value;
 
 template <class T, class = void>
-struct HasSize : public ::std::false_type {};
+class HasSize : public ::std::false_type {};
 template<class T>
-struct HasSize<T, ::std::void_t<decltype(T::N)>> : public ::std::true_type {};
+class HasSize<T, ::std::void_t<decltype(T::N)>> : public ::std::true_type {};
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_size_v = ::llcpp::meta::traits::HasSize<T>::value;
 
@@ -193,20 +193,20 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_size_v = ::llcpp::meta::traits::HasSiz
 template <class T, class = void>
 class HasHashType : public ::std::false_type {};
 template<class T>
-struct HasHashType<T, ::std::void_t<typename T::Hash>> : public ::std::true_type {};
+class HasHashType<T, ::std::void_t<typename T::Hash>> : public ::std::true_type {};
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_hash_type_v = ::llcpp::meta::traits::HasHashType<T>::value;
 
 #pragma endregion
 #pragma region Pair
 template <class T, class = void>
-struct HasPairFirst : public ::std::false_type {};
+class HasPairFirst : public ::std::false_type {};
 template<class T>
-struct HasPairFirst<T, ::std::void_t<decltype(T::first)>> : public ::std::true_type {};
+class HasPairFirst<T, ::std::void_t<decltype(T::first)>> : public ::std::true_type {};
 template <class T, class = void>
-struct HasPairSecond : public ::std::false_type {};
+class HasPairSecond : public ::std::false_type {};
 template<class T>
-struct HasPairSecond<T, ::std::void_t<decltype(T::second)>> : public ::std::true_type {};
+class HasPairSecond<T, ::std::void_t<decltype(T::second)>> : public ::std::true_type {};
 
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_pair_first_v = ::llcpp::meta::traits::HasPairFirst<T>::value;
@@ -223,7 +223,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_pair_v =
 template <class T, class U, class = void>
 class HasContainerType : public ::std::false_type {};
 template<class T, class U>
-struct HasContainerType<T, U, ::std::void_t<typename T::contain_value_type<U>>> : public ::std::true_type {};
+class HasContainerType<T, U, ::std::void_t<typename T::contain_value_type<U>>> : public ::std::true_type {};
 
 template<class T, class U>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_contain_value_type_v = ::llcpp::meta::traits::HasContainerType<T, U>::value;
@@ -231,7 +231,7 @@ __LL_VAR_INLINE__ constexpr ll_bool_t has_contain_value_type_v = ::llcpp::meta::
 template <class T, class U, class = void>
 class HasContainerTypeU : public ::std::false_type {};
 template<class T, class U>
-struct HasContainerTypeU<T, U, ::std::void_t<typename T::contain_value_type_u<U>>> : public ::std::true_type {};
+class HasContainerTypeU<T, U, ::std::void_t<typename T::contain_value_type_u<U>>> : public ::std::true_type {};
 
 template<class T, class U>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_contain_value_type_u_v = ::llcpp::meta::traits::HasContainerTypeU<T, U>::value;
@@ -678,11 +678,11 @@ namespace dev {
 template <class T, class = void>
 class HasPointerType : public ::std::false_type {};
 template<class T>
-struct HasPointerType<T, ::std::void_t<decltype(::std::declval<T>().*)>> : public ::std::true_type {};
+class HasPointerType<T, ::std::void_t<decltype(::std::declval<T>().*)>> : public ::std::true_type {};
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t has_pointer_type_v = ::llcpp::meta::traits::HasPointerType<T>::value;
 
-struct ASDF { int* val; };
+class ASDF { int* val; };
 class QWERT {
 	public:
 		int* val;
@@ -1356,7 +1356,7 @@ __LL_NODISCARD__ constexpr ::llcpp::string type_traits_kats() noexcept {
 #endif // __LL_STATIC_KATS
 
 } // namespace kat
-#endif // LLANYLIB_BOOLEAN_HPP_
+#endif // __LL_INCLUDE_KATS
 } // namespace traits
 } // namespace meta
 } // namespace llcpp

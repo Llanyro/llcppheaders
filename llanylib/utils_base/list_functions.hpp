@@ -231,6 +231,19 @@ constexpr ll_bool_t is_valid_array_type(const T& t) noexcept {
 }
 
 #if __LL_INCLUDE_KATS == 1
+} // namespace utils
+} // namespace meta
+} // namespace llcpp
+
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/Arrayo.hpp>
+#else
+	#include "../types/Arrayo.hpp"
+#endif // LL_LIB_PATHS
+
+namespace llcpp {
+namespace meta {
+namespace utils {
 namespace kat {
 
 struct KatArrayConst {
@@ -267,53 +280,6 @@ struct KatArrayConst2 {
 	template<usize NN>
 	constexpr KatArrayConst2(const ::llcpp::char_type (&v)[NN]) noexcept : str(v) {}
 	constexpr ~KatArrayConst2() noexcept {}
-};
-template<class _T, usize _N>
-struct MiniArray {
-	// Class related
-	using _MyType				= MiniArray;	// standard
-
-	// Types and enums
-	using T						= _T;
-	using type					= T;	// standard
-	using value_type			= T;	// standard
-	static constexpr usize N	= _N;
-
-	T base[N];
-
-	__LL_NODISCARD__ constexpr T* begin() noexcept { return this->base; }
-	__LL_NODISCARD__ constexpr T* end() noexcept { return this->base + this->N; }
-	__LL_NODISCARD__ constexpr const T* begin() const noexcept { return this->base; }
-	__LL_NODISCARD__ constexpr const T* end() const noexcept { return this->base + this->N; }
-	__LL_NODISCARD__ constexpr usize size() const noexcept { return this->N; }
-
-	__LL_NODISCARD__ constexpr T& operator[](const usize pos) noexcept {
-		return this->base[pos];
-	}
-	__LL_NODISCARD__ constexpr const T& operator[](const usize pos) const noexcept {
-		return this->base[pos];
-	}
-	template<usize N2 = N>
-	__LL_NODISCARD__ constexpr T& get() noexcept {
-		static_assert(N2 <= N,
-			"N2 must be lower than N");
-		return this->base[N2];
-	}
-	template<usize N2 = N>
-	__LL_NODISCARD__ constexpr const T& get() const noexcept {
-		static_assert(N2 <= N,
-			"N2 must be lower than N");
-		return this->base[N2];
-	}
-
-	__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[N]) const noexcept {
-		for(usize i{}; i < N; ++i)
-			if(arr[i] != this->base[i])
-				return ::llcpp::LL_FALSE;
-		return ::llcpp::LL_TRUE;
-	}
-	template<usize NN>
-	__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN]) const noexcept { return ::llcpp::LL_FALSE; }
 };
 
 __LL_VAR_INLINE__ constexpr const ::llcpp::char_type STR[]	= __LL_STRING_PREFIX "Hola mundo!";
@@ -474,9 +440,9 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 
 #pragma endregion
 #pragma region MakeArrays
-__LL_VAR_INLINE__ constexpr auto MARR_KAT	= ::llcpp::meta::utils::make_constructed_array_obj<MiniArray<u8, 5>>(99u);
-__LL_VAR_INLINE__ constexpr auto MARR_KAT2	= ::llcpp::meta::utils::make_constructed_array_obj<MiniArray<MiniArray<u8, 5>, 4>>(
-	::llcpp::meta::utils::make_constructed_array_obj<MiniArray<u8, 5>>(88u)
+__LL_VAR_INLINE__ constexpr auto MARR_KAT	= ::llcpp::meta::utils::make_constructed_array_obj<Arrayo<u8, 5>>(99u);
+__LL_VAR_INLINE__ constexpr auto MARR_KAT2	= ::llcpp::meta::utils::make_constructed_array_obj<Arrayo<Arrayo<u8, 5>, 4>>(
+	::llcpp::meta::utils::make_constructed_array_obj<Arrayo<u8, 5>>(88u)
 );
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_IS_MAKE_ARRAY	=

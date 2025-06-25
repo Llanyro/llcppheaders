@@ -58,6 +58,7 @@ class Boolean;
 #endif // LL_LIB_PATHS
 
 namespace llcpp {
+namespace meta {
 
 class Boolean : public ::llcpp::AlwaysValidTag {
 	#pragma region Types
@@ -102,13 +103,13 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 		}
 
 		constexpr Boolean(const enum_bool value) noexcept : value(value) {}
-		constexpr Boolean operator=(const enum_bool value) noexcept {
+		constexpr Boolean& operator=(const enum_bool value) noexcept {
 			this->set(value);
 			return *this;
 		}
 
 		constexpr Boolean(const ll_bool_t value) noexcept : value(_MyType::convert(value)) {}
-		constexpr Boolean operator=(const ll_bool_t value) noexcept {
+		constexpr Boolean& operator=(const ll_bool_t value) noexcept {
 			this->set(value);
 			return *this;
 		}
@@ -179,7 +180,7 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 
 namespace boolean {
 
-using _MyType = ::llcpp::Boolean::_MyType;
+using _MyType = ::llcpp::meta::Boolean::_MyType;
 
 __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_FALSE	= _MyType::enum_bool::False;
 __LL_VAR_INLINE__ constexpr _MyType BOOLEAN_TRUE	= _MyType::enum_bool::True;
@@ -192,12 +193,12 @@ namespace kat {
 #pragma region Standard
 __LL_KAT_FUNCTION_CONSTEXPR(
 	false_false_kat,
-	::llcpp::boolean::BOOLEAN_FALSE == ::llcpp::LL_FALSE,
+	::llcpp::meta::boolean::BOOLEAN_FALSE == ::llcpp::LL_FALSE,
 	"False needs to be equal to false"
 );
 __LL_KAT_FUNCTION_CONSTEXPR(
 	true_true_kat,
-	::llcpp::boolean::BOOLEAN_TRUE == ::llcpp::LL_TRUE,
+	::llcpp::meta::boolean::BOOLEAN_TRUE == ::llcpp::LL_TRUE,
 	"True needs to be equal to true"
 );
 
@@ -205,17 +206,17 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 #pragma region False
 __LL_KAT_FUNCTION_CONSTEXPR(
 	false_true_kat,
-	::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_TRUE,
+	::llcpp::meta::boolean::BOOLEAN_FALSE != ::llcpp::meta::boolean::BOOLEAN_TRUE,
 	"False cannot be equal to true"
 );
 __LL_KAT_FUNCTION_CONSTEXPR(
 	false_invalid_kat,
-	::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_INVALID,
+	::llcpp::meta::boolean::BOOLEAN_FALSE != ::llcpp::meta::boolean::BOOLEAN_INVALID,
 	"False cannot be equal to invalid"
 );
 __LL_KAT_FUNCTION_CONSTEXPR(
 	false_unknown_kat,
-	::llcpp::boolean::BOOLEAN_FALSE != ::llcpp::boolean::BOOLEAN_UNKNOWN,
+	::llcpp::meta::boolean::BOOLEAN_FALSE != ::llcpp::meta::boolean::BOOLEAN_UNKNOWN,
 	"False cannot be equal to unknonw"
 );
 
@@ -223,17 +224,17 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 #pragma region True
 __LL_KAT_FUNCTION_CONSTEXPR(
 	true_false_kat,
-	::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_FALSE,
+	::llcpp::meta::boolean::BOOLEAN_TRUE != ::llcpp::meta::boolean::BOOLEAN_FALSE,
 	"True cannot be equal to false"
 );
 __LL_KAT_FUNCTION_CONSTEXPR(
 	true_invalid_kat,
-	::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_INVALID,
+	::llcpp::meta::boolean::BOOLEAN_TRUE != ::llcpp::meta::boolean::BOOLEAN_INVALID,
 	"True cannot be equal to invalid"
 );
 __LL_KAT_FUNCTION_CONSTEXPR(
 	true_unknown_kat,
-	::llcpp::boolean::BOOLEAN_TRUE != ::llcpp::boolean::BOOLEAN_UNKNOWN,
+	::llcpp::meta::boolean::BOOLEAN_TRUE != ::llcpp::meta::boolean::BOOLEAN_UNKNOWN,
 	"True cannot be equal to unknonw"
 );
 
@@ -241,89 +242,112 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 #pragma region Invalid
 __LL_KAT_FUNCTION_CONSTEXPR(
 	invalid_false_kat,
-	::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_FALSE,
+	::llcpp::meta::boolean::BOOLEAN_INVALID != ::llcpp::meta::boolean::BOOLEAN_FALSE,
 	"Invalid cannot be equal to false"
 );
 __LL_KAT_FUNCTION_CONSTEXPR(
 	invalid_true_kat,
-	::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_TRUE,
+	::llcpp::meta::boolean::BOOLEAN_INVALID != ::llcpp::meta::boolean::BOOLEAN_TRUE,
 	"Invalid cannot be equal to true"
 );
 __LL_KAT_FUNCTION_CONSTEXPR(
 	invalid_unknown_kat,
-	::llcpp::boolean::BOOLEAN_INVALID != ::llcpp::boolean::BOOLEAN_UNKNOWN,
+	::llcpp::meta::boolean::BOOLEAN_INVALID != ::llcpp::meta::boolean::BOOLEAN_UNKNOWN,
 	"Invalid cannot be equal to unknonw"
 );
 
 #pragma endregion
-#pragma region Invalid
+#pragma region Unknown
 __LL_KAT_FUNCTION_CONSTEXPR(
 	unknown_false_kat,
-	::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_FALSE,
+	::llcpp::meta::boolean::BOOLEAN_UNKNOWN != ::llcpp::meta::boolean::BOOLEAN_FALSE,
 	"Unknown cannot be equal to false"
 );
 __LL_KAT_FUNCTION_CONSTEXPR(
 	unknown_true_kat,
-	::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_TRUE,
+	::llcpp::meta::boolean::BOOLEAN_UNKNOWN != ::llcpp::meta::boolean::BOOLEAN_TRUE,
 	"Unknown cannot be equal to true"
 );
 __LL_KAT_FUNCTION_CONSTEXPR(
 	unknown_invalid_kat,
-	::llcpp::boolean::BOOLEAN_UNKNOWN != ::llcpp::boolean::BOOLEAN_INVALID,
+	::llcpp::meta::boolean::BOOLEAN_UNKNOWN != ::llcpp::meta::boolean::BOOLEAN_INVALID,
 	"Unknown cannot be equal to invalid"
 );
 
 #pragma endregion
 
 __LL_NODISCARD__ constexpr ::llcpp::string boolean_kats() noexcept {
-	::llcpp::string result = ::llcpp::boolean::kat::false_false_kat();
+	::llcpp::string result = ::llcpp::meta::boolean::kat::false_false_kat();
 	if(result) return result;
-	result = ::llcpp::boolean::kat::true_true_kat();
-	if(result) return result;
-
-	result = ::llcpp::boolean::kat::false_true_kat();
-	if(result) return result;
-	result = ::llcpp::boolean::kat::false_invalid_kat();
-	if(result) return result;
-	result = ::llcpp::boolean::kat::false_unknown_kat();
+	result = ::llcpp::meta::boolean::kat::true_true_kat();
 	if(result) return result;
 
-	result = ::llcpp::boolean::kat::true_false_kat();
+	result = ::llcpp::meta::boolean::kat::false_true_kat();
 	if(result) return result;
-	result = ::llcpp::boolean::kat::true_invalid_kat();
+	result = ::llcpp::meta::boolean::kat::false_invalid_kat();
 	if(result) return result;
-	result = ::llcpp::boolean::kat::true_unknown_kat();
-	if(result) return result;
-
-	result = ::llcpp::boolean::kat::invalid_false_kat();
-	if(result) return result;
-	result = ::llcpp::boolean::kat::invalid_true_kat();
-	if(result) return result;
-	result = ::llcpp::boolean::kat::invalid_unknown_kat();
+	result = ::llcpp::meta::boolean::kat::false_unknown_kat();
 	if(result) return result;
 
-	result = ::llcpp::boolean::kat::unknown_false_kat();
+	result = ::llcpp::meta::boolean::kat::true_false_kat();
 	if(result) return result;
-	result = ::llcpp::boolean::kat::unknown_true_kat();
+	result = ::llcpp::meta::boolean::kat::true_invalid_kat();
 	if(result) return result;
-	result = ::llcpp::boolean::kat::unknown_invalid_kat();
+	result = ::llcpp::meta::boolean::kat::true_unknown_kat();
+	if(result) return result;
+
+	result = ::llcpp::meta::boolean::kat::invalid_false_kat();
+	if(result) return result;
+	result = ::llcpp::meta::boolean::kat::invalid_true_kat();
+	if(result) return result;
+	result = ::llcpp::meta::boolean::kat::invalid_unknown_kat();
+	if(result) return result;
+
+	result = ::llcpp::meta::boolean::kat::unknown_false_kat();
+	if(result) return result;
+	result = ::llcpp::meta::boolean::kat::unknown_true_kat();
+	if(result) return result;
+	result = ::llcpp::meta::boolean::kat::unknown_invalid_kat();
 	if(result) return result;
 
 	return nullptr;
 }
 
 #if __LL_STATIC_KATS == 1
-	static_assert(::llcpp::boolean::kat::boolean_kats() == LL_NULLPTR, "Boolean KAT not OK");
+	static_assert(::llcpp::meta::boolean::kat::boolean_kats() == LL_NULLPTR, "Boolean KAT not OK");
 #endif // __LL_STATIC_KATS
 
 } // namespace kat
 #endif // __LL_INCLUDE_KATS
 
 } // namespace boolean
+} // namespace meta
 } // namespace llcpp
 
 #endif // LLANYLIB_BOOLEAN_HPP_
 
-#if defined(LLANYLIB_ERROR_HPP_)
+#if !defined(LLANYLIB_ERROR_HPP_)
+	#if defined(LLANYLIB_BOOLEAN_EXTRA_HPP_)
+		#if LLANYLIB_BOOLEAN_EXTRA_MAYOR_ != 12 || LLANYLIB_BOOLEAN_EXTRA_MINOR_ < 0
+			#if __LL_DIRECTIVE_WARNING == 1
+				#warning "Boolean.hpp(extra) version error!"
+			#else
+				#error "Boolean.hpp(extra) version error!"
+			#endif // __LL_DIRECTIVE_WARNING == 1
+		#endif // LLANYLIB_BOOLEAN_EXTRA_MAYOR_ || LLANYLIB_BOOLEAN_EXTRA_MINOR_
+
+	#else
+		#define LLANYLIB_BOOLEAN_EXTRA_HPP_
+		#define LLANYLIB_BOOLEAN_EXTRA_MAYOR_ 12
+		#define LLANYLIB_BOOLEAN_EXTRA_MINOR_ 0
+
+namespace llcpp {
+
+using Boolean = ::llcpp::meta::Boolean;
+
+} // namespace llcpp
+
+	#endif // LLANYLIB_BOOLEAN_EXTRA_HPP_
+#else
 	#undef LLANYLIB_ERROR_HPP_
 #endif // LLANYLIB_ERROR_HPP_

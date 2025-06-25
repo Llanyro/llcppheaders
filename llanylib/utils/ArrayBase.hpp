@@ -23,7 +23,6 @@
 	#define LLANYLIB_ARRAYBASE_INCOMPLETE_MINOR_ 0
 
 #include <llanylib/traits_base/checker.hpp>
-#include <llanylib/utils/Tuple.hpp>
 #include <llanylib/utils/PointerIterator.hpp>
 #include <llanylib/utils/Exceptions.hpp>
 
@@ -60,10 +59,16 @@ class ArrayBase;
 	#define LLANYLIB_ARRAYBASE_MAYOR_ 12
 	#define LLANYLIB_ARRAYBASE_MINOR_ 0
 
-#include <llanylib/traits_base/checker.hpp>
-#include <llanylib/utils/Tuple.hpp>
-#include <llanylib/utils/PointerIterator.hpp>
-#include <llanylib/utils/Exceptions.hpp>
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/traits_base/checker.hpp>
+	#include <llanylib/utils/PointerIterator.hpp>
+	#include <llanylib/utils/Exceptions.hpp>
+#else
+	#include "../traits_base/checker.hpp"
+	#include "PointerIterator.hpp"
+	#include "Exceptions.hpp"
+#endif // LL_LIB_PATHS
+
 
 #define CHECK_RESET_VALIDATION_1(mem)																	\
 	if constexpr (::llcpp::LL_DEBUG || ::llcpp::LL_EXCEPTIONS) {										\
@@ -168,7 +173,8 @@ class ArrayBase {
 	#pragma region TypesExtra
 	public:
 		using mem_end_type	= ::llcpp::meta::traits::conditional_t<SIZED_ARRAY, ::llcpp::Emptyclass, default_iterator>;
-		using ArrayTypes	= ::llcpp::meta::utils::Tuple<default_iterator, mem_end_type>;
+		using ArrayTypes	= ::llcpp::meta::pair_none_empty<default_iterator, mem_end_type>;
+		//using ArrayTypes	= ::llcpp::meta::utils::Tuple<default_iterator, mem_end_type>;
 
 	#pragma endregion
 	#pragma region Asserts
@@ -295,8 +301,8 @@ class ArrayBase {
 		#pragma region ClassFunctions
 		#pragma region std
 	public:
-		__LL_NODISCARD__ constexpr iterator data() noexcept requires(ENABLE_NO_CONST) { return this->memory.getFirst(); }
-		__LL_NODISCARD__ constexpr const_iterator data() const noexcept { return this->memory.getFirst(); }
+		__LL_NODISCARD__ constexpr iterator data() noexcept requires(ENABLE_NO_CONST) { return this->memory.first; }
+		__LL_NODISCARD__ constexpr const_iterator data() const noexcept { return this->memory.first; }
 
 		__LL_NODISCARD__ constexpr iterator begin() noexcept requires(ENABLE_NO_CONST) { return this->data(); }
 		__LL_NODISCARD__ constexpr const_iterator begin() const noexcept { return this->data(); }
@@ -304,12 +310,12 @@ class ArrayBase {
 		__LL_NODISCARD__ constexpr iterator end() noexcept requires(ENABLE_NO_CONST) {
 			if constexpr (SIZED_ARRAY)
 				return this->begin() + this->size();
-			else return this->memory.getSecond().getFirst();
+			else return this->memory.second;
 		}
 		__LL_NODISCARD__ constexpr const_iterator end() const noexcept {
 			if constexpr (SIZED_ARRAY)
 				return this->begin() + this->size();
-			else return this->memory.getSecond().getFirst();
+			else return this->memory.second;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t empty() const noexcept {
 			if constexpr (SIZED_ARRAY)
@@ -341,19 +347,19 @@ class ArrayBase {
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t reset(default_iterator mem) noexcept requires(SIZED_ARRAY) {
 			CHECK_RESET_VALIDATION_1(mem);
-			this->memory.getFirst() = mem;
+			this->memory.first = mem;
 			return ::llcpp::LL_TRUE;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t reset(default_iterator mem, default_iterator mem_end) noexcept requires(!SIZED_ARRAY) {
 			CHECK_RESET_VALIDATION_2(mem, mem_end);
-			this->memory.getFirst() = mem;
-			this->memory.getSecond().getFirst() = mem_end;
+			this->memory.first = mem;
+			this->memory.second = mem_end;
 			return ::llcpp::LL_TRUE;
 		}
 		template<usize N>
 		__LL_NODISCARD__ constexpr ll_bool_t reset(default_iterator (&v)[N]) noexcept {
-			this->memory.getFirst() = v;
-			if constexpr (!SIZED_ARRAY) this->memory.getSecond().getFirst() = (v + N);
+			this->memory.first = v;
+			if constexpr (!SIZED_ARRAY) this->memory.second = (v + N);
 			return ::llcpp::LL_TRUE;
 		}
 		// Clears buffers data and reset class
@@ -377,9 +383,9 @@ class ArrayBase {
 		template<class ExtraInvalidator>
 		constexpr void makeInvalid(const ExtraInvalidator& extra) noexcept {
 			::llcpp::meta::utils::Invalidator invalidator;
-			(void)invalidator.process(this->memory.getFirst(), extra);
+			(void)invalidator.process(this->memory.first, extra);
 			if constexpr (SIZED_ARRAY)
-				(void)invalidator.process(this->memory.getSecond().getFirst(), extra);
+				(void)invalidator.process(this->memory.second, extra);
 		}
 		// Invalidates iterators and objects of fifo
 		template<class ExtraInvalidatorCleaner>

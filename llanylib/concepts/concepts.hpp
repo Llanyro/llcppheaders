@@ -155,6 +155,11 @@ concept HasOperatorArrayExcept = requires (T t) {
 };
 
 template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorSquareBrackets = ::llcpp::meta::concepts::signature::HasOperatorArray<T, ReturnType>;
+template<class T, class ReturnType = ::llcpp::Emptyclass>
+concept HasOperatorSquareBracketsExcept = ::llcpp::meta::concepts::signature::HasOperatorArrayExcept<T, ReturnType>;
+
+template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasPointerOperator = requires (T t) { { *t } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 
 template<class T, class ArrayType = ll_string_t, class SizeType = usize, class ReturnType = void>

@@ -115,11 +115,11 @@ class ParameterPackOperations : public ::llcpp::AlwaysValidTag {
 
 		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<_Args...>;
 		using PackFirst		= FirstType;
-		using pack_first_t	= PackFirst::T;		// First type
-		using Next			= FirstType::Next;	// Next element in list
+		using pack_first_t	= PackFirst::value_type;	// First type
+		using Next			= FirstType::Next;			// Next element in list
 		using T				= pack_first_t;
-		using type			= pack_first_t;		// standard
-		using value_type	= pack_first_t;		// standard
+		using type			= pack_first_t;				// standard
+		using value_type	= pack_first_t;				// standard
 
 	public:
 		// Expresions
@@ -137,7 +137,7 @@ class ParameterPackOperations<_T> : public ::llcpp::AlwaysValidTag {
 		// Types and enums
 		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<_T>;
 		using PackFirst		= FirstType;
-		using pack_first_t	= PackFirst::T;
+		using pack_first_t	= PackFirst::value_type;
 		using Next			= FirstType::Next;	// Next element in list
 		using T				= pack_first_t;
 		using type			= pack_first_t;		// standard
@@ -159,7 +159,7 @@ class ParameterPackOperations<> : public ::llcpp::AlwaysValidTag {
 		// Types and enums
 		using FirstType		= ::llcpp::meta::traits::__traits__::FirstType<::llcpp::Emptyclass>;
 		using PackFirst		= FirstType;
-		using pack_first_t	= PackFirst::T;
+		using pack_first_t	= PackFirst::value_type;
 		using Next			= FirstType::Next;	// Next element in list
 		using T				= pack_first_t;
 		using type			= pack_first_t;		// standard

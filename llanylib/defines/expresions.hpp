@@ -147,6 +147,10 @@ __LL_VAR_INLINE__ constexpr bool LL_DLL = __LL_DLL_BUILD;
 	#undef LL_DEBUG
 #endif // LL_DEBUG
 
+#if defined(LL_DEBUG_ERROR)
+	#undef LL_DEBUG_ERROR
+#endif // LL_DEBUG_ERROR
+
 #if defined(LL_DEBUG_WARNING)
 	#undef LL_DEBUG_WARNING
 #endif // LL_DEBUG_WARNING
@@ -186,6 +190,7 @@ __LL_VAR_INLINE__ constexpr bool LL_DLL = __LL_DLL_BUILD;
 #pragma endregion
 
 __LL_VAR_INLINE__ constexpr unsigned char LL_DEBUG					= __LL_DEBUG__;
+__LL_VAR_INLINE__ constexpr unsigned char LL_DEBUG_ERROR			= __LL_DEBUG_ERROR__;
 __LL_VAR_INLINE__ constexpr unsigned char LL_DEBUG_WARNING			= __LL_DEBUG_WARNING__;
 __LL_VAR_INLINE__ constexpr unsigned char LL_DEBUG_INFO				= __LL_DEBUG_INFO__;
 __LL_VAR_INLINE__ constexpr unsigned char LL_DEBUG_COMMNET			= __LL_DEBUG_COMMNET__;

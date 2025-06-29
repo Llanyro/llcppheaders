@@ -221,6 +221,14 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_pair_v =
 #pragma endregion
 #pragma region LlanycppCheckers
 template <class T, class U, class = void>
+class HasIteratorType : public ::std::false_type {};
+template<class T, class U>
+class HasIteratorType<T, U, ::std::void_t<typename T::iterator_type>> : public ::std::true_type {};
+
+template<class T, class U>
+__LL_VAR_INLINE__ constexpr ll_bool_t has_iterator_type_v = ::llcpp::meta::traits::HasIteratorType<T, U>::value;
+
+template <class T, class U, class = void>
 class HasContainerType : public ::std::false_type {};
 template<class T, class U>
 class HasContainerType<T, U, ::std::void_t<typename T::contain_value_type<U>>> : public ::std::true_type {};
@@ -743,6 +751,7 @@ class test_a {
 };
 
 } // namespace dev
+
 } // namespace traits
 } // namespace meta
 

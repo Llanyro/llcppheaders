@@ -54,8 +54,10 @@ class Arrayo;
 
 #if defined(LL_LIB_PATHS)
 	#include <llanylib/types/types.hpp>
+	#include <llanylib/types/compiler_extensions.hpp>
 #else
 	#include "types.hpp"
+	#include "compiler_extensions.hpp"
 #endif // LL_LIB_PATHS
 
 namespace llcpp {
@@ -68,6 +70,8 @@ class Arrayo {
 	public:
 		using _MyType				= Arrayo<_T, _N>;
 		using T						= _T;
+		using Iterator				= T*;
+		using ConstIterator			= const T*;
 		using type					= T;	// standard
 		using value_type			= T;	// standard
 		static constexpr usize N	= _N;
@@ -77,33 +81,69 @@ class Arrayo {
 		__LL_NODISCARD__ constexpr T& operator[](const usize position) noexcept { return this->_[position]; }
 		__LL_NODISCARD__ constexpr const T& operator[](const usize position) const noexcept { return this->_[position]; }
 
-		__LL_NODISCARD__ constexpr T* operator+(const usize position) noexcept { return this->_ + position; }
-		__LL_NODISCARD__ constexpr const T* operator+(const usize position) const noexcept { return this->_ + position; }
+		__LL_NODISCARD__ constexpr Iterator operator+(const usize position) noexcept { return this->_ + position; }
+		__LL_NODISCARD__ constexpr ConstIterator operator+(const usize position) const noexcept { return this->_ + position; }
 
-		__LL_NODISCARD__ constexpr T* operator-(const usize position) noexcept { return this->_ - position; }
-		__LL_NODISCARD__ constexpr const T* operator-(const usize position) const noexcept { return this->_ - position; }
+		__LL_NODISCARD__ constexpr Iterator operator-(const usize position) noexcept { return this->_ - position; }
+		__LL_NODISCARD__ constexpr ConstIterator operator-(const usize position) const noexcept { return this->_ - position; }
 
 		__LL_NODISCARD__ constexpr T& operator*() noexcept { return this->_[0]; }
 		__LL_NODISCARD__ constexpr const T& operator*() const noexcept { return this->_[0]; }
 
-		__LL_NODISCARD__ constexpr T* operator->() noexcept { return __builtin_addressof(this->_[0]); }
-		__LL_NODISCARD__ constexpr const T* operator->() const noexcept { return __builtin_addressof(this->_[0]); }
+		__LL_NODISCARD__ constexpr Iterator operator->() noexcept { return ::llcpp::addressof(this->_[0]); }
+		__LL_NODISCARD__ constexpr ConstIterator operator->() const noexcept { return ::llcpp::addressof(this->_[0]); }
 
-		__LL_NODISCARD__ constexpr T* begin() noexcept { return this->_; }
-		__LL_NODISCARD__ constexpr const T* begin() const noexcept { return this->_; }
-		__LL_NODISCARD__ constexpr T* end() noexcept { return this->_ + _MyType::N; }
-		__LL_NODISCARD__ constexpr const T* end() const noexcept { return this->_ + _MyType::N; }
+		__LL_NODISCARD__ constexpr Iterator get(const usize position) noexcept { return *this + position }
+		__LL_NODISCARD__ constexpr ConstIterator get(const usize position) const noexcept { return *this + position; }
+
+		__LL_NODISCARD__ constexpr Iterator begin() noexcept { return this->_; }
+		__LL_NODISCARD__ constexpr ConstIterator begin() const noexcept { return this->_; }
+		__LL_NODISCARD__ constexpr Iterator end() noexcept { return this->_ + _MyType::N; }
+		__LL_NODISCARD__ constexpr ConstIterator end() const noexcept { return this->_ + _MyType::N; }
 
 		__LL_NODISCARD__ constexpr const usize size() const noexcept { return _MyType::N; }
+		__LL_NODISCARD__ constexpr const usize count() const noexcept { return this->size(); }
+		__LL_NODISCARD__ constexpr const usize len() const noexcept { return this->size(); }
 
-		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[N]) const noexcept {
-			for(usize i{}; i < N; ++i)
-				if(arr[i] != this->_[i])
+	private:
+		__LL_NODISCARD__ constexpr ll_bool_t compare(ConstIterator tb, ConstIterator te,  ConstIterator ob) const noexcept {
+			for(; tb < te; ++tb, ++ob)
+				if(*tb != *ob)
 					return ::llcpp::LL_FALSE;
 			return ::llcpp::LL_TRUE;
 		}
+
+	public:
 		template<usize NN>
-		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN]) const noexcept { return ::llcpp::LL_FALSE; }
+		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN]) const noexcept {
+			if constexpr (N == NN)
+				return this->compare(this->begin(), this->end(), arr);
+			else return this->compare(this->begin(), this->get(N > NN ? NN : N), arr);
+		}
+		template<usize NN>
+		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN], const usize compare_size) const noexcept {
+			if (N < COMPARE_SIZE) {
+				if constexpr (::llcpp::LL_DEBUG_ERROR)
+					__debug_error_out_of_range(COMPARE_SIZE, "COMPARE_SIZE", N);
+				return ::llcpp::LL_FALSE;
+			}
+			else if (NN < COMPARE_SIZE) {
+				if constexpr (::llcpp::LL_DEBUG_ERROR)
+					__debug_error_out_of_range(COMPARE_SIZE, "COMPARE_SIZE", NN);
+				return ::llcpp::LL_FALSE;
+			}
+			return this->compare(this->begin(), this->get(COMPARE_SIZE), arr);
+		}
+		template<usize COMPARE_SIZE, usize NN>
+		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN]) const noexcept {
+			static_assert(N >= COMPARE_SIZE,
+				"N cannot be lower than COMPARE_SIZE");
+			static_assert(NN >= COMPARE_SIZE,
+				"NN cannot be lower than COMPARE_SIZE");
+			if constexpr (N < COMPARE_SIZE || NN < COMPARE_SIZE)
+				return ::llcpp::LL_FALSE;
+			return this->compare(this->begin(), this->get(COMPARE_SIZE), arr);
+		}
 };
 
 #if __LL_INCLUDE_KATS == 1

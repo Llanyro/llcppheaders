@@ -345,6 +345,14 @@ namespace llcpp {
 
 using Boolean = ::llcpp::meta::Boolean;
 
+namespace boolean {
+
+__LL_VAR_INLINE__ constexpr ::llcpp::Boolean BOOLEAN_FALSE		= ::llcpp::meta::boolean::BOOLEAN_FALSE;
+__LL_VAR_INLINE__ constexpr ::llcpp::Boolean BOOLEAN_TRUE		= ::llcpp::meta::boolean::BOOLEAN_TRUE;
+__LL_VAR_INLINE__ constexpr ::llcpp::Boolean BOOLEAN_INVALID	= ::llcpp::meta::boolean::BOOLEAN_INVALID;
+__LL_VAR_INLINE__ constexpr ::llcpp::Boolean BOOLEAN_UNKNOWN	= ::llcpp::meta::boolean::BOOLEAN_UNKNOWN;
+
+} // namespace boolean
 } // namespace llcpp
 
 	#endif // LLANYLIB_BOOLEAN_EXTRA_HPP_

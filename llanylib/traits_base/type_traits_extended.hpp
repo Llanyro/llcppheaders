@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	traits_base.hpp							//
+//	type_traits_extended.hpp							//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -10,9 +10,9 @@
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_TRAITSBASE_INCOMPLETE_HPP_)
 	#if LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ != 12 || LLANYLIB_TRAITSBASE_INCOMPLETE_MINOR_ < 0
 		#if __LL_DIRECTIVE_WARNING == 1
-			#warning "traits_base.hpp(incomplete) version error!"
+			#warning "type_traits_extended.hpp(incomplete) version error!"
 		#else
-			#error "traits_base.hpp(incomplete) version error!"
+			#error "type_traits_extended.hpp(incomplete) version error!"
 		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSBASE_INCOMPLETE_MAYOR_ || LLANYLIB_TRAITSBASE_INCOMPLETE_MINOR_
@@ -31,9 +31,9 @@
 #elif defined(LLANYLIB_TRAITSBASE_HPP_)
 	#if LLANYLIB_TRAITSBASE_MAYOR_ != 12 || LLANYLIB_TRAITSBASE_MINOR_ < 0
 		#if __LL_DIRECTIVE_WARNING == 1
-			#warning "traits_base.hpp version error!"
+			#warning "type_traits_extended.hpp version error!"
 		#else
-			#error "traits_base.hpp version error!"
+			#error "type_traits_extended.hpp version error!"
 		#endif // __LL_DIRECTIVE_WARNING == 1
 		#define LLANYLIB_ERROR_HPP_
 	#endif // LLANYLIB_TRAITSBASE_MAYOR_ || LLANYLIB_TRAITSBASE_MINOR_
@@ -123,8 +123,6 @@ __LL_VAR_INLINE__ constexpr ll_bool_t is_trivial_v =
 //	::llcpp::meta::traits::is_primitive_v<_T>
 //	|| ::std::is_class_v<_T>;
 
-template<class T>
-using array_type_t = ::std::remove_extent_t<T>;
 template<class T>
 using input = ::llcpp::meta::traits::conditional_t<::std::is_class_v<T> && !::std::is_pointer_v<T>, T&, T>;
 template<class T>

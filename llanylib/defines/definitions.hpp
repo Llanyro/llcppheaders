@@ -264,27 +264,27 @@
 #pragma region Error
 
 #if !defined(__debug_error_exceptions_full)
-	#define __debug_error_exceptions_full(str) LL_IGNORE()
+	#define __debug_error_exceptions_full(str) do { LL_IGNORE(); } while(0)
 #endif
 
 #if !defined(__debug_error_exceptions_empty)
-	#define __debug_error_exceptions_empty(str) LL_IGNORE()
+	#define __debug_error_exceptions_empty(str) do { LL_IGNORE(); } while(0)
 #endif
 
 #if !defined(__debug_error_not_nullptr_str)
-	#define __debug_error_not_nullptr_str(var_str) LL_IGNORE()
+	#define __debug_error_not_nullptr_str(var_str) do { LL_IGNORE(); } while(0)
 #endif
 
 #if !defined(__debug_error_begin_smaller)
-	#define __debug_error_begin_smaller(str, begin, end) LL_IGNORE()
+	#define __debug_error_begin_smaller(str, begin, end) do { LL_IGNORE(); } while(0)
 #endif
 
 #if !defined(__debug_error_out_of_range)
-	#define __debug_error_out_of_range(var, var_str, len) LL_IGNORE()
+	#define __debug_error_out_of_range(var, var_str, len) do { LL_IGNORE(); } while(0)
 #endif
 
 #if !defined(__debug_error_parser)
-	#define __debug_error_parser(str) LL_IGNORE()
+	#define __debug_error_parser(str) do { LL_IGNORE(); } while(0)
 #endif
 
 
@@ -292,11 +292,11 @@
 #pragma region Warning
 
 #if !defined(__debug_warning_nullptr)
-	#define __debug_warning_nullptr(var_str) LL_IGNORE()
+	#define __debug_warning_nullptr(var_str) do { LL_IGNORE(); } while(0)
 #endif
 
 #if !defined(__debug_warning_out_of_range)
-	#define __debug_warning_out_of_range(var, var_str, len) LL_IGNORE()
+	#define __debug_warning_out_of_range(var, var_str, len) do { LL_IGNORE(); } while(0)
 #endif
 
 #pragma endregion
@@ -306,18 +306,18 @@
 
 // Nullptr
 #if !defined(__debug_error_nullptr_str)
-	#define __debug_error_nullptr_str(var, var_str) LL_IGNORE()
+	#define __debug_error_nullptr_str(var, var_str) do { LL_IGNORE(); } while(0)
 #endif
 
 // Ranges
 #if !defined(__debug_error_out_of_range)
-	#define __debug_error_out_of_range(var, len) LL_IGNORE()
+	#define __debug_error_out_of_range(var, len) do { LL_IGNORE(); } while(0)
 #endif
 
 
 // Other
 #if !defined(__debug_error_zero_value_str)
-	#define __debug_error_zero_value_str(var_str) LL_IGNORE()
+	#define __debug_error_zero_value_str(var_str) do { LL_IGNORE(); } while(0)
 #endif
 
 #pragma endregion
@@ -325,25 +325,25 @@
 
 // Nullptr
 #if !defined(__debug_warning_not_nullptr)
-	#define __debug_warning_not_nullptr(var) LL_IGNORE()
+	#define __debug_warning_not_nullptr(var) do { LL_IGNORE(); } while(0)
 #endif
 
 #if !defined(__debug_warning_not_nullptr_str)
-	#define __debug_warning_not_nullptr_str(var, var_str) LL_IGNORE()
+	#define __debug_warning_not_nullptr_str(var, var_str) do { LL_IGNORE(); } while(0)
 #endif
 
 // Ranges
 #if !defined(__debug_warning_out_of_range)
-	#define __debug_warning_out_of_range(var, len) LL_IGNORE()
+	#define __debug_warning_out_of_range(var, len) do { LL_IGNORE(); } while(0)
 #endif
 
 // Other
 #if !defined(__debug_warning_zero_value_str)
-	#define __debug_warning_zero_value_str(var_str) LL_IGNORE()
+	#define __debug_warning_zero_value_str(var_str) do { LL_IGNORE(); } while(0)
 #endif
 
 #if !defined(__debug_warning_invalidation_in_reset_str)
-	#define __debug_warning_invalidation_in_reset_str(var_str) LL_IGNORE()
+	#define __debug_warning_invalidation_in_reset_str(var_str) do { LL_IGNORE(); } while(0)
 #endif
 
 #pragma endregion

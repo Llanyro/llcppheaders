@@ -225,10 +225,24 @@
 	#define __LL_DEBUG__ __LL_DEBUG_ERROR__
 #endif // __LL_DEBUG__
 
+#define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, __LL_STRING_PREFIX "[" var_str __LL_STRING_PREFIX "] cannot be 0. " __LL_FUNCNAME__)
+#define __LL_ASSERT_VAR_NULL__(var, var_str) LL_ASSERT(var, __LL_STRING_PREFIX "[" var_str __LL_STRING_PREFIX "] cannot be nullptr." __LL_FUNCNAME__)
+#define __LL_ASSERT_LIST_EMPTY__(var, var_str) LL_ASSERT(!var.empty(), __LL_STRING_PREFIX "[" var_str __LL_STRING_PREFIX "] cannot be empty." __LL_FUNCNAME__)
+#define __LL_ASSERT_B_LOWER_THAN_A__(var_a, var_b, var_a_str, var_b_str) \
+	LL_ASSERT(var_a < var_b, __LL_STRING_PREFIX "[" var_a_str __LL_STRING_PREFIX " < " var_b_str __LL_STRING_PREFIX "] " var_a_str __LL_STRING_PREFIX " cannot be lower or equal to " \
+		var_b_str __LL_STRING_PREFIX "." __LL_FUNCNAME__)
+
+#define __LL_FUNCTION_INIT__ do { LL_IGNORE(); } while(0)
 
 #define DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)													\
-	__LL_NODISCARD__ constexpr explicit operator const classname*() const noexcept { return this; }	\
-	__LL_NODISCARD__ constexpr explicit operator classname*() noexcept { return this; }				\
+	__LL_NODISCARD__ constexpr explicit operator const classname*() const noexcept {				\
+		__LL_FUNCTION_INIT__;																		\
+		return this;																				\
+	}																								\
+	__LL_NODISCARD__ constexpr explicit operator classname*() noexcept {							\
+		__LL_FUNCTION_INIT__;																		\
+		return this;																				\
+	}																								\
 	constexpr classname (const classname&) noexcept = default;										\
 	constexpr classname& operator=(const classname&) noexcept = default;							\
 	constexpr classname (classname&&) noexcept = default;											\
@@ -251,15 +265,6 @@
 #define EXTERN_C_FUNC extern "C"
 
 //#define LL_SHARED_LIB_FUNC extern "C" LL_SHARED_LIB
-
-#define __LL_ASSERT_VAR_ZERO__(var, var_str) LL_ASSERT(var > 0, __LL_STRING_PREFIX "[" var_str __LL_STRING_PREFIX "] cannot be 0. " __LL_FUNCNAME__)
-#define __LL_ASSERT_VAR_NULL__(var, var_str) LL_ASSERT(var, __LL_STRING_PREFIX "[" var_str __LL_STRING_PREFIX "] cannot be nullptr." __LL_FUNCNAME__)
-#define __LL_ASSERT_LIST_EMPTY__(var, var_str) LL_ASSERT(!var.empty(), __LL_STRING_PREFIX "[" var_str __LL_STRING_PREFIX "] cannot be empty." __LL_FUNCNAME__)
-#define __LL_ASSERT_B_LOWER_THAN_A__(var_a, var_b, var_a_str, var_b_str) \
-	LL_ASSERT(var_a < var_b, __LL_STRING_PREFIX "[" var_a_str __LL_STRING_PREFIX " < " var_b_str __LL_STRING_PREFIX "] " var_a_str __LL_STRING_PREFIX " cannot be lower or equal to " \
-		var_b_str __LL_STRING_PREFIX "." __LL_FUNCNAME__)
-
-#define __LL_FUNCTION_INIT__ do { LL_IGNORE(); } while(0)
 
 // Defines for logging
 

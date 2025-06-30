@@ -98,6 +98,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 	public:
 		template<class ExternalFunctions = _MyType, class T>
 		__LL_NODISCARD__ constexpr auto process(T& obj) const noexcept requires(IS_CLEANER) {
+			__LL_FUNCTION_INIT__;
 			// If this is this class type, we will use this instance as main source
 			if constexpr (::std::is_same_v<ExternalFunctions, _MyType>)
 				return this->process(obj, *this);
@@ -112,6 +113,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 		}
 		template<class ExternalFunctions = _MyType, class T>
 		__LL_NODISCARD__ constexpr auto process(T& obj, const ExternalFunctions& external) const noexcept requires(IS_CLEANER) {
+			__LL_FUNCTION_INIT__;
 			// If external has a way to clear object
 			if constexpr (::llcpp::meta::concepts::signature::HasCleaner<const ExternalFunctions, void, T&>)
 				return external.__cleaner(obj);
@@ -164,6 +166,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 		}
 		template<class ExternalFunctions = _MyType, class T>
 		__LL_NODISCARD__ constexpr auto process(T* begin, const T* end) const noexcept requires(IS_CLEANER) {
+			__LL_FUNCTION_INIT__;
 			// If this is this class type, we will use this instance as main source
 			if constexpr (::std::is_same_v<ExternalFunctions, _MyType>)
 				return this->process(begin, end, *this);
@@ -178,6 +181,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 		}
 		template<class ExternalFunctions = _MyType, class T>
 		__LL_NODISCARD__ constexpr auto process(T* begin, const T* end, const ExternalFunctions& external) const noexcept requires(IS_CLEANER) {
+			__LL_FUNCTION_INIT__;
 			// If external has a way to clear object
 			if constexpr (::llcpp::meta::concepts::signature::HasCleaner<const ExternalFunctions, void, T&>)
 				return external.__cleaner(begin, end);
@@ -194,14 +198,17 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 		template<class T>
 			requires IS_CLEANER_NO_POINTER<T> && ::llcpp::meta::concepts::signature::HasCopyAssignable<T>
 		constexpr void __cleaner(T& obj) const noexcept {
+			__LL_FUNCTION_INIT__;
 			obj = ::std::forward<const T&>(::llcpp::ZERO_VALUE<T>);
 		}
 		template<class T, usize N>
 		constexpr void __cleaner(T (&__array)[N]) const noexcept requires(IS_CLEANER_NO_POINTER<T>) {
+			__LL_FUNCTION_INIT__;
 			this->__cleaner(__array, __array + N);
 		}
 		template<class T>
 		constexpr void __cleaner(T* begin, const T* end) const noexcept requires(IS_CLEANER_NO_POINTER<T>) {
+			__LL_FUNCTION_INIT__;
 			T* aux = begin;
 			for(; aux < end; ++aux)
 				this->process(*aux, *this);
@@ -212,6 +219,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 	public:
 		template<class ExternalFunctions = _MyType, class T>
 		__LL_NODISCARD__ constexpr auto process(T& obj) const noexcept requires(IS_INVALIDATOR) {
+			__LL_FUNCTION_INIT__;
 			// If this is this class type, we will use this instance as main source
 			if constexpr (::std::is_same_v<ExternalFunctions, _MyType>)
 				return this->process(obj, *this);
@@ -226,6 +234,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 		}
 		template<class ExternalFunctions = _MyType, class T>
 		__LL_NODISCARD__ constexpr auto process(T& obj, const ExternalFunctions& external) const noexcept requires(IS_INVALIDATOR) {
+			__LL_FUNCTION_INIT__;
 			// If external has a way to clear object
 			if constexpr (::llcpp::meta::concepts::signature::HasInvalidator<ExternalFunctions, void, T&>)
 				return external.__invalidate(obj);

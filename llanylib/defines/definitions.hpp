@@ -259,6 +259,8 @@
 	LL_ASSERT(var_a < var_b, __LL_STRING_PREFIX "[" var_a_str __LL_STRING_PREFIX " < " var_b_str __LL_STRING_PREFIX "] " var_a_str __LL_STRING_PREFIX " cannot be lower or equal to " \
 		var_b_str __LL_STRING_PREFIX "." __LL_FUNCNAME__)
 
+#define __LL_FUNCTION_INIT__ do { LL_IGNORE(); } while(0)
+
 // Defines for logging
 
 #pragma region Error

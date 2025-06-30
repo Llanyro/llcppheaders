@@ -84,32 +84,39 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 	#pragma region Functions
 		#pragma region Constructor
 	public:
-		constexpr Boolean() noexcept : value(_MyType::enum_bool::Unknown) {}
+		constexpr Boolean() noexcept : value(_MyType::enum_bool::Unknown) { __LL_FUNCTION_INIT__; }
 		constexpr ~Boolean() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr Boolean(const Boolean& other) noexcept : value(other.value) {}
+		constexpr Boolean(const Boolean& other) noexcept : value(other.value) { __LL_FUNCTION_INIT__; }
 		constexpr Boolean& operator=(const Boolean& other) noexcept {
+			__LL_FUNCTION_INIT__;
 			this->set(other.value);
 			return *this;
 		}
-		constexpr Boolean(Boolean&& other) noexcept : value(other.value) { other.clear(); }
+		constexpr Boolean(Boolean&& other) noexcept : value(other.value) {
+			__LL_FUNCTION_INIT__;
+			other.clear();
+		}
 		constexpr Boolean& operator=(Boolean&& other) noexcept {
+			__LL_FUNCTION_INIT__;
 			this->set(other.value);
 			other.clear();
 			return *this;
 		}
 
-		constexpr Boolean(const enum_bool value) noexcept : value(value) {}
+		constexpr Boolean(const enum_bool value) noexcept : value(value) { __LL_FUNCTION_INIT__; }
 		constexpr Boolean& operator=(const enum_bool value) noexcept {
+			__LL_FUNCTION_INIT__;
 			this->set(value);
 			return *this;
 		}
 
-		constexpr Boolean(const ll_bool_t value) noexcept : value(_MyType::convert(value)) {}
+		constexpr Boolean(const ll_bool_t value) noexcept : value(_MyType::convert(value)) { __LL_FUNCTION_INIT__; }
 		constexpr Boolean& operator=(const ll_bool_t value) noexcept {
+			__LL_FUNCTION_INIT__;
 			this->set(value);
 			return *this;
 		}
@@ -127,51 +134,76 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr explicit operator const Boolean*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator Boolean*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const Boolean*() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this;
+		}
+		__LL_NODISCARD__ constexpr explicit operator Boolean*() noexcept {
+			__LL_FUNCTION_INIT__;
+			return this;
+		}
 
 		#pragma endregion
 		#pragma region ClassFunctions
 	public:
 		__LL_NODISCARD__ static constexpr ll_bool_t convert(const enum_bool value) noexcept {
+			__LL_FUNCTION_INIT__;
 			return value == enum_bool::True;
 		}
 		__LL_NODISCARD__ static constexpr enum_bool convert(const ll_bool_t value) noexcept {
+			__LL_FUNCTION_INIT__;
 			return static_cast<enum_bool>(value);
 		}
 
-		constexpr void set(const ll_bool_t value) noexcept { this->value = _MyType::convert(value); }
-		constexpr void set(const enum_bool value) noexcept { this->value = value; }
+		constexpr void set(const ll_bool_t value) noexcept {
+			__LL_FUNCTION_INIT__;
+			this->value = _MyType::convert(value);
+		}
+		constexpr void set(const enum_bool value) noexcept {
+			__LL_FUNCTION_INIT__;
+			this->value = value;
+		}
 
 		__LL_NODISCARD__ constexpr explicit operator ll_bool_t() const noexcept {
+			__LL_FUNCTION_INIT__;
 			return _MyType::convert(value);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t as_bool() const noexcept {
+			__LL_FUNCTION_INIT__;
 			return this->operator ll_bool_t();
 		}
 
 		__LL_NODISCARD__ constexpr explicit operator enum_bool() const noexcept {
+			__LL_FUNCTION_INIT__;
 			return this->value;
 		}
 		__LL_NODISCARD__ constexpr enum_bool as_enum() const noexcept {
+			__LL_FUNCTION_INIT__;
 			return this->operator enum_bool();
 		}
 
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const Boolean& other) const noexcept {
+			__LL_FUNCTION_INIT__;
 			return this->value == other.value;
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const Boolean& other) const noexcept {
+			__LL_FUNCTION_INIT__;
 			return this->value != other.value;
 		}
 
 		__LL_NODISCARD__ constexpr ll_bool_t operator==(const ll_bool_t value) const noexcept {
+			__LL_FUNCTION_INIT__;
 			return this->value == _MyType::convert(value);
 		}
 		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const ll_bool_t value) const noexcept {
+			__LL_FUNCTION_INIT__;
 			return this->value != _MyType::convert(value);
 		}
 
-		constexpr void clear() noexcept { this->set(_MyType::enum_bool::Unknown); }
+		constexpr void clear() noexcept {
+			__LL_FUNCTION_INIT__;
+			this->set(_MyType::enum_bool::Unknown);
+		}
 
 		#pragma endregion
 

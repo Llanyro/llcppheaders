@@ -59,10 +59,12 @@ __LL_NODISCARD__ constexpr U* get_array_end(T& arr) noexcept;
 	#define LLANYLIB_LISTFUNCTIONS_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
+	#include <llanylib/types/Arrayo.hpp>
 	#include <llanylib/traits_base/type_traits_extended.hpp>
 	#include <llanylib/concepts/concepts.hpp>
 	#include <llanylib/traits/ValidationChecker.hpp>
 #else
+	#include "../types/Arrayo.hpp"
 	#include "../traits_base/type_traits_extended.hpp"
 	#include "../concepts/concepts.hpp"
 	#include "../traits/ValidationChecker.hpp"
@@ -78,6 +80,84 @@ __LL_NODISCARD__ constexpr U* get_array_end(T& arr) noexcept;
 
 namespace llcpp {
 namespace meta {
+namespace traits {
+
+template<class T>
+__LL_VAR_INLINE__ constexpr auto getArrayType() noexcept {
+	if constexpr (::llcpp::meta::traits::has_value_type_v<T>)
+		return ::llcpp::meta::traits::TypeContainer<typename T::value_type>{};
+	else if constexpr (::std::is_pointer_v<T>)
+		return ::llcpp::meta::traits::TypeContainer<::std::remove_pointer_t<T>>{};
+	else if constexpr (::std::is_array_v<T>)
+		return ::llcpp::meta::traits::TypeContainer<::std::remove_extent_t<T>>{};
+	else if constexpr (::llcpp::meta::concepts::signature::HasOperatorArray<T>)
+		return ::llcpp::meta::traits::TypeContainer<::std::remove_reference_t<decltype(::std::declval<T>()[0])>>{};
+	else {
+		static_assert(::std::is_pointer_v<T>,
+			"There is not avaible Type for this array");
+		return ::llcpp::meta::traits::TypeContainer<::llcpp::Emptyclass>{};
+	}
+}
+
+template<class T>
+using array_type_t = decltype(::llcpp::meta::traits::getArrayType<T>())::value_type;
+
+template<class T>
+__LL_VAR_INLINE__ constexpr auto getArrayIteratorType() noexcept {
+	if constexpr (::llcpp::meta::traits::has_iterator_type_v<T>)
+		return ::llcpp::meta::traits::TypeContainer<typename T::Iterator>{};
+	else if constexpr (::std::is_pointer_v<T>)
+		return ::llcpp::meta::traits::TypeContainer<T>{};
+	else if constexpr (::std::is_array_v<T>)
+		return ::llcpp::meta::traits::TypeContainer<::std::remove_extent_t<T>*>{};
+	else if constexpr (::llcpp::meta::concepts::signature::HasBegin<T>)
+		return ::llcpp::meta::traits::TypeContainer<decltype(::std::declval<T>().begin())>{};
+	else {
+		static_assert(::std::is_pointer_v<T>,
+			"There is not avaible Iterator type for this array");
+		return ::llcpp::meta::traits::TypeContainer<::llcpp::Emptyclass>{};
+	}
+}
+
+template<class T>
+using array_iterator_t = decltype(::llcpp::meta::traits::getArrayIteratorType<T>())::value_type;
+
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_ARRAY_TYPE_0 =
+	::std::is_same_v<::llcpp::meta::traits::array_type_t<i32[6]>, i32>;
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_ARRAY_TYPE_1 =
+	::std::is_same_v<::llcpp::meta::traits::array_type_t<::llcpp::Arrayo<f64, 10000>>, f64>;
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_array_type_0_kat,
+	::llcpp::meta::traits::kat::IS_WORKING_ARRAY_TYPE_0,
+	"'array_type 0'" __LL_IS_NOT_WORKING_STR
+);
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_array_type_1_kat,
+	::llcpp::meta::traits::kat::IS_WORKING_ARRAY_TYPE_1,
+	"'array_type 1'" __LL_IS_NOT_WORKING_STR
+);
+
+__LL_NODISCARD__ constexpr ::llcpp::string list_functions_kats() noexcept {
+	::llcpp::string result = ::llcpp::meta::traits::kat::is_working_array_type_0_kat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::is_working_array_type_1_kat();
+	if(result) return result;
+
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::meta::traits::kat::list_functions_kats() == LL_NULLPTR, "traits::list_functions KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // __LL_INCLUDE_KATS
+
+} // namespace traits
 namespace utils {
 namespace __utils__ {
 
@@ -104,6 +184,12 @@ __LL_NODISCARD__ constexpr U make_constructed_array(const Args&... args) noexcep
 template<class U, usize N = U::N, class T = U::value_type, class... Args>
 __LL_NODISCARD__ constexpr U make_constructed_array_obj(const Args&... args) noexcept {
 	return ::llcpp::meta::utils::make_constructed_array<U, N, T, Args...>(
+		::std::forward<const Args&>(args)...
+	);
+}
+template<class U, usize N, class... Args>
+__LL_NODISCARD__ constexpr ::llcpp::Arrayo<U, N> make_constructed_arrayo(const Args&... args) noexcept {
+	return ::llcpp::meta::utils::make_constructed_array<::llcpp::Arrayo<U, N>, N, U, Args...>(
 		::std::forward<const Args&>(args)...
 	);
 }
@@ -230,20 +316,19 @@ constexpr ll_bool_t is_valid_array_type(const T& t) noexcept {
 	}
 }
 
-#if __LL_INCLUDE_KATS == 1
-} // namespace utils
-} // namespace meta
-} // namespace llcpp
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_array_type_v =
+	::llcpp::meta::utils::is_valid_array_type<T>();
 
-#if defined(LL_LIB_PATHS)
-	#include <llanylib/types/Arrayo.hpp>
+template<class... Args>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_array_type_all_v =
+#if __LL_REAL_CXX17 == 1
+	(::llcpp::meta::utils::is_valid_array_type_v<Args> || ...);
 #else
-	#include "../types/Arrayo.hpp"
-#endif // LL_LIB_PATHS
+	::std::disjunction_v<::llcpp::meta::utils::is_valid_array_type_v<Args>...>;
+#endif // __LL_REAL_CXX17 == 1
 
-namespace llcpp {
-namespace meta {
-namespace utils {
+#if __LL_INCLUDE_KATS == 1
 namespace kat {
 
 struct KatArrayConst {
@@ -444,6 +529,9 @@ __LL_VAR_INLINE__ constexpr auto MARR_KAT	= ::llcpp::meta::utils::make_construct
 __LL_VAR_INLINE__ constexpr auto MARR_KAT2	= ::llcpp::meta::utils::make_constructed_array_obj<Arrayo<Arrayo<u8, 5>, 4>>(
 	::llcpp::meta::utils::make_constructed_array_obj<Arrayo<u8, 5>>(88u)
 );
+__LL_VAR_INLINE__ constexpr auto MARR_KAT3	= ::llcpp::meta::utils::make_constructed_arrayo<Arrayo<u8, 5>, 4>(
+	::llcpp::meta::utils::make_constructed_arrayo<u8, 5>(88u)
+);
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_IS_MAKE_ARRAY	=
 	MARR_KAT.compare(MARR);
@@ -452,6 +540,11 @@ __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_IS_MAKE_ARRAY2	=
 	&& MARR_KAT2[1].compare(MARR2[1])
 	&& MARR_KAT2[2].compare(MARR2[2])
 	&& MARR_KAT2[3].compare(MARR2[3]);
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_IS_MAKE_ARRAY3	=
+	   MARR_KAT3[0].compare(MARR2[0])
+	&& MARR_KAT3[1].compare(MARR2[1])
+	&& MARR_KAT3[2].compare(MARR2[2])
+	&& MARR_KAT3[3].compare(MARR2[3]);
 
 __LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_make_contructed_array_kat,
@@ -462,6 +555,11 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_make_contructed_array_2_kat,
 	::llcpp::meta::utils::kat::IS_WORKING_IS_MAKE_ARRAY2,
 	"'Make contructed array of arrays'" __LL_IS_NOT_WORKING_STR
+);
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_make_contructed_array_3_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_IS_MAKE_ARRAY3,
+	"'Make contructed array of arrays 2'" __LL_IS_NOT_WORKING_STR
 );
 
 #pragma endregion
@@ -506,12 +604,14 @@ __LL_NODISCARD__ constexpr ::llcpp::string list_functions_kats() noexcept {
 	if(result) return result;
 	result = ::llcpp::meta::utils::kat::is_working_make_contructed_array_2_kat();
 	if(result) return result;
+	result = ::llcpp::meta::utils::kat::is_working_make_contructed_array_3_kat();
+	if(result) return result;
 
 	return nullptr;
 }
 
 #if __LL_STATIC_KATS == 1
-	static_assert(::llcpp::meta::utils::kat::list_functions_kats() == LL_NULLPTR, "list_functions KAT not OK");
+	static_assert(::llcpp::meta::utils::kat::list_functions_kats() == LL_NULLPTR, "utils::list_functions KAT not OK");
 #endif // __LL_STATIC_KATS
 
 } // namespace kat

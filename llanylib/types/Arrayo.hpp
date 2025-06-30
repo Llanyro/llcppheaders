@@ -78,35 +78,93 @@ class Arrayo {
 
 		T _[N];	// Unamed array
 
-		__LL_NODISCARD__ constexpr T& operator[](const usize position) noexcept { return this->_[position]; }
-		__LL_NODISCARD__ constexpr const T& operator[](const usize position) const noexcept { return this->_[position]; }
+		__LL_NODISCARD__ constexpr T& operator[](const usize position) noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_[position];
+		}
+		__LL_NODISCARD__ constexpr const T& operator[](const usize position) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_[position];
+		}
 
-		__LL_NODISCARD__ constexpr Iterator operator+(const usize position) noexcept { return this->_ + position; }
-		__LL_NODISCARD__ constexpr ConstIterator operator+(const usize position) const noexcept { return this->_ + position; }
+		__LL_NODISCARD__ constexpr Iterator operator+(const usize position) noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_ + position;
+		}
+		__LL_NODISCARD__ constexpr ConstIterator operator+(const usize position) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_ + position;
+		}
 
-		__LL_NODISCARD__ constexpr Iterator operator-(const usize position) noexcept { return this->_ - position; }
-		__LL_NODISCARD__ constexpr ConstIterator operator-(const usize position) const noexcept { return this->_ - position; }
+		__LL_NODISCARD__ constexpr Iterator operator-(const usize position) noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_ - position;
+		}
+		__LL_NODISCARD__ constexpr ConstIterator operator-(const usize position) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_ - position;
+		}
 
-		__LL_NODISCARD__ constexpr T& operator*() noexcept { return this->_[0]; }
-		__LL_NODISCARD__ constexpr const T& operator*() const noexcept { return this->_[0]; }
+		__LL_NODISCARD__ constexpr T& operator*() noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_[0];
+		}
+		__LL_NODISCARD__ constexpr const T& operator*() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_[0];
+		}
 
-		__LL_NODISCARD__ constexpr Iterator operator->() noexcept { return ::llcpp::addressof(this->_[0]); }
-		__LL_NODISCARD__ constexpr ConstIterator operator->() const noexcept { return ::llcpp::addressof(this->_[0]); }
+		__LL_NODISCARD__ constexpr Iterator operator->() noexcept {
+			__LL_FUNCTION_INIT__;
+			return ::llcpp::addressof(this->_[0]);
+		}
+		__LL_NODISCARD__ constexpr ConstIterator operator->() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return ::llcpp::addressof(this->_[0]);
+		}
 
-		__LL_NODISCARD__ constexpr Iterator get(const usize position) noexcept { return *this + position }
-		__LL_NODISCARD__ constexpr ConstIterator get(const usize position) const noexcept { return *this + position; }
+		__LL_NODISCARD__ constexpr Iterator get(const usize position) noexcept {
+			__LL_FUNCTION_INIT__;
+			return *this + position
+		}
+		__LL_NODISCARD__ constexpr ConstIterator get(const usize position) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return *this + position;
+		}
 
-		__LL_NODISCARD__ constexpr Iterator begin() noexcept { return this->_; }
-		__LL_NODISCARD__ constexpr ConstIterator begin() const noexcept { return this->_; }
-		__LL_NODISCARD__ constexpr Iterator end() noexcept { return this->_ + _MyType::N; }
-		__LL_NODISCARD__ constexpr ConstIterator end() const noexcept { return this->_ + _MyType::N; }
+		__LL_NODISCARD__ constexpr Iterator begin() noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_;
+		}
+		__LL_NODISCARD__ constexpr ConstIterator begin() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_;
+		}
+		__LL_NODISCARD__ constexpr Iterator end() noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_ + _MyType::N;
+		}
+		__LL_NODISCARD__ constexpr ConstIterator end() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->_ + _MyType::N;
+		}
 
-		__LL_NODISCARD__ constexpr const usize size() const noexcept { return _MyType::N; }
-		__LL_NODISCARD__ constexpr const usize count() const noexcept { return this->size(); }
-		__LL_NODISCARD__ constexpr const usize len() const noexcept { return this->size(); }
+		__LL_NODISCARD__ constexpr const usize size() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return _MyType::N;
+		}
+		__LL_NODISCARD__ constexpr const usize count() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->size();
+		}
+		__LL_NODISCARD__ constexpr const usize len() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->size();
+		}
 
 	private:
 		__LL_NODISCARD__ constexpr ll_bool_t compare(ConstIterator tb, ConstIterator te,  ConstIterator ob) const noexcept {
+			__LL_FUNCTION_INIT__;
 			for(; tb < te; ++tb, ++ob)
 				if(*tb != *ob)
 					return ::llcpp::LL_FALSE;
@@ -116,12 +174,14 @@ class Arrayo {
 	public:
 		template<usize NN>
 		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN]) const noexcept {
+			__LL_FUNCTION_INIT__;
 			if constexpr (N == NN)
 				return this->compare(this->begin(), this->end(), arr);
 			else return this->compare(this->begin(), this->get(N > NN ? NN : N), arr);
 		}
 		template<usize NN>
 		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN], const usize compare_size) const noexcept {
+			__LL_FUNCTION_INIT__;
 			if (N < COMPARE_SIZE) {
 				if constexpr (::llcpp::LL_DEBUG_ERROR)
 					__debug_error_out_of_range(COMPARE_SIZE, "COMPARE_SIZE", N);
@@ -136,6 +196,7 @@ class Arrayo {
 		}
 		template<usize COMPARE_SIZE, usize NN>
 		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN]) const noexcept {
+			__LL_FUNCTION_INIT__;
 			static_assert(N >= COMPARE_SIZE,
 				"N cannot be lower than COMPARE_SIZE");
 			static_assert(NN >= COMPARE_SIZE,

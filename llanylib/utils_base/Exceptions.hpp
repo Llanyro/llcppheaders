@@ -89,21 +89,13 @@ class ExceptionFunctions : public ::llcpp::AlwaysValidTag {
 		using ErrorType				= _ErrorType;
 		
 	#pragma endregion
-	#pragma region CleanFunctions
+	#pragma region Constructors
 	public:
-		constexpr ExceptionFunctions() noexcept = default;
-		constexpr ~ExceptionFunctions() noexcept = default;
+		DEFAULT_RULE_OF_6_CLEAR(ExceptionFunctions);
+	
+	#pragma endregion
+	#pragma region CleanFunctions
 
-		constexpr ExceptionFunctions(const ExceptionFunctions&) noexcept = delete;
-		constexpr ExceptionFunctions& operator=(const ExceptionFunctions&) noexcept = delete;
-		constexpr ExceptionFunctions(ExceptionFunctions&&) noexcept = delete;
-		constexpr ExceptionFunctions& operator=(ExceptionFunctions&&) noexcept = delete;
-
-		constexpr ExceptionFunctions(const volatile ExceptionFunctions&) noexcept = delete;
-		constexpr ExceptionFunctions& operator=(const volatile ExceptionFunctions&) noexcept = delete;
-		constexpr ExceptionFunctions(volatile ExceptionFunctions&&) noexcept = delete;
-		constexpr ExceptionFunctions& operator=(volatile ExceptionFunctions&&) noexcept = delete;
-		
 		constexpr void __cleaner(StringType*& val) const noexcept {
 			__LL_FUNCTION_INIT__;
 			val = ::llcpp::NULL_VALUE<StringType>;
@@ -489,6 +481,54 @@ static thread_local ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 	#define LOG_EXCEPTION(err) ::llcpp::LL_IGNORE(err)
 	#define LOG_EXCEPTION_TAG(tag, err) ::llcpp::LL_IGNORE(tag, err)
 #endif // __LL_EXCEPTIONS == 1
+
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+
+using ExceptionKat	= ::llcpp::meta::utils::ExceptionBuffer<10>;
+
+#pragma region Begin
+
+template<usize N>
+__LL_NODISCARD__ constexpr ::llcpp::meta::pair<usize, usize> push_elements() noexcept {
+	ExceptionKat list;
+	
+	for(usize i{}; i < N; ++i)
+		list.push("Dodod", -1);
+
+	return { list.size(), list.max_size() };
+}
+
+__LL_VAR_INLINE__ constexpr auto PUSH_ELEMENTS_RESULT = ::llcpp::meta::utils::kat::push_elements<5>();
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_PUSH_ELEMENTS =
+	   PUSH_ELEMENTS_RESULT.first == 5
+	&& PUSH_ELEMENTS_RESULT.second == 10;
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_get_push_elements_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_OBJ2_BEGIN,
+	"'Push elements'" __LL_IS_NOT_WORKING_STR
+);
+
+#pragma endregion
+
+__LL_NODISCARD__ constexpr ::llcpp::string list_functions_kats() noexcept {
+	::llcpp::string result = ::llcpp::meta::utils::kat::is_working_get_push_elements_kat();
+	if(result) return result;
+	//result = ::llcpp::meta::utils::kat::is_working_get_array_obj_begin_kat();
+	//if(result) return result;
+
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::meta::utils::kat::list_functions_kats() == LL_NULLPTR, "utils::list_functions KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // __LL_INCLUDE_KATS
+
 
 } // namespace utils
 } // namespace meta

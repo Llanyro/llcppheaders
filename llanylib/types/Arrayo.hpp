@@ -65,6 +65,7 @@ namespace meta {
 
 // Works like a C array "int char[5]"
 // It also make easy for compiler to move arrays between functions (you usually cant return arrays in C)
+// Simplest array, for more complex array use Vector instad
 template<class _T, usize _N>
 class Arrayo {
 	public:
@@ -326,6 +327,9 @@ __LL_NODISCARD__ constexpr ::llcpp::string arrayo_kats() noexcept {
 
 namespace llcpp {
 
+// Works like a C array "int char[5]"
+// It also make easy for compiler to move arrays between functions (you usually cant return arrays in C)
+// Simplest array, for more complex array use Vector instad
 template<class T, usize N>
 using Arrayo = ::llcpp::meta::Arrayo<T, N>;
 

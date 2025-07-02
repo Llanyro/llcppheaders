@@ -439,12 +439,15 @@ concept HasListFunctions = requires {
 	requires ::llcpp::meta::concepts::signature::HasEnd<T>;
 	requires ::llcpp::meta::concepts::signature::HasReverseEnd<T>;
 };
-template<class T, ll_bool_t IS_POINTER_ITERATOR = false>
+template<class T, ll_bool_t IS_POINTER_ITERATOR = ::llcpp::LL_FALSE>
 concept SameTypeBeginEnd = requires (T t) {
 	requires ::llcpp::meta::concepts::signature::HasBegin<T>;
 	requires ::llcpp::meta::concepts::signature::HasEnd<T>;
-	requires ::std::is_same_v<decltype(t.begin()), decltype(t.end())>;
-	requires IS_POINTER_ITERATOR ||
+	requires ::std::is_same_v<
+		::std::remove_cvref_t<decltype(t.begin())>,
+		::std::remove_cvref_t<decltype(t.end())>
+	>;
+	//requires IS_POINTER_ITERATOR ||
 };
 
 #pragma endregion

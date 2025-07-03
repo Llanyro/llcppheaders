@@ -63,91 +63,118 @@ class Arrayo;
 namespace llcpp {
 namespace meta {
 
+#define CHECK_ERROR_OUT_OF_RANGE										\
+	do {																\
+		if constexpr (::llcpp::LL_DEBUG_ERROR) {						\
+			if (!this->inRange(position))								\
+				__debug_error_out_of_range(position, "position", N);	\
+		}																\
+	} while (0)
+
 // Works like a C array "int char[5]"
 // It also make easy for compiler to move arrays between functions (you usually cant return arrays in C)
 // Simplest array, for more complex array use Vector instad
 template<class _T, usize _N>
 class Arrayo {
 	public:
+		// Class related
 		using _MyType				= Arrayo<_T, _N>;
+
+		// Types and enums
 		using T						= _T;
-		using Iterator				= T*;
-		using ConstIterator			= const T*;
 		using type					= T;	// standard
 		using value_type			= T;	// standard
+		using Iterator				= T*;
+		using ConstIterator			= const T*;
 		static constexpr usize N	= _N;
 
-		T _[N];	// Unamed array
+		T elements[N];	// Unamed array
 
 		__LL_NODISCARD__ constexpr T& operator[](const usize position) noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_[position];
+			CHECK_ERROR_OUT_OF_RANGE;
+			return this->elements[position];
 		}
 		__LL_NODISCARD__ constexpr const T& operator[](const usize position) const noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_[position];
+			CHECK_ERROR_OUT_OF_RANGE;
+			return this->elements[position];
 		}
 
 		__LL_NODISCARD__ constexpr Iterator operator+(const usize position) noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_ + position;
+			CHECK_ERROR_OUT_OF_RANGE;
+			return this->elements + position;
 		}
 		__LL_NODISCARD__ constexpr ConstIterator operator+(const usize position) const noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_ + position;
+			CHECK_ERROR_OUT_OF_RANGE;
+			return this->elements + position;
 		}
 
 		__LL_NODISCARD__ constexpr Iterator operator-(const usize position) noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_ - position;
+			CHECK_ERROR_OUT_OF_RANGE;
+			return this->elements - position;
 		}
 		__LL_NODISCARD__ constexpr ConstIterator operator-(const usize position) const noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_ - position;
+			CHECK_ERROR_OUT_OF_RANGE;
+			return this->elements - position;
 		}
 
 		__LL_NODISCARD__ constexpr T& operator*() noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_[0];
+			return this->elements[0];
 		}
 		__LL_NODISCARD__ constexpr const T& operator*() const noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_[0];
+			return this->elements[0];
 		}
 
 		__LL_NODISCARD__ constexpr Iterator operator->() noexcept {
 			__LL_FUNCTION_INIT__;
-			return ::llcpp::addressof(this->_[0]);
+			return ::llcpp::addressof(this->elements[0]);
 		}
 		__LL_NODISCARD__ constexpr ConstIterator operator->() const noexcept {
 			__LL_FUNCTION_INIT__;
-			return ::llcpp::addressof(this->_[0]);
+			return ::llcpp::addressof(this->elements[0]);
 		}
 
 		__LL_NODISCARD__ constexpr Iterator get(const usize position) noexcept {
 			__LL_FUNCTION_INIT__;
-			return *this + position
+			CHECK_ERROR_OUT_OF_RANGE;
+			return *this + position;
 		}
 		__LL_NODISCARD__ constexpr ConstIterator get(const usize position) const noexcept {
 			__LL_FUNCTION_INIT__;
+			CHECK_ERROR_OUT_OF_RANGE;
 			return *this + position;
 		}
 
+		__LL_NODISCARD__ constexpr Iterator data() noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->elements;
+		}
+		__LL_NODISCARD__ constexpr ConstIterator data() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->elements;
+		}
 		__LL_NODISCARD__ constexpr Iterator begin() noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_;
+			return this->elements;
 		}
 		__LL_NODISCARD__ constexpr ConstIterator begin() const noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_;
+			return this->elements;
 		}
 		__LL_NODISCARD__ constexpr Iterator end() noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_ + _MyType::N;
+			return this->elements + _MyType::N;
 		}
 		__LL_NODISCARD__ constexpr ConstIterator end() const noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->_ + _MyType::N;
+			return this->elements + _MyType::N;
 		}
 
 		__LL_NODISCARD__ constexpr const usize size() const noexcept {
@@ -163,8 +190,13 @@ class Arrayo {
 			return this->size();
 		}
 
-	private:
-		__LL_NODISCARD__ constexpr ll_bool_t compare(ConstIterator tb, ConstIterator te,  ConstIterator ob) const noexcept {
+		__LL_NODISCARD__ static constexpr ll_bool_t inRange(const usize position) noexcept {
+			__LL_FUNCTION_INIT__;
+			return N > position;
+		}
+
+	public:
+		__LL_NODISCARD__ static constexpr ll_bool_t compare(ConstIterator tb, ConstIterator te,  ConstIterator ob) noexcept {
 			__LL_FUNCTION_INIT__;
 			for(; tb < te; ++tb, ++ob)
 				if(*tb != *ob)
@@ -172,7 +204,6 @@ class Arrayo {
 			return ::llcpp::LL_TRUE;
 		}
 
-	public:
 		template<usize NN>
 		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN]) const noexcept {
 			__LL_FUNCTION_INIT__;
@@ -207,6 +238,8 @@ class Arrayo {
 			return this->compare(this->begin(), this->get(COMPARE_SIZE), arr);
 		}
 };
+
+#undef CHECK_ERROR_OUT_OF_RANGE
 
 #if __LL_INCLUDE_KATS == 1
 namespace kat {

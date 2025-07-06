@@ -23,9 +23,9 @@
 	#define LLANYLIB_COMPILEREXTENSIONS_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
-	#include <llanylib/types/types.hpp>
+	#include <llanylib/defines/expresions.hpp>
 #else
-	#include "types.hpp"
+	#include "../defines/expresions.hpp"
 #endif // LL_LIB_PATHS
 
 namespace llcpp {

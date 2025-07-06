@@ -29,11 +29,9 @@
 #endif // LL_LIB_PATHS
 
 namespace llcpp {
-namespace misc {
 
 enum class ValidType : u8;
 
-} // namespace misc
 } // namespace llcpp
 
 #elif defined(LLANYLIB_VALIDTYPE_HPP_)
@@ -58,7 +56,6 @@ enum class ValidType : u8;
 #endif // LL_LIB_PATHS
 
 namespace llcpp {
-namespace misc {
 
 /// Do not change order
 enum class ValidType : u8 {
@@ -73,7 +70,6 @@ enum class ValidType : u8 {
 	Error			// This one must be always last one
 };
 
-} // namespace misc
 } // namespace llcpp
 
 #endif // LLANYLIB_VALIDTYPE_HPP_

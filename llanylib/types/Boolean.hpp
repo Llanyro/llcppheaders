@@ -84,19 +84,25 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 	#pragma region Functions
 		#pragma region Constructor
 	public:
-		constexpr Boolean() noexcept : value(_MyType::enum_bool::Unknown) { __LL_FUNCTION_INIT__; }
+		constexpr Boolean() noexcept
+			: value(_MyType::enum_bool::Unknown)
+		{ __LL_FUNCTION_INIT__; }
 		constexpr ~Boolean() noexcept = default;
 
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		constexpr Boolean(const Boolean& other) noexcept : value(other.value) { __LL_FUNCTION_INIT__; }
+		constexpr Boolean(const Boolean& other) noexcept
+			: value(other.value)
+		{ __LL_FUNCTION_INIT__; }
 		constexpr Boolean& operator=(const Boolean& other) noexcept {
 			__LL_FUNCTION_INIT__;
 			this->set(other.value);
 			return *this;
 		}
-		constexpr Boolean(Boolean&& other) noexcept : value(other.value) {
+		constexpr Boolean(Boolean&& other) noexcept
+			: value(other.value)
+		{
 			__LL_FUNCTION_INIT__;
 			other.clear();
 		}
@@ -107,14 +113,18 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 			return *this;
 		}
 
-		constexpr Boolean(const enum_bool value) noexcept : value(value) { __LL_FUNCTION_INIT__; }
+		constexpr Boolean(const enum_bool value) noexcept
+			: value(value)
+		{ __LL_FUNCTION_INIT__; }
 		constexpr Boolean& operator=(const enum_bool value) noexcept {
 			__LL_FUNCTION_INIT__;
 			this->set(value);
 			return *this;
 		}
 
-		constexpr Boolean(const ll_bool_t value) noexcept : value(_MyType::convert(value)) { __LL_FUNCTION_INIT__; }
+		constexpr Boolean(const ll_bool_t value) noexcept
+			: value(_MyType::convert(value))
+		{ __LL_FUNCTION_INIT__; }
 		constexpr Boolean& operator=(const ll_bool_t value) noexcept {
 			__LL_FUNCTION_INIT__;
 			this->set(value);
@@ -126,10 +136,10 @@ class Boolean : public ::llcpp::AlwaysValidTag {
 		//constexpr Boolean(const volatile ll_bool_t value) noexcept = delete;
 		//constexpr Boolean operator=(const volatile ll_bool_t value) noexcept = delete;
 
-		constexpr Boolean(const volatile Boolean&) = delete;
-		constexpr Boolean& operator=(const volatile Boolean&) = delete;
-		constexpr Boolean(volatile Boolean&&) = delete;
-		constexpr Boolean& operator=(volatile Boolean&&) = delete;
+		constexpr Boolean(const volatile Boolean&) noexcept = delete;
+		constexpr Boolean& operator=(const volatile Boolean&) noexcept = delete;
+		constexpr Boolean(volatile Boolean&&) noexcept = delete;
+		constexpr Boolean& operator=(volatile Boolean&&) noexcept= delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators

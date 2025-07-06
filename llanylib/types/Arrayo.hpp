@@ -53,10 +53,10 @@ class Arrayo;
 	#define LLANYLIB_ARRAYO_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
-	#include <llanylib/types/types.hpp>
+	#include <llanylib/types/pair.hpp>
 	#include <llanylib/types/compiler_extensions.hpp>
 #else
-	#include "types.hpp"
+	#include "pair.hpp"
 	#include "compiler_extensions.hpp"
 #endif // LL_LIB_PATHS
 
@@ -89,6 +89,16 @@ class Arrayo {
 		static constexpr usize N	= _N;
 
 		T elements[N];	// Unamed array
+
+	public:
+		__LL_NODISCARD__ constexpr explicit operator const Arrayo*() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this;
+		}
+		__LL_NODISCARD__ constexpr explicit operator Arrayo*() noexcept {
+			__LL_FUNCTION_INIT__;
+			return this;
+		}
 
 		__LL_NODISCARD__ constexpr T& operator[](const usize position) noexcept {
 			__LL_FUNCTION_INIT__;

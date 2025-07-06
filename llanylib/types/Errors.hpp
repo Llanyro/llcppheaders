@@ -29,11 +29,9 @@
 #endif // LL_LIB_PATHS
 
 namespace llcpp {
-namespace misc {
 
 enum class Errors : u8;
 
-} // namespace misc
 } // namespace llcpp
 
 #elif defined(LLANYLIB_ERRORS_HPP_)
@@ -58,7 +56,6 @@ enum class Errors : u8;
 #endif // LL_LIB_PATHS
 
 namespace llcpp {
-namespace misc {
 
 enum class Errors : i32 {
 	Ok = 0,
@@ -71,7 +68,6 @@ enum class Errors : i32 {
 
 };
 
-} // namespace misc
 } // namespace llcpp
 
 #endif // LLANYLIB_ERRORS_HPP_

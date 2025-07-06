@@ -111,7 +111,7 @@ using ll_longdouble_t	= long double;
 #undef __cpp_char8_t
 #if defined(__cpp_char8_t)
 	#define __LL_8BIT_CHAR ::std::char8_t
-	#define __LL_8BIT_CHAR_EX , ::std::char8_t
+	#define __LL_8BIT_CHAR_EX , __LL_8BIT_CHAR
 #else
 	#define __LL_8BIT_CHAR
 	#define __LL_8BIT_CHAR_EX
@@ -141,33 +141,6 @@ using f128				= ll_longdouble_t;
 using ll_char16_t		= char16_t;
 using ll_char32_t		= char32_t;
 
-#define __LL_INTEGRAL_CHAR_TYPES	ll_char_t, ll_uchar_t, ll_wchar_t, ll_char16_t, ll_char32_t __LL_8BIT_CHAR_EX
-#define __LL_INTEGRAL_TYPES			u8, u16, u32, u64, i8, i16, i32, i64, ll_bool_t, __LL_INTEGRAL_CHAR_TYPES
-
-#pragma endregion
-#pragma region LibaryCustom
-#if __LL_USE_WIDE_CHAR == 0
-	using char_type	= ll_char_t;	// Default char type by program propiedies (char, wchar, ...)
-#elif __LL_USE_WIDE_CHAR == 1
-	using char_type	= ll_wchar_t;	// Default char type by program propiedies (char, wchar, ...)
-#elif __LL_USE_WIDE_CHAR == 2
-	using char_type	= ll_char16_t;	// Default char type by program propiedies (char, wchar, ...)
-#elif __LL_USE_WIDE_CHAR == 3
-	using char_type	= ll_char32_t;	// Default char type by program propiedies (char, wchar, ...)
-#endif // __LL_USE_WIDE_CHAR
-
-using string				= const char_type*;
-using c_cmp_t				= i32;					// Old type in comparations, compatible with C libs
-
-using ll_ustring_t			= const ll_uchar_t*;	// Used to point to non editable unsigned strings 
-using ll_string_t			= const ll_char_t*;		// Used to point to non editable strings
-using ll_wstring_t			= const ll_wchar_t*;	// Used to point to non editable strings
-using ll_string16_t			= const ll_char16_t*;	// Used to point to non editable strings
-using ll_string32_t			= const ll_char32_t*;	// Used to point to non editable strings
-using ll_lib_t				= void*;				// Handle for dynamic library linked/shared objects
-//using len_t				= void;
-using StandardComparation	= ::std::strong_ordering;
-
 // System size 64/32/16/8 bits
 // [TOCHECK]
 #if __LL_WORD == 8u
@@ -192,6 +165,34 @@ using StandardComparation	= ::std::strong_ordering;
 	#error "Invalid wordsize"
 #endif // __LL_WORD
 
+#define __LL_INTEGRAL_CHAR_TYPES	ll_char_t, ll_uchar_t, ll_wchar_t, ll_char16_t, ll_char32_t __LL_8BIT_CHAR_EX
+#define __LL_INTEGRAL_TYPES			u8, u16, u32, u64, i8, i16, i32, i64, ll_bool_t, __LL_INTEGRAL_CHAR_TYPES
+
+#pragma endregion
+#pragma region LibaryCustom
+
+#if __LL_USE_WIDE_CHAR == 0
+	using char_type	= ll_char_t;	// Default char type by program propiedies (char, wchar, ...)
+#elif __LL_USE_WIDE_CHAR == 1
+	using char_type	= ll_wchar_t;	// Default char type by program propiedies (char, wchar, ...)
+#elif __LL_USE_WIDE_CHAR == 2
+	using char_type	= ll_char16_t;	// Default char type by program propiedies (char, wchar, ...)
+#elif __LL_USE_WIDE_CHAR == 3
+	using char_type	= ll_char32_t;	// Default char type by program propiedies (char, wchar, ...)
+#endif // __LL_USE_WIDE_CHAR
+
+using string				= const char_type*;
+using c_cmp_t				= i32;					// Old type in comparations, compatible with C libs
+
+using ll_ustring_t			= const ll_uchar_t*;	// Used to point to non editable unsigned strings 
+using ll_string_t			= const ll_char_t*;		// Used to point to non editable strings
+using ll_wstring_t			= const ll_wchar_t*;	// Used to point to non editable strings
+using ll_string16_t			= const ll_char16_t*;	// Used to point to non editable strings
+using ll_string32_t			= const ll_char32_t*;	// Used to point to non editable strings
+using ll_lib_t				= void*;				// Handle for dynamic library linked/shared objects
+//using len_t				= void;
+using StandardComparation	= ::std::strong_ordering;
+
 #pragma region BytesTypes
 using size_bytes8_t		= u8;
 using size_bytes16_t	= u16;
@@ -204,7 +205,14 @@ using b32				= size_bytes32_t;
 using b64				= size_bytes64_t;
 
 #pragma endregion
+#pragma region Hash
+using Hash8			= u8;		// 8 bits Hash
+using Hash16		= u16;		// 16 bits Hash
+using Hash32		= u32;		// 32 bits Hash
+using Hash64		= u64;		// 64 bits Hash
+using StandardHash	= usize;	// Hash by system prop
 
+#pragma endregion
 #pragma endregion
 #pragma region Tags
 
@@ -273,6 +281,12 @@ class HalfClusterTag {
 
 #pragma endregion
 
+#if defined(__LL_REAL_CXX20)
+	__LL_INLINE__ constexpr void LL_IGNORE(auto...) {}
+#else
+	template<class... Args> __LL_INLINE__ constexpr void LL_IGNORE(Args&&...) {}
+#endif
+
 // Zero value or default value returns a base type (default contructor)
 template<class T>
 __LL_VAR_INLINE__ constexpr T	ZERO_VALUE		= T{};
@@ -294,47 +308,7 @@ __LL_VAR_INLINE__ constexpr usize array_size<T[N]> = N;
 __LL_VAR_INLINE__ constexpr ll_bool_t LL_FALSE		= false;
 __LL_VAR_INLINE__ constexpr ll_bool_t LL_TRUE		= true;
 
-#if defined(__LL_REAL_CXX20)
-	__LL_INLINE__ constexpr void LL_IGNORE(auto...) {}
-#else
-	template<class... Args> __LL_INLINE__ constexpr void LL_IGNORE(Args&&...) {}
-#endif
-
 namespace meta {
-
-template<class T>
-struct simplest_container { T value; };
-
-template<class T, class U = T>
-struct pair { T first; U second; };
-
-template<class T, class U = T>
-struct pair_none_empty { T first; U second; };
-template<class T>
-struct pair_none_empty<T, ::llcpp::Emptyclass> { T first; };
-template<class T>
-struct pair_none_empty<T, void> { T first; };
-template<class U>
-struct pair_none_empty<::llcpp::Emptyclass, U> { U second; };
-template<class U>
-struct pair_none_empty<void, U> { U second; };
-template<>
-struct pair_none_empty<::llcpp::Emptyclass, ::llcpp::Emptyclass> {};
-template<>
-struct pair_none_empty<::llcpp::Emptyclass, void> {};
-template<>
-struct pair_none_empty<void, ::llcpp::Emptyclass> {};
-template<>
-struct pair_none_empty<void, void> {};
-
-template<class T, class U = T>
-using pair_ne = ::llcpp::meta::pair_none_empty<T, U>;
-
-namespace utils {
-template<class ArrayType, class HashType = u64>
-using TypeID = ::llcpp::meta::pair<ArrayType, HashType>;
-} // namespace utils
-
 namespace algorithm {
 
 __LL_VAR_INLINE__ constexpr usize MAX_LIST_SIZE	= static_cast<usize>(-1);
@@ -342,13 +316,6 @@ __LL_VAR_INLINE__ constexpr usize npos			= ::llcpp::meta::algorithm::MAX_LIST_SI
 
 } // namespace algorithm
 } // namespace meta
-
-// [TOFIX]
-// Update types to Integer
-using i128 = ::llcpp::meta::pair<i64, i64>;
-using i256 = ::llcpp::meta::pair<i128, i128>;
-using u128 = ::llcpp::meta::pair<u64, u64>;
-using u256 = ::llcpp::meta::pair<u128, u128>;
 
 #if __LL_INCLUDE_KATS == 1
 namespace kat {

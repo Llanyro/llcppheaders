@@ -23,9 +23,9 @@
 	#define LLANYLIB_TYPETRAITS_INCOMPLETE_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
-	#include <llanylib/types/types.hpp>
+	#include <llanylib/types/types_big.hpp>
 #else
-	#include "../types/types.hpp"
+	#include "../types/types_big.hpp"
 #endif // LL_LIB_PATHS
 
 namespace llcpp {
@@ -125,9 +125,9 @@ class RangeChecker;
 	#define LLANYLIB_TYPETRAITS_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
-	#include <llanylib/types/types.hpp>
+	#include <llanylib/types/types_big.hpp>
 #else
-	#include "../types/types.hpp"
+	#include "../types/types_big.hpp"
 #endif // LL_LIB_PATHS
 
 #if defined(__LL_WINDOWS_SYSTEM)

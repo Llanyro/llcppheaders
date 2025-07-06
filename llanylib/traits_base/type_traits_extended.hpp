@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-//	type_traits_extended.hpp							//
+//	type_traits_extended.hpp				//
 //											//
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
@@ -134,6 +134,18 @@ template<class T>
 using pointer_t			= T*;
 template<class T>
 using const_pointer_t	= T*;
+
+template<class T, class U>
+__LL_VAR_INLINE__ constexpr ll_bool_t  is_same_no_const_conversion_v =
+	::std::is_same_v<T, U> || (::std::is_const_v<T> && ::std::is_same_v<::std::remove_const_t<T>, U>);
+
+template<class T, class U>
+__LL_VAR_INLINE__ constexpr ll_bool_t  is_same_or_const_conversion_v =
+	::std::is_const_v<U> && ::std::is_same_v<T, ::std::remove_const_t<U>>;
+
+template<class T, class U>
+__LL_VAR_INLINE__ constexpr ll_bool_t  is_same_any_const_conversion_v =
+	::std::is_same_v<T, U> || ::std::is_same_v<::std::remove_const_t<T>, ::std::remove_const_t<U>>;
 
 #if __LL_INCLUDE_KATS == 1
 namespace kat {

@@ -60,7 +60,7 @@ namespace signature {
 
 template<class T>
 concept HasValidationType = requires (T t) {
-	{ t.validationType() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<::llcpp::misc::ValidType>;
+	{ t.validationType() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<::llcpp::ValidType>;
 };
 
 } // namespace signature

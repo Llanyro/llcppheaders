@@ -23,8 +23,6 @@
 	#define LLANYLIB_POINTERITERATOR_INCOMPLETE_MINOR_ 0
 
 #include <llanylib/traits_base/type_traits.hpp>
-#include <llanylib/traits/ValidationChecker.hpp>
-#include <llanylib/utils_base/GenericFunctions.hpp>
 
 namespace llcpp {
 namespace meta {
@@ -53,8 +51,6 @@ class PointerIterator;
 	#define LLANYLIB_POINTERITERATOR_MINOR_ 0
 
 #include <llanylib/traits_base/type_traits.hpp>
-#include <llanylib/traits/ValidationChecker.hpp>
-#include <llanylib/utils_base/GenericFunctions.hpp>
 
 #if defined(__LL_MINGW)
 	#include <memory>	// To use ::std::addressof
@@ -64,6 +60,19 @@ namespace llcpp {
 namespace meta {
 namespace utils {
 
+template<ll_bool_t REVERSE = ::llcpp::LL_FALSE, ll_bool_t NEGATIVE = ::llcpp::LL_FALSE, class T, class U>
+__LL_NODISCARD__ constexpr T operateAricmetic(const T val, const U add) noexcept {
+	__LL_FUNCTION_INIT__;
+	if constexpr (!REVERSE && !NEGATIVE)
+		return val + add;
+	else if constexpr (REVERSE && !NEGATIVE)
+		return val - add;
+	else if constexpr (REVERSE && NEGATIVE)
+		return val + add;
+	else return val - add;
+}
+
+// Iterator of types pointers (T*)
 template<class _T, ll_bool_t _IS_REVERSED = ::llcpp::LL_FALSE>
 class PointerIterator {
 	#pragma region Types
@@ -82,27 +91,33 @@ class PointerIterator {
 		static constexpr ll_bool_t IS_REVERSED = _IS_REVERSED;
 
 	#pragma endregion
+	#pragma region Friends
+	private:
+		friend class PointerIterator<T, !IS_REVERSED>;	// Its reverse iterator is a friend
+
+	#pragma endregion
 	#pragma region Attributes
 	private:
-		T* mem;
+		T* pointer;
 
 	#pragma endregion
 	#pragma region Functions
-		#pragma region Private
-	private:
-		constexpr void setMem(T* mem) noexcept { this->mem = mem; }
-
-		#pragma endregion
 		#pragma region Constructors
 	public:
 		// By default is invalid class
 		constexpr PointerIterator() noexcept
 			: PointerIterator(::llcpp::NULL_VALUE<T>)
-		{}
-		constexpr PointerIterator(T* mem) noexcept
-			: mem(mem)
-		{}
+		{ __LL_FUNCTION_INIT__; }
+		constexpr PointerIterator(T* pointer) noexcept
+			: pointer(pointer)
+		{ __LL_FUNCTION_INIT__; }
+		constexpr PointerIterator& operator=(T* pointer) noexcept {
+			__LL_FUNCTION_INIT__;
+			this->reset(pointer);
+			return *this;
+		}
 		constexpr ~PointerIterator() noexcept {
+			__LL_FUNCTION_INIT__;
 			if constexpr (::llcpp::LL_CLEAR_POINTERS_ON_DESTRUCTION)
 				this->makeInvalid();
 		}
@@ -110,171 +125,354 @@ class PointerIterator {
 		#pragma endregion
 		#pragma region CopyMove
 	public:
-		// [TOCHECK] [TODO] [TOFIX]
-		template<ll_bool_t __IS_REVERSED>
-		constexpr PointerIterator(const PointerIterator<T, __IS_REVERSED>& other) noexcept
-			: PointerIterator(other.mem)
-		{}
-		// [TOCHECK] [TODO] [TOFIX]
-		template<ll_bool_t __IS_REVERSED>
+		// Same type or (T (other) to const T (this))
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_no_const_conversion_v<T, U>
+		constexpr PointerIterator(const PointerIterator<U, __IS_REVERSED>& other) noexcept
+			: PointerIterator(other.get())
+		{ __LL_FUNCTION_INIT__; }
+		// Same type or (const T (other) to T (this))
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_or_const_conversion_v<T, U>
+		constexpr PointerIterator(const PointerIterator<U, __IS_REVERSED>& other) noexcept
+			: PointerIterator(const_cast<T>(other.get()))
+		{ __LL_FUNCTION_INIT__; }	
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
 		constexpr PointerIterator& operator=(const PointerIterator<T, __IS_REVERSED>& other) noexcept {
-			this->reset(other.mem);
+			__LL_FUNCTION_INIT__;
+			// No changes needed
+			if constexpr (::llcpp::meta::traits::is_same_no_const_conversion_v<T, U>)
+				this->reset(other.get());
+			// Need to const convert
+			else this->reset(const_cast<T>(other.get()));
 			return *this;
 		}
-		template<ll_bool_t __IS_REVERSED>
+
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_no_const_conversion_v<T, U>
 		constexpr PointerIterator(PointerIterator<T, __IS_REVERSED>&& other) noexcept
-			: PointerIterator(other.getPointer())
-		{ other.makeInvalid(); }
-		template<ll_bool_t __IS_REVERSED>
+			: PointerIterator(other.get())
+		{
+			__LL_FUNCTION_INIT__;
+			other.makeInvalid();
+		}
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_or_const_conversion_v<T, U>
+		constexpr PointerIterator(PointerIterator<T, __IS_REVERSED>&& other) noexcept
+			: PointerIterator(const_cast<T>(other.get()))
+		{
+			__LL_FUNCTION_INIT__;
+			other.makeInvalid();
+		}
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
 		constexpr PointerIterator& operator=(PointerIterator<T, __IS_REVERSED>&& other) noexcept {
-			this->reset(other.getPointer());
+			__LL_FUNCTION_INIT__;
+			// No changes needed
+			if constexpr (::llcpp::meta::traits::is_same_no_const_conversion_v<T, U>)
+				this->reset(other.get());
+			// Need to const convert
+			else this->reset(const_cast<T>(other.get()));
 			other.makeInvalid();
 			return *this;
 		}
 
-		constexpr PointerIterator(const volatile PointerIterator& other) noexcept = delete;
-		constexpr PointerIterator& operator=(const volatile PointerIterator& other) noexcept = delete;
-		constexpr PointerIterator(volatile PointerIterator&& other) noexcept = delete;
-		constexpr PointerIterator& operator=(volatile PointerIterator&& other) noexcept = delete;
+		template<ll_bool_t __IS_REVERSED>
+		constexpr PointerIterator(const volatile PointerIterator<T, __IS_REVERSED>& other) noexcept = delete;
+		template<ll_bool_t __IS_REVERSED>
+		constexpr PointerIterator& operator=(const volatile PointerIterator<T, __IS_REVERSED>& other) noexcept = delete;
+		template<ll_bool_t __IS_REVERSED>
+		constexpr PointerIterator(volatile PointerIterator<T, __IS_REVERSED>&& other) noexcept = delete;
+		template<ll_bool_t __IS_REVERSED>
+		constexpr PointerIterator& operator=(volatile PointerIterator<T, __IS_REVERSED>&& other) noexcept = delete;
 
 		#pragma endregion
 		#pragma region ClassReferenceOperators
 	public:
-		__LL_NODISCARD__ constexpr explicit operator const PointerIterator*() const noexcept { return this; }
-		__LL_NODISCARD__ constexpr explicit operator PointerIterator*() noexcept { return this; }
+		__LL_NODISCARD__ constexpr explicit operator const PointerIterator*() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this;
+		}
+		__LL_NODISCARD__ constexpr explicit operator PointerIterator*() noexcept {
+			__LL_FUNCTION_INIT__;
+			return this;
+		}
 
 		#pragma endregion
 		#pragma region ClassFunctions
-	public:
-		__LL_NODISCARD__ constexpr T* getPointer() noexcept { return this->mem; }
-		__LL_NODISCARD__ constexpr const T* getPointer() const noexcept { return this->mem; }
+		#pragma region GetSet
+	private:
+		constexpr void setMem(T* pointer) noexcept {
+			__LL_FUNCTION_INIT__;
+			this->pointer = pointer;
+		}
 
+	public:
+		__LL_NODISCARD__ constexpr T* get() noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->pointer;
+		} 
+		__LL_NODISCARD__ constexpr const T* get() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->pointer;
+		}
+
+		#pragma endregion
+		#pragma region ValidationFunctions
+	public:
 		// Returns ValidType::Valid if pointer is not nullptr
-		__LL_NODISCARD__ constexpr ::llcpp::misc::ValidType validationType() const noexcept {
-			return (this->mem != ::llcpp::NULL_VALUE<T>) ? ::llcpp::misc::ValidType::Valid : ::llcpp::misc::ValidType::Invalid;
+		__LL_NODISCARD__ constexpr ::llcpp::ValidType validationType() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return (this->get() != ::llcpp::NULL_VALUE<T>)
+				? ::llcpp::ValidType::Valid
+				: ::llcpp::ValidType::Invalid;
 		}
-		// Reset pointer iterator to new mem
-		constexpr void reset(T* mem) noexcept { this->setMem(mem); }
-		// Clear pointer with provided cleaner type
-		template<class ExtraCleaner = ::llcpp::meta::utils::Cleaner>
+		// Reset pointer iterator to new pointer
+		constexpr void reset(T* pointer) noexcept {
+			__LL_FUNCTION_INIT__;
+			this->setMem(pointer);
+		}
+		// Sets pointer to nullptr
 		constexpr void clear() noexcept {
-			ExtraCleaner extra;
-			this->clear(extra);
-		}
-		// Clear pointer with provided cleaner
-		template<class ExtraCleaner = ::llcpp::meta::utils::Cleaner>
-		constexpr void clear(const ExtraCleaner& extra) noexcept {
-			::llcpp::meta::utils::Cleaner cleaner;
-			(void)cleaner.process(this->mem, extra);
+			__LL_FUNCTION_INIT__;
+			this->makeInvalid();
 		}
 		// Sets pointer to nullptr
 		constexpr void makeInvalid() noexcept {
-			this->mem = ::llcpp::NULL_VALUE<T>;
+			__LL_FUNCTION_INIT__;
+			this->reset(::llcpp::NULL_VALUE<T>);
 		}
-		// Clears mem and set it to nullptr
-		template<class ExtraCleaner = ::llcpp::meta::utils::Cleaner>
+		// Clears pointer and set it to nullptr
 		constexpr void makeInvalidClear() noexcept {
-			ExtraCleaner extra;
-			this->makeInvalidClear(extra);
-		}
-		// Clears mem (wtih object privided) and set it to nullptr
-		template<class ExtraCleaner = ::llcpp::meta::utils::Cleaner>
-		constexpr void makeInvalidClear(const ExtraCleaner& extra) noexcept {
-			this->clear(extra);
+			__LL_FUNCTION_INIT__;
 			this->makeInvalid();
 		}
 
+		#pragma endregion
+		#pragma region Operators
+	protected:
+		template<ll_bool_t NEGATIVE>
+		__LL_NODISCARD__ static constexpr T* preOperation(T* point, const usize val) noexcept {
+			__LL_FUNCTION_INIT__;
+			return ::llcpp::meta::utils::operateAricmetic<
+				_MyType::IS_REVERSED,
+				NEGATIVE
+			>(point, val);
+		}
+
+	public:
 		constexpr PointerIterator& operator++() noexcept {
-			if constexpr (_MyType::IS_REVERSED)
-				--this->mem;
-			else ++this->mem;
+			__LL_FUNCTION_INIT__;
+			this->setMem(this->preOperation<::llcpp::LL_FALSE>(this->get(), 1));
 			return *this;
 		}
 		constexpr PointerIterator operator++(int) noexcept {
-			if constexpr (_MyType::IS_REVERSED)
-				return this->mem--;
-			else return this->mem++;
+			__LL_FUNCTION_INIT__;
+			auto val = this->get();
+			(void)this->operator++();
+			return val;
 		}
 
 		constexpr PointerIterator& operator--() noexcept {
-			if constexpr (_MyType::IS_REVERSED)
-				++this->mem;
-			else --this->mem;
+			__LL_FUNCTION_INIT__;
+			this->setMem(this->preOperation<::llcpp::LL_TRUE>(this->get(), 1));
 			return *this;
 		}
 		constexpr PointerIterator operator--(int) noexcept {
-			if constexpr (_MyType::IS_REVERSED)
-				return this->mem++;
-			else return this->mem--;
+			__LL_FUNCTION_INIT__;
+			auto val = this->get();
+			(void)this->operator--();
+			return val;
 		}
 
-		constexpr PointerIterator& operator+=(const isize pos) noexcept {
-			if constexpr (_MyType::IS_REVERSED)
-				this->mem -= pos;
-			else this->mem += pos;
+		__LL_NODISCARD__ constexpr PointerIterator operator+(const isize value) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->preOperation<::llcpp::LL_FALSE>(this->get(), value);
+		}
+		__LL_NODISCARD__ constexpr PointerIterator operator-(const isize value) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->preOperation<::llcpp::LL_TRUE>(this->get(), value);
+		}
+
+		constexpr PointerIterator& operator+=(const isize value) noexcept {
+			__LL_FUNCTION_INIT__;
+			this->setMem(this->preOperation<::llcpp::LL_FALSE>(this->get(), value));
 			return *this;
 		}
-		constexpr PointerIterator& operator-=(const isize pos) noexcept {
-			if constexpr (_MyType::IS_REVERSED)
-				this->mem += pos;
-			else this->mem -= pos;
+		constexpr PointerIterator& operator-=(const isize value) noexcept {
+			__LL_FUNCTION_INIT__;
+			this->setMem(this->preOperation<::llcpp::LL_TRUE>(this->get(), value));
 			return *this;
 		}
 
-		__LL_NODISCARD__ constexpr PointerIterator operator+(const isize pos) const noexcept {
-			if constexpr (_MyType::IS_REVERSED)
-				return this->mem - pos;
-			else return this->mem + pos;
+		template<class U>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr isize distance(U* pointer) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->get() - pointer;
 		}
-		__LL_NODISCARD__ constexpr PointerIterator operator-(const isize pos) const noexcept {
-			if constexpr (_MyType::IS_REVERSED)
-				return this->mem + pos;
-			else return this->mem - pos;
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr isize distance(const PointerIterator<U, __IS_REVERSED>& it) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->distance(it.get());
 		}
 
-		__LL_NODISCARD__ constexpr isize distance(T* mem) const noexcept {
-			return this->mem - mem;
+		//__LL_NODISCARD__ constexpr isize operator+(T* pointer) const noexcept {
+		//	__LL_FUNCTION_INIT__;
+		//	return this->get() + pointer;
+		//}
+		//template<class U, ll_bool_t __IS_REVERSED>
+		//	requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		//__LL_NODISCARD__ constexpr isize operator+(const PointerIterator<U, __IS_REVERSED>& it) const noexcept {
+		//	__LL_FUNCTION_INIT__;
+		//	return this->get() + it.get();
+		//}
+
+		template<class U>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr isize operator-(U* pointer) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->distance(pointer);
 		}
-		template<ll_bool_t __IS_REVERSED>
-		__LL_NODISCARD__ constexpr isize distance(const PointerIterator<T, __IS_REVERSED>& it) const noexcept {
-			return this->mem - it.mem;
-		}
-		__LL_NODISCARD__ constexpr isize operator-(T* mem) const noexcept {
-			return this->mem - mem;
-		}
-		template<ll_bool_t __IS_REVERSED>
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
 		__LL_NODISCARD__ constexpr isize operator-(const PointerIterator<_T, __IS_REVERSED>& it) const noexcept {
-			return this->mem - it.mem;
+			__LL_FUNCTION_INIT__;
+			return this->distance(pointer);
 		}
 
-		__LL_NODISCARD__ constexpr T& operator*() noexcept { return *this->mem; }
-		__LL_NODISCARD__ constexpr T* operator->() noexcept { return ::std::addressof(*this->mem); }
-		__LL_NODISCARD__ constexpr operator T* () noexcept { return this->mem; }
-		__LL_NODISCARD__ constexpr operator const T* () const noexcept { return this->mem; }
+		__LL_NODISCARD__ constexpr T& operator*() noexcept {
+			__LL_FUNCTION_INIT__;
+			return *this->get();
+		}
+		__LL_NODISCARD__ constexpr const T& operator*() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return *this->get();
+		}
+		__LL_NODISCARD__ constexpr T* operator->() noexcept {
+			__LL_FUNCTION_INIT__;
+			return ::llcpp::addressof(this->operator *());
+		}
+		__LL_NODISCARD__ constexpr const T* operator->() const noexcept {
+			__LL_FUNCTION_INIT__;
+			return ::llcpp::addressof(this->operator *());
+		}
 
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const T* other) const noexcept {
-			return this->mem == other;
+		template<class U>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(U* other) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->get() == other;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const T* other) const noexcept {
-			return this->mem != other;
+		template<class U>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(U* other) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->get() != other;
 		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const T* other) const noexcept {
-			return this->mem >= other;
+		template<class U>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(U* other) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->get() >= other;
 		}
+		template<class U>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
 		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const T* other) const noexcept {
-			return this->mem <= other;
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const PointerIterator& other) const noexcept {
-			return this->mem == other.mem;
-		}
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const PointerIterator& other) const noexcept {
-			return this->mem != other.mem;
+			__LL_FUNCTION_INIT__;
+			return this->get() <= other;
 		}
 
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const PointerIterator<_T, __IS_REVERSED>& other) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->operator==(other.get());
+		}
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const PointerIterator<_T, __IS_REVERSED>& other) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->operator!==(other.get());
+		}
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const PointerIterator<_T, __IS_REVERSED>& other) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->operator>=(other.get());
+		}
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const PointerIterator<_T, __IS_REVERSED>& other) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->operator!<=(other.get());
+		}
+
+		#pragma endregion
 		#pragma endregion
 
 	#pragma endregion
 };
+
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+
+
+__LL_VAR_INLINE__ constexpr auto arrayo	= ::llcpp::Arrayo<i32, 5>{ 1, 2, 3, 4, 5 };
+__LL_VAR_INLINE__ constexpr auto it		= ::llcpp::meta::utils::PointerIterator(arrayo.begin());
+__LL_VAR_INLINE__ constexpr auto end	= ::llcpp::meta::utils::PointerIterator(arrayo.end());
+
+
+#pragma region Begin
+__LL_VAR_INLINE__ constexpr ::llcpp::string STR_BEGIN	= ::llcpp::meta::utils::get_array_begin<const ::llcpp::char_type>(STR);
+__LL_VAR_INLINE__ constexpr ::llcpp::string ARR_BEGIN	= ::llcpp::meta::utils::get_array_begin<const ::llcpp::char_type>(ARR);
+__LL_VAR_INLINE__ constexpr ::llcpp::string ARR2_BEGIN	= ::llcpp::meta::utils::get_array_begin<const ::llcpp::char_type>(ARR2);
+
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_BEGIN =
+	   (STR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	&& (*STR_BEGIN == STR_INIT);
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_OBJ_BEGIN =
+	   (ARR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	&& (*ARR_BEGIN == STR_INIT);
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_OBJ2_BEGIN =
+	   (ARR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	&& (*ARR_BEGIN == STR_INIT);
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_get_array_begin_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_BEGIN,
+	"'Get str begin'" __LL_IS_NOT_WORKING_STR
+);
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_get_array_obj_begin_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_OBJ_BEGIN,
+	"'Get object begin'" __LL_IS_NOT_WORKING_STR
+);
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_get_array_obj2_begin_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_OBJ2_BEGIN,
+	"'Get object 2 begin'" __LL_IS_NOT_WORKING_STR
+);
+
+#pragma endregion
+
+__LL_NODISCARD__ constexpr ::llcpp::string list_functions_kats() noexcept {
+	::llcpp::string result = ::llcpp::meta::utils::kat::is_working_get_array_begin_kat();
+	if(result) return result;
+	result = ::llcpp::meta::utils::kat::is_working_get_array_obj_begin_kat();
+	if(result) return result;
+
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::meta::utils::kat::list_functions_kats() == LL_NULLPTR, "utils::list_functions KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // __LL_INCLUDE_KATS
 
 } // namespace utils
 } // namespace meta

@@ -28,12 +28,18 @@
 	#include "../defines/expresions.hpp"
 #endif // LL_LIB_PATHS
 
+#if defined(__LL_MINGW)
+	#include <memory>	// To use ::std::addressof
+#endif // __LL_MINGW
+
 namespace llcpp {
 
 template<class T>
 __LL_NODISCARD__ constexpr T* addressof(T& _Val) noexcept {
 	__LL_FUNCTION_INIT__;
 	if constexpr (::llcpp::LL_OS_SYSTEM == ::llcpp::OSEnum::Windows)
+	    return __builtin_addressof(_Val);
+	else if constexpr (::llcpp::LL_OS_SYSTEM == ::llcpp::OSEnum::MinGW)
 	    return __builtin_addressof(_Val);
 	else {
 		static_assert(::llcpp::LL_OS_SYSTEM == ::llcpp::OSEnum::Windows,

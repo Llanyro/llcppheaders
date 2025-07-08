@@ -226,17 +226,17 @@ class Arrayo {
 		template<usize NN>
 		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN], const usize compare_size) const noexcept {
 			__LL_FUNCTION_INIT__;
-			if (N < COMPARE_SIZE) {
+			if (N < compare_size) {
 				if constexpr (::llcpp::LL_DEBUG_ERROR)
-					__debug_error_out_of_range(COMPARE_SIZE, "COMPARE_SIZE", N);
+					__debug_error_out_of_range(compare_size, "compare_size", N);
 				return ::llcpp::LL_FALSE;
 			}
-			else if (NN < COMPARE_SIZE) {
+			else if (NN < compare_size) {
 				if constexpr (::llcpp::LL_DEBUG_ERROR)
-					__debug_error_out_of_range(COMPARE_SIZE, "COMPARE_SIZE", NN);
+					__debug_error_out_of_range(compare_size, "compare_size", NN);
 				return ::llcpp::LL_FALSE;
 			}
-			return this->compare(this->begin(), this->get(COMPARE_SIZE), arr);
+			return this->compare(this->begin(), this->get(compare_size), arr);
 		}
 		template<usize COMPARE_SIZE, usize NN>
 		__LL_NODISCARD__ constexpr ll_bool_t compare(const T (&arr)[NN]) const noexcept {
@@ -309,7 +309,7 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 #pragma endregion
 #pragma region Loops
 __LL_NODISCARD__ constexpr ll_bool_t check_arrayo_loop() noexcept {
-	__LL_VAR_INLINE__ constexpr u32 arr[5] = { 1u, 2u, 3u, 4u, 5u };
+	constexpr u32 arr[5] = { 1u, 2u, 3u, 4u, 5u };
 
 	u8 pos{};
 	for(const auto& i : ::llcpp::meta::kat::ARRAYO) {

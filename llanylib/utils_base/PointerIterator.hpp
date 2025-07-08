@@ -50,11 +50,15 @@ class PointerIterator;
 	#define LLANYLIB_POINTERITERATOR_MAYOR_ 12
 	#define LLANYLIB_POINTERITERATOR_MINOR_ 0
 
-#include <llanylib/traits_base/type_traits.hpp>
-
-#if defined(__LL_MINGW)
-	#include <memory>	// To use ::std::addressof
-#endif // __LL_MINGW
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/ValidType.hpp>
+	#include <llanylib/types/compiler_extensions.hpp>
+	#include <llanylib/traits_base/type_traits_extended.hpp>
+#else
+	#include "../types/ValidType.hpp"
+	#include "../types/compiler_extensions.hpp"
+	#include "../traits_base/type_traits_extended.hpp"
+#endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
@@ -84,6 +88,7 @@ class PointerIterator {
 		using T				= _T;
 		using type			= T;
 		using value_type	= T;
+		
 
 	#pragma endregion
 	#pragma region Expresions
@@ -135,7 +140,7 @@ class PointerIterator {
 		template<class U, ll_bool_t __IS_REVERSED>
 			requires ::llcpp::meta::traits::is_same_or_const_conversion_v<T, U>
 		constexpr PointerIterator(const PointerIterator<U, __IS_REVERSED>& other) noexcept
-			: PointerIterator(const_cast<T>(other.get()))
+			: PointerIterator(const_cast<T*>(other.get()))
 		{ __LL_FUNCTION_INIT__; }	
 		template<class U, ll_bool_t __IS_REVERSED>
 			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
@@ -145,7 +150,7 @@ class PointerIterator {
 			if constexpr (::llcpp::meta::traits::is_same_no_const_conversion_v<T, U>)
 				this->reset(other.get());
 			// Need to const convert
-			else this->reset(const_cast<T>(other.get()));
+			else this->reset(const_cast<T*>(other.get()));
 			return *this;
 		}
 
@@ -160,7 +165,7 @@ class PointerIterator {
 		template<class U, ll_bool_t __IS_REVERSED>
 			requires ::llcpp::meta::traits::is_same_or_const_conversion_v<T, U>
 		constexpr PointerIterator(PointerIterator<T, __IS_REVERSED>&& other) noexcept
-			: PointerIterator(const_cast<T>(other.get()))
+			: PointerIterator(const_cast<T*>(other.get()))
 		{
 			__LL_FUNCTION_INIT__;
 			other.makeInvalid();
@@ -173,7 +178,7 @@ class PointerIterator {
 			if constexpr (::llcpp::meta::traits::is_same_no_const_conversion_v<T, U>)
 				this->reset(other.get());
 			// Need to const convert
-			else this->reset(const_cast<T>(other.get()));
+			else this->reset(const_cast<T*>(other.get()));
 			other.makeInvalid();
 			return *this;
 		}
@@ -250,7 +255,7 @@ class PointerIterator {
 		}
 
 		#pragma endregion
-		#pragma region Operators
+		#pragma region AritmeticOperators
 	protected:
 		template<ll_bool_t NEGATIVE>
 		__LL_NODISCARD__ static constexpr T* preOperation(T* point, const usize val) noexcept {
@@ -338,11 +343,14 @@ class PointerIterator {
 		}
 		template<class U, ll_bool_t __IS_REVERSED>
 			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
-		__LL_NODISCARD__ constexpr isize operator-(const PointerIterator<_T, __IS_REVERSED>& it) const noexcept {
+		__LL_NODISCARD__ constexpr isize operator-(const PointerIterator<U, __IS_REVERSED>& it) const noexcept {
 			__LL_FUNCTION_INIT__;
 			return this->distance(pointer);
 		}
 
+		#pragma endregion
+		#pragma region OtherOperators
+	public:
 		__LL_NODISCARD__ constexpr T& operator*() noexcept {
 			__LL_FUNCTION_INIT__;
 			return *this->get();
@@ -380,95 +388,160 @@ class PointerIterator {
 		}
 		template<class U>
 			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const T* other) const noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(U* other) const noexcept {
 			__LL_FUNCTION_INIT__;
 			return this->get() <= other;
 		}
 
 		template<class U, ll_bool_t __IS_REVERSED>
 			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
-		__LL_NODISCARD__ constexpr ll_bool_t operator==(const PointerIterator<_T, __IS_REVERSED>& other) const noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t operator==(const PointerIterator<U, __IS_REVERSED>& other) const noexcept {
 			__LL_FUNCTION_INIT__;
 			return this->operator==(other.get());
 		}
 		template<class U, ll_bool_t __IS_REVERSED>
 			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
-		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const PointerIterator<_T, __IS_REVERSED>& other) const noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t operator!=(const PointerIterator<U, __IS_REVERSED>& other) const noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->operator!==(other.get());
+			return this->operator!=(other.get());
 		}
 		template<class U, ll_bool_t __IS_REVERSED>
 			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
-		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const PointerIterator<_T, __IS_REVERSED>& other) const noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t operator>=(const PointerIterator<U, __IS_REVERSED>& other) const noexcept {
 			__LL_FUNCTION_INIT__;
 			return this->operator>=(other.get());
 		}
 		template<class U, ll_bool_t __IS_REVERSED>
 			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
-		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const PointerIterator<_T, __IS_REVERSED>& other) const noexcept {
+		__LL_NODISCARD__ constexpr ll_bool_t operator<=(const PointerIterator<U, __IS_REVERSED>& other) const noexcept {
 			__LL_FUNCTION_INIT__;
-			return this->operator!<=(other.get());
+			return this->operator<=(other.get());
 		}
 
 		#pragma endregion
+		#pragma region ExtraFunctions
+	public:
+		template<class U>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t isEnd(U* end) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->operator>=(end);
+		}
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t isEnd(const PointerIterator<U, __IS_REVERSED>& end) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->operator>=(end);
+		}
+		// Checks if iterator provided is end (this pointer) or higher
+		template<class U>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t isThisEnd(U* it) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->operator<=(it);
+		}
+		// Checks if iterator provided is end (this pointer) or higher
+		template<class U, ll_bool_t __IS_REVERSED>
+			requires ::llcpp::meta::traits::is_same_any_const_conversion_v<T, U>
+		__LL_NODISCARD__ constexpr ll_bool_t isThisEnd(const PointerIterator<U, __IS_REVERSED>& it) const noexcept {
+			__LL_FUNCTION_INIT__;
+			return this->operator<=(it);
+		}
+
+		#pragma endregion
+
 		#pragma endregion
 
 	#pragma endregion
 };
 
 #if __LL_INCLUDE_KATS == 1
+} // namespace utils
+} // namespace meta
+} // namespace llcpp
+
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/Arrayo.hpp>
+#else
+	#include "../types/Arrayo.hpp"
+#endif // LL_LIB_PATHS
+
+namespace llcpp {
+namespace meta {
+namespace utils {
 namespace kat {
 
-
-__LL_VAR_INLINE__ constexpr auto arrayo	= ::llcpp::Arrayo<i32, 5>{ 1, 2, 3, 4, 5 };
-__LL_VAR_INLINE__ constexpr auto it		= ::llcpp::meta::utils::PointerIterator(arrayo.begin());
-__LL_VAR_INLINE__ constexpr auto end	= ::llcpp::meta::utils::PointerIterator(arrayo.end());
-
+__LL_VAR_INLINE__ constexpr auto arrayo			= ::llcpp::Arrayo<::llcpp::meta::pair<i32>, 5>{ 1, 2, 3, 4, 5 };
+__LL_VAR_INLINE__ constexpr auto arrayo_empty	= ::llcpp::Arrayo<::llcpp::meta::pair<i32>, 0>();
+__LL_VAR_INLINE__ constexpr auto it				= ::llcpp::meta::utils::PointerIterator(arrayo.begin());
+__LL_VAR_INLINE__ constexpr auto end			= ::llcpp::meta::utils::PointerIterator(arrayo.end());
+__LL_VAR_INLINE__ constexpr auto empty_it		= ::llcpp::meta::utils::PointerIterator(arrayo_empty.begin());
+__LL_VAR_INLINE__ constexpr auto empty_end		= ::llcpp::meta::utils::PointerIterator(arrayo_empty.end());
 
 #pragma region Begin
-__LL_VAR_INLINE__ constexpr ::llcpp::string STR_BEGIN	= ::llcpp::meta::utils::get_array_begin<const ::llcpp::char_type>(STR);
-__LL_VAR_INLINE__ constexpr ::llcpp::string ARR_BEGIN	= ::llcpp::meta::utils::get_array_begin<const ::llcpp::char_type>(ARR);
-__LL_VAR_INLINE__ constexpr ::llcpp::string ARR2_BEGIN	= ::llcpp::meta::utils::get_array_begin<const ::llcpp::char_type>(ARR2);
-
-__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_BEGIN =
-	   (STR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
-	&& (*STR_BEGIN == STR_INIT);
-__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_OBJ_BEGIN =
-	   (ARR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
-	&& (*ARR_BEGIN == STR_INIT);
-__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_OBJ2_BEGIN =
-	   (ARR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
-	&& (*ARR_BEGIN == STR_INIT);
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_POINTERITERATOR_BEGIN =
+	    it.get() == arrayo.begin()
+	&& !it.isEnd(arrayo.end());
 
 __LL_KAT_FUNCTION_CONSTEXPR(
-	is_working_get_array_begin_kat,
-	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_BEGIN,
-	"'Get str begin'" __LL_IS_NOT_WORKING_STR
+	is_working_pointer_iterator_begin_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_POINTERITERATOR_BEGIN,
+	"'PointerIterator get + begin'" __LL_IS_NOT_WORKING_STR
 );
+
+#pragma endregion
+#pragma region End
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_POINTERITERATOR_END =
+	   end.get() == arrayo.end()
+	&& end.isThisEnd(arrayo.end());
+
 __LL_KAT_FUNCTION_CONSTEXPR(
-	is_working_get_array_obj_begin_kat,
-	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_OBJ_BEGIN,
-	"'Get object begin'" __LL_IS_NOT_WORKING_STR
+	is_working_pointer_iterator_end_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_POINTERITERATOR_END,
+	"'PointerIterator get + end'" __LL_IS_NOT_WORKING_STR
 );
+
+#pragma endregion
+#pragma region EmptyArray
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_POINTERITERATOR_ISEND =
+	   !it.isEnd(end)
+	&& empty_it.isEnd(empty_end);
+
 __LL_KAT_FUNCTION_CONSTEXPR(
-	is_working_get_array_obj2_begin_kat,
-	::llcpp::meta::utils::kat::IS_WORKING_GET_ARRAY_OBJ2_BEGIN,
-	"'Get object 2 begin'" __LL_IS_NOT_WORKING_STR
+	is_working_pointer_iterator_is_end_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_POINTERITERATOR_ISEND,
+	"'PointerIterator get + end'" __LL_IS_NOT_WORKING_STR
+);
+
+#pragma endregion
+#pragma region GetValue
+__LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_POINTERITERATOR_ARROW_OPERATOR =
+       it->first	== 1
+    && it->second	== 2;
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_pointer_iterator_arrow_iterator_kat,
+	::llcpp::meta::utils::kat::IS_WORKING_POINTERITERATOR_ARROW_OPERATOR,
+	"'PointerIterator arrow operator'" __LL_IS_NOT_WORKING_STR
 );
 
 #pragma endregion
 
-__LL_NODISCARD__ constexpr ::llcpp::string list_functions_kats() noexcept {
-	::llcpp::string result = ::llcpp::meta::utils::kat::is_working_get_array_begin_kat();
+__LL_NODISCARD__ constexpr ::llcpp::string pointer_iterator_kat() noexcept {
+	::llcpp::string result = ::llcpp::meta::utils::kat::is_working_pointer_iterator_begin_kat();
 	if(result) return result;
-	result = ::llcpp::meta::utils::kat::is_working_get_array_obj_begin_kat();
+	result = ::llcpp::meta::utils::kat::is_working_pointer_iterator_end_kat();
+	if(result) return result;
+	result = ::llcpp::meta::utils::kat::is_working_pointer_iterator_is_end_kat();
+	if(result) return result;
+	result = ::llcpp::meta::utils::kat::is_working_pointer_iterator_arrow_iterator_kat();
 	if(result) return result;
 
 	return nullptr;
 }
 
 #if __LL_STATIC_KATS == 1
-	static_assert(::llcpp::meta::utils::kat::list_functions_kats() == LL_NULLPTR, "utils::list_functions KAT not OK");
+	static_assert(::llcpp::meta::utils::kat::pointer_iterator_kat() == LL_NULLPTR, "utils::list_functions KAT not OK");
 #endif // __LL_STATIC_KATS
 
 } // namespace kat

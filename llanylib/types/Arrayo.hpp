@@ -378,6 +378,49 @@ namespace llcpp {
 template<class T, usize N>
 using Arrayo = ::llcpp::meta::Arrayo<T, N>;
 
+namespace meta {
+namespace traits {
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_arrayo_v							= ::llcpp::LL_FALSE;
+template<class U, usize N>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_arrayo_v<::llcpp::Arrayo<U, N>>	= ::llcpp::LL_TRUE;
+
+#if __LL_INCLUDE_KATS == 1
+namespace kat {
+
+__LL_VAR_INLINE__ constexpr auto IS_ARRAYO_TRUE		= ::llcpp::meta::traits::is_arrayo_v<::llcpp::Arrayo<i32, 5>>;
+__LL_VAR_INLINE__ constexpr auto IS_ARRAYO_FALSE	= ::llcpp::meta::traits::is_arrayo_v<i32>;
+
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_is_arrayo_true_kat,
+	::llcpp::meta::traits::kat::IS_ARRAYO_TRUE,
+	"'Is arrayo (true)'" __LL_IS_NOT_WORKING_STR
+);
+__LL_KAT_FUNCTION_CONSTEXPR(
+	is_working_is_arrayo_false_kat,
+	!::llcpp::meta::traits::kat::IS_ARRAYO_FALSE,
+	"'Is arrayo (false)'" __LL_IS_NOT_WORKING_STR
+);
+
+__LL_NODISCARD__ constexpr ::llcpp::string traits_arrayo_kats() noexcept {
+	::llcpp::string result = ::llcpp::meta::traits::kat::is_working_is_arrayo_true_kat();
+	if(result) return result;
+	result = ::llcpp::meta::traits::kat::is_working_is_arrayo_false_kat();
+	if(result) return result;
+
+	return nullptr;
+}
+
+#if __LL_STATIC_KATS == 1
+	static_assert(::llcpp::meta::traits::kat::traits_arrayo_kats() == LL_NULLPTR, "traits::arrayo_kats KAT not OK");
+#endif // __LL_STATIC_KATS
+
+} // namespace kat
+#endif // __LL_INCLUDE_KATS
+
+} // namespace traits
+} // namespace meta
 } // namespace llcpp
 
 	#endif // LLANYLIB_ARRAYO_EXTRA_HPP_

@@ -22,9 +22,15 @@
 	#define LLANYLIB_LISTFUNCTIONS_INCOMPLETE_MAYOR_ 12
 	#define LLANYLIB_LISTFUNCTIONS_INCOMPLETE_MINOR_ 0
 
-#include <llanylib/concepts/concepts.hpp>
-#include <llanylib/traits/ValidationChecker.hpp>
-
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/Arrayo.hpp>
+	#include <llanylib/concepts/concepts.hpp>
+	#include <llanylib/traits/ValidationChecker.hpp>
+#else
+	#include "../types/Arrayo.hpp"
+	#include "../concepts/concepts.hpp"
+	#include "../traits/ValidationChecker.hpp"
+#endif // LL_LIB_PATHS
 namespace llcpp {
 namespace meta {
 namespace utils {
@@ -60,12 +66,10 @@ __LL_NODISCARD__ constexpr U* get_array_end(T& arr) noexcept;
 
 #if defined(LL_LIB_PATHS)
 	#include <llanylib/types/Arrayo.hpp>
-	#include <llanylib/traits_base/type_traits_extended.hpp>
 	#include <llanylib/concepts/concepts.hpp>
 	#include <llanylib/traits/ValidationChecker.hpp>
 #else
 	#include "../types/Arrayo.hpp"
-	#include "../traits_base/type_traits_extended.hpp"
 	#include "../concepts/concepts.hpp"
 	#include "../traits/ValidationChecker.hpp"
 #endif // LL_LIB_PATHS
@@ -141,7 +145,7 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 	"'array_type 1'" __LL_IS_NOT_WORKING_STR
 );
 
-__LL_NODISCARD__ constexpr ::llcpp::string list_functions_kats() noexcept {
+__LL_NODISCARD__ constexpr ::llcpp::string traits_list_functions_kats() noexcept {
 	::llcpp::string result = ::llcpp::meta::traits::kat::is_working_array_type_0_kat();
 	if(result) return result;
 	result = ::llcpp::meta::traits::kat::is_working_array_type_1_kat();
@@ -151,7 +155,7 @@ __LL_NODISCARD__ constexpr ::llcpp::string list_functions_kats() noexcept {
 }
 
 #if __LL_STATIC_KATS == 1
-	static_assert(::llcpp::meta::traits::kat::list_functions_kats() == LL_NULLPTR, "traits::list_functions KAT not OK");
+	static_assert(::llcpp::meta::traits::kat::traits_list_functions_kats() == LL_NULLPTR, "traits::list_functions KAT not OK");
 #endif // __LL_STATIC_KATS
 
 } // namespace kat
@@ -297,20 +301,20 @@ template<class T>
 constexpr ll_bool_t is_valid_array_type() noexcept {
 	constexpr auto val = ::llcpp::meta::traits::ValidationChecker::valid_type_v<T>;
 	switch (val) {
-		case ::llcpp::misc::ValidType::Valid:
-		case ::llcpp::misc::ValidType::Array:	return ::llcpp::LL_TRUE;
+		case ::llcpp::ValidType::Valid:
+		case ::llcpp::ValidType::Array:	return ::llcpp::LL_TRUE;
 		default:								return ::llcpp::LL_FALSE;
 	}
 }
 template<class T>
 constexpr ll_bool_t is_valid_array_type(const T& t) noexcept {
 	constexpr auto val = ::llcpp::meta::traits::ValidationChecker::valid_type_v<const T>;
-	if constexpr (val == ::llcpp::misc::ValidType::ToCheck)
-		return t.validationType() == ::llcpp::misc::ValidType::Valid;
+	if constexpr (val == ::llcpp::ValidType::ToCheck)
+		return t.validationType() == ::llcpp::ValidType::Valid;
 	else {
 		switch (val) {
-			case ::llcpp::misc::ValidType::Valid:
-			case ::llcpp::misc::ValidType::Array:	return ::llcpp::LL_TRUE;
+			case ::llcpp::ValidType::Valid:
+			case ::llcpp::ValidType::Array:	return ::llcpp::LL_TRUE;
 			default:								return ::llcpp::LL_FALSE;
 		}
 	}
@@ -339,8 +343,8 @@ struct KatArrayConst {
 	__LL_NODISCARD__ constexpr ::llcpp::string end() const noexcept { return this->str + this->N2; }
 	__LL_NODISCARD__ constexpr usize size() const noexcept { return this->N2; }
 
-	__LL_NODISCARD__ constexpr ::llcpp::misc::ValidType validationType() const noexcept {
-		return this->begin() <= this->end() ? ::llcpp::misc::ValidType::Valid : ::llcpp::misc::ValidType::Invalid;
+	__LL_NODISCARD__ constexpr ::llcpp::ValidType validationType() const noexcept {
+		return this->begin() <= this->end() ? ::llcpp::ValidType::Valid : ::llcpp::ValidType::Invalid;
 	}
 
 	template<usize N>
@@ -358,8 +362,8 @@ struct KatArrayConst2 {
 	__LL_NODISCARD__ constexpr ::llcpp::string begin() const noexcept { return this->str; }
 	__LL_NODISCARD__ constexpr ::llcpp::string end() const noexcept { return this->str + N; }
 
-	__LL_NODISCARD__ constexpr ::llcpp::misc::ValidType validationType() const noexcept {
-		return this->begin() <= this->end() ? ::llcpp::misc::ValidType::Valid : ::llcpp::misc::ValidType::Invalid;
+	__LL_NODISCARD__ constexpr ::llcpp::ValidType validationType() const noexcept {
+		return this->begin() <= this->end() ? ::llcpp::ValidType::Valid : ::llcpp::ValidType::Invalid;
 	}
 
 	template<usize NN>

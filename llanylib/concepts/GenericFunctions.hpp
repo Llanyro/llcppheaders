@@ -55,12 +55,20 @@ namespace concepts {
 namespace signature {
 
 template<class T, class ReturnType = void, class... Args>
-concept HasCleaner = requires (T t, Args... args) {
-	{ t.__cleaner(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+concept HasCleaner = requires (T t, Args&... args) {
+	{ t.__cleaner(::std::forward<Args&>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 template<class T, class ReturnType = void, class... Args>
-concept HasInvalidator = requires (T t, Args... args) {
-	{ t.__invalidate(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+concept HasInvalidator = requires (T& t, Args&... args) {
+	{ t.__invalidate(::std::forward<Args&>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+template<class T, class ReturnType = void, class... Args>
+concept HasCopyator = requires (T& t, Args&... args) {
+	{ t.__copy(::std::forward<Args&>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+};
+template<class T, class ReturnType = void, class... Args>
+concept HasMoveator = requires (T& t, Args&... args) {
+	{ t.__move(::std::forward<Args&>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 
 } // namespace signature

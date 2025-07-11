@@ -173,6 +173,16 @@ class ParameterPackOperations<> : public ::llcpp::AlwaysValidTag {
 		static constexpr ll_bool_t HAS_AN_ARRAY		= ::llcpp::LL_FALSE;
 };
 
+template<usize N, class T, class... Args>
+__LL_NODISCARD__ constexpr auto getNextArgument(T& val, Args&... args) noexcept {
+	static_assert(sizeof...(args) >= N,
+		"Number of args must be at least equal to position wanted to get!");
+	
+	if constexpr (N == 0) return val;
+	else return ::llcpp::meta::traits::getNextArgument<N - 1>(args...);
+}
+
+
 #if __LL_INCLUDE_KATS == 1
 namespace kat {
 

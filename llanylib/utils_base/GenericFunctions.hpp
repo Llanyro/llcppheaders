@@ -23,10 +23,10 @@
 	#define LLANYLIB_GENERICFUNCTIONS_INCOMPLETE_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
-	#include <llanylib/types/Arrayo.hpp>
+	//#include <llanylib/traits_base/parameter_pack.hpp>
 	#include <llanylib/concepts/GenericFunctions.hpp>
 #else
-	#include "../types/Arrayo.hpp"
+	//#include "../traits_base/parameter_pack.hpp"
 	#include "../concepts/GenericFunctions.hpp"
 #endif // LL_LIB_PATHS
 
@@ -57,10 +57,10 @@ class GenericFunctions;
 	#define LLANYLIB_GENERICFUNCTIONS_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
-	#include <llanylib/traits_base/parameter_pack.hpp>
+	//#include <llanylib/traits_base/parameter_pack.hpp>
 	#include <llanylib/concepts/GenericFunctions.hpp>
 #else
-	#include "../traits_base/parameter_pack.hpp"
+	//#include "../traits_base/parameter_pack.hpp"
 	#include "../concepts/GenericFunctions.hpp"
 #endif // LL_LIB_PATHS
 

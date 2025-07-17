@@ -166,9 +166,9 @@ template<class T, class ArrayType = ll_string_t, class SizeType = usize, class R
 concept HasHashArray = requires (T t, ArrayType arr, SizeType s) {
 	{ t.hash(arr, s) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
-template<class T, class ReturnType = u64>
-concept HasHash = requires (T t) {
-	{ t.hash() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+template<class Iterator1, class Iterator2, class ReturnType = isize>
+concept HasDistance = requires (Iterator1 it, Iterator2 iu) {
+	{ it.distance(iu) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
 };
 
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>

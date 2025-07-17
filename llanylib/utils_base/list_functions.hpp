@@ -126,6 +126,26 @@ __LL_VAR_INLINE__ constexpr auto getArrayIteratorType() noexcept {
 template<class T>
 using array_iterator_t = decltype(::llcpp::meta::traits::getArrayIteratorType<T>())::value_type;
 
+template<class T>
+__LL_VAR_INLINE__ constexpr auto getArrayConstIteratorType() noexcept {
+	if constexpr (::llcpp::meta::traits::has_iterator_type_v<T>)
+		return ::llcpp::meta::traits::TypeContainer<typename T::ConstIterator>{};
+	else if constexpr (::std::is_pointer_v<T> && ::std::is_const_v<T>)
+		return ::llcpp::meta::traits::TypeContainer<T>{};
+	else if constexpr (::std::is_array_v<T> && ::std::is_const_v<T>)
+		return ::llcpp::meta::traits::TypeContainer<::std::remove_extent_t<T>*>{};
+	else if constexpr (::llcpp::meta::concepts::signature::HasBegin<T>)
+		return ::llcpp::meta::traits::TypeContainer<decltype(::std::declval<const T>().begin())>{};
+	else {
+		static_assert(::std::is_pointer_v<T>,
+			"There is not avaible Iterator type for this array");
+		return ::llcpp::meta::traits::TypeContainer<::llcpp::Emptyclass>{};
+	}
+}
+
+template<class T>
+using array_const_iterator_t = decltype(::llcpp::meta::traits::getArrayConstIteratorType<T>())::value_type;
+
 #if __LL_INCLUDE_KATS == 1
 namespace kat {
 
@@ -303,7 +323,7 @@ constexpr ll_bool_t is_valid_array_type() noexcept {
 	switch (val) {
 		case ::llcpp::ValidType::Valid:
 		case ::llcpp::ValidType::Array:	return ::llcpp::LL_TRUE;
-		default:								return ::llcpp::LL_FALSE;
+		default:						return ::llcpp::LL_FALSE;
 	}
 }
 template<class T>
@@ -315,11 +335,10 @@ constexpr ll_bool_t is_valid_array_type(const T& t) noexcept {
 		switch (val) {
 			case ::llcpp::ValidType::Valid:
 			case ::llcpp::ValidType::Array:	return ::llcpp::LL_TRUE;
-			default:								return ::llcpp::LL_FALSE;
+			default:						return ::llcpp::LL_FALSE;
 		}
 	}
 }
-
 template<class T>
 __LL_VAR_INLINE__ constexpr ll_bool_t is_valid_array_type_v =
 	::llcpp::meta::utils::is_valid_array_type<T>();

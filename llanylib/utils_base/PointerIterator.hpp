@@ -54,27 +54,17 @@ class PointerIterator;
 	#include <llanylib/types/ValidType.hpp>
 	#include <llanylib/types/compiler_extensions.hpp>
 	#include <llanylib/traits_base/type_traits_extended.hpp>
+	#include <llanylib/utils_base/iterator_functions.hpp>
 #else
 	#include "../types/ValidType.hpp"
 	#include "../types/compiler_extensions.hpp"
 	#include "../traits_base/type_traits_extended.hpp"
+	#include "iterator_functions.hpp"
 #endif // LL_LIB_PATHS
 
 namespace llcpp {
 namespace meta {
 namespace utils {
-
-template<ll_bool_t REVERSE = ::llcpp::LL_FALSE, ll_bool_t NEGATIVE = ::llcpp::LL_FALSE, class T, class U>
-__LL_NODISCARD__ constexpr T operateAricmetic(const T val, const U add) noexcept {
-	__LL_FUNCTION_INIT__;
-	if constexpr (!REVERSE && !NEGATIVE)
-		return val + add;
-	else if constexpr (REVERSE && !NEGATIVE)
-		return val - add;
-	else if constexpr (REVERSE && NEGATIVE)
-		return val + add;
-	else return val - add;
-}
 
 // Iterator of types pointers (T*)
 template<class _T, ll_bool_t _IS_REVERSED = ::llcpp::LL_FALSE>
@@ -252,6 +242,30 @@ class PointerIterator {
 		constexpr void makeInvalidClear() noexcept {
 			__LL_FUNCTION_INIT__;
 			this->makeInvalid();
+		}
+		// Checks if iterator is corrupted
+		// Iterator cannot be corrupted because is not always valid and pointers are (0x0 - 0xf...)
+		__LL_NODISCARD__ constexpr ll_bool_t isCorrupted() const noexcept {
+			return ::llcpp::LL_FALSE;
+		}
+		// Checks if iterator is corrupted by a range
+		// If this iterator is in a lower position than begin or higher position than end, we can expect that is corrupted
+		template<class U, ll_bool_t __IS_REVERSED_1, class W, ll_bool_t __IS_REVERSED_2>
+		__LL_NODISCARD__ constexpr ll_bool_t isCorrupted(const PointerIterator<U, __IS_REVERSED_1>& begin, const PointerIterator<W, __IS_REVERSED_2>& end) const noexcept {
+			return (::llcpp::meta::utils::itertator_distance(*this, begin) < 0) || (::llcpp::meta::utils::itertator_distance(end, *this) < 0);
+			return (this->distance(begin) < 0) || (this->distance(end) > 0);
+		}
+		// Checks if iterator is corrupted by a range
+		// If this iterator is in a lower position than begin or higher position than end, we can expect that is corrupted
+		template<class IteratorBegin, class IteratorEnd>
+		__LL_NODISCARD__ constexpr ll_bool_t isCorrupted(const IteratorBegin& begin, const IteratorEnd& end) const noexcept {
+			if constexpr (::llcpp::meta::utils::is_pointer_iterator(begin) && ::llcpp::meta::utils::is_pointer_iterator(end))
+				return (this->distance(begin) < 0) || this->distance(end) > 0;
+			else if constexpr (::llcpp::meta::utils::is_pointer_iterator(begin))
+				return (this->distance(begin) < 0) || (::llcpp::meta::utils::itertator_distance(end, *this) < 0);
+			else if constexpr (::llcpp::meta::utils::is_pointer_iterator(begin))
+				return (::llcpp::meta::utils::itertator_distance(*this, begin) < 0) || this->distance(end) > 0;
+			else return (::llcpp::meta::utils::itertator_distance(*this, begin) < 0) || (::llcpp::meta::utils::itertator_distance(end, *this) < 0);
 		}
 
 		#pragma endregion

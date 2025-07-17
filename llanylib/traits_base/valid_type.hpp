@@ -70,16 +70,22 @@ template<
 	class OnNotFound = ::llcpp::Emptyclass
 >
 using type_by_valid_type_t = typename ::std::disjunction<
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Valid,		OnValidAttr>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Valid,	OnValidAttr>,
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Invalid,	OnInvalidAttr>,
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::ToCheck,	OnToCheck>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Primitive,	OnPrimitive>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Array,		OnArray>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Primitive,OnPrimitive>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Array,	OnArray>,
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Pointer,	OnPointer>,
 	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Unknown,	OnUnknown>,
-	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Error,		OnError>,
+	::llcpp::meta::traits::BoolConstantContainer<_TYPE == ::llcpp::ValidType::Error,	OnError>,
 	::llcpp::meta::traits::TrueContainerEmptyClass<OnNotFound>
 >::U;
+
+template<class T>
+__LL_VAR_INLINE__ constexpr ll_bool_t is_valid_tag_type_v =
+	   ::std::is_same_v<T, ::llcpp::AlwaysValidTag>
+	|| ::std::is_same_v<T, ::llcpp::AlwaysInvalidTag>
+	|| ::std::is_same_v<T, ::llcpp::DummyClass>;
 
 #if __LL_INCLUDE_KATS == 1
 namespace kat {
@@ -100,12 +106,12 @@ using ValidationKat = ::llcpp::meta::traits::type_by_valid_type_t<
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_VALID_TYPE = 
 	   ::std::is_same_v<ValidationKat<::llcpp::ValidType::Valid>,		::llcpp::AlwaysValidTag>
-	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::Invalid>,	::llcpp::AlwaysInvalidTag>
-	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::ToCheck>,	::llcpp::DummyClass>
+	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::Invalid>,		::llcpp::AlwaysInvalidTag>
+	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::ToCheck>,		::llcpp::DummyClass>
 	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::Primitive>,	::llcpp::i32>
 	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::Array>,		::llcpp::string>
-	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::Pointer>,	::llcpp::f128*>
-	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::Unknown>,	::llcpp::ClusterTag>
+	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::Pointer>,		::llcpp::f128*>
+	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::Unknown>,		::llcpp::ClusterTag>
 	&& ::std::is_same_v<ValidationKat<::llcpp::ValidType::Error>,		void>;
 __LL_KAT_FUNCTION_CONSTEXPR(
 	is_working_valid_type_kat,

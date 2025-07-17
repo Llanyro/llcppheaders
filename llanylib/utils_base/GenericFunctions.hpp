@@ -57,11 +57,9 @@ class GenericFunctions;
 	#define LLANYLIB_GENERICFUNCTIONS_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
-	#include <llanylib/types/Arrayo.hpp>
 	#include <llanylib/traits_base/parameter_pack.hpp>
 	#include <llanylib/concepts/GenericFunctions.hpp>
 #else
-	#include "../types/Arrayo.hpp"
 	#include "../traits_base/parameter_pack.hpp"
 	#include "../concepts/GenericFunctions.hpp"
 #endif // LL_LIB_PATHS
@@ -313,6 +311,19 @@ class PrimitiveInvalidator : public ::llcpp::AlwaysValidTag {
 };
 
 #if __LL_INCLUDE_KATS == 1
+} // namespace utils
+} // namespace meta
+} // namespace llcpp
+
+#if defined(LL_LIB_PATHS)
+	#include <llanylib/types/Arrayo.hpp>
+#else
+	#include "../types/Arrayo.hpp"
+#endif // LL_LIB_PATHS
+
+namespace llcpp {
+namespace meta {
+namespace utils {
 namespace kat {
 
 struct TestObj {

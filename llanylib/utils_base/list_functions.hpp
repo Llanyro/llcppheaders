@@ -38,12 +38,12 @@ namespace utils {
 // Type structure needs to be an array type (memory needs to be contiguous)
 // Object returned by begin needs to be convertible to U pointer
 template<class T, class U>
-__LL_NODISCARD__ constexpr U* get_array_begin(T& arr) noexcept;
+__LL_NODISCARD__ constexpr U get_array_begin(T& arr) noexcept;
 
 // Type structure needs to be an array type (memory needs to be contiguous)
 // Object returned by end needs to be convertible to U pointer
 template<class T, class U>
-__LL_NODISCARD__ constexpr U* get_array_end(T& arr) noexcept;
+__LL_NODISCARD__ constexpr U get_array_end(T& arr) noexcept;
 
 } // namespace utils
 } // namespace meta
@@ -73,14 +73,6 @@ __LL_NODISCARD__ constexpr U* get_array_end(T& arr) noexcept;
 	#include "../concepts/concepts.hpp"
 	#include "../traits/ValidationChecker.hpp"
 #endif // LL_LIB_PATHS
-
-#if defined(__LL_WINDOWS_SYSTEM)
-	#include <utility>
-#elif defined(__LL_MINGW)
-#elif defined(__LL_POSIX_SYSTEM)
-#elif defined(__LL_UNIX_SYSTEM)
-#else
-#endif // __LL_WINDOWS_SYSTEM
 
 namespace llcpp {
 namespace meta {
@@ -244,7 +236,7 @@ __LL_NODISCARD__ constexpr U __get_convertible_type(::llcpp::meta::traits::ref_o
 // Type structure needs to be an array type (memory needs to be contiguous)
 // Object returned by begin needs to be convertible to U pointer
 template<class U, class T>
-__LL_NODISCARD__ constexpr U* get_array_begin(T& arr) noexcept {
+__LL_NODISCARD__ constexpr U get_array_begin(T& arr) noexcept {
 	using cvref_t = ::std::remove_cvref_t<decltype(arr)>;
 	using c_t = ::llcpp::meta::traits::conditional_t<::std::is_const_v<T>, const cvref_t, cvref_t>;
 
@@ -254,10 +246,10 @@ __LL_NODISCARD__ constexpr U* get_array_begin(T& arr) noexcept {
 		return ::llcpp::NULL_VALUE<U>;
 	}
 	else if constexpr (::llcpp::meta::concepts::signature::HasBegin<c_t>)
-		return ::llcpp::meta::utils::__get_convertible_type<decltype(arr.begin()), U*>(arr.begin());
+		return ::llcpp::meta::utils::__get_convertible_type<decltype(arr.begin()), U>(arr.begin());
 	else if constexpr (::std::is_array_v<cvref_t>) {
 		using array_t = ::llcpp::meta::traits::array_type_t<T>;
-		return ::llcpp::meta::utils::__get_convertible_type<array_t*, U*>(arr + 0);
+		return ::llcpp::meta::utils::__get_convertible_type<array_t*, U>(arr + 0);
 	}
 	else {
 		static_assert(::std::is_array_v<cvref_t>,
@@ -269,7 +261,7 @@ __LL_NODISCARD__ constexpr U* get_array_begin(T& arr) noexcept {
 // Type structure needs to be an array type (memory needs to be contiguous)
 // Object returned by end needs to be convertible to U pointer
 template<class U, class T>
-__LL_NODISCARD__ constexpr U* get_array_end(T& arr) noexcept {
+__LL_NODISCARD__ constexpr U get_array_end(T& arr) noexcept {
 	using cvref_t = ::std::remove_cvref_t<decltype(arr)>;
 	using c_t = ::llcpp::meta::traits::conditional_t<::std::is_const_v<T>, const cvref_t, cvref_t>;
 
@@ -279,10 +271,10 @@ __LL_NODISCARD__ constexpr U* get_array_end(T& arr) noexcept {
 		return ::llcpp::NULL_VALUE<U>;
 	}
 	else if constexpr (::llcpp::meta::concepts::signature::HasBegin<c_t>)
-		return ::llcpp::meta::utils::__get_convertible_type<decltype(arr.end()), U*>(arr.end());
+		return ::llcpp::meta::utils::__get_convertible_type<decltype(arr.end()), U>(arr.end());
 	else if constexpr (::std::is_array_v<cvref_t>) {
 		using array_t = ::llcpp::meta::traits::array_type_t<T>;
-		return ::llcpp::meta::utils::__get_convertible_type<array_t*, U*>(arr + ::llcpp::array_size<cvref_t>);
+		return ::llcpp::meta::utils::__get_convertible_type<array_t*, U>(arr + ::llcpp::array_size<cvref_t>);
 	}
 	else {
 		static_assert(::std::is_array_v<cvref_t>,
@@ -405,18 +397,18 @@ __LL_VAR_INLINE__ constexpr const u8 MARR2[][5]				= {
 };
 
 #pragma region Begin
-__LL_VAR_INLINE__ constexpr ::llcpp::string STR_BEGIN	= ::llcpp::meta::utils::get_array_begin<const ::llcpp::char_type>(STR);
-__LL_VAR_INLINE__ constexpr ::llcpp::string ARR_BEGIN	= ::llcpp::meta::utils::get_array_begin<const ::llcpp::char_type>(ARR);
-__LL_VAR_INLINE__ constexpr ::llcpp::string ARR2_BEGIN	= ::llcpp::meta::utils::get_array_begin<const ::llcpp::char_type>(ARR2);
+__LL_VAR_INLINE__ constexpr ::llcpp::string STR_BEGIN	= ::llcpp::meta::utils::get_array_begin<::llcpp::string>(STR);
+__LL_VAR_INLINE__ constexpr ::llcpp::string ARR_BEGIN	= ::llcpp::meta::utils::get_array_begin<::llcpp::string>(ARR);
+__LL_VAR_INLINE__ constexpr ::llcpp::string ARR2_BEGIN	= ::llcpp::meta::utils::get_array_begin<::llcpp::string>(ARR2);
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_BEGIN =
-	   (STR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	   (STR_BEGIN != ::llcpp::ZERO_VALUE<::llcpp::string>)
 	&& (*STR_BEGIN == STR_INIT);
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_OBJ_BEGIN =
-	   (ARR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	   (ARR_BEGIN != ::llcpp::ZERO_VALUE<::llcpp::string>)
 	&& (*ARR_BEGIN == STR_INIT);
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_OBJ2_BEGIN =
-	   (ARR_BEGIN != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	   (ARR_BEGIN != ::llcpp::ZERO_VALUE<::llcpp::string>)
 	&& (*ARR_BEGIN == STR_INIT);
 
 __LL_KAT_FUNCTION_CONSTEXPR(
@@ -437,18 +429,18 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 
 #pragma endregion
 #pragma region End
-__LL_VAR_INLINE__ constexpr ::llcpp::string STR_END		= ::llcpp::meta::utils::get_array_end<const ::llcpp::char_type>(STR);
-__LL_VAR_INLINE__ constexpr ::llcpp::string ARR_END		= ::llcpp::meta::utils::get_array_end<const ::llcpp::char_type>(ARR);
-__LL_VAR_INLINE__ constexpr ::llcpp::string ARR2_END	= ::llcpp::meta::utils::get_array_end<const ::llcpp::char_type>(ARR2);
+__LL_VAR_INLINE__ constexpr ::llcpp::string STR_END		= ::llcpp::meta::utils::get_array_end<::llcpp::string>(STR);
+__LL_VAR_INLINE__ constexpr ::llcpp::string ARR_END		= ::llcpp::meta::utils::get_array_end<::llcpp::string>(ARR);
+__LL_VAR_INLINE__ constexpr ::llcpp::string ARR2_END	= ::llcpp::meta::utils::get_array_end<::llcpp::string>(ARR2);
 
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_END =
-	   (STR_END != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	   (STR_END != ::llcpp::ZERO_VALUE<::llcpp::string>)
 	&& (*(STR_END - 1) == STR_LAST_);
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_OBJ_END =
-	   (ARR_END != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	   (ARR_END != ::llcpp::ZERO_VALUE<::llcpp::string>)
 	&& (*(ARR_END - 1) == STR_LAST_);
 __LL_VAR_INLINE__ constexpr ll_bool_t IS_WORKING_GET_ARRAY_OBJ2_END =
-	   (ARR2_END != ::llcpp::NULL_VALUE<const ::llcpp::char_type>)
+	   (ARR2_END != ::llcpp::ZERO_VALUE<::llcpp::string>)
 	&& (*(ARR2_END - 1) == STR_LAST_);
 
 __LL_KAT_FUNCTION_CONSTEXPR(

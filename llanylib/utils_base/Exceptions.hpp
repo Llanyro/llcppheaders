@@ -69,6 +69,91 @@ namespace llcpp {
 namespace meta {
 namespace utils {
 
+// Cluster to store some exceptions functions for its internal arrays
+// Also has some utilities used in ExceptionBuffer
+template<class _StringType, class _ErrorType>
+class ExceptionFunctions : public ::llcpp::AlwaysValidTag {
+	#pragma region Types
+	public:
+		// Class related
+		using _MyType				= ExceptionFunctions;
+
+		// Types and enums
+		using StringType			= _StringType;
+		using ErrorType				= _ErrorType;
+		
+	#pragma endregion
+	#pragma region Constructors
+	public:
+		DEFAULT_RULE_OF_6_CLEAR(ExceptionFunctions);
+	
+	#pragma endregion
+	#pragma region CleanFunctions
+
+		constexpr void __cleaner(StringType*& val) const noexcept {
+			__LL_FUNCTION_INIT__;
+			val = ::llcpp::NULL_VALUE<StringType>;
+		}
+		constexpr void __cleaner(ErrorType*& val) const noexcept {
+			__LL_FUNCTION_INIT__;
+			val = ::llcpp::NULL_VALUE<ErrorType>;
+		}
+
+		template<::llcpp::usize N>
+		constexpr void __cleaner(ErrorType (&val)[N]) const noexcept {
+			__LL_FUNCTION_INIT__;
+			ErrorType* aux = val;
+			for(const ErrorType* end = aux + N; aux < end; ++aux)
+				this->__cleaner(*aux);
+		}
+		template<::llcpp::usize N>
+		constexpr void __cleaner(StringType (&val)[N]) const noexcept {
+			__LL_FUNCTION_INIT__;
+			StringType* aux = val;
+			for(const StringType* end = aux + N; aux < end; ++aux)
+				this->__cleaner(*aux);
+		}
+
+	#pragma endregion
+	#pragma region InvalidateFunctions
+	public:
+		constexpr void __invalidate(StringType*& val) const noexcept {
+			__LL_FUNCTION_INIT__;
+			val = ::llcpp::NULL_VALUE<StringType>;
+		}
+		constexpr void __invalidate(ErrorType*& val) const noexcept {
+			__LL_FUNCTION_INIT__;
+			val = ::llcpp::NULL_VALUE<ErrorType>;
+		}
+
+		template<::llcpp::usize N>
+		constexpr void __invalidate(ErrorType (&val)[N]) const noexcept {
+			__LL_FUNCTION_INIT__;
+			ErrorType* aux = val;
+			for(const ErrorType* end = aux + N; aux < end; ++aux)
+				this->__invalidate(*aux);
+		}
+		template<::llcpp::usize N>
+		constexpr void __invalidate(StringType (&val)[N]) const noexcept {
+			__LL_FUNCTION_INIT__;
+			StringType* aux = val;
+			for(const StringType* end = aux + N; aux < end; ++aux)
+				this->__invalidate(*aux);
+		}
+
+	#pragma endregion
+};
+
+#define LL_EXCEPTIONS_ASSERT_CLUSTER																																\
+	static_assert(!::llcpp::meta::traits::is_empty_type_v<StringType>,			"StringTypeArray must be an C static array style or an array object like Arrayo");	\
+	static_assert(!::llcpp::meta::traits::is_empty_type_v<ErrorType>,			"ErrorTypeArray must be an C static array style or an array object like Arrayo");	\
+	static_assert(!::llcpp::meta::traits::is_empty_type_v<StringIterator>,		"StringIterator must be an iterator of provided array");							\
+	static_assert(!::llcpp::meta::traits::is_empty_type_v<ErrorIterator>,		"ErrorIterator must be an iterator of provided array");								\
+	static_assert(!::llcpp::meta::traits::is_empty_type_v<StringConstIterator>,	"StringConstIterator must be a const iterator of provided array");					\
+	static_assert(!::llcpp::meta::traits::is_empty_type_v<ErrorConstIterator>,	"ErrorConstIterator must be a const iterator of provided array");					\
+	static_assert(::llcpp::meta::traits::is_valid_tag_type_v<ValidTag>,			"Tag type is not a valid validation tag type!")
+
+
 template<usize _N, class _StringTypeArray, class _ErrorTypeArray, class _InvalidatorCleaner, class _ValidationTag>
 class ExceptionContainer : public _ValidationTag {
 	#pragma region Types
@@ -83,10 +168,10 @@ class ExceptionContainer : public _ValidationTag {
 		using InvalidatorCleaner	= _InvalidatorCleaner;
 		using StringType			= ::llcpp::meta::traits::array_type_t<StringTypeArray>;
 		using ErrorType				= ::llcpp::meta::traits::array_type_t<ErrorTypeArray>;
-		using StringIterator		= ::llcpp::meta::utils::array_iterator_t<StringTypeArray>;
-		using ErrorIterator			= ::llcpp::meta::utils::array_iterator_t<ErrorTypeArray>;
-		using StringConstIterator	= ::llcpp::meta::utils::array_const_iterator_t<StringTypeArray>;
-		using ErrorConstIterator	= ::llcpp::meta::utils::array_const_iterator_t<ErrorTypeArray>;
+		using StringIterator		= ::llcpp::meta::traits::array_iterator_t<StringTypeArray>;
+		using ErrorIterator			= ::llcpp::meta::traits::array_iterator_t<ErrorTypeArray>;
+		using StringConstIterator	= ::llcpp::meta::traits::array_const_iterator_t<StringTypeArray>;
+		using ErrorConstIterator	= ::llcpp::meta::traits::array_const_iterator_t<ErrorTypeArray>;
 		using PopData				= ::llcpp::meta::pair<StringType, ErrorType>;
 
 		template<class Cleaner, class Invalidator>
@@ -105,16 +190,7 @@ class ExceptionContainer : public _ValidationTag {
 	#pragma endregion
 	#pragma region Asserts
 	public:
-		static_assert(::llcpp::meta::traits::is_empty_type_v<StringType>,
-			"StringTypeArray must be an C static array style or an array object like Arrayo");
-		static_assert(::llcpp::meta::traits::is_empty_type_v<ErrorType>,
-			"ErrorTypeArray must be an C static array style or an array object like Arrayo");
-		static_assert(::llcpp::meta::traits::is_empty_type_v<StringIterator>,
-			"StringIterator must be an iterator of provided array");
-		static_assert(::llcpp::meta::traits::is_empty_type_v<ErrorIterator>,
-			"ErrorIterator must be an iterator of provided array");
-		static_assert(::llcpp::meta::traits::is_valid_tag_type_v<ValidTag>,
-			"Tag type is not a valid validation tag type!");
+		LL_EXCEPTIONS_ASSERT_CLUSTER;
 
 	#pragma endregion
 	#pragma region Attributes
@@ -424,19 +500,19 @@ class ExceptionContainer : public _ValidationTag {
 };
 
 template<
-	usize N,															// Number of elements that buffer can store
-	class StringTypeArray		= ::llcpp::Arrayo<::llcpp::string, N>,	// Array type to store string types
-	class ErrorTypeArray		= ::llcpp::Arrayo<i32, N>,				// Array type to store error types
-	class InvalidatorCleaner	= ::llcpp::Emptyclass					// Type with functionality used to invalidate/clear string/error types
+	usize N,
+	class StringTypeArray,
+	class ErrorTypeArray,
+	class InvalidatorCleaner
 >
 __LL_NODISCARD__ constexpr auto generateExceptionContainer() noexcept {
 	using StringType					= ::llcpp::meta::traits::array_type_t<StringTypeArray>;
 	using ErrorType						= ::llcpp::meta::traits::array_type_t<ErrorTypeArray>;
 
-	using StringIterator				= ::llcpp::meta::utils::array_iterator_t<StringTypeArray>;
-	using ErrorIterator					= ::llcpp::meta::utils::array_iterator_t<ErrorTypeArray>;
-	using StringConstIterator			= ::llcpp::meta::utils::array_const_iterator_t<StringTypeArray>;
-	using ErrorConstIterator			= ::llcpp::meta::utils::array_const_iterator_t<ErrorTypeArray>;
+	using StringIterator				= ::llcpp::meta::traits::array_iterator_t<StringTypeArray>;
+	using ErrorIterator					= ::llcpp::meta::traits::array_iterator_t<ErrorTypeArray>;
+	using StringConstIterator			= ::llcpp::meta::traits::array_const_iterator_t<StringTypeArray>;
+	using ErrorConstIterator			= ::llcpp::meta::traits::array_const_iterator_t<ErrorTypeArray>;
 
 	using InvalidatorCleanerInternal	=
 		::llcpp::meta::traits::conditional_t<::llcpp::meta::traits::is_empty_type_v<InvalidatorCleaner>,
@@ -450,18 +526,18 @@ __LL_NODISCARD__ constexpr auto generateExceptionContainer() noexcept {
 	>;
 
 	using ExceptionType = ::llcpp::meta::utils::ExceptionContainer<N, StringTypeArray, ErrorTypeArray, InvalidatorCleanerInternal, ValidTag>;
-	static_assert(::llcpp::meta::traits::is_empty_type_v<StringType>,			"StringTypeArray must be an C static array style or an array object like Arrayo");
-	static_assert(::llcpp::meta::traits::is_empty_type_v<ErrorType>,			"ErrorTypeArray must be an C static array style or an array object like Arrayo");
+	LL_EXCEPTIONS_ASSERT_CLUSTER;
 
-	static_assert(::llcpp::meta::traits::is_empty_type_v<StringIterator>,		"StringIterator must be an iterator of provided array");
-	static_assert(::llcpp::meta::traits::is_empty_type_v<ErrorIterator>,		"ErrorIterator must be an iterator of provided array");
-	static_assert(::llcpp::meta::traits::is_empty_type_v<StringConstIterator>,	"StringConstIterator must be a const iterator of provided array");
-	static_assert(::llcpp::meta::traits::is_empty_type_v<ErrorConstIterator>,	"ErrorConstIterator must be a const iterator of provided array");
-
-	static_assert(::llcpp::meta::traits::is_valid_tag_type_v<ValidTag>,			"Tag type is not a valid validation tag type!");
-
-	return ::llcpp::meta::traits::TypeContainer<ExceptionType>;
+	return ::llcpp::meta::traits::TypeContainer<ExceptionType>{};
 }
+
+template<
+	usize N,															// Number of elements that buffer can store
+	class StringTypeArray		= ::llcpp::Arrayo<::llcpp::string, N>,	// Array type to store string types
+	class ErrorTypeArray		= ::llcpp::Arrayo<i32, N>,				// Array type to store error types
+	class InvalidatorCleaner	= ::llcpp::Emptyclass					// Type with functionality used to invalidate/clear string/error types
+>
+using ExceptionType = decltype(::llcpp::meta::utils::generateExceptionContainer<N, StringTypeArray, ErrorTypeArray, InvalidatorCleaner>())::T;
 
 /*template<usize N, usize _N>
 constexpr void addExceptions(::llcpp::exceptions::ExceptionBuffer<_N>& buff) noexcept {
@@ -495,7 +571,7 @@ static thread_local ::llcpp::exceptions::ExceptionBuffer<10, string, i32> ex;
 #if __LL_INCLUDE_KATS == 1
 namespace kat {
 
-using ExceptionKat	= ::llcpp::meta::utils::ExceptionBuffer<10>;
+using ExceptionKat	= ::llcpp::meta::utils::ExceptionType<10>;
 
 #pragma region Begin
 
@@ -523,22 +599,21 @@ __LL_KAT_FUNCTION_CONSTEXPR(
 
 #pragma endregion
 
-__LL_NODISCARD__ constexpr ::llcpp::string list_functions_kats() noexcept {
+__LL_NODISCARD__ constexpr ::llcpp::string exceptions_kats() noexcept {
 	::llcpp::string result = ::llcpp::meta::utils::kat::is_working_get_push_elements_kat();
 	if(result) return result;
 	//result = ::llcpp::meta::utils::kat::is_working_get_array_obj_begin_kat();
 	//if(result) return result;
-
+	
 	return nullptr;
 }
 
 #if __LL_STATIC_KATS == 1
-	static_assert(::llcpp::meta::utils::kat::list_functions_kats() == LL_NULLPTR, "utils::list_functions KAT not OK");
+	static_assert(::llcpp::meta::utils::kat::exceptions_kats() == LL_NULLPTR, "utils::exceptions_kats KAT not OK");
 #endif // __LL_STATIC_KATS
 
 } // namespace kat
 #endif // __LL_INCLUDE_KATS
-
 
 } // namespace utils
 } // namespace meta
@@ -565,19 +640,12 @@ namespace llcpp {
 namespace exceptions {
 
 template<
-	// Number of elements that buffer can store
-	usize N,
-
-	// Error string type to store
-	class StringType			= ::llcpp::string,
-
-	// Value error to store
-	class ErrorType				= i32,
-
-	// Type with functionality used to invalidate/clear string/error types
-	class InvalidatorCleaner	= ::llcpp::meta::utils::ExceptionFunctions<StringType, ErrorType>
+	usize N,															// Number of elements that buffer can store
+	class StringTypeArray		= ::llcpp::Arrayo<::llcpp::string, N>,	// Array type to store string types
+	class ErrorTypeArray		= ::llcpp::Arrayo<i32, N>,				// Array type to store error types
+	class InvalidatorCleaner	= ::llcpp::Emptyclass					// Type with functionality used to invalidate/clear string/error types
 >
-using ExceptionBufferArrayo		= ::llcpp::meta::utils::ExceptionBuffer<N, ::llcpp::Arrayo<StringType, N>, ::llcpp::Arrayo<ErrorType, N>, InvalidatorCleaner>;
+using ExceptionType = ::llcpp::meta::utils::ExceptionType<N, StringTypeArray, ErrorTypeArray, InvalidatorCleaner>;
 
 } // namespace exceptions
 } // namespace llcpp

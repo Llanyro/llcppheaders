@@ -71,6 +71,14 @@ __LL_NODISCARD__ constexpr isize itertator_distance(const Iterator1& it1, const 
 	#include "../concepts/concepts.hpp"
 #endif // LL_LIB_PATHS
 
+#if defined(__LL_WINDOWS_SYSTEM)
+#elif defined(__LL_MINGW)
+	#include <algorithm>
+#elif defined(__LL_POSIX_SYSTEM)
+#elif defined(__LL_UNIX_SYSTEM)
+#else
+#endif // __LL_WINDOWS_SYSTEM
+
 namespace llcpp {
 namespace meta {
 namespace utils {

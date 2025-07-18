@@ -100,7 +100,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 	#pragma region Functions
 		#pragma region Constructors
 	public:
-		DEFAULT_RULE_OF_6_CLEAR(GenericFunctions);
+		LL_DEFAULT_RULE_OF_6_CLEAR(GenericFunctions);
 	
 		#pragma endregion
 		#pragma region Generic
@@ -202,7 +202,7 @@ class GenericFunctions : public ::llcpp::AlwaysValidTag {
 				else if constexpr (::llcpp::meta::concepts::signature::SameTypeBeginEnd<T>)
 					this->processArray(external, obj.begin(), obj.end());
 #if defined(__LL_BUILTIN_POINTER_CHECK)
-				else if constexpr (!::llcpp::meta::traits::HasPointerAttribute<Pack::T>) {
+				else if constexpr (!::llcpp::meta::traits::HasPointerAttribute<T>) {
 					// ????
 					static_assert(false, "Not yet implemented");
 				}
@@ -294,7 +294,7 @@ class PrimitiveInvalidator : public ::llcpp::AlwaysValidTag {
 	#pragma endregion
 	#pragma region Constructors
 	public:
-		DEFAULT_RULE_OF_6_CLEAR(PrimitiveInvalidator);
+		LL_DEFAULT_RULE_OF_6_CLEAR(PrimitiveInvalidator);
 	
 	#pragma endregion
 	#pragma region CleanFunctions

@@ -85,7 +85,7 @@ class ExceptionFunctions : public ::llcpp::AlwaysValidTag {
 	#pragma endregion
 	#pragma region Constructors
 	public:
-		DEFAULT_RULE_OF_6_CLEAR(ExceptionFunctions);
+		LL_DEFAULT_RULE_OF_6_CLEAR(ExceptionFunctions);
 	
 	#pragma endregion
 	#pragma region CleanFunctions
@@ -210,13 +210,7 @@ class ExceptionContainer : public _ValidationTag {
 			, lifo_names_last(this->str_begin())	// Point to first element in strings array
 			, lifo_errors_last(this->err_begin())	// Point to first element in errors array
 		{ __LL_FUNCTION_INIT__; }
-		constexpr ~ExceptionContainer() noexcept {
-			__LL_FUNCTION_INIT__;
-			if constexpr (::llcpp::LL_CLEAR_SECURE)
-				this->makeInvalidClear();
-			else if constexpr (::llcpp::LL_CLEAR_POINTERS_ON_DESTRUCTION)
-				this->makeInvalid();
-		}
+		constexpr ~ExceptionContainer() noexcept { LL_DEFAULT_DESTRUCTOR_INVALIDATOR; }
 
 		#pragma endregion
 		#pragma region CopyMove

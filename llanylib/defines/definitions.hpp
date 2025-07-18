@@ -234,7 +234,7 @@
 
 #define __LL_FUNCTION_INIT__ do { LL_IGNORE(); } while(0)
 
-#define DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)													\
+#define LL_DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)												\
 	__LL_NODISCARD__ constexpr explicit operator const classname*() const noexcept {				\
 		__LL_FUNCTION_INIT__;																		\
 		return this;																				\
@@ -253,13 +253,21 @@
 	constexpr classname& operator=(volatile classname&&) noexcept = delete;							\
 	constexpr ~classname () noexcept = default
 
-#define DEFAULT_RULE_OF_6_WITH_ERROR_DATA(classname)	\
+#define LL_DEFAULT_RULE_OF_6_WITH_ERROR_DATA(classname)	\
 	constexpr classname () noexcept {}					\
-	DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)
+	LL_DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)
 
-#define DEFAULT_RULE_OF_6_CLEAR(classname)				\
+#define LL_DEFAULT_RULE_OF_6_CLEAR(classname)			\
 	constexpr classname () noexcept = default;			\
-	DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)
+	LL_DEFAULT_RULE_OF_6_NO_CONSTRUCTOR(classname)
+
+#define LL_DEFAULT_DESTRUCTOR_INVALIDATOR							\
+	__LL_FUNCTION_INIT__;											\
+	if constexpr (::llcpp::LL_CLEAR_SECURE)							\
+		this->makeInvalidClear();									\
+	else if constexpr (::llcpp::LL_CLEAR_POINTERS_ON_DESTRUCTION)	\
+		this->makeInvalid()
+
 
 	
 #define EXTERN_C_FUNC extern "C"

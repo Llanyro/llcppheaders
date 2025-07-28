@@ -155,6 +155,19 @@ class ValidationChecker {
 	#pragma endregion
 };
 
+template<class T>
+using ValidInheritance =
+	::llcpp::meta::traits::ValidationChecker::conditional_valid_t<T,
+		::llcpp::AlwaysValidTag,
+		::llcpp::AlwaysInvalidTag,
+		::llcpp::DummyClass,
+		::llcpp::DummyClass,
+		::llcpp::DummyClass,
+		::llcpp::DummyClass,
+		::llcpp::DummyClass,
+		::llcpp::DummyClass
+	>;
+
 // if ValidType is not included by functions or inheritance, we use user type providded
 template<class ClassToCheck, class InhertiExtra>
 using ValidationWrapper = 

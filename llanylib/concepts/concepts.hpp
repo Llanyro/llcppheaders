@@ -83,15 +83,66 @@ namespace base {
 template<ll_bool_t VALUE>
 concept IsValidConcept = VALUE;
 
+__LL_VAR_INLINE__ constexpr ll_bool_t STRICT_CONVERTIBLE			= __LL_STRICT_CONVERTIBLE;
+__LL_VAR_INLINE__ constexpr ll_bool_t STRICT_CONVERTIBLE_OPERATOR	= __LL_STRICT_CONVERTIBLE_OPERATOR;
+
+enum class ConvertibleMode : u8 {
+	Default,
+	Operator,
+
+	Strict,
+	Soft
+};
+
+template<class T, class U, ll_bool_t STRICT>
+__LL_VAR_INLINE__ constexpr ll_bool_t flexible_convertible_v = ::llcpp::meta::traits::conditional_value_simple_v<
+	STRICT, ll_bool_t,
+	::std::is_same_v<T, U> && ::std::is_same_v<U, T>,
+	std::is_convertible_v<T, U>
+>;
+
+// If T is and empty type, this returns true always
+// If not, it depends of strict mode
+template<class U, class T, ::llcpp::meta::concepts::base::ConvertibleMode MODE>
+__LL_NODISCARD__ constexpr ll_bool_t is_same_or_void() noexcept {
+	if constexpr (::llcpp::meta::traits::is_empty_object_v<T>)
+		return ::llcpp::LL_TRUE;
+	
+	else if constexpr (MODE == ::llcpp::meta::concepts::base::ConvertibleMode::Default)
+		return ::llcpp::meta::concepts::base::flexible_convertible_v<U, T, ::llcpp::meta::concepts::base::STRICT_CONVERTIBLE>;
+	else if constexpr (MODE == ::llcpp::meta::concepts::base::ConvertibleMode::Operator)
+		return ::llcpp::meta::concepts::base::flexible_convertible_v<U, T, ::llcpp::meta::concepts::base::STRICT_CONVERTIBLE_OPERATOR>;
+
+
+	else if constexpr (MODE == ::llcpp::meta::concepts::base::ConvertibleMode::Strict)
+		return ::llcpp::meta::concepts::base::flexible_convertible_v<U, T, ::llcpp::LL_TRUE>;
+	else if constexpr (MODE == ::llcpp::meta::concepts::base::ConvertibleMode::Soft) {
+		return ::llcpp::meta::concepts::base::flexible_convertible_v<U, T, ::llcpp::LL_FALSE>;
+	}
+	else {
+		static_assert(MODE == ::llcpp::meta::concepts::base::ConvertibleMode::Soft,
+			"No valid mode for this check!");
+		return ::llcpp::LL_FALSE;
+	}
+}
+
 // Checks if U type is void/EmptyClass
-// If is void return trur
+// If is void return true
 // Else return true if U is same type as T
 template<class U, class T>
-concept IsSameOrVoid = ::llcpp::meta::traits::conditional_value_simple_v<
-	::llcpp::meta::traits::is_empty_object_v<T>,
-	ll_bool_t,
-	::llcpp::LL_TRUE,
-	::std::is_same_v<T, U> && ::std::is_same_v<U, T>
+concept IsOperatorSameOrVoid = ::llcpp::meta::concepts::base::is_same_or_void<
+	U, T, ::llcpp::meta::concepts::base::ConvertibleMode::Operator>();
+template<class U, class T>
+concept IsStrictSameOrVoid = ::llcpp::meta::concepts::base::is_same_or_void<
+	U, T, ::llcpp::meta::concepts::base::ConvertibleMode::Strict>();
+template<class U, class T>
+concept IsSoftSameOrVoid = ::llcpp::meta::concepts::base::is_same_or_void<
+	U, T, ::llcpp::meta::concepts::base::ConvertibleMode::Soft>();
+template<class U, class T, ll_bool_t IS_STRICT = ::llcpp::LL_TRUE>
+concept IsStrictSelectionSameOrVoid = ::llcpp::meta::traits::conditional_value_simple_v<
+	IS_STRICT, ll_bool_t,
+	::llcpp::meta::concepts::base::IsStrictSameOrVoid<U, T>,
+	::llcpp::meta::concepts::base::IsSoftSameOrVoid<U, T>
 >;
 
 template<class T, class U>
@@ -143,15 +194,14 @@ concept IsCharType = requires {
 } // namespace base
 namespace signature {
 
-// [TOCHECK]
 // Some objects uses this operator and expects a throw if parameter is invalid
 template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorArray = requires (T t) {
-	{ t[0] } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t[0] } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>;
 };
 template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorArrayExcept = requires (T t) {
-	{ t[0] } -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t[0] } -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>;
 };
 
 template<class T, class ReturnType = ::llcpp::Emptyclass>
@@ -160,33 +210,33 @@ template<class T, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorSquareBracketsExcept = ::llcpp::meta::concepts::signature::HasOperatorArrayExcept<T, ReturnType>;
 
 template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasPointerOperator = requires (T t) { { *t } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasPointerOperator = requires (T t) { { *t } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>; };
 
-template<class T, class ArrayType = ll_string_t, class SizeType = usize, class ReturnType = void>
+template<class T, class ArrayType = ll_string_t, class SizeType = usize, class ReturnType = ::llcpp::Emptyclass>
 concept HasHashArray = requires (T t, ArrayType arr, SizeType s) {
-	{ t.hash(arr, s) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t.hash(arr, s) } noexcept -> ::llcpp::meta::concepts::base::IsSoftSameOrVoid<ReturnType>;
 };
 template<class Iterator1, class Iterator2, class ReturnType = isize>
 concept HasDistance = requires (Iterator1 it, Iterator2 iu) {
-	{ it.distance(iu) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ it.distance(iu) } noexcept -> ::llcpp::meta::concepts::base::IsSoftSameOrVoid<ReturnType>;
 };
 
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasForeachOperation = requires (T t, U u) {
-	{ t.foreachOperation(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t.foreachOperation(u) } noexcept -> ::llcpp::meta::concepts::base::IsSoftSameOrVoid<ReturnType>;
 };
 template<class T, class U, class W, class ReturnType = ::llcpp::Emptyclass>
 concept HasForeachOperationExtra = requires (T t, U u, W w) {
-	{ t.foreachOperation(u, w) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t.foreachOperation(u, w) } noexcept -> ::llcpp::meta::concepts::base::IsSoftSameOrVoid<ReturnType>;
 };
 
 template<class T, class U = T, class ReturnType = T&>
 concept HasCopyAssignable = requires (T t, const U u) {
-	{ t = ::std::forward<const U&>(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t = ::std::forward<const U&>(u) } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>;
 };
 template<class T, class U = T, class ReturnType = T&>
 concept HasMoveAssignable = requires (T t, U u) {
-	{ t = ::std::forward<U&&>(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t = ::std::forward<U&&>(u) } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>;
 };
 
 #pragma region EditOperators
@@ -202,27 +252,27 @@ concept HasOperatorSub = requires (T t, U u) { { t - u } noexcept -> ::std::same
 
 template<class T, class U = u8, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseLeft = requires(T t, U u) {
-	{ t << u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t << u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U = u8, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseRight = requires(T t, U u) {
-	{ t >> u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t >> u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseAND = requires(T t, U u) {
-	{ t & u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t & u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseOR = requires(T t, U u) {
-	{ t | u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t | u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseXOR = requires(T t, U u) {
-	{ t ^ u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t ^ u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorModulus = requires(T t, U u) {
-	{ t % u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t % u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 
 #pragma endregion
@@ -234,27 +284,27 @@ concept HasOperatorSubAssign = requires (T t, U u) { { t -= u } noexcept -> ::st
 
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseLeftAssign = requires(T t, U u) {
-	{ t <<= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t <<= u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseRightAssign = requires(T t, U u) {
-	{ t >>= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t >>= u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseANDAssign = requires(T t, U u) {
-	{ t &= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t &= u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseORAssign = requires(T t, U u) {
-	{ t |= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t |= u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorBitwiseXORAssign = requires(T t, U u) {
-	{ t ^= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t ^= u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 template<class T, class U, class ReturnType = ::llcpp::Emptyclass>
 concept HasOperatorModulusAssign = requires(T t, U u) {
-	{ t %= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>;
+	{ t %= u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>;
 };
 
 #pragma endregion
@@ -402,36 +452,36 @@ concept HasOperatorModulusWithPrimitives =
 #pragma endregion
 #pragma region Comparations
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorEqual = requires (T t, U u) { { t == u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorEqual = requires (T t, U u) { { t == u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorNonEqual = requires (T t, U u) { { t != u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorNonEqual = requires (T t, U u) { { t != u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorGreaterEqual = requires (T t, U u) { { t >= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorGreaterEqual = requires (T t, U u) { { t >= u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorGreater = requires (T t, U u) { { t > u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorGreater = requires (T t, U u) { { t > u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorLowerEqual = requires (T t, U u) { { t <= u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorLowerEqual = requires (T t, U u) { { t <= u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorLower = requires (T t, U u) { { t < u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorLower = requires (T t, U u) { { t < u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasOperatorThreeWay = requires (T t, U u) { { t <=> u } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasOperatorThreeWay = requires (T t, U u) { { t <=> u } noexcept -> ::llcpp::meta::concepts::base::IsOperatorSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = i32>
-concept HasCompare = requires (T t, U u) { { t.compare(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasCompare = requires (T t, U u) { { t.compare(u) } noexcept -> ::llcpp::meta::concepts::base::IsSoftSameOrVoid<ReturnType>; };
 template<class T, class U = T, class ReturnType = ll_bool_t>
-concept HasEquals = requires (T t, U u) { { t.equals(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasEquals = requires (T t, U u) { { t.equals(u) } noexcept -> ::llcpp::meta::concepts::base::IsSoftSameOrVoid<ReturnType>; };
 
 #pragma endregion
 #pragma region Lists
 template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasData = requires (T t) { { t.data() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasData = requires (T t) { { t.data() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasBegin = requires (T t) { { t.begin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasBegin = requires (T t) { { t.begin() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasReverseBegin = requires (T t) { { t.rbegin() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasReverseBegin = requires (T t) { { t.rbegin() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasEnd = requires (T t) { { t.end() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasEnd = requires (T t) { { t.end() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = ::llcpp::Emptyclass>
-concept HasReverseEnd = requires (T t) { { t.rend() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasReverseEnd = requires (T t) { { t.rend() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>; };
 template<class T>
 concept HasListFunctions = requires {
 	requires ::llcpp::meta::concepts::signature::HasBegin<T>;
@@ -451,20 +501,14 @@ concept SameTypeBeginEnd = requires (T t) {
 };
 
 #pragma endregion
-template<class T, class ReturnType = void>
-concept HasClear = requires (T t) { { t.clear() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
-template<class T, class ReturnType = void>
-concept HasMakeInvalid = requires (T t) { { t.makeInvalid() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
-template<class T, class ReturnType = void, class... Args>
-concept HasClearOther = requires (T t, Args... args) { { t.clear(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = ll_bool_t>
-concept HasEmpty = requires (T t) { { t.empty() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasEmpty = requires (T t) { { t.empty() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>; };
 template<class T, class U = usize, class ReturnType = ll_bool_t>
-concept HasInRange = requires (T t, U u) { { t.inRange(u) } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasInRange = requires (T t, U u) { { t.inRange(u) } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>; };
 
 #pragma region Size
 template<class T, class ReturnType = usize>
-concept HasSize = requires (T t) { { t.size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasSize = requires (T t) { { t.size() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>; };
 template<class T, class... Args>
 concept HasSizeWith =
 #if __LL_REAL_CXX17 == 1
@@ -478,7 +522,7 @@ concept HasSizeWithPrimitives = ::llcpp::meta::concepts::signature::HasSizeWith<
 #pragma endregion
 #pragma region MaxSize
 template<class T, class ReturnType = usize>
-concept HasMaxSize = requires (T t) { { t.max_size() } noexcept -> ::llcpp::meta::concepts::base::IsSameOrVoid<ReturnType>; };
+concept HasMaxSize = requires (T t) { { t.max_size() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>; };
 template<class T, class ReturnType = usize, class... Args>
 concept HasMaxSizeWith =
 #if __LL_REAL_CXX17 == 1

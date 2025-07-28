@@ -85,10 +85,14 @@ concept IsValidConcept = VALUE;
 
 __LL_VAR_INLINE__ constexpr ll_bool_t STRICT_CONVERTIBLE			= __LL_STRICT_CONVERTIBLE;
 __LL_VAR_INLINE__ constexpr ll_bool_t STRICT_CONVERTIBLE_OPERATOR	= __LL_STRICT_CONVERTIBLE_OPERATOR;
+__LL_VAR_INLINE__ constexpr ll_bool_t STRICT_VALID_FUNCTIONS		= __LL_STRICT_VALID_FUNCTIONS;
+__LL_VAR_INLINE__ constexpr ll_bool_t STRICT_GENERIC_FUNCTIONS		= __LL_STRICT_GENERIC_FUNCTIONS;
 
 enum class ConvertibleMode : u8 {
 	Default,
 	Operator,
+	ValidFunctions,
+	GenericFunctions,
 
 	Strict,
 	Soft
@@ -112,6 +116,10 @@ __LL_NODISCARD__ constexpr ll_bool_t is_same_or_void() noexcept {
 		return ::llcpp::meta::concepts::base::flexible_convertible_v<U, T, ::llcpp::meta::concepts::base::STRICT_CONVERTIBLE>;
 	else if constexpr (MODE == ::llcpp::meta::concepts::base::ConvertibleMode::Operator)
 		return ::llcpp::meta::concepts::base::flexible_convertible_v<U, T, ::llcpp::meta::concepts::base::STRICT_CONVERTIBLE_OPERATOR>;
+	else if constexpr (MODE == ::llcpp::meta::concepts::base::ConvertibleMode::ValidFunctions)
+		return ::llcpp::meta::concepts::base::flexible_convertible_v<U, T, ::llcpp::meta::concepts::base::STRICT_VALID_FUNCTIONS>;
+	else if constexpr (MODE == ::llcpp::meta::concepts::base::ConvertibleMode::GenericFunctions)
+		return ::llcpp::meta::concepts::base::flexible_convertible_v<U, T, ::llcpp::meta::concepts::base::STRICT_GENERIC_FUNCTIONS>;
 
 
 	else if constexpr (MODE == ::llcpp::meta::concepts::base::ConvertibleMode::Strict)
@@ -130,14 +138,25 @@ __LL_NODISCARD__ constexpr ll_bool_t is_same_or_void() noexcept {
 // If is void return true
 // Else return true if U is same type as T
 template<class U, class T>
+concept IsDefaultSameOrVoid = ::llcpp::meta::concepts::base::is_same_or_void<
+	U, T, ::llcpp::meta::concepts::base::ConvertibleMode::Default>();
+template<class U, class T>
 concept IsOperatorSameOrVoid = ::llcpp::meta::concepts::base::is_same_or_void<
 	U, T, ::llcpp::meta::concepts::base::ConvertibleMode::Operator>();
+template<class U, class T>
+concept IsValidFunctionsSameOrVoid = ::llcpp::meta::concepts::base::is_same_or_void<
+	U, T, ::llcpp::meta::concepts::base::ConvertibleMode::ValidFunctions>();
+template<class U, class T>
+concept IsGenericFunctionsSameOrVoid = ::llcpp::meta::concepts::base::is_same_or_void<
+	U, T, ::llcpp::meta::concepts::base::ConvertibleMode::GenericFunctions>();
+
 template<class U, class T>
 concept IsStrictSameOrVoid = ::llcpp::meta::concepts::base::is_same_or_void<
 	U, T, ::llcpp::meta::concepts::base::ConvertibleMode::Strict>();
 template<class U, class T>
 concept IsSoftSameOrVoid = ::llcpp::meta::concepts::base::is_same_or_void<
 	U, T, ::llcpp::meta::concepts::base::ConvertibleMode::Soft>();
+
 template<class U, class T, ll_bool_t IS_STRICT = ::llcpp::LL_TRUE>
 concept IsStrictSelectionSameOrVoid = ::llcpp::meta::traits::conditional_value_simple_v<
 	IS_STRICT, ll_bool_t,

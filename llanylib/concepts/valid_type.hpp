@@ -61,34 +61,34 @@ namespace signature {
 // validationType() must return a valid type
 template<class T>
 concept HasValidationType = requires (T t) {
-	{ t.validationType() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<::llcpp::ValidType>;
+	{ t.validationType() } noexcept -> ::llcpp::meta::concepts::base::IsValidFunctionsSameOrVoid<::llcpp::ValidType>;
 };
 
 template<class T, class ReturnType = ll_bool_t>
 concept HasClear = requires (T t) {
-	{ t.clear() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>;
+	{ t.clear() } noexcept -> ::llcpp::meta::concepts::base::IsValidFunctionsSameOrVoid<ReturnType>;
 };
 template<class T, class ReturnType = ll_bool_t, class... Args>
 concept HasClearOther = requires (T t, Args... args) {
-	{ t.clear(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ReturnType>;
+	{ t.clear(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsValidFunctionsSameOrVoid<ReturnType>;
 };
 
 template<class T, class ReturnType = ll_bool_t, class ReturnType = ll_bool_t>
 concept HasMakeInvalid = requires (T t) {
-	{ t.makeInvalid() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ll_bool_t>;
+	{ t.makeInvalid() } noexcept -> ::llcpp::meta::concepts::base::IsValidFunctionsSameOrVoid<ll_bool_t>;
 };
 template<class T, class ReturnType = ll_bool_t, class... Args>
 concept HasMakeInvalidOther = requires (T t, Args... args) {
-	{ t.makeInvalid(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ll_bool_t>;
+	{ t.makeInvalid(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsValidFunctionsSameOrVoid<ll_bool_t>;
 };
 
 template<class T, class ReturnType = ll_bool_t>
 concept HasMakeInvalidClear = requires (T t) {
-	{ t.makeInvalidClear() } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ll_bool_t>;
+	{ t.makeInvalidClear() } noexcept -> ::llcpp::meta::concepts::base::IsValidFunctionsSameOrVoid<ll_bool_t>;
 };
 template<class T, class ReturnType = ll_bool_t, class... Args>
 concept HasMakeInvalidClearOther = requires (T t, Args... args) {
-	{ t.makeInvalidClear(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsStrictSameOrVoid<ll_bool_t>;
+	{ t.makeInvalidClear(::std::forward<Args>(args)...) } noexcept -> ::llcpp::meta::concepts::base::IsValidFunctionsSameOrVoid<ll_bool_t>;
 };
 
 

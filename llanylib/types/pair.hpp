@@ -23,9 +23,9 @@
 	#define LLANYLIB_PAIR_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
-	#include <llanylib/types/types.hpp>
-#else
 	#include "types.hpp"
+#else
+	#include <llanylib/types/types.hpp>
 #endif // LL_LIB_PATHS
 
 namespace llcpp {

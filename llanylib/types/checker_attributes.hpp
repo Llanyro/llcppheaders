@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 13.0							//
+//	Version: 15.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_INCOMPLETE_HPP_) && defined(LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_HPP_)
-	#if LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ != 13 || LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MINOR_ < 0
+	#if LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ != 15 || LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MINOR_ < 0
 		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "checker_attributes.hpp(incomplete) version error!"
 		#else
@@ -19,13 +19,13 @@
 
 #elif defined(LLANYLIB_INCOMPLETE_HPP_) && !defined(LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_HPP_)
 	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_HPP_
-	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ 13
+	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MAYOR_ 15
 	#define LLANYLIB_CHECKERATTRIBUTES_INCOMPLETE_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)
-	#include <llanylib/types/Comparations.hpp>
-#else
 	#include "Comparations.hpp"
+#else
+	#include <llanylib/types/Comparations.hpp>
 #endif // LL_LIB_PATHS
 
 namespace llcpp {
@@ -39,7 +39,7 @@ struct checker_attributes_t;
 } // namespace llcpp
 
 #elif defined(LLANYLIB_CHECKERATTRIBUTES_HPP_)
-	#if LLANYLIB_CHECKERATTRIBUTES_MAYOR_ != 13 || LLANYLIB_CHECKERATTRIBUTES_MINOR_ < 0
+	#if LLANYLIB_CHECKERATTRIBUTES_MAYOR_ != 15 || LLANYLIB_CHECKERATTRIBUTES_MINOR_ < 0
 		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "checker_attributes.hpp version error!"
 		#else
@@ -50,7 +50,7 @@ struct checker_attributes_t;
 
 #else
 	#define LLANYLIB_CHECKERATTRIBUTES_HPP_
-	#define LLANYLIB_CHECKERATTRIBUTES_MAYOR_ 13
+	#define LLANYLIB_CHECKERATTRIBUTES_MAYOR_ 15
 	#define LLANYLIB_CHECKERATTRIBUTES_MINOR_ 0
 
 #if defined(LL_LIB_PATHS)

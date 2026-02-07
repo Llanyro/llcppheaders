@@ -4,11 +4,11 @@
 //	Author: Francisco Julio Ruiz Fernandez	//
 //	Author: llanyro							//
 //											//
-//	Version: 12.0							//
+//	Version: 15.0							//
 //////////////////////////////////////////////
 
 #if defined(LLANYLIB_OS_HPP_) // Guard && version protector
-	#if LLANYLIB_OS_MAYOR_ != 12 || LLANYLIB_OS_MINOR_ < 0
+	#if LLANYLIB_OS_MAYOR_ != 15 || LLANYLIB_OS_MINOR_ < 0
 		#if __LL_DIRECTIVE_WARNING == 1
 			#warning "os.hpp version error!"
 		#else
@@ -19,7 +19,7 @@
 
 #elif !defined(LLANYLIB_OS_HPP_)
 	#define LLANYLIB_OS_HPP_
-	#define LLANYLIB_OS_MAYOR_ 12
+	#define LLANYLIB_OS_MAYOR_ 15
 	#define LLANYLIB_OS_MINOR_ 0
 
 /////////////////////////////////////////// C++ Version ///////////////////////////////////////////
@@ -85,12 +85,12 @@
 
 // This macro can be setted by user input, so do not trust this value
 
-#if !defined(__LL_BIGENDIAN)
-	#define __LL_BIGENDIAN 0
-#elif __LL_BIGENDIAN != 1 && __LL_BIGENDIAN != 0
-	#undef __LL_BIGENDIAN
-	#define __LL_BIGENDIAN 1
-#endif // __LL_BIGENDIAN
+#if !defined(__LL_LITTLE_ENDIAN)
+	#define __LL_LITTLE_ENDIAN 0
+#elif __LL_LITTLE_ENDIAN != 1 && __LL_LITTLE_ENDIAN != 0
+	#undef __LL_LITTLE_ENDIAN
+	#define __LL_LITTLE_ENDIAN 1
+#endif // __LL_LITTLE_ENDIAN
 
 //////////////////////////////////////////// OS check ////////////////////////////////////////////
 
@@ -98,9 +98,11 @@
 #if defined(__MINGW32__) || defined(__MINGW64__)
 	#define __LL_MINGW
 #elif (defined(_WIN32) || defined(_WIN64))
-	#define __LL_WINDOWS_SYSTEM
-	#undef __LL_REAL_CXX23
-	#define __LL_REAL_CXX23 0
+	// [TOCHECK] vs code error with macros
+	#define __LL_MINGW
+	//#define __LL_WINDOWS_SYSTEM
+	//#undef __LL_REAL_CXX23
+	//#define __LL_REAL_CXX23 0
 #elif defined(__unix__)
 	#if defined(__linux__)
 		#define __LL_POSIX_SYSTEM
